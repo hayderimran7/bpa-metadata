@@ -158,6 +158,8 @@ class Sample(models.Model):
     analysed_url = models.URLField()    
     ftp_url = models.URLField()
     
+    note = models.TextField()
+    
     
 
 
