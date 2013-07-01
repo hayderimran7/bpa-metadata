@@ -75,14 +75,14 @@ class Sample(models.Model):
     A sample
     """
 
-    bpa_sample_id = models.CharField(max_length=16)
+    BPA_sample_id = models.CharField(max_length=16)
     sample_name = models.CharField(max_length=200)
     requested_sequence_coverage = models.CharField(max_length=4)
     species = models.CharField(max_length=100)
     
-    sequencing_faciltiy = models.ForeignKey(Facility)
-    array_analysis_faciltiy = models.ForeignKey(Facility)
-    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility)    
+    sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility')
+    array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility')
+    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility')    
     
     date_sent_to_sequencing_facility = models.DateField()
     date_recieved_from_sequencing_facility = models.DateField()
@@ -105,13 +105,13 @@ class Sample(models.Model):
     tumor_stage = models.ForeignKey(TumorStage)
     histological_subtype = models.CharField(max_length=50)
     passage_number = models.IntegerField()
-    dna_extraction_protocol = models.CharField(max_length=200)
+    DNA_extraction_protocol = models.CharField(max_length=200)
     
     contact = models.ForeignKey(Contact)
     
     sequence_facility_filename = models.CharField(max_length=300)
     md5cheksum =  models.CharField(max_length=32)
-    bpa_archive_url = models.URLField()    
+    BPA_archive_url = models.URLField()    
     analysed = models.BooleanField()
     analysed_url = models.URLField()    
     ftp_url = models.URLField()
