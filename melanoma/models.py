@@ -5,7 +5,11 @@ class Affiliation(models.Model):
     """
     Affiliation
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=200)
+
+    def __unicode__(self):
+	return self.name
 
 
 class DNASource(models.Model):
@@ -15,11 +19,20 @@ class DNASource(models.Model):
     source = models.CharField(max_length=100)
 
 
+    def __unicode__(self):
+	return self.source
+
+
 class Facility(models.Model):
     """
     The Sequencing Facility
     """
     name = models.CharField(max_length=100)
+
+
+    def __unicode__(self):
+	return self.name
+
 
 
 class Contact(models.Model):
@@ -29,6 +42,12 @@ class Contact(models.Model):
     name = models.CharField(max_length=200)
     affiliation = models.ForeignKey(Affiliation)
     email = models.CharField(max_length=200)
+
+
+    def __unicode__(self):
+	return self.name
+
+
 
 
 class Sample(models.Model):
@@ -44,4 +63,11 @@ class Sample(models.Model):
     dna_source = models.ForeignKey(DNASource)
 
     sex = models.CharField(max_length=1)
+
+
+    def __unicode__(self):
+	return self.bpa_sample_id + " " + self.sample_name
+
+
+
 
