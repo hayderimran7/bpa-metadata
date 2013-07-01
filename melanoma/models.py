@@ -117,7 +117,7 @@ class Array(models.Model):
 
 class Sample(models.Model):
     """
-    A sample
+    A Melanoma sample
     """
 
     bpa_id = models.ForeignKey(BPA_ID)
