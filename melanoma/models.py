@@ -60,7 +60,7 @@ class Library(models.Model):
     protocol = models.ForeignKey(LibraryProtocol)
     
     def __unicode__(self):
-        return "Size: " + str(self.base_pairs) + " Paired: " + str(self.paired_end) + " Protocol: " + str(self.protocol)
+        return "Size: " + str(self.base_pairs) + " Type: " + str(self.type) + " Protocol: " + str(self.protocol)
 
     class Meta:
         verbose_name_plural = "Libraries"
