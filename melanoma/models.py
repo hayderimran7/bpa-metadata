@@ -1,16 +1,7 @@
 from django.db import models
+from common.models import *
 
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
-
-class Affiliation(models.Model):
-    """
-    Affiliation
-    """
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return self.name
 
 
 class DNASource(models.Model):
@@ -23,17 +14,9 @@ class DNASource(models.Model):
     def __unicode__(self):
         return self.source
 
-
-class Facility(models.Model):
-    """
-    The Sequencing SequencingFacility
-    """
-    name = models.CharField(max_length=100)
-    service = models.CharField(max_length=100)
-
-    def __unicode__(self):
-        return self.name
-
+    class Meta:
+        verbose_name = 'DNA Source'
+        verbose_name_plural = "DNA Sources"
 
 class Sequencer(models.Model):
     """
@@ -56,17 +39,6 @@ class TumorStage(models.Model):
         return self.name
 
 
-class Contact(models.Model):
-    """
-    Contact Detail
-    """
-    name = models.CharField(max_length=200)
-    affiliation = models.ForeignKey(Affiliation)
-    email = models.EmailField()
-
-
-    def __unicode__(self):
-        return self.name
 
 class LibraryProtocol(models.Model):
     """
@@ -90,15 +62,8 @@ class Library(models.Model):
     def __unicode__(self):
         return "Size: " + str(self.base_pairs) + " Paired: " + str(self.paired_end) + " Protocol: " + str(self.protocol)
 
-
-class BPA_ID(models.Model):
-    """
-    BPA Generated ID 
-    """
-    bpa_id = models.CharField(max_length=16, unique=True)
-
-    def __unicode__(self):
-        return self.bpa_id
+    class Meta:
+        verbose_name_plural = "Libraries"
 
 class Array(models.Model):
     """
