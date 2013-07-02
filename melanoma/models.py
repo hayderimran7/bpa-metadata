@@ -39,7 +39,6 @@ class TumorStage(models.Model):
         return self.name
 
 
-
 class LibraryProtocol(models.Model):
     """
     Library Protocol 
@@ -89,50 +88,62 @@ class Sample(models.Model):
     bpa_id = models.ForeignKey(BPA_ID)
     sample_name = models.CharField(max_length=200)
     
+    # Sample type
+    sex = models.CharField(choices=GENDERS, max_length=1)    
+    tumor_stage = models.ForeignKey(TumorStage)
+    histological_subtype = models.CharField(max_length=50)
+    species = models.ForeignKey(Species)
+    dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source")
+            
     requested_sequence_coverage = models.CharField(max_length=4)
-    species = models.CharField(max_length=100)
+   
+    contact = models.ForeignKey(Contact)
+    date_sent_to_sequencing_facility = models.DateField()
+    note = models.TextField()
     
+class Run(models.Model):
+    """
+    A Single Run
+    """
+    
+    sample = models.ForeignKey(Sample)
+    date_recieved_from_sequencing_facility = models.DateField()
+     
+    library = models.ForeignKey(Library)   
+    DNA_extraction_protocol = models.CharField(max_length=200)
+    passage_number = models.IntegerField()
+     
     # Facilitities
     sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility')
     array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility')
     whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility')    
-    
-    # Sequencing
-    dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source")
-    library = models.ForeignKey(Library)   
+
     index_number = models.IntegerField()
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField()
     flow_cell_id = models.CharField(max_length=10)
     lane_number = models.IntegerField()
-    DNA_extraction_protocol = models.CharField(max_length=200)
-    passage_number = models.IntegerField()
-        
-    # Sample type
-    sex = models.CharField(choices=GENDERS, max_length=1)    
-    tumor_stage = models.ForeignKey(TumorStage)
-    histological_subtype = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return "Run {} for {}".format(self.run_number, self.sample.sample_name)
+
+
+class SequenceFile(models.Model):
+    """
+    A sequence file resulting from a sequence run
+    """
     
-    # Data
-    sequence_facility_filename = models.CharField(max_length=300)
-    md5cheksum = models.CharField(max_length=32)
-    BPA_archive_url = models.URLField()    
+    run =  models.ForeignKey(Run)
+    date_received_from_sequencing_facility = models.DateField()
+    filename = models.CharField(max_length=300)
+    md5cheksum = models.CharField('MD5 Checksum', max_length=32)
+    BPA_archive_url = models.URLField('BPA Archive URL')    
     analysed = models.BooleanField()
     analysed_url = models.URLField()    
     ftp_url = models.URLField()
-    date_sent_to_sequencing_facility = models.DateField()
-    date_recieved_from_sequencing_facility = models.DateField()
-    
-    contact = models.ForeignKey(Contact)
-    note = models.TextField()
-    
-    
-
 
     def __unicode__(self):
-        return self.bpa_sample_id + " " + self.sample_name
-
-
+        return "{}".format(self.filename)
 
 
 
