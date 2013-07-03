@@ -69,7 +69,7 @@ class Array(models.Model):
     Array
     """
     
-    bpa_id = models.ForeignKey(BPA_ID)
+    bpa_id = models.ForeignKey(BPASampleID)
     array_id = models.CharField(max_length=17, unique=True)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
@@ -85,14 +85,14 @@ class Sample(models.Model):
     """
 
     # ID
-    bpa_id = models.ForeignKey(BPA_ID)
+    bpa_id = models.ForeignKey(BPASampleID)
     sample_name = models.CharField(max_length=200)
     
     # Sample type
     sex = models.CharField(choices=GENDERS, max_length=1)    
     tumor_stage = models.ForeignKey(TumorStage)
     histological_subtype = models.CharField(max_length=50)
-    species = models.ForeignKey(Species)
+    organism = models.ForeignKey(Organism)
     dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source")
             
     requested_sequence_coverage = models.CharField(max_length=4)

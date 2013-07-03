@@ -1,15 +1,17 @@
 from django.db import models
 
 
-class BPA_ID(models.Model):
+class BPASampleID(models.Model):
     """
-    BPA Generated ID 
+    BPA Generated Sample ID
+    Each sample should be issued a Unique ID by BPA
     """
     
-    bpa_id = models.CharField(max_length=16, unique=True)
+    bpa_sample_id = models.CharField(max_length=16, unique=True)
+    note =  models.TextField()
 
     def __unicode__(self):
-        return self.bpa_id
+        return self.bpa_sample_id
     
     class Meta:
         verbose_name = 'BPA Identification'
@@ -52,16 +54,17 @@ class Facility(models.Model):
         verbose_name_plural = "Facilities"
         
         
-class Species(models.Model):
+class Organism(models.Model):
     """
-    A Species
-    """
-    name = models.CharField(max_length=100)
+    An Organism
+    """    
+    genus = models.CharField(max_length=100)
+    species = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return self.name
+        return "{}.{}".format(self.genus, self.species)
     
     class Meta:
-        verbose_name_plural = "Species"
+        verbose_name_plural = "Organisms"
         
     
