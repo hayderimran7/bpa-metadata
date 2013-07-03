@@ -1,4 +1,5 @@
 from django.db import models
+
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
 class BPASampleID(models.Model):
@@ -7,8 +8,8 @@ class BPASampleID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
     
-    bpa_sample_id = models.CharField(max_length=16, unique=True)
-    note =  models.TextField()
+    bpa_sample_id = models.CharField(max_length=16, blank=False, primary_key=True)
+    note = models.TextField(blank=True)
 
     def __unicode__(self):
         return self.bpa_sample_id
@@ -17,12 +18,29 @@ class BPASampleID(models.Model):
         verbose_name = 'BPA Identification'
         verbose_name_plural = "BPA IDs"
 
+
+class BPAProject(models.Model):
+    """
+    The BPA project
+    Examples would be: Melanoma, Coral 
+    """
+    name = models.CharField(max_length=20, primary_key=True)
+    description = models.CharField(max_length=200, blank=True)
+
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'BPA Project'
+        verbose_name_plural = "BPA Projects"
+    
+
 class Affiliation(models.Model):
     """
     Affiliation
     """
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=20, primary_key=True)
+    description = models.CharField(max_length=200, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -33,7 +51,7 @@ class Contact(models.Model):
     """
     name = models.CharField(max_length=200)
     affiliation = models.ForeignKey(Affiliation)
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
 
 
     def __unicode__(self):
@@ -45,7 +63,7 @@ class Facility(models.Model):
     The Sequencing Facility
     """
     name = models.CharField(max_length=100)
-    service = models.CharField(max_length=100)
+    service = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -74,7 +92,6 @@ class DNASource(models.Model):
     """
     source = models.CharField(max_length=100)
 
-
     def __unicode__(self):
         return self.source
 
@@ -86,19 +103,9 @@ class Sequencer(models.Model):
     """
     The Sequencer
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
+    description = models.TextField(blank=True)
         
-    def __unicode__(self):
-        return self.name
-
-
-class TumorStage(models.Model):
-    """
-    Tumor Stage
-    """
-    
-    name = models.CharField(max_length=100)
-
     def __unicode__(self):
         return self.name
 
@@ -145,17 +152,14 @@ class Array(models.Model):
 
 class Sample(models.Model):
     """
-    A Melanoma sample
+    The common base Sample
     """
 
     # ID
     bpa_id = models.ForeignKey(BPASampleID)
-    sample_name = models.CharField(max_length=200)
+    bpa_project = models.ForeignKey(BPAProject)
+    sample_name = models.CharField(max_length=200)    
     
-    # Sample type
-    sex = models.CharField(choices=GENDERS, max_length=1)    
-    tumor_stage = models.ForeignKey(TumorStage)
-    histological_subtype = models.CharField(max_length=50)
     organism = models.ForeignKey(Organism)
     dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source")
             
@@ -163,7 +167,7 @@ class Sample(models.Model):
    
     contact = models.ForeignKey(Contact)
     date_sent_to_sequencing_facility = models.DateField()
-    note = models.TextField()
+    note = models.TextField(blank=True)
     
 class Run(models.Model):
     """

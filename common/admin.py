@@ -1,10 +1,9 @@
 from django.contrib import admin
-from metadata.models import *
+from common.models import *
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification', {'fields': [('bpa_id', 'sample_name')]}),
-        ('Sample Type', {'fields' : [('sex', 'tumor_stage', 'histological_subtype')]}),
         (None, {'fields': ['date_sent_to_sequencing_facility', 'contact', 'note']}),
     ]
     
@@ -49,9 +48,10 @@ class AffiliationAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
     
 
+admin.site.register(BPASampleID)
+admin.site.register(BPAProject)
 admin.site.register(Contact)
 admin.site.register(Facility)
-admin.site.register(BPASampleID)
 admin.site.register(Organism)
 admin.site.register(Sample, SampleAdmin)
 admin.site.register(Library, LibraryAdmin)
@@ -60,7 +60,6 @@ admin.site.register(SequenceFile, SequenceFileAdmin)
 admin.site.register(DNASource)
 admin.site.register(LibraryProtocol)
 admin.site.register(Array)
-admin.site.register(TumorStage)
 admin.site.register(Sequencer)
 admin.site.register(Affiliation, AffiliationAdmin)
     
