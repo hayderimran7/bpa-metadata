@@ -30,7 +30,7 @@ class BPASampleID(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return self.bpa_sample_id
+        return self.id
     
     class Meta:
         verbose_name = 'BPA Identification'

@@ -18,6 +18,12 @@ def add_projects():
         project.description = descr
         project.save()
 
+def add_BPA_ID(id):
+    sid = BPASampleID()
+    sid.id = id
+    sid.project = BPAProject.objects.get(name='Melanoma')
+    sid.save()
+
 def ingest_melanoma():
     
     with open('./scripts/melanoma_sheet3.csv', 'rb') as melanoma_files:
@@ -52,7 +58,7 @@ def ingest_melanoma():
                   
         melanoma_files_reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
         for sample in melanoma_files_reader:
-            pass
+            add_BPA_ID(sample['BPA_ID'])
                         
         
 def run():
