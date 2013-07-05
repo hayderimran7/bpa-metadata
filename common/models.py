@@ -2,21 +2,6 @@ from django.db import models
 
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
-class BPASampleID(models.Model):
-    """
-    BPA Generated Sample ID
-    Each sample should be issued a Unique ID by BPA
-    """
-    
-    bpa_sample_id = models.CharField(max_length=16, blank=False, primary_key=True)
-    note = models.TextField(blank=True)
-
-    def __unicode__(self):
-        return self.bpa_sample_id
-    
-    class Meta:
-        verbose_name = 'BPA Identification'
-        verbose_name_plural = "BPA IDs"
 
 
 class BPAProject(models.Model):
@@ -34,6 +19,23 @@ class BPAProject(models.Model):
         verbose_name = 'BPA Project'
         verbose_name_plural = "BPA Projects"
     
+class BPASampleID(models.Model):
+    """
+    BPA Generated Sample ID
+    Each sample should be issued a Unique ID by BPA
+    """
+    
+    id = models.CharField(max_length=16, blank=False, primary_key=True)
+    project = models.ForeignKey(BPAProject)
+    note = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return self.bpa_sample_id
+    
+    class Meta:
+        verbose_name = 'BPA Identification'
+        verbose_name_plural = "BPA IDs"
+
 
 class Affiliation(models.Model):
     """
@@ -181,7 +183,7 @@ class Run(models.Model):
     DNA_extraction_protocol = models.CharField(max_length=200)
     passage_number = models.IntegerField()
      
-    # Facilitities
+    # Facilities
     sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility')
     array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility')
     whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility')    

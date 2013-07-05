@@ -1,10 +1,16 @@
 # Django settings for bpametadata project.
 
 import os
+import socket
 
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
-DEBUG = True
+
+if socket.gethostname() == 'productionserver.com':
+    DEBUG = False
+else:
+    DEBUG = True
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -121,6 +127,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
