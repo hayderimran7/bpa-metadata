@@ -19,22 +19,22 @@ class BPAProject(models.Model):
         verbose_name = 'BPA Project'
         verbose_name_plural = "BPA Projects"
     
-class BPASampleID(models.Model):
+class BPASampleLabel(models.Model):
     """
-    BPA Generated Sample ID
+    BPA Generated Label
     Each sample should be issued a Unique ID by BPA
     """
     
-    id = models.CharField(max_length=16, blank=False, primary_key=True)
+    label = models.CharField(max_length=16, blank=False, primary_key=True)
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return self.id
+        return self.label
     
     class Meta:
-        verbose_name = 'BPA Identification'
-        verbose_name_plural = "BPA IDs"
+        verbose_name = 'BPA Sample Label'
+        verbose_name_plural = "BPA Label"
 
 
 class Affiliation(models.Model):
@@ -79,13 +79,16 @@ class Organism(models.Model):
     An Organism
     """    
     genus = models.CharField(max_length=100)
-    species = models.CharField(max_length=100)
+    species = models.CharField(max_length=100, primary_key=True)
+    classification = models.URLField('NCBI organismal classification', blank=True)   
+    note = models.TextField(blank=True) 
 
     def __unicode__(self):
         return "{}.{}".format(self.genus, self.species)
     
     class Meta:
         verbose_name_plural = "Organisms"
+        unique_together = ('genus', 'species')
         
 
 class DNASource(models.Model):
@@ -142,7 +145,7 @@ class Array(models.Model):
     Array
     """
     
-    bpa_id = models.ForeignKey(BPASampleID)
+    bpa_id = models.ForeignKey(BPASampleLabel)
     array_id = models.CharField(max_length=17, unique=True)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
@@ -157,19 +160,25 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    # ID
-    bpa_id = models.ForeignKey(BPASampleID)
-    bpa_project = models.ForeignKey(BPAProject)
-    sample_name = models.CharField(max_length=200)    
+    label = models.ForeignKey(BPASampleLabel)
+    project = models.ForeignKey(BPAProject)
+    name = models.CharField(max_length=200)    
     
     organism = models.ForeignKey(Organism)
-    dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source")
+    dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source", blank=True, null=True)
             
-    requested_sequence_coverage = models.CharField(max_length=4)
+    requested_sequence_coverage = models.CharField(max_length=4, blank=True)
    
-    contact = models.ForeignKey(Contact)
-    date_sent_to_sequencing_facility = models.DateField()
+    contact = models.ForeignKey(Contact, blank=True, null=True)
+    date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
     note = models.TextField(blank=True)
+    
+    def __unicode__(self):
+        return "{} {} {}".format(self.bpa_label, bpa_project, sample_name)
+
+    class Meta:
+        verbose_name_plural = "Samples"
+    
     
 class Run(models.Model):
     """
