@@ -3,7 +3,10 @@ from datetime import date
 
 from common.models import *
 
+MELANOMA_SAMPLE_FILE='./scripts/melanoma_sheet3.csv'
+
 INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
+
 
 def add_organism(genus="", species=""):
     organism = Organism(genus=genus, species=species)
@@ -25,7 +28,6 @@ def add_projects():
         print("Ingested project " + str(project))
 
 
-
 def ingest_bpa_ids(data):
     """
     The BPA ID's are unique
@@ -43,22 +45,29 @@ def ingest_bpa_ids(data):
     for id in id_set:
         add_BPA_ID(id)
 
-def add_sample(vals):
-    sample = Sample()
-    sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['BPA_ID'])
-    sample.project = BPAProject.objects.get(name='Melanoma')
-    sample.name = vals['sample_name']
-    sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
-    sample.note = INGEST_NOTE
-    sample.save()
-    print("Ingested Melanoma sample {}" + sample.name)
+def ingest_samples(samples):
+    
+    def add_sample(vals):
+        sample = Sample()
+        sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['BPA_ID'])
+        sample.project = BPAProject.objects.get(name='Melanoma')
+        sample.name = vals['sample_name']
+        sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
+        sample.note = INGEST_NOTE
+        sample.save()
+        print("Ingested Melanoma sample {}" + sample.name)
 
+    for sample in samples:
+        add_sample(sample)
+
+def ingest_contacts(data):
+    
 
 def get_melanoma_sample_data():
     """
-    The datasets is relatively small, so make a in-memory copy to simlify some operations. 
+    The datasets is relatively small, so make a in-memory copy to simplify some operations. 
     """
-    with open('./scripts/melanoma_sheet3.csv', 'rb') as melanoma_files:
+    with open(MELANOMA_SAMPLE_FILE, 'rb') as melanoma_files:
         fieldnames = ['BPA_ID', 
                       'sample_name', 
                       'sequence_coverage',
@@ -92,13 +101,12 @@ def get_melanoma_sample_data():
         return list(melanoma_files_reader)
 
 
-def ingest_melanoma():
-    
+def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
+        
+        ingest_contacts(sample_data)
         ingest_bpa_ids(sample_data)
-    
-        for sample in sample_data:
-            add_sample(sample)
+        ingest_samples(sample_data)
                         
         
 def run():
