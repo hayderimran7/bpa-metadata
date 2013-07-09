@@ -3,9 +3,12 @@ from common.models import *
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Sample Identification', {'fields': [('bpa_label', 'sample_name')]}),
+        ('Sample Identification', {'fields': [('bpa_id', 'name')]}),
+        ('Source', {'fields':['organism', 'dna_source']}),
         (None, {'fields': ['date_sent_to_sequencing_facility', 'contact', 'note']}),
     ]
+    
+    list_display = ('bpa_id', 'name', 'project', 'note')
     
     
 class LibraryAdmin(admin.ModelAdmin):
@@ -51,13 +54,13 @@ class BPAProjectAdmin(admin.ModelAdmin):
     fields = (('name', 'description'), )
     list_display = ('name', 'description')
     
-class BPASampleLabelAdmin(admin.ModelAdmin):
-    fields = (('label', 'project'), 'note')
-    list_display = ('label', 'project', 'note')
+class BPAUniqueIDAdmin(admin.ModelAdmin):
+    fields = (('bpa_id', 'project'), 'note')
+    list_display = ('bpa_id', 'project', 'note')
     
     
 admin.site.register(BPAProject, BPAProjectAdmin)
-admin.site.register(BPASampleLabel, BPASampleLabelAdmin)
+admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
 admin.site.register(Contact)
 admin.site.register(Facility)
 admin.site.register(Organism)

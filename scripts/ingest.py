@@ -3,10 +3,11 @@ from datetime import date
 
 from common.models import *
 
+INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
+
 def add_organism(genus="", species=""):
     organism = Organism(genus=genus, species=species)
     organism.save() 
-
 
 
 def add_projects():
@@ -23,26 +24,42 @@ def add_projects():
         project.save()
         print("Ingested project " + str(project))
 
-def add_BPA_label(label):
-    lbl = BPASampleLabel(label=label)
-    lbl.project = BPAProject.objects.get(name='Melanoma')
-    lbl.note = "Ingested from GoogleDocs on {}".format(date.today()) 
-    lbl.save()
-    print("Ingested BPA label " + str(lbl))
 
+
+def ingest_bpa_ids(data):
+    """
+    The BPA ID's are unique
+    """
+    def add_BPA_ID(id):
+        lbl = BPAUniqueID(bpa_id=id)
+        lbl.project = BPAProject.objects.get(name='Melanoma')
+        lbl.note = INGEST_NOTE
+        lbl.save()
+        print("Ingested BPA Unique ID: " + str(lbl))    
+    
+    id_set = set()
+    for e in data:
+        id_set.add(e['BPA_ID']) 
+    for id in id_set:
+        add_BPA_ID(id)
 
 def add_sample(vals):
     sample = Sample()
-    sample.label = BPASampleLabel.objects.get(label=vals['BPA_label'])
+    sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['BPA_ID'])
     sample.project = BPAProject.objects.get(name='Melanoma')
     sample.name = vals['sample_name']
     sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
+    sample.note = INGEST_NOTE
     sample.save()
+    print("Ingested Melanoma sample {}" + sample.name)
 
-def ingest_melanoma():
-    
+
+def get_melanoma_sample_data():
+    """
+    The datasets is relatively small, so make a in-memory copy to simlify some operations. 
+    """
     with open('./scripts/melanoma_sheet3.csv', 'rb') as melanoma_files:
-        fieldnames = ['BPA_label', 
+        fieldnames = ['BPA_ID', 
                       'sample_name', 
                       'sequence_coverage',
                       'sequencing_facility',
@@ -72,8 +89,15 @@ def ingest_melanoma():
                       'md5_cheksum']
                   
         melanoma_files_reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
-        for sample in melanoma_files_reader:
-            add_BPA_label(sample['BPA_label'])
+        return list(melanoma_files_reader)
+
+
+def ingest_melanoma():
+    
+        sample_data = get_melanoma_sample_data()
+        ingest_bpa_ids(sample_data)
+    
+        for sample in sample_data:
             add_sample(sample)
                         
         

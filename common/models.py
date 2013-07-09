@@ -19,22 +19,22 @@ class BPAProject(models.Model):
         verbose_name = 'BPA Project'
         verbose_name_plural = "BPA Projects"
     
-class BPASampleLabel(models.Model):
+class BPAUniqueID(models.Model):
     """
     BPA Generated Label
     Each sample should be issued a Unique ID by BPA
     """
     
-    label = models.CharField(max_length=16, blank=False, primary_key=True)
+    bpa_id = models.CharField("BPA Unique ID", max_length=16, blank=False, primary_key=True)
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
-
+    
     def __unicode__(self):
-        return self.label
+        return self.bpa_id
     
     class Meta:
-        verbose_name = 'BPA Sample Label'
-        verbose_name_plural = "BPA Label"
+        verbose_name = 'BPA Unique ID'
+        verbose_name_plural = "BPA Unique ID's"
 
 
 class Affiliation(models.Model):
@@ -84,7 +84,7 @@ class Organism(models.Model):
     note = models.TextField(blank=True) 
 
     def __unicode__(self):
-        return "{}.{}".format(self.genus, self.species)
+        return "{} {}".format(self.genus, self.species)
     
     class Meta:
         verbose_name_plural = "Organisms"
@@ -145,7 +145,7 @@ class Array(models.Model):
     Array
     """
     
-    bpa_id = models.ForeignKey(BPASampleLabel)
+    bpa_id = models.ForeignKey(BPAUniqueID)
     array_id = models.CharField(max_length=17, unique=True)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
@@ -160,7 +160,7 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    label = models.ForeignKey(BPASampleLabel)
+    bpa_id = models.ForeignKey(BPAUniqueID, primary_key=True)
     project = models.ForeignKey(BPAProject)
     name = models.CharField(max_length=200)    
     
@@ -174,7 +174,7 @@ class Sample(models.Model):
     note = models.TextField(blank=True)
     
     def __unicode__(self):
-        return "{} {} {}".format(self.bpa_label, bpa_project, sample_name)
+        return "{} {} {}".format(self.bpa_id, self.project, self.name)
 
     class Meta:
         verbose_name_plural = "Samples"
@@ -212,7 +212,7 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
     
-    run =  models.ForeignKey(Run)
+    run = models.ForeignKey(Run)
     date_received_from_sequencing_facility = models.DateField()
     filename = models.CharField(max_length=300)
     md5cheksum = models.CharField('MD5 Checksum', max_length=32)
