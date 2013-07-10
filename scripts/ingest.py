@@ -2,6 +2,7 @@ import csv
 from datetime import date
 
 from common.models import *
+from melanoma.models import *
 
 MELANOMA_SAMPLE_FILE='./scripts/melanoma_sheet3.csv'
 
@@ -48,19 +49,22 @@ def ingest_bpa_ids(data):
 def ingest_samples(samples):
     
     def add_sample(vals):
-        sample = Sample()
+        sample = MelanomaSample()
         sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['BPA_ID'])
-        sample.project = BPAProject.objects.get(name='Melanoma')
         sample.name = vals['sample_name']
         sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
         sample.note = INGEST_NOTE
         sample.save()
-        print("Ingested Melanoma sample {}" + sample.name)
+        print("Ingested Melanoma sample {}".format(sample.name))
 
     for sample in samples:
         add_sample(sample)
 
 def ingest_contacts(data):
+    """
+    Contacts associated with the Melanoma BPA poject
+    """
+    pass
     
 
 def get_melanoma_sample_data():
@@ -106,6 +110,7 @@ def ingest_melanoma():
         
         ingest_contacts(sample_data)
         ingest_bpa_ids(sample_data)
+        ingest_contacts(sample_data)
         ingest_samples(sample_data)
                         
         

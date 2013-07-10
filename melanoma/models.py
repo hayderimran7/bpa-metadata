@@ -1,5 +1,5 @@
 from django.db import models
-import common.models 
+from common.models import Sample, BPAUniqueID
 from common.models import GENDERS
 
 
@@ -14,11 +14,26 @@ class TumorStage(models.Model):
         return self.name
     
     
-class Sample(common.models.Sample):
+class Array(models.Model):
+    """
+    Array
+    """
+    
+    bpa_id = models.ForeignKey(BPAUniqueID)
+    array_id = models.CharField(max_length=17, unique=True)
+    batch_number = models.IntegerField()
+    well_id = models.CharField(max_length=4)
+    MIA_id = models.CharField(max_length=50)
+    call_rate = models.FloatField()
+    
+    gender = models.CharField(max_length=1, choices=GENDERS)
+    
+    
+class MelanomaSample(Sample):
     """
     Melanoma specific Sample
     """
     
-    sex = models.CharField(choices=GENDERS, max_length=1)    
-    tumor_stage = models.ForeignKey(TumorStage)
-    histological_subtype = models.CharField(max_length=50)
+    sex = models.CharField(choices=GENDERS, max_length=1, null=True)    
+    tumor_stage = models.ForeignKey(TumorStage, null=True)
+    histological_subtype = models.CharField(max_length=50, null=True)

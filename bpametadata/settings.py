@@ -117,7 +117,6 @@ ROOT_URLCONF = 'bpametadata.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'bpametadata.wsgi.application'
 
-
 TEMPLATE_DIRS = (PROJECT_PATH + '/templates/')
 
 INSTALLED_APPS = (
@@ -132,9 +131,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'userprofile',
     'common',
     'melanoma',
-    'coral'
+    'coral',
 )
 
 # A sample logging configuration. The only tangible logging

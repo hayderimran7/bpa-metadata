@@ -5,16 +5,15 @@ class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification', {'fields': [('bpa_id', 'name')]}),
         ('Source', {'fields':['organism', 'dna_source']}),
-        (None, {'fields': ['date_sent_to_sequencing_facility', 'contact', 'note']}),
+        (None, {'fields': ['date_sent_to_sequencing_facility', 'contact_scientist', 'note']}),
     ]
     
-    list_display = ('bpa_id', 'name', 'project', 'note')
+    list_display = ('bpa_id', 'name', 'note')
     
     
 class LibraryAdmin(admin.ModelAdmin):
     list_display = ('base_pairs', 'type', 'protocol')
 
-    
     
 class RunAdmin(admin.ModelAdmin):
      fieldsets = [       
@@ -57,11 +56,11 @@ class BPAProjectAdmin(admin.ModelAdmin):
 class BPAUniqueIDAdmin(admin.ModelAdmin):
     fields = (('bpa_id', 'project'), 'note')
     list_display = ('bpa_id', 'project', 'note')
-    
-    
+
+
+
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
-admin.site.register(Contact)
 admin.site.register(Facility)
 admin.site.register(Organism)
 admin.site.register(Sample, SampleAdmin)
@@ -70,9 +69,8 @@ admin.site.register(Run, RunAdmin)
 admin.site.register(SequenceFile, SequenceFileAdmin)
 admin.site.register(DNASource)
 admin.site.register(LibraryProtocol)
-admin.site.register(Array)
 admin.site.register(Sequencer)
-admin.site.register(Affiliation, AffiliationAdmin)
+
     
     
     

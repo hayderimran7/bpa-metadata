@@ -1,7 +1,8 @@
 from django.db import models
 
-GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
+from userprofile.models import UserProfile
 
+GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
 
 class BPAProject(models.Model):
@@ -36,29 +37,6 @@ class BPAUniqueID(models.Model):
         verbose_name = 'BPA Unique ID'
         verbose_name_plural = "BPA Unique ID's"
 
-
-class Affiliation(models.Model):
-    """
-    Affiliation
-    """
-    name = models.CharField(max_length=20, primary_key=True)
-    description = models.CharField(max_length=200, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-class Contact(models.Model):
-    """
-    Contact Detail
-    """
-    name = models.CharField(max_length=200)
-    affiliation = models.ForeignKey(Affiliation)
-    email = models.EmailField(blank=True)
-
-
-    def __unicode__(self):
-        return self.name
-    
     
 class Facility(models.Model):
     """
@@ -140,19 +118,6 @@ class Library(models.Model):
     class Meta:
         verbose_name_plural = "Libraries"
 
-class Array(models.Model):
-    """
-    Array
-    """
-    
-    bpa_id = models.ForeignKey(BPAUniqueID)
-    array_id = models.CharField(max_length=17, unique=True)
-    batch_number = models.IntegerField()
-    well_id = models.CharField(max_length=4)
-    MIA_id = models.CharField(max_length=50)
-    call_rate = models.FloatField()
-    
-    gender = models.CharField(max_length=1, choices=GENDERS)
 
 
 class Sample(models.Model):
@@ -160,8 +125,7 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID, primary_key=True)
-    project = models.ForeignKey(BPAProject)
+    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True)
     name = models.CharField(max_length=200)    
     
     organism = models.ForeignKey(Organism)
@@ -169,12 +133,12 @@ class Sample(models.Model):
             
     requested_sequence_coverage = models.CharField(max_length=4, blank=True)
    
-    contact = models.ForeignKey(Contact, blank=True, null=True)
+    contact_scientist = models.ForeignKey(UserProfile, blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
     note = models.TextField(blank=True)
     
     def __unicode__(self):
-        return "{} {} {}".format(self.bpa_id, self.project, self.name)
+        return "{} {}".format(self.bpa_id, self.name)
 
     class Meta:
         verbose_name_plural = "Samples"
