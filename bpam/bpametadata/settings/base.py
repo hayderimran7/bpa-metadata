@@ -2,6 +2,16 @@
 
 import os
 import socket
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
+
 
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
