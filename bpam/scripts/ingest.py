@@ -4,7 +4,7 @@ from datetime import date
 from common.models import *
 from melanoma.models import *
 
-MELANOMA_SAMPLE_FILE='./scripts/melanoma_sheet3.csv'
+MELANOMA_SAMPLE_FILE='./scripts/melanoma_samples.csv'
 
 INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
 

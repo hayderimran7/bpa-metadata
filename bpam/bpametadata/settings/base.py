@@ -5,14 +5,6 @@ import socket
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-
 PROJECT_DIR = Path(__file__).ancestor(3)
 
 MEDIA_ROOT = PROJECT_DIR.child("media")
@@ -26,7 +18,6 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     PROJECT_DIR.child("templates"),
 )
-
 
 DEBUG=False
 
@@ -162,3 +153,13 @@ LOGGING = {
         },
     }
 }
+
+
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
+
