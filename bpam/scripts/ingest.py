@@ -5,6 +5,7 @@ from common.models import *
 from melanoma.models import *
 
 MELANOMA_SAMPLE_FILE='./scripts/melanoma_samples.csv'
+MELANOMA_ARRAY_FILE='./scripts/melanoma_arrays.csv'
 
 INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
 
@@ -65,6 +66,7 @@ def ingest_contacts(data):
     Contacts associated with the Melanoma BPA poject
     """
     pass
+    
     
 
 def get_melanoma_sample_data():
