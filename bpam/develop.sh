@@ -1,5 +1,7 @@
 #!/bin/bash
 
-python manage.py syncdb --settings=bpametadata.settings.dev
-python manage.py runscript ingest --settings=bpametadata.settings.dev
-python manage.py runserver --settings=bpametadata.settings.dev
+DEV_SETTINGS=bpametadata.settings.dev
+
+python manage.py syncdb --settings=${DEV_SETTINGS}
+python manage.py runscript ingest --settings=${DEV_SETTINGS}
+python manage.py runserver --settings=${DEV_SETTINGS}

@@ -119,7 +119,6 @@ class Library(models.Model):
         verbose_name_plural = "Libraries"
 
 
-
 class Sample(models.Model):
     """
     The common base Sample
