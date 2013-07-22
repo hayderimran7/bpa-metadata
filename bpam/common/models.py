@@ -142,6 +142,7 @@ class Sample(models.Model):
 
     class Meta:
         verbose_name_plural = "Samples"
+        abstract = True
     
     
 class Run(models.Model):
