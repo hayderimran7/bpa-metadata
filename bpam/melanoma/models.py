@@ -14,17 +14,17 @@ class TumorStage(models.Model):
     
 class Array(models.Model):
     '''Array'''
-
     
     bpa_id = models.ForeignKey(BPAUniqueID)
-    array_id = models.CharField(max_length=17, unique=True)
+    array_id = models.CharField(max_length=17)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
-    MIA_id = models.CharField(max_length=50)
-    call_rate = models.FloatField()
-    
+    mia_id = models.CharField(max_length=50)
+    call_rate = models.FloatField()    
     gender = models.CharField(max_length=1, choices=GENDERS)
     
+    def __unicode__(self):
+        return "{} {} {}".format(self.bpa_id, self.array_id, self.mia_id)
     
 class MelanomaSample(Sample):
     '''Melanoma specific Sample'''

@@ -43,9 +43,12 @@ class SampleAdmin(admin.ModelAdmin):
     ]
     
     list_display = ('bpa_id', 'name', 'note')
+    
+class ArrayAdmin(admin.ModelAdmin):
+    list_display = ('bpa_id', 'array_id', 'mia_id')
 
 admin.site.register(TumorStage)
-admin.site.register(Array)
+admin.site.register(Array, ArrayAdmin)
 admin.site.register(MelanomaSample, SampleAdmin)
 admin.site.register(MelanomaRun, MelanomaRunAdmin)
 admin.site.register(MelanomaSequenceFile, MelanomaSequenceFileAdmin)

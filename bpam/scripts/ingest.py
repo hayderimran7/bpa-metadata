@@ -1,6 +1,5 @@
 import csv
 from datetime import date
-
 from common.models import *
 from melanoma.models import *
 
@@ -43,7 +42,7 @@ def ingest_bpa_ids(data):
     
     id_set = set()
     for e in data:
-        id_set.add(e['BPA_ID']) 
+        id_set.add(e['bpa_id']) 
     for id in id_set:
         add_BPA_ID(id)
 
@@ -51,7 +50,7 @@ def ingest_samples(samples):
     
     def add_sample(vals):
         sample = MelanomaSample()
-        sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['BPA_ID'])
+        sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['bpa_id'])
         sample.name = vals['sample_name']
         sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
         sample.note = INGEST_NOTE
@@ -68,13 +67,48 @@ def ingest_contacts(data):
     pass
     
     
+def ingest_arrays(arrays):
+    
+    def get_bpa_id(bpa_id):
+        try:
+            id = BPAUniqueID.objects.get(bpa_id=bpa_id)
+        except BPAUniqueID.DoesNotExist:
+            print("BPA ID {} does not exit, adding it".format(bpa_id))
+            id = BPAUniqueID(bpa_id=bpa_id)
+            id.project = BPAProject.objects.get(name='Melanoma')
+            id.note = "Created during array ingestion on {}".format(date.today())
+            id.save()      
+                  
+        return id
+        
+    
+    def get_gender(str):
+        str = str.strip().lower()
+        if str == "male": return 'M'
+        if str == "female": return 'F'
+        return 'U'
+    
+    for e in arrays:
+        array = Array()        
+        array.batch_number = int(e['batch_no'])        
+        array.bpa_id = get_bpa_id(e['bpa_id'])
+        array.mia_id = e['mia_id']
+        array.array_id = e['array_id']
+        array.call_rate = float(e['call_rate'])
+        array.gender = get_gender(e['gender'])
+        array.well_id = e['well_id']
+        
+        array.save()
+        
+        
+    
 
 def get_melanoma_sample_data():
     """
     The datasets is relatively small, so make a in-memory copy to simplify some operations. 
     """
     with open(MELANOMA_SAMPLE_FILE, 'rb') as melanoma_files:
-        fieldnames = ['BPA_ID', 
+        fieldnames = ['bpa_id', 
                       'sample_name', 
                       'sequence_coverage',
                       'sequencing_facility',
@@ -103,8 +137,26 @@ def get_melanoma_sample_data():
                       'sequence_filename',
                       'md5_cheksum']
                   
-        melanoma_files_reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
-        return list(melanoma_files_reader)
+        reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
+        return list(reader)
+
+
+def get_array_data():
+    """
+    Copy if the 'Array Data' Tab from the Melanoma_study_metadata document
+    """
+    
+    with open(MELANOMA_ARRAY_FILE, 'rb') as array_data:
+        fieldnames = ['batch_no',
+                      'well_id',
+                      'bpa_id',
+                      'mia_id',
+                      'array_id',
+                      'call_rate',
+                      'gender',                      
+                      ]
+        reader = csv.DictReader(array_data, fieldnames=fieldnames)
+        return list(reader)
 
 
 def ingest_melanoma():    
@@ -114,10 +166,15 @@ def ingest_melanoma():
         ingest_bpa_ids(sample_data)
         ingest_contacts(sample_data)
         ingest_samples(sample_data)
+        ingest_arrays(get_array_data())
                         
         
 def run():
     add_organism(genus="Homo", species="Sapient")
     add_projects()
     ingest_melanoma()
+    
+def run2():
+    ingest_arrays(get_array_data())
+    
     
