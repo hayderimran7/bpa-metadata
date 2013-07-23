@@ -139,8 +139,7 @@ class Sample(models.Model):
     def __unicode__(self):
         return "{} {}".format(self.bpa_id, self.name)
 
-    class Meta:
-        verbose_name_plural = "Samples"
+    class Meta:        
         abstract = True
     
     
@@ -149,7 +148,6 @@ class Run(models.Model):
     A Single Run
     """
     
-    sample = models.ForeignKey(Sample)
     date_recieved_from_sequencing_facility = models.DateField()
      
     library = models.ForeignKey(Library)   
@@ -166,9 +164,9 @@ class Run(models.Model):
     run_number = models.IntegerField()
     flow_cell_id = models.CharField(max_length=10)
     lane_number = models.IntegerField()
-
-    def __unicode__(self):
-        return "Run {} for {}".format(self.run_number, self.sample.sample_name)
+   
+    class Meta:
+        abstract = True
 
 
 class SequenceFile(models.Model):
@@ -176,7 +174,6 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
     
-    run = models.ForeignKey(Run)
     date_received_from_sequencing_facility = models.DateField()
     filename = models.CharField(max_length=300)
     md5cheksum = models.CharField('MD5 Checksum', max_length=32)
@@ -188,6 +185,7 @@ class SequenceFile(models.Model):
     def __unicode__(self):
         return "{}".format(self.filename)
 
-
+    class Meta:
+        abstract = True
 
 
