@@ -46,6 +46,7 @@ class MelanomaRun(Run):
     
 class MelanomaSequenceFile(SequenceFile):
     '''Resulting Sequence Files resulting from a run'''
+    
     run = models.ForeignKey(MelanomaRun)
 
     

@@ -37,20 +37,30 @@ class BPAUniqueID(models.Model):
         verbose_name = 'BPA Unique ID'
         verbose_name_plural = "BPA Unique ID's"
 
+
+class Service(models.Model):
+    ''' A service rendered by a facility'''
+    
+    description = models.CharField(max_length=300)
+       
+    def __unicode__(self):
+        return self.description
+    
     
 class Facility(models.Model):
     """
     The Sequencing Facility
     """
     name = models.CharField(max_length=100)
-    service = models.CharField(max_length=100, blank=True)
+    service = models.ForeignKey(Service)
+    note =  models.TextField(blank=True)
 
     def __unicode__(self):
         return self.name
     
     class Meta:
         verbose_name_plural = "Facilities"
-        
+
         
 class Organism(models.Model):
     """
@@ -176,11 +186,11 @@ class SequenceFile(models.Model):
     
     date_received_from_sequencing_facility = models.DateField()
     filename = models.CharField(max_length=300)
-    md5cheksum = models.CharField('MD5 Checksum', max_length=32)
+    md5 = models.CharField('MD5 Checksum', max_length=32)
     BPA_archive_url = models.URLField('BPA Archive URL')    
     analysed = models.BooleanField()
     analysed_url = models.URLField()    
-    ftp_url = models.URLField()
+    ftp_url = models.URLField('FTP URL')
 
     def __unicode__(self):
         return "{}".format(self.filename)

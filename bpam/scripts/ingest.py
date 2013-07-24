@@ -99,9 +99,7 @@ def ingest_arrays(arrays):
         array.well_id = e['well_id']
         
         array.save()
-        
-        
-    
+                
 
 def get_melanoma_sample_data():
     """

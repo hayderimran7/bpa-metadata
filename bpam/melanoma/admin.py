@@ -10,7 +10,7 @@ from melanoma.models import (TumorStage,
 class MelanomaSequenceFileAdmin(admin.ModelAdmin):
      fieldsets = [       
       
-        (None, {'fields' : [('filename', 'md5cheksum'),
+        (None, {'fields' : [('filename', 'md5'),
                               'BPA_archive_url',
                               ('analysed', 'analysed_url'),
                               'ftp_url',
