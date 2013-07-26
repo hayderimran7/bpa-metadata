@@ -65,10 +65,19 @@ def ingest_contacts():
     """
     Contacts associated with the Melanoma BPA poject
     """
-            
-    from userprofile.models import UserProfile
+    
     from django.contrib.auth.models import Group
-    from django.contrib.auth.models import User
+    from django.contrib.auth import get_user_model
+    
+    def get_group(name):
+        try:
+            group = Group.objects.get(name=name)
+        except Group.DoesNotExist:
+            print("Group {} does not exit, adding it".format(name))
+            group = Group(name=name)            
+            group.save()
+            
+        return group      
     
     def get_data():
         # Location ,Job Title / Department,Surname,First Name,Direct Line,Email
@@ -87,23 +96,22 @@ def ingest_contacts():
     contacts = get_data()
     
     for contact in contacts:
-        # group
-        group = Group()
-        group.name = contact['group'].strip()
-        group.save()
-                 
+        User = get_user_model()
         user = User()
         user.username = contact['username'].strip()
         user.email = contact['email'].strip()
-        user.fist_name = contact['first_name'].strip()
+        user.first_name = contact['first_name'].strip()
         user.last_name = contact['last_name'].strip()        
-        user.group = group
+        user.telephone = contact['telephone']
         
-            
-        userp = UserProfile()
-        userp.telephone = contact['telephone']
-        userp.user = user
-        userp.save()
+        group = get_group(contact['group'].strip())
+        user.groups.add(group)
+        
+        user.save()
+        
+
+
+        
         
 def ingest_arrays(arrays):
     
@@ -198,9 +206,7 @@ def get_array_data():
 def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
         
-        ingest_contacts(sample_data)
         ingest_bpa_ids(sample_data)
-        ingest_contacts(sample_data)
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())
                         

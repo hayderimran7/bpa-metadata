@@ -1,9 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from userprofile.models import UserProfile
 
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
+
+class BPAUser(AbstractUser):
+    """
+    Custom BPA User with extra fields
+    """
+    
+    department = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=12)
+    
 
 class BPAProject(models.Model):
     """
@@ -142,7 +153,7 @@ class Sample(models.Model):
             
     requested_sequence_coverage = models.CharField(max_length=4, blank=True)
    
-    contact_scientist = models.ForeignKey(UserProfile, blank=True, null=True)
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
     note = models.TextField(blank=True)
     
