@@ -3,8 +3,9 @@ from datetime import date
 from common.models import *
 from melanoma.models import *
 
-MELANOMA_SAMPLE_FILE='./scripts/melanoma_samples.csv'
-MELANOMA_ARRAY_FILE='./scripts/melanoma_arrays.csv'
+MELANOMA_SAMPLE_FILE='./scripts/data/melanoma_samples.csv'
+MELANOMA_ARRAY_FILE='./scripts/data/melanoma_arrays.csv'
+MELANOMA_CONTACT_DATA='./scripts/data/melanoma_contacts.csv'
 
 INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
 
@@ -60,13 +61,50 @@ def ingest_samples(samples):
     for sample in samples:
         add_sample(sample)
 
-def ingest_contacts(data):
+def ingest_contacts():
     """
     Contacts associated with the Melanoma BPA poject
     """
-    pass
+            
+    from userprofile.models import UserProfile
+    from django.contrib.auth.models import Group
+    from django.contrib.auth.models import User
     
+    def get_data():
+        # Location ,Job Title / Department,Surname,First Name,Direct Line,Email
+        with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
+            fieldnames = ['group',
+                          'department',
+                          'last_name',
+                          'first_name',
+                          'telephone',
+                          'email',
+                          'username'
+                          ]
+            reader = csv.DictReader(contacts, fieldnames=fieldnames)
+            return list(reader)
     
+    contacts = get_data()
+    
+    for contact in contacts:
+        # group
+        group = Group()
+        group.name = contact['group'].strip()
+        group.save()
+                 
+        user = User()
+        user.username = contact['username'].strip()
+        user.email = contact['email'].strip()
+        user.fist_name = contact['first_name'].strip()
+        user.last_name = contact['last_name'].strip()        
+        user.group = group
+        
+            
+        userp = UserProfile()
+        userp.telephone = contact['telephone']
+        userp.user = user
+        userp.save()
+        
 def ingest_arrays(arrays):
     
     def get_bpa_id(bpa_id):
@@ -168,11 +206,12 @@ def ingest_melanoma():
                         
         
 def run():
+    ingest_contacts()
     add_organism(genus="Homo", species="Sapient")
     add_projects()
     ingest_melanoma()
     
 def run2():
-    ingest_arrays(get_array_data())
+    ingest_contacts()
     
     
