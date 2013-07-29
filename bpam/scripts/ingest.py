@@ -80,7 +80,6 @@ def ingest_contacts():
         return group      
     
     def get_data():
-        # Location ,Job Title / Department,Surname,First Name,Direct Line,Email
         with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
             fieldnames = ['group',
                           'department',
@@ -103,6 +102,7 @@ def ingest_contacts():
         user.first_name = contact['first_name'].strip()
         user.last_name = contact['last_name'].strip()        
         user.telephone = contact['telephone']
+        user.save()
         
         group = get_group(contact['group'].strip())
         user.groups.add(group)
