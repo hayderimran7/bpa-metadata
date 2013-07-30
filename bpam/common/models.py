@@ -1,22 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
+from bpaauth.models import BPAUser
 
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
-
-
-class BPAUser(AbstractUser):
-    """
-    Custom BPA User with extra fields
-    """
-        
-    department = models.CharField(max_length=100, blank=True)
-    title = models.CharField(max_length=100, blank=True)
-    telephone = models.CharField(max_length=12, blank=True)
-    note = models.TextField(blank=True)
-    
 
 class BPAProject(models.Model):
     """

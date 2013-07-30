@@ -1,10 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-
 
 from .models import (BPAProject,
                      BPAUniqueID,
-                     BPAUser,
                      Service,
                      Facility,
                      Organism,
@@ -40,7 +37,6 @@ class FacilityAdmin(admin.ModelAdmin):
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
-admin.site.register(BPAUser, UserAdmin)
 admin.site.register(Facility)
 admin.site.register(Service)
 admin.site.register(Organism)

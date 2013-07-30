@@ -1,5 +1,6 @@
 import csv
 from datetime import date
+from bpaauth.models import BPAUser
 from common.models import *
 from melanoma.models import *
 

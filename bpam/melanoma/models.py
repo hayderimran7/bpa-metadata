@@ -1,7 +1,6 @@
 from django.db import models
-from common.models import Sample, Run, BPAUniqueID, SequenceFile
-from common.models import GENDERS
-
+from bpaauth.models import BPAUser
+from common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS
 
 class TumorStage(models.Model):
     '''Tumor Stage'''

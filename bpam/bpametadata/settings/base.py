@@ -40,7 +40,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'common.BPAUser'
+AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -120,7 +120,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.admin',
-    'django.contrib.admindocs',    
+    'django.contrib.admindocs',
+    'bpaauth',
     'common',
     'melanoma',
     'coral',
