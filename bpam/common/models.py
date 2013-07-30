@@ -11,9 +11,11 @@ class BPAUser(AbstractUser):
     """
     Custom BPA User with extra fields
     """
-    
-    department = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=12)
+        
+    department = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=100, blank=True)
+    telephone = models.CharField(max_length=12, blank=True)
+    note = models.TextField(blank=True)
     
 
 class BPAProject(models.Model):
@@ -21,6 +23,7 @@ class BPAProject(models.Model):
     The BPA project
     Examples would be: Melanoma, Coral 
     """
+    
     name = models.CharField(max_length=20, primary_key=True)
     description = models.CharField(max_length=200, blank=True)
 
@@ -77,6 +80,7 @@ class Organism(models.Model):
     """
     An Organism
     """    
+    
     genus = models.CharField(max_length=100)
     species = models.CharField(max_length=100, primary_key=True)
     classification = models.URLField('NCBI organismal classification', blank=True)   
@@ -107,6 +111,7 @@ class Sequencer(models.Model):
     """
     The Sequencer
     """
+    
     name = models.CharField(max_length=100, primary_key=True)
     description = models.TextField(blank=True)
         
@@ -118,6 +123,7 @@ class LibraryProtocol(models.Model):
     """
     Library Protocol 
     """
+    
     description = models.CharField(max_length=200)
     
     def __unicode__(self):
@@ -128,6 +134,7 @@ class Library(models.Model):
     """
     Library
     """
+    
     LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
     type = models.CharField(max_length=2, choices=LIB_TYPES)
     base_pairs = models.IntegerField()

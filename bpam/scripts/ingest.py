@@ -69,9 +69,15 @@ def ingest_contacts():
     from django.contrib.auth.models import Group
     from django.contrib.auth import get_user_model
     
-    def get_group(name):
+    def get_group(name):        
+        def get_group_name(raw_group):
+            if raw_group != "":
+                return raw_group.strip().split()[0]
+            else:
+                return "Ungrouped"
+                        
         try:
-            group = Group.objects.get(name=name)
+            group = Group.objects.get(name=get_group_name(name))
         except Group.DoesNotExist:
             print("Group {} does not exit, adding it".format(name))
             group = Group(name=name)            
@@ -79,17 +85,14 @@ def ingest_contacts():
             
         return group      
     
+    def is_active(active_str):
+        active = active_str.strip().lower()
+        return active == 'x'
+        
     def get_data():
         with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
-            fieldnames = ['group',
-                          'department',
-                          'last_name',
-                          'first_name',
-                          'telephone',
-                          'email',
-                          'username'
-                          ]
-            reader = csv.DictReader(contacts, fieldnames=fieldnames)
+            # Location, Job Title, Department, Surname, First Name, Direct Line, Email, Username, Enabled   
+            reader = csv.DictReader(contacts)
             return list(reader)
     
     contacts = get_data()
@@ -97,14 +100,19 @@ def ingest_contacts():
     for contact in contacts:
         User = get_user_model()
         user = User()
-        user.username = contact['username'].strip()
-        user.email = contact['email'].strip()
-        user.first_name = contact['first_name'].strip()
-        user.last_name = contact['last_name'].strip()        
-        user.telephone = contact['telephone']
+        user.username = contact['Username'].strip()
+        user.email = contact['Email'].strip()
+        user.first_name = contact['First Name'].strip()
+        user.last_name = contact['Surname'].strip()        
+        user.telephone = contact['Direct Line']
+        user.is_staff = is_active(contact['Enabled'])
+        user.title = contact['Job Title'].strip()
+        user.department = contact['Department']
+        user.note = contact['Location']
+        # user.is_superuser = True
         user.save()
         
-        group = get_group(contact['group'].strip())
+        group = get_group(contact['Location'])
         user.groups.add(group)
         
         user.save()
