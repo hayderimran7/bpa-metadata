@@ -240,10 +240,26 @@ def ingest_runs(sample_data):
         except ValueError:
             return default
         
+    def get_run_number(e):
+        """
+        ANU does not have their run numbers entered.
+        """
+        
+        run_number = get_clean_number(e['run_number'])
+        if run_number == -1:
+            # see if its ANU and parse the run_number from the filename
+            if e['whole_genome_sequencing_facility'].strip() == 'ANU':
+                filename = e['sequence_filename']
+                run_number = int(filename.split('_')[6]) 
+                print("ANU run_number {} parsed from filename".format(run_number))               
+        return run_number
+                
+        
+        
     def add_run(e):
         flow_cell_id = e['flow_cell_id'].strip()
         bpa_id = e['bpa_id'].strip()
-        run_number = get_clean_number(e['run_number'])
+        run_number = get_run_number(e)
         
         try:
             run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number, sample__bpa_id__bpa_id=bpa_id)
