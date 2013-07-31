@@ -108,8 +108,8 @@ def ingest_contacts():
         user.telephone = contact['Direct Line']
         user.is_staff = is_active(contact['Enabled'])
         user.title = contact['Job Title'].strip()
-        user.department = contact['Department']
-        user.note = contact['Location']
+        user.department = contact['Department']        
+        user.location = contact['Location']
         # user.is_superuser = True
         user.save()
         

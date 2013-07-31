@@ -8,5 +8,6 @@ class BPAUser(AbstractUser):
         
     department = models.CharField(max_length=100, blank=True)
     title = models.CharField(max_length=100, blank=True)
+    location = models.CharField(max_length=100, blank=True)
     telephone = models.CharField(max_length=12, blank=True)
     note = models.TextField(blank=True)
