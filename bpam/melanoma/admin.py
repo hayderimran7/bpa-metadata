@@ -8,7 +8,7 @@ from melanoma.models import (TumorStage,
 
 
 class MelanomaSequenceFileAdmin(admin.ModelAdmin):
-     fieldsets = [       
+    fieldsets = [       
       
         (None, {'fields' : [('filename', 'md5'),
                               'BPA_archive_url',
@@ -20,22 +20,24 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
          ),
     ]
 
+    list_display = ('filename', 'date_received_from_sequencing_facility', 'run')
+
 class MelanomaRunAdmin(admin.ModelAdmin):
-     fieldsets = [       
-        ('Facilities', {'fields': [('sequencing_faciltiy', 'array_analysis_faciltiy', 'whole_genome_sequencing_faciltiy')
-                                   ]
-                        }
+    fieldsets = [       
+       ('Facilities', {'fields': [('sequencing_faciltiy', 'array_analysis_faciltiy', 'whole_genome_sequencing_faciltiy')
+                                  ]
+                       }
+       ),
+       ('Sequencing', {'fields': [('library', 'index_number'),
+                                  ('sequencer', 'run_number', 'flow_cell_id', 'lane_number'),
+                                  'DNA_extraction_protocol',
+                                  'passage_number'                        
+                                  ]
+                       }
         ),
-        ('Sequencing', {'fields': [('library', 'index_number'),
-                                   ('sequencer', 'run_number', 'flow_cell_id', 'lane_number'),
-                                   'DNA_extraction_protocol',
-                                   'passage_number'                        
-                                   ]
-                        }
-         ),
     ]
-     
-     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'index_number', 'lane_number', 'passage_number')
+    
+    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'index_number', 'lane_number', 'passage_number')
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [

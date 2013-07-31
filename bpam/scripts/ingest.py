@@ -277,10 +277,22 @@ def ingest_runs(sample_data):
             run.index_number = get_clean_number(e['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER) # Ignore the empty column
             run.lane_number = get_clean_number(e['lane_number'])
-            run.save()                       
+            run.save()  
+            
+        return run                     
+
+    def add_file(e, run):
+        fname = e['sequence_filename'].strip()
+        if fname != "":
+            f = MelanomaSequenceFile()
+            f.run = run
+            f.filename = fname
+            f.md5 = e['md5_cheksum'].strip()
+            f.save()
 
     for e in sample_data:
-        add_run(e)
+        run = add_run(e)
+        add_file(e, run)
         
 
 def ingest_files(sample_data):

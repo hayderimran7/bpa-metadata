@@ -47,4 +47,5 @@ class MelanomaSequenceFile(SequenceFile):
     
     run = models.ForeignKey(MelanomaRun)
 
-    
+    def __unicode__(self):
+        return "Run {} for {}".format(self.run, self.filename)

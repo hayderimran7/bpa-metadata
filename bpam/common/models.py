@@ -188,13 +188,13 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
     
-    date_received_from_sequencing_facility = models.DateField()
-    filename = models.CharField(max_length=300)
-    md5 = models.CharField('MD5 Checksum', max_length=32)
-    BPA_archive_url = models.URLField('BPA Archive URL')    
-    analysed = models.BooleanField()
-    analysed_url = models.URLField()    
-    ftp_url = models.URLField('FTP URL')
+    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
+    filename = models.CharField(max_length=300, blank=True, null=True)
+    md5 = models.CharField('MD5 Checksum', max_length=32, blank=True, null=True)
+    BPA_archive_url = models.URLField('BPA Archive URL', blank=True, null=True)    
+    analysed = models.BooleanField(blank=True)
+    analysed_url = models.URLField(blank=True, null=True)    
+    ftp_url = models.URLField('FTP URL', blank=True, null=True)
 
     def __unicode__(self):
         return "{}".format(self.filename)
