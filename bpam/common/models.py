@@ -166,18 +166,18 @@ class Run(models.Model):
      
     library = models.ForeignKey(Library, blank=True, null=True)   
     DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
-    passage_number = models.IntegerField()
+    passage_number = models.IntegerField(blank=True, null=True)
      
     # Facilities
     sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
     array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
     whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility', blank=True, null=True)    
 
-    index_number = models.IntegerField()
+    index_number = models.IntegerField(blank=True, null=True)
     sequencer = models.ForeignKey(Sequencer)
-    run_number = models.IntegerField()
-    flow_cell_id = models.CharField(max_length=10)
-    lane_number = models.IntegerField()
+    run_number = models.IntegerField(blank=True, null=True)
+    flow_cell_id = models.CharField(max_length=10, blank=True)
+    lane_number = models.IntegerField(blank=True, null=True)
    
     class Meta:
         abstract = True

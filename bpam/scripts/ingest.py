@@ -234,7 +234,7 @@ def ingest_runs(sample_data):
         print("Found sample {}".format(sample))
         return sample
         
-    def get_clean_number(str, default=-1):
+    def get_clean_number(str, default=None):
         try:
             return int(str.lower().replace('run', '').strip())
         except ValueError:
@@ -246,12 +246,17 @@ def ingest_runs(sample_data):
         """
         
         run_number = get_clean_number(e['run_number'])
-        if run_number == -1:
+        if run_number == None:
             # see if its ANU and parse the run_number from the filename
             if e['whole_genome_sequencing_facility'].strip() == 'ANU':
-                filename = e['sequence_filename']
-                run_number = int(filename.split('_')[6]) 
-                print("ANU run_number {} parsed from filename".format(run_number))               
+                filename = e['sequence_filename'].strip()
+                if filename != "":
+                    try:
+                        run_number = int(filename.split('_')[6])
+                        print("ANU run_number {} parsed from filename".format(run_number))               
+                    except IndexError:
+                        print("Filename {} wrong format".format(filename))                
+
         return run_number
                 
         
