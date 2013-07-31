@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth.admin import UserAdmin
+# from django.contrib.auth.models import Group
 
 from .models import BPAUser
 
@@ -21,7 +22,7 @@ class BPAUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     
-    list_display = ('username', 'location', 'title', 'department', 'first_name', 'last_name', 'email')
+    list_display = ('username', 'location', 'title', 'department', 'first_name', 'last_name', 'email', 'is_staff')
     list_filter = ('groups', 'last_name')
     fieldsets = UserAdmin.fieldsets + (('Note', {'fields': ('note',)}),)
     print(fieldsets)

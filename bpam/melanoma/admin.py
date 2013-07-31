@@ -34,6 +34,8 @@ class MelanomaRunAdmin(admin.ModelAdmin):
                         }
          ),
     ]
+     
+     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'index_number', 'lane_number', 'passage_number')
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [

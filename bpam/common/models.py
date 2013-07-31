@@ -140,7 +140,7 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True)
+    bpa_id = models.OneToOneField(BPAUniqueID, unique=True)
     name = models.CharField(max_length=200)    
     
     organism = models.ForeignKey(Organism)
@@ -163,17 +163,15 @@ class Run(models.Model):
     """
     A Single Run
     """
-    
-    date_recieved_from_sequencing_facility = models.DateField()
      
-    library = models.ForeignKey(Library)   
-    DNA_extraction_protocol = models.CharField(max_length=200)
+    library = models.ForeignKey(Library, blank=True, null=True)   
+    DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
     passage_number = models.IntegerField()
      
     # Facilities
-    sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility')
-    array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility')
-    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility')    
+    sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
+    array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
+    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility', blank=True, null=True)    
 
     index_number = models.IntegerField()
     sequencer = models.ForeignKey(Sequencer)

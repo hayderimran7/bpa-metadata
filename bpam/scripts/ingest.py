@@ -10,6 +10,7 @@ MELANOMA_CONTACT_DATA='./scripts/data/melanoma_contacts.csv'
 
 INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
 
+MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
 def add_organism(genus="", species=""):
     organism = Organism(genus=genus, species=species)
@@ -44,20 +45,27 @@ def ingest_bpa_ids(data):
     
     id_set = set()
     for e in data:
-        id_set.add(e['bpa_id']) 
+        id_set.add(e['bpa_id'].strip()) 
     for id in id_set:
         add_BPA_ID(id)
 
 def ingest_samples(samples):
     
     def add_sample(vals):
-        sample = MelanomaSample()
-        sample.bpa_id = BPAUniqueID.objects.get(bpa_id=vals['bpa_id'])
-        sample.name = vals['sample_name']
-        sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
-        sample.note = INGEST_NOTE
-        sample.save()
-        print("Ingested Melanoma sample {}".format(sample.name))
+        bpa_id = vals['bpa_id'].strip()
+        try:
+            # Test if sample already exists
+            # First come fist serve            
+            MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+        except MelanomaSample.DoesNotExist:
+            sample = MelanomaSample()
+            sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
+            sample.name = vals['sample_name']
+            sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
+            sample.note = INGEST_NOTE
+            sample.save()
+            print("Ingested Melanoma sample {}".format(sample.name))
+            
 
     for sample in samples:
         add_sample(sample)
@@ -117,10 +125,7 @@ def ingest_contacts():
         user.groups.add(group)
         
         user.save()
-        
-
-
-        
+           
         
 def ingest_arrays(arrays):
     
@@ -185,7 +190,7 @@ def get_melanoma_sample_data():
                       'index_number',
                       'sequencer',
                       'run_number',
-                      'flow_Cell_id',
+                      'flow_cell_id',
                       'lane_number',
                       'sequence_filename',
                       'md5_cheksum']
@@ -212,13 +217,70 @@ def get_array_data():
         return list(reader)
 
 
+def ingest_runs(sample_data):
+        
+    def get_sequencer(name):
+        if name == "":
+            name = "Unknown"
+        try:
+            sequencer = Sequencer.objects.get(name=name)
+        except Sequencer.DoesNotExist:
+            sequencer = Sequencer(name=name)
+            sequencer.save()
+        return sequencer      
+    
+    def get_sample(bpa_id):
+        sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+        print("Found sample {}".format(sample))
+        return sample
+        
+    def get_clean_number(str, default=-1):
+        try:
+            return int(str.lower().replace('run', '').strip())
+        except ValueError:
+            return default
+        
+    def add_run(e):
+        flow_cell_id = e['flow_cell_id'].strip()
+        bpa_id = e['bpa_id'].strip()
+        run_number = get_clean_number(e['run_number'])
+        
+        try:
+            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number, sample__bpa_id__bpa_id=bpa_id)
+        except MelanomaRun.DoesNotExist:
+            run = MelanomaRun()
+            run.flow_cell_id = flow_cell_id
+            run.run_number = run_number 
+            run.sample = get_sample(bpa_id)
+            run.passage_number = get_clean_number(e['passage_number']) 
+            run.index_number = get_clean_number(e['index_number'])
+            run.sequencer = get_sequencer(MELANOMA_SEQUENCER) # Ignore the empty column
+            run.lane_number = get_clean_number(e['lane_number'])
+            run.save()                       
+
+    for e in sample_data:
+        add_run(e)
+        
+
+def ingest_files(sample_data):
+    """
+    The melanoma study metadata sheet is a list of files.
+    Each row represents a file.
+    """
+    
+    for file in sample_data:
+        pass
+        
+
 def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
         
         ingest_bpa_ids(sample_data)
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())
-                        
+        ingest_runs(sample_data)
+        ingest_files(sample_data)
+
         
 def run():
     ingest_contacts()
@@ -226,7 +288,8 @@ def run():
     add_projects()
     ingest_melanoma()
     
-def run2():
-    ingest_contacts()
+def runx():
+    sample_data = get_melanoma_sample_data()
+    ingest_runs(sample_data)
     
     

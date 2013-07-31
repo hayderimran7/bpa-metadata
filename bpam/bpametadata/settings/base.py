@@ -19,7 +19,7 @@ TEMPLATE_DIRS = (
     PROJECT_DIR.child("templates"),
 )
 
-DEBUG=False
+DEBUG = False
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -31,12 +31,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql', 
-        'NAME': '', 
+        'ENGINE': 'mysql',
+        'NAME': '',
         'USER': '',
         'PASSWORD': '',
-        'HOST': '',  
-        'PORT': '', 
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -106,12 +106,21 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth'
+)
+
 ROOT_URLCONF = 'bpametadata.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'bpametadata.wsgi.application'
 
 INSTALLED_APPS = (
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

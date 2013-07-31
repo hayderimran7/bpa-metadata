@@ -28,7 +28,6 @@ class Array(models.Model):
 class MelanomaSample(Sample):
     '''Melanoma specific Sample'''
     
-    
     sex = models.CharField(choices=GENDERS, max_length=1, null=True)    
     tumor_stage = models.ForeignKey(TumorStage, null=True)
     histological_subtype = models.CharField(max_length=50, null=True)
@@ -40,7 +39,7 @@ class MelanomaRun(Run):
     sample = models.ForeignKey(MelanomaSample)
     
     def __unicode__(self):
-        return "Run {} for {}".format(self.run_number, self.sample.sample_name)
+        return "Run {} for {}".format(self.run_number, self.sample.name)
     
     
 class MelanomaSequenceFile(SequenceFile):
