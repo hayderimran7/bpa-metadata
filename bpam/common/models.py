@@ -107,32 +107,22 @@ class Sequencer(models.Model):
         return self.name
 
 
-class LibraryProtocol(models.Model):
+class Protocol(models.Model):
     """
-    Library Protocol 
-    """
-    
-    description = models.CharField(max_length=200)
-    
-    def __unicode__(self):
-        return self.description
-    
-
-class Library(models.Model):
-    """
-    Library
+    Protocol
     """
     
     LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
-    type = models.CharField(max_length=2, choices=LIB_TYPES)
+    construct_type = models.CharField(max_length=2, choices=LIB_TYPES)
     base_pairs = models.IntegerField()
-    protocol = models.ForeignKey(LibraryProtocol)
+    library_construction_protocol = models.CharField(max_length=200)
+    note = models.TextField(blank=True)
     
     def __unicode__(self):
-        return "Size: " + str(self.base_pairs) + " Type: " + str(self.type) + " Protocol: " + str(self.protocol)
+        return "Size: " + str(self.base_pairs) + " Type: " + str(self.construct_type) + " Protocol: " + str(self.library_construction_protocol)
 
     class Meta:
-        verbose_name_plural = "Libraries"
+        verbose_name_plural = "Protocol"
 
 
 class Sample(models.Model):
@@ -164,7 +154,7 @@ class Run(models.Model):
     A Single Run
     """
      
-    library = models.ForeignKey(Library, blank=True, null=True)   
+    protocol = models.ForeignKey(Protocol, blank=True, null=True)   
     DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
     passage_number = models.IntegerField(blank=True, null=True)
      
@@ -195,6 +185,7 @@ class SequenceFile(models.Model):
     analysed = models.BooleanField(blank=True)
     analysed_url = models.URLField(blank=True, null=True)    
     ftp_url = models.URLField('FTP URL', blank=True, null=True)
+    note = models.TextField(blank=True)
 
     def __unicode__(self):
         return "{}".format(self.filename)

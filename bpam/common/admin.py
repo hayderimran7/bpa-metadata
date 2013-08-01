@@ -4,17 +4,17 @@ from .models import (BPAProject,
                      BPAUniqueID,
                      Service,
                      Facility,
-                     Organism,
-                     Library,
+                     Protocol,
+                     Organism,                     
                      SequenceFile,
                      DNASource,
-                     LibraryProtocol,
                      Sequencer,
                      )
 
     
-class LibraryAdmin(admin.ModelAdmin):
-    list_display = ('base_pairs', 'type', 'protocol')
+class ProtocolAdmin(admin.ModelAdmin):
+    fields = (('construct_type', 'base_pairs', 'library_construction_protocol'), 'note')
+    list_display = ('construct_type', 'base_pairs', 'library_construction_protocol')
 
     
 class AffiliationAdmin(admin.ModelAdmin):
@@ -40,9 +40,8 @@ admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
 admin.site.register(Facility)
 admin.site.register(Service)
 admin.site.register(Organism)
-admin.site.register(Library, LibraryAdmin)
+admin.site.register(Protocol, ProtocolAdmin)
 admin.site.register(DNASource)
-admin.site.register(LibraryProtocol)
 admin.site.register(Sequencer)
 
     

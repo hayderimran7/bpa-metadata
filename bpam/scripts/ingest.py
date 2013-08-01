@@ -3,6 +3,7 @@ from datetime import date
 from bpaauth.models import BPAUser
 from common.models import *
 from melanoma.models import *
+import pprint
 
 MELANOMA_SAMPLE_FILE='./scripts/data/melanoma_samples.csv'
 MELANOMA_ARRAY_FILE='./scripts/data/melanoma_arrays.csv'
@@ -308,9 +309,6 @@ def ingest_runs(sample_data):
             run.save()  
             
         return run                     
-
-
-
     
 
     def add_file(e, run):
@@ -324,23 +322,13 @@ def ingest_runs(sample_data):
             f.run = run
             f.filename = fname
             f.md5 = e['md5_cheksum'].strip()
+            f.note = pprint.pformat(e)
             f.save()
 
     for e in sample_data:
         run = add_run(e)
         add_file(e, run)
         
-
-def ingest_files(sample_data):
-    """
-    The melanoma study metadata sheet is a list of files.
-    Each row represents a file.
-    """
-    
-    for file in sample_data:
-        pass
-        
-
 def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
         
@@ -348,8 +336,6 @@ def ingest_melanoma():
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())
         ingest_runs(sample_data)
-        ingest_files(sample_data)
-
         
 def run():
     ingest_contacts()

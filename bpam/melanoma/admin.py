@@ -8,16 +8,16 @@ from melanoma.models import (TumorStage,
 
 
 class MelanomaSequenceFileAdmin(admin.ModelAdmin):
-    fieldsets = [       
-      
+    fieldsets = [             
         (None, {'fields' : [('filename', 'md5'),
-                              'BPA_archive_url',
-                              ('analysed', 'analysed_url'),
-                              'ftp_url',
-                              'date_received_from_sequencing_facility'
-                              ]
-                  }
-         ),
+                            'BPA_archive_url',
+                            ('analysed', 'analysed_url'),
+                            'ftp_url',
+                            'date_received_from_sequencing_facility'
+                            ]
+                }
+        ),
+        ('Note', {'fields' : [('note',)]}),
     ]
 
     list_display = ('filename', 'date_received_from_sequencing_facility', 'run')
@@ -28,7 +28,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
                                   ]
                        }
        ),
-       ('Sequencing', {'fields': [('library', 'index_number'),
+       ('Sequencing', {'fields': [('protocol', 'index_number'),
                                   ('sequencer', 'run_number', 'flow_cell_id', 'lane_number'),
                                   'DNA_extraction_protocol',
                                   'passage_number'                        
