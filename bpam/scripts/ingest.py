@@ -320,8 +320,10 @@ def ingest_runs(sample_data):
             f = MelanomaSequenceFile()
             f.date_received_from_sequencing_facility = get_date(e['date_received'].strip())
             f.run = run
+            f.index_number = get_clean_number(e['index_number'])
+            f.lane_number = get_clean_number(e['lane_number'])
             f.filename = fname
-            f.md5 = e['md5_cheksum'].strip()
+            f.md5 = e['md5_cheksum']
             f.note = pprint.pformat(e)
             f.save()
 

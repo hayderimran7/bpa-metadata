@@ -163,11 +163,9 @@ class Run(models.Model):
     array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
     whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility', blank=True, null=True)    
 
-    index_number = models.IntegerField(blank=True, null=True)
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
-    flow_cell_id = models.CharField(max_length=10, blank=True)
-    lane_number = models.IntegerField(blank=True, null=True)
+    flow_cell_id = models.CharField(max_length=10, blank=True)    
    
     class Meta:
         abstract = True
@@ -177,7 +175,8 @@ class SequenceFile(models.Model):
     """
     A sequence file resulting from a sequence run
     """
-    
+    index_number = models.IntegerField(blank=True, null=True)
+    lane_number = models.IntegerField(blank=True, null=True)    
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
     md5 = models.CharField('MD5 Checksum', max_length=32, blank=True, null=True)
