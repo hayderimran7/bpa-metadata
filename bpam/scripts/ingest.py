@@ -12,6 +12,28 @@ INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today())
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
+
+def get_date(date_str):
+    """
+    Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
+    """
+    from dateutil import parser
+    return parser.parse(date_str)
+ 
+def strip_all(reader):
+    """
+    Scrub extra whitespace from values in the reader dicts as read from the csv files 
+    """
+    
+    entries = []
+    for entry in reader:
+        new_e = {}
+        for k, v in entry.items():
+            new_e[k] = v.strip()
+        entries.append(new_e)
+    
+    return entries
+        
 def add_organism(genus="", species=""):
     organism = Organism(genus=genus, species=species)
     organism.save() 
@@ -52,7 +74,7 @@ def ingest_bpa_ids(data):
 def ingest_samples(samples):
     
     def add_sample(vals):
-        bpa_id = vals['bpa_id'].strip()
+        bpa_id = vals['bpa_id']
         try:
             # Test if sample already exists
             # First come fist serve            
@@ -102,23 +124,22 @@ def ingest_contacts():
         with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
             # Location, Job Title, Department, Surname, First Name, Direct Line, Email, Username, Enabled   
             reader = csv.DictReader(contacts)
-            return list(reader)
+            return strip_all(reader)
     
     contacts = get_data()
     
     for contact in contacts:
         User = get_user_model()
         user = User()
-        user.username = contact['Username'].strip()
-        user.email = contact['Email'].strip()
-        user.first_name = contact['First Name'].strip()
-        user.last_name = contact['Surname'].strip()        
+        user.username = contact['Username']
+        user.email = contact['Email']
+        user.first_name = contact['First Name']
+        user.last_name = contact['Surname']
         user.telephone = contact['Direct Line']
         user.is_staff = is_active(contact['Enabled'])
-        user.title = contact['Job Title'].strip()
+        user.title = contact['Job Title']
         user.department = contact['Department']        
         user.location = contact['Location']
-        # user.is_superuser = True
         user.save()
         
         group = get_group(contact['Location'])
@@ -193,11 +214,15 @@ def get_melanoma_sample_data():
                       'flow_cell_id',
                       'lane_number',
                       'sequence_filename',
-                      'md5_cheksum']
+                      'md5_cheksum',
+                      'file_path',
+                      'file_url',
+                      'analysed',
+                      'analysed_url']
                   
         reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
-        return list(reader)
-
+        return strip_all(reader)
+      
 
 def get_array_data():
     """
@@ -214,7 +239,7 @@ def get_array_data():
                       'gender',                      
                       ]
         reader = csv.DictReader(array_data, fieldnames=fieldnames)
-        return list(reader)
+        return strip_all(reader)
 
 
 def ingest_runs(sample_data):
@@ -262,6 +287,9 @@ def ingest_runs(sample_data):
         
         
     def add_run(e):
+        """
+        The run produced several files
+        """
         flow_cell_id = e['flow_cell_id'].strip()
         bpa_id = e['bpa_id'].strip()
         run_number = get_run_number(e)
@@ -281,10 +309,18 @@ def ingest_runs(sample_data):
             
         return run                     
 
+
+
+    
+
     def add_file(e, run):
+        """
+        Add each sequence file produced by a run
+        """
         fname = e['sequence_filename'].strip()
         if fname != "":
             f = MelanomaSequenceFile()
+            f.date_received_from_sequencing_facility = get_date(e['date_received'].strip())
             f.run = run
             f.filename = fname
             f.md5 = e['md5_cheksum'].strip()
