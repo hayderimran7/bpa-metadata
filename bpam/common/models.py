@@ -14,7 +14,8 @@ class BPAProject(models.Model):
     
     name = models.CharField(max_length=20, primary_key=True)
     description = models.CharField(max_length=200, blank=True)
-
+    note = models.TextField(blank=True)
+    
     def __unicode__(self):
         return self.name
     
@@ -86,10 +87,11 @@ class DNASource(models.Model):
     """
     DNA Source
     """
-    source = models.CharField(max_length=100)
-
+    description = models.CharField(max_length=100)    
+    note = models.TextField(blank=True) 
+    
     def __unicode__(self):
-        return self.source
+        return self.description
 
     class Meta:
         verbose_name = "DNA Source"

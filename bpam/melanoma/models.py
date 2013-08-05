@@ -5,10 +5,11 @@ from common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS
 class TumorStage(models.Model):
     '''Tumor Stage'''
     
-    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    note = models.TextField(blank=True) 
 
     def __unicode__(self):
-        return self.name
+        return self.description
     
     
 class Array(models.Model):

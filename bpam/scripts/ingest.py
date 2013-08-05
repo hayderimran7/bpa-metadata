@@ -72,6 +72,39 @@ def ingest_bpa_ids(data):
     for id in id_set:
         add_BPA_ID(id)
 
+def get_dna_source(description):
+    """
+    Get a dna source if it exist, if it doesn't make it.
+    """
+
+    description = description.capitalize()
+
+    try:
+        source = DNASource.objects.get(description=description)
+    except DNASource.DoesNotExist:
+        source = DNASource(description=description)
+        source.save()
+    
+    return source
+
+def get_tumor_stage(description):
+    """
+    Get the tumor stage if it exists, else make it.
+    """
+
+    description = description.capitalize()
+    if description == "":
+        description = "Not applicable"
+
+    try:
+        stage = TumorStage.objects.get(description=description)
+    except TumorStage.DoesNotExist:
+        stage = TumorStage(description=description)
+        stage.save()
+    
+    return stage
+
+
 def ingest_samples(samples):
     
     def add_sample(vals):
@@ -85,6 +118,8 @@ def ingest_samples(samples):
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
             sample.name = vals['sample_name']
             sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
+            sample.dna_source = get_dna_source(vals['sample_dna_source'])
+            sample.tumor_stage = get_tumor_stage(vals['sample_tumor_stage'])
             sample.note = INGEST_NOTE
             sample.save()
             print("Ingested Melanoma sample {}".format(sample.name))
@@ -333,7 +368,6 @@ def ingest_runs(sample_data):
         
 def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
-        
         ingest_bpa_ids(sample_data)
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())

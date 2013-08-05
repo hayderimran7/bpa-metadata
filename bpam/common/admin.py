@@ -23,7 +23,7 @@ class AffiliationAdmin(admin.ModelAdmin):
     
     
 class BPAProjectAdmin(admin.ModelAdmin):
-    fields = (('name', 'description'),)
+    fields = (('name', 'description'),'note')
     list_display = ('name', 'description')
     
     
