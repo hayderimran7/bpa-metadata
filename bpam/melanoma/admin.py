@@ -41,7 +41,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification', {'fields': [('bpa_id', 'name')]}),
-        ('Source', {'fields':['organism', 'dna_source']}),
+        ('Source', {'fields':['organism', 'dna_source', 'sex', 'tumor_stage', 'histological_subtype']}),
         (None, {'fields': ['date_sent_to_sequencing_facility', 'contact_scientist', 'note']}),
     ]
     
