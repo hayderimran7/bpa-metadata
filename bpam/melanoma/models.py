@@ -29,6 +29,9 @@ class Array(models.Model):
 class MelanomaSample(Sample):
     '''Melanoma specific Sample'''
     
+    # don't currently understand what this is. 
+    passage_number = models.IntegerField(null=True)
+    
     gender = models.CharField(choices=GENDERS, max_length=1, null=True)    
     tumor_stage = models.ForeignKey(TumorStage, null=True)
     histological_subtype = models.CharField(max_length=50, null=True)

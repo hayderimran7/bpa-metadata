@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from .models import (BPAProject,
                      BPAUniqueID,
-                     Service,
                      Facility,
                      Protocol,
                      Organism,                     
@@ -37,8 +36,7 @@ class FacilityAdmin(admin.ModelAdmin):
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
-admin.site.register(Facility)
-admin.site.register(Service)
+admin.site.register(Facility, FacilityAdmin)
 admin.site.register(Organism)
 admin.site.register(Protocol, ProtocolAdmin)
 admin.site.register(DNASource)

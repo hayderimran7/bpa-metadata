@@ -41,11 +41,12 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification', {'fields': [('bpa_id', 'name')]}),
-        ('Source', {'fields':['organism', 'dna_source', 'gender', 'tumor_stage', 'histological_subtype']}),
+        ('Source', {'fields':['organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype']}),
+        ('Facilities', {'fields': ['sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility']}),
         (None, {'fields': ['requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist', 'note']}),
     ]
     
-    list_display = ('bpa_id', 'name', 'note')
+    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
     
 class ArrayAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'array_id', 'mia_id')

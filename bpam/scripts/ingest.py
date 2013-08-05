@@ -1,4 +1,5 @@
 import csv
+import string
 from datetime import date
 from bpaauth.models import BPAUser
 from common.models import *
@@ -13,7 +14,12 @@ INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today())
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-
+def get_clean_number(str, default=None):
+    try:
+        return int(str.translate(None, string.letters))
+    except ValueError:
+        return default
+        
 def get_date(date_str):
     """
     Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
@@ -107,13 +113,27 @@ def get_tumor_stage(description):
 
 def ingest_samples(samples):
     
+    def get_facility(name, service):
+        if name == '': name = "Unknown"
+        if service == '': service = "Unknown"
+        
+        try:
+            facility = Facility.objects.get(name=name, service=service)
+        except Facility.DoesNotExist:
+            facility = Facility(name=name, service=service)
+            facility.save()
+        
+        return facility
+        
+        
+    
     def get_gender(gender):
         if gender == "":
             gender = "U"
         return gender
     
-    def add_sample(vals):
-        bpa_id = vals['bpa_id']
+    def add_sample(e):
+        bpa_id = e['bpa_id']
         try:
             # Test if sample already exists
             # First come fist serve            
@@ -121,13 +141,22 @@ def ingest_samples(samples):
         except MelanomaSample.DoesNotExist:
             sample = MelanomaSample()
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
-            sample.name = vals['sample_name']
-            sample.requested_sequence_coverage = vals['sequence_coverage'].upper()
+            sample.name = e['sample_name']
+            sample.requested_sequence_coverage = e['sequence_coverage'].upper()
             sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
-            sample.dna_source = get_dna_source(vals['sample_dna_source'])
-            sample.tumor_stage = get_tumor_stage(vals['sample_tumor_stage'])
-            sample.gender = get_gender(vals['sample_gender'])
-            sample.note = INGEST_NOTE            
+            sample.dna_source = get_dna_source(e['sample_dna_source'])
+            sample.dna_extraction_protocol = e['dna_extraction_protocol']
+            sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
+            sample.gender = get_gender(e['sample_gender'])
+            sample.histological_subtype = e['histological_subtype']
+            sample.passage_number = get_clean_number(e['passage_number'])
+            
+            # facilities
+            sample.array_analysis_facility = get_facility(e['array_analysis_facility'], 'Array Analysis')
+            sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'], 'Whole Genome Sequencing')
+            sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
+             
+            sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
             print("Ingested Melanoma sample {}".format(sample.name))
             
@@ -302,11 +331,6 @@ def ingest_runs(sample_data):
         print("Found sample {}".format(sample))
         return sample
         
-    def get_clean_number(str, default=None):
-        try:
-            return int(str.lower().replace('run', '').strip())
-        except ValueError:
-            return default
         
     def get_run_number(e):
         """
