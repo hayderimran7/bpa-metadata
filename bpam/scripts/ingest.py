@@ -107,6 +107,11 @@ def get_tumor_stage(description):
 
 def ingest_samples(samples):
     
+    def get_gender(gender):
+        if gender == "":
+            gender = "U"
+        return gender
+    
     def add_sample(vals):
         bpa_id = vals['bpa_id']
         try:
@@ -117,10 +122,12 @@ def ingest_samples(samples):
             sample = MelanomaSample()
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
             sample.name = vals['sample_name']
+            sample.requested_sequence_coverage = vals['sequence_coverage'].upper()
             sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
             sample.dna_source = get_dna_source(vals['sample_dna_source'])
             sample.tumor_stage = get_tumor_stage(vals['sample_tumor_stage'])
-            sample.note = INGEST_NOTE
+            sample.gender = get_gender(vals['sample_gender'])
+            sample.note = INGEST_NOTE            
             sample.save()
             print("Ingested Melanoma sample {}".format(sample.name))
             
@@ -231,7 +238,7 @@ def get_melanoma_sample_data():
                       'contact_scientist',
                       'contact_affiliation',
                       'contact_email',
-                      'sample_sex',
+                      'sample_gender',
                       'sample_dna_source',
                       'sample_tumor_stage',
                       'histological_subtype',

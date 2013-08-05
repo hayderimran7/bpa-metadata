@@ -138,7 +138,7 @@ class Sample(models.Model):
     organism = models.ForeignKey(Organism)
     dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source", blank=True, null=True)
             
-    requested_sequence_coverage = models.CharField(max_length=4, blank=True)
+    requested_sequence_coverage = models.CharField(max_length=6, blank=True)
    
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
