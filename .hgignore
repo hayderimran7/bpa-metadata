@@ -9,3 +9,4 @@ bpam/build
 bpam/bpam.egg-info
 bootstrap
 virt_bpam
+*.rpm
