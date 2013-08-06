@@ -414,6 +414,7 @@ def ingest_runs(sample_data):
         fname = e['sequence_filename'].strip()
         if fname != "":
             f = MelanomaSequenceFile()
+            f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
             f.date_received_from_sequencing_facility = get_date(e['date_received'].strip())
             f.run = run
             f.index_number = get_clean_number(e['index_number'])

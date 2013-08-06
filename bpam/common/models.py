@@ -127,7 +127,7 @@ class Sample(models.Model):
     """
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True)
-    name = models.CharField(max_length=200)    
+    name = models.CharField(max_length=200)   
     
     organism = models.ForeignKey(Organism)
     dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source", blank=True, null=True)
@@ -179,6 +179,7 @@ class SequenceFile(models.Model):
     """
     A sequence file resulting from a sequence run
     """
+        
     index_number = models.IntegerField(blank=True, null=True)
     lane_number = models.IntegerField(blank=True, null=True)    
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)

@@ -3,7 +3,7 @@ from bpaauth.models import BPAUser
 from common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS
 
 class TumorStage(models.Model):
-    '''Tumor Stage'''
+    """ Tumor Stage """
     
     description = models.CharField(max_length=100)
     note = models.TextField(blank=True) 
@@ -13,7 +13,7 @@ class TumorStage(models.Model):
     
     
 class Array(models.Model):
-    '''Array'''
+    """ Array """
     
     bpa_id = models.ForeignKey(BPAUniqueID)
     array_id = models.CharField(max_length=17)
@@ -27,7 +27,7 @@ class Array(models.Model):
         return "{} {} {}".format(self.bpa_id, self.array_id, self.mia_id)
     
 class MelanomaSample(Sample):
-    '''Melanoma specific Sample'''
+    """ Melanoma specific Sample """
     
     # don't currently understand what this is. 
     passage_number = models.IntegerField(null=True)
@@ -38,7 +38,7 @@ class MelanomaSample(Sample):
 
 
 class MelanomaRun(Run):
-    '''A Melanoma Run '''
+    """ A Melanoma Run """
     
     sample = models.ForeignKey(MelanomaSample)
     
@@ -47,8 +47,9 @@ class MelanomaRun(Run):
     
     
 class MelanomaSequenceFile(SequenceFile):
-    '''Resulting Sequence Files resulting from a run'''
+    """ Sequence Files resulting from a run """
     
+    sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
 
     def __unicode__(self):
