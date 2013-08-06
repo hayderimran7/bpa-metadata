@@ -1,0 +1,1 @@
+../bpametadata/settings/dev.py
