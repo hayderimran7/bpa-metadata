@@ -178,12 +178,13 @@ def ingest_contacts():
                 return raw_group.strip().split()[0]
             else:
                 return "Ungrouped"
-                        
+            
+        nname = get_group_name(name.strip())                        
         try:
-            group = Group.objects.get(name=get_group_name(name))
+            group = Group.objects.get(name=nname)
         except Group.DoesNotExist:
-            print("Group {} does not exit, adding it".format(name))
-            group = Group(name=name)            
+            print("Group {} does not exit, adding it".format(nname))
+            group = Group(name=nname)            
             group.save()
             
         return group      
@@ -212,6 +213,7 @@ def ingest_contacts():
         user.title = contact['Job Title']
         user.department = contact['Department']        
         user.location = contact['Location']
+        user.affiliations = contact['Affiliations']
         user.save()
         
         group = get_group(contact['Location'])

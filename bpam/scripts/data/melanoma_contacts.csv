@@ -1,25 +1,28 @@
-Location,Job Title,Department,Surname,First Name,Direct Line,Email,Username,Enabled
-MIA,Professor,,Mann,Graham,,graham.mann@sydney.edu.au,gmann,x
-QIMR,Professor,,Hayward,Nick,,Nick.Hayward@qimr.edu.au,nhayward,x
-MIA (RPAH),Head,Tumour Bank,Scolyer,Richard,02 9515 7011,Richard.Scolyer@melanoma.org.au,rscolyer,x
-MIA (RPAH),Project Manager,,Wilmott,James,02 9515 6441,james.wilmott@melanoma.org.au,jwilmott,x
-MIA (RPAH),Research Assistant,Tissue QC and extraction,Kakavand,Hojabr,02 9515 6441,Hojabr.Kakavand@melanoma.org.au,hkakavand,
-MIA (RPAH),Research Assistant,Tissue QC and extraction,Shang,Ping,02 9515 6441,Ping.Shang@melanoma.org.au,pshang,
-MIA (North Sydney),Project Manager,Tumour bank,Jakrot,Valerie,61 2 9911 7346 ,Valerie.Jakrot@melanoma.org.au,vjakrot,
-MIA (North Sydney),"Statistical Analyst
+Location,Affiliations,Job Title,Department,Surname,First Name,Direct Line,Email,Username,Enabled
+MIA,RPAH,Professor,,Mann,Graham,,graham.mann@sydney.edu.au,gmann,x
+QIMR,QIMR,Professor,,Hayward,Nick,,Nick.Hayward@qimr.edu.au,nhayward,x
+MIA (RPAH),,Head,Tumour Bank,Scolyer,Richard,02 9515 7011,Richard.Scolyer@melanoma.org.au,rscolyer,x
+MIA (RPAH),"RPAH, Ludwig, Peter Mac",Project Manager,,Wilmott,James,02 9515 6441,james.wilmott@melanoma.org.au,jwilmott,x
+,Ludwig,,,Behren,Andreas,,,abehren,
+,Peter Mac,,,McCathur,Grant,,,gmcathur,
+,Peter Mac,,,Shackleton,Marc,,,mshackleton,
+MIA (RPAH),,Research Assistant,Tissue QC and extraction,Kakavand,Hojabr,02 9515 6441,Hojabr.Kakavand@melanoma.org.au,hkakavand,
+MIA (RPAH),,Research Assistant,Tissue QC and extraction,Shang,Ping,02 9515 6441,Ping.Shang@melanoma.org.au,pshang,
+MIA (North Sydney),,Project Manager,Tumour bank,Jakrot,Valerie,61 2 9911 7346 ,Valerie.Jakrot@melanoma.org.au,vjakrot,
+MIA (North Sydney),,"Statistical Analyst
  
 ",Research and Biostatistics Group ,Haydu,Lauren,61 2 9911 7322,Lauren.Haydu@melanoma.org.au,lhaydu,
-MIA (Westmead),Post Doctoral Fellow,Cancer research group,Tembe,Varsha,61-2-98459052,varsha.tembe@sydney.edu.au,vtembe,
-MIA (Westmead),Post Doctoral Fellow/cancer research group,Cancer research group,Pupo,Gulietta,61-2-98459052,gulietta.pupo@sydney.edu.au,gpupo,
-MIA (Westmead),PhD candidate,Cancer research group,Schramm,Sarah-Jane,,ssch2971@uni.sydney.edu.au,sjschramm,
-MIA (Westmead),Head,Cell cycle group,Rizos,Helen,61 2 9845 9059  ,helen.rizos@sydney.edu.au  ,hrizos,
-QIMR,Post Doctoral Fellow,Bioinformatician,Johansson,Peter,61-7-33620323,peter.johansson@qimr.edu.au,pjohansson,x
-QIMR,Post Doctoral Fellow,Mutant epitopes,Pritchard,Antonia,61-7-33620323,antonia.pritchard@qimr.edu.au,apritchard,
-QIMR,Post Doctoral Fellow,Recurrent mutations,Dutton-Regester,Ken,61-7-33620323,ken.dutton-regester@qimr.edu.au,kdutton,
-QIMR,PhD student,MicroRNAs,Stark,Mitchell,61-7-33620323,mitchell.stark@qimr.edu.au,mstark,
-QIMR,Research Assistant,Frequently mutated genes,Gartside,Michael,61-7-33620323,michael.gartside@qimr.edu.au,mgartside,
-BPA,,,Shang,Catherine,,cshang@bioplatforms.com,cshang,x
-BPA,,,Fitzgerald,Anna,,afitzgerald@bioplatforms.com,afitzgerald,x
-ANU,Senior Bioinformatics Manager,"College of Medicine, Biology and Environment
+MIA (Westmead),,Post Doctoral Fellow,Cancer research group,Tembe,Varsha,61-2-98459052,varsha.tembe@sydney.edu.au,vtembe,
+MIA (Westmead),,Post Doctoral Fellow/cancer research group,Cancer research group,Pupo,Gulietta,61-2-98459052,gulietta.pupo@sydney.edu.au,gpupo,
+MIA (Westmead),,PhD candidate,Cancer research group,Schramm,Sarah-Jane,,ssch2971@uni.sydney.edu.au,sjschramm,
+MIA (Westmead),,Head,Cell cycle group,Rizos,Helen,61 2 9845 9059  ,helen.rizos@sydney.edu.au  ,hrizos,
+QIMR,,Post Doctoral Fellow,Bioinformatician,Johansson,Peter,61-7-33620323,peter.johansson@qimr.edu.au,pjohansson,x
+QIMR,,Post Doctoral Fellow,Mutant epitopes,Pritchard,Antonia,61-7-33620323,antonia.pritchard@qimr.edu.au,apritchard,
+QIMR,,Post Doctoral Fellow,Recurrent mutations,Dutton-Regester,Ken,61-7-33620323,ken.dutton-regester@qimr.edu.au,kdutton,
+QIMR,,PhD student,MicroRNAs,Stark,Mitchell,61-7-33620323,mitchell.stark@qimr.edu.au,mstark,
+QIMR,,Research Assistant,Frequently mutated genes,Gartside,Michael,61-7-33620323,michael.gartside@qimr.edu.au,mgartside,
+BPA,,,,Shang,Catherine,,cshang@bioplatforms.com,cshang,x
+BPA,,,,Fitzgerald,Anna,,afitzgerald@bioplatforms.com,afitzgerald,x
+ANU,,Senior Bioinformatics Manager,"College of Medicine, Biology and Environment
 The John Curtin School of Medical Research.",Field,Matt,61 2 6125 6436,u4991372@anu.edu.au,mfield,x
-CCG,Senior Bioinformatics Officer ,CCG,Moolhuijzen,Paula,61 8 6436 8939 , pmoolhuijzen@ccg.murdoch.edu.au ,pmoolhuijzen,x
+CCG,,Senior Bioinformatics Officer ,CCG,Moolhuijzen,Paula,61 8 6436 8939 , pmoolhuijzen@ccg.murdoch.edu.au ,pmoolhuijzen,x

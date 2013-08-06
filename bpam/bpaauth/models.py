@@ -10,4 +10,5 @@ class BPAUser(AbstractUser):
     title = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
     telephone = models.CharField(max_length=12, blank=True)
+    affiliations = models.CharField(max_length=200, blank=True)
     note = models.TextField(blank=True)
