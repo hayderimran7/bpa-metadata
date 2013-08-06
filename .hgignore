@@ -5,3 +5,7 @@ syntax: glob
 *.html~
 *.js~
 media/
+bpam/build
+bpam/bpam.egg-info
+bootstrap
+virt_bpam
