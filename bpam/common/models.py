@@ -107,17 +107,18 @@ class Protocol(models.Model):
     Protocol
     """
     
-    LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
-    construct_type = models.CharField(max_length=2, choices=LIB_TYPES)
-    base_pairs = models.IntegerField()
+    LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
+    library_type = models.CharField(max_length=2, choices=LIB_TYPES)
+    base_pairs = models.IntegerField(blank=True, null=True)
     library_construction_protocol = models.CharField(max_length=200)
     note = models.TextField(blank=True)
     
     def __unicode__(self):
-        return "Size: " + str(self.base_pairs) + " Type: " + str(self.construct_type) + " Protocol: " + str(self.library_construction_protocol)
+        return "Size: " + str(self.base_pairs) + " Type: " + str(self.library_type) + " Protocol: " + str(self.library_construction_protocol)
 
     class Meta:
         verbose_name_plural = "Protocol"
+        unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
 
 class Sample(models.Model):
@@ -142,6 +143,8 @@ class Sample(models.Model):
     sequencing_facility = models.ForeignKey(Facility, related_name='sequencing', blank=True, null=True)
     array_analysis_facility = models.ForeignKey(Facility, related_name='array_analysis', blank=True, null=True)
     whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='whole_genome', blank=True, null=True)
+    
+    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     
     def __unicode__(self):
         return "{} {}".format(self.bpa_id, self.name)

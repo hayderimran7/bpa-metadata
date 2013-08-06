@@ -80,7 +80,7 @@ def ingest_bpa_ids(data):
 
 def get_dna_source(description):
     """
-    Get a dna source if it exist, if it doesn't make it.
+    Get a DNA source if it exists, if it doesn't make it.
     """
 
     description = description.capitalize()
@@ -125,6 +125,32 @@ def ingest_samples(samples):
         
         return facility
         
+    def get_protocol(e):
+        
+        def get_library_type(str):
+            """
+            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            """
+            nstr = str.lower()
+            if nstr.find('pair') >= 0:
+                return 'PE'
+            if nstr.find('single') >= 0:
+                return 'SE'
+            if nstr.find('mate') >= 0:
+                return 'MP'
+            return 'UN'
+                        
+        base_pairs = get_clean_number(e['library_construction']) 
+        library_type = get_library_type(e['library'])
+        library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
+        
+        try:
+            protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
+        except Protocol.DoesNotExist:
+            protocol = Protocol(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
+            protocol.save()
+            
+        return protocol
         
     
     def get_gender(gender):
@@ -155,7 +181,9 @@ def ingest_samples(samples):
             sample.array_analysis_facility = get_facility(e['array_analysis_facility'], 'Array Analysis')
             sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'], 'Whole Genome Sequencing')
             sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
-             
+            
+            sample.protocol = get_protocol(e)
+            
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
             print("Ingested Melanoma sample {}".format(sample.name))

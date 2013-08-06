@@ -12,8 +12,8 @@ from .models import (BPAProject,
 
     
 class ProtocolAdmin(admin.ModelAdmin):
-    fields = (('construct_type', 'base_pairs', 'library_construction_protocol'), 'note')
-    list_display = ('construct_type', 'base_pairs', 'library_construction_protocol')
+    fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
+    list_display = ('library_type', 'base_pairs', 'library_construction_protocol')
 
     
 class AffiliationAdmin(admin.ModelAdmin):
