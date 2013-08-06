@@ -31,10 +31,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bpam',
+        'USER': 'bpam',
+        'PASSWORD': 'bpam',
         'HOST': '',
         'PORT': '',
     }
@@ -173,4 +173,3 @@ def get_env_variable(var_name):
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
-
