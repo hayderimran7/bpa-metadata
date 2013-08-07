@@ -158,14 +158,16 @@ purge() {
 
 run() {
     python manage.py syncdb --traceback
+    python manage.py runscript ingest_projects --traceback
     python manage.py runscript ingest_melanoma --traceback
+    python manage.py runscript ingest_soil_agricultural --traceback
     python manage.py runserver
 }
 
 dev() {
     (
 	cd ${PROJECT_NICKNAME}
-        if [ -f /tmp/bpa* ]
+        if [ -f /tmp/bpaXX* ]
 	then
 	    rm /tmp/bpa*
         fi

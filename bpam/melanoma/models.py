@@ -1,6 +1,6 @@
 from django.db import models
 from bpaauth.models import BPAUser
-from common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS
+from common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS, Organism
 
 class TumorStage(models.Model):
     """ Tumor Stage """
@@ -29,6 +29,7 @@ class Array(models.Model):
 class MelanomaSample(Sample):
     """ Melanoma specific Sample """
     
+    organism = models.ForeignKey(Organism)
     # don't currently understand what this is. 
     passage_number = models.IntegerField(null=True)
     

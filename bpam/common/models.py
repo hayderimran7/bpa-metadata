@@ -128,8 +128,7 @@ class Sample(models.Model):
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True)
     name = models.CharField(max_length=200)   
-    
-    organism = models.ForeignKey(Organism)
+        
     dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source", blank=True, null=True)
     dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True)             
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
@@ -138,9 +137,9 @@ class Sample(models.Model):
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     
     # facilities
-    sequencing_facility = models.ForeignKey(Facility, related_name='sequencing', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, related_name='array_analysis', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='whole_genome', blank=True, null=True)
+    sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    array_analysis_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
     
     protocol = models.ForeignKey(Protocol, blank=True, null=True)    
     note = models.TextField(blank=True)

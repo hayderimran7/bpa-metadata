@@ -134,6 +134,11 @@ INSTALLED_APPS = (
     'common',
     'melanoma',
     'coral',
+    'base_soil_agricultural',
+    'base_soil_environmental',
+    'wheat_cultivars',
+    'wheat_fungal_pathogens'
+    
 )
 
 # A sample logging configuration. The only tangible logging
