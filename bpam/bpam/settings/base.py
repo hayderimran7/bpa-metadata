@@ -40,6 +40,10 @@ DATABASES = {
     }
 }
 
+
+ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
+
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
