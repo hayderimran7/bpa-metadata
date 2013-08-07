@@ -5,7 +5,8 @@ DEMO_SETTINGS=bpametadata.settings.demo
 
 run() {
     python manage.py syncdb --settings=$1 --traceback
-    python manage.py runscript ingest --settings=$1 --traceback
+    python manage.py runscript ingest_melanoma --settings=$1 --traceback
+    python manage.py runscript ingest_soil_agricultural --settings=$1 --traceback
     python manage.py runserver --settings=$1
 }
 
