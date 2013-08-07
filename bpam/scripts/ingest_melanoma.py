@@ -4,79 +4,14 @@ from datetime import date
 from bpaauth.models import BPAUser
 from common.models import *
 from melanoma.models import *
+from utils import *
 import pprint
 
 MELANOMA_SAMPLE_FILE='./scripts/data/melanoma_samples.csv'
 MELANOMA_ARRAY_FILE='./scripts/data/melanoma_arrays.csv'
 MELANOMA_CONTACT_DATA='./scripts/data/melanoma_contacts.csv'
 
-INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
-
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
-
-def get_clean_number(str, default=None):
-    try:
-        return int(str.translate(None, string.letters))
-    except ValueError:
-        return default
-        
-def get_date(date_str):
-    """
-    Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
-    """
-    from dateutil import parser
-    return parser.parse(date_str)
- 
-def strip_all(reader):
-    """
-    Scrub extra whitespace from values in the reader dicts as read from the csv files 
-    """
-    
-    entries = []
-    for entry in reader:
-        new_e = {}
-        for k, v in entry.items():
-            new_e[k] = v.strip()
-        entries.append(new_e)
-    
-    return entries
-        
-def add_organism(genus="", species=""):
-    organism = Organism(genus=genus, species=species)
-    organism.save() 
-
-
-def add_projects():
-    
-    projects = (('Melanoma', 'Human Melanoma'),
-                ('Coral', 'Great Barrier Reef Coral'),
-                ('BASE Soil Agricultural', 'BASE Soil project agricultural sites'),
-                ('BASE Soil Environmental', 'BASE Soil project environmental sites'),
-                ('Wheat Cultivars', 'Wheat Cultivars'),
-                ('Wheat Fungal pathogens', 'Wheat fungal pathogens'))
-    
-    for name, descr in projects: 
-        project = BPAProject(name=name, description=descr)
-        project.save()
-        print("Ingested project " + str(project))
-
-
-def ingest_bpa_ids(data):
-    """
-    The BPA ID's are unique
-    """
-    def add_BPA_ID(id):
-        lbl = BPAUniqueID(bpa_id=id)
-        lbl.project = BPAProject.objects.get(name='Melanoma')
-        lbl.note = INGEST_NOTE
-        lbl.save()
-        print("Ingested BPA Unique ID: " + str(lbl))    
-    
-    id_set = set()
-    for e in data:
-        id_set.add(e['bpa_id'].strip()) 
-    for id in id_set:
-        add_BPA_ID(id)
 
 def get_dna_source(description):
     """
@@ -84,7 +19,6 @@ def get_dna_source(description):
     """
 
     description = description.capitalize()
-
     try:
         source = DNASource.objects.get(description=description)
     except DNASource.DoesNotExist:
@@ -430,7 +364,7 @@ def ingest_runs(sample_data):
         
 def ingest_melanoma():    
         sample_data = get_melanoma_sample_data()
-        ingest_bpa_ids(sample_data)
+        ingest_bpa_ids(sample_data, 'Melanoma')
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())
         ingest_runs(sample_data)
@@ -441,8 +375,5 @@ def run():
     add_projects()
     ingest_melanoma()
     
-def runx():
-    sample_data = get_melanoma_sample_data()
-    ingest_runs(sample_data)
     
     

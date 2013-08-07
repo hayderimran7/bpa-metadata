@@ -158,14 +158,20 @@ purge() {
 
 run() {
     python manage.py syncdb --traceback
-    python manage.py runscript ingest --traceback
+    python manage.py runscript ingest_melanoma --traceback
     python manage.py runserver
 }
 
 dev() {
-    rm /tmp/bpa*
-    devsettings
-    run
+    (
+	cd ${PROJECT_NICKNAME}
+        if [ -f /tmp/bpa* ]
+	then
+	    rm /tmp/bpa*
+        fi
+	devsettings
+	run
+    )
 }
 
 demo() {
