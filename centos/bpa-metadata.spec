@@ -26,8 +26,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 BuildArch: x86_64
 Vendor: Centre for Comparative Genomics <web@ccg.murdoch.edu.au>
-BuildRequires: python-setuptools python-devel
-Requires: python-setuptools httpd mod_wsgi graphviz-devel
+BuildRequires: python-setuptools python-devel graphviz-devel
+Requires: python-setuptools httpd mod_wsgi
 
 %description
 BPA Metadata Management
