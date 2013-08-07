@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from bpaauth.models import BPAUser
+from apps.bpaauth.models import BPAUser
 
 GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
@@ -20,8 +20,8 @@ class BPAProject(models.Model):
         return self.name
     
     class Meta:
-        verbose_name = 'BPA Project'
-        verbose_name_plural = "BPA Projects"
+        verbose_name = _('BPA Project')
+        verbose_name_plural = _("BPA Projects")
     
 class BPAUniqueID(models.Model):
     """

@@ -111,10 +111,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth'
 )
 
-ROOT_URLCONF = 'bpametadata.urls'
+ROOT_URLCONF = 'bpam.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'bpametadata.wsgi.application'
+WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
     'admin_tools',
@@ -130,14 +130,14 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'bpaauth',
-    'common',
-    'melanoma',
-    'coral',
-    'base_soil_agricultural',
-    'base_soil_environmental',
-    'wheat_cultivars',
-    'wheat_fungal_pathogens'
+    'apps.bpaauth',
+    'apps.common',
+    'apps.melanoma',
+    'apps.coral',
+    'apps.base_soil_agricultural',
+    'apps.base_soil_environmental',
+    'apps.wheat_cultivars',
+    'apps.wheat_fungal_pathogens'
     
 )
 

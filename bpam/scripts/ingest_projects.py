@@ -1,4 +1,4 @@
-from common.models import *
+from apps.common.models import *
 
 def add_projects():
     """ The set of projects is set"""

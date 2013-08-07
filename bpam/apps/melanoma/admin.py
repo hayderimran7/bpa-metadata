@@ -1,10 +1,10 @@
 from django.contrib import admin
-from melanoma.models import (TumorStage,
-                             Array,
-                             MelanomaSample,
-                             MelanomaRun,
-                             MelanomaSequenceFile,
-                             )
+from models import (TumorStage,
+                    Array,
+                    MelanomaSample,
+                    MelanomaRun,
+                    MelanomaSequenceFile,
+                    )
 
 
 class MelanomaSequenceFileAdmin(admin.ModelAdmin):
@@ -22,7 +22,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
        
     ]
 
-    list_display = ('filename', 'get_sample_id', 'get_sample_name', 'get_project_name', 'date_received_from_sequencing_facility', 'run')
+    list_display = ('filename', 'get_sample_id', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
     
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
@@ -33,13 +33,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
         return obj.sample.name
     get_sample_name.short_description = 'Sample Name'
     get_sample_name.admin_order_field = 'sample__name'
-    
-    def get_project_name(self, obj):
-        return obj.sample.bpa_id.project.name
-    get_project_name.short_description = 'Project'
-    get_project_name.admin_order_field = 'sample__bpa_id__project__name'
-    
-    
+     
 
 class MelanomaRunAdmin(admin.ModelAdmin):
     fieldsets = [       

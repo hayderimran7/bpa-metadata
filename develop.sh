@@ -19,11 +19,11 @@ MODULES="MySQL-python==1.2.3 psycopg2==2.4.6 Werkzeug flake8 ${TESTING_MODULES}"
 PIP_OPTS="-v -M --download-cache ~/.pip/cache"
 
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpametadata.settings.dev"
+    export DJANGO_SETTINGS_MODULE="bpam.settings.dev"
 }
 
 demosettings() {
-    export DJANGO_SETTINGS_MODULE="bpametadata.settings.demo"
+    export DJANGO_SETTINGS_MODULE="bpam.settings.demo"
 }
 
 activate_virtualenv() {

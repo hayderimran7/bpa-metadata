@@ -1,11 +1,12 @@
+import pprint
 import csv
 import string
 from datetime import date
-from bpaauth.models import BPAUser
-from common.models import *
-from melanoma.models import *
-from utils import *
-import pprint
+
+from apps.bpaauth.models import BPAUser
+from apps.common.models import *
+from apps.melanoma.models import *
+from .utils import *
 
 MELANOMA_SAMPLE_FILE='./scripts/data/melanoma_samples.csv'
 MELANOMA_ARRAY_FILE='./scripts/data/melanoma_arrays.csv'

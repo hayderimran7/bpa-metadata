@@ -1,1 +1,0 @@
-../bpametadata/settings/base.py

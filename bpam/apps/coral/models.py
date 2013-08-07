@@ -1,8 +1,5 @@
 from django.db import models
 
-import common.models 
-
-
 class Collection(models.Model):
     """
     Data surrounding a Coral collection

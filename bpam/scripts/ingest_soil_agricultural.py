@@ -1,12 +1,13 @@
+import pprint
 import csv
 import string
 from datetime import date
-from bpaauth.models import BPAUser
-from common.models import *
-from base_soil_agricultural.models import * 
-import pprint
 
-from utils import *
+from apps.bpaauth.models import BPAUser
+from apps.common.models import *
+from apps.base_soil_agricultural.models import * 
+
+from .utils import *
 
 SAMPLE_FILE = './scripts/data/base_soil_agric_sample.csv'
 

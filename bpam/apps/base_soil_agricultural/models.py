@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import Sample
+from apps.common.models import Sample
 
 class SoilSample(Sample):
     """ Soil Sample """
