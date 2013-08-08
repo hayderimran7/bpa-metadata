@@ -142,7 +142,7 @@ class Sample(models.Model):
     whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
     
     protocol = models.ForeignKey(Protocol, blank=True, null=True)    
-    note = models.TextField(blank=True)
+    note = models.TextField(blank=True, null=True)
     
     def __unicode__(self):
         return "{} {}".format(self.bpa_id, self.name)

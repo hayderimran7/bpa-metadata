@@ -11,11 +11,25 @@ from .utils import *
 
 SAMPLE_FILE = './scripts/data/base_soil_agric_sample.csv'
 
+
+def ingest_land_use_taxonomy():
+    
+    land_uses = ('Conservation and Natural Environments',
+                 'Production from relatively natural Environments',
+                 'Production from dryland agriculture and plantations',
+                 'Production from irrigated agriculture and plantations',
+                 'Intensive uses',
+                 'Water')
+    for use in land_uses:
+        u = LandUse(description=use)
+        u.save()
+     
+
 def get_sample_data():
     with open(SAMPLE_FILE, 'rb') as samples:
         fieldnames = ['bpa_id',
                       'sample_name',
-                      'soil_dept',
+                      'sample_depth',
                       'plot_description',
                       'owner',
                       'collection_date',
@@ -51,6 +65,26 @@ def get_sample_data():
         return strip_all(reader)
 
 
+def get_collection_site(e):
+    """ Add a collection site"""
+    
+    collection_site = CollectionSite()
+    collection_site.sample_depth = e['sample_depth']
+    collection_site.note = e['notes']
+    collection_site.lat = e['lat']
+    collection_site.long = e['long']
+    collection_site.elevation = e['elevation']
+    collection_site.slope_gradient = e['slope_gradient']
+    collection_site.slope_aspect = e['slope_aspect']
+    collection_site.profile_position = e['profile_position']
+    collection_site.drainage = e['drainage_classification']
+    collection_site.australian_classification_soil_type = e['australian_classification_soil_type']
+    collection_site.note = e['notes']
+    
+    collection_site.save()
+    
+    return collection_site    
+
 def add_sample(e):
     bpa_id = e['bpa_id']
     try:
@@ -59,12 +93,14 @@ def add_sample(e):
         sample = SoilSample()
         sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
         sample.name = e['sample_name']
-
-        sample.note = e['notes']
+        sample.collection_site = get_collection_site(e)
+        sample.note = pprint.pprint(e)
         sample.save()
         print("Ingested Soil sample {}".format(sample.name))
 
 def run():
+    ingest_land_use_taxonomy()
+        
     data = get_sample_data()
     ingest_bpa_ids(data, 'BASE Soil Agricultural')
     
