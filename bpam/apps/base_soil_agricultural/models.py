@@ -102,42 +102,42 @@ class ChemicalAnalysis(models.Model):
     
     # sample = models.ForeignKey(SoilSample)
     bpa_id = models.ForeignKey(BPAUniqueID)
-    lab_name_id = models.CharField(max_length=100, blank=True)
-    customer = models.CharField(max_length=100, blank=True)
-    collection_depth = models.CharField(max_length=100, blank=True)
-    colour = models.CharField(max_length=100, blank=True)
-    gravel = models.CharField(max_length=100, blank=True)
-    texture = models.CharField(max_length=100, blank=True)
+    lab_name_id = models.CharField(max_length=100, blank=True, null=True)
+    customer = models.CharField(max_length=100, blank=True, null=True)
+    depth = models.CharField(max_length=100, blank=True, null=True)
+    colour = models.CharField(max_length=100, blank=True, null=True)
+    gravel = models.CharField(max_length=100, blank=True, null=True)
+    texture = models.CharField(max_length=100, blank=True, null=True)
     
-    ammonium_nitrogen = models.FloatField(blank=True)
-    nitrate_nitrogen = models.CharField(max_length=10) # <>
-    phosphorus_colwell = models.CharField(max_length=10) # <>
-    potassium_colwell = models.FloatField(blank=True)
-    sulphur_colwell = models.FloatField(blank=True)
-    organic_carbon = models.FloatField(blank=True)
-    conductivity = models.FloatField(blank=True)
-    cacl2_ph = models.FloatField(blank=True)
-    h20_ph = models.FloatField(blank=True)
-    dtpa_copper = models.FloatField(blank=True)
-    dtpa_iron = models.FloatField(blank=True)
-    dtpa_manganese = models.FloatField(blank=True)
-    dtpa_zinc = models.FloatField(blank=True)
-    exc_aluminium = models.FloatField(blank=True)
-    exc_calcium = models.FloatField(blank=True)
-    exc_magnesium = models.FloatField(blank=True)
-    exc_potassium = models.FloatField(blank=True)
-    exc_sodium = models.FloatField(blank=True)
-    boron_hot_cacl2 = models.FloatField(blank=True)
+    ammonium_nitrogen = models.FloatField(blank=True, null=True)
+    nitrate_nitrogen = models.CharField(max_length=10, null=True) # <>
+    phosphorus_colwell = models.CharField(max_length=10, null=True) # <>
+    potassium_colwell = models.FloatField(blank=True, null=True)
+    sulphur_colwell = models.FloatField(blank=True, null=True)
+    organic_carbon = models.FloatField(blank=True, null=True)
+    conductivity = models.FloatField(blank=True, null=True)
+    cacl2_ph = models.FloatField(blank=True, null=True)
+    h20_ph = models.FloatField(blank=True, null=True)
+    dtpa_copper = models.FloatField(blank=True, null=True)
+    dtpa_iron = models.FloatField(blank=True, null=True)
+    dtpa_manganese = models.FloatField(blank=True, null=True)
+    dtpa_zinc = models.FloatField(blank=True, null=True)
+    exc_aluminium = models.FloatField(blank=True, null=True)
+    exc_calcium = models.FloatField(blank=True, null=True)
+    exc_magnesium = models.FloatField(blank=True, null=True)
+    exc_potassium = models.FloatField(blank=True, null=True)
+    exc_sodium = models.FloatField(blank=True, null=True)
+    boron_hot_cacl2 = models.FloatField(blank=True, null=True)
     
-    clay = models.FloatField()
-    course_sand = models.FloatField()
-    fine_sand = models.FloatField()
-    sand = models.FloatField()
-    silt = models.FloatField()
+    clay = models.FloatField(blank=True, null=True)
+    course_sand = models.FloatField(blank=True, null=True)
+    fine_sand = models.FloatField(blank=True, null=True)
+    sand = models.FloatField(blank=True, null=True)
+    silt = models.FloatField(blank=True, null=True)
     
     
     def __unicode__(self):
-        return "Chemical Analysis for {}".format(self.sample)
+        return "Chemical Analysis for {}".format(self.bpa_id)
     
     class Meta:
         verbose_name_plural = "Sample Chemical Essays"

@@ -13,6 +13,12 @@ def get_clean_number(str, default=None):
         return int(str.translate(None, string.letters))
     except ValueError:
         return default
+    
+def get_clean_float(str, default=None):
+    try:
+        return float(str.translate(None, string.letters))
+    except ValueError:
+        return default
         
 def get_date(date_str):
     """

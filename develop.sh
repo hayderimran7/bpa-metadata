@@ -165,15 +165,17 @@ run() {
 }
 
 dev() {
-    (
-	cd ${PROJECT_NICKNAME}
-        if [ -f /tmp/bpaXX* ]
-	then
-	    rm /tmp/bpa*
-        fi
-	devsettings
-	run
-    )
+    if [ -f /tmp/bpa ]
+    then
+        rm /tmp/bpa*
+    fi
+    devsettings
+    run
+}
+
+doagric() {
+    devsettings
+    python manage.py runscript ingest_soil_agricultural --traceback
 }
 
 demo() {
@@ -240,6 +242,9 @@ purge)
     ;;
 dev)
     dev
+    ;;
+doagric)
+    doagric
     ;;
 demo)
     demo

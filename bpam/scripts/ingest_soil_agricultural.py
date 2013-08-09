@@ -29,7 +29,7 @@ def get_sample_data():
     with open(SAMPLE_FILE, 'rb') as samples:
         fieldnames = ['bpa_id',
                       'sample_name',
-                      'sample_depth',
+                      'depth',
                       'plot_description',
                       'owner',
                       'collection_date',
@@ -69,7 +69,7 @@ def get_chem_data():
         fieldnames = ['bpa_id',
                       'lab_name_id',
                       'customer',
-                      'collection_depth',
+                      'depth',
                       'colour',
                       'gravel',
                       'texture',
@@ -116,7 +116,7 @@ def get_collection_site(e):
     
     collection_site = CollectionSite()
     collection_site.plot_description = e['plot_description']
-    collection_site.sample_depth = e['collection_depth']
+    collection_site.sample_depth = e['depth']
     collection_site.note = e['notes']
     collection_site.lat = e['lat']
     collection_site.long = e['long']
@@ -151,35 +151,35 @@ def add_chem_sample(e):
     chema.bpa_id = BPAUniqueID(e['bpa_id'])
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
-    chema.collection_depth = e['collection_depth']
+    chema.depth = e['depth']
     chema.colour = e['colour']
     chema.gravel = e['gravel']
     chema.texture = e['texture']    
-    chema.ammonium_nitrogen = float(e['ammonium_nitrogen'])
+    chema.ammonium_nitrogen = get_clean_float(e['ammonium_nitrogen'])
     chema.nitrate_nitrogen = e['nitrate_nitrogen'] # <>
     chema.phosphorus_colwell = e['phosphorus_colwell'] # <>
-    chema.potassium_colwell = float(e['potassium_colwell'])
-    chema.sulphur_colwell = float(e['sulphur_colwell'])
-    chema.organic_carbon = float(e['organic_carbon'])
-    chema.conductivity = float(e['conductivity'])
-    chema.cacl2_ph = float(e['cacl2_ph'])
-    chema.h20_ph = float(e['h2o_ph'])
-    chema.dtpa_copper = float(e['dtpa_copper'])
-    chema.dtpa_iron = float(e['dtpa_iron'])
-    chema.dtpa_manganese = float(e['dtpa_manganese']) 
-    chema.dtpa_zinc = float(e['dtpa_zinc'])
-    chema.exc_aluminium = float(e['exc_aluminium'])
-    chema.exc_calcium = float(e['exc_calcium'])
-    chema.exc_magnesium = float(e['exc_magnesium'])
-    chema.exc_potassium = float(e['exc_potassium'])
-    chema.exc_sodium = float(e['exc_sodium'])
-    chema.boron_hot_cacl2 = float(e['boron_hot_cacl2'])
+    chema.potassium_colwell = get_clean_float(e['potassium_colwell'])
+    chema.sulphur_colwell = get_clean_float(e['sulphur_colwell'])
+    chema.organic_carbon = get_clean_float(e['organic_carbon'])
+    chema.conductivity = get_clean_float(e['conductivity'])
+    chema.cacl2_ph = get_clean_float(e['cacl2_ph'])
+    chema.h20_ph = get_clean_float(e['h2o_ph'])
+    chema.dtpa_copper = get_clean_float(e['dtpa_copper'])
+    chema.dtpa_iron = get_clean_float(e['dtpa_iron'])
+    chema.dtpa_manganese = get_clean_float(e['dtpa_manganese']) 
+    chema.dtpa_zinc = get_clean_float(e['dtpa_zinc'])
+    chema.exc_aluminium = get_clean_float(e['exc_aluminium'])
+    chema.exc_calcium = get_clean_float(e['exc_calcium'])
+    chema.exc_magnesium = get_clean_float(e['exc_magnesium'])
+    chema.exc_potassium = get_clean_float(e['exc_potassium'])
+    chema.exc_sodium = get_clean_float(e['exc_sodium'])
+    chema.boron_hot_cacl2 = get_clean_float(e['boron_hot_cacl2'])
     
-    chema.clay = e['clay']
-    chema.course_sand = e['course_sand']
-    chema.fine_sand = e['fine_sand']
-    chema.sand = e['sand']
-    chema.silt = e['silt']
+    chema.clay = get_clean_float(e['clay'])
+    chema.course_sand = get_clean_float(e['course_sand'])
+    chema.fine_sand = get_clean_float(e['fine_sand'])
+    chema.sand = get_clean_float(e['sand'])
+    chema.silt = get_clean_float(e['silt'])
     
     chema.save()
 
