@@ -7,6 +7,7 @@ syntax: glob
 media/
 bpam/build
 bpam/bpam.egg-info
+bpam/dist
 bootstrap
 virt_bpam
 *.rpm

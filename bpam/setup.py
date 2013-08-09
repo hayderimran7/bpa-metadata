@@ -1,8 +1,12 @@
 import setuptools
-from setuptools import setup
+from setuptools import setup, find_packages
 import os.path
 import re
 from pip.req import parse_requirements
+
+def list_requirements(name):
+    return [str(ir.req) for ir in
+            parse_requirements(os.path.join("..", "requirements", name))]
 
 setup(
     name='bpam',
@@ -11,23 +15,9 @@ setup(
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
-    packages=[
-        'bpam',
-        'bpam.settings',
-        'apps.bpaauth',
-        'apps.common',
-        'apps.common.management',
-        'apps.common.management.commands',
-        'apps.coral',
-        'apps.melanoma',
-        'apps.base_soil_agricultural',
-        'apps.base_soil_environmental',
-        'apps.wheat_cultivars',
-        'apps.wheat_fungal_pathogens',
-        'scripts',
-        ],
+    packages=find_packages(),
     package_data={
         "bpametadata": [ "templates/admin/base_site.html" ],
         },
-    install_requires=[str(ir.req) for ir in parse_requirements('../requirements/dev.txt')],
+    install_requires=list_requirements("dev.txt"),
     )
