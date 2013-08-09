@@ -1,5 +1,5 @@
 from django.db import models
-from apps.common.models import Sample
+from apps.common.models import Sample, BPAUniqueID
 
 class LandUse(models.Model):
     """ Land use taxonomy """
@@ -49,7 +49,7 @@ class CollectionSiteHistory(models.Model):
 
 class CollectionSite(models.Model):
     """ Collection Site Information"""
-    
+        
     plot_description = models.TextField(blank=True)
     collection_depth = models.CharField(max_length=20, blank=True)
     lat = models.CharField(max_length=20, blank=True)
@@ -67,7 +67,7 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Collection site {} {}".format(self.collection_depth, self.plot_description, self.note)
+        return "Collection site {} {}".format(self.plot_description, self.note)
     
     class Meta:
         verbose_name_plural = "Collection Sites"
@@ -100,39 +100,40 @@ class SequenceConstruct(models.Model):
 class ChemicalAnalysis(models.Model):
     """ Chemical Analysis assay """
     
-    sample = models.ForeignKey(SoilSample)
+    # sample = models.ForeignKey(SoilSample)
+    bpa_id = models.ForeignKey(BPAUniqueID)
     lab_name_id = models.CharField(max_length=100, blank=True)
     customer = models.CharField(max_length=100, blank=True)
     collection_depth = models.CharField(max_length=100, blank=True)
     colour = models.CharField(max_length=100, blank=True)
-    gravel_persent = models.CharField(max_length=100, blank=True)
+    gravel = models.CharField(max_length=100, blank=True)
     texture = models.CharField(max_length=100, blank=True)
     
-    ammonium_nitrogen_mg_kg = models.FloatField()
-    nitrate_nitrogen_mg_kg = models.FloatField()
-    phosphorus_colwell_mg_kg = models.FloatField()
-    potassium_colwell_mg_kg = models.FloatField()
-    sulphur_colwell_mg_kg = models.FloatField()
-    organic_carbon_persentage = models.FloatField()
-    conductivity_ds_m = models.FloatField()
-    cacl2_ph = models.FloatField()
-    h20_ph = models.FloatField()
-    dtpa_copper_mg_kg = models.FloatField()
-    dtpa_iron_mg_kg = models.FloatField()
-    dtpa_manganese_mg_kg = models.FloatField()
-    dtpa_zinc_mg_kg = models.FloatField()
-    exc_aluminium_meq_100g = models.FloatField()
-    exc_calsium_meq_100g = models.FloatField()
-    exc_magnesium_meq_100g = models.FloatField()
-    exc_potasium_meq_100g = models.FloatField()
-    exc_sodium_meq_100g = models.FloatField()
-    boron_hot_cacl2_mg_kg = models.FloatField()
+    ammonium_nitrogen = models.FloatField(blank=True)
+    nitrate_nitrogen = models.CharField(max_length=10) # <>
+    phosphorus_colwell = models.CharField(max_length=10) # <>
+    potassium_colwell = models.FloatField(blank=True)
+    sulphur_colwell = models.FloatField(blank=True)
+    organic_carbon = models.FloatField(blank=True)
+    conductivity = models.FloatField(blank=True)
+    cacl2_ph = models.FloatField(blank=True)
+    h20_ph = models.FloatField(blank=True)
+    dtpa_copper = models.FloatField(blank=True)
+    dtpa_iron = models.FloatField(blank=True)
+    dtpa_manganese = models.FloatField(blank=True)
+    dtpa_zinc = models.FloatField(blank=True)
+    exc_aluminium = models.FloatField(blank=True)
+    exc_calcium = models.FloatField(blank=True)
+    exc_magnesium = models.FloatField(blank=True)
+    exc_potassium = models.FloatField(blank=True)
+    exc_sodium = models.FloatField(blank=True)
+    boron_hot_cacl2 = models.FloatField(blank=True)
     
-    clay_persentage = models.FloatField()
-    course_sand_persentage = models.FloatField()
-    fine_sand_persentage = models.FloatField()
-    sand_persentage = models.FloatField()
-    silt_persentage = models.FloatField()
+    clay = models.FloatField()
+    course_sand = models.FloatField()
+    fine_sand = models.FloatField()
+    sand = models.FloatField()
+    silt = models.FloatField()
     
     
     def __unicode__(self):
