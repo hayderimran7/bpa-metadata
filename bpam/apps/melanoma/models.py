@@ -1,6 +1,10 @@
 from django.db import models
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, GENDERS, Organism
+from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism
+
+GENDERS=(('M', 'Male'),
+         ('F', 'Female'),
+         ('U', 'Unknown'))
 
 class TumorStage(models.Model):
     """ Tumor Stage """

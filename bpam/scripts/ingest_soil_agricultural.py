@@ -12,19 +12,6 @@ from .utils import *
 SAMPLE_FILE = './scripts/data/base_soil_agric_sample.csv'
 CHEM_FILE = './scripts/data/base_soil_agric_chem.csv'
 
-def ingest_land_use_taxonomy():
-    
-    land_uses = ('Conservation and Natural Environments',
-                 'Production from relatively natural Environments',
-                 'Production from dryland agriculture and plantations',
-                 'Production from irrigated agriculture and plantations',
-                 'Intensive uses',
-                 'Water')
-    for use in land_uses:
-        u = LandUse(description=use)
-        u.save()
-     
-
 def get_sample_data():
     with open(SAMPLE_FILE, 'rb') as samples:
         fieldnames = ['bpa_id',
@@ -141,7 +128,7 @@ def add_sample(e):
         sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
         sample.name = e['sample_name']
         sample.collection_site = get_collection_site(e)
-        sample.note = pprint.pprint(e)
+        sample.note = pprint.pformat(e)
         sample.save()
         print("Ingested Soil sample {}".format(sample.name))
 
@@ -184,8 +171,9 @@ def add_chem_sample(e):
     chema.save()
 
 def run():
-    ingest_land_use_taxonomy()
-        
+    
+    LandUse.makeall()
+    
     data = get_sample_data()
     ingest_bpa_ids(data, 'BASE Soil Agricultural')
               

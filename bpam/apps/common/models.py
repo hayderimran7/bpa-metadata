@@ -4,7 +4,6 @@ from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
 
-GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'),)
 
 class BPAProject(models.Model):
     """
@@ -194,5 +193,7 @@ class SequenceFile(models.Model):
 
     class Meta:
         abstract = True
+
+
 
 

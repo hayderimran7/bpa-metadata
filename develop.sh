@@ -190,6 +190,11 @@ usage() {
     echo ""
 }
 
+
+devrun() {
+    python manage.py runserver --settings=bpam.settings.dev
+}
+
 case ${ACTION} in
 pythonversion)
     pythonversion
@@ -245,6 +250,9 @@ dev)
     ;;
 doagric)
     doagric
+    ;;
+devrun)
+    devrun
     ;;
 demo)
     demo

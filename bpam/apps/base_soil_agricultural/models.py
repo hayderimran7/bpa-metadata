@@ -2,15 +2,33 @@ from django.db import models
 from apps.common.models import Sample, BPAUniqueID
 
 class LandUse(models.Model):
-    """ Land use taxonomy """
-    
+    """ Land use taxonomy 
+    http://lrm.nt.gov.au/soil/landuse/classification
+    """
+        
+    LAND_USES = ((1, 'Conservation and Natural Environments'),
+                 (2, 'Production from relatively natural Environments'),
+                 (3, 'Production from dry land agriculture and plantations'),
+                 (4, 'Production from Irrigated agriculture and plantations'),
+                 (5, 'Intensive uses'),
+                 (6, 'Water'),)
+        
+    classification = models.IntegerField(unique=True)
     description = models.CharField(max_length=100, blank=True)
+    
+    @classmethod
+    def makeall(cls):
+        """ Land use taxonomy"""
+        for c, d in cls.LAND_USES:
+            LandUse(classification=c, description=d).save()
+            
     
     def __unicode__(self):
         return "{}".format(self.description)
     
     class Meta:
         verbose_name_plural = "Land Uses"
+        unique_together = ('classification', 'description')        
 
 class SiteOwner(models.Model):
     """ The Site Owner """
@@ -143,9 +161,17 @@ class ChemicalAnalysis(models.Model):
         verbose_name_plural = "Sample Chemical Essays"
     
         
-
+class SoilSampleDNA(models.Model):
+    name = models.CharField(max_length=20)
+    submitter = models.CharField(max_length=20)
+    dna_conc = models.CharField(max_length=20, blank=True, null=True)
+    protocol_ref = models.CharField(max_length=20, blank=True, null=True)
     
+    def __unicode__(self):
+        return "Soil DNA Library {}".format(self.name)
     
+    class Meta:
+        verbose_name_plural = "Soil Sample DNA "
     
     
     

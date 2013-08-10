@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'localflavor',
     'apps.bpaauth',
     'apps.common',
     'apps.melanoma',
