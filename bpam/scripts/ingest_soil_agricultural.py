@@ -173,6 +173,9 @@ def add_chem_sample(e):
 def run():
     
     LandUse.makeall()
+    TargetTaxon.makeall()
+    PCRPrimer.makeall()
+    TargetGene.makeall()
     
     data = get_sample_data()
     ingest_bpa_ids(data, 'BASE Soil Agricultural')

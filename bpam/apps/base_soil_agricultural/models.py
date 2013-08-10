@@ -1,6 +1,77 @@
 from django.db import models
 from apps.common.models import Sample, BPAUniqueID
 
+class PCRPrimer(models.Model):
+    """ PCR Primers """
+        
+    PRIMERS = ('27F-519R',
+               'ITS1F-ITS4',
+               '515F-806R',
+               '515F-806R',
+               '1392F-1492R',
+               '1392F-1492R',)
+    
+    name = models.CharField(max_length=100, unique=True)
+    note = models.TextField(null=True, blank=True)
+    
+    @classmethod
+    def makeall(cls):
+        """ Create all Primers"""
+        for name in cls.PRIMERS:
+            TargetGene(name=name).save()
+    
+    def __unicode__(self):
+        return "{}".format(self.name)
+    
+    class Meta:
+        verbose_name_plural = "PCR Primers"
+
+class TargetGene(models.Model):
+    """ Target Gene """
+    
+    GENES = ('V1-V3', 'V4', 'V9', 'ITS1-4')
+    
+    name = models.CharField(max_length=100, unique=True)
+    note = models.TextField(null=True, blank=True)
+    
+    @classmethod
+    def makeall(cls):
+        """ Create all Target Genes"""
+        for name in cls.GENES:
+            TargetGene(name=name).save()
+    
+    def __unicode__(self):
+        return "{}".format(self.name)
+    
+    class Meta:
+        verbose_name_plural = "Target Genes"
+
+
+class TargetTaxon(models.Model):
+    """ Target Taxon """
+    
+    TAXI = ('Eukarya',
+            'Bacteria',
+            'Prokaryota',
+            'Fungi', 
+            'Bacteria and archea')
+    
+    name = models.CharField(max_length=100, unique=True)
+    note = models.TextField()
+    
+    @classmethod
+    def makeall(cls):
+        """ Create all Target Taxons"""
+        for name in cls.TAXI:
+            TargetTaxon(name=name).save()
+    
+    def __unicode__(self):
+        return "{}".format(self.name)
+    
+    class Meta:
+        verbose_name_plural = "Target Taxons"
+
+
 class LandUse(models.Model):
     """ Land use taxonomy 
     http://lrm.nt.gov.au/soil/landuse/classification
@@ -18,7 +89,7 @@ class LandUse(models.Model):
     
     @classmethod
     def makeall(cls):
-        """ Land use taxonomy"""
+        """ Create all Land Uses"""
         for c, d in cls.LAND_USES:
             LandUse(classification=c, description=d).save()
             
@@ -165,7 +236,23 @@ class SoilSampleDNA(models.Model):
     name = models.CharField(max_length=20)
     submitter = models.CharField(max_length=20)
     dna_conc = models.CharField(max_length=20, blank=True, null=True)
-    protocol_ref = models.CharField(max_length=20, blank=True, null=True)
+    protocol_ref = models.CharField(max_length=20, blank=True, null=True, choices=(('S', 'Single'), ('P', 'Paired')))
+    library_selection = models.CharField(max_length=20, blank=True, null=True)
+    library_layout = models.CharField(max_length=20, blank=True, null=True)
+    target_taxon = models.ForeignKey(TargetTaxon)
+    target_gene = models.ForeignKey(TargetGene, related_name='target')
+    target_subfragment = models.ForeignKey(TargetGene, related_name='subfragment')
+    pcr_primer = models.ForeignKey(PCRPrimer)
+    pcr_primer_db_ref = models.CharField(max_length=20, blank=True, null=True)
+    forward_primer_sequence = models.CharField(max_length=100, blank=True, null=True)
+    reverse_primer_sequence = models.CharField(max_length=100, blank=True, null=True)
+    pcr_reaction = models.CharField(max_length=100, blank=True, null=True)
+    barcode_label = models.CharField(max_length=10, blank=True, null=True)
+    barcode_sequence = models.CharField(max_length=20, blank=True, null=True)
+    performer = models.CharField(max_length=10, blank=True, null=True)
+    labeled_extract_name = models.CharField(max_length=10, blank=True, null=True)
+    protocol_ref = models.CharField(max_length=10, blank=True, null=True)
+    
     
     def __unicode__(self):
         return "Soil DNA Library {}".format(self.name)
