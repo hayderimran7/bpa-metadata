@@ -7,8 +7,6 @@ class PCRPrimer(models.Model):
     PRIMERS = ('27F-519R',
                'ITS1F-ITS4',
                '515F-806R',
-               '515F-806R',
-               '1392F-1492R',
                '1392F-1492R',)
     
     name = models.CharField(max_length=100, unique=True)
@@ -135,10 +133,16 @@ class CollectionSiteHistory(models.Model):
     class Meta:
         verbose_name_plural = "Site History"
     
-
+    
 class CollectionSite(models.Model):
     """ Collection Site Information"""
-        
+    
+    country = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    location_name = models.CharField(max_length=100, blank=True)
+    image_url = models.URLField(blank=True, null=True)
+    horizon = models.CharField(max_length=100, blank=True)
+
     plot_description = models.TextField(blank=True)
     collection_depth = models.CharField(max_length=20, blank=True)
     lat = models.CharField(max_length=20, blank=True)
@@ -156,7 +160,7 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Collection site {} {}".format(self.plot_description, self.note)
+        return "Collection site {} {} {}".format(self.country, self.state, self.location_name)
     
     class Meta:
         verbose_name_plural = "Collection Sites"
@@ -164,7 +168,7 @@ class CollectionSite(models.Model):
 class SoilSample(Sample):
     """ Soil Sample """
         
-    collection_site = models.ForeignKey(CollectionSite)
+    collection_site = models.ForeignKey(CollectionSite)    
     
     
 class SequenceConstruct(models.Model):

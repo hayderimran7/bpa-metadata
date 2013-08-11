@@ -18,6 +18,10 @@ class SampleAdmin(admin.ModelAdmin):
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'texture')
+    
+class CollectionSiteAdmin(admin.ModelAdmin):
+    list_display = ('country', 'state', 'location_name')
+
 
 admin.site.register(SoilSample, SampleAdmin)
 admin.site.register(LandUse, LandUseAdmin)

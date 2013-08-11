@@ -22,7 +22,7 @@ def get_sample_data():
                       'collection_date',
                       'country',
                       'state',
-                      'location',
+                      'location_name',
                       'image_url',
                       'lat',
                       'long',
@@ -102,6 +102,13 @@ def get_collection_site(e):
     """ Add a collection site"""
     
     collection_site = CollectionSite()
+    collection_site.country = e['country']
+    collection_site.state = e['state']
+    collection_site.location = e['location_name']
+    collection_site.image_url = e['image_url']
+    collection_site.horizon = e['horizon']
+    
+    
     collection_site.plot_description = e['plot_description']
     collection_site.sample_depth = e['depth']
     collection_site.note = e['notes']
@@ -128,6 +135,7 @@ def add_sample(e):
         sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
         sample.name = e['sample_name']
         sample.collection_site = get_collection_site(e)
+        sample.collection_date = get_date(e['collection_date'])
         sample.note = pprint.pformat(e)
         sample.save()
         print("Ingested Soil sample {}".format(sample.name))
