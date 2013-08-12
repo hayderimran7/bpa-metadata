@@ -50,7 +50,7 @@ class Facility(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{} {}".format(self.name, self.service)
+        return "{0} {1}".format(self.name, self.service)
     
     class Meta:
         unique_together = ('name', 'service',)
@@ -68,7 +68,7 @@ class Organism(models.Model):
     note = models.TextField(blank=True) 
 
     def __unicode__(self):
-        return "{} {}".format(self.genus, self.species)
+        return "{0} {1}".format(self.genus, self.species)
     
     class Meta:
         verbose_name_plural = "Organisms"
@@ -144,7 +144,7 @@ class Sample(models.Model):
     note = models.TextField(blank=True, null=True)
     
     def __unicode__(self):
-        return "{} {}".format(self.bpa_id, self.name)
+        return "{0} {1}".format(self.bpa_id, self.name)
 
     class Meta:        
         abstract = True
@@ -189,7 +189,7 @@ class SequenceFile(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{}".format(self.filename)
+        return "{0}".format(self.filename)
 
     class Meta:
         abstract = True

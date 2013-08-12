@@ -138,7 +138,7 @@ def add_sample(e):
         sample.collection_date = get_date(e['collection_date'])
         sample.note = pprint.pformat(e)
         sample.save()
-        print("Ingested Soil sample {}".format(sample.name))
+        print("Ingested Soil sample {0}".format(sample.name))
 
 def add_chem_sample(e):
             

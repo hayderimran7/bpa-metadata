@@ -28,7 +28,7 @@ class Array(models.Model):
     gender = models.CharField(max_length=1, choices=GENDERS)
     
     def __unicode__(self):
-        return "{} {} {}".format(self.bpa_id, self.array_id, self.mia_id)
+        return "{0} {1} {2}".format(self.bpa_id, self.array_id, self.mia_id)
     
 class MelanomaSample(Sample):
     """ Melanoma specific Sample """
@@ -48,7 +48,7 @@ class MelanomaRun(Run):
     sample = models.ForeignKey(MelanomaSample)
     
     def __unicode__(self):
-        return "Run {} for {}".format(self.run_number, self.sample.name)
+        return "Run {0} for {1}".format(self.run_number, self.sample.name)
     
     
 class MelanomaSequenceFile(SequenceFile):
@@ -58,4 +58,4 @@ class MelanomaSequenceFile(SequenceFile):
     run = models.ForeignKey(MelanomaRun)
 
     def __unicode__(self):
-        return "Run {} for {}".format(self.run, self.filename)
+        return "Run {0} for {1}".format(self.run, self.filename)

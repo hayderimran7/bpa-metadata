@@ -6,7 +6,7 @@ from common.models import *
 from dateutil import parser
 import pprint
 
-INGEST_NOTE = "Ingested from GoogleDocs on {}".format(date.today()) 
+INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today()) 
 
 def get_clean_number(str, default=None):
     try:

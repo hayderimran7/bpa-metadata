@@ -15,4 +15,4 @@ class Collection(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{} {} {}".format(self.type, self.site, self.date)
+        return "{0} {1} {2}".format(self.type, self.site, self.date)

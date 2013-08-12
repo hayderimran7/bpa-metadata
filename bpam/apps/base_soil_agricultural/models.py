@@ -20,7 +20,7 @@ class PCRPrimer(models.Model):
             TargetGene(name=name).save()
     
     def __unicode__(self):
-        return "{}".format(self.name)
+        return "{0}".format(self.name)
     
     class Meta:
         verbose_name_plural = _("PCR Primers")
@@ -40,7 +40,7 @@ class TargetGene(models.Model):
             TargetGene(name=name).save()
     
     def __unicode__(self):
-        return "{}".format(self.name)
+        return "{0}".format(self.name)
     
     class Meta:
         verbose_name_plural = _("Target Genes")
@@ -65,7 +65,7 @@ class TargetTaxon(models.Model):
             TargetTaxon(name=name).save()
     
     def __unicode__(self):
-        return "{}".format(self.name)
+        return "{0}".format(self.name)
     
     class Meta:
         verbose_name_plural = _("Target Taxons")
@@ -94,7 +94,7 @@ class LandUse(models.Model):
             
     
     def __unicode__(self):
-        return "{}".format(self.description)
+        return "{0}".format(self.description)
     
     class Meta:
         verbose_name_plural = _("Land Uses")
@@ -109,7 +109,7 @@ class SiteOwner(models.Model):
     note = models.TextField(blank=True)
             
     def __unicode__(self):
-        return "{} {}".format(self.name, self.email)
+        return "{0} {1}".format(self.name, self.email)
     
     class Meta:
         verbose_name_plural = _("Site Owners")
@@ -129,7 +129,7 @@ class CollectionSiteHistory(models.Model):
     note = models.TextField()           
     
     def __unicode__(self):
-        return "Site history on {}".format(self.history_report_date)
+        return "Site history on {0}".format(self.history_report_date)
     
     class Meta:
         verbose_name_plural = _("Site History")
@@ -161,7 +161,7 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Collection site {} {} {}".format(self.country, self.state, self.location_name)
+        return "Collection site {0} {1} {2}".format(self.country, self.state, self.location_name)
     
     class Meta:
         verbose_name_plural = "Collection Sites"
@@ -186,7 +186,7 @@ class SequenceConstruct(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{}".format(self.sequence)
+        return "{0}".format(self.sequence)
     
     class Meta:
         verbose_name_plural = _("Sequence Constructs")
@@ -231,7 +231,7 @@ class ChemicalAnalysis(models.Model):
     
     
     def __unicode__(self):
-        return "Chemical Analysis for {}".format(self.bpa_id)
+        return "Chemical Analysis for {0}".format(self.bpa_id)
     
     class Meta:
         verbose_name_plural = _("Sample Chemical Essays")
@@ -260,7 +260,7 @@ class SoilSampleDNA(models.Model):
     
     
     def __unicode__(self):
-        return "Soil DNA Library {}".format(self.name)
+        return "Soil DNA Library {0}".format(self.name)
     
     class Meta:
         verbose_name_plural = _("Soil Sample DNA")

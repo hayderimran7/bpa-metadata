@@ -121,7 +121,7 @@ def ingest_samples(samples):
             
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
-            print("Ingested Melanoma sample {}".format(sample.name))
+            print("Ingested Melanoma sample {0}".format(sample.name))
             
 
     for sample in samples:
@@ -146,7 +146,7 @@ def ingest_contacts():
         try:
             group = Group.objects.get(name=nname)
         except Group.DoesNotExist:
-            print("Group {} does not exit, adding it".format(nname))
+            print("Group {0} does not exit, adding it".format(nname))
             group = Group(name=nname)            
             group.save()
             
@@ -191,10 +191,10 @@ def ingest_arrays(arrays):
         try:
             id = BPAUniqueID.objects.get(bpa_id=bpa_id)
         except BPAUniqueID.DoesNotExist:
-            print("BPA ID {} does not exit, adding it".format(bpa_id))
+            print("BPA ID {0} does not exit, adding it".format(bpa_id))
             id = BPAUniqueID(bpa_id=bpa_id)
             id.project = BPAProject.objects.get(name='Melanoma')
-            id.note = "Created during array ingestion on {}".format(date.today())
+            id.note = "Created during array ingestion on {0}".format(date.today())
             id.save()      
                   
         return id
@@ -293,7 +293,7 @@ def ingest_runs(sample_data):
     
     def get_sample(bpa_id):
         sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
-        print("Found sample {}".format(sample))
+        print("Found sample {0}".format(sample))
         return sample
         
         
@@ -310,9 +310,9 @@ def ingest_runs(sample_data):
                 if filename != "":
                     try:
                         run_number = int(filename.split('_')[6])
-                        print("ANU run_number {} parsed from filename".format(run_number))               
+                        print("ANU run_number {0} parsed from filename".format(run_number))               
                     except IndexError:
-                        print("Filename {} wrong format".format(filename))                
+                        print("Filename {0} wrong format".format(filename))                
 
         return run_number
                 
