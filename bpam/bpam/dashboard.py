@@ -21,10 +21,10 @@ class CustomIndexDashboard(Dashboard):
     """
     Custom index dashboard for bpam.
     """
-    
+
     title = "Bioplatforms Australia Metadata"
     columns = 3
-    
+
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
         # append a link list module for "quick links"
@@ -47,12 +47,7 @@ class CustomIndexDashboard(Dashboard):
             _('Bioplatforms Australia Projects'),
             exclude=('django.contrib.*', 'apps.bpaauth.*'),
         ))
-        
-        self.children.append(modules.AppList(
-            _('BASE Soil, Agricultural'),
-            models=('apps.base_soil_agricultural.*',),            
-        ))
-   
+
         # append an app list module for "Administration"
         self.children.append(modules.AppList(
             _('User Management'),
@@ -77,12 +72,12 @@ class CustomIndexDashboard(Dashboard):
                     'title': _('Bioplatforms Australia'),
                     'url': 'http://www.bioplatforms.com.au/',
                     'external': True,
-                },          
+                },
                 {
                     'title': _('Bioplatforms Australia ISAtools'),
                     'url': 'http://portal.bioplatforms.com/bioinvindex/browse_studies.seam',
                     'external': True,
-                },                
+                },
                 {
                     'title': _('Bioplatforms Australia Archive'),
                     'url': 'https://archive.bioplatforms.com/',
