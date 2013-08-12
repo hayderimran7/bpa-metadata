@@ -21,6 +21,10 @@ class CustomIndexDashboard(Dashboard):
     """
     Custom index dashboard for bpam.
     """
+    
+    title = "Bioplatforms Australia Metadata"
+    columns = 3
+    
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
         # append a link list module for "quick links"
@@ -41,13 +45,18 @@ class CustomIndexDashboard(Dashboard):
         # append an app list module for "Applications"
         self.children.append(modules.AppList(
             _('Bioplatforms Australia Projects'),
-            exclude=('django.contrib.*',),
+            exclude=('django.contrib.*', 'apps.bpaauth.*'),
         ))
-
+        
+        self.children.append(modules.AppList(
+            _('BASE Soil, Agricultural'),
+            models=('apps.base_soil_agricultural.*',),            
+        ))
+   
         # append an app list module for "Administration"
         self.children.append(modules.AppList(
             _('User Management'),
-            models=('apps.bpaauth.*', 'django.contrib.*',),
+            models=('apps.bpaauth.*', 'django.contrib.auth.models.Group',),
         ))
 
         # append a recent actions module

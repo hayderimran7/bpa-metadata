@@ -9,10 +9,10 @@ PROJECT_DIR = Path(__file__).ancestor(3)
 
 MEDIA_ROOT = PROJECT_DIR.child("media")
 
-STATIC_ROOT = PROJECT_DIR.child("static")
+# STATIC_ROOT = PROJECT_DIR.child("static")
 
 STATICFILES_DIRS = (
-    PROJECT_DIR.child("assets"),
+    PROJECT_DIR.child("static"),
 )
 
 TEMPLATE_DIRS = (
@@ -43,6 +43,7 @@ DATABASES = {
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
+ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
 
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
@@ -142,8 +143,7 @@ INSTALLED_APPS = (
     'apps.base_soil_agricultural',
     'apps.base_soil_environmental',
     'apps.wheat_cultivars',
-    'apps.wheat_fungal_pathogens'
-    
+    'apps.wheat_fungal_pathogens',
 )
 
 # A sample logging configuration. The only tangible logging

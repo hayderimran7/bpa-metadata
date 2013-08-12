@@ -1,5 +1,6 @@
 from django.db import models
 from apps.common.models import Sample, BPAUniqueID
+from django.utils.translation import ugettext_lazy as _
 
 class PCRPrimer(models.Model):
     """ PCR Primers """
@@ -14,7 +15,7 @@ class PCRPrimer(models.Model):
     
     @classmethod
     def makeall(cls):
-        """ Create all Primers"""
+        """Create all Primers"""
         for name in cls.PRIMERS:
             TargetGene(name=name).save()
     
@@ -22,7 +23,7 @@ class PCRPrimer(models.Model):
         return "{}".format(self.name)
     
     class Meta:
-        verbose_name_plural = "PCR Primers"
+        verbose_name_plural = _("PCR Primers")
 
 class TargetGene(models.Model):
     """ Target Gene """
@@ -42,7 +43,7 @@ class TargetGene(models.Model):
         return "{}".format(self.name)
     
     class Meta:
-        verbose_name_plural = "Target Genes"
+        verbose_name_plural = _("Target Genes")
 
 
 class TargetTaxon(models.Model):
@@ -67,7 +68,7 @@ class TargetTaxon(models.Model):
         return "{}".format(self.name)
     
     class Meta:
-        verbose_name_plural = "Target Taxons"
+        verbose_name_plural = _("Target Taxons")
 
 
 class LandUse(models.Model):
@@ -96,7 +97,7 @@ class LandUse(models.Model):
         return "{}".format(self.description)
     
     class Meta:
-        verbose_name_plural = "Land Uses"
+        verbose_name_plural = _("Land Uses")
         unique_together = ('classification', 'description')        
 
 class SiteOwner(models.Model):
@@ -111,7 +112,7 @@ class SiteOwner(models.Model):
         return "{} {}".format(self.name, self.email)
     
     class Meta:
-        verbose_name_plural = "Site Owners"
+        verbose_name_plural = _("Site Owners")
 
 class CollectionSiteHistory(models.Model):
     """ Background history for the collection site"""
@@ -131,11 +132,11 @@ class CollectionSiteHistory(models.Model):
         return "Site history on {}".format(self.history_report_date)
     
     class Meta:
-        verbose_name_plural = "Site History"
+        verbose_name_plural = _("Site History")
     
     
 class CollectionSite(models.Model):
-    """ Collection Site Information"""
+    """ Collection Site Information """
     
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
@@ -188,7 +189,7 @@ class SequenceConstruct(models.Model):
         return "{}".format(self.sequence)
     
     class Meta:
-        verbose_name_plural = "Sequence Constructs"
+        verbose_name_plural = _("Sequence Constructs")
         
 class ChemicalAnalysis(models.Model):
     """ Chemical Analysis assay """
@@ -233,7 +234,7 @@ class ChemicalAnalysis(models.Model):
         return "Chemical Analysis for {}".format(self.bpa_id)
     
     class Meta:
-        verbose_name_plural = "Sample Chemical Essays"
+        verbose_name_plural = _("Sample Chemical Essays")
     
         
 class SoilSampleDNA(models.Model):
@@ -262,7 +263,7 @@ class SoilSampleDNA(models.Model):
         return "Soil DNA Library {}".format(self.name)
     
     class Meta:
-        verbose_name_plural = "Soil Sample DNA "
+        verbose_name_plural = _("Soil Sample DNA")
     
     
     
