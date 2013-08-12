@@ -2,15 +2,17 @@ import pprint
 import csv
 import string
 from datetime import date
+import os.path
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.melanoma.models import *
 from .utils import *
 
-MELANOMA_SAMPLE_FILE='./scripts/data/melanoma_samples.csv'
-MELANOMA_ARRAY_FILE='./scripts/data/melanoma_arrays.csv'
-MELANOMA_CONTACT_DATA='./scripts/data/melanoma_contacts.csv'
+DATA_DIR=os.path.join(os.path.dirname(__file__), "data")
+MELANOMA_SAMPLE_FILE=os.path.join(DATA_DIR, 'melanoma_samples.csv')
+MELANOMA_ARRAY_FILE=os.path.join(DATA_DIR, 'melanoma_arrays.csv')
+MELANOMA_CONTACT_DATA=os.path.join(DATA_DIR, 'melanoma_contacts.csv')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
@@ -25,7 +27,7 @@ def get_dna_source(description):
     except DNASource.DoesNotExist:
         source = DNASource(description=description)
         source.save()
-    
+
     return source
 
 def get_tumor_stage(description):
@@ -42,26 +44,26 @@ def get_tumor_stage(description):
     except TumorStage.DoesNotExist:
         stage = TumorStage(description=description)
         stage.save()
-    
+
     return stage
 
 
 def ingest_samples(samples):
-    
+
     def get_facility(name, service):
         if name == '': name = "Unknown"
         if service == '': service = "Unknown"
-        
+
         try:
             facility = Facility.objects.get(name=name, service=service)
         except Facility.DoesNotExist:
             facility = Facility(name=name, service=service)
             facility.save()
-        
+
         return facility
-        
+
     def get_protocol(e):
-        
+
         def get_library_type(str):
             """
             (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
@@ -74,30 +76,30 @@ def ingest_samples(samples):
             if nstr.find('mate') >= 0:
                 return 'MP'
             return 'UN'
-                        
-        base_pairs = get_clean_number(e['library_construction']) 
+
+        base_pairs = get_clean_number(e['library_construction'])
         library_type = get_library_type(e['library'])
         library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
-        
+
         try:
             protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
         except Protocol.DoesNotExist:
             protocol = Protocol(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
             protocol.save()
-            
+
         return protocol
-        
-    
+
+
     def get_gender(gender):
         if gender == "":
             gender = "U"
         return gender
-    
+
     def add_sample(e):
         bpa_id = e['bpa_id']
         try:
             # Test if sample already exists
-            # First come fist serve            
+            # First come fist serve
             MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
         except MelanomaSample.DoesNotExist:
             sample = MelanomaSample()
@@ -111,18 +113,18 @@ def ingest_samples(samples):
             sample.gender = get_gender(e['sample_gender'])
             sample.histological_subtype = e['histological_subtype']
             sample.passage_number = get_clean_number(e['passage_number'])
-            
+
             # facilities
             sample.array_analysis_facility = get_facility(e['array_analysis_facility'], 'Array Analysis')
             sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'], 'Whole Genome Sequencing')
             sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
-            
+
             sample.protocol = get_protocol(e)
-            
+
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
             print("Ingested Melanoma sample {0}".format(sample.name))
-            
+
 
     for sample in samples:
         add_sample(sample)
@@ -131,39 +133,39 @@ def ingest_contacts():
     """
     Contacts associated with the Melanoma BPA poject
     """
-    
+
     from django.contrib.auth.models import Group
     from django.contrib.auth import get_user_model
-    
-    def get_group(name):        
+
+    def get_group(name):
         def get_group_name(raw_group):
             if raw_group != "":
                 return raw_group.strip().split()[0]
             else:
                 return "Ungrouped"
-            
-        nname = get_group_name(name.strip())                        
+
+        nname = get_group_name(name.strip())
         try:
             group = Group.objects.get(name=nname)
         except Group.DoesNotExist:
             print("Group {0} does not exit, adding it".format(nname))
-            group = Group(name=nname)            
+            group = Group(name=nname)
             group.save()
-            
-        return group      
-    
+
+        return group
+
     def is_active(active_str):
         active = active_str.strip().lower()
         return active == 'x'
-        
+
     def get_data():
         with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
-            # Location, Job Title, Department, Surname, First Name, Direct Line, Email, Username, Enabled   
+            # Location, Job Title, Department, Surname, First Name, Direct Line, Email, Username, Enabled
             reader = csv.DictReader(contacts)
             return strip_all(reader)
-    
+
     contacts = get_data()
-    
+
     for contact in contacts:
         User = get_user_model()
         user = User()
@@ -174,19 +176,19 @@ def ingest_contacts():
         user.telephone = contact['Direct Line']
         user.is_staff = is_active(contact['Enabled'])
         user.title = contact['Job Title']
-        user.department = contact['Department']        
+        user.department = contact['Department']
         user.location = contact['Location']
         user.affiliations = contact['Affiliations']
         user.save()
-        
+
         group = get_group(contact['Location'])
         user.groups.add(group)
-        
+
         user.save()
-           
-        
+
+
 def ingest_arrays(arrays):
-    
+
     def get_bpa_id(bpa_id):
         try:
             id = BPAUniqueID.objects.get(bpa_id=bpa_id)
@@ -195,37 +197,37 @@ def ingest_arrays(arrays):
             id = BPAUniqueID(bpa_id=bpa_id)
             id.project = BPAProject.objects.get(name='Melanoma')
             id.note = "Created during array ingestion on {0}".format(date.today())
-            id.save()      
-                  
+            id.save()
+
         return id
-        
-    
+
+
     def get_gender(str):
         str = str.strip().lower()
         if str == "male": return 'M'
         if str == "female": return 'F'
         return 'U'
-    
+
     for e in arrays:
-        array = Array()        
-        array.batch_number = int(e['batch_no'])        
+        array = Array()
+        array.batch_number = int(e['batch_no'])
         array.bpa_id = get_bpa_id(e['bpa_id'])
         array.mia_id = e['mia_id']
         array.array_id = e['array_id']
         array.call_rate = float(e['call_rate'])
         array.gender = get_gender(e['gender'])
         array.well_id = e['well_id']
-        
+
         array.save()
-                
+
 
 def get_melanoma_sample_data():
     """
-    The datasets is relatively small, so make a in-memory copy to simplify some operations. 
+    The datasets is relatively small, so make a in-memory copy to simplify some operations.
     """
     with open(MELANOMA_SAMPLE_FILE, 'rb') as melanoma_files:
-        fieldnames = ['bpa_id', 
-                      'sample_name', 
+        fieldnames = ['bpa_id',
+                      'sample_name',
                       'sequence_coverage',
                       'sequencing_facility',
                       'species',
@@ -256,16 +258,16 @@ def get_melanoma_sample_data():
                       'file_url',
                       'analysed',
                       'analysed_url']
-                  
+
         reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
         return strip_all(reader)
-      
+
 
 def get_array_data():
     """
     Copy if the 'Array Data' Tab from the Melanoma_study_metadata document
     """
-    
+
     with open(MELANOMA_ARRAY_FILE, 'rb') as array_data:
         fieldnames = ['batch_no',
                       'well_id',
@@ -273,14 +275,14 @@ def get_array_data():
                       'mia_id',
                       'array_id',
                       'call_rate',
-                      'gender',                      
+                      'gender',
                       ]
         reader = csv.DictReader(array_data, fieldnames=fieldnames)
         return strip_all(reader)
 
 
 def ingest_runs(sample_data):
-        
+
     def get_sequencer(name):
         if name == "":
             name = "Unknown"
@@ -289,19 +291,19 @@ def ingest_runs(sample_data):
         except Sequencer.DoesNotExist:
             sequencer = Sequencer(name=name)
             sequencer.save()
-        return sequencer      
-    
+        return sequencer
+
     def get_sample(bpa_id):
         sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
         print("Found sample {0}".format(sample))
         return sample
-        
-        
+
+
     def get_run_number(e):
         """
         ANU does not have their run numbers entered.
         """
-        
+
         run_number = get_clean_number(e['run_number'])
         if run_number == None:
             # see if its ANU and parse the run_number from the filename
@@ -310,14 +312,14 @@ def ingest_runs(sample_data):
                 if filename != "":
                     try:
                         run_number = int(filename.split('_')[6])
-                        print("ANU run_number {0} parsed from filename".format(run_number))               
+                        print("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
-                        print("Filename {0} wrong format".format(filename))                
+                        print("Filename {0} wrong format".format(filename))
 
         return run_number
-                
-        
-        
+
+
+
     def add_run(e):
         """
         The run produced several files
@@ -325,22 +327,22 @@ def ingest_runs(sample_data):
         flow_cell_id = e['flow_cell_id'].strip()
         bpa_id = e['bpa_id'].strip()
         run_number = get_run_number(e)
-        
+
         try:
             run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number, sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
             run = MelanomaRun()
             run.flow_cell_id = flow_cell_id
-            run.run_number = run_number 
+            run.run_number = run_number
             run.sample = get_sample(bpa_id)
-            run.passage_number = get_clean_number(e['passage_number']) 
+            run.passage_number = get_clean_number(e['passage_number'])
             run.index_number = get_clean_number(e['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER) # Ignore the empty column
             run.lane_number = get_clean_number(e['lane_number'])
-            run.save()  
-            
-        return run                     
-    
+            run.save()
+
+        return run
+
 
     def add_file(e, run):
         """
@@ -362,18 +364,15 @@ def ingest_runs(sample_data):
     for e in sample_data:
         run = add_run(e)
         add_file(e, run)
-        
-def ingest_melanoma():    
+
+def ingest_melanoma():
         sample_data = get_melanoma_sample_data()
         ingest_bpa_ids(sample_data, 'Melanoma')
         ingest_samples(sample_data)
         ingest_arrays(get_array_data())
         ingest_runs(sample_data)
-        
+
 def run():
     ingest_contacts()
     add_organism(genus="Homo", species="Sapient")
     ingest_melanoma()
-    
-    
-    
