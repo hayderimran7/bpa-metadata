@@ -20,4 +20,5 @@ setup(
         "bpametadata": [ "templates/admin/base_site.html" ],
         },
     install_requires=list_requirements("dev.txt"),
+    zip_safe=False,
     )
