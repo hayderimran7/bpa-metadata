@@ -142,6 +142,9 @@ class CollectionSite(models.Model):
     state = models.CharField(max_length=100, blank=True)
     location_name = models.CharField(max_length=100, blank=True)
     image_url = models.URLField(blank=True, null=True)
+    
+    positions = models.ForeignKey()
+    
     horizon = models.CharField(max_length=100, blank=True)
 
     plot_description = models.TextField(blank=True)

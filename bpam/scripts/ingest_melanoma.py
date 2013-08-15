@@ -9,7 +9,7 @@ from apps.common.models import *
 from apps.melanoma.models import *
 from .utils import *
 
-DATA_DIR=os.path.join(os.path.dirname(__file__), "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 MELANOMA_SAMPLE_FILE=os.path.join(DATA_DIR, 'melanoma_samples.csv')
 MELANOMA_ARRAY_FILE=os.path.join(DATA_DIR, 'melanoma_arrays.csv')
 MELANOMA_CONTACT_DATA=os.path.join(DATA_DIR, 'melanoma_contacts.csv')
