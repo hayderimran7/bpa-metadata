@@ -156,7 +156,7 @@ purge() {
     rm *.log
 }
 
-run() {
+run() {   
     python manage.py syncdb --traceback
     python manage.py runscript ingest_projects --traceback
     python manage.py runscript ingest_melanoma --traceback
@@ -164,11 +164,7 @@ run() {
     python manage.py runserver
 }
 
-dev() {
-    if [ -f /tmp/bpa ]
-    then
-        rm /tmp/bpa*
-    fi
+dev() { 
     devsettings
     run
 }

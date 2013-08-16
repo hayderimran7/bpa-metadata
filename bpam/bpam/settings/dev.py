@@ -6,17 +6,17 @@ TEMPLATE_DEBUG = DEBUG
 EMAIL_HOST = "localhost"
 EMAIL_PORT = 1025
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/bpametadata.sqllite',  
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '', 
-        'PORT': '', 
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
+        'NAME': 'bpam',
+        'USER': 'bpam',
+        'PASSWORD': 'bpam',
+        'HOST': '',
+        'PORT': '',
     }
 }
-
 
 INSTALLED_APPS += ("debug_toolbar", )
 INTERNAL_IPS = ("127.0.0.1",)

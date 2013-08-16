@@ -1,5 +1,7 @@
 from django.db import models
 from apps.common.models import Sample, BPAUniqueID
+from apps.geo.models import GPSPosition
+
 from django.utils.translation import ugettext_lazy as _
 
 class PCRPrimer(models.Model):
@@ -143,7 +145,7 @@ class CollectionSite(models.Model):
     location_name = models.CharField(max_length=100, blank=True)
     image_url = models.URLField(blank=True, null=True)
     
-    positions = models.ForeignKey()
+    positions = models.ForeignKey(GPSPosition)
     
     horizon = models.CharField(max_length=100, blank=True)
 

@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.gis',
     'localflavor',
+    'apps.geo',
     'apps.bpaauth',
     'apps.common',
     'apps.melanoma',
