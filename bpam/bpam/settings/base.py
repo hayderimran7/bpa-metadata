@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'apps.base_soil_environmental',
     'apps.wheat_cultivars',
     'apps.wheat_fungal_pathogens',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
