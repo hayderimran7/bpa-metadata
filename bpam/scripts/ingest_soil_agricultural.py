@@ -1,6 +1,7 @@
 import pprint
 import csv
 import string
+import re
 from datetime import date
 
 from apps.bpaauth.models import BPAUser
@@ -101,28 +102,37 @@ def get_chem_data():
 def get_collection_site(e):
     """ Add a collection site"""
     
-    collection_site = CollectionSite()
+    POINT_REGEXP = r'\d{1,4}m [S|N]\d{1,2}.\d{5} [E|W]\d{1,3}.\d{5}'
+    
+    def add_position(site, lat, long, elevation):
+        """ The current spreadsheet has all data in the lat column"""
+        found = re.findall(POINT_REGEXP, lat)
+        for p in found:
+            elevation, lat, long = p.split()
+            elevation = get_clean_float(elevation)
+            lat = get_clean_float(lat)
+            long = get_clean_float(long)
+                    
+            site.positions.entry_set.create(longitude=long, latitude=lat, elevation=elevation)
+             
+    collection_site = CollectionSite()    
     collection_site.country = e['country']
     collection_site.state = e['state']
     collection_site.location = e['location_name']
     collection_site.image_url = e['image_url']
     collection_site.horizon = e['horizon']
-    
-    
     collection_site.plot_description = e['plot_description']
     collection_site.sample_depth = e['depth']
     collection_site.note = e['notes']
-    collection_site.lat = e['lat']
-    collection_site.long = e['long']
-    collection_site.elevation = e['elevation']
     collection_site.slope_gradient = e['slope_gradient']
     collection_site.slope_aspect = e['slope_aspect']
     collection_site.profile_position = e['profile_position']
     collection_site.drainage = e['drainage_classification']
     collection_site.australian_classification_soil_type = e['australian_classification_soil_type']
-    collection_site.note = e['notes']
-    
+    collection_site.note = e['notes']    
     collection_site.save()
+    pprint.pprint(collection_site)
+    add_position(collection_site, e['lat'], e['long'], e['elevation']) 
     
     return collection_site    
 

@@ -145,15 +145,11 @@ class CollectionSite(models.Model):
     location_name = models.CharField(max_length=100, blank=True)
     image_url = models.URLField(blank=True, null=True)
     
-    positions = models.ForeignKey(GPSPosition)
-    
+    positions = models.ForeignKey(GPSPosition, null=True, blank=True)
     horizon = models.CharField(max_length=100, blank=True)
-
     plot_description = models.TextField(blank=True)
     collection_depth = models.CharField(max_length=20, blank=True)
-    lat = models.CharField(max_length=20, blank=True)
-    long = models.CharField(max_length=20, blank=True)
-    elevation = models.CharField(max_length=20, blank=True)
+
     slope_gradient = models.CharField(max_length=20, blank=True)
     slope_aspect = models.CharField(max_length=20, blank=True)
     profile_position = models.CharField(max_length=20, blank=True)

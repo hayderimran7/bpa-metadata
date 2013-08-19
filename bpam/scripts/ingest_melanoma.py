@@ -217,7 +217,6 @@ def ingest_arrays(arrays):
         array.call_rate = float(e['call_rate'])
         array.gender = get_gender(e['gender'])
         array.well_id = e['well_id']
-
         array.save()
 
 

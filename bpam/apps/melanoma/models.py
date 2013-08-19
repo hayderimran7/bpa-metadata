@@ -23,7 +23,7 @@ class Array(models.Model):
     array_id = models.CharField(max_length=17)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
-    mia_id = models.CharField(max_length=50)
+    mia_id = models.CharField(max_length=200)
     call_rate = models.FloatField()    
     gender = models.CharField(max_length=1, choices=GENDERS)
     
