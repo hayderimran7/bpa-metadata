@@ -106,14 +106,19 @@ def get_collection_site(e):
     
     def add_position(site, lat, long, elevation):
         """ The current spreadsheet has all data in the lat column"""
+        
         found = re.findall(POINT_REGEXP, lat)
+        
         for p in found:
             elevation, lat, long = p.split()
             elevation = get_clean_float(elevation)
             lat = get_clean_float(lat)
             long = get_clean_float(long)
-                    
-            site.positions.entry_set.create(longitude=long, latitude=lat, elevation=elevation)
+
+            gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)  
+            pprint.pprint(gps)
+            gps.save()                  
+            site.positions.add(gps)
              
     collection_site = CollectionSite()    
     collection_site.country = e['country']

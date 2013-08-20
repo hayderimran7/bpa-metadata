@@ -145,7 +145,8 @@ class CollectionSite(models.Model):
     location_name = models.CharField(max_length=100, blank=True)
     image_url = models.URLField(blank=True, null=True)
     
-    positions = models.ForeignKey(GPSPosition, null=True, blank=True)
+    positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
+    
     horizon = models.CharField(max_length=100, blank=True)
     plot_description = models.TextField(blank=True)
     collection_depth = models.CharField(max_length=20, blank=True)
@@ -166,6 +167,7 @@ class CollectionSite(models.Model):
     
     class Meta:
         verbose_name_plural = "Collection Sites"
+
 
 class SoilSample(Sample):
     """ Soil Sample """

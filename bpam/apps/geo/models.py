@@ -8,10 +8,9 @@ class GPSPosition(models.Model):
     longitude = models.FloatField() 
     latitude = models.FloatField()
     elevation = models.FloatField()
-    
+
     # in_geom = models.PointField('shp', srid=4326)
-    
     objects = models.GeoManager() 
     
     def __unicode__(self): 
-        return "{0} {1} {2} {3}".format(self.description, self.altitude, self.longitude, self.latitude)
+        return "{0} {1} {2} {3}".format(self.description, self.elevation, self.longitude, self.latitude)
