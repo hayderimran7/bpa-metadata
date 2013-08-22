@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'apps.wheat_cultivars',
     'apps.wheat_fungal_pathogens',
     'south',
+    'tinymce',
 )
 
 # A sample logging configuration. The only tangible logging

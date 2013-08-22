@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-
+from tinymce.models import HTMLField
 from apps.bpaauth.models import BPAUser
 
 
@@ -13,7 +13,7 @@ class BPAProject(models.Model):
 
     name = models.CharField(max_length=200, primary_key=True)
     description = models.CharField(max_length=2000, blank=True)
-    note = models.TextField(blank=True)
+    note = HTMLField(blank=True)
 
     def __unicode__(self):
         return self.name
