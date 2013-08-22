@@ -188,20 +188,8 @@ def ingest_contacts():
 
 
 def ingest_arrays(arrays):
-
-    def get_bpa_id(bpa_id):
-        try:
-            id = BPAUniqueID.objects.get(bpa_id=bpa_id)
-        except BPAUniqueID.DoesNotExist:
-            print("BPA ID {0} does not exit, adding it".format(bpa_id))
-            id = BPAUniqueID(bpa_id=bpa_id)
-            id.project = BPAProject.objects.get(name='Melanoma')
-            id.note = "Created during array ingestion on {0}".format(date.today())
-            id.save()
-
-        return id
-
-
+    """ Melanoma Arrays"""
+    
     def get_gender(str):
         str = str.strip().lower()
         if str == "male": return 'M'
@@ -211,7 +199,7 @@ def ingest_arrays(arrays):
     for e in arrays:
         array = Array()
         array.batch_number = int(e['batch_no'])
-        array.bpa_id = get_bpa_id(e['bpa_id'])
+        array.bpa_id = get_bpa_id(e['bpa_id'], project_name="Melanoma", note="Created during array ingestion on {0}".format(date.today()))
         array.mia_id = e['mia_id']
         array.array_id = e['array_id']
         array.call_rate = float(e['call_rate'])

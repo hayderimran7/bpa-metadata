@@ -2,6 +2,7 @@ import pprint
 import csv
 import string
 import re
+import os.path
 from datetime import date
 
 from apps.bpaauth.models import BPAUser
@@ -10,8 +11,9 @@ from apps.base_soil_agricultural.models import *
 
 from .utils import *
 
-SAMPLE_FILE = './scripts/data/base_soil_agric_sample.csv'
-CHEM_FILE = './scripts/data/base_soil_agric_chem.csv'
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
+CHEM_FILE = os.path.join(DATA_DIR, 'base_soil_agric_chem.csv')
 
 def get_sample_data():
     with open(SAMPLE_FILE, 'rb') as samples:
@@ -116,7 +118,6 @@ def get_collection_site(e):
             long = get_clean_float(long)
 
             gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)  
-            pprint.pprint(gps)
             gps.save()                  
             site.positions.add(gps)
              
@@ -136,7 +137,6 @@ def get_collection_site(e):
     collection_site.australian_classification_soil_type = e['australian_classification_soil_type']
     collection_site.note = e['notes']    
     collection_site.save()
-    pprint.pprint(collection_site)
     add_position(collection_site, e['lat'], e['long'], e['elevation']) 
     
     return collection_site    
@@ -158,7 +158,7 @@ def add_sample(e):
 def add_chem_sample(e):
             
     chema = ChemicalAnalysis()
-    chema.bpa_id = BPAUniqueID(e['bpa_id'])
+    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE Soil Agricultural', note="Created during chem sample ingestion on {0}".format(date.today()))
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
     chema.depth = e['depth']

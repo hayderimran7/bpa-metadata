@@ -44,21 +44,39 @@ def add_organism(genus="", species=""):
     organism = Organism(genus=genus, species=species)
     organism.save() 
 
+
+def add_bpa_id(id, project_name, note=INGEST_NOTE):
+    """ Add a bpa ID"""
+    
+    lbl = BPAUniqueID(bpa_id=id)
+    lbl.project = BPAProject.objects.get(name=project_name)
+    lbl.note = note
+    lbl.save()
+    print("Added BPA Unique ID: " + str(lbl))    
+
 def ingest_bpa_ids(data, project_name):
     """ The BPA ID's are unique """
-    
-    def add_BPA_ID(id):
-        lbl = BPAUniqueID(bpa_id=id)
-        lbl.project = BPAProject.objects.get(name=project_name)
-        lbl.note = INGEST_NOTE
-        lbl.save()
-        print("Ingested BPA Unique ID: " + str(lbl))    
     
     id_set = set()
     for e in data:
         id_set.add(e['bpa_id'].strip()) 
     for id in id_set:
-        add_BPA_ID(id)
+        add_bpa_id(id, project_name)
+
+
+
+def get_bpa_id(id, project_name, note=INGEST_NOTE):
+    """ Get a BPA ID, if it does not exist, make it"""    
+    try:
+        bid = BPAUniqueID.objects.get(bpa_id=id)
+    except BPAUniqueID.DoesNotExist:
+        print("BPA ID {0} does not exit, adding it".format(id))
+        bid = BPAUniqueID(bpa_id=id)
+        bid.project = BPAProject.objects.get(name=project_name)
+        bid.note = note
+        bid.save()
+    
+    return bid
 
 def get_dna_source(description):
     """ Get a DNA source if it exists, if it doesn't make it. """

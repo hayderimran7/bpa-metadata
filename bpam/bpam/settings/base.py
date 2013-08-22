@@ -31,7 +31,11 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
+        'STORAGE_ENGINE': 'INNODB',
+        'OPTIONS': {
+         "init_command": "SET foreign_key_checks = 0;",
+         },
         'NAME': 'bpam',
         'USER': 'bpam',
         'PASSWORD': 'bpam',
