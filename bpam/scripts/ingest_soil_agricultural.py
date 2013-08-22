@@ -106,10 +106,16 @@ def get_collection_site(e):
     
     POINT_REGEXP = r'\d{1,4}m [S|N]\d{1,2}.\d{5} [E|W]\d{1,3}.\d{5}'
     
-    def add_position(site, lat, long, elevation):
+    
+    def get_gps_description(site):
+        """ Construct a GPS description field """
+        
+        return "{0} {1} {2} {3}".format(site.country, site.state, site.location, site.plot_description)
+    
+    def add_position(site, e_lat, e_long, e_elevation):
         """ The current spreadsheet has all data in the lat column"""
         
-        found = re.findall(POINT_REGEXP, lat)
+        found = re.findall(POINT_REGEXP, e_lat)
         
         for p in found:
             elevation, lat, long = p.split()
@@ -117,7 +123,8 @@ def get_collection_site(e):
             lat = get_clean_float(lat)
             long = get_clean_float(long)
 
-            gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)  
+            gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)
+            gps.description = get_gps_description(site)  
             gps.save()                  
             site.positions.add(gps)
              

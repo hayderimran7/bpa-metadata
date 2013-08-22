@@ -158,6 +158,7 @@ purge() {
 
 run() {   
     python manage.py syncdb --traceback
+    python manage.py migrate --traceback
     python manage.py runscript ingest_projects --traceback
     python manage.py runscript ingest_melanoma --traceback
     python manage.py runscript ingest_soil_agricultural --traceback
