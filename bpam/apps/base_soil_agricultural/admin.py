@@ -1,24 +1,28 @@
 from django.contrib import admin
-from .models import (SoilSample, 
-                     LandUse, 
+from .models import (SoilSample,
+                     LandUse,
                      SiteOwner,
-                     CollectionSiteHistory, 
+                     CollectionSiteHistory,
                      CollectionSite,
                      SequenceConstruct,
-                     ChemicalAnalysis, 
+                     ChemicalAnalysis,
                      PCRPrimer,
                      TargetGene,
                      TargetTaxon)
-                     
+
+
 class LandUseAdmin(admin.ModelAdmin):
-    list_display = ('description', 'classification')                 
-                     
+    list_display = ('description', 'classification')
+
+
 class SampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'name')
 
+
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'texture')
-    
+
+
 class CollectionSiteAdmin(admin.ModelAdmin):
     list_display = ('country', 'state', 'location_name')
 

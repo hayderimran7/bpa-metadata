@@ -1,19 +1,19 @@
 import pprint
 import csv
-import string
 import re
 import os.path
 from datetime import date
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
-from apps.base_soil_agricultural.models import * 
+from apps.base_soil_agricultural.models import *
 
 from .utils import *
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
 CHEM_FILE = os.path.join(DATA_DIR, 'base_soil_agric_chem.csv')
+
 
 def get_sample_data():
     with open(SAMPLE_FILE, 'rb') as samples:
@@ -50,12 +50,13 @@ def get_sample_data():
                       'drainage_classification',
                       'notes',
                       ]
-                  
+
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
         return strip_all(reader)
 
+
 def get_chem_data():
-    with open(CHEM_FILE, 'rb') as samples:        
+    with open(CHEM_FILE, 'rb') as samples:
         fieldnames = ['bpa_id',
                       'lab_name_id',
                       'customer',
@@ -65,58 +66,57 @@ def get_chem_data():
                       'texture',
                       'ammonium_nitrogen',
                       'nitrate_nitrogen',
-                      'phosphorus_colwell',    
+                      'phosphorus_colwell',
                       'potassium_colwell',
                       'sulphur_colwell',
                       'organic_carbon',
                       'conductivity',
-                      'cacl2_ph',    
+                      'cacl2_ph',
                       'h2o_ph',
                       'dtpa_copper',
-                      'dtpa_iron', 
+                      'dtpa_iron',
                       'dtpa_manganese',
                       'dtpa_zinc',
-                      'exc_aluminium', 
-                      'exc_calcium', 
+                      'exc_aluminium',
+                      'exc_calcium',
                       'exc_magnesium',
                       'exc_potassium',
                       'exc_sodium',
-                      'boron_hot_cacl2', 
+                      'boron_hot_cacl2',
                       'clay',
                       'course_sand',
-                      'fine_sand', 
-                      'sand', 
-                      'silt', 
+                      'fine_sand',
+                      'sand',
+                      'silt',
                       'silt_unit',
                       'sodium',
                       'sodium_unit',
                       'magnesium',
-                      'magnesium_unit', 
+                      'magnesium_unit',
                       'aluminium',
                       'aluminium_unit',
                       'boron',
                       'boron_unit']
-                  
+
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
         return strip_all(reader)
 
 
 def get_collection_site(e):
     """ Add a collection site"""
-    
+
     POINT_REGEXP = r'\d{1,4}m [S|N]\d{1,2}.\d{5} [E|W]\d{1,3}.\d{5}'
-    
-    
+
     def get_gps_description(site):
         """ Construct a GPS description field """
-        
+
         return "{0} {1} {2} {3}".format(site.country, site.state, site.location, site.plot_description)
-    
+
     def add_position(site, e_lat, e_long, e_elevation):
         """ The current spreadsheet has all data in the lat column"""
-        
+
         found = re.findall(POINT_REGEXP, e_lat)
-        
+
         for p in found:
             elevation, lat, long = p.split()
             elevation = get_clean_float(elevation)
@@ -124,11 +124,11 @@ def get_collection_site(e):
             long = get_clean_float(long)
 
             gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)
-            gps.description = get_gps_description(site)  
-            gps.save()                  
+            gps.description = get_gps_description(site)
+            gps.save()
             site.positions.add(gps)
-             
-    collection_site = CollectionSite()    
+
+    collection_site = CollectionSite()
     collection_site.country = e['country']
     collection_site.state = e['state']
     collection_site.location = e['location_name']
@@ -142,11 +142,12 @@ def get_collection_site(e):
     collection_site.profile_position = e['profile_position']
     collection_site.drainage = e['drainage_classification']
     collection_site.australian_classification_soil_type = e['australian_classification_soil_type']
-    collection_site.note = e['notes']    
+    collection_site.note = e['notes']
     collection_site.save()
-    add_position(collection_site, e['lat'], e['long'], e['elevation']) 
-    
-    return collection_site    
+    add_position(collection_site, e['lat'], e['long'], e['elevation'])
+
+    return collection_site
+
 
 def add_sample(e):
     bpa_id = e['bpa_id']
@@ -162,16 +163,17 @@ def add_sample(e):
         sample.save()
         print("Ingested Soil sample {0}".format(sample.name))
 
+
 def add_chem_sample(e):
-            
     chema = ChemicalAnalysis()
-    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE Soil Agricultural', note="Created during chem sample ingestion on {0}".format(date.today()))
+    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE Soil Agricultural',
+                              note="Created during chem sample ingestion on {0}".format(date.today()))
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
     chema.depth = e['depth']
     chema.colour = e['colour']
     chema.gravel = e['gravel']
-    chema.texture = e['texture']    
+    chema.texture = e['texture']
     chema.ammonium_nitrogen = get_clean_float(e['ammonium_nitrogen'])
     chema.nitrate_nitrogen = e['nitrate_nitrogen'] # <>
     chema.phosphorus_colwell = e['phosphorus_colwell'] # <>
@@ -183,7 +185,7 @@ def add_chem_sample(e):
     chema.h20_ph = get_clean_float(e['h2o_ph'])
     chema.dtpa_copper = get_clean_float(e['dtpa_copper'])
     chema.dtpa_iron = get_clean_float(e['dtpa_iron'])
-    chema.dtpa_manganese = get_clean_float(e['dtpa_manganese']) 
+    chema.dtpa_manganese = get_clean_float(e['dtpa_manganese'])
     chema.dtpa_zinc = get_clean_float(e['dtpa_zinc'])
     chema.exc_aluminium = get_clean_float(e['exc_aluminium'])
     chema.exc_calcium = get_clean_float(e['exc_calcium'])
@@ -191,28 +193,28 @@ def add_chem_sample(e):
     chema.exc_potassium = get_clean_float(e['exc_potassium'])
     chema.exc_sodium = get_clean_float(e['exc_sodium'])
     chema.boron_hot_cacl2 = get_clean_float(e['boron_hot_cacl2'])
-    
+
     chema.clay = get_clean_float(e['clay'])
     chema.course_sand = get_clean_float(e['course_sand'])
     chema.fine_sand = get_clean_float(e['fine_sand'])
     chema.sand = get_clean_float(e['sand'])
     chema.silt = get_clean_float(e['silt'])
-    
+
     chema.save()
 
+
 def run():
-    
-    LandUse.makeall()
-    TargetTaxon.makeall()
-    PCRPrimer.makeall()
+    LandUse.makeAll()
+    TargetTaxon.makeAll()
+    PCRPrimer.makeAll()
     TargetGene.makeall()
-    
+
     data = get_sample_data()
     ingest_bpa_ids(data, 'BASE Soil Agricultural')
-              
+
     for e in data:
         add_sample(e)
-    
+
     chem_data = get_chem_data()
     for e in chem_data:
         add_chem_sample(e)

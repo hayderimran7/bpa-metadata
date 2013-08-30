@@ -4,149 +4,174 @@ from apps.geo.models import GPSPosition
 
 from django.utils.translation import ugettext_lazy as _
 
+
 class PCRPrimer(models.Model):
-    """ PCR Primers """
-        
+    """
+    PCR Primers
+    """
+
     PRIMERS = ('27F-519R',
                'ITS1F-ITS4',
                '515F-806R',
                '1392F-1492R',)
-    
+
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField(null=True, blank=True)
-    
+
     @classmethod
-    def makeall(cls):
-        """Create all Primers"""
+    def makeAll(cls):
+        """
+        Create all Primers
+        """
         for name in cls.PRIMERS:
             TargetGene(name=name).save()
-    
+
     def __unicode__(self):
         return "{0}".format(self.name)
-    
+
     class Meta:
         verbose_name_plural = _("PCR Primers")
 
+
 class TargetGene(models.Model):
-    """ Target Gene """
-    
+    """
+    Target Gene
+    """
+
     GENES = ('V1-V3', 'V4', 'V9', 'ITS1-4')
-    
+
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField(null=True, blank=True)
-    
+
     @classmethod
     def makeall(cls):
-        """ Create all Target Genes"""
+        """
+        Create all Target Genes
+        """
         for name in cls.GENES:
             TargetGene(name=name).save()
-    
+
     def __unicode__(self):
         return "{0}".format(self.name)
-    
+
     class Meta:
         verbose_name_plural = _("Target Genes")
 
 
 class TargetTaxon(models.Model):
-    """ Target Taxon """
-    
+    """
+    Target Taxon
+    """
+
     TAXI = ('Eukarya',
             'Bacteria',
             'Prokaryota',
-            'Fungi', 
+            'Fungi',
             'Bacteria and archea')
-    
+
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField()
-    
+
     @classmethod
-    def makeall(cls):
-        """ Create all Target Taxons"""
+    def makeAll(cls):
+        """
+        Create all Target Taxons
+        """
         for name in cls.TAXI:
             TargetTaxon(name=name).save()
-    
+
     def __unicode__(self):
         return "{0}".format(self.name)
-    
+
     class Meta:
         verbose_name_plural = _("Target Taxons")
 
 
 class LandUse(models.Model):
-    """ Land use taxonomy 
+    """
+    Land use taxonomy
     http://lrm.nt.gov.au/soil/landuse/classification
     """
-        
+
     LAND_USES = ((1, 'Conservation and Natural Environments'),
                  (2, 'Production from relatively natural Environments'),
                  (3, 'Production from dry land agriculture and plantations'),
                  (4, 'Production from Irrigated agriculture and plantations'),
                  (5, 'Intensive uses'),
                  (6, 'Water'),)
-        
+
     classification = models.IntegerField(unique=True)
     description = models.CharField(max_length=100, blank=True)
-    
+
     @classmethod
-    def makeall(cls):
-        """ Create all Land Uses"""
+    def makeAll(cls):
+        """
+        Create all Land Uses
+        """
         for c, d in cls.LAND_USES:
             LandUse(classification=c, description=d).save()
-            
-    
+
+
     def __unicode__(self):
         return "{0}".format(self.description)
-    
+
     class Meta:
         verbose_name_plural = _("Land Uses")
-        unique_together = ('classification', 'description')        
+        unique_together = ('classification', 'description')
+
 
 class SiteOwner(models.Model):
-    """ The Site Owner """
-    
+    """
+    The Site Owner
+    """
+
     name = models.CharField(max_length=100, blank=True)
     email = models.EmailField()
     address = models.TextField(blank=True)
     note = models.TextField(blank=True)
-            
+
     def __unicode__(self):
         return "{0} {1}".format(self.name, self.email)
-    
+
     class Meta:
         verbose_name_plural = _("Site Owners")
 
+
 class CollectionSiteHistory(models.Model):
-    """ Background history for the collection site"""
+    """
+    Background history for the collection site
+    """
 
     history_report_date = models.DateField(blank=True, null=True) # the date this report was compiled
-    current_vegation = models.CharField(max_length=100, blank=True)
-    
+    current_vegetation = models.CharField(max_length=100, blank=True)
+
     previous_land_use = models.ForeignKey(LandUse, related_name='previous')
     current_land_use = models.ForeignKey(LandUse, related_name='current')
     crop_rotation = models.CharField(max_length=100, blank=True)
     tillage = models.CharField(max_length=100, blank=True)
     environment_event = models.CharField(max_length=100, blank=True) # fire, flood, extreme, other
-        
-    note = models.TextField()           
-    
+
+    note = models.TextField()
+
     def __unicode__(self):
         return "Site history on {0}".format(self.history_report_date)
-    
+
     class Meta:
         verbose_name_plural = _("Site History")
-    
-    
+
+
 class CollectionSite(models.Model):
-    """ Collection Site Information """
-    
+    """
+    Collection Site Information
+    """
+
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
     location_name = models.CharField(max_length=100, blank=True)
     image_url = models.URLField(blank=True, null=True)
-    
+
     positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
-    
+
     horizon = models.CharField(max_length=100, blank=True)
     plot_description = models.TextField(blank=True)
     collection_depth = models.CharField(max_length=20, blank=True)
@@ -156,28 +181,32 @@ class CollectionSite(models.Model):
     profile_position = models.CharField(max_length=20, blank=True)
     drainage_classification = models.CharField(max_length=20, blank=True)
     australian_classification_soil_type = models.CharField(max_length=20, blank=True)
-    
+
     history = models.ForeignKey(CollectionSiteHistory, null=True)
     owner = models.ForeignKey(SiteOwner, null=True)
-    
+
     note = models.TextField(blank=True)
 
     def __unicode__(self):
         return "Collection site {0} {1} {2}".format(self.country, self.state, self.location_name)
-    
+
     class Meta:
         verbose_name_plural = "Collection Sites"
 
 
 class SoilSample(Sample):
-    """ Soil Sample """
-        
-    collection_site = models.ForeignKey(CollectionSite)    
-    
-    
+    """
+    BASE Soil Sample
+    """
+
+    collection_site = models.ForeignKey(CollectionSite)
+
+
 class SequenceConstruct(models.Model):
-    """ The Sequence Construct """
-    
+    """
+    The Sequence Construct
+    """
+
     adapter_sequence = models.CharField(max_length=100, blank=True)
     barcode_sequence = models.CharField(max_length=100, blank=True)
     forward_primer = models.CharField(max_length=100, blank=True)
@@ -185,18 +214,21 @@ class SequenceConstruct(models.Model):
     target_region = models.CharField(max_length=100, blank=True)
     sequence = models.CharField(max_length=100, blank=True)
     reverse_primer = models.CharField(max_length=100, blank=True)
-    
+
     note = models.TextField(blank=True)
 
     def __unicode__(self):
         return "{0}".format(self.sequence)
-    
+
     class Meta:
         verbose_name_plural = _("Sequence Constructs")
-        
+
+
 class ChemicalAnalysis(models.Model):
-    """ Chemical Analysis assay """
-    
+    """
+    Chemical Analysis assay
+    """
+
     # sample = models.ForeignKey(SoilSample)
     bpa_id = models.ForeignKey(BPAUniqueID)
     lab_name_id = models.CharField(max_length=100, blank=True, null=True)
@@ -205,7 +237,7 @@ class ChemicalAnalysis(models.Model):
     colour = models.CharField(max_length=100, blank=True, null=True)
     gravel = models.CharField(max_length=100, blank=True, null=True)
     texture = models.CharField(max_length=100, blank=True, null=True)
-    
+
     ammonium_nitrogen = models.FloatField(blank=True, null=True)
     nitrate_nitrogen = models.CharField(max_length=10, null=True) # <>
     phosphorus_colwell = models.CharField(max_length=10, null=True) # <>
@@ -225,21 +257,20 @@ class ChemicalAnalysis(models.Model):
     exc_potassium = models.FloatField(blank=True, null=True)
     exc_sodium = models.FloatField(blank=True, null=True)
     boron_hot_cacl2 = models.FloatField(blank=True, null=True)
-    
+
     clay = models.FloatField(blank=True, null=True)
     course_sand = models.FloatField(blank=True, null=True)
     fine_sand = models.FloatField(blank=True, null=True)
     sand = models.FloatField(blank=True, null=True)
     silt = models.FloatField(blank=True, null=True)
-    
-    
+
     def __unicode__(self):
         return "Chemical Analysis for {0}".format(self.bpa_id)
-    
+
     class Meta:
         verbose_name_plural = _("Sample Chemical Essays")
-    
-        
+
+
 class SoilSampleDNA(models.Model):
     name = models.CharField(max_length=20)
     submitter = models.CharField(max_length=20)
@@ -260,18 +291,9 @@ class SoilSampleDNA(models.Model):
     performer = models.CharField(max_length=10, blank=True, null=True)
     labeled_extract_name = models.CharField(max_length=10, blank=True, null=True)
     protocol_ref = models.CharField(max_length=10, blank=True, null=True)
-    
-    
+
     def __unicode__(self):
         return "Soil DNA Library {0}".format(self.name)
-    
+
     class Meta:
         verbose_name_plural = _("Soil Sample DNA")
-    
-    
-    
-    
-    
-    
-    
-    
