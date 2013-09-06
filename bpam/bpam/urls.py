@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^qbe/', include('django_qbe.urls')),
 )

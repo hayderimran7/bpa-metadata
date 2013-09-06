@@ -113,7 +113,7 @@ def get_collection_site(e):
         return "{0} {1} {2} {3}".format(site.country, site.state, site.location, site.plot_description)
 
     def add_position(site, e_lat, e_long, e_elevation):
-        """ The current spreadsheet has all data in the lat column"""
+        """ The current spreadsheet has all data in the lat column..."""
 
         found = re.findall(POINT_REGEXP, e_lat)
 

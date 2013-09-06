@@ -104,5 +104,3 @@ def get_dna_source(description):
         source.save()
 
     return source
-
-    

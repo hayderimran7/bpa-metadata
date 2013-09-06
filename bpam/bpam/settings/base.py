@@ -1,7 +1,6 @@
 # Django settings for bpametadata project.
 
 import os
-import socket
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
@@ -116,7 +115,8 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth'
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.static',
 )
 
 ROOT_URLCONF = 'bpam.urls'
@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
+    'django_qbe',
 )
 
 # A sample logging configuration. The only tangible logging

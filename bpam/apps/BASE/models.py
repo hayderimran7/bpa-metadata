@@ -188,7 +188,7 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Collection site {0} {1} {2}".format(self.country, self.state, self.location_name)
+        return "{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
 
     class Meta:
         verbose_name_plural = "Collection Sites"
