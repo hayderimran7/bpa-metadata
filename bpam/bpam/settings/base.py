@@ -24,7 +24,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+# ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
@@ -34,8 +34,8 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.mysql',
         'STORAGE_ENGINE': 'INNODB',
         'OPTIONS': {
-         "init_command": "SET foreign_key_checks = 0;",
-         },
+            "init_command": "SET foreign_key_checks = 0;",
+        },
         'NAME': 'bpam',
         'USER': 'bpam',
         'PASSWORD': 'bpam',
@@ -43,7 +43,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
@@ -92,7 +91,7 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -102,7 +101,7 @@ SECRET_KEY = '2(3)7aip&90=vw@(qwfzvi@zyw8ll+ekq0_mp4rfd-7hn14mmk'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -146,8 +145,7 @@ INSTALLED_APPS = (
     'apps.common',
     'apps.melanoma',
     'apps.coral',
-    'apps.base_soil_agricultural',
-    'apps.base_soil_environmental',
+    'apps.BASE',
     'apps.wheat_cultivars',
     'apps.wheat_fungal_pathogens',
     'south',

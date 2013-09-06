@@ -1,12 +1,12 @@
 from apps.common.models import *
 
+
 def add_projects():
     """ The set of projects is set"""
     
     projects = (('Melanoma', 'Human Melanoma'),
                 ('Coral', 'Great Barrier Reef Coral'),
-                ('BASE Soil Agricultural', 'BASE Soil project agricultural sites'),
-                ('BASE Soil Environmental', 'BASE Soil project environmental sites'),
+                ('BASE', 'BASE, Agricultural and Environmental Soil'),
                 ('Wheat Cultivars', 'Wheat Cultivars'),
                 ('Wheat Fungal pathogens', 'Wheat fungal pathogens'))
     

@@ -161,7 +161,7 @@ run() {
     python manage.py migrate --traceback
     python manage.py runscript ingest_projects --traceback
     python manage.py runscript ingest_melanoma --traceback
-    python manage.py runscript ingest_soil_agricultural --traceback
+    python manage.py runscript ingest_BASE --traceback
     python manage.py runserver
 }
 

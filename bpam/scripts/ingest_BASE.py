@@ -6,7 +6,7 @@ from datetime import date
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
-from apps.base_soil_agricultural.models import *
+from apps.BASE.models import *
 
 from .utils import *
 
@@ -166,7 +166,7 @@ def add_sample(e):
 
 def add_chem_sample(e):
     chema = ChemicalAnalysis()
-    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE Soil Agricultural',
+    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE',
                               note="Created during chem sample ingestion on {0}".format(date.today()))
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
@@ -175,7 +175,7 @@ def add_chem_sample(e):
     chema.gravel = e['gravel']
     chema.texture = e['texture']
     chema.ammonium_nitrogen = get_clean_float(e['ammonium_nitrogen'])
-    chema.nitrate_nitrogen = e['nitrate_nitrogen'] # <>
+    chema.nitrate_nitrogen = e['nitrate_nitrogen']  # <>
     chema.phosphorus_colwell = e['phosphorus_colwell'] # <>
     chema.potassium_colwell = get_clean_float(e['potassium_colwell'])
     chema.sulphur_colwell = get_clean_float(e['sulphur_colwell'])
@@ -210,7 +210,7 @@ def run():
     TargetGene.makeall()
 
     data = get_sample_data()
-    ingest_bpa_ids(data, 'BASE Soil Agricultural')
+    ingest_bpa_ids(data, 'BASE')
 
     for e in data:
         add_sample(e)
@@ -218,4 +218,3 @@ def run():
     chem_data = get_chem_data()
     for e in chem_data:
         add_chem_sample(e)
-    
