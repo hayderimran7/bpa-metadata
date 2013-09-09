@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'django_qbe',
+    'bootstrap3',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -190,3 +191,5 @@ def get_env_variable(var_name):
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
+
+BPA_BASE_URL = 'http://files.ivec.org/bpa/'

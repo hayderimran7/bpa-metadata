@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^qbe/', include('django_qbe.urls')),
+    url(r'', include('apps.melanoma.urls'))
 )

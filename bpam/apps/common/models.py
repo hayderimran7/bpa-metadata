@@ -171,7 +171,6 @@ class Run(models.Model):
     class Meta:
         abstract = True
 
-
 class SequenceFile(models.Model):
     """
     A sequence file resulting from a sequence run
@@ -182,14 +181,26 @@ class SequenceFile(models.Model):
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
     md5 = models.CharField('MD5 Checksum', max_length=32, blank=True, null=True)
-    BPA_archive_url = models.URLField('BPA Archive URL', blank=True, null=True)
     analysed = models.BooleanField(blank=True)
-    analysed_url = models.URLField(blank=True, null=True)
-    ftp_url = models.URLField('FTP URL', blank=True, null=True)
     note = models.TextField(blank=True)
 
     def __unicode__(self):
         return "{0}".format(self.filename)
 
+    def get_url(self):
+        return settings.BPA_BASE_URL
+
     class Meta:
         abstract = True
+
+class SequenceFileVerification(models.Model):
+    """
+    Notes whether a sequence file could be accessed via HTTP. As SequenceFile is abstract
+    we can't use a straight DB relationship, so instead we use the calculated URL as the key
+    for the join.
+    The cron script will clean old entries up.
+    """
+    checked_url = models.URLField(db_index=True)
+    checked_at = models.DateTimeField()
+    status_ok = models.BooleanField()
+    status_note = models.TextField()

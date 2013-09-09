@@ -11,9 +11,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
     fieldsets = [             
         (None, {'fields' : [('filename', 'md5'),
                             ('lane_number', 'index_number'),
-                            'BPA_archive_url',
-                            ('analysed', 'analysed_url'),
-                            'ftp_url',
+                            ('analysed'),
                             'date_received_from_sequencing_facility',
                             'note'
                             ]
