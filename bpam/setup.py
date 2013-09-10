@@ -30,5 +30,9 @@ setup(
         "django-bootstrap3==0.0.6",
         "mimeparse==0.1.3",
         ],
+    dependency_links = [
+        "http://repo.ccgapps.com.au",
+        "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz"
+    ],
     zip_safe=False,
     )
