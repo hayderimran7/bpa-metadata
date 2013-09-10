@@ -1,30 +1,14 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-
 from apps.common.models import Sample, BPAUniqueID
 from apps.geo.models import GPSPosition
+
+from django.utils.translation import ugettext_lazy as _
 
 
 class PCRPrimer(models.Model):
     """
     PCR Primers
     """
-
-    PRIMERS = ('27F-519R',
-               'ITS1F-ITS4',
-               '515F-806R',
-               '1392F-1492R',)
-
-    name = models.CharField(max_length=100, unique=True)
-    note = models.TextField(null=True, blank=True)
-
-    @classmethod
-    def makeAll(cls):
-        """
-        Create all Primers
-        """
-        for name in cls.PRIMERS:
-            TargetGene(name=name).save()
 
     def __unicode__(self):
         return "{0}".format(self.name)
