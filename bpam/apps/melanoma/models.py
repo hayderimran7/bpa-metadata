@@ -1,6 +1,8 @@
 from django.db import models
+from django.conf import settings
 from apps.bpaauth.models import BPAUser
 from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism
+import urlparse
 
 GENDERS=(('M', 'Male'),
          ('F', 'Female'),
@@ -59,3 +61,7 @@ class MelanomaSequenceFile(SequenceFile):
 
     def __unicode__(self):
         return "Run {0} for {1}".format(self.run, self.filename)
+
+    def get_url(self):
+        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
+        return urlparse.urljoin(urlparse.urljoin(urlparse.urljoin(settings.BPA_BASE_URL, 'melanoma/'), bpa_id + '/'), self.filename)
