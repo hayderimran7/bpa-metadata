@@ -1,1 +1,0 @@
-sudo apt-get install graphviz-dev python-dev mysql-server libmysqlclient-dev

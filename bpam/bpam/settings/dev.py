@@ -19,7 +19,8 @@ DATABASES = {
 }
 
 INSTALLED_APPS += ("debug_toolbar", )
-INTERNAL_IPS = ("127.0.0.1",)
+INTERNAL_IPS = ("127.0.0.1", '172.16.2.222', '172.16.2.1')
 
 MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
+
 

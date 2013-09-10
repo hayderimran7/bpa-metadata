@@ -187,9 +187,6 @@ class SequenceFile(models.Model):
     def __unicode__(self):
         return "{0}".format(self.filename)
 
-    def get_url(self):
-        return settings.BPA_BASE_URL
-
     class Meta:
         abstract = True
 
