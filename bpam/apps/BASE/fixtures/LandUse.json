@@ -1,0 +1,50 @@
+[
+{
+  "pk": 1, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Conservation and Natural Environments", 
+    "classification": 1
+  }
+},
+{
+  "pk": 2, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Production from relatively natural Environments", 
+    "classification": 2
+  }
+},
+{
+  "pk": 3, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Production from dry land agriculture and plantations", 
+    "classification": 3
+  }
+},
+{
+  "pk": 4, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Production from Irrigated agriculture and plantations", 
+    "classification": 4
+  }
+},
+{
+  "pk": 5, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Intensive uses", 
+    "classification": 5
+  }
+},
+{
+  "pk": 6, 
+  "model": "BASE.landuse", 
+  "fields": {
+    "description": "Water", 
+    "classification": 6
+  }
+}
+]

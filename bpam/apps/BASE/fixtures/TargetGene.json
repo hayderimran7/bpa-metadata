@@ -1,0 +1,66 @@
+[
+{
+  "pk": 1, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "27F-519R"
+  }
+},
+{
+  "pk": 2, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "ITS1F-ITS4"
+  }
+},
+{
+  "pk": 3, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "515F-806R"
+  }
+},
+{
+  "pk": 4, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "1392F-1492R"
+  }
+},
+{
+  "pk": 5, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "V1-V3"
+  }
+},
+{
+  "pk": 6, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "V4"
+  }
+},
+{
+  "pk": 7, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "V9"
+  }
+},
+{
+  "pk": 8, 
+  "model": "BASE.targetgene", 
+  "fields": {
+    "note": null, 
+    "name": "ITS1-4"
+  }
+}
+]
