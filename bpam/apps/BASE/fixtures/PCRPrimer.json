@@ -1,0 +1,34 @@
+[
+    {
+      "pk": 1,
+      "model": "BASE.pcrprimer",
+      "fields": {
+        "note": null,
+        "name": "27F-519R"
+      }
+    },
+    {
+      "pk": 2,
+      "model": "BASE.pcrprimer",
+      "fields": {
+        "note": null,
+        "name": "ITS1F-ITS4"
+      }
+    },
+    {
+      "pk": 3,
+      "model": "BASE.pcrprimer",
+      "fields": {
+        "note": null,
+        "name": "515F-806R"
+      }
+    },
+    {
+      "pk": 4,
+      "model": "BASE.pcrprimer",
+      "fields": {
+        "note": null,
+        "name": "1392F-1492R"
+      }
+    },
+]

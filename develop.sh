@@ -160,8 +160,17 @@ run() {
     python manage.py syncdb --traceback
     python manage.py migrate --traceback
     python manage.py runscript ingest_projects --traceback
-    python manage.py runscript ingest_melanoma --traceback
+
+    # BASE taxonomies
+    python manage.py loaddata ./apps/BASE/fixtures/LandUse.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetGene.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
+    # python manage.py loaddata ./apps/BASE/fixtures/PCRPrimer.json  --traceback
+
     python manage.py runscript ingest_BASE --traceback
+
+    python manage.py runscript ingest_melanoma --traceback
+
     python manage.py runserver
 }
 

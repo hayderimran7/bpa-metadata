@@ -204,11 +204,6 @@ def add_chem_sample(e):
 
 
 def run():
-    LandUse.makeAll()
-    TargetTaxon.makeAll()
-    PCRPrimer.makeAll()
-    TargetGene.makeall()
-
     data = get_sample_data()
     ingest_bpa_ids(data, 'BASE')
 

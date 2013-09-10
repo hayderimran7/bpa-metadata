@@ -10,21 +10,8 @@ class PCRPrimer(models.Model):
     PCR Primers
     """
 
-    PRIMERS = ('27F-519R',
-               'ITS1F-ITS4',
-               '515F-806R',
-               '1392F-1492R',)
-
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField(null=True, blank=True)
-
-    @classmethod
-    def makeAll(cls):
-        """
-        Create all Primers
-        """
-        for name in cls.PRIMERS:
-            TargetGene(name=name).save()
 
     def __unicode__(self):
         return "{0}".format(self.name)
@@ -38,18 +25,8 @@ class TargetGene(models.Model):
     Target Gene
     """
 
-    GENES = ('V1-V3', 'V4', 'V9', 'ITS1-4')
-
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField(null=True, blank=True)
-
-    @classmethod
-    def makeall(cls):
-        """
-        Create all Target Genes
-        """
-        for name in cls.GENES:
-            TargetGene(name=name).save()
 
     def __unicode__(self):
         return "{0}".format(self.name)
@@ -63,22 +40,8 @@ class TargetTaxon(models.Model):
     Target Taxon
     """
 
-    TAXI = ('Eukarya',
-            'Bacteria',
-            'Prokaryota',
-            'Fungi',
-            'Bacteria and archea')
-
     name = models.CharField(max_length=100, unique=True)
     note = models.TextField()
-
-    @classmethod
-    def makeAll(cls):
-        """
-        Create all Target Taxons
-        """
-        for name in cls.TAXI:
-            TargetTaxon(name=name).save()
 
     def __unicode__(self):
         return "{0}".format(self.name)
@@ -93,24 +56,8 @@ class LandUse(models.Model):
     http://lrm.nt.gov.au/soil/landuse/classification
     """
 
-    LAND_USES = ((1, 'Conservation and Natural Environments'),
-                 (2, 'Production from relatively natural Environments'),
-                 (3, 'Production from dry land agriculture and plantations'),
-                 (4, 'Production from Irrigated agriculture and plantations'),
-                 (5, 'Intensive uses'),
-                 (6, 'Water'),)
-
     classification = models.IntegerField(unique=True)
     description = models.CharField(max_length=100, blank=True)
-
-    @classmethod
-    def makeAll(cls):
-        """
-        Create all Land Uses
-        """
-        for c, d in cls.LAND_USES:
-            LandUse(classification=c, description=d).save()
-
 
     def __unicode__(self):
         return "{0}".format(self.description)
@@ -142,14 +89,14 @@ class CollectionSiteHistory(models.Model):
     Background history for the collection site
     """
 
-    history_report_date = models.DateField(blank=True, null=True) # the date this report was compiled
+    history_report_date = models.DateField(blank=True, null=True)  # the date this report was compiled
     current_vegetation = models.CharField(max_length=100, blank=True)
 
     previous_land_use = models.ForeignKey(LandUse, related_name='previous')
     current_land_use = models.ForeignKey(LandUse, related_name='current')
     crop_rotation = models.CharField(max_length=100, blank=True)
     tillage = models.CharField(max_length=100, blank=True)
-    environment_event = models.CharField(max_length=100, blank=True) # fire, flood, extreme, other
+    environment_event = models.CharField(max_length=100, blank=True)  # fire, flood, extreme, other
 
     note = models.TextField()
 
