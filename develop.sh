@@ -201,9 +201,20 @@ devrun() {
     python manage.py runserver --settings=bpam.settings.dev
 }
 
+
+install_ccg() {
+    TGT=/usr/local/bin/ccg
+    wget https://bitbucket.org/ccgmurdoch/ccg/raw/default/ccg -O ${TGT}
+    chmod 755 ${TGT}
+}
+
+
 case ${ACTION} in
 pythonversion)
     pythonversion
+    ;;
+install_ccg)
+    install_ccg
     ;;
 pipfreeze)
     pipfreeze
