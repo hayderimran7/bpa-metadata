@@ -152,6 +152,7 @@ INSTALLED_APPS = (
     'tinymce',
     'django_qbe',
     'bootstrap3',
+    'tastypie',
 )
 
 # A sample logging configuration. The only tangible logging

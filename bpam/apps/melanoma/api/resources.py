@@ -1,0 +1,9 @@
+from tastypie.resources import ModelResource
+from apps.melanoma.models import MelanomaSequenceFile
+from tastypie.authentication import BasicAuthentication
+
+class MelanomaSequenceFileResource(ModelResource):
+    class Meta:
+        queryset = MelanomaSequenceFile.objects.all()
+        allowed_methods = ['get']
+        authentication = BasicAuthentication()
