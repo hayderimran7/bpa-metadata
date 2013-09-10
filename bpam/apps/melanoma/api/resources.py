@@ -7,3 +7,5 @@ class MelanomaSequenceFileResource(ModelResource):
         queryset = MelanomaSequenceFile.objects.all()
         allowed_methods = ['get']
         authentication = SessionAuthentication()
+        limit = 10000
+        max_limit = None
