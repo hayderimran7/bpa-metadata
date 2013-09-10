@@ -11,9 +11,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
     fieldsets = [             
         (None, {'fields' : [('filename', 'md5'),
                             ('lane_number', 'index_number'),
-                            'BPA_archive_url',
-                            ('analysed', 'analysed_url'),
-                            'ftp_url',
+                            ('analysed'),
                             'date_received_from_sequencing_facility',
                             'note'
                             ]
@@ -22,7 +20,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
        
     ]
 
-    list_display = ('filename', 'get_sample_id', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    list_display = ('get_sample_id', 'filename', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
     
     def get_sample_id(self, obj):
         return obj.sample.bpa_id

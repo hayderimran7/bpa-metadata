@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Melanoma Listing{% endblock %}
+
+{% block content %}
+
+<h3>Melanoma Sequence Files</h3>
+
+<table id="sequence-list" class="table table-striped">
+
+    {% for obj in object_list %}
+
+    <tr>
+        <td>{{ obj.sample.bpa_id }}</td>
+        <td>{{ obj.filename }}</td>
+        <td>{{ obj.sample.name }}</td>
+        <td>{{ obj.date_received_from_sequencing_facility}}</td>
+        <td>{{ obj.run }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}
