@@ -10,6 +10,9 @@ class PCRPrimer(models.Model):
     PCR Primers
     """
 
+    name = models.CharField(max_length=100, unique=True)
+    note = models.TextField(null=True, blank=True)
+
     def __unicode__(self):
         return "{0}".format(self.name)
 
