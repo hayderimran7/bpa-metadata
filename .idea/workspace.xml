@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1c43c744-b1ba-49f2-9c5d-e3c236162716" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json" afterPath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/PCRPrimer.json" afterPath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/PCRPrimer.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetGene.json" afterPath="$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetGene.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/develop.sh" afterPath="$PROJECT_DIR$/develop.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bpam/apps/BASE/models.py" afterPath="$PROJECT_DIR$/bpam/apps/BASE/models.py" />
-    </list>
+    <list default="true" id="1c43c744-b1ba-49f2-9c5d-e3c236162716" name="Default" comment="" />
     <ignored path="bpa-metadata.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/base.txt" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1377847915151" ignored="false" />
@@ -19,6 +13,8 @@
     <file path="/ingest_BASE.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378443030288" ignored="false" />
     <file path="/ingest_projects.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378441479941" ignored="false" />
     <file path="/develop.sh" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378779254698" ignored="false" />
+    <file path="$PROJECT_DIR$/bpam/bpam/urls.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378782620981" ignored="false" />
+    <file path="$PROJECT_DIR$/bpam/bpam/settings/base.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378782620981" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
