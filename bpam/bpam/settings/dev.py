@@ -18,7 +18,7 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS += ("debug_toolbar", )
+INSTALLED_APPS += ("debug_toolbar", "lettuce.django")
 INTERNAL_IPS = ("127.0.0.1", '172.16.2.222', '172.16.2.1')
 
 MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
