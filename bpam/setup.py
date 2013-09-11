@@ -16,7 +16,7 @@ setup(
         "bpametadata": [ "templates/admin/base_site.html" ],
         },
     install_requires=[
-        "Django==1.5.2",
+        "Django==1.5.3",
         "unipath==1.0",
         "South==0.8.2",
         "pygraphviz==1.2",
