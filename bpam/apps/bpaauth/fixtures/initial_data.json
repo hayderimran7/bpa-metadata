@@ -1,0 +1,26 @@
+[
+{
+    "pk": 1, 
+    "model": "bpaauth.bpauser", 
+    "fields": {
+        "username": "admin", 
+        "first_name": "", 
+        "last_name": "", 
+        "affiliations": "", 
+        "title": "", 
+        "is_active": true, 
+        "telephone": "", 
+        "note": "", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2013-09-11T03:35:36Z", 
+        "location": "", 
+        "groups": [], 
+        "department": "", 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$aCFKIgjC9M7m$FMy4MVmCAiS6P8sKwB6w2olnBknBs1twiU7hTGBx6v0=", 
+        "email": "", 
+        "date_joined": "2013-09-10T08:14:59Z"
+    }
+}
+]
