@@ -4,6 +4,7 @@
   <head>
     <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
     {% bootstrap_css %}
     <style>
     .content-div {
@@ -25,12 +26,16 @@
         <a class="navbar-brand" href="/">BPA Metadata</a>
       </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="/melanoma/">Melanoma</a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
+      <ul class="nav navbar-nav">
+        <li><a href="/melanoma/">Melanoma</a></li>
+      </ul>
+
+      <form id="submit-form" class="navbar-form navbar-left pull-right" role="search">
+        <div class="form-group">
+          <input id="search-input" type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+      </form>
     </nav>
 
     <div class="content-div">
@@ -38,6 +43,7 @@
     </div>
 
     {% bootstrap_javascript jquery=True %}
+    <script src="/static/base.js"></script> 
   </body>
 </html>
 

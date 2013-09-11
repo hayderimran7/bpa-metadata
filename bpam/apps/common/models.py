@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from tinymce.models import HTMLField
 from apps.bpaauth.models import BPAUser
-
+    
 
 class BPAProject(models.Model):
     """
