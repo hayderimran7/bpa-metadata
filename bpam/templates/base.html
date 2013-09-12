@@ -30,6 +30,15 @@
         <li><a href="/melanoma/">Melanoma</a></li>
       </ul>
 
+      <ul class="nav navbar-nav pull-right">
+        <li><a href="/admin/">Admin</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="/accounts/logout">Log out as {{user.username}}</a></li>
+        {% else %}
+        <li><a href="/accounts/login">Log in</a></li>
+        {% endif %}
+      </ul>
+
       <form id="submit-form" class="navbar-form navbar-left pull-right" role="search">
         <div class="form-group">
           <input id="search-input" type="text" class="form-control" placeholder="Search">

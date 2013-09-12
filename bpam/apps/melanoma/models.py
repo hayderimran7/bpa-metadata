@@ -67,4 +67,3 @@ class MelanomaSequenceFile(SequenceFile):
         uj = urlparse.urljoin
         uq = urllib.quote
         return uj(uj(uj(settings.BPA_BASE_URL, 'melanoma/'), uq(bpa_id) + '/'), uq(self.filename.strip()))
-        
