@@ -23,12 +23,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">BPA Metadata</a>
+        <a class="navbar-brand" href="/{{catalog}}/">BPA Metadata - {{catalog|capfirst}}</a>
       </div>
-
-      <ul class="nav navbar-nav">
-        <li><a href="/melanoma/">Melanoma</a></li>
-      </ul>
 
       <ul class="nav navbar-nav pull-right">
         <li><a href="/admin/">Admin</a></li>
@@ -52,7 +48,9 @@
     </div>
 
     {% bootstrap_javascript jquery=True %}
-    <script src="/static/base.js"></script> 
+    <script src="/static/base.js"></script>
+
+    <form><input type="hidden" id="bpa-metadata-catalog" value="{{catalog}}" /></form>
   </body>
 </html>
 
