@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c43c744-b1ba-49f2-9c5d-e3c236162716" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/develop.sh" afterPath="$PROJECT_DIR$/develop.sh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bpam/scripts/utils.py" afterPath="$PROJECT_DIR$/bpam/scripts/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bpa-metadata.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -10,13 +11,14 @@
     <file path="/models.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378442773724" ignored="false" />
     <file path="/ingest_soil_agricultural.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1377849570305" ignored="false" />
     <file path="/Dummy.txt" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378442516796" ignored="false" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378078350342" ignored="false" />
     <file path="/a.dummy" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378777001127" ignored="false" />
     <file path="/ingest_BASE.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378443030288" ignored="false" />
     <file path="/ingest_projects.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378441479941" ignored="false" />
     <file path="/develop.sh" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378779254698" ignored="false" />
     <file path="$PROJECT_DIR$/bpam/bpam/urls.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378782620981" ignored="false" />
     <file path="$PROJECT_DIR$/bpam/bpam/settings/base.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1378782620981" ignored="false" />
+    <file path="/utils.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1379036725512" ignored="false" />
+    <file path="$PROJECT_DIR$/../ccg/setup.py" changelist="1c43c744-b1ba-49f2-9c5d-e3c236162716" time="1379034194495" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,11 +38,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="develop.sh" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="develop.sh" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/develop.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="166" column="6" selection-start="4863" selection-end="4863" vertical-scroll-proportion="0.34238604">
+            <state line="166" column="6" selection-start="4863" selection-end="4863" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ingest_BASE.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bpam/scripts/ingest_BASE.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="31" selection-start="1723" selection-end="1733" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bpam/scripts/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="0" selection-start="167" selection-end="167" vertical-scroll-proportion="0.13068731">
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,9 +73,7 @@
         <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="9" column="15" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#28#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -59,7 +81,7 @@
       <file leaf-file-name="TargetGene.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetGene.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="21" selection-start="96" selection-end="96" vertical-scroll-proportion="-3.125">
+            <state line="5" column="21" selection-start="96" selection-end="96" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -68,7 +90,7 @@
       <file leaf-file-name="LandUse.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="-26.875">
+            <state line="43" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -77,7 +99,7 @@
       <file leaf-file-name="PCRPrimer.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/PCRPrimer.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="17" selection-start="484" selection-end="484" vertical-scroll-proportion="-17.5">
+            <state line="28" column="17" selection-start="484" selection-end="484" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -105,7 +127,6 @@
         <option value="$PROJECT_DIR$/bpam/apps/base_soil_agricultural/models.py" />
         <option value="$PROJECT_DIR$/bpam/scripts/ingest_soil_agricultural.py" />
         <option value="$PROJECT_DIR$/bpam/scripts/ingest_projects.py" />
-        <option value="$PROJECT_DIR$/bpam/scripts/utils.py" />
         <option value="$PROJECT_DIR$/bpam/bpam/urls.py" />
         <option value="$PROJECT_DIR$/bpam/bpam/settings/base.py" />
         <option value="$PROJECT_DIR$/bpam/scripts/ingest_BASE.py" />
@@ -114,6 +135,7 @@
         <option value="$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json" />
         <option value="$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetGene.json" />
         <option value="$PROJECT_DIR$/develop.sh" />
+        <option value="$PROJECT_DIR$/bpam/scripts/utils.py" />
       </list>
     </option>
   </component>
@@ -173,6 +195,48 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpam" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpa-metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bpam" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -181,11 +245,11 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="editor" />
     <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="editor" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ccg" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -326,15 +390,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="48" y="-4" width="1873" height="1205" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983795" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2547945" sideWeight="0.6707663" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25424656" sideWeight="0.6707663" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
@@ -343,6 +405,8 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -412,104 +476,105 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/bpam/manage.py">
+    <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="247" selection-end="247" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/setup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/bpam/dashboard.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/bpam/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="47" selection-start="352" selection-end="352" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/bpam/settings/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="0" selection-start="3800" selection-end="3800" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#44#53#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/templates/admin/base_site.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/scripts/ingest_BASE.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="10" selection-start="7617" selection-end="7617" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetTaxon.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="43" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/PCRPrimer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="17" selection-start="484" selection-end="484" vertical-scroll-proportion="-17.5">
+        <state line="28" column="17" selection-start="484" selection-end="484" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/manage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="247" selection-end="247" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/bpam/dashboard.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/bpam/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="47" selection-start="352" selection-end="352" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/bpam/settings/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="0" selection-start="3800" selection-end="3800" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/templates/admin/base_site.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetTaxon.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/PCRPrimer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="17" selection-start="484" selection-end="484" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/LandUse.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="-26.875">
+        <state line="43" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/fixtures/TargetGene.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="21" selection-start="96" selection-end="96" vertical-scroll-proportion="-3.125">
+        <state line="5" column="21" selection-start="96" selection-end="96" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/develop.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="166" column="6" selection-start="4863" selection-end="4863" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bpam/scripts/ingest_BASE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="31" selection-start="1723" selection-end="1733" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bpam/apps/BASE/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="15" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/develop.sh">
+    <entry file="file://$PROJECT_DIR$/bpam/scripts/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="166" column="6" selection-start="4863" selection-end="4863" vertical-scroll-proportion="0.34238604">
-          <folding />
+        <state line="9" column="0" selection-start="167" selection-end="167" vertical-scroll-proportion="0.13068731">
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
