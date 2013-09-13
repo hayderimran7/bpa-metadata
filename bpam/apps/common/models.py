@@ -198,6 +198,6 @@ class URLVerification(models.Model):
     The cron script will clean old entries up.
     """
     checked_url = models.URLField()
-    checked_at = models.DateTimeField()
+    checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
     status_ok = models.BooleanField()
     status_note = models.TextField()
