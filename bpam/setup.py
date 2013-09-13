@@ -29,6 +29,7 @@ setup(
         "django-tastypie==0.10.0",
         "django-bootstrap3==0.0.6",
         "mimeparse==0.1.3",
+        "requests==1.2.3"
         ],
     dependency_links = [
         "http://repo.ccgapps.com.au",
