@@ -19,7 +19,7 @@ MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-
 PIP_OPTS="-v -M --download-cache ~/.pip/cache"
 
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings.dev"
+    export DJANGO_SETTINGS_MODULE="bpam.settings"
 }
 
 demosettings() {

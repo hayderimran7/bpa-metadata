@@ -18,7 +18,7 @@ TEMPLATE_DIRS = (
     PROJECT_DIR.child("templates"),
 )
 
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -31,10 +31,6 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.mysql',
-        'STORAGE_ENGINE': 'INNODB',
-        'OPTIONS': {
-            "init_command": "SET foreign_key_checks = 0;",
-        },
         'NAME': 'bpam',
         'USER': 'bpam',
         'PASSWORD': 'bpam',
@@ -153,6 +149,7 @@ INSTALLED_APPS = (
     'django_qbe',
     'bootstrap3',
     'tastypie',
+    'lettuce.django'
 )
 
 # A sample logging configuration. The only tangible logging

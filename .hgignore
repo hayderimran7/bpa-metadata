@@ -10,4 +10,8 @@ bpam/bpam.egg-info
 bpam/dist
 bootstrap
 virt_bpam
+bpam.egg-info/
+*.komodoproject
+build-number.txt
+setup.cfg
 *.rpm
