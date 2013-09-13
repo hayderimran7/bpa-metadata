@@ -43,7 +43,7 @@ class GeneralEcologicalZone(models.Model):
     """
 
     description = models.CharField(max_length=100, unique=True)
-    note = models.CharField(max_length=100, blank=True)
+    note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return "{0}".format(self.description)
