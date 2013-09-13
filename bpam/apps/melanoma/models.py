@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from apps.bpaauth.models import BPAUser
 from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism
-import urlparse
+import urlparse, urllib
 
 GENDERS=(('M', 'Male'),
          ('F', 'Female'),
@@ -64,4 +64,6 @@ class MelanomaSequenceFile(SequenceFile):
 
     def get_url(self):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
-        return urlparse.urljoin(urlparse.urljoin(urlparse.urljoin(settings.BPA_BASE_URL, 'melanoma/'), bpa_id + '/'), self.filename)
+        uj = urlparse.urljoin
+        uq = urllib.quote
+        return uj(uj(uj(settings.BPA_BASE_URL, 'melanoma/'), uq(bpa_id) + '/'), uq(self.filename.strip()))
