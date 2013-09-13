@@ -175,7 +175,7 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/LandUse.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetGene.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
-    # python manage.py loaddata ./apps/BASE/fixtures/PCRPrimer.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimer.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 
@@ -221,74 +221,74 @@ install_ccg() {
 
 
 case ${ACTION} in
-pythonversion)
-    pythonversion
-    ;;
-install_ccg)
-    install_ccg
-    ;;
-pipfreeze)
-    pipfreeze
-    ;;
-lint)
-    lint
-    ;;
-jslint)
-    jslint
-    ;;
-syncmigrate)
-    devsettings
-    syncmigrate
-    ;;
-start)
-    devsettings
-    startserver
-    ;;
-install)
-    devsettings
-    installapp
-    ;;
-ci_remote_build)
-    ci_ssh_agent
-    ci_remote_build
-    ;;
-ci_remote_destroy)
-    ci_ssh_agent
-    ci_remote_destroy
-    ;;
-ci_rpm_publish)
-    ci_ssh_agent
-    ci_rpm_publish
-    ;;
-ci_staging)
-    ci_ssh_agent
-    ci_staging
-    ;;
-ci_staging_lettuce)
-    ci_ssh_agent
-    ci_staging_lettuce
-    ;;
-clean)
-    settings
-    clean
-    ;;
-purge)
-    settings
-    clean
-    purge
-    ;;
-dev)
-    dev
-    ;;
-doagric)
-    doagric
-    ;;
-devrun)
-    devrun
-    ;;
-demo)
-    demo
-    ;;
-*)
-    usage
+    pythonversion)
+        pythonversion
+        ;;
+    install_ccg)
+        install_ccg
+        ;;
+    pipfreeze)
+        pipfreeze
+        ;;
+    lint)
+        lint
+        ;;
+    jslint)
+        jslint
+        ;;
+    syncmigrate)
+        devsettings
+        syncmigrate
+        ;;
+    start)
+        devsettings
+        startserver
+        ;;
+    install)
+        devsettings
+        installapp
+        ;;
+    ci_remote_build)
+        ci_ssh_agent
+        ci_remote_build
+        ;;
+    ci_remote_destroy)
+        ci_ssh_agent
+        ci_remote_destroy
+        ;;
+    ci_rpm_publish)
+        ci_ssh_agent
+        ci_rpm_publish
+        ;;
+    ci_staging)
+        ci_ssh_agent
+        ci_staging
+        ;;
+    ci_staging_lettuce)
+        ci_ssh_agent
+        ci_staging_lettuce
+        ;;
+    clean)
+        settings
+        clean
+        ;;
+    purge)
+        settings
+        clean
+        purge
+        ;;
+    dev)
+        dev
+        ;;
+    doagric)
+        doagric
+        ;;
+    devrun)
+        devrun
+        ;;
+    demo)
+        demo
+        ;;
+    *)
+        usage
 esac
