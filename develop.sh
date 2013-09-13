@@ -93,6 +93,15 @@ ci_staging() {
     ccg ${AWS_STAGING_INSTANCE} shutdown:50
 }
 
+ci_staging_lettuce() {
+    ccg ${AWS_STAGING_INSTANCE} dsudo:'dbus-uuidgen --ensure'
+    ccg ${AWS_STAGING_INSTANCE} dsudo:'chown apache:apache /var/www'
+
+    ccg ${AWS_STAGING_INSTANCE} dsudo:'bpam run_lettuce --with-xunit --xunit-file\=/tmp/tests.xml || true'
+    
+    ccg ${AWS_STAGING_INSTANCE} getfile:/tmp/tests.xml,./
+}
+
 # lint using flake8
 lint() {
     activate_virtualenv
@@ -252,6 +261,10 @@ ci_rpm_publish)
 ci_staging)
     ci_ssh_agent
     ci_staging
+    ;;
+ci_staging_lettuce)
+    ci_ssh_agent
+    ci_staging_lettuce
     ;;
 clean)
     settings
