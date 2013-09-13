@@ -4,7 +4,7 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-PROJECT_DIR = Path(__file__).ancestor(3)
+PROJECT_DIR = Path(__file__).ancestor(2)
 
 MEDIA_ROOT = PROJECT_DIR.child("media")
 
