@@ -40,6 +40,7 @@ BPA Metadata Management
 
 %install
 NAME=%{name}
+NICKNAME=%{nickname}
 
 # Make sure the standard target directories exist
 # These two contain files owned by the RPM
@@ -68,11 +69,8 @@ export PYTHONPATH=%{buildinstalldir}/lib
 easy_install -O1 --prefix %{buildinstalldir} --install-dir %{buildinstalldir}/lib .
 
 # Create settings symlink so we can run collectstatic with the default settings
-find %{buildinstalldir} -path "*/$NAME/*/settings/*.py" | sed s:^%{buildinstalldir}:: | while read py
-do
-    ln -sf ..$py %{settingsdir}
-done
-ln -sf production.py %{settingsdir}/%{nickname}.py
+touch %{settingsdir}/__init__.py
+ln -fs ..`find %{buildinstalldir} -path "*/$NICKNAME/settings.py" | sed s:^%{buildinstalldir}::` %{settingsdir}/%{nickname}.py
 
 # Create symlinks under install directory to real persistent data directories
 ln -nfs /var/log/%{name} %{buildinstalldir}/log
