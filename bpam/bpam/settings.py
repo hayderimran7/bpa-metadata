@@ -191,3 +191,10 @@ def get_env_variable(var_name):
         raise ImproperlyConfigured(error_msg)
 
 BPA_BASE_URL = 'http://files.ivec.org/bpa/'
+
+try:
+    print "Attempting to import default settings as appsettings.bpam"
+    from appsettings.bpam import *
+    print "Successfully imported appsettings.bpam"
+except ImportError, e:
+    print "Failed to import appsettings.bpam"
