@@ -10,7 +10,7 @@ class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
 
     def get_queryset(self):
-        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample')
+        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification')
 
     def get_context_data(self, **kwargs):
         context = super(MelanomaSequenceFileListView, self).get_context_data(**kwargs)

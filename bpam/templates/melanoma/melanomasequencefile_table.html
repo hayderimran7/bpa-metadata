@@ -1,6 +1,7 @@
 <table id="sequence-list" class="table table-striped">
     <thead>
         <tr>
+            <th></th>
             <th>BPA ID</th>
             <th>Filename</th>
             <th>Sample Name</th>
@@ -10,6 +11,13 @@
     <tbody>
         {% for obj in object_list %}
         <tr>
+            <td>
+                {% if obj.url_verification.status_ok %}
+                <span title="Last checked {{ obj.url_verification.checked_at }}" class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span title="Error {{ obj.url_verification.status_note }} at {{ obj.url_verification.checked_at }}" class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
             <td>{{ obj.sample.bpa_id }}</td>
             <td><a href="{{obj.get_url}}">{{ obj.filename }}</a></td>
             <td>{{ obj.sample.name }}</td>
