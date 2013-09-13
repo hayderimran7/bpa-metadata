@@ -134,7 +134,8 @@ syncmigrate() {
 
 # start runserver
 startserver() {
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus ${port}
+    # ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus ${PORT}
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT}
 }
 
 pythonversion() {
@@ -171,7 +172,8 @@ run() {
 
     python manage.py runscript ingest_melanoma --traceback
 
-    python manage.py runserver
+    # python manage.py runserver
+    startserver
 }
 
 dev() { 
