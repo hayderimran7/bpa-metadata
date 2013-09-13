@@ -2,8 +2,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from tinymce.models import HTMLField
+
 from apps.bpaauth.models import BPAUser
-    
+
 
 class BPAProject(models.Model):
     """
@@ -21,6 +22,7 @@ class BPAProject(models.Model):
     class Meta:
         verbose_name = _('BPA Project')
         verbose_name_plural = _("BPA Projects")
+
 
 class BPAUniqueID(models.Model):
     """
@@ -89,6 +91,7 @@ class DNASource(models.Model):
         verbose_name = "DNA Source"
         verbose_name_plural = "DNA Sources"
 
+
 class Sequencer(models.Model):
     """
     The Sequencer
@@ -113,7 +116,8 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Size: " + str(self.base_pairs) + " Type: " + str(self.library_type) + " Protocol: " + str(self.library_construction_protocol)
+        return "Size: " + str(self.base_pairs) + " Type: " + str(self.library_type) + " Protocol: " + str(
+            self.library_construction_protocol)
 
     class Meta:
         verbose_name_plural = "Protocol"
@@ -162,7 +166,8 @@ class Run(models.Model):
     # Facilities
     sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
     array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
-    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility', blank=True, null=True)
+    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility',
+                                                         blank=True, null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
@@ -170,6 +175,7 @@ class Run(models.Model):
 
     class Meta:
         abstract = True
+
 
 class SequenceFile(models.Model):
     """
@@ -189,6 +195,7 @@ class SequenceFile(models.Model):
 
     class Meta:
         abstract = True
+
 
 class SequenceFileVerification(models.Model):
     """
