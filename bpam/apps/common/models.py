@@ -190,14 +190,14 @@ class SequenceFile(models.Model):
     class Meta:
         abstract = True
 
-class SequenceFileVerification(models.Model):
+class URLVerification(models.Model):
     """
     Notes whether a sequence file could be accessed via HTTP. As SequenceFile is abstract
     we can't use a straight DB relationship, so instead we use the calculated URL as the key
     for the join.
     The cron script will clean old entries up.
     """
-    checked_url = models.URLField(db_index=True)
+    checked_url = models.URLField()
     checked_at = models.DateTimeField()
     status_ok = models.BooleanField()
     status_note = models.TextField()

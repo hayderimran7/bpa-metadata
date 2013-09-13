@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism
+from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
 import urlparse, urllib
 
 GENDERS=(('M', 'Male'),
@@ -58,6 +58,7 @@ class MelanomaSequenceFile(SequenceFile):
     
     sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
+    url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
         return "Run {0} for {1}".format(self.run, self.filename)

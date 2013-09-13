@@ -20,15 +20,24 @@ class MelanomaSequenceFileListView(ListView):
 def search_view(request, term):
     data = {
         'catalog' : 'melanoma',
+        'melanoma_object_list' : [],
         'term' : term,
         'nresults' : 0,
     }
-    def add_search_results(k, object_list):
-        data[k] = object_list
-        data['nresults'] += len(object_list)
+    def add_search_results(objects):
+        results = data['melanoma_object_list']
+        present = set(t.id for t in results)
+        for obj in objects:
+            if obj.id not in present:
+                results.append(obj)
+
     # searches restricted to logged-in users go here
     if request.user.is_authenticated:
         add_search_results(
-            'melanoma_object_list',
             MelanomaSequenceFile.objects.filter(sample__bpa_id__bpa_id__endswith='/'+term))
+        add_search_results(
+            MelanomaSequenceFile.objects.filter(sample__name__icontains=term)
+            )
+
+    data['nresults'] += len(data['melanoma_object_list'])
     return render(request, 'common/search_results.html', data)
