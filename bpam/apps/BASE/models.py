@@ -20,6 +20,38 @@ class PCRPrimer(models.Model):
         verbose_name_plural = _("PCR Primers")
 
 
+class LandUse(models.Model):
+    """
+    Land use taxonomy
+    http://lrm.nt.gov.au/soil/landuse/classification
+    """
+
+    classification = models.IntegerField(unique=True)
+    description = models.CharField(max_length=100, blank=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.description)
+
+    class Meta:
+        verbose_name_plural = _("Land Uses")
+        unique_together = ('classification', 'description')
+
+
+class GeneralEcologicalZone(models.Model):
+    """
+    General ecological zone taxonomy
+    """
+
+    description = models.CharField(max_length=100, unique=True)
+    note = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.description)
+
+    class Meta:
+        verbose_name_plural = _("General Ecological Zones")
+
+
 class TargetGene(models.Model):
     """
     Target Gene
@@ -49,22 +81,6 @@ class TargetTaxon(models.Model):
     class Meta:
         verbose_name_plural = _("Target Taxons")
 
-
-class LandUse(models.Model):
-    """
-    Land use taxonomy
-    http://lrm.nt.gov.au/soil/landuse/classification
-    """
-
-    classification = models.IntegerField(unique=True)
-    description = models.CharField(max_length=100, blank=True)
-
-    def __unicode__(self):
-        return "{0}".format(self.description)
-
-    class Meta:
-        verbose_name_plural = _("Land Uses")
-        unique_together = ('classification', 'description')
 
 
 class SiteOwner(models.Model):
