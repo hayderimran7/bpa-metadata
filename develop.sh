@@ -172,10 +172,11 @@ run() {
     python manage.py runscript ingest_projects --traceback
 
     # BASE taxonomies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUse.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGene.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/LandUseTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimer.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneTaxon.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 
