@@ -251,12 +251,6 @@ usage() {
     echo ""
 }
 
-
-devrun() {
-    python manage.py runserver --settings=bpam.settings.dev
-}
-
-
 install_ccg() {
     TGT=/usr/local/bin/ccg
     wget https://bitbucket.org/ccgmurdoch/ccg/raw/default/ccg -O ${TGT}
@@ -336,9 +330,6 @@ case ${ACTION} in
         ;;
     doagric)
         doagric
-        ;;
-    devrun)
-        devrun
         ;;
     demo)
         demo
