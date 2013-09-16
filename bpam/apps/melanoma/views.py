@@ -1,29 +1,31 @@
-from django.http import HttpResponse
-from django.template import RequestContext, loader
 from django.views.generic.list import ListView
-from django.utils import timezone
-from apps.melanoma.models import MelanomaSequenceFile
 from django.shortcuts import render
+
+from apps.melanoma.models import MelanomaSequenceFile
 from apps.common.models import BPAUniqueID
+
 
 class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
 
     def get_queryset(self):
-        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification')
+        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
+                                                           'url_verification')
 
     def get_context_data(self, **kwargs):
         context = super(MelanomaSequenceFileListView, self).get_context_data(**kwargs)
         context['catalog'] = 'melanoma'
         return context
 
+
 def search_view(request, term):
     data = {
-        'catalog' : 'melanoma',
-        'melanoma_object_list' : [],
-        'term' : term,
-        'nresults' : 0,
+        'catalog': 'melanoma',
+        'melanoma_object_list': [],
+        'term': term,
+        'nresults': 0,
     }
+
     def add_search_results(objects):
         results = data['melanoma_object_list']
         present = set(t.id for t in results)
@@ -34,10 +36,10 @@ def search_view(request, term):
     # searches restricted to logged-in users go here
     if request.user.is_authenticated:
         add_search_results(
-            MelanomaSequenceFile.objects.filter(sample__bpa_id__bpa_id__endswith='/'+term))
+            MelanomaSequenceFile.objects.filter(sample__bpa_id__bpa_id__endswith='/' + term))
         add_search_results(
             MelanomaSequenceFile.objects.filter(sample__name__icontains=term)
-            )
+        )
 
     data['nresults'] += len(data['melanoma_object_list'])
     return render(request, 'common/search_results.html', data)
