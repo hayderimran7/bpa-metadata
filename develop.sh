@@ -220,6 +220,7 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TillageTaxon.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 

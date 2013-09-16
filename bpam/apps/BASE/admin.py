@@ -1,18 +1,5 @@
 from django.contrib import admin
-
-from .models import (GeneralEcologicalZone,
-                     BroadVegetationType,
-                     SoilSample,
-                     LandUse,
-                     SiteOwner,
-                     CollectionSiteHistory,
-                     CollectionSite,
-                     SequenceConstruct,
-                     ChemicalAnalysis,
-                     PCRPrimer,
-                     TargetGene,
-                     TargetTaxon)
-
+from .models import *
 
 class LandUseAdmin(admin.ModelAdmin):
     list_display = ('description', 'classification')
@@ -30,6 +17,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     list_display = ('country', 'state', 'location_name')
 
 
+admin.site.register(TillageType)
 admin.site.register(BroadVegetationType)
 admin.site.register(GeneralEcologicalZone)
 admin.site.register(SoilSample, SampleAdmin)

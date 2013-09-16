@@ -68,6 +68,21 @@ class BroadVegetationType(models.Model):
         verbose_name_plural = _("Broad Vegetation Types")
 
 
+class TillageType(models.Model):
+    """
+    Note method(s) used for tilling; moldboard plow, chisel, no-till, etc.
+    """
+
+    tillage = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+
+    def __unicode__(self):
+        return "{0}".format(self.tillage)
+
+    class Meta:
+        verbose_name_plural = _("Tillage Types")
+
+
 class TargetGene(models.Model):
     """
     Target Gene

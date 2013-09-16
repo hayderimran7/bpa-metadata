@@ -22,6 +22,7 @@ class BPAProject(models.Model):
         verbose_name = _('BPA Project')
         verbose_name_plural = _("BPA Projects")
 
+
 class BPAUniqueID(models.Model):
     """
     BPA Generated Label
