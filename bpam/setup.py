@@ -5,7 +5,7 @@ import re
 from pip.req import parse_requirements
 
 data_files = {}
-for package in ['bpam']:
+for package in ['bpam', 'apps/BASE', 'bpaauth']:
     data_files[package] = []
     os.chdir(os.path.join(package))
     for data_dir in ('templates', 'static', 'migrations', 'fixtures', 'features', 'templatetags', 'management'):
