@@ -27,7 +27,7 @@ class LandUse(models.Model):
     """
 
     classification = models.IntegerField(unique=True)
-    description = models.TextField(blank=True)
+    description = models.CharField(blank=True, max_length=200)
 
     def __unicode__(self):
         return "{0}".format(self.description)
