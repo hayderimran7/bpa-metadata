@@ -53,6 +53,21 @@ class GeneralEcologicalZone(models.Model):
         verbose_name_plural = _("General Ecological Zones")
 
 
+class BroadVegetationType(models.Model):
+    """
+    Broad Vegetation Type taxonomy
+    """
+
+    description = models.CharField(max_length=100, unique=True)
+    note = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.description)
+
+    class Meta:
+        verbose_name_plural = _("Broad Vegetation Types")
+
+
 class TargetGene(models.Model):
     """
     Target Gene

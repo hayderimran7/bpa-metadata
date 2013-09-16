@@ -185,9 +185,8 @@ syncmigrate() {
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> collectstatic-develop.log
 }
 
-# start runserver
 startserver() {
-    # ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus ${PORT}
+    log_info "Starting server on http://$(hostname -I):${PORT}"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT}
 }
 
@@ -220,6 +219,7 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeTaxon.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 

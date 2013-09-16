@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import (GeneralEcologicalZone,
+                     BroadVegetationType,
                      SoilSample,
                      LandUse,
                      SiteOwner,
@@ -29,6 +30,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     list_display = ('country', 'state', 'location_name')
 
 
+admin.site.register(BroadVegetationType)
 admin.site.register(GeneralEcologicalZone)
 admin.site.register(SoilSample, SampleAdmin)
 admin.site.register(LandUse, LandUseAdmin)

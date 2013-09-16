@@ -1,0 +1,75 @@
+[
+    {
+      "pk": 1,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Marsh/Bog",
+        "note": ""
+      }
+    },
+    {
+      "pk": 2,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Healthland",
+        "note": ""
+      }
+    },
+    {
+      "pk": 3,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Grassland",
+        "note": ""
+      }
+    },
+    {
+      "pk": 4,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Shrubland",
+        "note": ""
+      }
+    },
+    {
+      "pk": 5,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Woodland",
+        "note": ""
+      }
+    },
+    {
+      "pk": 6,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Forest",
+        "note": ""
+      }
+    },
+    {
+      "pk": 7,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Savannah",
+        "note": ""
+      }
+    },
+
+    {
+      "pk": 8,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Dune",
+        "note": ""
+      }
+    },
+    {
+      "pk": 9,
+      "model": "BASE.broadvegetationtype",
+      "fields": {
+        "description": "Other",
+        "note": ""
+      }
+    }
+]
