@@ -83,6 +83,23 @@ class TillageType(models.Model):
         verbose_name_plural = _("Tillage Types")
 
 
+class HorizonType(models.Model):
+    """
+    Specific layer in the land area which measures parallel to the soil surface and possesses physical characteristics
+    which differ from the layers above and beneath; master horizons (O, A, E,  B, C, R) are rather standard, but
+    sub-designations (subordinate distinctions) will vary by country.
+    """
+
+    horizon = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+
+    def __unicode__(self):
+        return "{0}".format(self.horizon)
+
+    class Meta:
+        verbose_name_plural = _("Horizon Types")
+
+
 class TargetGene(models.Model):
     """
     Target Gene
