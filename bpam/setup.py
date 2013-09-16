@@ -4,6 +4,15 @@ import os.path
 import re
 from pip.req import parse_requirements
 
+data_files = {}
+for package in ['bpam']:
+    data_files[package] = []
+    os.chdir(os.path.join(package))
+    for data_dir in ('templates', 'static', 'migrations', 'fixtures', 'features', 'templatetags', 'management'):
+	    data_files[package].extend(
+	        [os.path.join(subdir,f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
+    os.chdir('..')
+
 setup(
     name='bpam',
     version='1.0',
@@ -12,9 +21,7 @@ setup(
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
     packages=find_packages(),
-    package_data={
-        "bpametadata": [ "templates/admin/base_site.html" ],
-        },
+    package_data=data_files,
     install_requires=[
         "Django==1.5.4",
         "unipath==1.0",
