@@ -83,7 +83,7 @@ class TillageType(models.Model):
         verbose_name_plural = _("Tillage Types")
 
 
-class HorizonType(models.Model):
+class HorizonClassification(models.Model):
     """
     Specific layer in the land area which measures parallel to the soil surface and possesses physical characteristics
     which differ from the layers above and beneath; master horizons (O, A, E,  B, C, R) are rather standard, but

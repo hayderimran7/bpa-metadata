@@ -23,6 +23,7 @@ class SoilClassificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DrainageClassification)
+admin.site.register(HorizonClassification)
 admin.site.register(Colour)
 admin.site.register(ProfilePosition)
 admin.site.register(SoilClassification, SoilClassificationAdmin)
