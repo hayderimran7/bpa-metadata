@@ -55,14 +55,14 @@ class GeneralEcologicalZone(models.Model):
 
 class BroadVegetationType(models.Model):
     """
-    Broad Vegetation Type taxonomy
+    Broad Vegetation Type
     """
 
-    description = models.CharField(max_length=100, unique=True)
+    vegetation = models.CharField(max_length=100, unique=True)
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.description)
+        return "{0}".format(self.vegetation)
 
     class Meta:
         verbose_name_plural = _("Broad Vegetation Types")
@@ -97,7 +97,7 @@ class HorizonClassification(models.Model):
         return "{0}".format(self.horizon)
 
     class Meta:
-        verbose_name_plural = _("Horizon Types")
+        verbose_name_plural = _("Horizon Classification")
 
 
 class SoilClassification(models.Model):

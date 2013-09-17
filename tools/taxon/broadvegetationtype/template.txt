@@ -1,0 +1,8 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.vegetationtype",
+  "fields": {
+    "vegetation": "${vegetation}",
+    "note": "${note}"
+  }
+}
