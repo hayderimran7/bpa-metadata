@@ -1,17 +1,18 @@
 import setuptools
 from setuptools import setup, find_packages
 import os.path
-import re
-from pip.req import parse_requirements
+
+current_dir = os.getcwd()
+
+packages = [p.replace(".", "/") for p in sorted(find_packages())]
 
 data_files = {}
-for package in ['bpam', 'apps/BASE', 'bpaauth']:
+for package in packages:
     data_files[package] = []
     os.chdir(os.path.join(package))
     for data_dir in ('templates', 'static', 'migrations', 'fixtures', 'features', 'templatetags', 'management'):
-	    data_files[package].extend(
-	        [os.path.join(subdir,f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
-    os.chdir('..')
+	data_files[package].extend([os.path.join(subdir,f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
+    os.chdir(current_dir)
 
 setup(
     name='bpam',
@@ -20,7 +21,7 @@ setup(
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
-    packages=find_packages(),
+    packages=packages,
     package_data=data_files,
     install_requires=[
         "Django==1.5.4",
