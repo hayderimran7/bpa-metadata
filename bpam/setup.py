@@ -1,16 +1,18 @@
+import setuptools
+from setuptools import setup, find_packages
 import os.path
 
-from setuptools import setup, find_packages
+current_dir = os.getcwd()
 
+packages = [p.replace(".", "/") for p in sorted(find_packages())]
 
 data_files = {}
-for package in ['bpam', 'apps/BASE', 'bpaauth']:
+for package in packages:
     data_files[package] = []
     os.chdir(os.path.join(package))
     for data_dir in ('templates', 'static', 'migrations', 'fixtures', 'features', 'templatetags', 'management'):
-        data_files[package].extend(
-            [os.path.join(subdir, f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
-    os.chdir('..')
+        data_files[package].extend([os.path.join(subdir,f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
+    os.chdir(current_dir)
 
 setup(
     name='bpam',
@@ -19,7 +21,7 @@ setup(
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
-    packages=find_packages(),
+    packages=packages,
     package_data=data_files,
     install_requires=[
         "Django==1.5.4",
@@ -35,10 +37,9 @@ setup(
         "django-tastypie==0.10.0",
         "django-bootstrap3==0.0.6",
         "mimeparse==0.1.3",
-        "requests==1.2.3",
-        "tendo==0.2.4",
-    ],
-    dependency_links=[
+        "requests==1.2.3"
+        ],
+    dependency_links = [
         "http://repo.ccgapps.com.au",
         "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz"
     ],
