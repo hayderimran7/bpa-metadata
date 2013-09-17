@@ -1,6 +1,6 @@
 {
   "pk": ${pkey},
-  "model": "BASE.vegetationtype",
+  "model": "BASE.broadvegetationtype",
   "fields": {
     "vegetation": "${vegetation}",
     "note": "${note}"
