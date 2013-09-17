@@ -1,0 +1,8 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "${colour}",
+    "code": "${code}"
+  }
+}

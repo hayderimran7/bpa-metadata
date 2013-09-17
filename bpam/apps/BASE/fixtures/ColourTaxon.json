@@ -1,0 +1,178 @@
+[
+{
+  "pk": 1,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown",
+    "code": "BR"
+  }
+}, 
+{
+  "pk": 2,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Gray",
+    "code": "GR"
+  }
+}, 
+{
+  "pk": 3,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Black",
+    "code": "BK"
+  }
+}, 
+{
+  "pk": 4,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown Gray",
+    "code": "BRGR"
+  }
+}, 
+{
+  "pk": 5,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Gray Brown",
+    "code": "GRBR"
+  }
+}, 
+{
+  "pk": 6,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Light Brown",
+    "code": "LTBR"
+  }
+}, 
+{
+  "pk": 7,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Dark Brown",
+    "code": "DKBR"
+  }
+}, 
+{
+  "pk": 8,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Light Gray",
+    "code": "LTGR"
+  }
+}, 
+{
+  "pk": 9,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Dark Gray",
+    "code": "DKGR"
+  }
+}, 
+{
+  "pk": 10,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown Yellow",
+    "code": "BRYW"
+  }
+}, 
+{
+  "pk": 11,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown Red",
+    "code": "BRRD"
+  }
+}, 
+{
+  "pk": 12,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown Orange",
+    "code": "BROR"
+  }
+}, 
+{
+  "pk": 13,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown Black",
+    "code": "BRBK"
+  }
+}, 
+{
+  "pk": 14,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Brown White",
+    "code": "BRWH"
+  }
+}, 
+{
+  "pk": 15,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Gray Black",
+    "code": "GRBK"
+  }
+}, 
+{
+  "pk": 16,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Gray White",
+    "code": "GRWH"
+  }
+}, 
+{
+  "pk": 17,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Gray Yellow",
+    "code": "GRYW"
+  }
+}, 
+{
+  "pk": 18,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "White",
+    "code": "WH"
+  }
+}, 
+{
+  "pk": 19,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Yellow",
+    "code": "YW"
+  }
+}, 
+{
+  "pk": 20,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Yellow Brown",
+    "code": "YWBR"
+  }
+}, 
+{
+  "pk": 21,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Yellow Gray",
+    "code": "YWGR"
+  }
+}, 
+{
+  "pk": 22,
+  "model": "BASE.colour",
+  "fields": {
+    "colour": "Orange",
+    "code": "OR"
+  }
+}
+]

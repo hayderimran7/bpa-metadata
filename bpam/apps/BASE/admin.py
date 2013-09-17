@@ -21,6 +21,9 @@ class CollectionSiteAdmin(admin.ModelAdmin):
 class SoilClassificationAdmin(admin.ModelAdmin):
     list_display = ('authority', 'classification')
 
+
+admin.site.register(DrainageClassification)
+admin.site.register(Colour)
 admin.site.register(ProfilePosition)
 admin.site.register(SoilClassification, SoilClassificationAdmin)
 admin.site.register(TillageType)

@@ -118,6 +118,21 @@ class SoilClassification(models.Model):
         verbose_name_plural = _("Soil Classification")
 
 
+class DrainageClassification(models.Model):
+    """
+    Drainage classification from a standard system such as the US Department of Agriculture system.
+    """
+
+    drainage = models.CharField(max_length=50)
+    description = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.drainage)
+
+    class Meta:
+        verbose_name_plural = _("Drainage Classifications")
+
+
 class ProfilePosition(models.Model):
     """
     Cross-sectional position in the hill slope where sample was collected; sample area position in relation to
@@ -161,6 +176,17 @@ class TargetTaxon(models.Model):
 
     class Meta:
         verbose_name_plural = _("Target Taxons")
+
+
+class Colour(models.Model):
+    """
+    Soil Colour
+    """
+    colour = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=5, unique=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.colour)
 
 
 class SiteOwner(models.Model):

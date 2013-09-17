@@ -34,14 +34,13 @@ def get_template(args):
 
 def get_csv_reader(args):
     data_file = Path(args['TAXONDIRECTORY'], args['--list'])
-    return csv.DictReader(open(data_file, 'r'), restkey='the_rest')
+    return csv.DictReader(open(data_file, 'r'), delimiter=';', restkey='the_rest')
 
 
-def populate_template(tmpl, old, new):
-    return
-
-
-def main(args):
+def get_fixture_list(args):
+    """
+    make a list of fixture objects
+    """
     fixturelist = []
     template = get_template(args)
     for d in get_csv_reader(args):
@@ -50,6 +49,13 @@ def main(args):
             wc = wc.replace('${%s}' % k, v)
         fixturelist.append(wc)
 
+    return fixturelist
+
+
+def print_fixtures(fixturelist):
+    """
+    Print the list of fixtures
+    """
     print("[")
     for i, e in enumerate(fixturelist):
         e = e.replace('${pkey}', str(i + 1))
@@ -58,6 +64,11 @@ def main(args):
         else:
             print(e)
     print("]")
+
+
+def main(args):
+    fixturelist = get_fixture_list(args)
+    print_fixtures(fixturelist)
 
 
 if __name__ == "__main__":

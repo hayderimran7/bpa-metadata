@@ -1,0 +1,58 @@
+[
+{
+  "pk": 1,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Excessively drained",
+    "description": "Water is removed from the soil very rapidly and available water holding capacity is very low.  Soils are commonly very sandy, gravelly or shallow on steep slopes All are uniform color and free of the mottling (mixture of colors in the same layer, often yellow, brown and sometimes grey) related to wetness. Irrigation would be needed for crop production."
+  }
+}, 
+{
+  "pk": 2,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Somewhat excessively drained",
+    "description": "Water is removed from the soil rapidly. Internal free water occurrence commonly is very rare or very deep. The soils are commonly coarse-textured and have high saturated hydraulic conductivity or are very shallow."
+  }
+}, 
+{
+  "pk": 3,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Well drained",
+    "description": "Water is removed from the soil readily, but not rapidly making it available to plants throughout most of the growing season.  Seasonal high water table is not within the rooting zone long enough during the growing season to adversely affect agricultural crops. Soils are commonly medium textured and mainly free of mottling. "
+  }
+}, 
+{
+  "pk": 4,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Moderately well drained",
+    "description": "Water is removed from the soil somewhat slowly during some periods. Soils are wet for only a short time during the growing season, but periodically they are wet long enough that most mesophytic crops are affected. They commonly have a slowly pervious layer within or directly below the solum, or periodically receive high rainfall, or both."
+  }
+}, 
+{
+  "pk": 5,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Somewhat poorly drained",
+    "description": "Water is removed slowly enough that the soil is wet for significant periods during the growing season. Wetness markedly restricts the growth of mesophytic crops unless artificial drainage is provided. Soils commonly have a slowly pervious layer, a high water table, additional water from seepage, nearly continuous rainfall, or a combination of these factors."
+  }
+}, 
+{
+  "pk": 6,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Poorly drained",
+    "description": "Water is removed so slowly that the soil is saturated periodically during the growing season or remains wet for long periods. Free water is commonly at or near the surface for long enough during the growing season that most mesophytic crops cannot be grown unless the soil is artificially drained. The soil is not continuously saturated in layers directly below plow depth. Poor drainage results from a high water table, a slowly pervious layer within the profile, seepage, nearly continuous rainfall, or a combination of these."
+  }
+}, 
+{
+  "pk": 7,
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "Very poorly drained",
+    "description": "Water is removed from the soil so slowly that free water remains at or on the surface during most of the growing season. Unless the soil is artificially drained, most mesophytic crops cannot be grown. Very poorly drained soils are commonly level or depressed and are frequently ponded. Yet in rare cases, where rainfall is high and nearly continuous, they can have moderate or high slope gradients."
+  }
+}
+]

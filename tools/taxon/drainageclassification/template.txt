@@ -3,6 +3,6 @@
   "model": "BASE.drainageclassification",
   "fields": {
     "drainage": "${drainage}",
-    "description": "${description}",
+    "description": "${description}"
   }
 }
