@@ -100,6 +100,24 @@ class HorizonType(models.Model):
         verbose_name_plural = _("Horizon Types")
 
 
+class SoilClassification(models.Model):
+    """
+    Australian Soil Classification System (http://www.clw.csiro.au/aclep/asc_re_on_line/soilkey.htm)
+    Soil classification from the FAO World Reference
+    (http://www.fao.org/docrep/w8594e/w8594e05.htm#key%20to%20the%20reference%20soil%20groups%20of%20the%20world%20reference%20base%20for%20soil%20resources)
+    """
+
+    authority = models.CharField(max_length=10)
+    classification = models.CharField(max_length=50)
+    note = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return "{0} {1}".format(self.authority, self.classification)
+
+    class Meta:
+        verbose_name_plural = _("Soil Classification")
+
+
 class TargetGene(models.Model):
     """
     Target Gene

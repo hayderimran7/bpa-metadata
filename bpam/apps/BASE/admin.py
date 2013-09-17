@@ -17,7 +17,10 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     list_display = ('country', 'state', 'location_name')
 
 
-admin.site.register(HorizonType)
+class SoilClassificationAdmin(admin.ModelAdmin):
+    list_display = ('authority', 'classification')
+
+admin.site.register(SoilClassification, SoilClassificationAdmin)
 admin.site.register(TillageType)
 admin.site.register(BroadVegetationType)
 admin.site.register(GeneralEcologicalZone)

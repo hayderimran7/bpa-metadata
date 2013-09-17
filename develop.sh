@@ -222,6 +222,7 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TillageTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/HorizonTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationTaxon.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 

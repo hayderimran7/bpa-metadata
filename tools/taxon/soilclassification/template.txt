@@ -1,0 +1,9 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.soilclassification",
+  "fields": {
+    "authority": "${authority}",
+    "classification": "${classification}",
+    "note": "${note}"
+  }
+}
