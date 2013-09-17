@@ -1,0 +1,7 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.profileposition",
+  "fields": {
+    "position": "${position}"
+  }
+}

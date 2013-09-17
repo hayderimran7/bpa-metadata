@@ -118,6 +118,21 @@ class SoilClassification(models.Model):
         verbose_name_plural = _("Soil Classification")
 
 
+class ProfilePosition(models.Model):
+    """
+    Cross-sectional position in the hill slope where sample was collected; sample area position in relation to
+    surrounding areas
+    """
+
+    position = models.CharField(max_length=20)
+
+    def __unicode__(self):
+        return "{0}".format(self.position)
+
+    class Meta:
+        verbose_name_plural = _("Profile Positions")
+
+
 class TargetGene(models.Model):
     """
     Target Gene

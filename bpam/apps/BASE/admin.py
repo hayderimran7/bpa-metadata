@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 
+
 class LandUseAdmin(admin.ModelAdmin):
     list_display = ('description', 'classification')
 
@@ -20,6 +21,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
 class SoilClassificationAdmin(admin.ModelAdmin):
     list_display = ('authority', 'classification')
 
+admin.site.register(ProfilePosition)
 admin.site.register(SoilClassification, SoilClassificationAdmin)
 admin.site.register(TillageType)
 admin.site.register(BroadVegetationType)

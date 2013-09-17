@@ -1,0 +1,8 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.drainageclassification",
+  "fields": {
+    "drainage": "${drainage}",
+    "description": "${description}",
+  }
+}
