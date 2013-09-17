@@ -1,58 +1,58 @@
 [
-    {
-      "pk": 1,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "O horizon",
-        "description":"The organic or litter layer mainly over the soil surface composed of fresh and decaying plant residue. Typically composed of >25% organic soil materials. This layer can usually be easily brushed away by hand."
-      }
-    },
-    {
-      "pk": 2,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "A horizon",
-        "description":"This is the top layer of soil (often called top soil) that typically has the highest microbial activity.  It is composed of a mixture of mineral material and accumulated humified organic matter. Also, any plowed or disturbed surface layer."
-      }
-    },
-    {
-      "pk": 3,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "E horizon",
-        "description":"This is the eluviated layer that is only seen in older soils and is not a universally used horizon designation.  If present it is below the A horizon and commonly is recognized by its lighter colored due to loss of clay, iron, aluminum, organic matter or some combination of these components. "
-      }
-    },
-    {
-      "pk": 4,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "B horizon",
-        "description":"In lay terms this is often called sub-soil.  It is the layer where most of the mineral materials that leach from the upper horizons accumulate.  Accumulation of clay, iron, silica, calcium carbonate, calcium sulphate, sesquioxides, and/or humus can occur.  Soil structure and color often differs from the A horizon. Color may be redder or browner due to iron accumulation.  Structure may be more granular, prismatic, or blocky. "
-      }
-    },
-    {
-      "pk": 5,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "C horizon",
-        "description":"This is basically the weathered parent rock (excluding hard bedrock) that has not been affected by soil formation.  Composed mainly of large rocks."
-      }
-    },
-    {
-      "pk": 6,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "R layer",
-        "description":"This is the consolidated unweathered hard bedrock beneath the soil.  Usually is one large continuous rock mass.  The bedrock commonly found below the C horizon but under certain circumstances can be found directly below the A or B horizon."
-      }
-    },
-    {
-      "pk": 7,
-      "model": "BASE.horizontype",
-      "fields": {
-        "horizon": "Permafrost",
-        "description":"Soils that are permanently frozen due to sustained temperature of less than 0ºC for two or more years.  Typically found in Polar regions."
-      }
-    }
+{
+  "pk": 1,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "O horizon",
+    "description": "The organic or litter layer mainly over the soil surface composed of fresh and decaying plant residue. Typically composed of >25% organic soil materials.  This layer can usually be easily brushed away by hand."
+  }
+}, 
+{
+  "pk": 2,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "A horizon",
+    "description": "This is the top layer of soil (often called top soil) that typically has the highest microbial activity.  It is composed of a mixture of mineral material and accumulated humified organic matter. Also, any plowed or disturbed surface layer."
+  }
+}, 
+{
+  "pk": 3,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "E horizon",
+    "description": "This is the eluviated layer that is only seen in older soils and is not a universally used horizon designation.  If present it is below the A horizon and commonly is recognized by its lighter colored due to loss of clay, iron, aluminum, organic matter or some combination of these components. "
+  }
+}, 
+{
+  "pk": 4,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "B horizon",
+    "description": "In lay terms this is often called sub-soil.  It is the layer where most of the mineral materials that leach from the upper horizons accumulate.  Accumulation of clay, iron, silica, calcium carbonate, calcium sulphate, sesquioxides, and/or humus can occur.  Soil structure and color often differs from the A horizon. Color may be redder or browner due to iron accumulation.  Structure may be more granular, prismatic, or blocky. "
+  }
+}, 
+{
+  "pk": 5,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "C horizon",
+    "description": "This is basically the weathered parent rock (excluding hard bedrock) that has not been affected by soil formation.  Composed mainly of large rocks. "
+  }
+}, 
+{
+  "pk": 6,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "R layer",
+    "description": "This is the consolidated unweathered hard bedrock beneath the soil.  Usually is one large continuous rock mass.  The bedrock commonly found below the C horizon but under certain circumstances can be found directly below the A or B horizon."
+  }
+}, 
+{
+  "pk": 7,
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "Permafrost",
+    "description": "Soils that are permanently frozen due to sustained temperature of less than 0ºC for two or more years.  Typically found in Polar regions."
+  }
+}
 ]

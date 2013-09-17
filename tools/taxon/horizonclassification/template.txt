@@ -1,0 +1,8 @@
+{
+  "pk": ${pkey},
+  "model": "BASE.horizonclassification",
+  "fields": {
+    "horizon": "${horizon}",
+    "description": "${description}"
+  }
+}
