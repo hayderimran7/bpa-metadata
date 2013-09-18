@@ -4,7 +4,7 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-PROJECT_DIR = Path(__file__).ancestor(2)
+PROJECT_DIR = Path(__file__).ancestor(1)
 
 MEDIA_ROOT = PROJECT_DIR.child("media")
 
@@ -79,7 +79,7 @@ MEDIA_URL = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+STATIC_URL = '{0}/static/'.format(os.environ.get("SCRIPT_NAME", ""))
 
 # List of finder classes that know how to find static files in
 # various locations.
