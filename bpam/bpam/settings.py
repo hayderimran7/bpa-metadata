@@ -4,15 +4,17 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
+WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 PROJECT_DIR = Path(__file__).ancestor(1)
 
 MEDIA_ROOT = PROJECT_DIR.child("media")
 
-# STATIC_ROOT = PROJECT_DIR.child("static")
+STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
 
-STATICFILES_DIRS = (
-    PROJECT_DIR.child("static"),
-)
+#STATICFILES_DIRS = (
+#    PROJECT_DIR.child("static"),
+#)
 
 TEMPLATE_DIRS = (
     PROJECT_DIR.child("bpam.templates"),
