@@ -11,11 +11,11 @@ MEDIA_ROOT = PROJECT_DIR.child("media")
 # STATIC_ROOT = PROJECT_DIR.child("static")
 
 STATICFILES_DIRS = (
-    PROJECT_DIR.child("static"),
+    PROJECT_DIR.child("bpam.static"),
 )
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child("templates"),
+    PROJECT_DIR.child("bpam.templates"),
 )
 
 DEBUG = True
