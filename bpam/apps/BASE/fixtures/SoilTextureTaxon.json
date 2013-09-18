@@ -1,0 +1,50 @@
+[
+    {
+        "fields": {
+            "description": "<2 µm",
+            "texture": "Clay"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "2-20 µm",
+            "texture": "Silt"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "20-200 µm",
+            "texture": "Fine sand"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "description": "200-2000 µm",
+            "texture": "Course sand"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "description": "Total of fine and coarse sand",
+            "texture": "Sand"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "description": ">2.0 mm",
+            "texture": "Gravel"
+        },
+        "model": "BASE.soiltexture",
+        "pk": 6
+    }
+]

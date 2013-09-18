@@ -11,7 +11,7 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
-    list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'texture')
+    list_display = ('bpa_id', 'lab_name_id', 'depth', 'texture')
 
 
 class CollectionSiteAdmin(admin.ModelAdmin):
@@ -24,7 +24,8 @@ class SoilClassificationAdmin(admin.ModelAdmin):
 
 admin.site.register(DrainageClassification)
 admin.site.register(HorizonClassification)
-admin.site.register(Colour)
+admin.site.register(SoilColour)
+admin.site.register(SoilTexture)
 admin.site.register(ProfilePosition)
 admin.site.register(SoilClassification, SoilClassificationAdmin)
 admin.site.register(TillageType)

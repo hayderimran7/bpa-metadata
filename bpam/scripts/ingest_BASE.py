@@ -61,7 +61,7 @@ def get_chem_data():
                       'lab_name_id',
                       'customer',
                       'depth',
-                      'colour',
+                      'soilcolour',
                       'gravel',
                       'texture',
                       'ammonium_nitrogen',
@@ -171,7 +171,7 @@ def add_chem_sample(e):
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
     chema.depth = e['depth']
-    chema.colour = e['colour']
+    chema.colour = e['soilcolour']
     chema.gravel = e['gravel']
     chema.texture = e['texture']
     chema.ammonium_nitrogen = get_clean_float(e['ammonium_nitrogen'])

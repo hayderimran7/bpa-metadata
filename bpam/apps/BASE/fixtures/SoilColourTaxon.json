@@ -1,0 +1,178 @@
+[
+    {
+        "fields": {
+            "code": "BR",
+            "colour": "Brown"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "code": "GR",
+            "colour": "Gray"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "code": "BK",
+            "colour": "Black"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "code": "BRGR",
+            "colour": "Brown Gray"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "code": "GRBR",
+            "colour": "Gray Brown"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "code": "LTBR",
+            "colour": "Light Brown"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "code": "DKBR",
+            "colour": "Dark Brown"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "code": "LTGR",
+            "colour": "Light Gray"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "code": "DKGR",
+            "colour": "Dark Gray"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "code": "BRYW",
+            "colour": "Brown Yellow"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "code": "BRRD",
+            "colour": "Brown Red"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "code": "BROR",
+            "colour": "Brown Orange"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "code": "BRBK",
+            "colour": "Brown Black"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "code": "BRWH",
+            "colour": "Brown White"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "code": "GRBK",
+            "colour": "Gray Black"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "code": "GRWH",
+            "colour": "Gray White"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "code": "GRYW",
+            "colour": "Gray Yellow"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "code": "WH",
+            "colour": "White"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "code": "YW",
+            "colour": "Yellow"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "code": "YWBR",
+            "colour": "Yellow Brown"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "code": "YWGR",
+            "colour": "Yellow Gray"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "code": "OR",
+            "colour": "Orange"
+        },
+        "model": "BASE.soilcolour",
+        "pk": 22
+    }
+]
