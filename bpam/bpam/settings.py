@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'admin_tools.theming',
     'admin_tools.menu',
     'admin_tools.dashboard',
+    'bpam',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
