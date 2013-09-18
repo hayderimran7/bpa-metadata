@@ -4,7 +4,7 @@ This tool takes a Django json class definition template and a csv dataset and ma
 fixture. It expects a directory with a template.txt and data.csv file.
 
 Usage:
-    makefixture.py [options] TAXONDIRECTORY
+    makefixture.py [options] TAXONDIRECTORY [FIXTURE]
 
 Options:
     -v --verbose  Explain what makefixture is doing as it is doing it.
@@ -22,6 +22,9 @@ from unipath import Path
 import json
 import importlib
 import sys
+import codecs
+
+from django.utils.encoding import smart_text
 
 __version__ = "0.1"
 logging.basicConfig(level=logging.INFO)
@@ -47,22 +50,28 @@ def get_fixture_list(args):
     for i, d in enumerate(get_csv_reader(args)):
         fixture = {"model": config.model_class, "fields": {}, "pk": i + 1}
         for k, v in d.items():
-            fixture["fields"][k] = v
+            fixture["fields"][k] = smart_text(v)
         fixturelist.append(fixture)
 
     return fixturelist
 
 
-def print_fixtures(fixturelist):
+def print_fixtures(args, fixturelist):
     """
     Print the list of fixtures
     """
-    print(json.dumps(fixturelist, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    fixture_name = args['FIXTURE']
+    if fixture_name:
+        with codecs.open(args['FIXTURE'], "w",  encoding='utf-8') as f:
+            json.dump(fixturelist, f, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': '))
+    else:
+        print(json.dumps(fixturelist, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def main(args):
     fixturelist = get_fixture_list(args)
-    print_fixtures(fixturelist)
+    print_fixtures(args, fixturelist)
 
 
 if __name__ == "__main__":

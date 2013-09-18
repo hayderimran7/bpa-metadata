@@ -225,7 +225,8 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ColourTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilColourTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureTaxon.json  --traceback
 
     python manage.py runscript ingest_BASE --traceback
 

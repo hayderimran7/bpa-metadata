@@ -5,6 +5,28 @@ from apps.geo.models import GPSPosition
 from django.utils.translation import ugettext_lazy as _
 
 
+class SoilTexture(models.Model):
+    """
+    Soil Texture
+    """
+    texture = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return u"{0} {1}".format(self.texture, self.description)
+
+
+class SoilColour(models.Model):
+    """
+    Soil Colour
+    """
+    colour = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=5, unique=True)
+
+    def __unicode__(self):
+        return "{0}".format(self.colour)
+
+
 class PCRPrimer(models.Model):
     """
     PCR Primers
@@ -176,17 +198,6 @@ class TargetTaxon(models.Model):
 
     class Meta:
         verbose_name_plural = _("Target Taxons")
-
-
-class Colour(models.Model):
-    """
-    Soil Colour
-    """
-    colour = models.CharField(max_length=100, unique=True)
-    code = models.CharField(max_length=5, unique=True)
-
-    def __unicode__(self):
-        return "{0}".format(self.colour)
 
 
 class SiteOwner(models.Model):
