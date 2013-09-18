@@ -8,7 +8,7 @@ Usage:
 
 Options:
     -v --verbose  Explain what makefixture is doing as it is doing it.
-    -t --template=NAME  Specify the template file name [default: template.txt].
+    -c --config=NAME  Specify the config module name for this fixture [default: config].
     -l --list=NAME  Specify the source data file name [default: data.csv].
 """
 
@@ -19,17 +19,17 @@ from docopt import docopt
 import csv
 from pprint import pprint
 from unipath import Path
+import json
+import importlib
+import sys
 
 __version__ = "0.1"
 logging.basicConfig(level=logging.INFO)
 
 
-def get_template(args):
-    template_file = Path(args['TAXONDIRECTORY'], args['--template'])
-    with open(template_file, 'r') as tfile:
-        template = tfile.read()
-        logging.info(template)
-        return template.strip()
+def import_config(args):
+    sys.path.append(Path(args['TAXONDIRECTORY']))
+    return importlib.import_module(args['--config'])
 
 
 def get_csv_reader(args):
@@ -42,12 +42,13 @@ def get_fixture_list(args):
     make a list of fixture objects
     """
     fixturelist = []
-    template = get_template(args)
-    for d in get_csv_reader(args):
-        wc = template
+    config = import_config(args)
+
+    for i, d in enumerate(get_csv_reader(args)):
+        fixture = {"model": config.model_class, "fields": {}, "pk": i + 1}
         for k, v in d.items():
-            wc = wc.replace('${%s}' % k, v)
-        fixturelist.append(wc)
+            fixture["fields"][k] = v
+        fixturelist.append(fixture)
 
     return fixturelist
 
@@ -56,14 +57,7 @@ def print_fixtures(fixturelist):
     """
     Print the list of fixtures
     """
-    print("[")
-    for i, e in enumerate(fixturelist):
-        e = e.replace('${pkey}', str(i + 1))
-        if (i + 1) < len(fixturelist):
-            print(e + ", ")
-        else:
-            print(e)
-    print("]")
+    print(json.dumps(fixturelist, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
 def main(args):

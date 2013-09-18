@@ -1,74 +1,74 @@
 [
-{
-  "pk": 1,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Marsh/bog",
-    "note": ""
-  }
-}, 
-{
-  "pk": 2,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Healthland",
-    "note": ""
-  }
-}, 
-{
-  "pk": 3,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Grassland",
-    "note": ""
-  }
-}, 
-{
-  "pk": 4,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Shrubland",
-    "note": ""
-  }
-}, 
-{
-  "pk": 5,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Woodland",
-    "note": ""
-  }
-}, 
-{
-  "pk": 6,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Forest",
-    "note": ""
-  }
-}, 
-{
-  "pk": 7,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Savannah",
-    "note": ""
-  }
-}, 
-{
-  "pk": 8,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Dune",
-    "note": ""
-  }
-}, 
-{
-  "pk": 9,
-  "model": "BASE.broadvegetationtype",
-  "fields": {
-    "vegetation": "Other",
-    "note": ""
-  }
-}
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Marsh/bog"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Healthland"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Grassland"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Shrubland"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Woodland"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Forest"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Savannah"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Dune"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "note": "",
+            "vegetation": "Other"
+        },
+        "model": "BASE.broadvegetationtype",
+        "pk": 9
+    }
 ]
