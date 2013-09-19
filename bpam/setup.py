@@ -42,8 +42,8 @@ setup(
         'python-memcached==1.48',
         ],
     dependency_links = [
-        "http://repo.ccgapps.com.au",
-        "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz"
+        "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz",
+        "https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.6.tar.gz",
     ],
     zip_safe=False,
 )
