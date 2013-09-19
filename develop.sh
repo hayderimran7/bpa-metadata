@@ -140,6 +140,8 @@ ci_staging() {
 ci_staging_lettuce() {
     ccg ${AWS_STAGING_INSTANCE} dsudo:'dbus-uuidgen --ensure'
     ccg ${AWS_STAGING_INSTANCE} dsudo:'chown apache:apache /var/www'
+    
+    ccg ${AWS_STAGING_INSTANCE} dsudo:'service httpd restart'
 
     ccg ${AWS_STAGING_INSTANCE} dsudo:'bpam run_lettuce --with-xunit --xunit-file\=/tmp/tests.xml || true'
     
