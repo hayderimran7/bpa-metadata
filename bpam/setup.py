@@ -38,7 +38,6 @@ setup(
         "django-bootstrap3==0.0.6",
         "mimeparse==0.1.3",
         "requests==1.2.3",
-        "tendo==0.2.4",
         'ccg-extras==0.1.6',
         'python-memcached==1.48',
         ],
