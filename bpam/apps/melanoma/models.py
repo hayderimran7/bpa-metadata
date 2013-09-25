@@ -1,67 +1,83 @@
+import urlparse
+import urllib
+
 from django.db import models
 from django.conf import settings
+
 from apps.bpaauth.models import BPAUser
 from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
-import urlparse, urllib
 
-GENDERS=(('M', 'Male'),
-         ('F', 'Female'),
-         ('U', 'Unknown'))
+
+GENDERS = (('M', 'Male'),
+           ('F', 'Female'),
+           ('U', 'Unknown'))
+
 
 class TumorStage(models.Model):
-    """ Tumor Stage """
-    
+    """
+    Tumor Stage
+    """
+
     description = models.CharField(max_length=100)
-    note = models.TextField(blank=True) 
+    note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return self.description
-    
-    
+        return u"{0}".format(self.description)
+
+
 class Array(models.Model):
-    """ Array """
-    
+    """
+    Array
+    """
+
     bpa_id = models.ForeignKey(BPAUniqueID)
     array_id = models.CharField(max_length=17)
     batch_number = models.IntegerField()
     well_id = models.CharField(max_length=4)
     mia_id = models.CharField(max_length=200)
-    call_rate = models.FloatField()    
+    call_rate = models.FloatField()
     gender = models.CharField(max_length=1, choices=GENDERS)
-    
+
     def __unicode__(self):
-        return "{0} {1} {2}".format(self.bpa_id, self.array_id, self.mia_id)
-    
+        return u"{0} {1} {2}".format(self.bpa_id, self.array_id, self.mia_id)
+
+
 class MelanomaSample(Sample):
-    """ Melanoma specific Sample """
-    
+    """
+    Melanoma specific Sample
+    """
+
     organism = models.ForeignKey(Organism)
     # don't currently understand what this is. 
     passage_number = models.IntegerField(null=True)
-    
-    gender = models.CharField(choices=GENDERS, max_length=1, null=True)    
+
+    gender = models.CharField(choices=GENDERS, max_length=1, null=True)
     tumor_stage = models.ForeignKey(TumorStage, null=True)
     histological_subtype = models.CharField(max_length=50, null=True)
 
 
 class MelanomaRun(Run):
-    """ A Melanoma Run """
-    
+    """
+    A Melanoma Run
+    """
+
     sample = models.ForeignKey(MelanomaSample)
-    
+
     def __unicode__(self):
-        return "Run {0} for {1}".format(self.run_number, self.sample.name)
-    
-    
+        return u"Run {0} for {1}".format(self.run_number, self.sample.name)
+
+
 class MelanomaSequenceFile(SequenceFile):
-    """ Sequence Files resulting from a run """
-    
+    """
+    Sequence Files resulting from a run
+    """
+
     sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
     url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
-        return "Run {0} for {1}".format(self.run, self.filename)
+        return u"Run {0} for {1}".format(self.run, self.filename)
 
     def get_url(self):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
