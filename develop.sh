@@ -120,7 +120,7 @@ ci_remote_build() {
 
 # publish rpms
 ci_rpm_publish() {
-    time ccg ${AWS_BUILD_INSTANCE} publish_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    time ccg ${AWS_BUILD_INSTANCE} publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
 
