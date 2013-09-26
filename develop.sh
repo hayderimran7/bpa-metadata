@@ -211,7 +211,7 @@ purge() {
 }
 
 run() {   
-    python manage.py syncdb --traceback
+    python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
     python manage.py runscript ingest_projects --traceback
 
@@ -230,8 +230,8 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/SoilColourTaxon.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/SoilTextureTaxon.json  --traceback
 
+    python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_BASE --traceback
-
     python manage.py runscript ingest_melanoma --traceback
 
     # python manage.py runserver
