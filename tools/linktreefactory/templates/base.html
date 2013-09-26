@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{% block title %}{% endblock %} | BioPlatforms Australia Data Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+    .content-div {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/melanoma/">Melanoma</a>
+        <a class="navbar-brand" href="/gbr/">Great Barrier Reef</a>
+      </div>
+    </nav>
+
+    <div class="content-div">
+
+    {% block main %}{% endblock %}
+
+    </div>
+
+    <script src="//code.jquery.com/jquery.min.js"></script><script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="/static/base.js"></script>
+
+    <form><input type="hidden" id="bpa-metadata-catalog" value="melanoma" /></form>
+  </body>
+</html>
+
