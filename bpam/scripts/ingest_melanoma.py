@@ -1,6 +1,5 @@
 import pprint
 import csv
-import string
 from datetime import date
 import os.path
 
@@ -12,7 +11,6 @@ from .utils import *
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 MELANOMA_SAMPLE_FILE = os.path.join(DATA_DIR, 'melanoma_samples.csv')
 MELANOMA_ARRAY_FILE = os.path.join(DATA_DIR, 'melanoma_arrays.csv')
-MELANOMA_CONTACT_DATA = os.path.join(DATA_DIR, 'melanoma_contacts.csv')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
@@ -129,67 +127,8 @@ def ingest_samples(samples):
             sample.save()
             print("Ingested Melanoma sample {0}".format(sample.name))
 
-
     for sample in samples:
         add_sample(sample)
-
-
-def ingest_contacts():
-    """
-    Contacts associated with the Melanoma BPA poject
-    """
-
-    from django.contrib.auth.models import Group
-    from django.contrib.auth import get_user_model
-
-    def get_group(name):
-        def get_group_name(raw_group):
-            if raw_group != "":
-                return raw_group.strip().split()[0]
-            else:
-                return "Ungrouped"
-
-        nname = get_group_name(name.strip())
-        try:
-            group = Group.objects.get(name=nname)
-        except Group.DoesNotExist:
-            print("Group {0} does not exit, adding it".format(nname))
-            group = Group(name=nname)
-            group.save()
-
-        return group
-
-    def is_active(active_str):
-        active = active_str.strip().lower()
-        return active == 'x'
-
-    def get_data():
-        with open(MELANOMA_CONTACT_DATA, 'rb') as contacts:
-            # Location, Job Title, Department, Surname, First Name, Direct Line, Email, Username, Enabled
-            reader = csv.DictReader(contacts)
-            return strip_all(reader)
-
-    contacts = get_data()
-
-    for contact in contacts:
-        User = get_user_model()
-        user = User()
-        user.username = contact['Username']
-        user.email = contact['Email']
-        user.first_name = contact['First Name']
-        user.last_name = contact['Surname']
-        user.telephone = contact['Direct Line']
-        user.is_staff = is_active(contact['Enabled'])
-        user.title = contact['Job Title']
-        user.department = contact['Department']
-        user.location = contact['Location']
-        user.affiliations = contact['Affiliations']
-        user.save()
-
-        group = get_group(contact['Location'])
-        user.groups.add(group)
-
-        user.save()
 
 
 def ingest_arrays(arrays):
@@ -290,7 +229,6 @@ def ingest_runs(sample_data):
         print("Found sample {0}".format(sample))
         return sample
 
-
     def get_run_number(e):
         """
         ANU does not have their run numbers entered.
@@ -309,7 +247,6 @@ def ingest_runs(sample_data):
                         print("Filename {0} wrong format".format(filename))
 
         return run_number
-
 
     def add_run(e):
         """
@@ -334,7 +271,6 @@ def ingest_runs(sample_data):
             run.save()
 
         return run
-
 
     def add_file(e, run):
         """
@@ -367,6 +303,5 @@ def ingest_melanoma():
 
 
 def run():
-    ingest_contacts()
     add_organism(genus="Homo", species="Sapient")
     ingest_melanoma()

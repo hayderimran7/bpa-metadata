@@ -8,12 +8,10 @@ from bpaauth.models import BPAUser
 from common.models import *
 
 
-
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
 
 def get_clean_number(str, default=None):
-
     remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
         return int(str.translate(remove_letters_map))
@@ -58,7 +56,7 @@ def add_organism(genus="", species=""):
 
 def add_bpa_id(id, project_name, note=INGEST_NOTE):
     """
-    Add a bpa ID
+    Add a BPA ID
     """
 
     lbl = BPAUniqueID(bpa_id=id)
@@ -69,7 +67,9 @@ def add_bpa_id(id, project_name, note=INGEST_NOTE):
 
 
 def ingest_bpa_ids(data, project_name):
-    """ The BPA ID's are unique """
+    """
+    The BPA ID's are unique
+    """
 
     id_set = set()
     for e in data:
