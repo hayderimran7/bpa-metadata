@@ -3,22 +3,24 @@
 
 """  
 Usage: 
-    bpalink.py [options] (melanoma | wheat_pathogens | wheat_cultivars | coral | base) SUBARCHIVE_ROOT
+    bpalink.py [options] (melanoma | wheat_pathogens | wheat_cultivars | gbr | base) SUBARCHIVE_ROOT
 
 Options:
     -v --verbose                       Verbose mode.
     -s --swiftbase=SWIFTURI            Base URI for files in swift, eg. http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea
     -a --apacheredirects=APACHEREDIRS  Output file for Apache redirects
     -l --linktree=LINKTREE_ROOT        Base path for link tree
-    -h --htmlindex=HTML_ROOT           Output file for HTML index page
-    -l --linkbase=PUBLICURI            Base URI for files on public interface, eg. http://downloads.bioplatforms.com/
+    -h --htmlindex=HTMLFILE            Output file for HTML index page
+    -b --linkbase=PUBLICURI            Base URI for files on public interface, eg. http://downloads.bioplatforms.com/
 """
 
 from docopt import docopt
 from unipath import Path
-import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib
+import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os
 from collections import namedtuple
 from tendo import colorer
+from jinja2 import FileSystemLoader
+from jinja2.environment import Environment
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -184,6 +186,11 @@ class FastqInventory(object):
         return path
 
 class Archive(object):
+    sane_uid = re.compile(r'^[0-9\.]+$')
+    # empty flow cell ID is valid
+    sane_flow_cell_id = re.compile(r'^[A-Z0-9_\.]*$')
+    sane_filename = re.compile(r'^[^/]+$')
+
     def tie_metadata_to_fastq(self):
         """
         for every file in metadata, try to find the file in the FastqInventory; returns a 
@@ -217,24 +224,24 @@ class Archive(object):
             link_file = Path(patient_path, meta.filename)
             link_file.make_relative_link_to(fastq.filename)
 
+    def paths_for_match(self, meta, fastq):
+        uid = meta.uid.replace('/', '.')
+        if not Archive.sane_uid.match(uid) or not Archive.sane_flow_cell_id.match(meta.flow_cell_id) or not Archive.sane_filename.match(meta.filename):
+            logging.error("sanity check failed, skipping: %s / %s / %s" % (uid, meta.flow_cell_id, meta.filename))
+            raise Exception("invalid metadata")
+        if meta.flow_cell_id:
+            public_path = '/bpaswift/%s/%s/%s' % (uid, meta.flow_cell_id, meta.filename)
+        else:
+            public_path = '/bpaswift/%s/%s' % (uid, meta.filename)
+        swift_path = '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
+        swift_path = '/'.join([urllib.quote(t) for t in swift_path.split('/')])
+        return swift_path, public_path
+
     def build_apache_redirects(self, swiftbase, outf):
-        sane_uid = re.compile(r'^[0-9\.]+$')
-        # empty flow cell ID is handled
-        sane_flow_cell_id = re.compile(r'^[A-Z0-9_\.]*$')
-        sane_filename = re.compile(r'^[^/]+$')
         with open(outf, 'w') as fd:
             for fastq, meta in self.matches:
-                uid = meta.uid.replace('/', '.')
-                # paranoia in case of spreadsheet errors - we don't watch to output rubbish and break apache
-                if not sane_uid.match(uid) or not sane_flow_cell_id.match(meta.flow_cell_id) or not sane_filename.match(meta.filename):
-                    logging.error("sanity check failed, skipping: %s / %s / %s" % (uid, meta.flow_cell_id, meta.filename))
-                    continue
-                if meta.flow_cell_id:
-                    public_path = '/bpaswift/%s/%s/%s' % (uid, meta.flow_cell_id, meta.filename)
-                else:
-                    public_path = '/bpaswift/%s/%s' % (uid, meta.filename)
-                swift_rel_path = '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
-                swift_uri = urlparse.urljoin(swiftbase, '/'.join([urllib.quote(t) for t in swift_rel_path.split('/')]))
+                swift_path, public_path = self.paths_for_match(meta, fastq)
+                swift_uri = urlparse.urljoin(swiftbase, swift_path)
                 # redirectmatch because redirect (annoyingly) does prefix matches that can't be disabled
                 print >>fd, "RedirectMatch ^%s$ %s" % (re.escape(public_path), swift_uri)
                 
@@ -244,10 +251,36 @@ class Archive(object):
             self.build_linktree(root)
         if args['--apacheredirects']:
             self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
+        if args['--htmlindex']:
+            self.render_template(args['--htmlindex'], args['--linkbase'])
+
+    def render_template(self, output_filename, publicuri):
+        env = Environment()
+        env.loader = FileSystemLoader('templates/')
+        template = env.get_template(self.template_name)
+        tmpf = output_filename+'.tmp'
+        with open(tmpf, 'w') as fd:
+            fd.write(template.render(self.get_template_environment(publicuri)))
+        os.rename(tmpf, output_filename)
+
+    def get_template_environment(self, publicuri):
+        objects = []
+        for fastq, meta in self.matches:
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id' : meta.uid,
+                'filename' : meta.filename,
+                'name' : '',
+                'date_received_from_sequencing_facility' : '',
+                'run' : ''
+            })
+        return { 'object_list' : objects }
 
 class MelanomaArchive(Archive):
     metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
     container_name = 'Melanoma'
+    template_name = 'melanoma.html'
 
     def __init__(self, bpa_base):
         self.base = Path(bpa_base)
@@ -276,9 +309,11 @@ class MelanomaArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-class CoralArchive(Archive):
-    metadata_filename = '../../bpam/scripts/data/coral_pilot_samples.csv'
-    container_name = 'Coral'
+
+class GBRArchive(Archive):
+    metadata_filename = '../../bpam/scripts/data/gbr_pilot_samples.csv'
+    container_name = 'GBR'
+    template_name = 'gbr.html'
 
     def __init__(self, bpa_base):
         self.base = Path(bpa_base)
@@ -291,7 +326,7 @@ class CoralArchive(Archive):
         with open(self.metadata_filename) as fd:
             reader = csv.reader(fd)
             header = [t.strip() for t in next(reader)]
-            for tpl in parse_to_named_tuple('CoralMeta', reader, header, [
+            for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
                     ('md5', 'MD5 checksum', None),
                     ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
                     ('uid', 'Unique ID', None),
@@ -307,8 +342,8 @@ def run_melanoma(args):
     archive = MelanomaArchive(args['SUBARCHIVE_ROOT'])
     archive.process(args)
 
-def run_coral(args):
-    archive = CoralArchive(args['SUBARCHIVE_ROOT'])
+def run_gbr(args):
+    archive = GBRArchive(args['SUBARCHIVE_ROOT'])
     archive.process(args)
 
 if __name__ == '__main__':
@@ -323,8 +358,8 @@ if __name__ == '__main__':
     def run():
         if args['melanoma']:
             run_melanoma(args)
-        elif args['coral']:
-            run_coral(args)
+        elif args['gbr']:
+            run_gbr(args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:

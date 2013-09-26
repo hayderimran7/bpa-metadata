@@ -35,7 +35,7 @@ update_apache() {
 
 # any new entries here will need a matching include in /etc/apache2/sites-enabled/000-default
 update_apache Melanoma melanoma
-update_apache Coral coral
+update_apache GBR gbr
 
 # requires this line in sudoers:
 # ccg-user ALL=(ALL) NOPASSWD: /usr/sbin/apachectl
