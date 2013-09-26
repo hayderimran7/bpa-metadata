@@ -271,9 +271,10 @@ class Archive(object):
             objects.append({
                 'bpa_id' : meta.uid,
                 'filename' : meta.filename,
-                'name' : '',
-                'date_received_from_sequencing_facility' : '',
-                'run' : ''
+                'name' : meta.sample_name,
+                'date_received_from_sequencing_facility' : meta.date_received,
+                'run' : meta.run,
+                'url' : url,
             })
         return { 'object_list' : objects }
 
@@ -301,7 +302,10 @@ class MelanomaArchive(Archive):
                     ('md5', 'MD5 checksum', None),
                     ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
                     ('uid', 'Unique Identifier', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None)
+                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                    ('sample_name', 'Sample Name', None),
+                    ('date_received', 'Date Received', None),
+                    ('run', 'Run number', None),
                     ]):
                 if tpl.filename == '':
                     continue
