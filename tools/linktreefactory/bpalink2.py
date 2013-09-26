@@ -275,7 +275,7 @@ class Archive(object):
                 'date_received_from_sequencing_facility' : '',
                 'run' : ''
             })
-        return { 'objects' : objects }
+        return { 'object_list' : objects }
 
 class MelanomaArchive(Archive):
     metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
