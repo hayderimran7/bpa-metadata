@@ -246,7 +246,7 @@ class Archive(object):
             self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
 
 class MelanomaArchive(Archive):
-    metadata_filename = 'metadata/Melanoma_study_metadata - Melanoma_study_metadata.csv'
+    metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
     container_name = 'Melanoma'
 
     def __init__(self, bpa_base):
@@ -277,7 +277,7 @@ class MelanomaArchive(Archive):
         return metadata
 
 class CoralArchive(Archive):
-    metadata_filename = 'metadata/BPA_ReFuGe2020_METADATA - DNA library Sequencing - Pilot.csv'
+    metadata_filename = '../../bpam/scripts/data/coral_pilot_samples.csv'
     container_name = 'Coral'
 
     def __init__(self, bpa_base):
