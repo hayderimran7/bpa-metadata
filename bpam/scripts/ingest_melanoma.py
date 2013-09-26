@@ -10,11 +10,12 @@ from apps.melanoma.models import *
 from .utils import *
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-MELANOMA_SAMPLE_FILE=os.path.join(DATA_DIR, 'melanoma_samples.csv')
-MELANOMA_ARRAY_FILE=os.path.join(DATA_DIR, 'melanoma_arrays.csv')
-MELANOMA_CONTACT_DATA=os.path.join(DATA_DIR, 'melanoma_contacts.csv')
+MELANOMA_SAMPLE_FILE = os.path.join(DATA_DIR, 'melanoma_samples.csv')
+MELANOMA_ARRAY_FILE = os.path.join(DATA_DIR, 'melanoma_arrays.csv')
+MELANOMA_CONTACT_DATA = os.path.join(DATA_DIR, 'melanoma_contacts.csv')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
+
 
 def get_dna_source(description):
     """
@@ -29,6 +30,7 @@ def get_dna_source(description):
         source.save()
 
     return source
+
 
 def get_tumor_stage(description):
     """
@@ -49,7 +51,6 @@ def get_tumor_stage(description):
 
 
 def ingest_samples(samples):
-
     def get_facility(name, service):
         if name == '': name = "Unknown"
         if service == '': service = "Unknown"
@@ -82,9 +83,11 @@ def ingest_samples(samples):
         library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
 
         try:
-            protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
+            protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type,
+                                            library_construction_protocol=library_construction_protocol)
         except Protocol.DoesNotExist:
-            protocol = Protocol(base_pairs=base_pairs, library_type=library_type, library_construction_protocol=library_construction_protocol)
+            protocol = Protocol(base_pairs=base_pairs, library_type=library_type,
+                                library_construction_protocol=library_construction_protocol)
             protocol.save()
 
         return protocol
@@ -116,7 +119,8 @@ def ingest_samples(samples):
 
             # facilities
             sample.array_analysis_facility = get_facility(e['array_analysis_facility'], 'Array Analysis')
-            sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'], 'Whole Genome Sequencing')
+            sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'],
+                                                                   'Whole Genome Sequencing')
             sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
 
             sample.protocol = get_protocol(e)
@@ -128,6 +132,7 @@ def ingest_samples(samples):
 
     for sample in samples:
         add_sample(sample)
+
 
 def ingest_contacts():
     """
@@ -189,7 +194,7 @@ def ingest_contacts():
 
 def ingest_arrays(arrays):
     """ Melanoma Arrays"""
-    
+
     def get_gender(str):
         str = str.strip().lower()
         if str == "male": return 'M'
@@ -199,7 +204,8 @@ def ingest_arrays(arrays):
     for e in arrays:
         array = Array()
         array.batch_number = int(e['batch_no'])
-        array.bpa_id = get_bpa_id(e['bpa_id'], project_name="Melanoma", note="Created during array ingestion on {0}".format(date.today()))
+        array.bpa_id = get_bpa_id(e['bpa_id'], project_name="Melanoma",
+                                  note="Created during array ingestion on {0}".format(date.today()))
         array.mia_id = e['mia_id']
         array.array_id = e['array_id']
         array.call_rate = float(e['call_rate'])
@@ -263,13 +269,12 @@ def get_array_data():
                       'array_id',
                       'call_rate',
                       'gender',
-                      ]
+        ]
         reader = csv.DictReader(array_data, fieldnames=fieldnames)
         return strip_all(reader)
 
 
 def ingest_runs(sample_data):
-
     def get_sequencer(name):
         if name == "":
             name = "Unknown"
@@ -306,7 +311,6 @@ def ingest_runs(sample_data):
         return run_number
 
 
-
     def add_run(e):
         """
         The run produced several files
@@ -316,7 +320,8 @@ def ingest_runs(sample_data):
         run_number = get_run_number(e)
 
         try:
-            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number, sample__bpa_id__bpa_id=bpa_id)
+            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
+                                          sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
             run = MelanomaRun()
             run.flow_cell_id = flow_cell_id
@@ -352,12 +357,14 @@ def ingest_runs(sample_data):
         run = add_run(e)
         add_file(e, run)
 
+
 def ingest_melanoma():
-        sample_data = get_melanoma_sample_data()
-        ingest_bpa_ids(sample_data, 'Melanoma')
-        ingest_samples(sample_data)
-        ingest_arrays(get_array_data())
-        ingest_runs(sample_data)
+    sample_data = get_melanoma_sample_data()
+    ingest_bpa_ids(sample_data, 'Melanoma')
+    ingest_samples(sample_data)
+    ingest_arrays(get_array_data())
+    ingest_runs(sample_data)
+
 
 def run():
     ingest_contacts()
