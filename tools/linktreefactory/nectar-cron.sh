@@ -25,9 +25,12 @@ update_apache() {
     cfgtmp="$tmpdir/$container.cfg"
     cfgprod="$apachedir/$container.cfg"
     # generate link tree, and if successful update apache config
+    mkdir -p /var/www/test/"$linkmethod"/
     ./bpalink2.py \
         -a "$cfgtmp" \
         -s http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
+        -h /var/www/test/"$linkmethod"/index.html \
+        -b https://downloads.bioplatforms.com/ \
         "$linkmethod" "$dummy" && (
             mv "$cfgtmp" "$cfgprod"
         )

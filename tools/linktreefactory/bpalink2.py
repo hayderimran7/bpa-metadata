@@ -212,7 +212,7 @@ class Archive(object):
                 logging.error("File not found in BPA archive %s / %s @%d" % (meta.filename, meta.md5, meta.row))
                 unknown += 1
         problems = ambiguous + no_checksum + unknown
-        logging.error(
+        logging.info(
             "%d BPA %s metadata entries ok, %d problems (%d ambiguous, %d no checksum, %d totally unknown)" % (len(matches), type(self).__name__, problems, ambiguous, no_checksum, unknown))
         return matches
 
@@ -263,21 +263,6 @@ class Archive(object):
             fd.write(template.render(self.get_template_environment(publicuri)))
         os.rename(tmpf, output_filename)
 
-    def get_template_environment(self, publicuri):
-        objects = []
-        for fastq, meta in self.matches:
-            swift_path, public_path = self.paths_for_match(meta, fastq)
-            url = urlparse.urljoin(publicuri, public_path)
-            objects.append({
-                'bpa_id' : meta.uid,
-                'filename' : meta.filename,
-                'name' : meta.sample_name,
-                'date_received_from_sequencing_facility' : meta.date_received,
-                'run' : meta.run,
-                'url' : url,
-            })
-        return { 'object_list' : objects }
-
 class MelanomaArchive(Archive):
     metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
     container_name = 'Melanoma'
@@ -313,6 +298,21 @@ class MelanomaArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
+    def get_template_environment(self, publicuri):
+        objects = []
+        for fastq, meta in self.matches:
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id' : meta.uid,
+                'filename' : meta.filename,
+                'name' : meta.sample_name,
+                'date_received_from_sequencing_facility' : meta.date_received,
+                'run' : meta.run,
+                'url' : url,
+            })
+        return { 'object_list' : objects }
+
 
 class GBRArchive(Archive):
     metadata_filename = '../../bpam/scripts/data/gbr_pilot_samples.csv'
@@ -334,13 +334,33 @@ class GBRArchive(Archive):
                     ('md5', 'MD5 checksum', None),
                     ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
                     ('uid', 'Unique ID', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None)
+                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                    ('species', 'Species', None),
+                    ('dataset', 'Dataset', None),
+                    ('sample_name', 'Sample Description', None),
+                    ('date_received', 'Date data sent/transferred', None),
+                    ('run', 'Run number', None),
                     ]):
                 if tpl.filename == '':
                     continue
                 # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
                 metadata.append(tpl)
         return metadata
+
+    def get_template_environment(self, publicuri):
+        objects = []
+        for fastq, meta in self.matches:
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id' : meta.uid,
+                'filename' : meta.filename,
+                'name' : meta.sample_name,
+                'date_received_from_sequencing_facility' : meta.date_received,
+                'run' : meta.run,
+                'url' : url,
+            })
+        return { 'object_list' : objects }
 
 def run_melanoma(args):
     archive = MelanomaArchive(args['SUBARCHIVE_ROOT'])
