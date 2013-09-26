@@ -3,7 +3,7 @@
 
 """  
 Usage: 
-    bpalink.py [options] (melanoma | wheat_pathogens | wheat_cultivars | coral | base) SUBARCHIVE_ROOT
+    bpalink.py [options] (melanoma | wheat_pathogens | wheat_cultivars | gbr | base) SUBARCHIVE_ROOT
 
 Options:
     -v --verbose                       Verbose mode.
@@ -276,9 +276,9 @@ class MelanomaArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-class CoralArchive(Archive):
-    metadata_filename = '../../bpam/scripts/data/coral_pilot_samples.csv'
-    container_name = 'Coral'
+class GBRArchive(Archive):
+    metadata_filename = '../../bpam/scripts/data/gbr_pilot_samples.csv'
+    container_name = 'GBR'
 
     def __init__(self, bpa_base):
         self.base = Path(bpa_base)
@@ -291,7 +291,7 @@ class CoralArchive(Archive):
         with open(self.metadata_filename) as fd:
             reader = csv.reader(fd)
             header = [t.strip() for t in next(reader)]
-            for tpl in parse_to_named_tuple('CoralMeta', reader, header, [
+            for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
                     ('md5', 'MD5 checksum', None),
                     ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
                     ('uid', 'Unique ID', None),
@@ -307,8 +307,8 @@ def run_melanoma(args):
     archive = MelanomaArchive(args['SUBARCHIVE_ROOT'])
     archive.process(args)
 
-def run_coral(args):
-    archive = CoralArchive(args['SUBARCHIVE_ROOT'])
+def run_gbr(args):
+    archive = GBRArchive(args['SUBARCHIVE_ROOT'])
     archive.process(args)
 
 if __name__ == '__main__':
@@ -323,8 +323,8 @@ if __name__ == '__main__':
     def run():
         if args['melanoma']:
             run_melanoma(args)
-        elif args['coral']:
-            run_coral(args)
+        elif args['gbr']:
+            run_gbr(args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
