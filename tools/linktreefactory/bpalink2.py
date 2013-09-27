@@ -414,6 +414,7 @@ if __name__ == '__main__':
         test_path(args['SUBARCHIVE_ROOT'])
 
     def run_archive(cls, args):
+        print "run_archive", cls
         archive = cls(args['SUBARCHIVE_ROOT'])
         archive.process(args)
 
@@ -428,6 +429,8 @@ if __name__ == '__main__':
             run_archive(WheatPathogensArchive, args)
         elif args['wheat_cultivars']:
             run_archive(WheatCultivarsArchive, args)
+        elif args['base']:
+            run_archive(BASEArchive, args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:

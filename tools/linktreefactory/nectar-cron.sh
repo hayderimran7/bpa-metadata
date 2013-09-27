@@ -21,15 +21,15 @@ update_apache() {
     dummy=~/var/linktree/"$container"
     # make or update a dummy BPA archive
     mkdir -p "$dummy"
-##    ./swift-dummy.sh "$container" "$dummy"
+    ./swift-dummy.sh "$container" "$dummy"
     cfgtmp="$tmpdir/$container.cfg"
     cfgprod="$apachedir/$container.cfg"
     # generate link tree, and if successful update apache config
-    mkdir -p /var/www/test/"$linkmethod"/
+    mkdir -p /var/www/"$linkmethod"/
     ./bpalink2.py \
         -a "$cfgtmp" \
         -s http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
-        -h /var/www/test/"$linkmethod"/index.html \
+        -h /var/www/"$linkmethod"/index.html \
         -b https://downloads.bioplatforms.com/ \
         "$linkmethod" "$dummy" && (
             test -e "$cfgtmp" && mv "$cfgtmp" "$cfgprod"
