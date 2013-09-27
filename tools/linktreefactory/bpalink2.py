@@ -225,9 +225,10 @@ class Archive(object):
             link_file.make_relative_link_to(fastq.filename)
 
     def swift_path(self, fastq):
-        swift_path = '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
-        swift_path = '/'.join([urllib.quote(t) for t in swift_path.split('/')])
-        return swift_path
+        return '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
+
+    def public_file_path(self, fastq):
+        return '/files/' + self.base.rel_path_to(fastq.filename)
 
     def paths_for_match(self, meta, fastq):
         uid = meta.uid.replace('/', '.')
@@ -242,19 +243,34 @@ class Archive(object):
 
     def build_apache_redirects(self, swiftbase, outf):
         with open(outf, 'w') as fd:
+            # RedirectMatch because Redirect (annoyingly) does prefix matches that can't be disabled
+            # Apache wants URLs in non-% escaped form; it %-escapes them itself. hence very bodgy escaping
+            # to avoid quotation marks in files breaking things
+
+            def apache_escape(s):
+                s = s.replace('\\', '\\\\')
+                s = s.replace('"', '\\"')
+                return s
+
+            # make public URIs for all fastq files
+            for fastq in self.fastq.inventory:
+                swift_path = self.swift_path(fastq)
+                swift_uri = urlparse.urljoin(swiftbase, swift_path)
+                print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
+            if self.matches is None:
+                return
+            # make public linktree by patient ID / flow cell
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
-                # redirectmatch because redirect (annoyingly) does prefix matches that can't be disabled
-                print >>fd, "RedirectMatch ^%s$ %s" % (re.escape(public_path), swift_uri)
+                print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(public_path), apache_escape(swift_uri))
                 
     def process(self, args):
         if args['--linktree']:
             root = Path(args['--linktree'])
             self.build_linktree(root)
         if args['--apacheredirects']:
-            if self.matches is not None:
-                self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
+            self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
         if args['--htmlindex']:
             self.render_template(args['--htmlindex'], args['--linkbase'], args['--swiftbase'])
 
@@ -315,6 +331,7 @@ class MelanomaArchive(Archive):
                 'run' : meta.run,
                 'url' : url,
             })
+        objects.sort(key=lambda o: o['bpa_id'])
         return { 'object_list' : objects }
 
 
@@ -364,6 +381,7 @@ class GBRArchive(Archive):
                 'run' : meta.run,
                 'url' : url,
             })
+        objects.sort(key=lambda o: o['bpa_id'])
         return { 'object_list' : objects }
 
 class NoMetadataArchive(Archive):
@@ -376,8 +394,8 @@ class NoMetadataArchive(Archive):
     def get_template_environment(self, publicuri, swifturi):
         objects = []
         for fastq in sorted(self.fastq.inventory, key=lambda f: f.filename.name):
-            swift_path = self.swift_path(fastq)
-            url = urlparse.urljoin(swifturi, swift_path)
+            public_file_path = self.public_file_path(fastq)
+            url = urlparse.urljoin(publicuri, public_file_path)
             objects.append({
                 'filename' : fastq.filename.name,
                 'url' : url,
@@ -414,7 +432,6 @@ if __name__ == '__main__':
         test_path(args['SUBARCHIVE_ROOT'])
 
     def run_archive(cls, args):
-        print "run_archive", cls
         archive = cls(args['SUBARCHIVE_ROOT'])
         archive.process(args)
 
