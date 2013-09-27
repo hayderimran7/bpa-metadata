@@ -5,8 +5,9 @@ def add_projects():
     """ The set of projects is set"""
     
     projects = (('Melanoma', 'Human Melanoma'),
-                ('Coral', 'Great Barrier Reef Coral'),
+                ('GBR', 'Great Barrier Reef Coral'),
                 ('BASE', 'BASE, Agricultural and Environmental Soil'),
+                ('Wheat 7A', 'Wheat Gene 7A'),
                 ('Wheat Cultivars', 'Wheat Cultivars'),
                 ('Wheat Fungal pathogens', 'Wheat fungal pathogens'))
     

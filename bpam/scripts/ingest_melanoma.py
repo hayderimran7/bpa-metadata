@@ -1,3 +1,4 @@
+import sys
 import pprint
 import csv
 from datetime import date
@@ -8,11 +9,13 @@ from apps.common.models import *
 from apps.melanoma.models import *
 from .utils import *
 
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 MELANOMA_SAMPLE_FILE = os.path.join(DATA_DIR, 'melanoma_samples.csv')
 MELANOMA_ARRAY_FILE = os.path.join(DATA_DIR, 'melanoma_arrays.csv')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
+BPA_ID = "102.100.100"
 
 
 def get_dna_source(description):
@@ -50,8 +53,10 @@ def get_tumor_stage(description):
 
 def ingest_samples(samples):
     def get_facility(name, service):
-        if name == '': name = "Unknown"
-        if service == '': service = "Unknown"
+        if name == '':
+            name = "Unknown"
+        if service == '':
+            service = "Unknown"
 
         try:
             facility = Facility.objects.get(name=name, service=service)
@@ -62,17 +67,16 @@ def ingest_samples(samples):
         return facility
 
     def get_protocol(e):
-
         def get_library_type(str):
             """
             (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
             """
-            nstr = str.lower()
-            if nstr.find('pair') >= 0:
+            new_str = str.lower()
+            if new_str.find('pair') >= 0:
                 return 'PE'
-            if nstr.find('single') >= 0:
+            if new_str.find('single') >= 0:
                 return 'SE'
-            if nstr.find('mate') >= 0:
+            if new_str.find('mate') >= 0:
                 return 'MP'
             return 'UN'
 
@@ -89,7 +93,6 @@ def ingest_samples(samples):
             protocol.save()
 
         return protocol
-
 
     def get_gender(gender):
         if gender == "":
@@ -136,8 +139,10 @@ def ingest_arrays(arrays):
 
     def get_gender(str):
         str = str.strip().lower()
-        if str == "male": return 'M'
-        if str == "female": return 'F'
+        if str == "male":
+            return 'M'
+        if str == "female":
+            return 'F'
         return 'U'
 
     for e in arrays:
@@ -155,8 +160,20 @@ def ingest_arrays(arrays):
 
 def get_melanoma_sample_data():
     """
-    The datasets is relatively small, so make a in-memory copy to simplify some operations.
+    The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
+
+    def filter_out_sample(sample):
+        """
+        Filter out a sample for whatever reason
+        """
+        # the csv file is a straight csv dump of the google doc
+        if sample['bpa_id'].find(BPA_ID) == -1:
+            print sample
+            return True
+
+        return False
+
     with open(MELANOMA_SAMPLE_FILE, 'rb') as melanoma_files:
         fieldnames = ['bpa_id',
                       'sample_name',
@@ -192,7 +209,14 @@ def get_melanoma_sample_data():
                       'analysed_url']
 
         reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
-        return strip_all(reader)
+        # maybe use map() ?
+        samples = []
+        for sample in strip_all(reader):
+            if not filter_out_sample(sample):
+                samples.append(sample)
+
+        return samples
+
 
 
 def get_array_data():
@@ -208,7 +232,8 @@ def get_array_data():
                       'array_id',
                       'call_rate',
                       'gender',
-        ]
+                      ]
+
         reader = csv.DictReader(array_data, fieldnames=fieldnames)
         return strip_all(reader)
 
@@ -225,9 +250,13 @@ def ingest_runs(sample_data):
         return sequencer
 
     def get_sample(bpa_id):
-        sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
-        print("Found sample {0}".format(sample))
-        return sample
+        try:
+            sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+            print("Found sample {0}".format(sample))
+            return sample
+        except MelanomaSample.DoesNotExist:
+            print("No sample with ID {0}, quiting now".format(bpa_id))
+            sys.exit(1)
 
     def get_run_number(e):
         """
@@ -235,13 +264,13 @@ def ingest_runs(sample_data):
         """
 
         run_number = get_clean_number(e['run_number'])
-        if run_number == None:
+        if run_number is None:
             # see if its ANU and parse the run_number from the filename
             if e['whole_genome_sequencing_facility'].strip() == 'ANU':
                 filename = e['sequence_filename'].strip()
                 if filename != "":
                     try:
-                        run_number = int(filename.split('_')[6])
+                        run_number = get_clean_number(filename.split('_')[7])
                         print("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
                         print("Filename {0} wrong format".format(filename))
@@ -266,7 +295,7 @@ def ingest_runs(sample_data):
             run.sample = get_sample(bpa_id)
             run.passage_number = get_clean_number(e['passage_number'])
             run.index_number = get_clean_number(e['index_number'])
-            run.sequencer = get_sequencer(MELANOMA_SEQUENCER) # Ignore the empty column
+            run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
             run.lane_number = get_clean_number(e['lane_number'])
             run.save()
 
@@ -276,15 +305,15 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
-        fname = e['sequence_filename'].strip()
-        if fname != "":
+        file_name = e['sequence_filename'].strip()
+        if file_name != "":
             f = MelanomaSequenceFile()
             f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
             f.date_received_from_sequencing_facility = get_date(e['date_received'].strip())
             f.run = run
             f.index_number = get_clean_number(e['index_number'])
             f.lane_number = get_clean_number(e['lane_number'])
-            f.filename = fname
+            f.filename = file_name
             f.md5 = e['md5_cheksum']
             f.note = pprint.pformat(e)
             f.save()

@@ -70,18 +70,31 @@ def make_new_user(username, contact):
     user.save()
 
 
+def filter_contacts(contact):
+    """
+    If for some reason the contact line is unsuitable, filter it out.
+    """
+    username = make_username(contact)
+    if not username:
+        return True
+
+    if contact['Project'].strip() == 'Project':
+        return True
+
+    return False
+
+
 def ingest_contacts():
     """
     Contacts associated with BPA pojects
     """
 
     for contact in get_data():
-        pprint.pprint(contact)
-        username = make_username(contact)
-        if not username:
+        if filter_contacts(contact):
             continue
 
         # if the user already exists, she propably is part of several projects so add her to those groups
+        username = make_username(contact)
         try:
             existing_user = BPAUser.objects.get(username=username)
             group = get_group(contact['Project'])
