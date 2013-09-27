@@ -195,9 +195,9 @@ def get_env_variable(var_name):
 
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
 
-try:
-    print "Attempting to import default settings as appsettings.bpam"
-    from appsettings.bpam import *
-    print "Successfully imported appsettings.bpam"
-except ImportError, e:
-    print "Failed to import appsettings.bpam"
+#try:
+#    print "Attempting to import default settings as appsettings.bpam"
+#    from appsettings.bpam import *
+#    print "Successfully imported appsettings.bpam"
+#except ImportError, e:
+#    print "Failed to import appsettings.bpam"
