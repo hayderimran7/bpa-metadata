@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from tinymce.models import HTMLField
 from apps.bpaauth.models import BPAUser
-    
+
 
 class BPAProject(models.Model):
     """
@@ -90,6 +90,7 @@ class DNASource(models.Model):
         verbose_name = "DNA Source"
         verbose_name_plural = "DNA Sources"
 
+
 class Sequencer(models.Model):
     """
     The Sequencer
@@ -114,7 +115,8 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "Size: " + str(self.base_pairs) + " Type: " + str(self.library_type) + " Protocol: " + str(self.library_construction_protocol)
+        return u"Size: " + str(self.base_pairs) + u" Type: " + str(self.library_type) + u" Protocol: " + str(
+            self.library_construction_protocol)
 
     class Meta:
         verbose_name_plural = "Protocol"
@@ -145,7 +147,7 @@ class Sample(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.bpa_id, self.name)
+        return u"{0} {1}".format(self.bpa_id, self.name)
 
     class Meta:
         abstract = True
@@ -161,9 +163,10 @@ class Run(models.Model):
     passage_number = models.IntegerField(blank=True, null=True)
 
     # Facilities
-    sequencing_faciltiy = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
-    array_analysis_faciltiy = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
-    whole_genome_sequencing_faciltiy = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility', blank=True, null=True)
+    sequencing_facility = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
+    array_analysis_facility = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility',
+                                                         blank=True, null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
@@ -171,6 +174,7 @@ class Run(models.Model):
 
     class Meta:
         abstract = True
+
 
 class SequenceFile(models.Model):
     """
@@ -190,6 +194,7 @@ class SequenceFile(models.Model):
 
     class Meta:
         abstract = True
+
 
 class URLVerification(models.Model):
     """
