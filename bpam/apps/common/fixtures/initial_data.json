@@ -1,50 +1,50 @@
 [
-{
-    "pk": "BASE",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "BASE, Agricultural and Environmental Soil"
+    {
+        "pk": "BASE",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "BASE, Agricultural and Environmental Soil"
+        }
+    },
+    {
+        "pk": "GBR",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "Great Barrier Reef, Coral"
+        }
+    },
+    {
+        "pk": "Melanoma",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "Human Melanoma"
+        }
+    },
+    {
+        "pk": "Wheat 7A",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "Wheat Gene 7A"
+        }
+    },
+    {
+        "pk": "Wheat Cultivars",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "Wheat Cultivars"
+        }
+    },
+    {
+        "pk": "Wheat Fungal pathogens",
+        "model": "common.bpaproject",
+        "fields": {
+            "note": "",
+            "description": "Wheat fungal pathogens"
+        }
     }
-},
-{
-    "pk": "GBR",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "Great Barrier Reef, Coral"
-    }
-},
-{
-    "pk": "Melanoma",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "Human Melanoma"
-    }
-},
-{
-    "pk": "Wheat 7A",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "Wheat Gene 7A"
-    }
-},
-{
-    "pk": "Wheat Cultivars",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "Wheat Cultivars"
-    }
-},
-{
-    "pk": "Wheat Fungal pathogens",
-    "model": "common.bpaproject",
-    "fields": {
-        "note": "",
-        "description": "Wheat fungal pathogens"
-    }
-}
 ]

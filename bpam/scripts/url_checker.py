@@ -3,6 +3,7 @@ from apps.melanoma.models import MelanomaSequenceFile
 from django.db import transaction
 import requests, time, sys
 
+
 def process_object(session, model, attr_name, url_fn):
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:
@@ -25,10 +26,12 @@ def process_object(session, model, attr_name, url_fn):
         verifier.save()
         time.sleep(0.2) # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
 
+
 def check_melanoma():
     session = requests.Session()
-    session.auth = ('rodney', 'slipslopslap')
+    session.auth = ('bpa', 'm3lan0ma')
     process_object(session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
 
 def run():
     check_melanoma()
