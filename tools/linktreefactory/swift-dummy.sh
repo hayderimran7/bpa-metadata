@@ -41,7 +41,7 @@ find . -type f -regextype posix-extended -regex "^.*/[A-Z0-9a-z]+$" -and -size 0
             swift download "$bucket" "$F"
         else
             echo "making dummy: $F"
-            mkdir -p "`dirname $F`"
+            mkdir -p "`dirname "$F"`"
             touch "$F"
         fi
     done

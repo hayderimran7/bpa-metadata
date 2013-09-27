@@ -21,7 +21,7 @@ update_apache() {
     dummy=~/var/linktree/"$container"
     # make or update a dummy BPA archive
     mkdir -p "$dummy"
-    ./swift-dummy.sh "$container" "$dummy"
+##    ./swift-dummy.sh "$container" "$dummy"
     cfgtmp="$tmpdir/$container.cfg"
     cfgprod="$apachedir/$container.cfg"
     # generate link tree, and if successful update apache config
@@ -32,13 +32,17 @@ update_apache() {
         -h /var/www/test/"$linkmethod"/index.html \
         -b https://downloads.bioplatforms.com/ \
         "$linkmethod" "$dummy" && (
-            mv "$cfgtmp" "$cfgprod"
+            test -e "$cfgtmp" && mv "$cfgtmp" "$cfgprod"
         )
 }
 
 # any new entries here will need a matching include in /etc/apache2/sites-enabled/000-default
 update_apache Melanoma melanoma
 update_apache GBR gbr
+update_apache Wheat7a wheat7a
+update_apache BASE base
+update_apache Wheat_Pathogens wheat_pathogens
+update_apache Wheat_Cultivars wheat_cultivars
 
 # requires this line in sudoers:
 # ccg-user ALL=(ALL) NOPASSWD: /usr/sbin/apachectl

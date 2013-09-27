@@ -3,7 +3,7 @@
 
 """  
 Usage: 
-    bpalink.py [options] (melanoma | wheat_pathogens | wheat_cultivars | gbr | base) SUBARCHIVE_ROOT
+    bpalink.py [options] (melanoma | gbr | wheat7a | wheat_cultivars | wheat_pathogens | base ) SUBARCHIVE_ROOT
 
 Options:
     -v --verbose                       Verbose mode.
@@ -224,18 +224,21 @@ class Archive(object):
             link_file = Path(patient_path, meta.filename)
             link_file.make_relative_link_to(fastq.filename)
 
+    def swift_path(self, fastq):
+        swift_path = '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
+        swift_path = '/'.join([urllib.quote(t) for t in swift_path.split('/')])
+        return swift_path
+
     def paths_for_match(self, meta, fastq):
         uid = meta.uid.replace('/', '.')
         if not Archive.sane_uid.match(uid) or not Archive.sane_flow_cell_id.match(meta.flow_cell_id) or not Archive.sane_filename.match(meta.filename):
             logging.error("sanity check failed, skipping: %s / %s / %s" % (uid, meta.flow_cell_id, meta.filename))
             raise Exception("invalid metadata")
         if meta.flow_cell_id:
-            public_path = '/bpaswift/%s/%s/%s' % (uid, meta.flow_cell_id, meta.filename)
+            public_path = '/data/%s/%s/%s/%s' % (self.container_name, uid, meta.flow_cell_id, meta.filename)
         else:
-            public_path = '/bpaswift/%s/%s' % (uid, meta.filename)
-        swift_path = '%s/%s' % (self.container_name, self.base.rel_path_to(fastq.filename))
-        swift_path = '/'.join([urllib.quote(t) for t in swift_path.split('/')])
-        return swift_path, public_path
+            public_path = '/data/%s/%s/%s' % (self.container_name, uid, meta.filename)
+        return self.swift_path(fastq), public_path
 
     def build_apache_redirects(self, swiftbase, outf):
         with open(outf, 'w') as fd:
@@ -250,17 +253,18 @@ class Archive(object):
             root = Path(args['--linktree'])
             self.build_linktree(root)
         if args['--apacheredirects']:
-            self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
+            if self.matches is not None:
+                self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
         if args['--htmlindex']:
-            self.render_template(args['--htmlindex'], args['--linkbase'])
+            self.render_template(args['--htmlindex'], args['--linkbase'], args['--swiftbase'])
 
-    def render_template(self, output_filename, publicuri):
+    def render_template(self, output_filename, publicuri, swifturi):
         env = Environment()
         env.loader = FileSystemLoader('templates/')
         template = env.get_template(self.template_name)
         tmpf = output_filename+'.tmp'
         with open(tmpf, 'w') as fd:
-            fd.write(template.render(self.get_template_environment(publicuri)))
+            fd.write(template.render(self.get_template_environment(publicuri, swifturi)))
         os.rename(tmpf, output_filename)
 
 class MelanomaArchive(Archive):
@@ -298,7 +302,7 @@ class MelanomaArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-    def get_template_environment(self, publicuri):
+    def get_template_environment(self, publicuri, swifturi):
         objects = []
         for fastq, meta in self.matches:
             swift_path, public_path = self.paths_for_match(meta, fastq)
@@ -347,7 +351,7 @@ class GBRArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-    def get_template_environment(self, publicuri):
+    def get_template_environment(self, publicuri, swifturi):
         objects = []
         for fastq, meta in self.matches:
             swift_path, public_path = self.paths_for_match(meta, fastq)
@@ -362,13 +366,43 @@ class GBRArchive(Archive):
             })
         return { 'object_list' : objects }
 
-def run_melanoma(args):
-    archive = MelanomaArchive(args['SUBARCHIVE_ROOT'])
-    archive.process(args)
+class NoMetadataArchive(Archive):
+    def __init__(self, bpa_base):
+        self.base = Path(bpa_base)
+        self.fastq = FastqInventory(self.base)
+        self.metadata = None
+        self.matches = None
 
-def run_gbr(args):
-    archive = GBRArchive(args['SUBARCHIVE_ROOT'])
-    archive.process(args)
+    def get_template_environment(self, publicuri, swifturi):
+        objects = []
+        for fastq in sorted(self.fastq.inventory, key=lambda f: f.filename.name):
+            swift_path = self.swift_path(fastq)
+            url = urlparse.urljoin(swifturi, swift_path)
+            objects.append({
+                'filename' : fastq.filename.name,
+                'url' : url,
+            })
+        return { 'object_list' : objects }
+
+class Wheat7aArchive(NoMetadataArchive):
+    metadata_filename = None
+    container_name = 'Wheat7a'
+    template_name = 'wheat7a.html'
+
+class BASEArchive(NoMetadataArchive):
+    metadata_filename = None
+    container_name = 'BASE'
+    template_name = 'base.html'
+
+class WheatPathogensArchive(NoMetadataArchive):
+    metadata_filename = None
+    container_name = 'Wheat_Pathogens'
+    template_name = 'wheat_pathogens.html'
+
+class WheatCultivarsArchive(NoMetadataArchive):
+    metadata_filename = None
+    container_name = 'Wheat_Cultivals'
+    template_name = 'wheat_cultivars.html'
 
 if __name__ == '__main__':
     def sanity_check(args):
@@ -379,11 +413,21 @@ if __name__ == '__main__':
         # does the source folder exist ?
         test_path(args['SUBARCHIVE_ROOT'])
 
+    def run_archive(cls, args):
+        archive = cls(args['SUBARCHIVE_ROOT'])
+        archive.process(args)
+
     def run():
         if args['melanoma']:
-            run_melanoma(args)
+            run_archive(MelanomaArchive, args)
         elif args['gbr']:
-            run_gbr(args)
+            run_archive(GBRArchive, args)
+        elif args['wheat7a']:
+            run_archive(Wheat7aArchive, args)
+        elif args['wheat_pathogens']:
+            run_archive(WheatPathogensArchive, args)
+        elif args['wheat_cultivars']:
+            run_archive(WheatCultivarsArchive, args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
