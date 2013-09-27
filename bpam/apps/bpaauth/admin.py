@@ -20,14 +20,14 @@ class BPAUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('username', 'project', 'affiliations', 'first_name', 'last_name', 'email', 'is_staff')
+    list_display = ('username', 'project', 'first_name', 'last_name', 'email', 'is_staff')
 
     list_filter = ('groups', 'last_name')
     fieldsets = UserAdmin.fieldsets + (('Note', {'fields': ('note',)}),)
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'project', 'email', 'telephone', 'affiliations')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'project', 'email', 'telephone')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important Dates', {'fields': ('last_login', 'date_joined')}),
         ('Note', {'fields': ('note',)})
