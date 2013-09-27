@@ -213,7 +213,6 @@ purge() {
 run() {   
     python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
-    python manage.py runscript ingest_projects --traceback
 
     # BASE taxonomies
     python manage.py loaddata ./apps/BASE/fixtures/LandUseTaxon.json  --traceback
