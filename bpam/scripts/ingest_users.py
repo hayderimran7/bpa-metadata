@@ -15,14 +15,16 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 USERS_FILE = os.path.join(DATA_DIR, 'bpa-users.csv')
 
 
-def get_group(name):
-    def get_group_name(raw_group):
-        if raw_group != "":
-            return raw_group.strip().split()[0]
-        else:
-            return "Ungrouped"
+def format_group_name(name):
+    """
+    A standard format for the group name
+    """
+    name = name.strip().replace('_', ' ').title()
+    return name
 
-    name = get_group_name(name.strip())
+
+def get_group(name):
+    name = format_group_name(name)
     try:
         group = Group.objects.get(name=name)
     except Group.DoesNotExist:
@@ -46,7 +48,7 @@ def make_username(entry):
     I ignore this line from the file.
     """
     try:
-        name = entry['First name'][0].lower() + entry['Last name'].lower()
+        name = entry['First name'][0].lower() + entry['Last name'].lower().replace(' ', '')
         return name
     except IndexError:
         return None
@@ -60,7 +62,7 @@ def make_new_user(username, contact):
     user.first_name = contact['First name']
     user.last_name = contact['Last name']
     user.is_staff = False
-    user.project = contact['Project']
+    user.project = format_group_name(contact['Project'])
     user.organisation = contact['Organisation']
     user.interest = contact['Interest']
     user.lab = contact['Lab']
