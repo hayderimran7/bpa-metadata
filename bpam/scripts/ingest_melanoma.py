@@ -148,8 +148,9 @@ def ingest_arrays(arrays):
     for e in arrays:
         array = Array()
         array.batch_number = int(e['batch_no'])
-        array.bpa_id = get_bpa_id(e['bpa_id'], project_name="Melanoma",
-                                  note="Created during array ingestion on {0}".format(date.today()))
+        array.bpa_id = get_bpa_id(e['bpa_id'],
+                                  project_name="Melanoma",
+                                  note=u"Created during array ingestion on {0}".format(date.today()))
         array.mia_id = e['mia_id']
         array.array_id = e['array_id']
         array.call_rate = float(e['call_rate'])
@@ -214,9 +215,7 @@ def get_melanoma_sample_data():
         for sample in strip_all(reader):
             if not filter_out_sample(sample):
                 samples.append(sample)
-
         return samples
-
 
 
 def get_array_data():
@@ -277,26 +276,27 @@ def ingest_runs(sample_data):
 
         return run_number
 
-    def add_run(e):
+    def add_run(entry):
         """
         The run produced several files
         """
-        flow_cell_id = e['flow_cell_id'].strip()
-        bpa_id = e['bpa_id'].strip()
-        run_number = get_run_number(e)
+        flow_cell_id = entry['flow_cell_id'].strip()
+        bpa_id = entry['bpa_id'].strip()
+        run_number = get_run_number(entry)
 
         try:
-            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
+            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id,
+                                          run_number=run_number,
                                           sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
             run = MelanomaRun()
             run.flow_cell_id = flow_cell_id
             run.run_number = run_number
             run.sample = get_sample(bpa_id)
-            run.passage_number = get_clean_number(e['passage_number'])
-            run.index_number = get_clean_number(e['index_number'])
+            run.passage_number = get_clean_number(entry['passage_number'])
+            run.index_number = get_clean_number(entry['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
-            run.lane_number = get_clean_number(e['lane_number'])
+            run.lane_number = get_clean_number(entry['lane_number'])
             run.save()
 
         return run
@@ -319,8 +319,8 @@ def ingest_runs(sample_data):
             f.save()
 
     for e in sample_data:
-        run = add_run(e)
-        add_file(e, run)
+        sequence_run = add_run(e)
+        add_file(e, sequence_run)
 
 
 def ingest_melanoma():
