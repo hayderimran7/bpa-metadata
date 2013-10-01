@@ -16,7 +16,7 @@ AWS_STAGING_INSTANCE='aws_syd_bpam_staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 TESTING_MODULES="nose"
 MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
-PIP_OPTS="-v -M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
+PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
@@ -270,12 +270,6 @@ flushdb() {
     log_info "Flushing ${DB}"
     mysql -u ${DB} -p${DB} -e "DROP DATABASE ${DB}"
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
-}
-
-usage() {
-    echo ""
-    echo "Usage ./develop.sh (test|nosetests|lint|jslint|dropdb|start|install|clean|purge|pipfreeze|pythonversion|ci_remote_build|ci_staging|ci_staging_tests|ci_rpm_publish|ci_remote_destroy)"
-    echo ""
 }
 
 case ${ACTION} in
