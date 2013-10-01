@@ -27,11 +27,11 @@
       </div>
 
       <ul class="nav navbar-nav pull-right">
-        <li><a href="/admin/">Admin</a></li>
+        <li><a href="{% url 'admin:index' %}">Admin</a></li>
         {% if user.is_authenticated %}
-        <li><a href="/accounts/logout">Log out as {{user.username}}</a></li>
+        <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{user.username}}</a></li>
         {% else %}
-        <li><a href="/accounts/login">Log in</a></li>
+        <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
         {% endif %}
       </ul>
 
