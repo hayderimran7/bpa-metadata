@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from apps.melanoma.api.resources import MelanomaSequenceFileResource
+from django.views.generic import TemplateView
 
 from tastypie.api import Api
 v1_api = Api(api_name='v1')
@@ -18,5 +19,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^qbe/', include('django_qbe.urls')),
+    (r"^$", TemplateView.as_view(template_name="landing/index.html"))
 )
