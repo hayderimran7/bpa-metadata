@@ -272,9 +272,14 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+usage() {
+    echo ""
+    echo "Usage ./develop.sh (test|nosetests|lint|jslint|dropdb|start|install|clean|purge|pipfreeze|pythonversion|ci_remote_build|ci_staging|ci_staging_tests|ci_rpm_publish|ci_remote_destroy)"
+    echo ""
+}
 
 case ${ACTION} in
-    flushdb)
+    drobdb)
 	flushdb
         ;;
     pythonversion)
@@ -320,7 +325,7 @@ case ${ACTION} in
         ci_ssh_agent
         ci_staging
         ;;
-    ci_staging_lettuce)
+    ci_staging_tests)
         ci_ssh_agent
         ci_staging_lettuce
         ;;
