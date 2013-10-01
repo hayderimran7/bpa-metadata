@@ -31,7 +31,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a  href="http://www.bioplatforms.com.au">Bioplatforms Australia</a></li>
-                <li class="active"><a  href="https://ccgapps.com.au/bpa-metadata/admin">Admin</a></li>
+                <li class="active"><a  href="{% url 'admin:index' %}">Admin</a></li>
                 <li class="active"><a  href="http://ccg.murdoch.edu.au">CCG</a></li>
                 <li class="active"><a  href="http://ccg.murdoch.edu.au/index.php/contact">Contact</a></li>
             </ul>
@@ -43,12 +43,12 @@
     <div class="jumbotron">
         <h1>Bioplatforms Australia Metadata</h1>
         <p>Welcome to Bioplatforms Australia's project metadata portal</p>
-	{% load staticfiles %}
+        {% load staticfiles %}
         <p>
             <img src="{% static "bpa-logos/BPA-logo-clear.png" %}" alt="BPA Logo"/>
         </p>
         <p>
-            <a class="btn btn-lg btn-primary" href="https://ccgapps.com.au/bpa-metadata/melanoma">Melanoma &raquo;</a>
+            <a class="btn btn-lg btn-primary" href="{% url 'melanoma-list' %}">Melanoma &raquo;</a>
         </p>
         <p>
             <a class="btn btn-lg btn-primary" href="https://downloads.bioplatforms.com">Sequence Downloads &raquo;</a>
