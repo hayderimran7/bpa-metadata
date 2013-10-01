@@ -16,7 +16,7 @@ AWS_STAGING_INSTANCE='aws_syd_bpam_staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 TESTING_MODULES="nose"
 MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
-PIP_OPTS="-v -M --download-cache ~/.pip/cache"
+PIP_OPTS="-v -M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
