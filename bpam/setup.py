@@ -40,6 +40,7 @@ setup(
         "requests==1.2.3",
         'ccg-extras==0.1.6',
         'python-memcached==1.48',
+        'docutils==0.11'
         ],
     dependency_links = [
         "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz",
