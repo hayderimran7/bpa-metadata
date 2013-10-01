@@ -1,11 +1,11 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
-set -e
-
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
+
+set -e
 
 PORT='8000'
 
