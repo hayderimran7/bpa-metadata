@@ -110,7 +110,7 @@ def ingest_samples(samples):
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
             sample.name = e['sample_name']
             sample.requested_sequence_coverage = e['sequence_coverage'].upper()
-            sample.organism = Organism.objects.get(genus="Homo", species="Sapient")
+            sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
             sample.dna_source = get_dna_source(e['sample_dna_source'])
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
             sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
