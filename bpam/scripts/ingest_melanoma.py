@@ -332,5 +332,5 @@ def ingest_melanoma():
 
 
 def run():
-    add_organism(genus="Homo", species="Sapient")
+    add_organism(genus="Homo", species="Sapiens")
     ingest_melanoma()
