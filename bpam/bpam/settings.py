@@ -193,7 +193,7 @@ def get_env_variable(var_name):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
-BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
+BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 
 try:
     print "Attempting to import default settings as appsettings.bpam"

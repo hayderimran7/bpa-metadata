@@ -66,6 +66,19 @@ class CustomIndexDashboard(Dashboard):
 
         # append another link list module for "support".
         self.children.append(modules.LinkList(
+            _('Sequence File Listings'),
+            children=[
+                {
+                    'title': _('Melanoma'),
+                    'url': reverse('melanoma-list'),
+                    'external': False,
+                }
+            ]
+        ))
+
+
+        # append another link list module for "support".
+        self.children.append(modules.LinkList(
             _('Support'),
             children=[
                 {

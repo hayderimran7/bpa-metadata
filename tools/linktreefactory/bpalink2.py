@@ -10,7 +10,7 @@ Options:
     -s --swiftbase=SWIFTURI            Base URI for files in swift, eg. http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea
     -a --apacheredirects=APACHEREDIRS  Output file for Apache redirects
     -l --linktree=LINKTREE_ROOT        Base path for link tree
-    -h --htmlindex=HTMLFILE            Output file for HTML index page
+    -h --htmlbase=HTMLBASE             Output path for HTML
     -b --linkbase=PUBLICURI            Base URI for files on public interface, eg. http://downloads.bioplatforms.com/
 """
 
@@ -271,17 +271,48 @@ class Archive(object):
             self.build_linktree(root)
         if args['--apacheredirects']:
             self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
-        if args['--htmlindex']:
-            self.render_template(args['--htmlindex'], args['--linkbase'], args['--swiftbase'])
+        if args['--htmlbase']:
+            self.generate_html(args['--htmlbase'], args['--linkbase'], args['--swiftbase'])
 
-    def render_template(self, output_filename, publicuri, swifturi):
+    def generate_html(self, output_base, publicuri, swifturi):
         env = Environment()
         env.loader = FileSystemLoader('templates/')
-        template = env.get_template(self.template_name)
-        tmpf = output_filename+'.tmp'
-        with open(tmpf, 'w') as fd:
-            fd.write(template.render(self.get_template_environment(publicuri, swifturi)))
-        os.rename(tmpf, output_filename)
+        def render_directory(base, bpa_id=None):
+            try:
+                os.mkdir(base)
+            except OSError:
+                pass # probably already exists
+            template = env.get_template(self.template_name)
+            output_filename = os.path.join(base, 'index.html')
+            tmpf = output_filename+'.tmp'
+            with open(tmpf, 'w') as fd:
+                template_env = self.get_template_environment(publicuri, swifturi, bpa_id)
+                if bpa_id is not None:
+                    template_env['bpa_id'] = bpa_id
+                fd.write(template.render(template_env))
+            os.rename(tmpf, output_filename)
+
+        render_directory(output_base)
+        for bpa_id in self.get_bpa_ids():
+            render_directory(os.path.join(output_base, bpa_id.replace('/', '.')), bpa_id)
+
+    def bpa_sort_key(self, bpa_id):
+        return [int(t) for t in bpa_id.replace('/', '.').split('.')]
+
+    def get_bpa_ids(self):
+        """should work for all subclasses, but may need to overridden in the future"""
+        if self.metadata is not None:
+            last = None
+            for meta in sorted(self.metadata, key=lambda m: self.bpa_sort_key(m.uid)):
+                if last is None or meta.uid != last:
+                    yield meta.uid
+                    last = meta.uid
+
+    def get_matches(self, bpa_id):
+        for fastq, meta in self.matches:
+            if bpa_id is None or meta.uid == bpa_id:
+                yield fastq, meta
+
 
 class MelanomaArchive(Archive):
     metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
@@ -318,9 +349,9 @@ class MelanomaArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-    def get_template_environment(self, publicuri, swifturi):
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
         objects = []
-        for fastq, meta in self.matches:
+        for fastq, meta in self.get_matches(bpa_id):
             swift_path, public_path = self.paths_for_match(meta, fastq)
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
@@ -331,7 +362,7 @@ class MelanomaArchive(Archive):
                 'run' : meta.run,
                 'url' : url,
             })
-        objects.sort(key=lambda o: o['bpa_id'])
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return { 'object_list' : objects }
 
 
@@ -368,9 +399,9 @@ class GBRArchive(Archive):
                 metadata.append(tpl)
         return metadata
 
-    def get_template_environment(self, publicuri, swifturi):
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
         objects = []
-        for fastq, meta in self.matches:
+        for fastq, meta in self.get_matches(bpa_id):
             swift_path, public_path = self.paths_for_match(meta, fastq)
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
@@ -381,7 +412,7 @@ class GBRArchive(Archive):
                 'run' : meta.run,
                 'url' : url,
             })
-        objects.sort(key=lambda o: o['bpa_id'])
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return { 'object_list' : objects }
 
 class NoMetadataArchive(Archive):
@@ -391,7 +422,7 @@ class NoMetadataArchive(Archive):
         self.metadata = None
         self.matches = None
 
-    def get_template_environment(self, publicuri, swifturi):
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
         objects = []
         for fastq in sorted(self.fastq.inventory, key=lambda f: f.filename.name):
             public_file_path = self.public_file_path(fastq)
@@ -419,7 +450,7 @@ class WheatPathogensArchive(NoMetadataArchive):
 
 class WheatCultivarsArchive(NoMetadataArchive):
     metadata_filename = None
-    container_name = 'Wheat_Cultivals'
+    container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 
 if __name__ == '__main__':
