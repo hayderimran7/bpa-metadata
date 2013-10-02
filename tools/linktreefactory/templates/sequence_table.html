@@ -11,7 +11,11 @@
     <tbody>
         {% for obj in object_list %}
         <tr>
+        {% if bpa_id %}
             <td>{{ obj.bpa_id }}</td>
+        {% else %}
+            <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
+        {% endif %}
             <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
             <td>{{ obj.name }}</td>
             <td>{{ obj.date_received_from_sequencing_facility}}</td>
