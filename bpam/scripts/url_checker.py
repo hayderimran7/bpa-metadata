@@ -15,14 +15,16 @@ def process_object(session, model, attr_name, url_fn):
         sys.stderr.write("HEAD %s: " % (verifier.checked_url))
         sys.stderr.flush()
         r = session.head(verifier.checked_url)
-        sys.stderr.write("%d\n" % (r.status_code))
-        sys.stderr.flush()
-        if r.status_code == 200:
+        # direct access, or a redirect to the backend. redirects are precise, so 
+        # we can be sure we'll find the backing file if they exist
+        if r.status_code == 200 or r.status_code == 302:
             verifier.status_ok = True
         else:
             verifier.status_ok = False
             verifier.status_note = "Status %d: %s" % (r.status_code, r.text)
         obj.save()
+        sys.stderr.write("%d -> %s\n" % (r.status_code, verifier.status_ok))
+        sys.stderr.flush()
         verifier.save()
         time.sleep(0.2) # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
 
