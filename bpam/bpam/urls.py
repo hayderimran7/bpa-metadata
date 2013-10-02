@@ -19,5 +19,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    (r"^$", TemplateView.as_view(template_name="landing/index.html"))
+    url(r"^$", TemplateView.as_view(template_name="landing/index.html"), name='landing-page')
 )

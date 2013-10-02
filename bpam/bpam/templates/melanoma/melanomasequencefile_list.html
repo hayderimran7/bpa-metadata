@@ -8,4 +8,8 @@
 
 {% include "melanoma/melanomasequencefile_table.html" %}
 
+<form>
+    <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma-list' %}" />
+</form>
+
 {% endblock %}
