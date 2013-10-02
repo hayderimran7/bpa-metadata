@@ -419,7 +419,7 @@ class WheatPathogensArchive(NoMetadataArchive):
 
 class WheatCultivarsArchive(NoMetadataArchive):
     metadata_filename = None
-    container_name = 'Wheat_Cultivals'
+    container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 
 if __name__ == '__main__':
