@@ -48,7 +48,8 @@
     </div>
 
     {% bootstrap_javascript jquery=True %}
-    <script src="/static/base.js"></script>
+    {% load staticfiles %}
+    <script src="{% static "bpam/base.js" %}"></script>
 
   </body>
 </html>
