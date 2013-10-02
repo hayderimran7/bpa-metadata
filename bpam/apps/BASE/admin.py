@@ -11,7 +11,7 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
-    list_display = ('bpa_id', 'lab_name_id', 'depth', 'texture')
+    list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'gravel', 'texture')
 
 
 class CollectionSiteAdmin(admin.ModelAdmin):
