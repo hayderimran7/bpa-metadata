@@ -256,7 +256,6 @@ class Archive(object):
             for fastq in self.fastq.inventory:
                 swift_path = self.swift_path(fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
-                print self.public_file_path(fastq)
                 print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
