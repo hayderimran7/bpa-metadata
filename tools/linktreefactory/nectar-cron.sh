@@ -21,7 +21,7 @@ update_apache() {
     dummy=~/var/linktree/"$container"
     # make or update a dummy BPA archive
     mkdir -p "$dummy"
-    ###./swift-dummy.sh "$container" "$dummy"
+    ./swift-dummy.sh "$container" "$dummy"
     cfgtmp="$tmpdir/$container.cfg"
     cfgprod="$apachedir/$container.cfg"
     # generate link tree, and if successful update apache config

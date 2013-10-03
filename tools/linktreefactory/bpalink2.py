@@ -16,7 +16,7 @@ Options:
 
 from docopt import docopt
 from unipath import Path
-import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os
+import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json
 from collections import namedtuple
 from tendo import colorer
 from jinja2 import FileSystemLoader
@@ -256,6 +256,7 @@ class Archive(object):
             for fastq in self.fastq.inventory:
                 swift_path = self.swift_path(fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
+                print self.public_file_path(fastq)
                 print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
@@ -291,6 +292,12 @@ class Archive(object):
                     template_env['bpa_id'] = bpa_id
                 fd.write(template.render(template_env))
             os.rename(tmpf, output_filename)
+            if bpa_id is None:
+                json_filename = os.path.join(base, 'metadata.json')
+                tmpf = json_filename+'.tmp'
+                with open(tmpf, 'w') as fd:
+                    json.dump(template_env, fd, sort_keys=True, indent=4, separators=(',', ': '))
+                os.rename(tmpf, json_filename)
 
         render_directory(output_base)
         for bpa_id in self.get_bpa_ids():
@@ -357,6 +364,7 @@ class MelanomaArchive(Archive):
             objects.append({
                 'bpa_id' : meta.uid,
                 'filename' : meta.filename,
+                'md5' : meta.md5,
                 'name' : meta.sample_name,
                 'date_received_from_sequencing_facility' : meta.date_received,
                 'run' : meta.run,
