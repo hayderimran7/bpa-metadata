@@ -215,19 +215,19 @@ run() {
     python manage.py migrate --traceback
 
     # BASE taxonomies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUseTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TillageTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/HorizonTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilColourTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureTaxon.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
     python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_BASE --traceback
