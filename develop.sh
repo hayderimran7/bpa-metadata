@@ -168,7 +168,7 @@ installapp() {
     # check requirements
     which virtualenv >/dev/null
 
-    echo "Install ${PROJECT_NICKNAME}"
+    log_info "Install ${PROJECT_NICKNAME}"
     virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
@@ -179,11 +179,11 @@ installapp() {
 
 # django syncdb, migrate and collect static
 syncmigrate() {
-    echo "syncdb"
+    log_info "syncdb"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> syncdb-develop.log
-    echo "migrate"
+    log_info "migrate"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} 1> migrate-develop.log
-    echo "collectstatic"
+    log_info "collectstatic"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> collectstatic-develop.log
 }
 
@@ -202,10 +202,12 @@ pipfreeze() {
 }
 
 clean() {
+    log_info "Cleaning"
     find ${TOPDIR}/${PROJECT_NICKNAME} -name "*.pyc" -exec rm -rf {} \;
 }
 
 purge() {
+    log_info "Purging"
     rm -rf ${TOPDIR}/virt_${PROJECT_NICKNAME}
     rm *.log
 }
@@ -214,7 +216,7 @@ run() {
     python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
 
-    # BASE taxonomies
+    # BASE Controlled Vocabularies
     python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
@@ -242,25 +244,17 @@ dev() {
     run
 }
 
-doagric() {
-    devsettings
-    python manage.py runscript ingest_soil_agricultural --traceback
-}
-
-demo() {
-    rm /tmp/demobpa*
-    demosettings
-    run
-}
 
 usage() {
-    echo ""
-    log_info "Usage ./develop.sh (lint|jslint|start|install|clean|purge|pipfreeze|pythonversion|ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
-    echo ""
+    log_warning "Usage ./develop.sh (lint|jslint)"
+    log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
 }
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
+    log_info "Installing CCG to ${TGT}"
     wget https://bitbucket.org/ccgmurdoch/ccg/raw/default/ccg -O ${TGT}
     chmod 755 ${TGT}
 }
@@ -273,7 +267,7 @@ flushdb() {
 }
 
 case ${ACTION} in
-    drobdb)
+    flushdb)
 	flushdb
         ;;
     pythonversion)
@@ -334,12 +328,6 @@ case ${ACTION} in
         ;;
     dev)
         dev
-        ;;
-    doagric)
-        doagric
-        ;;
-    demo)
-        demo
         ;;
     *)
         usage
