@@ -151,6 +151,7 @@ class FastqInventory(object):
         # checksums for them
         for sub in base.walk(filter=unipath.DIRS):
             fastq = sub.listdir(pattern="*fastq.gz", filter=unipath.FILES)
+            fastq += sub.listdir(pattern="*txt.bz2", filter=unipath.FILES)
             if len(fastq) == 0:
                 continue
             # build a dictionary of MD5sums from this subdirectory up to our parent
@@ -273,6 +274,7 @@ class Archive(object):
             self.build_apache_redirects(args['--swiftbase'], args['--apacheredirects'])
         if args['--htmlbase']:
             self.generate_html(args['--htmlbase'], args['--linkbase'], args['--swiftbase'])
+            self.generate_json_metadata(args['--htmlbase'], args['--linkbase'], args['--swiftbase'])
 
     def generate_html(self, output_base, publicuri, swifturi):
         env = Environment()
@@ -291,16 +293,31 @@ class Archive(object):
                     template_env['bpa_id'] = bpa_id
                 fd.write(template.render(template_env))
             os.rename(tmpf, output_filename)
-            if bpa_id is None:
-                json_filename = os.path.join(base, 'metadata.json')
-                tmpf = json_filename+'.tmp'
-                with open(tmpf, 'w') as fd:
-                    json.dump(template_env, fd, sort_keys=True, indent=4, separators=(',', ': '))
-                os.rename(tmpf, json_filename)
-
         render_directory(output_base)
         for bpa_id in self.get_bpa_ids():
             render_directory(os.path.join(output_base, bpa_id.replace('/', '.')), bpa_id)
+    
+    def generate_json_metadata(self, output_base, publicuri, swifturi):
+        metadata_dict = {}
+        metadata_dict['files'] = [ {
+            "url" : urlparse.urljoin(publicuri, self.public_file_path(fastq)),
+            "filename" : fastq.filename.name,
+            "md5" : fastq.md5, 
+        }  for fastq in self.fastq.inventory ]
+        metadata_dict['matches'] = match_info = []
+        if self.matches is not None:
+            for fastq, meta in self.matches:
+                swift_path, public_path = self.paths_for_match(meta, fastq)
+                match_info.append({
+                    "url" : urlparse.urljoin(publicuri, public_path),
+                    "filename" : fastq.filename.name,
+                    "md5" : fastq.md5, 
+                })
+        json_filename = os.path.join(output_base, 'metadata.json')
+        tmpf = json_filename+'.tmp'
+        with open(tmpf, 'w') as fd:
+            json.dump(metadata_dict, fd, sort_keys=True, indent=4, separators=(',', ': '))
+        os.rename(tmpf, json_filename)
 
     def bpa_sort_key(self, bpa_id):
         return [int(t) for t in bpa_id.replace('/', '.').split('.')]
@@ -436,6 +453,7 @@ class NoMetadataArchive(Archive):
             url = urlparse.urljoin(publicuri, public_file_path)
             objects.append({
                 'filename' : fastq.filename.name,
+                'md5' : fastq.md5,
                 'url' : url,
             })
         return { 'object_list' : objects }
