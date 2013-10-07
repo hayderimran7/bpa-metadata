@@ -2,7 +2,7 @@ from setuptools import setup
 from pip.req import parse_requirements
 from bpalink import __version__
 
-reqs = [str(ir.req) for ir in parse_requirements('./requirements.txt')]
+requirements = [str(ir.req) for ir in parse_requirements('./requirements.txt')]
 
 setup(
     name='bpalink',
@@ -20,5 +20,5 @@ setup(
         'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: MIT License',
     ],
-    install_requires = reqs,  
+    install_requires=requirements,
 )
