@@ -15,5 +15,5 @@ bpam.egg-info/
 build-number.txt
 setup.cfg
 *.rpm
-./idea/workspace.xml
-./idea/tasks.xml
+.idea/workspace.xml
+.idea/tasks.xml
