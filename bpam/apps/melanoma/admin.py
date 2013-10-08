@@ -17,8 +17,9 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
                            ]
                 }
         ),
-
     ]
+
+    search_fields = ( 'sample__bpa_id__bpa_id', 'sample__name' )
 
     def download_field(self, obj):
         return '<a href="%s">%s</a>' % (obj.url, obj.filename)
