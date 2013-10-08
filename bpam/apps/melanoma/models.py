@@ -88,3 +88,5 @@ class MelanomaSequenceFile(SequenceFile):
                 uq(self.run.flow_cell_id),
                 uq(self.filename)))
 
+    url = property(get_url)
+

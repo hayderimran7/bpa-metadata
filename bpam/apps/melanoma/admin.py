@@ -20,7 +20,13 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('get_sample_id', 'filename', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    def download_field(self, obj):
+        return '<a href="%s">%s</a>' % (obj.url, obj.filename)
+    
+    download_field.allow_tags = True
+    download_field.short_description = 'Filename'
+
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
 
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
