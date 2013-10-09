@@ -17,11 +17,11 @@ Options:
 """
 
 from unipath import Path
+import codecs
 import logging
 import sys
 import csv
 import pprint
-import time
 from collections import namedtuple
 from docopt import docopt
 from dateutil.parser import parse as date_parse
@@ -82,7 +82,7 @@ COLUMNS = {'Sample#': ColumnSpec('bpa_id', None, None),
            'Fine Sand (%)': ColumnSpec('fine_sand', None, None),
            'Sand (%)': ColumnSpec('sand', None, None),
            'Silt  (%)': ColumnSpec('silt', None, None),
-           'GPS lat. (GDA94?)': ColumnSpec('latitute', None, None),
+           'GPS lat. (GDA94?)': ColumnSpec('latitude', None, None),
            'GPS lon. (GDA94?)': ColumnSpec('longitude', None, None),
            'current land-use': ColumnSpec('land_use', None, None),
            'Vegetation Total cover (%)': ColumnSpec('vegetation_total_cover', None, None),
@@ -102,9 +102,12 @@ AttributeSpec = namedtuple('AttributeSpec', 'column_name validator converter')
 for c_name, col_spec in COLUMNS.items():
     ATTRIBUTES[col_spec.name] = AttributeSpec(c_name, col_spec.validator, col_spec.converter)
 
-
 class Helper(object):
+
     field_spec = []
+
+    def __init__(self, args):
+        self.args = args
 
     @classmethod
     def get_date_str(cls, date):
@@ -131,7 +134,8 @@ class Helper(object):
             tpl = [idx]
             for field in cls.field_spec:
                 spec = ATTRIBUTES[field]
-                val = row[spec.column_name].decode('utf-8').strip()
+                # val = row[spec.column_name].decode('utf-8').strip()
+                val = row[spec.column_name].strip()
 
                 converter_func = spec.converter
                 validator_func = spec.validator
@@ -150,52 +154,192 @@ class Helper(object):
             yield named_tup(*tpl)
 
 
+
+
+
 class SampleHelper(Helper):
 
-    field_spec = ['bpa_id', 'depth', 'sample_date']
+    field_spec = ['bpa_id', 'depth', 'sample_date', 'latitude', 'longitude']
 
-    @classmethod
-    def write_samples(cls, args, samples):
+    def write_csv(self, samples):
         """
         Write list of sample objects to csv file
         """
         file_name = args['OUTPUT_FILE_PREFIX'] + '_samples.csv'
         with open(file_name, 'wb') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(cls.get_header())
+            writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(self.get_header())
             for sample in samples:
-                formatted = [sample.bpa_id, sample.depth, cls.get_date_str(sample.sample_date)]
-                writer.writerow(formatted)  # don't want row in file
+                formatted = [sample.bpa_id, sample.depth, self.get_date_str(sample.sample_date), sample.latitude, sample.longitude]
+                writer.writerow(formatted)
 
-    @classmethod
-    def get_samples(cls, args):
+    def to_file(self):
         """
         Parse samples
         """
 
         in_file = Path(args['INPUT_FILE'])
-        with open(in_file) as fd:
+        with open(in_file, 'r') as fd:
             reader = csv.DictReader(fd)
-            cls.write_samples(args, cls.unpack('Sample', reader))
+            self.write_csv(self.unpack('Sample', reader))
 
 
 class SiteHelper(Helper):
-    @classmethod
-    def get_sites(cls, args):
-        in_file = Path(args['INPUT_FILE'])
-        with open(in_file) as fd:
-            reader = csv.DictReader(fd)
+    field_spec = ['latitude',
+                  'longitude',
+                  'site_name',
+                  'sample_date',
+                  'land_use',
+                  'vegetation_total_cover',
+                  'vegetation_dominant_trees',
+                  'vegetation_dominant_shrubs',
+                  'vegetation_dominant_grasses',
+                  'elevation',
+                  'slope',
+                  'slope_aspect',
+                  'slope_position',
+                  'comments']
 
+    def write_csv(self, tuples):
+        """
+        Write list of sample objects to csv file
+        """
+        file_name = args['OUTPUT_FILE_PREFIX'] + '_sites.csv'
+        with open(file_name, 'wb') as csvfile:
+            sitedict = {}
+            writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(self.get_header())
+            for sample in tuples:
+                formatted = [sample.latitude,
+                             sample.longitude,
+                             sample.site_name,
+                             self.get_date_str(sample.sample_date),
+                             sample.land_use,
+                             sample.vegetation_total_cover,
+                             sample.vegetation_dominant_trees,
+                             sample.vegetation_dominant_shrubs,
+                             sample.vegetation_dominant_grasses,
+                             sample.elevation,
+                             sample.slope,
+                             sample.slope_aspect,
+                             sample.slope_position,
+                             sample.comments]
+
+                sitedict[(sample.latitude, sample.longitude)] = formatted
+
+            for _, v in sitedict.items():
+                writer.writerow(v)
+
+    def to_file(self):
+        """
+        Parse samples
+        """
+
+        in_file = Path(args['INPUT_FILE'])
+        with open(in_file, 'r') as fd:
+            reader = csv.DictReader(fd)
+            self.write_csv(self.unpack('Site', reader))
+
+
+class ChemHelper(Helper):
+    field_spec = ['bpa_id',
+                  'sample_date',
+                  'moisture',
+                  'color',
+                  'gravel',
+                  'texture',
+                  'ammonium_nitrogen',
+                  'nitrate_nitrogen',
+                  'phosphorus_colwell',
+                  'potassium_colwell',
+                  'sulphur',
+                  'organic_carbon',
+                  'conductivity',
+                  'ph_cacl2',
+                  'ph_h20',
+                  'dtpa_copper',
+                  'dtpa_iron',
+                  'dtpa_manganese',
+                  'dtpa_zinc',
+                  'exc_aluminium',
+                  'exc_calcium',
+                  'exc_magnesium',
+                  'exc_potasium',
+                  'exc_sodium',
+                  'exc_boron',
+                  'clay',
+                  'course_sand',
+                  'fine_sand',
+                  'sand',
+                  'silt']
+
+    def write_csv(self, tuples):
+        """
+        Write list of chem vals to file
+        """
+        file_name = args['OUTPUT_FILE_PREFIX'] + '_chem.csv'
+        with open(file_name, 'wb') as csvfile:
+
+            writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(self.get_header())
+            for sample in tuples:
+                formatted = [
+                    sample.bpa_id,
+                    self.get_date_str(sample.sample_date),
+                    sample.moisture,
+                    sample.color,
+                    sample.gravel,
+                    sample.texture,
+                    sample.ammonium_nitrogen,
+                    sample.nitrate_nitrogen,
+                    sample.phosphorus_colwell,
+                    sample.potassium_colwell,
+                    sample.sulphur,
+                    sample.organic_carbon,
+                    sample.conductivity,
+                    sample.ph_cacl2,
+                    sample.ph_h20,
+                    sample.dtpa_copper,
+                    sample.dtpa_iron,
+                    sample.dtpa_manganese,
+                    sample.dtpa_zinc,
+                    sample.exc_aluminium,
+                    sample.exc_calcium,
+                    sample.exc_magnesium,
+                    sample.exc_potasium,
+                    sample.exc_sodium,
+                    sample.exc_boron,
+                    sample.clay,
+                    sample.course_sand,
+                    sample.fine_sand,
+                    sample.sand,
+                    sample.silt]
+
+                writer.writerow(formatted)
+
+    def to_file(self):
+        """
+        Parse samples
+        """
+
+        in_file = Path(args['INPUT_FILE'])
+        with open(in_file, 'r') as fd:
+            reader = csv.DictReader(fd)
+            self.write_csv(self.unpack('Site', reader))
 
 
 def main(args):
     if args['--get-sites'] is not None:
-        site_helper = SiteHelper()
-        site_helper.get_sites(args)
+        site_helper = SiteHelper(args)
+        site_helper.to_file()
 
     if args['--get-samples'] is not None:
-        sample_helper = SampleHelper()
-        sample_helper.get_samples(args)
+        sample_helper = SampleHelper(args)
+        sample_helper.to_file()
+
+    if args['--get-analysis'] is not None:
+        chem_helper = ChemHelper(args)
+        chem_helper.to_file()
 
 
 def args_check(args):
@@ -212,7 +356,6 @@ if __name__ == '__main__':
 
     if args['OUTPUT_FILE_PREFIX'] is None:
         args['OUTPUT_FILE_PREFIX'] = DEFAULT_OUTPUT_FILE_PREFIX
-
 
     if args['--verbose']:
         logger.setLevel(level=logging.DEBUG)
