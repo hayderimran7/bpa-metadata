@@ -338,7 +338,7 @@ class Archive(object):
 
 
 class MelanomaArchive(Archive):
-    metadata_filename = '../../bpam/scripts/data/melanoma_samples.csv'
+    metadata_filename = '../../data/melanoma_samples.csv'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
 
@@ -391,7 +391,7 @@ class MelanomaArchive(Archive):
 
 
 class GBRArchive(Archive):
-    metadata_filename = '../../bpam/scripts/data/gbr_pilot_samples.csv'
+    metadata_filename = '../../data/gbr/gbr_pilot_samples.csv'
     container_name = 'GBR'
     template_name = 'gbr.html'
 
