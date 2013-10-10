@@ -338,7 +338,7 @@ class Archive(object):
 
 
 class MelanomaArchive(Archive):
-    metadata_filename = '../../data/melanoma_samples.csv'
+    metadata_filename = '../../data/melanoma/melanoma_samples.csv'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
 
