@@ -17,7 +17,6 @@ Options:
 """
 
 from unipath import Path
-import codecs
 import logging
 import sys
 import csv
@@ -329,17 +328,33 @@ class ChemHelper(Helper):
 
 
 def main(args):
-    if args['--get-sites'] is not None:
+
+    def do_site():
         site_helper = SiteHelper(args)
         site_helper.to_file()
 
-    if args['--get-samples'] is not None:
+    def do_samples():
         sample_helper = SampleHelper(args)
         sample_helper.to_file()
 
-    if args['--get-analysis'] is not None:
+    def do_chem():
         chem_helper = ChemHelper(args)
         chem_helper.to_file()
+
+    if args['--get-sites']:
+        do_site()
+
+    if args['--get-samples']:
+        do_samples()
+
+    if args['--get-analysis']:
+        do_chem()
+
+    if args['--get-all']:
+        do_site()
+        do_samples()
+        do_chem()
+
 
 
 def args_check(args):
