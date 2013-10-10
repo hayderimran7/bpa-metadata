@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-"""  
+"""
+bpalink.py builds download link trees with file names provided.
+
 Usage: 
-    bpalink.py [options] (melanoma | gbr | wheat7a | wheat_cultivars | wheat_pathogens | base ) SUBARCHIVE_ROOT
+  bpalink.py [options] (melanoma | gbr | wheat7a | wheat_cultivars | wheat_pathogens | base ) SUBARCHIVE_ROOT
 
 Options:
-    -v --verbose                       Verbose mode.
-    -s --swiftbase=SWIFTURI            Base URI for files in swift, eg. http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea
-    -a --apacheredirects=APACHEREDIRS  Output file for Apache redirects
-    -l --linktree=LINKTREE_ROOT        Base path for link tree
-    -h --htmlbase=HTMLBASE             Output path for HTML
-    -b --linkbase=PUBLICURI            Base URI for files on public interface, eg. http://downloads.bioplatforms.com/
+  -v, --verbose                       Verbose mode.
+  -s, --swiftbase=SWIFTURI            Base URI for files in swift [default: http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea]
+  -a, --apacheredirects=APACHEREDIRS  Output file for Apache redirects
+  -l, --linktree=LINKTREE_ROOT        Base path for link tree
+  -o, --htmlbase=HTMLBASE             Output path for HTML
+  -b, --linkbase=PUBLICURI            Base URI for files on public interface,  [default: http://downloads.bioplatforms.com/]
 """
 
 from docopt import docopt
 from unipath import Path
+from tendo import colorer
 import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json
 from collections import namedtuple
-from tendo import colorer
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
 import logging

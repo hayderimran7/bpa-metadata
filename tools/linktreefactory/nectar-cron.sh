@@ -29,7 +29,7 @@ update_apache() {
     ./bpalink2.py \
         -a "$cfgtmp" \
         -s http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
-        -h /var/www/"$linkmethod"/ \
+        -o /var/www/"$linkmethod"/ \
         -b https://downloads.bioplatforms.com/ \
         "$linkmethod" "$dummy" && (
             test -e "$cfgtmp" && mv "$cfgtmp" "$cfgprod"
