@@ -14,20 +14,21 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
                            ('analysed'),
                            'date_received_from_sequencing_facility',
                            'note'
-                           ]
-                }
+        ]
+        }
         ),
     ]
 
-    search_fields = ( 'sample__bpa_id__bpa_id', 'sample__name' )
+    search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
 
     def download_field(self, obj):
         return '<a href="%s">%s</a>' % (obj.url, obj.filename)
-    
+
     download_field.allow_tags = True
     download_field.short_description = 'Filename'
 
-    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    list_display = (
+        'get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
 
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
@@ -56,6 +57,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
+    search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -72,10 +74,12 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
+    search_fields = ('bpa_id__bpa_id', 'name')
 
 
 class ArrayAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'array_id', 'mia_id')
+    search_fields = ('bpa_id__bpa_id', 'array_id', 'mia_id')
 
 
 admin.site.register(TumorStage)
