@@ -1,7 +1,7 @@
 import pprint
 import csv
 from datetime import date
-import os.path
+import unipath
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
@@ -11,8 +11,8 @@ from .utils import *
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-USERS_FILE = os.path.join(DATA_DIR, 'bpa-users.csv')
+DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
+USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
 
 
 def format_group_name(name):

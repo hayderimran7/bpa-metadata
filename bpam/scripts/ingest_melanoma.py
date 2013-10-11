@@ -1,18 +1,18 @@
 import sys
 import pprint
 import csv
+import xlrd
 from datetime import date
-import os.path
+from unipath import Path
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.melanoma.models import *
 from .utils import *
 
-
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-MELANOMA_SAMPLE_FILE = os.path.join(DATA_DIR, 'melanoma_samples.csv')
-MELANOMA_ARRAY_FILE = os.path.join(DATA_DIR, 'melanoma_arrays.csv')
+DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
+MELANOMA_SAMPLE_FILE = Path(DATA_DIR, 'melanoma_samples.csv')
+MELANOMA_ARRAY_FILE = Path(DATA_DIR, 'melanoma_arrays.csv')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 BPA_ID = "102.100.100"
@@ -332,5 +332,5 @@ def ingest_melanoma():
 
 
 def run():
-    add_organism(genus="Homo", species="Sapiens")
+    add_organism(genus="Homo", species="Sapien")
     ingest_melanoma()
