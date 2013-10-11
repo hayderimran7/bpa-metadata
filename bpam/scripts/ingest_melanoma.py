@@ -2,7 +2,7 @@ import sys
 import pprint
 import csv
 import xlrd
-from datetime import date
+from datetime import datetime
 from unipath import Path
 
 from apps.bpaauth.models import BPAUser
@@ -11,8 +11,7 @@ from apps.melanoma.models import *
 from .utils import *
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
-MELANOMA_SAMPLE_FILE = Path(DATA_DIR, 'melanoma_samples.csv')
-MELANOMA_ARRAY_FILE = Path(DATA_DIR, 'melanoma_arrays.csv')
+MELANOMA_SPREADSHEET_FILE = Path(DATA_DIR, 'Melanoma_study_metadata.xlsx')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 BPA_ID = "102.100.100"
@@ -175,47 +174,53 @@ def get_melanoma_sample_data():
 
         return False
 
-    with open(MELANOMA_SAMPLE_FILE, 'rb') as melanoma_files:
-        fieldnames = ['bpa_id',
-                      'sample_name',
-                      'sequence_coverage',
-                      'sequencing_facility',
-                      'species',
-                      'contact_scientist',
-                      'contact_affiliation',
-                      'contact_email',
-                      'sample_gender',
-                      'sample_dna_source',
-                      'sample_tumor_stage',
-                      'histological_subtype',
-                      'passage_number',
-                      'dna_extraction_protocol',
-                      'array_analysis_facility',
-                      'date_sent_for_sequencing',
-                      'whole_genome_sequencing_facility',
-                      'date_received',
-                      'library',
-                      'library_construction',
-                      'library_construction_protocol',
-                      'index_number',
-                      'sequencer',
-                      'run_number',
-                      'flow_cell_id',
-                      'lane_number',
-                      'sequence_filename',
-                      'md5_cheksum',
-                      'file_path',
-                      'file_url',
-                      'analysed',
-                      'analysed_url']
+    fieldnames = ['bpa_id',
+                  'sample_name',
+                  'sequence_coverage',
+                  'sequencing_facility',
+                  'species',
+                  'contact_scientist',
+                  'contact_affiliation',
+                  'contact_email',
+                  'sample_gender',
+                  'sample_dna_source',
+                  'sample_tumor_stage',
+                  'histological_subtype',
+                  'passage_number',
+                  'dna_extraction_protocol',
+                  'array_analysis_facility',
+                  'date_sent_for_sequencing',
+                  'whole_genome_sequencing_facility',
+                  'date_received',
+                  'library',
+                  'library_construction',
+                  'library_construction_protocol',
+                  'index_number',
+                  'sequencer',
+                  'run_number',
+                  'flow_cell_id',
+                  'lane_number',
+                  'sequence_filename',
+                  'md5_cheksum',
+                  'file_path',
+                  'file_url',
+                  'analysed',
+                  'analysed_url']
 
-        reader = csv.DictReader(melanoma_files, fieldnames=fieldnames)
-        # maybe use map() ?
-        samples = []
-        for sample in strip_all(reader):
-            if not filter_out_sample(sample):
-                samples.append(sample)
-        return samples
+    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
+    sheet = wb.sheet_by_name('Melanoma_study_metadata')
+    samples = []
+    for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
+        vals = sheet.row_values(row_idx)
+        # for date types try to convert to python dates
+        types = sheet.row_types(row_idx)
+        for i, t in enumerate(types):
+            if t == xlrd.XL_CELL_DATE:
+                vals[i] = datetime(*xldate_as_tuple(vals[i], wb.datemode))
+
+        samples.append(dict(zip(fieldnames, vals)))
+
+    return samples
 
 
 def get_array_data():
@@ -223,18 +228,31 @@ def get_array_data():
     Copy if the 'Array Data' Tab from the Melanoma_study_metadata document
     """
 
-    with open(MELANOMA_ARRAY_FILE, 'rb') as array_data:
-        fieldnames = ['batch_no',
-                      'well_id',
-                      'bpa_id',
-                      'mia_id',
-                      'array_id',
-                      'call_rate',
-                      'gender',
-                      ]
+    fieldnames = ['batch_no',
+                  'well_id',
+                  'bpa_id',
+                  'mia_id',
+                  'array_id',
+                  'call_rate',
+                  'gender',
+                  ]
 
-        reader = csv.DictReader(array_data, fieldnames=fieldnames)
-        return strip_all(reader)
+    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
+    sheet = wb.sheet_by_name('Array data')
+    rows = []
+    for row_idx in range(sheet.nrows)[1:]:
+        vals = sheet.row_values(row_idx)
+        # for date types try to convert to python dates
+        types = sheet.row_types(row_idx)
+        for i, t in enumerate(types):
+            if t == xlrd.XL_CELL_DATE:
+                vals[i] = datetime(*xldate_as_tuple(vals[i], wb.datemode))
+
+        rows.append(dict(zip(fieldnames, vals)))
+
+
+    return rows
+
 
 
 def ingest_runs(sample_data):
@@ -305,11 +323,22 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
+
+        def check_date(dt):
+            """
+            When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
+            if it wasn't, it may still be a valid date string.
+            """
+            if isinstance(dt, date):
+                return dt
+            if isinstance(dt, basestring):
+                return dateutil.parser.parse(dt)
+
         file_name = e['sequence_filename'].strip()
         if file_name != "":
             f = MelanomaSequenceFile()
             f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
-            f.date_received_from_sequencing_facility = get_date(e['date_received'].strip())
+            f.date_received_from_sequencing_facility = check_date(e['date_received'])
             f.run = run
             f.index_number = get_clean_number(e['index_number'])
             f.lane_number = get_clean_number(e['lane_number'])
@@ -332,5 +361,5 @@ def ingest_melanoma():
 
 
 def run():
-    add_organism(genus="Homo", species="Sapien")
+    add_organism(genus="Homo", species="Sapiens")
     ingest_melanoma()

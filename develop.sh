@@ -232,8 +232,10 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
     python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_BASE --traceback
-    # python manage.py runscript ingest_melanoma --traceback
+    python manage.py runscript ingest_melanoma --traceback
+
+    # python manage.py runscript ingest_BASE --traceback
+
 
     # python manage.py runserver
     startserver
