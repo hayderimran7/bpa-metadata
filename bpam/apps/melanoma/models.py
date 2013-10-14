@@ -48,7 +48,7 @@ class MelanomaSample(Sample):
     """
 
     organism = models.ForeignKey(Organism)
-    # don't currently understand what this is. 
+    # don't currently understand what this is.
     passage_number = models.IntegerField(null=True)
 
     gender = models.CharField(choices=GENDERS, max_length=1, null=True)
