@@ -1,22 +1,22 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
-set -e
-
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
+
+set -e
 
 PORT='8000'
 
 PROJECT_NAME='bpa-metadata'
 PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
-AWS_STAGING_INSTANCE='aws_syd_bpam_staging'
+AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 TESTING_MODULES="nose"
 MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
-PIP_OPTS="-v -M --download-cache ~/.pip/cache"
+PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
@@ -120,7 +120,7 @@ ci_remote_build() {
 
 # publish rpms
 ci_rpm_publish() {
-    time ccg ${AWS_BUILD_INSTANCE} publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
 
@@ -140,6 +140,8 @@ ci_staging() {
 ci_staging_lettuce() {
     ccg ${AWS_STAGING_INSTANCE} dsudo:'dbus-uuidgen --ensure'
     ccg ${AWS_STAGING_INSTANCE} dsudo:'chown apache:apache /var/www'
+    
+    ccg ${AWS_STAGING_INSTANCE} dsudo:'service httpd restart'
 
     ccg ${AWS_STAGING_INSTANCE} dsudo:'bpam run_lettuce --with-xunit --xunit-file\=/tmp/tests.xml || true'
     
@@ -166,7 +168,7 @@ installapp() {
     # check requirements
     which virtualenv >/dev/null
 
-    echo "Install ${PROJECT_NICKNAME}"
+    log_info "Install ${PROJECT_NICKNAME}"
     virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
@@ -177,11 +179,11 @@ installapp() {
 
 # django syncdb, migrate and collect static
 syncmigrate() {
-    echo "syncdb"
+    log_info "syncdb"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> syncdb-develop.log
-    echo "migrate"
+    log_info "migrate"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} 1> migrate-develop.log
-    echo "collectstatic"
+    log_info "collectstatic"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> collectstatic-develop.log
 }
 
@@ -200,37 +202,40 @@ pipfreeze() {
 }
 
 clean() {
+    log_info "Cleaning"
     find ${TOPDIR}/${PROJECT_NICKNAME} -name "*.pyc" -exec rm -rf {} \;
 }
 
 purge() {
+    log_info "Purging"
     rm -rf ${TOPDIR}/virt_${PROJECT_NICKNAME}
     rm *.log
 }
 
 run() {   
-    python manage.py syncdb --traceback
+    python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
-    python manage.py runscript ingest_projects --traceback
 
-    # BASE taxonomies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUseTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TillageTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/HorizonTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilColourTaxon.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureTaxon.json  --traceback
+    # BASE Controlled Vocabularies
+    python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
+    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
-    python manage.py runscript ingest_BASE --traceback
-
+    python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_melanoma --traceback
+
+    # python manage.py runscript ingest_BASE --traceback
+
 
     # python manage.py runserver
     startserver
@@ -241,25 +246,17 @@ dev() {
     run
 }
 
-doagric() {
-    devsettings
-    python manage.py runscript ingest_soil_agricultural --traceback
-}
-
-demo() {
-    rm /tmp/demobpa*
-    demosettings
-    run
-}
 
 usage() {
-    echo ""
-    log_info "Usage ./develop.sh (lint|jslint|start|install|clean|purge|pipfreeze|pythonversion|ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
-    echo ""
+    log_warning "Usage ./develop.sh (lint|jslint)"
+    log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
 }
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
+    log_info "Installing CCG to ${TGT}"
     wget https://bitbucket.org/ccgmurdoch/ccg/raw/default/ccg -O ${TGT}
     chmod 755 ${TGT}
 }
@@ -270,7 +267,6 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "DROP DATABASE ${DB}"
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
-
 
 case ${ACTION} in
     flushdb)
@@ -319,7 +315,7 @@ case ${ACTION} in
         ci_ssh_agent
         ci_staging
         ;;
-    ci_staging_lettuce)
+    ci_staging_tests)
         ci_ssh_agent
         ci_staging_lettuce
         ;;
@@ -334,12 +330,6 @@ case ${ACTION} in
         ;;
     dev)
         dev
-        ;;
-    doagric)
-        doagric
-        ;;
-    demo)
-        demo
         ;;
     *)
         usage

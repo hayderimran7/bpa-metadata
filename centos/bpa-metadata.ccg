@@ -1,5 +1,5 @@
 WSGISocketPrefix run/wsgi
-WSGIDaemonProcess bpa_metadata processes=2 threads=15 display-name=%{GROUP}
+WSGIDaemonProcess bpa-metadata processes=2 threads=15 display-name=%{GROUP}
 
 <VirtualHost *:80>
   DocumentRoot /var/www/html
@@ -17,7 +17,7 @@ WSGIDaemonProcess bpa_metadata processes=2 threads=15 display-name=%{GROUP}
   </Directory>
 
   <Location /bpa-metadata>
-    WSGIProcessGroup bpa_metadata
+    WSGIProcessGroup bpa-metadata
   </Location>
 
   Alias /bpa-metadata/static /usr/local/webapps/bpa-metadata/static

@@ -48,7 +48,7 @@ class MelanomaSample(Sample):
     """
 
     organism = models.ForeignKey(Organism)
-    # don't currently understand what this is. 
+    # don't currently understand what this is.
     passage_number = models.IntegerField(null=True)
 
     gender = models.CharField(choices=GENDERS, max_length=1, null=True)
@@ -83,4 +83,10 @@ class MelanomaSequenceFile(SequenceFile):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
         uq = urllib.quote
-        return uj(uj(uj(settings.BPA_BASE_URL, 'melanoma/'), uq(bpa_id) + '/'), uq(self.filename))
+        return uj(settings.BPA_BASE_URL, "Melanoma/%s/%s/%s" % (
+                uq(bpa_id),
+                uq(self.run.flow_cell_id),
+                uq(self.filename)))
+
+    url = property(get_url)
+

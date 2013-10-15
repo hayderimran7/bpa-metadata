@@ -28,6 +28,7 @@ from django.utils.encoding import smart_text
 
 __version__ = "0.1"
 logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("makefixture")
 
 
 def import_config(args):

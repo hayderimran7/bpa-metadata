@@ -143,10 +143,10 @@ INSTALLED_APPS = (
     'apps.bpaauth',
     'apps.common',
     'apps.melanoma',
-    'apps.coral',
-    'apps.BASE',
-    'apps.wheat_cultivars',
-    'apps.wheat_fungal_pathogens',
+    #'apps.gbr',
+    #'apps.BASE',
+    #'apps.wheat_cultivars',
+    #'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
     'django_qbe',
@@ -193,7 +193,7 @@ def get_env_variable(var_name):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
-BPA_BASE_URL = 'http://files.ivec.org/bpa/'
+BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 
 try:
     print "Attempting to import default settings as appsettings.bpam"

@@ -23,15 +23,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/{{catalog}}/">BPA Metadata - {{catalog|capfirst}}</a>
+        <a class="navbar-brand" href="{% url 'landing-page' %}">Bioplatforms Australia Metadata</a>
       </div>
 
       <ul class="nav navbar-nav pull-right">
-        <li><a href="/admin/">Admin</a></li>
+        <li><a href="{% url 'admin:index' %}">Admin</a></li>
         {% if user.is_authenticated %}
-        <li><a href="/accounts/logout">Log out as {{user.username}}</a></li>
+        <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{user.username}}</a></li>
         {% else %}
-        <li><a href="/accounts/login">Log in</a></li>
+        <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
         {% endif %}
       </ul>
 
@@ -48,9 +48,9 @@
     </div>
 
     {% bootstrap_javascript jquery=True %}
-    <script src="/static/base.js"></script>
+    {% load staticfiles %}
+    <script src="{% static "bpam/base.js" %}"></script>
 
-    <form><input type="hidden" id="bpa-metadata-catalog" value="{{catalog}}" /></form>
   </body>
 </html>
 

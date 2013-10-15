@@ -1,6 +1,7 @@
 import string
 from datetime import date
 import dateutil
+from xlrd import xldate_as_tuple
 
 from django.utils.encoding import smart_text
 
@@ -8,32 +9,41 @@ from bpaauth.models import BPAUser
 from common.models import *
 
 
-
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
 
-def get_clean_number(str, default=None):
+def get_clean_number(val, default=None):
+    """
+    Try to clean up numbers
+    """
+
+    if val in (None, ""):
+        return default
+
+    if isinstance(val, float):
+        return val
 
     remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
-        return int(str.translate(remove_letters_map))
+        return int(val.translate(remove_letters_map))
     except ValueError:
         return default
 
 
-def get_clean_float(str, default=None):
+def get_clean_float(val, default=None):
     remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
-        return float(str.translate(remove_letters_map))
+        return float(val.translate(remove_letters_map))
     except ValueError:
         return default
 
 
-def get_date(date_str):
+def get_date(val):
     """
     Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
     """
-    return dateutil.parser.parse(date_str)
+
+    return dateutil.parser.parse(val)
 
 
 def strip_all(reader):
@@ -58,7 +68,7 @@ def add_organism(genus="", species=""):
 
 def add_bpa_id(id, project_name, note=INGEST_NOTE):
     """
-    Add a bpa ID
+    Add a BPA ID
     """
 
     lbl = BPAUniqueID(bpa_id=id)
@@ -69,7 +79,9 @@ def add_bpa_id(id, project_name, note=INGEST_NOTE):
 
 
 def ingest_bpa_ids(data, project_name):
-    """ The BPA ID's are unique """
+    """
+    The BPA ID's are unique
+    """
 
     id_set = set()
     for e in data:

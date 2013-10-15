@@ -1,0 +1,15 @@
+{% extends "base_template.html" %}
+
+{% block title %}Melanoma {% endblock %}
+
+{% block content %}
+
+<h3>Melanoma Sequence Files{% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
+
+{% include "sequence_table.html" %}
+
+{% if bpa_id %}
+<a href="../">Back to index</a>
+{% endif %}
+
+{% endblock %}
