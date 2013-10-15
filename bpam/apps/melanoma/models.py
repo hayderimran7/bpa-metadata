@@ -79,6 +79,12 @@ class MelanomaSequenceFile(SequenceFile):
     def __unicode__(self):
         return u"Run {0} for {1}".format(self.run, self.filename)
 
+    def link_ok(self):
+        if self.url_verification is not None:
+            return self.url_verification.status_ok
+        else:
+            return False
+
     def get_url(self):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin

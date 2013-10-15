@@ -22,7 +22,10 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
 
     def download_field(self, obj):
-        return '<a href="%s">%s</a>' % (obj.url, obj.filename)
+        if obj.link_ok():
+            return '<a href="%s">%s</a>' % (obj.url, obj.filename)
+        else:
+            return '<a style="color:grey">%s</a>' % obj.filename
 
     download_field.allow_tags = True
     download_field.short_description = 'Filename'
