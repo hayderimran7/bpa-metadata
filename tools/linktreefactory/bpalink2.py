@@ -373,7 +373,8 @@ class Archive(object):
 
 
 class MelanomaArchive(Archive):
-    metadata_filename = '../../data/melanoma/melanoma_samples.csv'
+    metadata_filename = '../../data/melanoma/Melanoma_study_metadata.xlsx'
+    metadata_sheet = 'Melanoma_study_metadata'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
 
@@ -384,27 +385,27 @@ class MelanomaArchive(Archive):
         self.matches = self.tie_metadata_to_fastq()
 
     def parse_metadata(self):
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
         metadata = []
-        with open(self.metadata_filename) as fd:
-            reader = csv.reader(fd)
-            header = [t.strip() for t in next(reader)]
-            # second header line - assert just to make sure it's still there, file format
-            # hasn't changed without script update
-            second_header = next(reader)
-            assert(second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
-            for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
-                    ('md5', 'MD5 checksum', None),
-                    ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-                    ('uid', 'Unique Identifier', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                    ('sample_name', 'Sample Name', None),
-                    ('date_received', 'Date Received', None),
-                    ('run', 'Run number', None),
-                    ]):
-                if tpl.filename == '':
-                    continue
-                # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
-                metadata.append(tpl)
+        header = [t.strip() for t in next(reader)]
+        # second header line - assert just to make sure it's still there, file format
+        # hasn't changed without script update
+        second_header = next(reader)
+        assert(second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
+                ('md5', 'MD5 checksum', None),
+                ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+                ('uid', 'Unique Identifier', None),
+                ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                ('sample_name', 'Sample Name', None),
+                ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+                ('run', 'Run number', None),
+                ]):
+            if tpl.filename == '':
+                continue
+            # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
+            metadata.append(tpl)
         return metadata
 
     def get_template_environment(self, publicuri, swifturi, bpa_id):
