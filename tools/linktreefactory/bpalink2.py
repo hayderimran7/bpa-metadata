@@ -375,6 +375,7 @@ class Archive(object):
 class MelanomaArchive(Archive):
     metadata_filename = '../../data/melanoma/Melanoma_study_metadata.xlsx'
     metadata_sheet = 'Melanoma_study_metadata'
+    pilot_sheet = 'Melanoma_pilot_study'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
 
@@ -406,6 +407,34 @@ class MelanomaArchive(Archive):
                 continue
             # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
             metadata.append(tpl)
+
+        reader = wrapper.sheet_iter(self.pilot_sheet)
+        header = [t.strip() for t in next(reader)]
+        if header[0] == '':
+            header[0] = 'UID'
+
+        current_uid = None
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
+                ('md5', 'MD5 checksum', None),
+                ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+                ('uid', 'UID', None),
+                ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                ('sample_name', 'Sample Name', None),
+                ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+                ('run', 'Run number', None),
+                ]):
+            if tpl.filename == '':
+                continue
+            if tpl.uid == '':
+                # ugly, we have to rewrite the tuple (it's immutable)
+                d = dict( (t, getattr(tpl, t)) for t in dir(tpl) if not t.startswith('_') and not hasattr(getattr(tpl, t), '__call__'))
+                d['uid'] = current_uid
+                tpl = type(tpl)(**d)
+            else:
+                current_uid = tpl.uid
+            # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
+            metadata.append(tpl)
+
         return metadata
 
     def get_template_environment(self, publicuri, swifturi, bpa_id):
