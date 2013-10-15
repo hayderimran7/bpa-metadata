@@ -32,6 +32,23 @@ __version__ = "1.1.0"
 # this ID never changes... it captures the place where it was minted.
 BPA_PREFIX = '102.100.101'
 
+def stringify(s):
+    if isinstance(s, str):
+        return str(s.decode('utf8'))
+    elif isinstance(s, unicode):
+        return str(s.encode('utf8'))
+    else:
+        return str(s)
+
+def xls_iter():
+    x = xlrd.open_workbook(path.absolute())
+    for sheet in x.sheets():
+        for row_idx in xrange(sheet.nrows):
+            vals = [t.strip() for t in sheet.row_values(row_idx)]
+            if len(vals) == 2 and len(vals[1]) == 32:
+                filename, md5 = vals
+                yield md5, filename
+
 def parse_to_named_tuple(typname, reader, header, fieldspec):
     """
     parse a CSV file and yield a list of namedtuple instances.
@@ -122,14 +139,7 @@ class MD5Load(object):
 
     @classmethod
     def parse_xls_checksum_file(cls, path, checksums):
-        def xls_iter():
-            x = xlrd.open_workbook(path.absolute())
-            for sheet in x.sheets():
-                for row_idx in xrange(sheet.nrows):
-                    vals = [t.strip() for t in sheet.row_values(row_idx)]
-                    if len(vals) == 2 and len(vals[1]) == 32:
-                        filename, md5 = vals
-                        yield md5, filename
+
         cls.update_checksums_from_iter(xls_iter(), checksums)
         return checksums
 
@@ -393,7 +403,8 @@ class MelanomaArchive(Archive):
 
 
 class GBRArchive(Archive):
-    metadata_filename = '../../data/gbr/gbr_pilot_samples.csv'
+    metadata_filename = '../../data/gbr/BPA_ReFuGe2020_METADATA.xlsx'
+    metadata_sheet = 'DNA library Sequencing - Pilot'
     container_name = 'GBR'
     template_name = 'gbr.html'
 
@@ -405,24 +416,31 @@ class GBRArchive(Archive):
 
     def parse_metadata(self):
         metadata = []
-        with open(self.metadata_filename) as fd:
-            reader = csv.reader(fd)
-            header = [t.strip() for t in next(reader)]
-            for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
-                    ('md5', 'MD5 checksum', None),
-                    ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-                    ('uid', 'Unique ID', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                    ('species', 'Species', None),
-                    ('dataset', 'Dataset', None),
-                    ('sample_name', 'Sample Description', None),
-                    ('date_received', 'Date data sent/transferred', None),
-                    ('run', 'Run number', None),
-                    ]):
-                if tpl.filename == '':
-                    continue
-                # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
-                metadata.append(tpl)
+
+        def xlrd_iter(fname, sheet):
+            x = xlrd.open_workbook(fname)
+            sheet = [t for t in x.sheets() if t.name.lower() == sheet.lower()][0]
+            for row_idx in xrange(sheet.nrows):
+                vals = [stringify(t) for t in sheet.row_values(row_idx)]
+                yield vals
+
+        reader = xlrd_iter(self.metadata_filename, self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
+                ('md5', 'MD5 checksum', None),
+                ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+                ('uid', 'Unique ID', None),
+                ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                ('species', 'Species', None),
+                ('dataset', 'Dataset', None),
+                ('sample_name', 'Sample Description', None),
+                ('date_received', 'Date data sent/transferred', None),
+                ('run', 'Run number', None),
+                ]):
+            if tpl.filename == '':
+                continue
+            # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
+            metadata.append(tpl)
         return metadata
 
     def get_template_environment(self, publicuri, swifturi, bpa_id):
@@ -461,22 +479,18 @@ class NoMetadataArchive(Archive):
         return { 'object_list' : objects }
 
 class Wheat7aArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat7a'
     template_name = 'wheat7a.html'
 
 class BASEArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'BASE'
     template_name = 'base.html'
 
 class WheatPathogensArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat_Pathogens'
     template_name = 'wheat_pathogens.html'
 
 class WheatCultivarsArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 
