@@ -19,7 +19,7 @@ Options:
 from docopt import docopt
 from unipath import Path
 from tendo import colorer
-import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json
+import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json, datetime
 from collections import namedtuple
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
@@ -32,7 +32,7 @@ __version__ = "1.1.0"
 # this ID never changes... it captures the place where it was minted.
 BPA_PREFIX = '102.100.101'
 
-def stringify(s):
+def _stringify(s):
     if isinstance(s, str):
         return str(s.decode('utf8'))
     elif isinstance(s, unicode):
@@ -40,12 +40,30 @@ def stringify(s):
     else:
         return str(s)
 
-def xlrd_iter(fname, sheet):
-    x = xlrd.open_workbook(fname)
-    sheet = [t for t in x.sheets() if t.name.lower() == sheet.lower()][0]
-    for row_idx in xrange(sheet.nrows):
-        vals = [stringify(t) for t in sheet.row_values(row_idx)]
-        yield vals
+def stringify(s):
+    _s = _stringify(s)
+    return _s
+
+def excel_date_to_string(date_mode, s):
+    try:
+        date_val = float(s)
+        tpl = xlrd.xldate_as_tuple(date_val, date_mode)
+        return datetime.datetime(*tpl).strftime("%d/%m/%Y")
+    except ValueError:
+        return s
+
+class ExcelWrapper(object):
+    def __init__(self, fname):
+        self.x  = xlrd.open_workbook(fname)
+
+    def get_date_mode(self):
+        return self.x.datemode
+
+    def sheet_iter(self, sheet_name):
+        sheet = [t for t in self.x.sheets() if t.name.lower() == sheet_name.lower()][0]
+        for row_idx in xrange(sheet.nrows):
+            vals = [stringify(t) for t in sheet.row_values(row_idx)]
+            yield vals
 
 def parse_to_named_tuple(typname, reader, header, fieldspec):
     """
@@ -422,7 +440,8 @@ class GBRArchive(Archive):
     def parse_metadata(self):
         metadata = []
 
-        reader = xlrd_iter(self.metadata_filename, self.metadata_sheet)
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
                 ('md5', 'MD5 checksum', None),
@@ -432,7 +451,7 @@ class GBRArchive(Archive):
                 ('species', 'Species', None),
                 ('dataset', 'Dataset', None),
                 ('sample_name', 'Sample Description', None),
-                ('date_received', 'Date data sent/transferred', None),
+                ('date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
                 ('run', 'Run number', None),
                 ]):
             if tpl.filename == '':
