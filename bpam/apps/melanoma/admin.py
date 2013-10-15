@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django import forms
+
 from models import (TumorStage,
                     Array,
                     MelanomaSample,
@@ -7,10 +9,22 @@ from models import (TumorStage,
                     )
 
 
+class SequenceFileForm(forms.ModelForm):
+    class Meta:
+        model = MelanomaSequenceFile
+        widgets = {
+            'filename': forms.TextInput(attrs={'size': 100}),
+        }
+
+
 class MelanomaSequenceFileAdmin(admin.ModelAdmin):
+    form = SequenceFileForm
+
     fieldsets = [
         (None,
-         {'fields': [('filename', 'md5'), ('lane_number', 'index_number'), 'analysed', 'date_received_from_sequencing_facility', 'note']}),
+         {'fields': (
+             ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed', 'date_received_from_sequencing_facility',
+             'note'), }),
     ]
 
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
@@ -43,9 +57,10 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
 class MelanomaRunAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Facilities',
-         {'fields': [('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')]}),
+         {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
-         {'fields': ['protocol', ('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number']}),
+         {'fields': (
+             'protocol', ('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
     ]
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
@@ -55,13 +70,16 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
-         {'fields': [('bpa_id', 'name')]}),
+         {'fields': (('bpa_id', 'name'))}),
         ('Source',
-         {'fields': ['organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype']}),
+         {'fields': (
+             'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
         ('Facilities',
-         {'fields': ['sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility']}),
+         {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
         (None,
-         {'fields': ['requested_sequence_coverage', 'protocol', 'date_sent_to_sequencing_facility', 'contact_scientist', 'note']}),
+         {'fields': (
+             'requested_sequence_coverage', 'protocol', 'date_sent_to_sequencing_facility', 'contact_scientist',
+             'note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')

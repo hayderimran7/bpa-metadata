@@ -51,7 +51,7 @@ class Facility(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.name, self.service)
+        return u'{0} {1}'.format(self.name, self.service)
 
     class Meta:
         unique_together = ('name', 'service',)
@@ -69,7 +69,7 @@ class Organism(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.genus, self.species)
+        return u'{0} {1}'.format(self.genus, self.species)
 
     class Meta:
         verbose_name_plural = "Organisms"
@@ -115,8 +115,7 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"Size: " + str(self.base_pairs) + u" Type: " + str(self.library_type) + u" Protocol: " + str(
-            self.library_construction_protocol)
+        return u'Size: ' + str(self.base_pairs) + u' Type: ' + str(self.library_type) + u' Protocol: ' + str(self.library_construction_protocol)
 
     class Meta:
         verbose_name_plural = "Protocol"
@@ -147,7 +146,7 @@ class Sample(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return u"{0} {1}".format(self.bpa_id, self.name)
+        return u'{0} {1}'.format(self.bpa_id, self.name)
 
     class Meta:
         abstract = True
@@ -190,7 +189,7 @@ class SequenceFile(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.filename)
+        return u'{0}'.format(self.filename)
 
     class Meta:
         abstract = True

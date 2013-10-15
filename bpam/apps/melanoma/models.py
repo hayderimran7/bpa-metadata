@@ -77,7 +77,7 @@ class MelanomaSequenceFile(SequenceFile):
     url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
-        return u"Run {0} for {1}".format(self.run, self.filename)
+        return u'Run {0} for {1}'.format(self.run, self.filename)
 
     def link_ok(self):
         if self.url_verification is not None:
