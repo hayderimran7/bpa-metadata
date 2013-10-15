@@ -40,14 +40,12 @@ def stringify(s):
     else:
         return str(s)
 
-def xls_iter():
-    x = xlrd.open_workbook(path.absolute())
-    for sheet in x.sheets():
-        for row_idx in xrange(sheet.nrows):
-            vals = [t.strip() for t in sheet.row_values(row_idx)]
-            if len(vals) == 2 and len(vals[1]) == 32:
-                filename, md5 = vals
-                yield md5, filename
+def xlrd_iter(fname, sheet):
+    x = xlrd.open_workbook(fname)
+    sheet = [t for t in x.sheets() if t.name.lower() == sheet.lower()][0]
+    for row_idx in xrange(sheet.nrows):
+        vals = [stringify(t) for t in sheet.row_values(row_idx)]
+        yield vals
 
 def parse_to_named_tuple(typname, reader, header, fieldspec):
     """
@@ -139,7 +137,14 @@ class MD5Load(object):
 
     @classmethod
     def parse_xls_checksum_file(cls, path, checksums):
-
+        def xls_iter():
+            x = xlrd.open_workbook(path.absolute())
+            for sheet in x.sheets():
+                for row_idx in xrange(sheet.nrows):
+                    vals = [t.strip() for t in sheet.row_values(row_idx)]
+                    if len(vals) == 2 and len(vals[1]) == 32:
+                        filename, md5 = vals
+                        yield md5, filename
         cls.update_checksums_from_iter(xls_iter(), checksums)
         return checksums
 
@@ -416,13 +421,6 @@ class GBRArchive(Archive):
 
     def parse_metadata(self):
         metadata = []
-
-        def xlrd_iter(fname, sheet):
-            x = xlrd.open_workbook(fname)
-            sheet = [t for t in x.sheets() if t.name.lower() == sheet.lower()][0]
-            for row_idx in xrange(sheet.nrows):
-                vals = [stringify(t) for t in sheet.row_values(row_idx)]
-                yield vals
 
         reader = xlrd_iter(self.metadata_filename, self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
