@@ -180,16 +180,16 @@ installapp() {
 # django syncdb, migrate and collect static
 syncmigrate() {
     log_info "syncdb"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> syncdb-develop.log
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
     log_info "migrate"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} 1> migrate-develop.log
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
     log_info "collectstatic"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 1> collectstatic-develop.log
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
 }
 
 startserver() {
     log_info "Starting server on http://$(hostname -I):${PORT}"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT}
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
 
 pythonversion() {
