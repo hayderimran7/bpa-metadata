@@ -118,7 +118,7 @@ class Protocol(models.Model):
         return u'Size: ' + str(self.base_pairs) + u' Type: ' + str(self.library_type) + u' Protocol: ' + str(self.library_construction_protocol)
 
     class Meta:
-        verbose_name_plural = "Protocol"
+        verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
 
