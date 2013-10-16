@@ -83,7 +83,7 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
-    search_fields = ('bpa_id__bpa_id', 'name')
+    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
 
 
 class ArrayAdmin(admin.ModelAdmin):
