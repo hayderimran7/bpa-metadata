@@ -212,10 +212,8 @@ purge() {
     rm *.log
 }
 
-run() {   
-    python manage.py syncdb --traceback --noinput
-    python manage.py migrate --traceback
 
+load_base() {
     # BASE Controlled Vocabularies
     python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
@@ -231,11 +229,17 @@ run() {
     python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
     python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
+    python manage.py runscript ingest_BASE --traceback
+}
+
+run() {   
+    python manage.py syncdb --traceback --noinput
+    python manage.py migrate --traceback
+
     python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_melanoma --traceback
 
-    # python manage.py runscript ingest_BASE --traceback
-
+    # load_base
 
     # python manage.py runserver
     startserver
