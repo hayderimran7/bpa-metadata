@@ -30,7 +30,7 @@ class Array(models.Model):
     Array
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID)
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
     array_id = models.CharField(max_length=17, verbose_name=_('Array ID'))
     batch_number = models.IntegerField(verbose_name=_('Batch'))
     well_id = models.CharField(max_length=4, verbose_name=_('Well ID'))
