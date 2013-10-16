@@ -128,7 +128,7 @@ class Sample(models.Model):
     """
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
 
     dna_source = models.ForeignKey(DNASource, blank=True, null=True)
     dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True, verbose_name=_('DNA Extraction Protocol'))
