@@ -6,7 +6,7 @@ from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
 from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
-
+from django.utils.translation import ugettext_lazy as _
 
 GENDERS = (('M', 'Male'),
            ('F', 'Female'),
@@ -22,7 +22,7 @@ class TumorStage(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.description)
+        return u'{0}'.format(self.description)
 
 
 class Array(models.Model):
@@ -30,11 +30,11 @@ class Array(models.Model):
     Array
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID)
-    array_id = models.CharField(max_length=17)
-    batch_number = models.IntegerField()
-    well_id = models.CharField(max_length=4)
-    mia_id = models.CharField(max_length=200)
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
+    array_id = models.CharField(max_length=17, verbose_name=_('Array ID'))
+    batch_number = models.IntegerField(verbose_name=_('Batch'))
+    well_id = models.CharField(max_length=4, verbose_name=_('Well ID'))
+    mia_id = models.CharField(max_length=200, verbose_name=_('MIA ID'))
     call_rate = models.FloatField()
     gender = models.CharField(max_length=1, choices=GENDERS)
 
@@ -64,7 +64,7 @@ class MelanomaRun(Run):
     sample = models.ForeignKey(MelanomaSample)
 
     def __unicode__(self):
-        return u"Run {0} for {1}".format(self.run_number, self.sample.name)
+        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class MelanomaSequenceFile(SequenceFile):
@@ -77,7 +77,7 @@ class MelanomaSequenceFile(SequenceFile):
     url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
-        return u"Run {0} for {1}".format(self.run, self.filename)
+        return u'Run {0} for {1}'.format(self.run, self.filename)
 
     def link_ok(self):
         if self.url_verification is not None:

@@ -29,7 +29,7 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField("BPA Unique ID", max_length=200, blank=False, primary_key=True, unique=True)
+    bpa_id = models.CharField(verbose_name=_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True)
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
@@ -37,8 +37,8 @@ class BPAUniqueID(models.Model):
         return self.bpa_id
 
     class Meta:
-        verbose_name = 'BPA Unique ID'
-        verbose_name_plural = "BPA Unique ID's"
+        verbose_name = _('BPA Unique ID')
+        verbose_name_plural = _("BPA Unique ID's")
 
 
 class Facility(models.Model):
@@ -51,11 +51,11 @@ class Facility(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.name, self.service)
+        return u'{0} {1}'.format(self.name, self.service)
 
     class Meta:
         unique_together = ('name', 'service',)
-        verbose_name_plural = "Facilities"
+        verbose_name_plural = _('Facilities')
 
 
 class Organism(models.Model):
@@ -69,10 +69,10 @@ class Organism(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.genus, self.species)
+        return u'{0} {1}'.format(self.genus, self.species)
 
     class Meta:
-        verbose_name_plural = "Organisms"
+        verbose_name_plural = _('Organisms')
         unique_together = ('genus', 'species')
 
 
@@ -87,8 +87,8 @@ class DNASource(models.Model):
         return self.description
 
     class Meta:
-        verbose_name = "DNA Source"
-        verbose_name_plural = "DNA Sources"
+        verbose_name = _('DNA Source')
+        verbose_name_plural = _('DNA Sources')
 
 
 class Sequencer(models.Model):
@@ -115,11 +115,10 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"Size: " + str(self.base_pairs) + u" Type: " + str(self.library_type) + u" Protocol: " + str(
-            self.library_construction_protocol)
+        return u'Size: ' + str(self.base_pairs) + u' Type: ' + str(self.library_type) + u' Protocol: ' + str(self.library_construction_protocol)
 
     class Meta:
-        verbose_name_plural = "Protocol"
+        verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
 
@@ -128,11 +127,11 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, unique=True)
-    name = models.CharField(max_length=200)
+    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
+    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
 
-    dna_source = models.ForeignKey(DNASource, verbose_name="DNA Source", blank=True, null=True)
-    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True)
+    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
+    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True, verbose_name=_('DNA Extraction Protocol'))
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
     collection_date = models.DateField(blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
@@ -147,7 +146,7 @@ class Sample(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return u"{0} {1}".format(self.bpa_id, self.name)
+        return u'{0} {1}'.format(self.bpa_id, self.name)
 
     class Meta:
         abstract = True
@@ -170,7 +169,7 @@ class Run(models.Model):
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
-    flow_cell_id = models.CharField(max_length=10, blank=True)
+    flow_cell_id = models.CharField(max_length=10, blank=True, verbose_name=_('Flow Cell ID'))
 
     class Meta:
         abstract = True
@@ -181,16 +180,16 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
 
-    index_number = models.IntegerField(blank=True, null=True)
-    lane_number = models.IntegerField(blank=True, null=True)
+    index_number = models.IntegerField(blank=True, null=True, verbose_name=_('Index'))
+    lane_number = models.IntegerField(blank=True, null=True, verbose_name=_('Lane'))
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
-    md5 = models.CharField('MD5 Checksum', max_length=32, blank=True, null=True)
+    md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
     analysed = models.BooleanField(blank=True)
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.filename)
+        return u'{0}'.format(self.filename)
 
     class Meta:
         abstract = True
