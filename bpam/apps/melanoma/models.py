@@ -64,7 +64,7 @@ class MelanomaRun(Run):
     sample = models.ForeignKey(MelanomaSample)
 
     def __unicode__(self):
-        return u"Run {0} for {1}".format(self.run_number, self.sample.name)
+        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class MelanomaSequenceFile(SequenceFile):
