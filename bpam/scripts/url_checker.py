@@ -3,8 +3,11 @@ from apps.melanoma.models import MelanomaSequenceFile
 from django.db import transaction
 import requests, time, sys
 
+# SLEEP_TIME = 0.2 # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
+SLEEP_TIME = 0.0  # time to rest between checks
 
-def process_object(session, model, attr_name, url_fn):
+
+def process_object(sleep_time, session, model, attr_name, url_fn):
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:
             uv = URLVerification()
@@ -26,14 +29,26 @@ def process_object(session, model, attr_name, url_fn):
         sys.stderr.write("%d -> %s\n" % (r.status_code, verifier.status_ok))
         sys.stderr.flush()
         verifier.save()
-        time.sleep(0.2) # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
+        time.sleep(sleep_time)
 
 
-def check_melanoma():
+def check_melanoma(sleep_time):
     session = requests.Session()
     session.auth = ('bpa', 'm3lan0ma')
-    process_object(session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
-def run():
-    check_melanoma()
+def run(sleep_time=SLEEP_TIME):
+    """
+    Pass parameters like below:
+    vpython-bpam manage.py runscript url_checker --script-args 0.1
+    """
+    try:
+        sleep_time = float(sleep_time)
+    except ValueError:
+        sys.stderr.write("sleep_time parameter must be a float.\n")
+        sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
+        sleep_time = SLEEP_TIME
+    check_melanoma(sleep_time)
+
+

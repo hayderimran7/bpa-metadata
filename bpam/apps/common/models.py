@@ -50,7 +50,7 @@ class Facility(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.name, self.service)
+        return u'{0}'.format(self.name)
 
     class Meta:
         verbose_name_plural = _('Facilities')
@@ -126,21 +126,16 @@ class Sample(models.Model):
     """
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
-    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
-
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
+
+    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
     dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True, verbose_name=_('DNA Extraction Protocol'))
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
     collection_date = models.DateField(blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
 
-    # facilities
-    sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-
-    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
@@ -152,18 +147,18 @@ class Sample(models.Model):
 
 class Run(models.Model):
     """
-    A Single Run
+    A Single Run.
+    This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
     protocol = models.ForeignKey(Protocol, blank=True, null=True)
     DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
     passage_number = models.IntegerField(blank=True, null=True)
 
-    # Facilities
-    sequencing_facility = models.ForeignKey(Facility, related_name='sequencing_facility', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, related_name='array_analysis_facility', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='whole_genome_sequencing_facility',
-                                                         blank=True, null=True)
+    # facilities
+    sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    array_analysis_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
