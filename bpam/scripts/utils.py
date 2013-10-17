@@ -128,3 +128,14 @@ def get_dna_source(description):
         source.save()
 
     return source
+
+
+def check_date(dt):
+    """
+    When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
+    if it wasn't, it may still be a valid date string.
+    """
+    if isinstance(dt, date):
+        return dt
+    if isinstance(dt, basestring):
+        return dateutil.parser.parse(dt)
