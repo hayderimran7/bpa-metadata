@@ -50,7 +50,7 @@ class Facility(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.name, self.service)
+        return u'{0}'.format(self.name)
 
     class Meta:
         verbose_name_plural = _('Facilities')
