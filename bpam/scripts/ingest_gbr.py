@@ -172,53 +172,6 @@ def get_gbr_sample_data():
 
         return False
 
-Unique ID
-Species
-Dataset
-Sample Description
-DNA conc (ng/ul)
-Total DNA (ug)
-Site of collection
-Date of collection
-Collector
-GPS Location
-water temp
-pH
-Depth (m)
-Other
-Requested sequence coverage
-Sequencing Notes
-contact scientist
-Contact affiliation
-Contact email
-DNA/RNA Source
-DNA extraction protocol
-DNA/RNA conc (ng/ul)
-Total amount of DNA/RNA shipped (ul)
-Genome Sequencing Facility
-Date Received by sequencing facility
-Comments by sequencing facility
-Sequencing date ETA
-Date sequenced
-Library
-Library Construction (insert size bp)
-Requested read length (bp)
-Library construction protocol
-Index #
-Sequencer
-Run number
-Run #:Flow Cell ID
-Lane number
-FILE NAMES - supplied by sequencing facility
-file type
-MD5 checksum
-Contact bioinformatician
-Email contact
-Date data sent/transferred
-Date data received
-FILES NAME ON FTP at Murdoch (http://files.ivec.org/bpa/)
-
-
     fieldnames = ['bpa_id',
                   'species',
                   'dataset', # NEW (model?)
@@ -277,6 +230,9 @@ FILES NAME ON FTP at Murdoch (http://files.ivec.org/bpa/)
                 vals[i] = datetime(*xldate_as_tuple(vals[i], wb.datemode))
 
         samples.append(dict(zip(fieldnames, vals)))
+
+    print(samples)
+    sys.exit(1)
 
     return samples
 
