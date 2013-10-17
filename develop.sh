@@ -238,6 +238,7 @@ run() {
 
     python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_melanoma --traceback
+    python manage.py runscript ingest_gbr --traceback
 
     # load_base
 
