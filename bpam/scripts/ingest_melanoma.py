@@ -313,6 +313,7 @@ def ingest_runs(sample_data):
             run.index_number = get_clean_number(entry['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
             run.lane_number = get_clean_number(entry['lane_number'])
+            run.save()
 
         return run
 
