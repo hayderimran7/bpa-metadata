@@ -147,7 +147,8 @@ class Sample(models.Model):
 
 class Run(models.Model):
     """
-    A Single Run
+    A Single Run.
+    This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
     protocol = models.ForeignKey(Protocol, blank=True, null=True)
