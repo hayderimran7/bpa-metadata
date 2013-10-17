@@ -55,6 +55,7 @@ class MelanomaSample(Sample):
     tumor_stage = models.ForeignKey(TumorStage, null=True)
     histological_subtype = models.CharField(max_length=50, null=True)
 
+
 class MelanomaRun(Run):
     """
     A Melanoma Run

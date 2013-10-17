@@ -71,7 +71,7 @@ class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
          {'fields': (('bpa_id', 'name'))}),
-        ('Source',
+        ('DNA Source',
          {'fields': (
              'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
         ('Sample Management',

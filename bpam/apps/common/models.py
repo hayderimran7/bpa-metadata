@@ -113,7 +113,7 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u'Size: ' + str(self.base_pairs) + u' Type: ' + str(self.library_type) + u' Protocol: ' + str(self.library_construction_protocol)
+        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type, self.library_construction_protocol)
 
     class Meta:
         verbose_name_plural = _('Protocol')
