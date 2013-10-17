@@ -31,7 +31,6 @@ class GBRSample(Sample):
     """
 
     organism = models.ForeignKey(Organism)
-    passage_number = models.IntegerField(null=True)
     dataset = models.CharField(max_length=100, null=True, blank=True)
     dna_concentration = models.FloatField(null=True, blank=True)
     total_dna = models.FloatField(null=True, blank=True)
@@ -51,3 +50,44 @@ class GBRSample(Sample):
     date_sequenced = models.DateField(blank=True, null=True)
     requested_read_length = models.IntegerField(blank=True, null=True)
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='bioinformatician')
+
+class GBRRun(Run):
+    """
+    A GBR Run
+    """
+
+    sample = models.ForeignKey(GBRSample)
+
+    def __unicode__(self):
+        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
+
+class GBRSequenceFile(SequenceFile):
+    """
+    Sequence Files resulting from a run
+    """
+
+    sample = models.ForeignKey(GBRSample)
+    run = models.ForeignKey(GBRRun)
+    url_verification = models.OneToOneField(URLVerification, null=True)
+
+    def __unicode__(self):
+        return u'Run {0} for {1}'.format(self.run, self.filename)
+
+    def link_ok(self):
+        if self.url_verification is not None:
+            return self.url_verification.status_ok
+        else:
+            return False
+
+    # FIXME move this into sequencefile, code duplicated with MelanomaSequenceFile
+    def get_url(self):
+        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
+        uj = urlparse.urljoin
+        uq = urllib.quote
+        return uj(settings.BPA_BASE_URL, "GBR/%s/%s/%s" % (
+                uq(bpa_id),
+                uq(self.run.flow_cell_id),
+                uq(self.filename)))
+
+    url = property(get_url)
+

@@ -99,7 +99,7 @@ def ingest_samples(samples):
 
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
-            print("Ingested Melanoma sample {0}".format(sample.name))
+            print("Ingested GBR sample {0}".format(sample.name))
 
     for sample in samples:
         add_sample(sample)
@@ -213,7 +213,7 @@ def ingest_runs(sample_data):
         run_number = get_clean_number(e['run_number'])
         if run_number is None:
             # see if its ANU and parse the run_number from the filename
-            if e['whole_genome_sequencing_facility'].strip() == 'ANU':
+            if e['sequencing_facility'].strip() == 'ANU':
                 filename = e['sequence_filename'].strip()
                 if filename != "":
                     try:
@@ -233,17 +233,16 @@ def ingest_runs(sample_data):
         run_number = get_run_number(entry)
 
         try:
-            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id,
+            run = GBRRun.objects.get(flow_cell_id=flow_cell_id,
                                           run_number=run_number,
                                           sample__bpa_id__bpa_id=bpa_id)
-        except MelanomaRun.DoesNotExist:
-            run = MelanomaRun()
+        except GBRRun.DoesNotExist:
+            run = GBRRun()
             run.flow_cell_id = flow_cell_id
             run.run_number = run_number
             run.sample = get_sample(bpa_id)
-            run.passage_number = get_clean_number(entry['passage_number'])
             run.index_number = get_clean_number(entry['index_number'])
-            run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
+            run.sequencer = get_sequencer(entry['sequencer'])
             run.lane_number = get_clean_number(entry['lane_number'])
             run.save()
 
@@ -266,8 +265,8 @@ def ingest_runs(sample_data):
 
         file_name = e['sequence_filename'].strip()
         if file_name != "":
-            f = MelanomaSequenceFile()
-            f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
+            f = GBRSequenceFile()
+            f.sample = GBRSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
             f.date_received_from_sequencing_facility = check_date(e['date_received'])
             f.run = run
             f.index_number = get_clean_number(e['index_number'])
@@ -286,7 +285,6 @@ def ingest_gbr():
     sample_data = get_gbr_sample_data()
     ingest_bpa_ids(sample_data, 'GBR')
     ingest_samples(sample_data)
-    ingest_arrays(get_array_data())
     ingest_runs(sample_data)
 
 
