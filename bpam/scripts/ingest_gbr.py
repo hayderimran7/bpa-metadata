@@ -11,7 +11,7 @@ from apps.gbr.models import *
 from .utils import *
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
-MELANOMA_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
+GBR_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
 
 BPA_ID = "102.100.100"
 
@@ -28,25 +28,6 @@ def get_dna_source(description):
         source.save()
 
     return source
-
-
-def get_tumor_stage(description):
-    """
-    Get the tumor stage if it exists, else make it.
-    """
-
-    description = description.capitalize()
-    if description == "":
-        description = "Not applicable"
-
-    try:
-        stage = TumorStage.objects.get(description=description)
-    except TumorStage.DoesNotExist:
-        stage = TumorStage(description=description)
-        stage.save()
-
-    return stage
-
 
 def ingest_samples(samples):
     def get_facility(name, service):
@@ -130,32 +111,6 @@ def ingest_samples(samples):
     for sample in samples:
         add_sample(sample)
 
-
-def ingest_arrays(arrays):
-    """ Melanoma Arrays"""
-
-    def get_gender(str):
-        str = str.strip().lower()
-        if str == "male":
-            return 'M'
-        if str == "female":
-            return 'F'
-        return 'U'
-
-    for e in arrays:
-        array = Array()
-        array.batch_number = int(e['batch_no'])
-        array.bpa_id = get_bpa_id(e['bpa_id'],
-                                  project_name="Melanoma",
-                                  note=u"Created during array ingestion on {0}".format(date.today()))
-        array.mia_id = e['mia_id']
-        array.array_id = e['array_id']
-        array.call_rate = float(e['call_rate'])
-        array.gender = get_gender(e['gender'])
-        array.well_id = e['well_id']
-        array.save()
-
-
 def get_gbr_sample_data():
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -218,7 +173,7 @@ def get_gbr_sample_data():
                   'data_data_received', # NEW
                   ]
 
-    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
+    wb = xlrd.open_workbook(GBR_SPREADSHEET_FILE)
     sheet = wb.sheet_by_name('DNA library Sequencing - Pilot')
     samples = []
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
@@ -236,39 +191,6 @@ def get_gbr_sample_data():
         print "%44s: %s" % (field, samples[0][field])
 
     return samples
-
-
-def get_array_data():
-    """
-    Copy if the 'Array Data' Tab from the Melanoma_study_metadata document
-    """
-
-    fieldnames = ['batch_no',
-                  'well_id',
-                  'bpa_id',
-                  'mia_id',
-                  'array_id',
-                  'call_rate',
-                  'gender',
-                  ]
-
-    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
-    sheet = wb.sheet_by_name('Array data')
-    rows = []
-    for row_idx in range(sheet.nrows)[1:]:
-        vals = sheet.row_values(row_idx)
-        # for date types try to convert to python dates
-        types = sheet.row_types(row_idx)
-        for i, t in enumerate(types):
-            if t == xlrd.XL_CELL_DATE:
-                vals[i] = datetime(*xldate_as_tuple(vals[i], wb.datemode))
-
-        rows.append(dict(zip(fieldnames, vals)))
-
-
-    return rows
-
-
 
 def ingest_runs(sample_data):
     def get_sequencer(name):
