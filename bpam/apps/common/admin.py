@@ -33,8 +33,8 @@ class BPAUniqueIDAdmin(admin.ModelAdmin):
 
 
 class FacilityAdmin(admin.ModelAdmin):
-    fields = (('name', 'service'), 'note')
-    list_display = ('name', 'service', 'note')
+    fields = ('name', 'note')
+    list_display = ('name',)
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
