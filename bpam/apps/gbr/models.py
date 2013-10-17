@@ -33,7 +33,6 @@ class GBRSample(Sample):
     organism = models.ForeignKey(Organism)
     passage_number = models.IntegerField(null=True)
     dataset = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
     dna_concentration = models.FloatField(null=True, blank=True)
     total_dna = models.FloatField(null=True, blank=True)
     collection_site = models.CharField(max_length=100, null=True, blank=True)
@@ -51,4 +50,4 @@ class GBRSample(Sample):
     sequencing_data_eta = models.DateField(blank=True, null=True)
     date_sequenced = models.DateField(blank=True, null=True)
     requested_read_length = models.IntegerField(blank=True, null=True)
-    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='bioinformatician')

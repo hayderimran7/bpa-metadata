@@ -31,6 +31,7 @@ def get_dna_source(description):
 
 def ingest_samples(samples):
     def get_facility(name, service):
+        print(name, service)
         if name == '':
             name = "Unknown"
         if service == '':
@@ -91,15 +92,8 @@ def ingest_samples(samples):
             sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
             sample.dna_source = get_dna_source(e['sample_dna_source'])
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
-            sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
-            sample.gender = get_gender(e['sample_gender'])
-            sample.histological_subtype = e['histological_subtype']
-            sample.passage_number = get_clean_number(e['passage_number'])
 
             # facilities
-            sample.array_analysis_facility = get_facility(e['array_analysis_facility'], 'Array Analysis')
-            sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'],
-                                                                   'Whole Genome Sequencing')
             sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
 
             sample.protocol = get_protocol(e)
@@ -130,7 +124,7 @@ def get_gbr_sample_data():
     fieldnames = ['bpa_id',
                   'species',
                   'dataset', # NEW (model?)
-                  'description', # NEW
+                  'sample_name',
                   'dna_concentration', # NEW
                   'total_dna', # NEW
                   'collection_site', # NEW (model?)
