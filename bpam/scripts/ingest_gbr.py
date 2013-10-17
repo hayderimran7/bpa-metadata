@@ -30,17 +30,16 @@ def get_dna_source(description):
     return source
 
 def ingest_samples(samples):
-    def get_facility(name, service):
-        print(name, service)
+    def get_facility(name):
+        """
+        Return the sequencing facility with this name, or a new facility.
+        """
         if name == '':
             name = "Unknown"
-        if service == '':
-            service = "Unknown"
-
         try:
-            facility = Facility.objects.get(name=name, service=service)
+            facility = Facility.objects.get(name=name)
         except Facility.DoesNotExist:
-            facility = Facility(name=name, service=service)
+            facility = Facility(name=name)
             facility.save()
 
         return facility
@@ -94,7 +93,7 @@ def ingest_samples(samples):
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
 
             # facilities
-            sample.sequencing_facility = get_facility(e['sequencing_facility'], 'Sequencing')
+            sample.sequencing_facility = get_facility(e['sequencing_facility'])
 
             sample.protocol = get_protocol(e)
 
