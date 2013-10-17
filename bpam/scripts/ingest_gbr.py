@@ -193,7 +193,7 @@ def get_gbr_sample_data():
                   'contact_email',
                   'sample_dna_source',           
                   'dna_extraction_protocol',
-                  'dna_rna_concentration' # NEW
+                  'dna_rna_concentration', # NEW
                   'total_dna_rna_shipped', # NEW
                   'sequencing_facility',
                   'date_received',
@@ -213,7 +213,7 @@ def get_gbr_sample_data():
                   'sequence_filetype',
                   'md5_checksum',
                   'contact_bioinformatician_name', # NEW
-                  'contact_bioinformatician_email' # NEW
+                  'contact_bioinformatician_email', # NEW
                   'date_data_sent', # NEW
                   'data_data_received', # NEW
                   ]
@@ -231,8 +231,9 @@ def get_gbr_sample_data():
 
         samples.append(dict(zip(fieldnames, vals)))
 
-    print(samples)
-    sys.exit(1)
+    print("debug sample print")
+    for field in fieldnames:
+        print "%44s: %s" % (field, samples[0][field])
 
     return samples
 
