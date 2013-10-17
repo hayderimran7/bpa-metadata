@@ -82,9 +82,9 @@ def ingest_samples(samples):
         try:
             # Test if sample already exists
             # First come fist serve
-            MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
-        except MelanomaSample.DoesNotExist:
-            sample = MelanomaSample()
+            GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
+        except GBRSample.DoesNotExist:
+            sample = GBRSample()
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
             sample.name = e['sample_name']
             sample.requested_sequence_coverage = e['requested_sequence_coverage'].upper()
@@ -134,7 +134,7 @@ def get_gbr_sample_data():
                   'dna_concentration', # NEW
                   'total_dna', # NEW
                   'collection_site', # NEW (model?)
-                  'collection_date', # NEW
+                  'collection_date',
                   'collector', # NEW
                   'gps_location', # NEW
                   'water_temp', # NEW
@@ -205,10 +205,10 @@ def ingest_runs(sample_data):
 
     def get_sample(bpa_id):
         try:
-            sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+            sample = GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
             print("Found sample {0}".format(sample))
             return sample
-        except MelanomaSample.DoesNotExist:
+        except GBRSample.DoesNotExist:
             print("No sample with ID {0}, quiting now".format(bpa_id))
             sys.exit(1)
 
