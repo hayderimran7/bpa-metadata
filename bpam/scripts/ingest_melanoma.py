@@ -318,6 +318,7 @@ def ingest_runs(sample_data):
             run.sequencing_facility = get_facility(entry['sequencing_facility'])
             run.array_analysis_facility = get_facility(entry['array_analysis_facility'])
             run.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
+            run.DNA_extraction_protocol = entry['dna_extraction_protocol']
             run.save()
 
         return run
