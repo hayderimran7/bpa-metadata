@@ -35,7 +35,7 @@ class GBRSample(Sample):
     dna_concentration = models.FloatField(null=True, blank=True)
     total_dna = models.FloatField(null=True, blank=True)
     collection_site = models.CharField(max_length=100, null=True, blank=True)
-    collector = models.CharField(max_length=100, null=True, blank=True)
+    collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
     # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
     gps_location = models.CharField(max_length=100, null=True, blank=True)
     water_temp = models.FloatField(null=True, blank=True)

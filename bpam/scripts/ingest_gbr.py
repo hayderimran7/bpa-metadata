@@ -91,6 +91,26 @@ def ingest_samples(samples):
             sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
             sample.dna_source = get_dna_source(e['sample_dna_source'])
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
+            sample.dna_concentration = get_clean_number(e['dna_concentration'])
+            sample.total_dna = get_clean_number(e['total_dna'])
+            # fixme
+            # sample.collector = e['collector']
+            sample.gps_location = e['gps_location']
+            sample.water_temp = get_clean_number(e['water_temp'])
+            sample.ph = get_clean_number(e['ph'])
+            sample.depth = get_clean_number(e['depth'])
+            sample.other = e['other']
+            sample.requested_sequence_coverage = e['requested_sequence_coverage']
+            sample.sequencing_notes = e['sequencing_notes']
+            sample.dna_rna_concentration = get_clean_number(e['dna_rna_concentration'])
+            sample.total_dna_rna_shipped = get_clean_number(e['total_dna_rna_shipped'])
+            sample.comments_by_facility = e['comments_by_facility']
+            sample.sequencing_data_eta = check_date(e['sequencing_data_eta'])
+            sample.date_sequenced = check_date(e['date_sequenced'])
+            sample.requested_read_length = get_clean_number(e['requested_read_length'])
+            sample.date_data_sent = check_date(e['date_data_sent'])
+            sample.date_data_received = check_date(e['date_data_received'])
+            # sample.contact_bioinformatician_name  = xxx
 
             # facilities
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
@@ -163,7 +183,7 @@ def get_gbr_sample_data():
                   'contact_bioinformatician_name', # NEW
                   'contact_bioinformatician_email', # NEW
                   'date_data_sent', # NEW
-                  'data_data_received', # NEW
+                  'date_data_received', # NEW
                   ]
 
     wb = xlrd.open_workbook(GBR_SPREADSHEET_FILE)
@@ -252,16 +272,6 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
-
-        def check_date(dt):
-            """
-            When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
-            if it wasn't, it may still be a valid date string.
-            """
-            if isinstance(dt, date):
-                return dt
-            if isinstance(dt, basestring):
-                return dateutil.parser.parse(dt)
 
         file_name = e['sequence_filename'].strip()
         if file_name != "":
