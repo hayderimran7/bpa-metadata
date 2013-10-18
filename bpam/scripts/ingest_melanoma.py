@@ -69,34 +69,6 @@ def get_facility(name):
     return facility
 
 def ingest_samples(samples):
-    def get_protocol(e):
-        def get_library_type(str):
-            """
-            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
-            """
-            new_str = str.lower()
-            if new_str.find('pair') >= 0:
-                return 'PE'
-            if new_str.find('single') >= 0:
-                return 'SE'
-            if new_str.find('mate') >= 0:
-                return 'MP'
-            return 'UN'
-
-        base_pairs = get_clean_number(e['library_construction'])
-        library_type = get_library_type(e['library'])
-        library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
-
-        try:
-            protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type,
-                                            library_construction_protocol=library_construction_protocol)
-        except Protocol.DoesNotExist:
-            protocol = Protocol(base_pairs=base_pairs, library_type=library_type,
-                                library_construction_protocol=library_construction_protocol)
-            protocol.save()
-
-        return protocol
-
     def get_gender(gender):
         if gender == "":
             gender = "U"
@@ -125,8 +97,6 @@ def ingest_samples(samples):
             sample.array_analysis_facility = get_facility(e['array_analysis_facility'])
             sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'])
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
-
-            sample.protocol = get_protocol(e)
 
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
@@ -257,6 +227,35 @@ def get_array_data():
     return rows
 
 
+def get_protocol(e):
+    def get_library_type(library):
+        """
+        (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+        """
+        new_str = library.lower()
+        if new_str.find('pair') >= 0:
+            return 'PE'
+        if new_str.find('single') >= 0:
+            return 'SE'
+        if new_str.find('mate') >= 0:
+            return 'MP'
+        return 'UN'
+
+    base_pairs = get_clean_number(e['library_construction'])
+    library_type = get_library_type(e['library'])
+    library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
+
+    try:
+        protocol = MelanomaProtocol.objects.get(base_pairs=base_pairs, library_type=library_type,
+                                        library_construction_protocol=library_construction_protocol)
+    except MelanomaProtocol.DoesNotExist:
+        protocol = MelanomaProtocol(base_pairs=base_pairs, library_type=library_type,
+                            library_construction_protocol=library_construction_protocol)
+        protocol.save()
+
+    return protocol
+
+
 def ingest_runs(sample_data):
     def get_sequencer(name):
         if name == "":
@@ -319,6 +318,7 @@ def ingest_runs(sample_data):
             run.array_analysis_facility = get_facility(entry['array_analysis_facility'])
             run.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
             run.DNA_extraction_protocol = entry['dna_extraction_protocol']
+            run.protocol = get_protocol(e)
             run.save()
 
         return run
