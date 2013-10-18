@@ -143,7 +143,7 @@ INSTALLED_APPS = (
     'apps.bpaauth',
     'apps.common',
     'apps.melanoma',
-    #'apps.gbr',
+    'apps.gbr',
     #'apps.BASE',
     #'apps.wheat_cultivars',
     #'apps.wheat_fungal_pathogens',

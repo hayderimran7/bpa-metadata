@@ -54,19 +54,21 @@ def get_tumor_stage(description):
     return stage
 
 
+def get_facility(name):
+    """
+    Return the sequencing facility with this name, or a new facility.
+    """
+    if name == '':
+        name = "Unknown"
+    try:
+        facility = Facility.objects.get(name=name)
+    except Facility.DoesNotExist:
+        facility = Facility(name=name)
+        facility.save()
+
+    return facility
+
 def ingest_samples(samples):
-    def get_facility(name):
-        if name == '':
-            name = "Unknown"
-
-        try:
-            facility = Facility.objects.get(name=name)
-        except Facility.DoesNotExist:
-            facility = Facility(name=name)
-            facility.save()
-
-        return facility
-
     def get_protocol(e):
         def get_library_type(str):
             """
@@ -171,7 +173,7 @@ def get_melanoma_sample_data():
                   'sequence_coverage',
                   'sequencing_facility',
                   'species',
-                  'contact_scientist',
+                  'contact_scientist', # FIXME this isn't imported anywhere
                   'contact_affiliation',
                   'contact_email',
                   'sample_gender',
@@ -313,6 +315,10 @@ def ingest_runs(sample_data):
             run.index_number = get_clean_number(entry['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
             run.lane_number = get_clean_number(entry['lane_number'])
+            run.sequencing_facility = get_facility(entry['sequencing_facility'])
+            run.array_analysis_facility = get_facility(entry['array_analysis_facility'])
+            run.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
+            run.DNA_extraction_protocol = entry['dna_extraction_protocol']
             run.save()
 
         return run
@@ -321,16 +327,6 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
-
-        def check_date(dt):
-            """
-            When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
-            if it wasn't, it may still be a valid date string.
-            """
-            if isinstance(dt, date):
-                return dt
-            if isinstance(dt, basestring):
-                return dateutil.parser.parse(dt)
 
         file_name = e['sequence_filename'].strip()
         if file_name != "":

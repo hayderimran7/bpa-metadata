@@ -74,9 +74,7 @@ class SampleAdmin(admin.ModelAdmin):
         ('Source',
          {'fields': (
              'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
-        ('Facilities',
-         {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
-        (None,
+        ('Sample Management',
          {'fields': (
              'requested_sequence_coverage', 'protocol', 'date_sent_to_sequencing_facility', 'contact_scientist',
              'note')}),
