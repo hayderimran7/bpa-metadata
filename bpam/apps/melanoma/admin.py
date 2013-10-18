@@ -56,7 +56,7 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
 
 class MelanomaRunAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Facilities',
+        ('Sequencing Facilities',
          {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
          {'fields': (

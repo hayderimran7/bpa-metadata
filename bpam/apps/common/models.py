@@ -156,9 +156,9 @@ class Run(models.Model):
     passage_number = models.IntegerField(blank=True, null=True)
 
     # facilities
-    sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Sequencing'), related_name='+', blank=True, null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Whole Genome'), related_name='+', blank=True, null=True)
+    array_analysis_facility = models.ForeignKey(Facility, verbose_name=_('Array Analysis'), related_name='+', blank=True, null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
