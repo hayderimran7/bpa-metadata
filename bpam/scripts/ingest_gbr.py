@@ -1,10 +1,9 @@
 import sys
 import pprint
-import csv
 import xlrd
 from datetime import datetime
 from unipath import Path
-
+from django.utils.encoding import smart_text
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.gbr.models import *
@@ -14,6 +13,7 @@ DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 GBR_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
 
 BPA_ID = "102.100.100"
+
 
 def get_dna_source(description):
     """
@@ -28,6 +28,7 @@ def get_dna_source(description):
         source.save()
 
     return source
+
 
 def ingest_samples(samples):
     def get_facility(name):
@@ -44,33 +45,7 @@ def ingest_samples(samples):
 
         return facility
 
-    def get_protocol(e):
-        def get_library_type(str):
-            """
-            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
-            """
-            new_str = str.lower()
-            if new_str.find('pair') >= 0:
-                return 'PE'
-            if new_str.find('single') >= 0:
-                return 'SE'
-            if new_str.find('mate') >= 0:
-                return 'MP'
-            return 'UN'
 
-        base_pairs = get_clean_number(e['library_construction'])
-        library_type = get_library_type(e['library'])
-        library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
-
-        try:
-            protocol = Protocol.objects.get(base_pairs=base_pairs, library_type=library_type,
-                                            library_construction_protocol=library_construction_protocol)
-        except Protocol.DoesNotExist:
-            protocol = Protocol(base_pairs=base_pairs, library_type=library_type,
-                                library_construction_protocol=library_construction_protocol)
-            protocol.save()
-
-        return protocol
 
     def get_gender(gender):
         if gender == "":
@@ -95,7 +70,7 @@ def ingest_samples(samples):
             sample.total_dna = get_clean_number(e['total_dna'])
             # fixme
             # sample.collector = e['collector']
-            sample.gps_location = e['gps_location']
+            # sample.gps_location = smart_text(e['gps_location'])
             sample.water_temp = get_clean_number(e['water_temp'])
             sample.ph = get_clean_number(e['ph'])
             sample.depth = get_clean_number(e['depth'])
@@ -114,15 +89,13 @@ def ingest_samples(samples):
 
             # facilities
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
-
-            sample.protocol = get_protocol(e)
-
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
             print("Ingested GBR sample {0}".format(sample.name))
 
     for sample in samples:
         add_sample(sample)
+
 
 def get_gbr_sample_data():
     """
@@ -159,7 +132,7 @@ def get_gbr_sample_data():
                   'contact_scientist',
                   'contact_affiliation',
                   'contact_email',
-                  'sample_dna_source',           
+                  'sample_dna_source',
                   'dna_extraction_protocol',
                   'dna_rna_concentration', # NEW
                   'total_dna_rna_shipped', # NEW
@@ -184,7 +157,7 @@ def get_gbr_sample_data():
                   'contact_bioinformatician_email', # NEW
                   'date_data_sent', # NEW
                   'date_data_received', # NEW
-                  ]
+    ]
 
     wb = xlrd.open_workbook(GBR_SPREADSHEET_FILE)
     sheet = wb.sheet_by_name('DNA library Sequencing - Pilot')
@@ -205,7 +178,38 @@ def get_gbr_sample_data():
 
     return samples
 
+
 def ingest_runs(sample_data):
+
+    def get_protocol(e):
+        def get_library_type(str):
+            """
+            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            """
+            new_str = str.lower()
+            if new_str.find('pair') >= 0:
+                return 'PE'
+            if new_str.find('single') >= 0:
+                return 'SE'
+            if new_str.find('mate') >= 0:
+                return 'MP'
+            return 'UN'
+
+        base_pairs = get_clean_number(e['library_construction'])
+        library_type = get_library_type(e['library'])
+        library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
+
+        try:
+            protocol = GBRProtocol.objects.get(base_pairs=base_pairs, library_type=library_type,
+                                            library_construction_protocol=library_construction_protocol)
+        except GBRProtocol.DoesNotExist:
+            protocol = GBRProtocol(base_pairs=base_pairs, library_type=library_type,
+                                library_construction_protocol=library_construction_protocol)
+            protocol.save()
+
+        return protocol
+
+
     def get_sequencer(name):
         if name == "":
             name = "Unknown"
@@ -254,8 +258,8 @@ def ingest_runs(sample_data):
 
         try:
             run = GBRRun.objects.get(flow_cell_id=flow_cell_id,
-                                          run_number=run_number,
-                                          sample__bpa_id__bpa_id=bpa_id)
+                                     run_number=run_number,
+                                     sample__bpa_id__bpa_id=bpa_id)
         except GBRRun.DoesNotExist:
             run = GBRRun()
             run.flow_cell_id = flow_cell_id
@@ -264,6 +268,7 @@ def ingest_runs(sample_data):
             run.index_number = get_clean_number(entry['index_number'])
             run.sequencer = get_sequencer(entry['sequencer'])
             run.lane_number = get_clean_number(entry['lane_number'])
+            run.protocol = get_protocol(e)
             run.save()
 
         return run

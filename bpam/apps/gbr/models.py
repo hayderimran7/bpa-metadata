@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
+from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
 from django.utils.translation import ugettext_lazy as _
 
 class Collection(models.Model):
@@ -16,7 +16,7 @@ class Collection(models.Model):
     type = models.CharField(max_length=100)
     site = models.CharField(max_length=100)
     date = models.DateField()
-    gps_location = models.CharField(max_length=100) # FIXME, nice geo types
+    gps_location = models.CharField(max_length=100)  # FIXME, nice geo types
     water_temperature = models.IntegerField()
     water_ph = models.IntegerField()
     depth = models.IntegerField()
@@ -55,11 +55,15 @@ class GBRRun(Run):
     """
     A GBR Run
     """
-
     sample = models.ForeignKey(GBRSample)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
+
+
+class GBRProtocol(Protocol):
+    run = models.OneToOneField(GBRRun, blank=True, null=True)
+
 
 class GBRSequenceFile(SequenceFile):
     """

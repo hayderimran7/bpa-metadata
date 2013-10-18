@@ -113,9 +113,10 @@ class Protocol(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u'Size: ' + str(self.base_pairs) + u' Type: ' + str(self.library_type) + u' Protocol: ' + str(self.library_construction_protocol)
+        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type, self.library_construction_protocol)
 
     class Meta:
+        abstract = True
         verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
@@ -127,7 +128,6 @@ class Sample(models.Model):
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
     name = models.CharField(max_length=200, verbose_name=_('Sample name'))
@@ -151,14 +151,13 @@ class Run(models.Model):
     This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
-    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
     passage_number = models.IntegerField(blank=True, null=True)
 
     # facilities
-    sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, related_name='+', blank=True, null=True)
+    sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Sequencing'), related_name='+', blank=True, null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Whole Genome'), related_name='+', blank=True, null=True)
+    array_analysis_facility = models.ForeignKey(Facility, verbose_name=_('Array Analysis'), related_name='+', blank=True, null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
