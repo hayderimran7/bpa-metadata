@@ -116,6 +116,7 @@ class Protocol(models.Model):
         return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type, self.library_construction_protocol)
 
     class Meta:
+        abstract = True
         verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
@@ -127,7 +128,6 @@ class Sample(models.Model):
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    # protocol = models.ForeignKey(Protocol, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
     name = models.CharField(max_length=200, verbose_name=_('Sample name'))

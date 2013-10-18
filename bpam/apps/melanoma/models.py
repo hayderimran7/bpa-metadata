@@ -68,7 +68,7 @@ class MelanomaRun(Run):
 
 
 class MelanomaProtocol(Protocol):
-    run = models.ForeignKey(MelanomaRun, blank=True, null=True)
+    run = models.OneToOneField(MelanomaRun, blank=True, null=True)
 
 
 class MelanomaSequenceFile(SequenceFile):
