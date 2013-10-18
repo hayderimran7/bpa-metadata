@@ -127,7 +127,7 @@ class Sample(models.Model):
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    protocol = models.ForeignKey(Protocol, blank=True, null=True)
+    # protocol = models.ForeignKey(Protocol, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
     name = models.CharField(max_length=200, verbose_name=_('Sample name'))
@@ -151,7 +151,6 @@ class Run(models.Model):
     This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
-    protocol = models.ForeignKey(Protocol, blank=True, null=True)
     DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
     passage_number = models.IntegerField(blank=True, null=True)
 

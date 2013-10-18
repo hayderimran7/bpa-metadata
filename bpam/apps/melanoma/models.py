@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
+from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
 from django.utils.translation import ugettext_lazy as _
 
 GENDERS = (('M', 'Male'),
@@ -65,6 +65,10 @@ class MelanomaRun(Run):
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
+
+
+class MelanomaProtocol(Protocol):
+    run = models.ForeignKey(MelanomaRun, blank=True, null=True)
 
 
 class MelanomaSequenceFile(SequenceFile):

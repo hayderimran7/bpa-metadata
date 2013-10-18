@@ -6,7 +6,9 @@ from models import (TumorStage,
                     MelanomaSample,
                     MelanomaRun,
                     MelanomaSequenceFile,
+                    MelanomaProtocol,
                     )
+
 
 
 class SequenceFileForm(forms.ModelForm):
@@ -54,15 +56,19 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
     get_sample_name.admin_order_field = 'sample__name'
 
 
+class ProtocolInline(admin.StackedInline):
+    model = MelanomaProtocol
+    extra = 0
+
+
 class MelanomaRunAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sequencing Facilities',
          {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
-         {'fields': (
-             'protocol', ('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
+         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
     ]
-
+    inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
 
@@ -76,7 +82,7 @@ class SampleAdmin(admin.ModelAdmin):
              'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
         ('Sample Management',
          {'fields': (
-             'requested_sequence_coverage', 'protocol', 'date_sent_to_sequencing_facility', 'contact_scientist',
+             'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist',
              'note')}),
     ]
 
