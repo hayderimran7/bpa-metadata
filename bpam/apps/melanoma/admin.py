@@ -95,6 +95,11 @@ class ArrayAdmin(admin.ModelAdmin):
     search_fields = ('bpa_id__bpa_id', 'array_id', 'mia_id')
 
 
+class ProtocolAdmin(admin.ModelAdmin):
+    fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
+    list_display = ('library_type', 'base_pairs', 'library_construction_protocol')
+
+admin.site.register(MelanomaProtocol, ProtocolAdmin)
 admin.site.register(TumorStage)
 admin.site.register(Array, ArrayAdmin)
 admin.site.register(MelanomaSample, SampleAdmin)
