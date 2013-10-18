@@ -324,6 +324,7 @@ def ingest_runs(sample_data):
 
             run.protocol = get_protocol(entry)
             run.save()
+            # this just seems wrong to me...
             run.protocol.run = run
             run.protocol.save()
 
