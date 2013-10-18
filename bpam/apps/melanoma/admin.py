@@ -10,7 +10,6 @@ from models import (TumorStage,
                     )
 
 
-
 class SequenceFileForm(forms.ModelForm):
     class Meta:
         model = MelanomaSequenceFile
@@ -97,7 +96,7 @@ class ArrayAdmin(admin.ModelAdmin):
 
 class ProtocolAdmin(admin.ModelAdmin):
     fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
-    list_display = ('library_type', 'base_pairs', 'library_construction_protocol')
+    list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
 
 admin.site.register(MelanomaProtocol, ProtocolAdmin)
 admin.site.register(TumorStage)
