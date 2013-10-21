@@ -1,24 +1,2995 @@
 [
 {
-    "pk": 1, 
-    "model": "bpaauth.bpauser", 
-    "fields": {
-        "interest":"",
-        "lab":"",
-        "username": "admin", 
-        "first_name": "", 
-        "last_name": "", 
-        "is_active": true,
-        "telephone": "", 
-        "note": "This is the CCG super user",
-        "is_superuser": true, 
-        "is_staff": true, 
-        "last_login": "2013-09-11T03:35:36Z",
-        "groups": [],
-        "user_permissions": [],
-        "password": "pbkdf2_sha256$10000$aCFKIgjC9M7m$FMy4MVmCAiS6P8sKwB6w2olnBknBs1twiU7hTGBx6v0=", 
-        "email": "", 
-        "date_joined": "2013-09-10T08:14:59Z"
-    }
+   "pk": 1, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "admin", 
+      "note": "This is the CCG super user", 
+      "first_name": "", 
+      "last_name": "", 
+      "groups": [], 
+      "title": "", 
+      "organisation": "", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "", 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2013-10-15T03:47:31Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "pbkdf2_sha256$10000$5fNgV1yXRKYA$EtHsHvW7dxGHkEw88NfYOXa/c5phULoR9vHRUyjMs6g=", 
+      "email": "", 
+      "date_joined": "2013-09-10T08:14:59Z"
+   }
+},
+{
+   "pk": 2, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mvanoppen", 
+      "note": "", 
+      "first_name": "Madeleine", 
+      "last_name": "van Oppen", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "van Oppen", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Viromes/symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "M.vanoppen@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 3, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ewood", 
+      "note": "", 
+      "first_name": "Elisha", 
+      "last_name": "Wood", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "van Oppen", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Viromes", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "E.WoodCharlson@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 4, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "vbeltran", 
+      "note": "", 
+      "first_name": "Victor", 
+      "last_name": "Beltran", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "van Oppen", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "V.Beltran@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 5, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "kweynberg", 
+      "note": "", 
+      "first_name": "Karen", 
+      "last_name": "Weynberg", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "van Oppen", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Viromes", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "K.Weynberg@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 6, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dbourne", 
+      "note": "", 
+      "first_name": "David", 
+      "last_name": "Bourne", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Bourne", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Microbial", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "D.Bourne@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 7, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "kmorrow", 
+      "note": "", 
+      "first_name": "Kathy", 
+      "last_name": "Morrow", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "AIMS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Bourne", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Microbial", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "K.Morrow@aims.gov.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 8, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "sforet", 
+      "note": "", 
+      "first_name": "Sylvain", 
+      "last_name": "Foret", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Foret", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Bioinformatics coral", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "sylvain.foret@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 9, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "stakahashi", 
+      "note": "", 
+      "first_name": "Shunichi", 
+      "last_name": "Takahashi", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "shunichi.takahashi@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 10, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "eball", 
+      "note": "", 
+      "first_name": "Eldon", 
+      "last_name": "Ball", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "eldon.ball@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 11, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dmiller", 
+      "note": "", 
+      "first_name": "David", 
+      "last_name": "Miller", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "JCU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Miller", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Coral and symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "david.miller@jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 12, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ssprungala", 
+      "note": "", 
+      "first_name": "Susie", 
+      "last_name": "Sprungala", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "JCU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Miller", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Coral", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "susanne.sprungala@jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 13, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "bleggatt", 
+      "note": "", 
+      "first_name": "Bill", 
+      "last_name": "Leggatt", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "JCU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Leggat", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "bill.leggat@jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 14, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "travasi", 
+      "note": "", 
+      "first_name": "Tim", 
+      "last_name": "Ravasi", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "KAUST", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Ravasi", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Bioinformatics", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Timothy.ravasi@kaust.edu.sa", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 15, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cvoolstra", 
+      "note": "", 
+      "first_name": "Christian", 
+      "last_name": "Voolstra", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "KAUST", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Voolstra", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "christian.voolstra@kaust.edu.sa", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 16, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mberumen", 
+      "note": "", 
+      "first_name": "Michael", 
+      "last_name": "Berumen", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "KAUST", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Berumen", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "michael.berumen@kaust.edu.sa", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 17, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gtyson", 
+      "note": "", 
+      "first_name": "Gene", 
+      "last_name": "Tyson", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Tyson", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Bioinformatics microbial", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "g.tyson@awmc.uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 18, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mimelfort", 
+      "note": "", 
+      "first_name": "Michael", 
+      "last_name": "Imelfort", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Tyson", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Bioinformatics microbial", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "m.imelfort@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 19, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "fangly", 
+      "note": "", 
+      "first_name": "Florent", 
+      "last_name": "Angly", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Tyson", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:45Z", 
+      "location": "", 
+      "interest": "Bioinformatics viromes", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "florent.angly@gmail.com", 
+      "date_joined": "2013-10-14T23:45:45Z"
+   }
+},
+{
+   "pk": 20, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mragan", 
+      "note": "", 
+      "first_name": "Mark", 
+      "last_name": "Ragan", 
+      "groups": [
+         1, 
+         2
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Ragan", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Bioinformatics symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "m.ragan@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 21, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cchan", 
+      "note": "", 
+      "first_name": "Cheong Xin", 
+      "last_name": "Chan", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Ragan", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Bioinformatics symbiodinium", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "c.chan1@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 22, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ohoegh-guldberg", 
+      "note": "", 
+      "first_name": "Ove", 
+      "last_name": "Hoegh-Guldberg", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hoegh-Guldberg", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Coral", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "oveh@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 23, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "nrosic", 
+      "note": "", 
+      "first_name": "Nela", 
+      "last_name": "Rosic", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hoegh-Guldberg", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Coral", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "n.rosic@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 24, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "plundgren", 
+      "note": "", 
+      "first_name": "Petra", 
+      "last_name": "Lundgren", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "GBRMPA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "petra.lundgren@gbrmpa.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 25, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "tfyffe", 
+      "note": "", 
+      "first_name": "Theresa", 
+      "last_name": "Fyffe", 
+      "groups": [
+         1
+      ], 
+      "title": "", 
+      "organisation": "GBRF", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Great Barrier Reef", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Project manager", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "tfyffe@barrierreef.org", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 26, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ayoung", 
+      "note": "", 
+      "first_name": "Andrew", 
+      "last_name": "Young", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Young", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Key project contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Andrew.Young@csiro.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 27, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "abissett", 
+      "note": "", 
+      "first_name": "Andrew", 
+      "last_name": "Bissett", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Young", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Key project contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Andrew.Bissett@csiro.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 28, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "pmele", 
+      "note": "", 
+      "first_name": "Pauline", 
+      "last_name": "Mele", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "VicDPI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Mele", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Key project contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Pauline.Mele@depi.vic.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 29, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "freith", 
+      "note": "", 
+      "first_name": "Frank", 
+      "last_name": "Reith", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Reith", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Key project contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Frank.Reith@csiro.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 30, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mkaran", 
+      "note": "", 
+      "first_name": "Mirko", 
+      "last_name": "Karan", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "TERN", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "mirko.karan@jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 31, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "alowe", 
+      "note": "", 
+      "first_name": "Andy", 
+      "last_name": "Lowe", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "TERN/UA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "andrew.lowe@adelaide.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 32, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "hcross", 
+      "note": "", 
+      "first_name": "Hugh", 
+      "last_name": "Cross", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "hughbcross@gmail.com", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 33, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "sschmidt", 
+      "note": "", 
+      "first_name": "Susanne", 
+      "last_name": "Schmidt", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Schmidt/Hugenholtz/Ragan", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "susanne.schmidt@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 34, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "nseymour", 
+      "note": "", 
+      "first_name": "Nikki", 
+      "last_name": "Seymour", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "DAFF QLD", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Seymour", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Nikki.Seymour@daff.qld.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 35, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jli", 
+      "note": "", 
+      "first_name": "Jady", 
+      "last_name": "Li", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "DAFF QLD", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Seymour", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "jady.li@daff.qld.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 36, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gvadakattu", 
+      "note": "", 
+      "first_name": "Gupta", 
+      "last_name": "Vadakattu", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Vadakattu", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Gupta.Vadakattu@csiro.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 37, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "isnape", 
+      "note": "", 
+      "first_name": "Ian", 
+      "last_name": "Snape", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "AAD", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Snape", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Ian.Snape@aad.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 38, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "twinsley", 
+      "note": "", 
+      "first_name": "Tristrom", 
+      "last_name": "Winsley", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "AAD", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Snape", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Tristrom.Winsley@aad.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 39, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "glagerewskij", 
+      "note": "", 
+      "first_name": "Greg", 
+      "last_name": "Lagerewskij", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "AAD", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Snape", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Database developer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Greg.Lagerewskij@aad.gov.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 40, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cpaungfoolonhienne", 
+      "note": "", 
+      "first_name": "Chanyarat", 
+      "last_name": "Paungfoo Lonhienne", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hugenholtz/Ragan", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:46Z", 
+      "location": "", 
+      "interest": "Sample contributer/sugar cane project (Mark, Phil and Susanne's PhD student)", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "c.paungfoolonhienne@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:46Z"
+   }
+},
+{
+   "pk": 41, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "phugenholtz", 
+      "note": "", 
+      "first_name": "Phil", 
+      "last_name": "Hugenholtz", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hugenholtz", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Smart state sugar cane project leader", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "p.hugenholtz@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 42, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "yyo", 
+      "note": "", 
+      "first_name": "Yun kit", 
+      "last_name": "Yo", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hugenholtz/Ragan", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "sugar cane project sample submitter (Mark/Phil's PhD student)", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "yun.yeoh@uqconnect.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 43, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "imchugh", 
+      "note": "", 
+      "first_name": "Ian", 
+      "last_name": "McHugh", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "Monash", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "ian.mchugh@monash.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 44, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gkoerber", 
+      "note": "", 
+      "first_name": "Georgia", 
+      "last_name": "Koerber", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "ozfluxtech@adelaide.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 45, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "rfaux", 
+      "note": "", 
+      "first_name": "Ralph", 
+      "last_name": "Faux", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UTS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "ralph.faux@uts.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 46, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mboer", 
+      "note": "", 
+      "first_name": "Matthias", 
+      "last_name": "Boer", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "UWS", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "M.Boer@uws.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 47, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "sarndt", 
+      "note": "", 
+      "first_name": "Stefan", 
+      "last_name": "Arndt", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "Melb Uni", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "sarndt@unimelb.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 48, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "glollback", 
+      "note": "", 
+      "first_name": "Greg", 
+      "last_name": "Lollback", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "Griffith Uni", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "glollback@gmail.com", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 49, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "snuske", 
+      "note": "", 
+      "first_name": "Susan", 
+      "last_name": "Nuske", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "JCU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "susan.nuske@my.jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 50, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "sabell-davis", 
+      "note": "", 
+      "first_name": "Sandra", 
+      "last_name": "Abell-Davis", 
+      "groups": [
+         2
+      ], 
+      "title": "", 
+      "organisation": "JCU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "TERN", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "sandra.abell@jcu.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 51, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "tsawbridge", 
+      "note": "", 
+      "first_name": "Tim", 
+      "last_name": "Sawbridge", 
+      "groups": [
+         2, 
+         4
+      ], 
+      "title": "", 
+      "organisation": "VicDPI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Mele", 
+      "project": "Base", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Bioinformatician", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Tim.Sawbridge@dpi.vic.gov.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 52, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jwilmott", 
+      "note": "", 
+      "first_name": "James", 
+      "last_name": "Wilmott", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "MIA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Mann", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "MIA project manager", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "James.Wilmott@melanoma.org.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 53, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gmann", 
+      "note": "", 
+      "first_name": "Graham", 
+      "last_name": "Mann", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "MIA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Mann", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Project leader", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "graham.mann@sydney.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 54, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "nhayward", 
+      "note": "", 
+      "first_name": "Nick", 
+      "last_name": "Hayward", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "QIMR/MIA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hayward", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Key project contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Nick.Hayward@qimr.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 55, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "pjohansson", 
+      "note": "", 
+      "first_name": "Peter", 
+      "last_name": "Johansson", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "QIMR", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Hayward", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Bioinformatician", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Peter.Johansson@qimr.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 56, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "rscolyer", 
+      "note": "", 
+      "first_name": "Richard", 
+      "last_name": "Scolyer", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "MIA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Pathologist", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "richard.scolyer@sswahs.nsw.gov.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 57, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mfield", 
+      "note": "", 
+      "first_name": "Matt", 
+      "last_name": "Field", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "John Curtin School", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": true, 
+      "last_login": "2013-10-15T00:20:42Z", 
+      "location": "", 
+      "interest": "Bioinformatician", 
+      "user_permissions": [
+         58, 
+         59, 
+         60, 
+         64, 
+         65, 
+         66, 
+         61, 
+         62, 
+         63, 
+         67, 
+         68, 
+         69, 
+         55, 
+         56, 
+         57, 
+         1, 
+         2, 
+         3
+      ], 
+      "password": "pbkdf2_sha256$10000$HyVWlqeP0UT3$qK2xPAATZGHL8YbfNr6sc86oi8ANoKWUtDJJdzxsuLE=", 
+      "email": "matt.field@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 58, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "vtembe", 
+      "note": "", 
+      "first_name": "Varsha", 
+      "last_name": "Tembe", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Usyd", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Mann", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Data user", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "varsha.tembe@sydney.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 59, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jcebon", 
+      "note": "", 
+      "first_name": "Jonathan", 
+      "last_name": "Cebon", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Ludwig", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Cebon", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Jonathan.Cebon@ludwig.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 60, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "abehren", 
+      "note": "", 
+      "first_name": "Andreas", 
+      "last_name": "Behren", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Ludwig", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Cebon", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:47Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Andreas.Behren@ludwig.edu.au", 
+      "date_joined": "2013-10-14T23:45:47Z"
+   }
+},
+{
+   "pk": 61, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mshackleton", 
+      "note": "", 
+      "first_name": "Mark", 
+      "last_name": "Shackleton", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Peter Mac", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Shackleton", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Autopsy project leader/Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Mark.Shackleton@petermac.org", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 62, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "tpapenfuss", 
+      "note": "", 
+      "first_name": "Tony", 
+      "last_name": "Papenfuss", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "WEHI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Bioinformatician working with Mark Shackleton", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "papenfuss@wehi.EDU.AU", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 63, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dallan", 
+      "note": "", 
+      "first_name": "Debbie", 
+      "last_name": "Allan", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Peter Mac", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Shackleton", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Research assistant - sample submitter", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Debbie.Allan@petermac.org", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 64, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "acust", 
+      "note": "", 
+      "first_name": "Anne", 
+      "last_name": "Cust", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Usyd", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Project partner", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "anne.cust@sydney.edu.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 65, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cwilliams", 
+      "note": "", 
+      "first_name": "Carolyn", 
+      "last_name": "Williams", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "WAIMR", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Project partner", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "carolynw@waimr.uwa.edu.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 66, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gmcarthur", 
+      "note": "", 
+      "first_name": "Grant", 
+      "last_name": "McArthur", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "Peter Mac", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "McArthur", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Sample contributer", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "grant.mcarthur@petermac.org", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 67, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "nware", 
+      "note": "", 
+      "first_name": "Nicola", 
+      "last_name": "Ware", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "MIA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "MIA general manager", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Nicola.Ware@melanoma.org.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 68, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "awoollet", 
+      "note": "", 
+      "first_name": "Anne", 
+      "last_name": "Woollet", 
+      "groups": [
+         3
+      ], 
+      "title": "", 
+      "organisation": "MMP", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Melbourne Melanoma Project - coordinator", 
+      "project": "Melanoma", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "Project partner", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Anne.Woollett@petermac.org", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 69, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "plangridge", 
+      "note": "", 
+      "first_name": "Peter", 
+      "last_name": "Langridge", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "ACPFG", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "peter.langridge@acpfg.com.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 70, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ccavanagh", 
+      "note": "", 
+      "first_name": "Colin", 
+      "last_name": "Cavanagh", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Colin.Cavanagh@csiro.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 71, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dedwards", 
+      "note": "", 
+      "first_name": "Dave", 
+      "last_name": "Edwards", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "UQ", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "dave.edwards@uq.edu.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 72, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dfleury", 
+      "note": "", 
+      "first_name": "Delphine", 
+      "last_name": "Fleury", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "ACPFG", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "delphine.fleury@acpfg.com.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 73, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jtaylor", 
+      "note": "", 
+      "first_name": "Jen", 
+      "last_name": "Taylor", 
+      "groups": [
+         4, 
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Jen.Taylor@csiro.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 74, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "mhayden", 
+      "note": "", 
+      "first_name": "Matt", 
+      "last_name": "Hayden", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "VicDPI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "matthew.hayden@dpi.vic.gov.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 75, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jtibbits", 
+      "note": "", 
+      "first_name": "Josquin", 
+      "last_name": "Tibbits", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "VicDPI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "josquin.tibbits@dpi.vic.gov.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 76, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "rappels", 
+      "note": "", 
+      "first_name": "Rudi", 
+      "last_name": "Appels", 
+      "groups": [
+         4, 
+         5
+      ], 
+      "title": "", 
+      "organisation": "Murdoch", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "rudiappels5@gmail.com", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 77, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ubaumann", 
+      "note": "", 
+      "first_name": "Ute", 
+      "last_name": "Baumann", 
+      "groups": [
+         4
+      ], 
+      "title": "", 
+      "organisation": "ACPFG", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Cultivars", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Ute.Baumann@acpfg.com.au", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 78, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "gkeeble", 
+      "note": "", 
+      "first_name": "Gabriel", 
+      "last_name": "Keeble", 
+      "groups": [
+         5
+      ], 
+      "title": "", 
+      "organisation": "Murdoch", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat 7A", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:48Z", 
+      "location": "", 
+      "interest": "", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "gabriel7@gmail.com", 
+      "date_joined": "2013-10-14T23:45:48Z"
+   }
+},
+{
+   "pk": 79, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dgardiner", 
+      "note": "", 
+      "first_name": "Don", 
+      "last_name": "Gardiner", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Gardiner/Manners", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Fusarium pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Donald.Gardiner@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 80, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jmanners", 
+      "note": "", 
+      "first_name": "John", 
+      "last_name": "Manners", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Manners", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Consortium leader", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "John.Manners@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 81, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "tfitzgerald", 
+      "note": "", 
+      "first_name": "Tim", 
+      "last_name": "Fitzgerald", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Gardiner", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Fusarium pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Timothy.Fitzgerald@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 82, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "roliver", 
+      "note": "", 
+      "first_name": "Richard", 
+      "last_name": "Oliver", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "Curtin", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Oliver", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Consortium leader", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Richard.Oliver@curtin.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 83, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ktan", 
+      "note": "", 
+      "first_name": "Kar-Chun", 
+      "last_name": "Tan", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "Curtin", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Oliver", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Stagonospora pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Kar-Chun.Tan@curtin.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 84, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cmoffat", 
+      "note": "", 
+      "first_name": "Caroline", 
+      "last_name": "Moffat", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "Curtin", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Oliver", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Pyrenophora pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Caroline.Moffat@curtin.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 85, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ksingh", 
+      "note": "", 
+      "first_name": "Karam", 
+      "last_name": "Singh", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Singh", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rhizoctonia pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Karam.Singh@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 86, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "janderson", 
+      "note": "", 
+      "first_name": "Jonathan", 
+      "last_name": "Anderson", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Singh", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rhizoctonia pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Jonathan.Anderson@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 87, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jhane", 
+      "note": "", 
+      "first_name": "James", 
+      "last_name": "Hane", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Singh", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Bioinformatics", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "James.Hane@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 88, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "ltabe", 
+      "note": "", 
+      "first_name": "Linda", 
+      "last_name": "Tabe", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rust pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Linda.Tabe@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 89, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "psolomon", 
+      "note": "", 
+      "first_name": "Peter", 
+      "last_name": "Solomon", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Solomon", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Stagonospora pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "peter.solomon@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 90, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "bwinterberg", 
+      "note": "", 
+      "first_name": "Britta", 
+      "last_name": "Winterberg", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Solomon", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Stagonospora pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Britta.Winterberg@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 91, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jrathjen", 
+      "note": "", 
+      "first_name": "John", 
+      "last_name": "Rathjen", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Rathjen", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rust pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "john.rathjen@anu.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 92, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "dgarnica", 
+      "note": "", 
+      "first_name": "Diana", 
+      "last_name": "Garnica", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "ANU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Rathjen", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rust pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "dgarnic@gmail.com", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 93, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "nupadhyaya", 
+      "note": "", 
+      "first_name": "Narayana", 
+      "last_name": "Upadhyaya", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Rust pathogens", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Narayana.Upadhyaya@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 94, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "amilgate", 
+      "note": "", 
+      "first_name": "Andrew", 
+      "last_name": "Milgate", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "NSW DPI", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Milgate", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Mycosphaerella pathogen", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "andrew.milgate@dpi.nsw.gov.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 95, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jpattermore", 
+      "note": "", 
+      "first_name": "Julie", 
+      "last_name": "Pattermore", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSU", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Milgate", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Mycosphaerella pathogen", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "JPattemore@csu.edu.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 96, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "jsperschneider", 
+      "note": "", 
+      "first_name": "Jana", 
+      "last_name": "Sperschneider", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Taylor/Manners", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "Bioinformatics", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Jana.Sperschneider@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 97, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "idry", 
+      "note": "", 
+      "first_name": "Ian", 
+      "last_name": "Dry", 
+      "groups": [
+         6
+      ], 
+      "title": "", 
+      "organisation": "CSIRO", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "Dry", 
+      "project": "Wheat Pathogens", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2013-10-14T23:45:49Z", 
+      "location": "", 
+      "interest": "General", 
+      "user_permissions": [], 
+      "password": "", 
+      "email": "Ian.Dry@csiro.au", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 98, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "afitzgerald", 
+      "note": "", 
+      "first_name": "Anna", 
+      "last_name": "Fitzgerald", 
+      "groups": [
+         2, 
+         7, 
+         8, 
+         1, 
+         3, 
+         5, 
+         4, 
+         6
+      ], 
+      "title": "", 
+      "organisation": "BPA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Bpa", 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2013-10-15T00:40:45Z", 
+      "location": "", 
+      "interest": "BPA Administration", 
+      "user_permissions": [
+         22, 
+         23, 
+         24, 
+         10, 
+         11, 
+         12, 
+         7, 
+         8, 
+         9, 
+         28, 
+         29, 
+         30, 
+         31, 
+         32, 
+         33, 
+         34, 
+         35, 
+         36, 
+         43, 
+         44, 
+         45, 
+         37, 
+         38, 
+         39, 
+         40, 
+         41, 
+         42, 
+         49, 
+         50, 
+         51, 
+         46, 
+         47, 
+         48, 
+         52, 
+         53, 
+         54, 
+         13, 
+         14, 
+         15, 
+         4, 
+         5, 
+         6, 
+         25, 
+         26, 
+         27, 
+         58, 
+         59, 
+         60, 
+         64, 
+         65, 
+         66, 
+         61, 
+         62, 
+         63, 
+         67, 
+         68, 
+         69, 
+         55, 
+         56, 
+         57, 
+         1, 
+         2, 
+         3, 
+         16, 
+         17, 
+         18, 
+         19, 
+         20, 
+         21, 
+         70, 
+         71, 
+         72, 
+         73, 
+         74, 
+         75, 
+         76, 
+         77, 
+         78
+      ], 
+      "password": "pbkdf2_sha256$10000$QuryvQjUICGU$U2rjk1HDwYc/hpW2GRZjQfkmxmbYLOJgUXaa4sCnWgc=", 
+      "email": "afitzgerald@bioplatforms.com", 
+      "date_joined": "2013-10-14T23:45:49Z"
+   }
+},
+{
+   "pk": 99, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "cshang", 
+      "note": "", 
+      "first_name": "Catherine", 
+      "last_name": "Shang", 
+      "groups": [
+         2, 
+         7, 
+         8, 
+         1, 
+         3, 
+         5, 
+         4, 
+         6
+      ], 
+      "title": "", 
+      "organisation": "BPA", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Bpa", 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2013-10-14T23:45:50Z", 
+      "location": "", 
+      "interest": "BPA Administration", 
+      "user_permissions": [
+         22, 
+         23, 
+         24, 
+         10, 
+         11, 
+         12, 
+         7, 
+         8, 
+         9, 
+         28, 
+         29, 
+         30, 
+         31, 
+         32, 
+         33, 
+         34, 
+         35, 
+         36, 
+         43, 
+         44, 
+         45, 
+         37, 
+         38, 
+         39, 
+         40, 
+         41, 
+         42, 
+         49, 
+         50, 
+         51, 
+         46, 
+         47, 
+         48, 
+         52, 
+         53, 
+         54, 
+         13, 
+         14, 
+         15, 
+         4, 
+         5, 
+         6, 
+         25, 
+         26, 
+         27, 
+         58, 
+         59, 
+         60, 
+         64, 
+         65, 
+         66, 
+         61, 
+         62, 
+         63, 
+         67, 
+         68, 
+         69, 
+         55, 
+         56, 
+         57, 
+         1, 
+         2, 
+         3, 
+         16, 
+         17, 
+         18, 
+         19, 
+         20, 
+         21, 
+         70, 
+         71, 
+         72, 
+         73, 
+         74, 
+         75, 
+         76, 
+         77, 
+         78
+      ], 
+      "password": "pbkdf2_sha256$10000$bdl6GKnTKSzX$gC1qOULB/v1If8Swq6CMWILSQEwoeZSnh0CI3jImB0g=", 
+      "email": "cshang@bioplatforms.com", 
+      "date_joined": "2013-10-14T23:45:50Z"
+   }
+},
+{
+   "pk": 100, 
+   "model": "bpaauth.bpauser", 
+   "fields": {
+      "username": "tmeintjes", 
+      "note": "", 
+      "first_name": "Thys", 
+      "last_name": "Meintjes", 
+      "groups": [
+         8
+      ], 
+      "title": "", 
+      "organisation": "CCG", 
+      "is_active": true, 
+      "telephone": "", 
+      "lab": "", 
+      "project": "Ccg", 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2013-10-16T04:01:10Z", 
+      "location": "", 
+      "interest": "General", 
+      "user_permissions": [], 
+      "password": "pbkdf2_sha256$10000$mZAEwjIRC0PM$YaxtKwPVtgEo2VjTBNQ3xnW/KOwgG68gwqwMwioggvE=", 
+      "email": "tmeintjes@ccg.murdoch.edu.au", 
+      "date_joined": "2013-10-14T23:45:50Z"
+   }
 }
 ]
