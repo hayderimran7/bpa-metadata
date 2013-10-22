@@ -4,6 +4,8 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
+BPA_VERSION = '1.0.3'
+
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PROJECT_DIR = Path(__file__).ancestor(1)
