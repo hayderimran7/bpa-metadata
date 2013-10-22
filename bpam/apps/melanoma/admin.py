@@ -39,8 +39,8 @@ class MelanomaSequenceFileAdmin(admin.ModelAdmin):
     download_field.allow_tags = True
     download_field.short_description = 'Filename'
 
-    list_display = (
-        'get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    list_filter = ('date_received_from_sequencing_facility',)
 
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
@@ -70,6 +70,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
     inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
+    list_filter = ('sequencing_facility', 'flow_cell_id', )
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -87,6 +88,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
     search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
+    list_filter = ('dna_source', 'gender', 'requested_sequence_coverage',)
 
 
 class ArrayAdmin(admin.ModelAdmin):
@@ -97,6 +99,7 @@ class ArrayAdmin(admin.ModelAdmin):
 class ProtocolAdmin(admin.ModelAdmin):
     fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
+    list_filter = ('library_type',)
 
 admin.site.register(MelanomaProtocol, ProtocolAdmin)
 admin.site.register(TumorStage)
