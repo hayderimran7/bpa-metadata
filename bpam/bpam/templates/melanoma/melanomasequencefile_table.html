@@ -4,6 +4,7 @@
             <th></th>
             <th>BPA ID</th>
             <th>Filename</th>
+            <th>MD5</th>
             <th>Sample Name</th>
             <th>Run Date</th>
             <th>Run Description</th>
@@ -21,6 +22,7 @@
             </td>
             <td>{{ obj.sample.bpa_id }}</td>
             <td><a href="{{obj.get_url}}">{{ obj.filename }}</a></td>
+            <td>{{ obj.md5 }}</td>
             <td>{{ obj.sample.name }}</td>
             <td>{{ obj.date_received_from_sequencing_facility}}</td>
             <td>{{ obj.run }}</td>
