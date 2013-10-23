@@ -23,7 +23,7 @@ class CustomIndexDashboard(Dashboard):
     """
 
     title = "Bioplatforms Australia Metadata"
-    columns = 3
+    columns = 4
 
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
@@ -45,7 +45,7 @@ class CustomIndexDashboard(Dashboard):
         # append an app list module for "Applications"
         self.children.append(modules.AppList(
             _('Bioplatforms Australia Projects'),
-            exclude=('django.contrib.*', 'apps.bpaauth.*'),
+            exclude=('django.contrib.*', 'apps.bpaauth.*', 'apps.geo.*', 'tastypie.*'),
         ))
 
         # append an app list module for "Administration"
