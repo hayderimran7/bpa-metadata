@@ -42,17 +42,27 @@ class CustomIndexDashboard(Dashboard):
             ]
         ))
 
-        # append an app list module for "Applications"
-        self.children.append(modules.AppList(
-            _('Bioplatforms Australia Projects'),
-            exclude=('django.contrib.*', 'apps.bpaauth.*', 'apps.geo.*', 'tastypie.*'),
-        ))
-
         # append an app list module for "Administration"
-        self.children.append(modules.AppList(
+        self.children.append(modules.ModelList(
             _('User Management'),
             models=('apps.bpaauth.*', 'django.contrib.auth.models.Group',),
         ))
+
+        self.children.append(modules.ModelList(
+            _('Common Project Data'),
+            models=('apps.common.*',),
+        ))
+
+        self.children.append(modules.ModelList(
+            _('Great Barrier Reef'),
+            models=('apps.gbr.*',),
+        ))
+
+        self.children.append(modules.ModelList(
+            _('Melanoma'),
+            models=('apps.melanoma.*',),
+        ))
+
 
         # append a recent actions module
         self.children.append(modules.RecentActions(_('Recent Actions'), 5))
@@ -64,7 +74,6 @@ class CustomIndexDashboard(Dashboard):
             limit=10
         ))
 
-        # append another link list module for "support".
         self.children.append(modules.LinkList(
             _('Sequence File Listings'),
             children=[
@@ -75,7 +84,6 @@ class CustomIndexDashboard(Dashboard):
                 }
             ]
         ))
-
 
         # append another link list module for "support".
         self.children.append(modules.LinkList(
@@ -127,7 +135,7 @@ class CustomAppIndexDashboard(AppIndexDashboard):
             modules.RecentActions(
                 _('Recent Actions'),
                 include_list=self.get_app_content_types(),
-                limit=5
+                limit=10
             )
         ]
 
