@@ -8,6 +8,7 @@ from apps.bpaauth.models import BPAUser
 from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
 from django.utils.translation import ugettext_lazy as _
 
+
 class Collection(models.Model):
     """
     Data surrounding a Coral collection
@@ -23,7 +24,8 @@ class Collection(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"{0} {1} {2}".format(self.type, self.site, self.date)
+        return u'{0} {1} {2}'.format(self.type, self.site, self.date)
+
 
 class GBRSample(Sample):
     """
@@ -49,7 +51,12 @@ class GBRSample(Sample):
     sequencing_data_eta = models.DateField(blank=True, null=True)
     date_sequenced = models.DateField(blank=True, null=True)
     requested_read_length = models.IntegerField(blank=True, null=True)
-    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='bioinformatician')
+    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+                                                 related_name='bioinformatician')
+
+    class Meta:
+        verbose_name = _('Great Barrier Reef Sample')
+
 
 class GBRRun(Run):
     """
@@ -57,12 +64,18 @@ class GBRRun(Run):
     """
     sample = models.ForeignKey(GBRSample)
 
+    class Meta:
+        verbose_name = _('Great Barrier Reef Run')
+
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class GBRProtocol(Protocol):
     run = models.OneToOneField(GBRRun, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Great Barrier Reef Protocol')
 
 
 class GBRSequenceFile(SequenceFile):
@@ -89,9 +102,11 @@ class GBRSequenceFile(SequenceFile):
         uj = urlparse.urljoin
         uq = urllib.quote
         return uj(settings.BPA_BASE_URL, "GBR/%s/%s/%s" % (
-                uq(bpa_id),
-                uq(self.run.flow_cell_id),
-                uq(self.filename)))
+            uq(bpa_id),
+            uq(self.run.flow_cell_id),
+            uq(self.filename)))
 
     url = property(get_url)
 
+    class Meta:
+        verbose_name = _('Great Barrier Reef Sequence File')
