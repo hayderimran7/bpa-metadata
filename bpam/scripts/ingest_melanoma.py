@@ -14,7 +14,6 @@ DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
 MELANOMA_SPREADSHEET_FILE = Path(DATA_DIR, 'Melanoma_study_metadata.xlsx')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
-BPA_ID = "102.100.100"
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)

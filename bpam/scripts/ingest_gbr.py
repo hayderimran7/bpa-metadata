@@ -1,13 +1,15 @@
 import sys
 import pprint
-import xlrd
 from datetime import datetime
+
+import xlrd
 from unipath import Path
-from django.utils.encoding import smart_text
+
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.gbr.models import *
 from .utils import *
+
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 GBR_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
@@ -46,7 +48,6 @@ def ingest_samples(samples):
         return facility
 
 
-
     def get_gender(gender):
         if gender == "":
             gender = "U"
@@ -54,6 +55,11 @@ def ingest_samples(samples):
 
     def add_sample(e):
         bpa_id = e['bpa_id']
+
+        if not is_bpa_id(bpa_id):
+            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
+            return
+
         try:
             # Test if sample already exists
             # First come fist serve
@@ -102,17 +108,6 @@ def get_gbr_sample_data():
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    def filter_out_sample(sample):
-        """
-        Filter out a sample for whatever reason
-        """
-        # the csv file is a straight csv dump of the google doc
-        if sample['bpa_id'].find(BPA_ID) == -1:
-            print sample
-            return True
-
-        return False
-
     fieldnames = ['bpa_id',
                   'species',
                   'dataset', # NEW (model?)
@@ -128,7 +123,7 @@ def get_gbr_sample_data():
                   'depth', # NEW
                   'other', # NEW 
                   'requested_sequence_coverage',
-                  'sequencing_notes', # NEW
+                  'sequencing_notes',  # NEW
                   'contact_scientist',
                   'contact_affiliation',
                   'contact_email',
@@ -164,6 +159,11 @@ def get_gbr_sample_data():
     samples = []
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
+
+        if not is_bpa_id(vals[0]):
+            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
+            continue
+
         # for date types try to convert to python dates
         types = sheet.row_types(row_idx)
         for i, t in enumerate(types):
@@ -180,7 +180,6 @@ def get_gbr_sample_data():
 
 
 def ingest_runs(sample_data):
-
     def get_protocol(e):
         def get_library_type(str):
             """
@@ -201,10 +200,10 @@ def ingest_runs(sample_data):
 
         try:
             protocol = GBRProtocol.objects.get(base_pairs=base_pairs, library_type=library_type,
-                                            library_construction_protocol=library_construction_protocol)
+                                               library_construction_protocol=library_construction_protocol)
         except GBRProtocol.DoesNotExist:
             protocol = GBRProtocol(base_pairs=base_pairs, library_type=library_type,
-                                library_construction_protocol=library_construction_protocol)
+                                   library_construction_protocol=library_construction_protocol)
             protocol.save()
 
         return protocol
