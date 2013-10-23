@@ -60,8 +60,8 @@ class CustomIndexDashboard(Dashboard):
         # append a feed module
         self.children.append(modules.Feed(
             _('Latest BioInformatics News'),
-            feed_url='http://www.biomedcentral.com/bmcbioinformatics/editorspicks/rss',
-            limit=5
+            feed_url='http://bioinformatics.ca/links_directory/search/gene%20expression/feed',
+            limit=10
         ))
 
         # append another link list module for "support".
