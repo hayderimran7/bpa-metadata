@@ -68,6 +68,7 @@ def get_facility(name):
 
     return facility
 
+
 def ingest_samples(samples):
     def get_gender(gender):
         if gender == "":
@@ -204,7 +205,7 @@ def get_array_data():
                   'array_id',
                   'call_rate',
                   'gender',
-    ]
+                  ]
 
     wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
     sheet = wb.sheet_by_name('Array data')
@@ -215,12 +216,6 @@ def get_array_data():
          # get rid of "" ID's
         if vals[2].strip() == "":
             continue
-
-        # for date types try to convert to python dates
-        types = sheet.row_types(row_idx)
-        for i, t in enumerate(types):
-            if t == xlrd.XL_CELL_DATE:
-                vals[i] = datetime(*xldate_as_tuple(vals[i], wb.datemode))
 
         rows.append(dict(zip(fieldnames, vals)))
 

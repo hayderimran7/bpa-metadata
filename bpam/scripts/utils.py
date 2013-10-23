@@ -138,4 +138,6 @@ def check_date(dt):
     if isinstance(dt, date):
         return dt
     if isinstance(dt, basestring):
+        if dt.strip() == "":
+            return None
         return dateutil.parser.parse(dt)
