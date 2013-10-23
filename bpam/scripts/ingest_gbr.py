@@ -53,6 +53,27 @@ def ingest_samples(samples):
             gender = "U"
         return gender
 
+
+    def get_organism(name):
+        """
+        Set the organism
+        """
+        genus, species = name.strip().split()
+
+        try:
+            organism = Organism.objects.get(genus=genus, species=species)
+        except Organism.DoesNotExist:
+            logger.debug('Adding Organism ' + name)
+            organism = Organism()
+            organism.genus = genus
+            organism.species = species
+            organism.note = 'GBR'
+            organism.save()
+
+        return organism
+
+
+
     def add_sample(e):
         bpa_id = e['bpa_id']
 
@@ -69,7 +90,7 @@ def ingest_samples(samples):
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
             sample.name = e['sample_name']
             sample.requested_sequence_coverage = e['requested_sequence_coverage'].upper()
-            sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
+            sample.organism = get_organism(e['species'])
             sample.dna_source = get_dna_source(e['sample_dna_source'])
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
             sample.dna_concentration = get_clean_number(e['dna_concentration'])
