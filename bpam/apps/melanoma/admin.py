@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from apps.common.admin import SequenceFileAdmin
 
 from models import (TumorStage,
                     Array,
@@ -8,51 +9,6 @@ from models import (TumorStage,
                     MelanomaSequenceFile,
                     MelanomaProtocol,
                     )
-
-
-class SequenceFileForm(forms.ModelForm):
-    class Meta:
-        model = MelanomaSequenceFile
-        widgets = {
-            'filename': forms.TextInput(attrs={'size': 100}),
-        }
-
-
-class MelanomaSequenceFileAdmin(admin.ModelAdmin):
-    form = SequenceFileForm
-
-    fieldsets = [
-        (None,
-         {'fields': (
-             ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed', 'date_received_from_sequencing_facility',
-             'note'), }),
-    ]
-
-    search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
-
-    def download_field(self, obj):
-        if obj.link_ok():
-            return '<a href="%s">%s</a>' % (obj.url, obj.filename)
-        else:
-            return '<a style="color:grey">%s</a>' % obj.filename
-
-    download_field.allow_tags = True
-    download_field.short_description = 'Filename'
-
-    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
-    list_filter = ('date_received_from_sequencing_facility',)
-
-    def get_sample_id(self, obj):
-        return obj.sample.bpa_id
-
-    get_sample_id.short_description = 'BPA ID'
-    get_sample_id.admin_order_field = 'sample__bpa_id'
-
-    def get_sample_name(self, obj):
-        return obj.sample.name
-
-    get_sample_name.short_description = 'Sample Name'
-    get_sample_name.admin_order_field = 'sample__name'
 
 
 class ProtocolInline(admin.StackedInline):
@@ -98,6 +54,7 @@ class ArrayAdmin(admin.ModelAdmin):
 
 class ProtocolAdmin(admin.ModelAdmin):
     fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
+    search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
@@ -106,7 +63,7 @@ admin.site.register(TumorStage)
 admin.site.register(Array, ArrayAdmin)
 admin.site.register(MelanomaSample, SampleAdmin)
 admin.site.register(MelanomaRun, MelanomaRunAdmin)
-admin.site.register(MelanomaSequenceFile, MelanomaSequenceFileAdmin)
+admin.site.register(MelanomaSequenceFile, SequenceFileAdmin)
     
     
 
