@@ -68,10 +68,21 @@ def get_facility(name):
     return facility
 
 
+def get_contact(email):
+    """
+    See if we can find a contact for this sample based on the email address in the spreadsheet.
+    """
+    try:
+        return BPAUser.objects.get(email=email)
+    except BPAUser.DoesNotExist:
+        logger.warning('No user found with email: {0}'.format(email))
+        return None
+
+
 def ingest_samples(samples):
     def get_gender(gender):
-        if gender == "":
-            gender = "U"
+        if gender == '':
+            gender = 'U'
         return gender
 
     def add_sample(e):
@@ -92,6 +103,8 @@ def ingest_samples(samples):
             sample.gender = get_gender(e['sample_gender'])
             sample.histological_subtype = e['histological_subtype']
             sample.passage_number = get_clean_number(e['passage_number'])
+
+            sample.contact_scientist = get_contact(e['contact_email'])
 
             # facilities
             sample.array_analysis_facility = get_facility(e['array_analysis_facility'])

@@ -27,7 +27,7 @@ class TumorStage(models.Model):
 
 class Array(models.Model):
     """
-    Array
+    Micro Array ?
     """
 
     bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
@@ -39,7 +39,7 @@ class Array(models.Model):
     gender = models.CharField(max_length=1, choices=GENDERS)
 
     def __unicode__(self):
-        return u"{0} {1} {2}".format(self.bpa_id, self.array_id, self.mia_id)
+        return u'{0} {1} {2}'.format(self.bpa_id, self.array_id, self.mia_id)
 
 
 class MelanomaSample(Sample):
