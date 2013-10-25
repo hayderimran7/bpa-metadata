@@ -18,6 +18,8 @@ class ProtocolInline(admin.StackedInline):
 
 class MelanomaRunAdmin(admin.ModelAdmin):
     fieldsets = [
+        ('Sample',
+         {'fields': ('sample',)}),
         ('Sequencing Facilities',
          {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
