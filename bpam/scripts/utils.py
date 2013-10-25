@@ -1,4 +1,5 @@
 import string
+import logging
 from datetime import date
 import dateutil
 from xlrd import xldate_as_tuple
@@ -8,8 +9,12 @@ from django.utils.encoding import smart_text
 from bpaauth.models import BPAUser
 from common.models import *
 
-
+BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
 
 
 def get_clean_number(val, default=None):
@@ -42,7 +47,6 @@ def get_date(val):
     """
     Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
     """
-
     return dateutil.parser.parse(val)
 
 
@@ -75,7 +79,7 @@ def add_bpa_id(id, project_name, note=INGEST_NOTE):
     lbl.project = BPAProject.objects.get(name=project_name)
     lbl.note = note
     lbl.save()
-    print("Added BPA Unique ID: " + str(lbl))
+    logger.info("Added BPA Unique ID: " + str(lbl))
 
 
 def ingest_bpa_ids(data, project_name):
@@ -85,9 +89,12 @@ def ingest_bpa_ids(data, project_name):
 
     id_set = set()
     for e in data:
-        id_set.add(e['bpa_id'].strip())
-    for id in id_set:
-        add_bpa_id(id, project_name)
+        bpa_id = e['bpa_id'].strip()
+        if is_bpa_id(bpa_id):
+            id_set.add(bpa_id)
+
+    for bpa_id in id_set:
+        add_bpa_id(bpa_id, project_name)
 
 
 def get_bpa_id(id, project_name, note=INGEST_NOTE):
@@ -121,3 +128,36 @@ def get_dna_source(description):
         source.save()
 
     return source
+
+
+def check_date(dt):
+    """
+    When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
+    if it wasn't, it may still be a valid date string.
+    """
+    if isinstance(dt, date):
+        return dt
+    if isinstance(dt, basestring):
+        if dt.strip() == "":
+            return None
+        return dateutil.parser.parse(dt)
+
+
+def is_bpa_id(bpa_id):
+    """
+    Determines if id is a good BPA ID
+    """
+
+    bpa_id = bpa_id.strip()
+
+    # empties
+    if bpa_id == '':
+        return False
+
+    # no BPA prefix
+    if bpa_id.find(BPA_ID) == -1:
+        return False
+
+    # this function has failed to find a reason why this can't be a BPA ID....
+    return True
+

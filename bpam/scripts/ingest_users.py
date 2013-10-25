@@ -95,7 +95,7 @@ def ingest_contacts():
         if filter_contacts(contact):
             continue
 
-        # if the user already exists, she propably is part of several projects so add her to those groups
+        # if the user already exists, she probably is part of several projects so add her to those groups
         username = make_username(contact)
         try:
             existing_user = BPAUser.objects.get(username=username)

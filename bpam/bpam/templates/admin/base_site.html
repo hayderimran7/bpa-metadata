@@ -1,10 +1,45 @@
 {% extends "admin/base.html" %}
-{% load i18n %}
+{% load i18n admin_tools_menu_tags %}
+{% load commontags %}
 
-{% block title %}{{ title }} | {% trans 'Bioplatforms Australia Metadata Administration' %}{% endblock %}
+{% block title %}{{ title }} | Bioplatforms Australia Metadata Administration{% endblock %}
 
-{% block branding %}
-<h1 id="site-name">{% trans 'BPA Metadata Administration' %}</h1>
+{% block extrastyle %}
+{{ block.super }}
+<style type="text/css">
+    .version {
+      border-top: 1px solid #CCC;
+    }
+    .version p {
+      text-align: right;
+      padding-right: 2em;
+    }
+</style>
+{% if user.is_active and user.is_staff %}
+{% if not is_popup %}
+{% admin_tools_render_menu_css %}
+{% endif %}
+{% endif %}
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block branding %}
+<h1 id="site-name">{% trans 'Bioplatforms Australia Metadata Administration' %}</h1>
+{% endblock %}
+
+{% block nav-global %}
+{% if user.is_active and user.is_staff %}
+{% if not is_popup %}
+{% admin_tools_render_menu %}
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+
+<div id="footer">
+    <div class="version">
+      <p>bpa-metadata {% bpam_version %}</p>
+    </div>
+</div>
+
+{% endblock %}

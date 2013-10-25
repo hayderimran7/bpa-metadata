@@ -19,7 +19,7 @@ Options:
 from docopt import docopt
 from unipath import Path
 from tendo import colorer
-import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json
+import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json, datetime
 from collections import namedtuple
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
@@ -31,6 +31,44 @@ __version__ = "1.1.0"
 
 # this ID never changes... it captures the place where it was minted.
 BPA_PREFIX = '102.100.101'
+
+
+def _stringify(s):
+    if isinstance(s, str):
+        return str(s.decode('utf8'))
+    elif isinstance(s, unicode):
+        return str(s.encode('utf8'))
+    else:
+        return str(s)
+
+
+def stringify(s):
+    _s = _stringify(s)
+    return _s
+
+
+def excel_date_to_string(date_mode, s):
+    try:
+        date_val = float(s)
+        tpl = xlrd.xldate_as_tuple(date_val, date_mode)
+        return datetime.datetime(*tpl).strftime("%d/%m/%Y")
+    except ValueError:
+        return s
+
+
+class ExcelWrapper(object):
+    def __init__(self, fname):
+        self.x = xlrd.open_workbook(fname)
+
+    def get_date_mode(self):
+        return self.x.datemode
+
+    def sheet_iter(self, sheet_name):
+        sheet = [t for t in self.x.sheets() if t.name.lower() == sheet_name.lower()][0]
+        for row_idx in xrange(sheet.nrows):
+            vals = [stringify(t) for t in sheet.row_values(row_idx)]
+            yield vals
+
 
 def parse_to_named_tuple(typname, reader, header, fieldspec):
     """
@@ -48,7 +86,7 @@ def parse_to_named_tuple(typname, reader, header, fieldspec):
     fns = [t[2] for t in fieldspec]
     for _, field_name, _ in fieldspec:
         idx = header.index(field_name)
-        assert(idx != -1)
+        assert (idx != -1)
         lookup.append(idx)
     for idx, row in enumerate(reader):
         tpl = [idx]
@@ -58,6 +96,7 @@ def parse_to_named_tuple(typname, reader, header, fieldspec):
                 val = fn(val)
             tpl.append(val)
         yield typ(*tpl)
+
 
 class MD5Load(object):
     @classmethod
@@ -77,7 +116,7 @@ class MD5Load(object):
         plain = folder.listdir(pattern="*.exf", filter=unipath.FILES)
         plain += folder.listdir(pattern="checksums.*", filter=unipath.FILES)
         plain += folder.listdir(pattern="*md5*", filter=unipath.FILES)
-        
+
         for path in plain:
             if not path.endswith('.xls'):
                 cls.parse_checksum_file(path, checksums)
@@ -102,6 +141,7 @@ class MD5Load(object):
 
     exf_line_re = re.compile(r'^([a-z0-9]{32}) \*(.*)$')
     md5_line_re = re.compile(r'^([a-z0-9]{32})  (.*)$')
+
     @classmethod
     def parse_checksum_file(cls, path, checksums):
         """copes with exf and plain md5 file formats"""
@@ -116,7 +156,8 @@ class MD5Load(object):
                 if m:
                     yield m.groups()
                     continue
-                # logging.info("skipped: " + path + " " + repr(line.rstrip()))
+                    # logging.info("skipped: " + path + " " + repr(line.rstrip()))
+
         cls.update_checksums_from_iter(checksums_iter(), checksums)
         return checksums
 
@@ -130,20 +171,26 @@ class MD5Load(object):
                     if len(vals) == 2 and len(vals[1]) == 32:
                         filename, md5 = vals
                         yield md5, filename
+
         cls.update_checksums_from_iter(xls_iter(), checksums)
         return checksums
+
 
 class AmbiguousChecksum(Exception):
     pass
 
+
 class NoChecksum(Exception):
     pass
+
 
 class Unknown(Exception):
     pass
 
+
 class FastqInventory(object):
     fastq = namedtuple('Fastq', ['filename', 'md5'])
+
     def __init__(self, base):
         self.base = base
         self.inventory = []
@@ -156,7 +203,7 @@ class FastqInventory(object):
             fastq += sub.listdir(pattern="*txt.bz2", filter=unipath.FILES)
             if len(fastq) == 0:
                 continue
-            # build a dictionary of MD5sums from this subdirectory up to our parent
+                # build a dictionary of MD5sums from this subdirectory up to our parent
             md5s = {}
             md5_sub = sub
             while True:
@@ -174,8 +221,8 @@ class FastqInventory(object):
                     self.ambiguous_checksum.add(path.name)
                     continue
                 self.inventory.append(self.fastq(path, md5s[path.name]))
-        # lookup by hash table and filename
-        self.lookup = dict( ((t.filename.name, t.md5), t) for t in self.inventory )
+            # lookup by hash table and filename
+        self.lookup = dict(((t.filename.name, t.md5), t) for t in self.inventory)
 
     def get_path_by_name_md5(self, filename, md5sum):
         path = self.lookup.get((filename, md5sum))
@@ -187,6 +234,7 @@ class FastqInventory(object):
             else:
                 raise Unknown(filename)
         return path
+
 
 class Archive(object):
     sane_uid = re.compile(r'^[0-9\.]+$')
@@ -206,17 +254,20 @@ class Archive(object):
                 fastq_info = self.fastq.get_path_by_name_md5(meta.filename, meta.md5)
                 matches.append((fastq_info, meta))
             except AmbiguousChecksum:
-                logging.error("File present in archive but ambiguous checksum %s / %s @%d" % (meta.filename, meta.md5, meta.row))
+                logging.error(
+                    "File present in archive but ambiguous checksum %s / %s @%d" % (meta.filename, meta.md5, meta.row))
                 ambiguous += 1
             except NoChecksum:
-                logging.error("File present in archive but no checksum %s / %s @%d" % (meta.filename, meta.md5, meta.row))
+                logging.error(
+                    "File present in archive but no checksum %s / %s @%d" % (meta.filename, meta.md5, meta.row))
                 no_checksum += 1
             except Unknown:
                 logging.error("File not found in BPA archive %s / %s @%d" % (meta.filename, meta.md5, meta.row))
                 unknown += 1
         problems = ambiguous + no_checksum + unknown
         logging.info(
-            "%d BPA %s metadata entries ok, %d problems (%d ambiguous, %d no checksum, %d totally unknown)" % (len(matches), type(self).__name__, problems, ambiguous, no_checksum, unknown))
+            "%d BPA %s metadata entries ok, %d problems (%d ambiguous, %d no checksum, %d totally unknown)" % (
+            len(matches), type(self).__name__, problems, ambiguous, no_checksum, unknown))
         return matches
 
     def build_linktree(self, root):
@@ -235,7 +286,8 @@ class Archive(object):
 
     def paths_for_match(self, meta, fastq):
         uid = meta.uid.replace('/', '.')
-        if not Archive.sane_uid.match(uid) or not Archive.sane_flow_cell_id.match(meta.flow_cell_id) or not Archive.sane_filename.match(meta.filename):
+        if not Archive.sane_uid.match(uid) or not Archive.sane_flow_cell_id.match(
+                meta.flow_cell_id) or not Archive.sane_filename.match(meta.filename):
             logging.error("sanity check failed, skipping: %s / %s / %s" % (uid, meta.flow_cell_id, meta.filename))
             raise Exception("invalid metadata")
         if meta.flow_cell_id:
@@ -259,15 +311,16 @@ class Archive(object):
             for fastq in self.fastq.inventory:
                 swift_path = self.swift_path(fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
-                print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
+                print >> fd, 'RedirectMatch "^%s$" "%s"' % (
+                re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
-            # make public linktree by patient ID / flow cell
+                # make public linktree by patient ID / flow cell
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
-                print >>fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(public_path), apache_escape(swift_uri))
-                
+                print >> fd, 'RedirectMatch "^%s$" "%s"' % (re.escape(public_path), apache_escape(swift_uri))
+
     def process(self, args):
         if args['--linktree']:
             root = Path(args['--linktree'])
@@ -281,6 +334,7 @@ class Archive(object):
     def generate_html(self, output_base, publicuri, swifturi):
         env = Environment()
         env.loader = FileSystemLoader('templates/')
+
         def render_directory(base, bpa_id=None):
             try:
                 os.mkdir(base)
@@ -288,35 +342,36 @@ class Archive(object):
                 pass # probably already exists
             template = env.get_template(self.template_name)
             output_filename = os.path.join(base, 'index.html')
-            tmpf = output_filename+'.tmp'
+            tmpf = output_filename + '.tmp'
             with open(tmpf, 'w') as fd:
                 template_env = self.get_template_environment(publicuri, swifturi, bpa_id)
                 if bpa_id is not None:
                     template_env['bpa_id'] = bpa_id
                 fd.write(template.render(template_env))
             os.rename(tmpf, output_filename)
+
         render_directory(output_base)
         for bpa_id in self.get_bpa_ids():
             render_directory(os.path.join(output_base, bpa_id.replace('/', '.')), bpa_id)
-    
+
     def generate_json_metadata(self, output_base, publicuri, swifturi):
         metadata_dict = {}
-        metadata_dict['files'] = [ {
-            "url" : urlparse.urljoin(publicuri, self.public_file_path(fastq)),
-            "filename" : fastq.filename.name,
-            "md5" : fastq.md5, 
-        }  for fastq in self.fastq.inventory ]
+        metadata_dict['files'] = [{
+                                      "url": urlparse.urljoin(publicuri, self.public_file_path(fastq)),
+                                      "filename": fastq.filename.name,
+                                      "md5": fastq.md5,
+                                  } for fastq in self.fastq.inventory]
         metadata_dict['matches'] = match_info = []
         if self.matches is not None:
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 match_info.append({
-                    "url" : urlparse.urljoin(publicuri, public_path),
-                    "filename" : fastq.filename.name,
-                    "md5" : fastq.md5, 
+                    "url": urlparse.urljoin(publicuri, public_path),
+                    "filename": fastq.filename.name,
+                    "md5": fastq.md5,
                 })
         json_filename = os.path.join(output_base, 'metadata.json')
-        tmpf = json_filename+'.tmp'
+        tmpf = json_filename + '.tmp'
         with open(tmpf, 'w') as fd:
             json.dump(metadata_dict, fd, sort_keys=True, indent=4, separators=(',', ': '))
         os.rename(tmpf, json_filename)
@@ -340,7 +395,9 @@ class Archive(object):
 
 
 class MelanomaArchive(Archive):
-    metadata_filename = '../../data/melanoma/melanoma_samples.csv'
+    metadata_filename = '../../data/melanoma/Melanoma_study_metadata.xlsx'
+    metadata_sheet = 'Melanoma_study_metadata'
+    pilot_sheet = 'Melanoma_pilot_study'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
 
@@ -351,27 +408,56 @@ class MelanomaArchive(Archive):
         self.matches = self.tie_metadata_to_fastq()
 
     def parse_metadata(self):
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
         metadata = []
-        with open(self.metadata_filename) as fd:
-            reader = csv.reader(fd)
-            header = [t.strip() for t in next(reader)]
-            # second header line - assert just to make sure it's still there, file format
-            # hasn't changed without script update
-            second_header = next(reader)
-            assert(second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
-            for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
-                    ('md5', 'MD5 checksum', None),
-                    ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-                    ('uid', 'Unique Identifier', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                    ('sample_name', 'Sample Name', None),
-                    ('date_received', 'Date Received', None),
-                    ('run', 'Run number', None),
-                    ]):
-                if tpl.filename == '':
-                    continue
+        header = [t.strip() for t in next(reader)]
+        # second header line - assert just to make sure it's still there, file format
+        # hasn't changed without script update
+        second_header = next(reader)
+        assert (second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
+            ('md5', 'MD5 checksum', None),
+            ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'Unique Identifier', None),
+            ('flow_cell_id', 'Run #:Flow Cell ID', None),
+            ('sample_name', 'Sample Name', None),
+            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('run', 'Run number', None),
+        ]):
+            if tpl.filename == '':
+                continue
                 # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
-                metadata.append(tpl)
+            metadata.append(tpl)
+
+        reader = wrapper.sheet_iter(self.pilot_sheet)
+        header = [t.strip() for t in next(reader)]
+        if header[0] == '':
+            header[0] = 'UID'
+
+        current_uid = None
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
+            ('md5', 'MD5 checksum', None),
+            ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'UID', None),
+            ('flow_cell_id', 'Run #:Flow Cell ID', None),
+            ('sample_name', 'Sample Name', None),
+            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('run', 'Run number', None),
+        ]):
+            if tpl.filename == '':
+                continue
+            if tpl.uid == '':
+                # ugly, we have to rewrite the tuple (it's immutable)
+                d = dict((t, getattr(tpl, t)) for t in dir(tpl) if
+                         not t.startswith('_') and not hasattr(getattr(tpl, t), '__call__'))
+                d['uid'] = current_uid
+                tpl = type(tpl)(**d)
+            else:
+                current_uid = tpl.uid
+                # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
+            metadata.append(tpl)
+
         return metadata
 
     def get_template_environment(self, publicuri, swifturi, bpa_id):
@@ -380,20 +466,21 @@ class MelanomaArchive(Archive):
             swift_path, public_path = self.paths_for_match(meta, fastq)
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
-                'bpa_id' : meta.uid,
-                'filename' : meta.filename,
-                'md5' : meta.md5,
-                'name' : meta.sample_name,
-                'date_received_from_sequencing_facility' : meta.date_received,
-                'run' : meta.run,
-                'url' : url,
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'md5': meta.md5,
+                'name': meta.sample_name,
+                'date_received_from_sequencing_facility': meta.date_received,
+                'run': meta.run,
+                'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
-        return { 'object_list' : objects }
+        return {'object_list': objects}
 
 
 class GBRArchive(Archive):
-    metadata_filename = '../../data/gbr/gbr_pilot_samples.csv'
+    metadata_filename = '../../data/gbr/BPA_ReFuGe2020_METADATA.xlsx'
+    metadata_sheet = 'DNA library Sequencing - Pilot'
     container_name = 'GBR'
     template_name = 'gbr.html'
 
@@ -405,24 +492,26 @@ class GBRArchive(Archive):
 
     def parse_metadata(self):
         metadata = []
-        with open(self.metadata_filename) as fd:
-            reader = csv.reader(fd)
-            header = [t.strip() for t in next(reader)]
-            for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
-                    ('md5', 'MD5 checksum', None),
-                    ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-                    ('uid', 'Unique ID', None),
-                    ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                    ('species', 'Species', None),
-                    ('dataset', 'Dataset', None),
-                    ('sample_name', 'Sample Description', None),
-                    ('date_received', 'Date data sent/transferred', None),
-                    ('run', 'Run number', None),
-                    ]):
-                if tpl.filename == '':
-                    continue
+
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
+            ('md5', 'MD5 checksum', None),
+            ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'Unique ID', None),
+            ('flow_cell_id', 'Run #:Flow Cell ID', None),
+            ('species', 'Species', None),
+            ('dataset', 'Dataset', None),
+            ('sample_name', 'Sample Description', None),
+            (
+            'date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('run', 'Run number', None),
+        ]):
+            if tpl.filename == '':
+                continue
                 # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
-                metadata.append(tpl)
+            metadata.append(tpl)
         return metadata
 
     def get_template_environment(self, publicuri, swifturi, bpa_id):
@@ -431,15 +520,16 @@ class GBRArchive(Archive):
             swift_path, public_path = self.paths_for_match(meta, fastq)
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
-                'bpa_id' : meta.uid,
-                'filename' : meta.filename,
-                'name' : meta.sample_name,
-                'date_received_from_sequencing_facility' : meta.date_received,
-                'run' : meta.run,
-                'url' : url,
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'name': meta.sample_name,
+                'date_received_from_sequencing_facility': meta.date_received,
+                'run': meta.run,
+                'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
-        return { 'object_list' : objects }
+        return {'object_list': objects}
+
 
 class NoMetadataArchive(Archive):
     def __init__(self, bpa_base):
@@ -454,31 +544,32 @@ class NoMetadataArchive(Archive):
             public_file_path = self.public_file_path(fastq)
             url = urlparse.urljoin(publicuri, public_file_path)
             objects.append({
-                'filename' : fastq.filename.name,
-                'md5' : fastq.md5,
-                'url' : url,
+                'filename': fastq.filename.name,
+                'md5': fastq.md5,
+                'url': url,
             })
-        return { 'object_list' : objects }
+        return {'object_list': objects}
+
 
 class Wheat7aArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat7a'
     template_name = 'wheat7a.html'
 
+
 class BASEArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'BASE'
     template_name = 'base.html'
 
+
 class WheatPathogensArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat_Pathogens'
     template_name = 'wheat_pathogens.html'
 
+
 class WheatCultivarsArchive(NoMetadataArchive):
-    metadata_filename = None
     container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
+
 
 if __name__ == '__main__':
     def sanity_check(args):

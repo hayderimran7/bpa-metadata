@@ -4,6 +4,8 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
+BPA_VERSION = '1.0.3'
+
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PROJECT_DIR = Path(__file__).ancestor(1)
@@ -123,11 +125,11 @@ ROOT_URLCONF = 'bpam.urls'
 WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
+    'bpam',
     'admin_tools',
     'admin_tools.theming',
     'admin_tools.menu',
     'admin_tools.dashboard',
-    'bpam',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -143,13 +145,13 @@ INSTALLED_APPS = (
     'apps.bpaauth',
     'apps.common',
     'apps.melanoma',
-    #'apps.gbr',
+    'apps.gbr',
     #'apps.BASE',
     #'apps.wheat_cultivars',
     #'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
-    'django_qbe',
+    #'django_qbe',
     'bootstrap3',
     'tastypie',
     'lettuce.django'

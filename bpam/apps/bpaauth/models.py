@@ -15,3 +15,6 @@ class BPAUser(AbstractUser):
     interest = models.CharField(max_length=200, blank=True)
     lab = models.CharField(max_length=200, blank=True)
     note = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return self.get_full_name()
