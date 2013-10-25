@@ -16,7 +16,8 @@ class ProtocolForm(forms.ModelForm):
 class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
     fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
-    search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
+    search_fields = (
+    'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
@@ -41,8 +42,29 @@ class RunAdmin(admin.ModelAdmin):
     list_filter = ('sequencing_facility', 'flow_cell_id', )
 
 
+class SampleAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Sample Identification',
+         {'fields': (('bpa_id', 'name'),)}),
+        ('DNA Source',
+         {'fields': (
+             'organism', 'dna_source', 'dna_extraction_protocol',)}),
+        ('Sample Management',
+         {'fields': (
+             'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'dataset',)}),
+        ('Contacts',
+         {'fields': ('contact_scientist', 'contact_bioinformatician',)}),
+        ('',
+         {'fields': ('note',)})
+    ]
+
+    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
+    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
+    list_filter = ('dna_source', 'requested_sequence_coverage',)
+
+
 admin.site.register(Collection)
-admin.site.register(GBRSample)
+admin.site.register(GBRSample, SampleAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
 admin.site.register(GBRRun, RunAdmin)
