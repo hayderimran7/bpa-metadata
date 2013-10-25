@@ -10,8 +10,9 @@ from apps.common.models import *
 from apps.melanoma.models import *
 from .utils import *
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
-MELANOMA_SPREADSHEET_FILE = Path(DATA_DIR, 'Melanoma_study_metadata.xlsx')
+# some defaults to fall back on
+DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
+DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'Melanoma_study_metadata.xlsx')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
@@ -146,7 +147,7 @@ def ingest_arrays(arrays):
         array.save()
 
 
-def get_melanoma_sample_data():
+def get_melanoma_sample_data(spreadsheet_file):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -184,7 +185,7 @@ def get_melanoma_sample_data():
                   'analysed',
                   'analysed_url']
 
-    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
+    wb = xlrd.open_workbook(spreadsheet_file)
     sheet = wb.sheet_by_name('Melanoma_study_metadata')
     samples = []
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
@@ -205,7 +206,7 @@ def get_melanoma_sample_data():
     return samples
 
 
-def get_array_data():
+def get_array_data(spreadsheet_file):
     """
     Copy if the 'Array Data' Tab from the Melanoma_study_metadata document
     """
@@ -219,7 +220,7 @@ def get_array_data():
                   'gender',
                   ]
 
-    wb = xlrd.open_workbook(MELANOMA_SPREADSHEET_FILE)
+    wb = xlrd.open_workbook(spreadsheet_file)
     sheet = wb.sheet_by_name('Array data')
     rows = []
     for row_idx in range(sheet.nrows)[1:]:
@@ -337,37 +338,47 @@ def ingest_runs(sample_data):
 
         return run
 
-    def add_file(e, run):
+    def add_file(entry, run):
         """
         Add each sequence file produced by a run
         """
 
-        file_name = e['sequence_filename'].strip()
-        if file_name != "":
+        file_name = entry['sequence_filename'].strip()
+        md5 = entry['md5_checksum'].strip()
+
+        if file_name == '':
+            logger.warning('Filename is not set, ignoring')
+            return
+
+        try:
+            f = MelanomaSequenceFile.objects.get(filename=file_name, md5=md5)
+        except MelanomaSequenceFile.DoesNotExist:
             f = MelanomaSequenceFile()
-            f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
-            f.date_received_from_sequencing_facility = check_date(e['date_received'])
-            f.run = run
-            f.index_number = get_clean_number(e['index_number'])
-            f.lane_number = get_clean_number(e['lane_number'])
-            f.filename = file_name
-            f.md5 = e['md5_checksum']
-            f.note = pprint.pformat(e)
-            f.save()
+
+        f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
+        f.date_received_from_sequencing_facility = check_date(entry['date_received'])
+        f.run = run
+        f.index_number = get_clean_number(entry['index_number'])
+        f.lane_number = get_clean_number(entry['lane_number'])
+        f.filename = file_name
+        f.md5 = md5
+        f.note = pprint.pformat(entry)
+        f.save()
 
     for e in sample_data:
         sequence_run = add_run(e)
         add_file(e, sequence_run)
 
 
-def ingest_melanoma():
-    sample_data = get_melanoma_sample_data()
+def ingest_melanoma(spreadsheet_file):
+    sample_data = get_melanoma_sample_data(spreadsheet_file)
     ingest_bpa_ids(sample_data, 'Melanoma')
     ingest_samples(sample_data)
-    ingest_arrays(get_array_data())
+    ingest_arrays(get_array_data(spreadsheet_file))
     ingest_runs(sample_data)
 
 
-def run():
+def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+    logger.info('Ingesting spreadsheet: ' + spreadsheet_file)
     add_organism(genus="Homo", species="Sapiens")
-    ingest_melanoma()
+    ingest_melanoma(spreadsheet_file)
