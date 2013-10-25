@@ -28,13 +28,6 @@ def get_data_files():
             data_files[package].extend(
                 [os.path.join(subdir, f) for (subdir, dirs, files) in os.walk(data_dir) for f in files])
         os.chdir(current_dir)
-
-    os.chdir('../data/')
-    data_files['data'] = [os.path.join(subdir, f) for (subdir, dirs, files) in os.walk('.') for f in files]
-    os.chdir(current_dir)
-
-    pprint(data_files)
-
     return data_files
 
 setup(
@@ -45,7 +38,7 @@ setup(
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
     packages=packages,
-    # package_data=get_data_files(),
+    package_data=get_data_files(),
     include_package_data=True,
     install_requires=[
         "Django==1.5.4",

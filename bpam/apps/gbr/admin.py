@@ -21,11 +21,31 @@ class ProtocolAdmin(admin.ModelAdmin):
     list_filter = ('library_type',)
 
 
+class ProtocolInline(admin.StackedInline):
+    model = GBRProtocol
+    extra = 0
+
+
+class RunAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Sample',
+         {'fields': ('sample',)}),
+        ('Sequencing Facilities',
+         {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
+        ('Sequencing',
+         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
+    ]
+    inlines = (ProtocolInline, )
+    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
+    search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
+    list_filter = ('sequencing_facility', 'flow_cell_id', )
+
+
 admin.site.register(Collection)
 admin.site.register(GBRSample)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
-admin.site.register(GBRRun)
+admin.site.register(GBRRun, RunAdmin)
 
     
     
