@@ -38,7 +38,7 @@ setup(
     author_email='web@ccg.murdoch.edu.au',
     license="gpl3",
     packages=packages,
-    # package_data=get_data_files(),
+    package_data=get_data_files(),
     include_package_data=True,
     install_requires=[
         "Django==1.5.4",
