@@ -9,6 +9,7 @@ from django.utils.encoding import smart_text
 from bpaauth.models import BPAUser
 from common.models import *
 
+
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 

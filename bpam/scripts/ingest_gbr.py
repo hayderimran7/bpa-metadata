@@ -9,12 +9,14 @@ from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.gbr.models import *
 from .utils import *
+import user_helper
 
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 GBR_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
 
 BPA_ID = "102.100.100"
+GBR = 'Great Barrier Reef'
 
 
 def get_dna_source(description):
@@ -47,13 +49,6 @@ def ingest_samples(samples):
 
         return facility
 
-
-    def get_gender(gender):
-        if gender == "":
-            gender = "U"
-        return gender
-
-
     def get_organism(name):
         """
         Set the organism
@@ -71,8 +66,6 @@ def ingest_samples(samples):
             organism.save()
 
         return organism
-
-
 
     def add_sample(e):
         bpa_id = e['bpa_id']
@@ -95,8 +88,24 @@ def ingest_samples(samples):
             sample.dna_extraction_protocol = e['dna_extraction_protocol']
             sample.dna_concentration = get_clean_number(e['dna_concentration'])
             sample.total_dna = get_clean_number(e['total_dna'])
-            # fixme
-            # sample.collector = e['collector']
+
+            # sample collector
+            sample.collector = user_helper.get_user(
+                e['collector_name'],
+                e['contact_email'],
+                GBR)
+            # scientist
+            sample.contact_scientist = user_helper.get_user(
+                e['contact_scientist'],
+                e['contact_email'],
+                (GBR, e['contact_affiliation']))
+
+            # bioinformatician
+            sample.contact_bioinformatician_name = user_helper.get_user(
+                e['contact_bioinformatician_name'],
+                e['contact_bioinformatician_email'],
+                GBR)
+
             # sample.gps_location = smart_text(e['gps_location'])
             sample.water_temp = get_clean_number(e['water_temp'])
             sample.ph = get_clean_number(e['ph'])
@@ -112,7 +121,7 @@ def ingest_samples(samples):
             sample.requested_read_length = get_clean_number(e['requested_read_length'])
             sample.date_data_sent = check_date(e['date_data_sent'])
             sample.date_data_received = check_date(e['date_data_received'])
-            # sample.contact_bioinformatician_name  = xxx
+
 
             # facilities
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
@@ -137,14 +146,14 @@ def get_gbr_sample_data():
                   'total_dna', # NEW
                   'collection_site', # NEW (model?)
                   'collection_date',
-                  'collector', # NEW
-                  'gps_location', # NEW
-                  'water_temp', # NEW
+                  'collector_name',  # NEW
+                  'gps_location',  # NEW
+                  'water_temp',  # NEW
                   'ph', # NEW
                   'depth', # NEW
                   'other', # NEW 
                   'requested_sequence_coverage',
-                  'sequencing_notes',  # NEW
+                  'sequencing_notes', # NEW
                   'contact_scientist',
                   'contact_affiliation',
                   'contact_email',
