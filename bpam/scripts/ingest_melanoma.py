@@ -338,23 +338,32 @@ def ingest_runs(sample_data):
 
         return run
 
-    def add_file(e, run):
+    def add_file(entry, run):
         """
         Add each sequence file produced by a run
         """
 
-        file_name = e['sequence_filename'].strip()
-        if file_name != "":
+        file_name = entry['sequence_filename'].strip()
+        md5 = entry['md5_checksum'].strip()
+
+        if file_name == '':
+            logger.warning('Filename is not set, ignoring')
+            return
+
+        try:
+            f = MelanomaSequenceFile.objects.get(filename=file_name, md5=md5)
+        except MelanomaSequenceFile.DoesNotExist:
             f = MelanomaSequenceFile()
-            f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=e['bpa_id'])
-            f.date_received_from_sequencing_facility = check_date(e['date_received'])
-            f.run = run
-            f.index_number = get_clean_number(e['index_number'])
-            f.lane_number = get_clean_number(e['lane_number'])
-            f.filename = file_name
-            f.md5 = e['md5_checksum']
-            f.note = pprint.pformat(e)
-            f.save()
+
+        f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
+        f.date_received_from_sequencing_facility = check_date(entry['date_received'])
+        f.run = run
+        f.index_number = get_clean_number(entry['index_number'])
+        f.lane_number = get_clean_number(entry['lane_number'])
+        f.filename = file_name
+        f.md5 = md5
+        f.note = pprint.pformat(entry)
+        f.save()
 
     for e in sample_data:
         sequence_run = add_run(e)
@@ -362,7 +371,6 @@ def ingest_runs(sample_data):
 
 
 def ingest_melanoma(spreadsheet_file):
-
     sample_data = get_melanoma_sample_data(spreadsheet_file)
     ingest_bpa_ids(sample_data, 'Melanoma')
     ingest_samples(sample_data)
