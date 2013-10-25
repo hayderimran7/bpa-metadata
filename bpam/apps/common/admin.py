@@ -12,6 +12,24 @@ from .models import (BPAProject,
                      )
 
 
+class SampleAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Sample Identification',
+         {'fields': (('bpa_id', 'name'))}),
+        ('DNA Source',
+         {'fields': (
+             'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
+        ('Sample Management',
+         {'fields': (
+             'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist',
+             'note')}),
+    ]
+
+    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
+    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
+    list_filter = ('dna_source', 'gender', 'requested_sequence_coverage',)
+
+
 class SequenceFileForm(forms.ModelForm):
     class Meta:
         model = SequenceFile
