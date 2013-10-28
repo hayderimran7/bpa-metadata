@@ -255,10 +255,10 @@ def ingest_runs(sample_data):
     def get_sample(bpa_id):
         try:
             sample = GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
-            print("Found sample {0}".format(sample))
+            logger.debug("Found sample {0}".format(sample))
             return sample
         except GBRSample.DoesNotExist:
-            print("No sample with ID {0}, quiting now".format(bpa_id))
+            logger.error("No sample with ID {0}, quiting now".format(bpa_id))
             sys.exit(1)
 
     def get_run_number(e):
@@ -274,9 +274,9 @@ def ingest_runs(sample_data):
                 if filename != "":
                     try:
                         run_number = get_clean_number(filename.split('_')[7])
-                        print("ANU run_number {0} parsed from filename".format(run_number))
+                        logger.info("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
-                        print("Filename {0} wrong format".format(filename))
+                        logger.info("Filename {0} wrong format".format(filename))
 
         return run_number
 
