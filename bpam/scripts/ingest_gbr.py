@@ -257,15 +257,15 @@ def ingest_runs(sample_data):
         library_construction_protocol = e['library_construction_protocol'].replace(',', '').capitalize()
 
         try:
-            protocol = GBRProtocol.objects.get(base_pairs=base_pairs, library_type=library_type,
+            protocol = GBRProtocol.objects.get(base_pairs=base_pairs,
+                                               library_type=library_type,
                                                library_construction_protocol=library_construction_protocol)
         except GBRProtocol.DoesNotExist:
-            protocol = GBRProtocol(base_pairs=base_pairs, library_type=library_type,
+            protocol = GBRProtocol(base_pairs=base_pairs,
+                                   library_type=library_type,
                                    library_construction_protocol=library_construction_protocol)
             protocol.save()
-
         return protocol
-
 
     def get_sequencer(name):
         if name == "":
