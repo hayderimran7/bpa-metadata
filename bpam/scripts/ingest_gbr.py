@@ -125,7 +125,6 @@ def ingest_samples(samples):
             sample.date_data_sent = check_date(e['date_data_sent'])
             sample.date_data_received = check_date(e['date_data_received'])
 
-
             # facilities
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
             sample.note = INGEST_NOTE + pprint.pformat(e)
