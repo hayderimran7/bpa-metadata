@@ -42,6 +42,8 @@ class SampleAdmin(admin.ModelAdmin):
          {'fields': (
              'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist',
              'note')}),
+        ('Source Data Note',
+         {'fields': ('debug_note',)}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
