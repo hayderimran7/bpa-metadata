@@ -70,7 +70,38 @@ def ingest_samples(samples):
 
         return organism
 
+    def get_collection_event(entry):
+        """
+        The site where the sample has been collected from.
+        """
+
+        try:
+            collection_event = CollectionEvent.objects.get(name=entry['collection_site'])
+        except CollectionEvent.DoesNotExist:
+            collection_event = CollectionEvent(name=entry['collection_site'])
+
+        collection_event.collection_date = get_date(entry['collection_date'])
+        collection_event.water_temp = get_clean_number(entry['water_temp'])
+        collection_event.ph = get_clean_number(entry['ph'])
+        collection_event.depth = get_clean_number(entry['depth'])
+        # site.gps_location = smart_text(e['gps_location'])
+        # site.note = entry['gps_location'] # FIXME
+
+         # sample collector
+        collection_event.collector = user_helper.get_user(
+            entry['collector_name'],
+            entry['contact_email'],
+            (GBR, ))
+
+        collection_event.save()
+
+        return collection_event
+
     def add_sample(e):
+        """
+        Adds new sample or updates existing sample
+        """
+
         bpa_id = e['bpa_id']
 
         if not is_bpa_id(bpa_id):
@@ -79,58 +110,52 @@ def ingest_samples(samples):
 
         try:
             # Test if sample already exists
-            # First come fist serve
-            GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
+            sample = GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
         except GBRSample.DoesNotExist:
             sample = GBRSample()
             sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
-            sample.name = e['sample_name']
-            sample.requested_sequence_coverage = e['requested_sequence_coverage'].upper()
-            sample.organism = get_organism(e['species'])
-            sample.dna_source = get_dna_source(e['sample_dna_source'])
-            sample.dna_extraction_protocol = e['dna_extraction_protocol']
-            sample.dna_concentration = get_clean_number(e['dna_concentration'])
-            sample.total_dna = get_clean_number(e['total_dna'])
 
-            # sample collector
-            sample.collector = user_helper.get_user(
-                e['collector_name'],
-                e['contact_email'],
-                GBR)
-            # scientist
-            sample.contact_scientist = user_helper.get_user(
-                e['contact_scientist'],
-                e['contact_email'],
-                (GBR, e['contact_affiliation']))
+        sample.name = e['sample_name']
+        sample.requested_sequence_coverage = e['requested_sequence_coverage'].upper()
+        sample.organism = get_organism(e['species'])
+        sample.dna_source = get_dna_source(e['sample_dna_source'])
+        sample.dna_extraction_protocol = e['dna_extraction_protocol']
+        sample.dna_concentration = get_clean_number(e['dna_concentration'])
+        sample.total_dna = get_clean_number(e['total_dna'])
 
-            # bioinformatician
-            sample.contact_bioinformatician_name = user_helper.get_user(
-                e['contact_bioinformatician_name'],
-                e['contact_bioinformatician_email'],
-                GBR)
 
-            # sample.gps_location = smart_text(e['gps_location'])
-            sample.water_temp = get_clean_number(e['water_temp'])
-            sample.ph = get_clean_number(e['ph'])
-            sample.depth = get_clean_number(e['depth'])
-            sample.requested_sequence_coverage = e['requested_sequence_coverage']
-            sample.sequencing_notes = e['sequencing_notes']
-            sample.dna_rna_concentration = get_clean_number(e['dna_rna_concentration'])
-            sample.total_dna_rna_shipped = get_clean_number(e['total_dna_rna_shipped'])
-            sample.comments_by_facility = e['comments_by_facility']
-            sample.sequencing_data_eta = check_date(e['sequencing_data_eta'])
-            sample.date_sequenced = check_date(e['date_sequenced'])
-            sample.requested_read_length = get_clean_number(e['requested_read_length'])
-            sample.date_data_sent = check_date(e['date_data_sent'])
-            sample.date_data_received = check_date(e['date_data_received'])
+        # scientist
+        sample.contact_scientist = user_helper.get_user(
+            e['contact_scientist'],
+            e['contact_email'],
+            (GBR, e['contact_affiliation']))
 
-            # facilities
-            sample.sequencing_facility = get_facility(e['sequencing_facility'])
-            sample.note = e['other']
-            sample.debug_note = INGEST_NOTE + pprint.pformat(e)
-            sample.save()
+        # bioinformatician
+        sample.contact_bioinformatician_name = user_helper.get_user(
+            e['contact_bioinformatician_name'],
+            e['contact_bioinformatician_email'],
+            (GBR,))
 
-            logger.info("Ingested GBR sample {0}".format(sample.name))
+        sample.requested_sequence_coverage = e['requested_sequence_coverage']
+        sample.sequencing_notes = e['sequencing_notes']
+        sample.dna_rna_concentration = get_clean_number(e['dna_rna_concentration'])
+        sample.total_dna_rna_shipped = get_clean_number(e['total_dna_rna_shipped'])
+        sample.comments_by_facility = e['comments_by_facility']
+        sample.sequencing_data_eta = check_date(e['sequencing_data_eta'])
+        sample.date_sequenced = check_date(e['date_sequenced'])
+        sample.requested_read_length = get_clean_number(e['requested_read_length'])
+        sample.date_data_sent = check_date(e['date_data_sent'])
+        sample.date_data_received = check_date(e['date_data_received'])
+
+        # facilities
+        sample.sequencing_facility = get_facility(e['sequencing_facility'])
+        sample.note = e['other']
+        sample.debug_note = INGEST_NOTE + pprint.pformat(e)
+
+        sample.collection_event = get_collection_event(e)
+        sample.save()
+
+        logger.info("Ingested GBR sample {0}".format(sample.name))
 
     for sample in samples:
         add_sample(sample)

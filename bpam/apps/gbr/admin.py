@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from apps.common.admin import SequenceFileAdmin
 
-from models import Collection, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from models import CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
@@ -79,7 +79,7 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
-admin.site.register(Collection)
+admin.site.register(CollectionEvent)
 admin.site.register(GBRSample, SampleAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)

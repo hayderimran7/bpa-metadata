@@ -8,6 +8,7 @@ from unipath import Path
 from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.melanoma.models import *
+import user_helper
 from .utils import *
 
 # some defaults to fall back on
@@ -69,55 +70,60 @@ def get_facility(name):
     return facility
 
 
-def get_contact(email):
-    """
-    See if we can find a contact for this sample based on the email address in the spreadsheet.
-    """
-    try:
-        return BPAUser.objects.get(email=email)
-    except BPAUser.DoesNotExist:
-        logger.warning('No user found with email: {0}'.format(email))
-        return None
-
-
 def ingest_samples(samples):
     def get_gender(gender):
         if gender == '':
             gender = 'U'
         return gender
 
+    def get_contact_scientist(names):
+        """
+        Get a user associated with this sample.
+        Names in the source doc looks like this:
+        James Wilmott/Grant McCathur/Mark Shackleton
+        or
+        James Wilmott
+        So pick the first one. We don't have more than one scientist associated with a sample.
+        If they want that, make a group.
+        """
+
+        if names.find('/') != -1:
+            name = names.split('/')[0]
+            return user_helper.get_user_by_full_name(name)
+        return user_helper.get_user_by_full_name(names)
+
     def add_sample(e):
         bpa_id = e['bpa_id']
         try:
             # Test if sample already exists
-            # First come fist serve
-            MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+            sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
         except MelanomaSample.DoesNotExist:
             sample = MelanomaSample()
-            sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
-            sample.name = e['sample_name']
-            sample.requested_sequence_coverage = e['sequence_coverage'].upper()
-            sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
-            sample.dna_source = get_dna_source(e['sample_dna_source'])
-            sample.dna_extraction_protocol = e['dna_extraction_protocol']
-            sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
-            sample.gender = get_gender(e['sample_gender'])
-            sample.histological_subtype = e['histological_subtype']
-            sample.passage_number = get_clean_number(e['passage_number'])
 
-            sample.contact_scientist = get_contact(e['contact_email'])
+        sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
+        sample.name = e['sample_name']
+        sample.requested_sequence_coverage = e['sequence_coverage'].upper()
+        sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
+        sample.dna_source = get_dna_source(e['sample_dna_source'])
+        sample.dna_extraction_protocol = e['dna_extraction_protocol']
+        sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
+        sample.gender = get_gender(e['sample_gender'])
+        sample.histological_subtype = e['histological_subtype']
+        sample.passage_number = get_clean_number(e['passage_number'])
 
-            # facilities
-            sample.array_analysis_facility = get_facility(e['array_analysis_facility'])
-            sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'])
-            sample.sequencing_facility = get_facility(e['sequencing_facility'])
+        sample.contact_scientist = get_contact_scientist(e['contact_scientists'])
 
-            sample.note = INGEST_NOTE + pprint.pformat(e)
-            sample.save()
-            logger.info("Ingested Melanoma sample {0}".format(sample.name))
+        # facilities
+        sample.array_analysis_facility = get_facility(e['array_analysis_facility'])
+        sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'])
+        sample.sequencing_facility = get_facility(e['sequencing_facility'])
 
-    for sample in samples:
-        add_sample(sample)
+        sample.note = INGEST_NOTE + pprint.pformat(e)
+        sample.save()
+        logger.info("Ingested Melanoma sample {0}".format(sample.name))
+
+    for s in samples:
+        add_sample(s)
 
 
 def ingest_arrays(arrays):
@@ -134,11 +140,14 @@ def ingest_arrays(arrays):
         return 'U'
 
     for e in arrays:
-        array = Array()
+        try:
+            array = Array.objects.get(bpa_id__bpa_id=e['bpa_id'])
+        except Array.DoesNotExist:
+            array = Array()
+            array.bpa_id = get_bpa_id(e['bpa_id'], project_name="Melanoma")
+            array.note = u"Created during array ingestion on {0}".format(date.today())
+
         array.batch_number = int(e['batch_no'])
-        array.bpa_id = get_bpa_id(e['bpa_id'],
-                                  project_name="Melanoma",
-                                  note=u"Created during array ingestion on {0}".format(date.today()))
         array.mia_id = e['mia_id']
         array.array_id = e['array_id']
         array.call_rate = float(e['call_rate'])
@@ -157,7 +166,7 @@ def get_melanoma_sample_data(spreadsheet_file):
                   'sequence_coverage',
                   'sequencing_facility',
                   'species',
-                  'contact_scientist', # FIXME this isn't imported anywhere
+                  'contact_scientists',
                   'contact_affiliation',
                   'contact_email',
                   'sample_gender',
@@ -321,6 +330,8 @@ def ingest_runs(sample_data):
             run.flow_cell_id = flow_cell_id
             run.run_number = run_number
             run.sample = get_sample(bpa_id)
+
+            # Update FIXME
             run.passage_number = get_clean_number(entry['passage_number'])
             run.index_number = get_clean_number(entry['index_number'])
             run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column

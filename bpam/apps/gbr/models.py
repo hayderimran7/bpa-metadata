@@ -10,22 +10,27 @@ from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile,
 from django.utils.translation import ugettext_lazy as _
 
 
-class Collection(models.Model):
+class CollectionEvent(models.Model):
     """
     Data surrounding a Coral collection
     """
 
-    type = models.CharField(max_length=100)
-    site = models.CharField(max_length=100)
-    date = models.DateField()
-    gps_location = models.CharField(max_length=100)  # FIXME, nice geo types
-    water_temperature = models.IntegerField()
-    water_ph = models.IntegerField()
-    depth = models.IntegerField()
+    name = models.CharField(max_length=100, null=True, blank=True)
+    collection_date = models.DateField(blank=True, null=True)
+    collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
+    # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
+    gps_location = models.CharField(max_length=100, null=True, blank=True)
+    water_temp = models.FloatField(null=True, blank=True)
+    water_ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
+    depth = models.FloatField(null=True, blank=True)
+
     note = models.TextField(blank=True)
 
+    class Meta:
+        unique_together = ('name', 'collection_date')
+
     def __unicode__(self):
-        return u'{0} {1} {2}'.format(self.type, self.site, self.date)
+        return u'{0} {1}'.format(self.name, self.collection_date)
 
 
 class GBRSample(Sample, DebugNote):
@@ -37,13 +42,9 @@ class GBRSample(Sample, DebugNote):
     dataset = models.CharField(max_length=100, null=True, blank=True)
     dna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA Concentration'))
     total_dna = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA'))
-    collection_site = models.CharField(max_length=100, null=True, blank=True)
-    collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
-    # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
-    gps_location = models.CharField(max_length=100, null=True, blank=True)
-    water_temp = models.FloatField(null=True, blank=True)
-    ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
-    depth = models.FloatField(null=True, blank=True)
+
+    collection_event = models.ForeignKey(CollectionEvent)
+
     sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
     dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration'))
     total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))

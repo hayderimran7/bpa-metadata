@@ -205,3 +205,6 @@ class DebugNote(models.Model):
     A text field to use for debugging. Stores the original parsed data.
     """
     debug_note = models.TextField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
