@@ -24,7 +24,7 @@ def get_group(name):
     try:
         group = Group.objects.get(name=name)
     except Group.DoesNotExist:
-        print("Group {0} does not exit, adding it".format(name))
+        logger.info("Group {0} does not exit, adding it".format(name))
         group = Group(name=name)
         group.save()
 

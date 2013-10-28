@@ -11,9 +11,12 @@ from apps.gbr.models import *
 from .utils import *
 import user_helper
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
-GBR_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
+DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
 
 BPA_ID = "102.100.100"
 GBR = 'Great Barrier Reef'
@@ -127,13 +130,13 @@ def ingest_samples(samples):
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
             sample.note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
-            print("Ingested GBR sample {0}".format(sample.name))
+            logger.info("Ingested GBR sample {0}".format(sample.name))
 
     for sample in samples:
         add_sample(sample)
 
 
-def get_gbr_sample_data():
+def get_gbr_sample_data(spreadsheet_file):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -184,7 +187,7 @@ def get_gbr_sample_data():
                   'date_data_received', # NEW
     ]
 
-    wb = xlrd.open_workbook(GBR_SPREADSHEET_FILE)
+    wb = xlrd.open_workbook(spreadsheet_file)
     sheet = wb.sheet_by_name('DNA library Sequencing - Pilot')
     samples = []
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
@@ -325,12 +328,17 @@ def ingest_runs(sample_data):
         add_file(e, sequence_run)
 
 
-def ingest_gbr():
-    sample_data = get_gbr_sample_data()
+def ingest_gbr(spreadsheet_file):
+    sample_data = get_gbr_sample_data(spreadsheet_file)
     ingest_bpa_ids(sample_data, 'GBR')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
 
-def run():
-    ingest_gbr()
+def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+    """
+    Pass parameters like below:
+    vpython-bpam manage.py runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
+    """
+
+    ingest_gbr(spreadsheet_file)

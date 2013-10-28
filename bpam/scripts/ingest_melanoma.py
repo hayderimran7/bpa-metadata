@@ -379,6 +379,11 @@ def ingest_melanoma(spreadsheet_file):
 
 
 def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+    """
+    Pass parameters like below:
+    vpython-bpam manage.py runscript ingest_melanoma --script-args Melanoma_study_metadata.xlsx
+    """
+
     logger.info('Ingesting spreadsheet: ' + spreadsheet_file)
     add_organism(genus="Homo", species="Sapiens")
     ingest_melanoma(spreadsheet_file)
