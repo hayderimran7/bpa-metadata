@@ -118,7 +118,8 @@ def ingest_samples(samples):
         sample.whole_genome_sequencing_facility = get_facility(e['whole_genome_sequencing_facility'])
         sample.sequencing_facility = get_facility(e['sequencing_facility'])
 
-        sample.note = INGEST_NOTE + pprint.pformat(e)
+        sample.note = u'{0} {1} {2}'.format(e['contact_scientists'], e['contact_affiliation'], e['contact_email'])
+        sample.debug_note = INGEST_NOTE + pprint.pformat(e)
         sample.save()
         logger.info("Ingested Melanoma sample {0}".format(sample.name))
 
