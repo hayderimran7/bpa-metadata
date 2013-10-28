@@ -94,9 +94,9 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('name', 'collection_date', 'collector')
+    list_display = ('name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
     search_fields = ('name', 'collector', 'note')
-    list_filter = ('name', 'collector', )
+    list_filter = ('name', )
 
 admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRSample, SampleAdmin)

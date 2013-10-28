@@ -83,19 +83,19 @@ def ingest_samples(samples):
             collection_event.name = entry['collection_site']
             collection_event.collection_date = collection_date
 
-        collection_event.water_temp = get_clean_number(entry['water_temp'])
-        collection_event.ph = get_clean_number(entry['ph'])
-        collection_event.depth = get_clean_number(entry['depth'])
-        # site.gps_location = smart_text(e['gps_location'])
-        # site.note = entry['gps_location'] # FIXME
+            collection_event.water_temp = get_clean_number(entry['water_temp'])
+            collection_event.ph = get_clean_number(entry['ph'])
+            collection_event.depth = get_clean_number(entry['depth'])
+            collection_event.gps_location = unicode(entry['gps_location'])
+            # collection_event.note = entry['gps_location'] # FIXME
 
-         # sample collector
-        collection_event.collector = user_helper.get_user(
-            entry['collector_name'],
-            entry['contact_email'],
-            (GBR, ))
+             # sample collector
+            collection_event.collector = user_helper.get_user(
+                entry['collector_name'],
+                entry['contact_email'],
+                (GBR, ))
 
-        collection_event.save()
+            collection_event.save()
 
         return collection_event
 
