@@ -68,7 +68,10 @@ class SampleAdmin(admin.ModelAdmin):
         ('Contacts',
          {'fields': ('contact_scientist', 'contact_bioinformatician',)}),
         ('',
-         {'fields': ('note',)})
+         {'fields': ('note',)}),
+        ('Debug',
+         {'fields': ('debug_note',)})
+
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')

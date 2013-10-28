@@ -5,7 +5,8 @@ from django.db import models
 from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
+from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification, DebugNote
+
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -27,7 +28,7 @@ class Collection(models.Model):
         return u'{0} {1} {2}'.format(self.type, self.site, self.date)
 
 
-class GBRSample(Sample):
+class GBRSample(Sample, DebugNote):
     """
     GBR specific Sample
     """
@@ -43,7 +44,6 @@ class GBRSample(Sample):
     water_temp = models.FloatField(null=True, blank=True)
     ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
     depth = models.FloatField(null=True, blank=True)
-    other = models.TextField(null=True, blank=True)
     sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
     dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration'))
     total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))

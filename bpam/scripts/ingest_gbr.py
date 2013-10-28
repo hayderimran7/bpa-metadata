@@ -113,7 +113,6 @@ def ingest_samples(samples):
             sample.water_temp = get_clean_number(e['water_temp'])
             sample.ph = get_clean_number(e['ph'])
             sample.depth = get_clean_number(e['depth'])
-            sample.other = e['other']
             sample.requested_sequence_coverage = e['requested_sequence_coverage']
             sample.sequencing_notes = e['sequencing_notes']
             sample.dna_rna_concentration = get_clean_number(e['dna_rna_concentration'])
@@ -127,8 +126,10 @@ def ingest_samples(samples):
 
             # facilities
             sample.sequencing_facility = get_facility(e['sequencing_facility'])
-            sample.note = INGEST_NOTE + pprint.pformat(e)
+            sample.note = e['other']
+            sample.debug_note = INGEST_NOTE + pprint.pformat(e)
             sample.save()
+
             logger.info("Ingested GBR sample {0}".format(sample.name))
 
     for sample in samples:
