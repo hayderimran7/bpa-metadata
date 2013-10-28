@@ -22,7 +22,7 @@ class CollectionEvent(models.Model):
     gps_location = models.CharField(max_length=100, null=True, blank=True)
     water_temp = models.FloatField(null=True, blank=True)
     water_ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
-    depth = models.FloatField(null=True, blank=True)
+    depth = models.CharField(max_length=20, null=True, blank=True)
 
     note = models.TextField(blank=True)
 
