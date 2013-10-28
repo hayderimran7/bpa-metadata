@@ -67,20 +67,22 @@ def ingest_samples(samples):
             organism.species = species
             organism.note = 'GBR'
             organism.save()
-
         return organism
 
     def get_collection_event(entry):
         """
         The site where the sample has been collected from.
         """
-
+        collection_date = check_date(entry['collection_date'])
         try:
-            collection_event = CollectionEvent.objects.get(name=entry['collection_site'])
+            collection_event = CollectionEvent.objects.get(
+                name=entry['collection_site'],
+                collection_date=collection_date)
         except CollectionEvent.DoesNotExist:
-            collection_event = CollectionEvent(name=entry['collection_site'])
+            collection_event = CollectionEvent()
+            collection_event.name = entry['collection_site']
+            collection_event.collection_date = collection_date
 
-        collection_event.collection_date = get_date(entry['collection_date'])
         collection_event.water_temp = get_clean_number(entry['water_temp'])
         collection_event.ph = get_clean_number(entry['ph'])
         collection_event.depth = get_clean_number(entry['depth'])

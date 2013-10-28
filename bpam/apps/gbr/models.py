@@ -27,7 +27,7 @@ class CollectionEvent(models.Model):
     note = models.TextField(blank=True)
 
     class Meta:
-        unique_together = ('name', 'collection_date')
+        unique_together = (('name', 'collection_date'))
 
     def __unicode__(self):
         return u'{0} {1}'.format(self.name, self.collection_date)

@@ -83,7 +83,22 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
-admin.site.register(CollectionEvent)
+class CollectionEventAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Collection',
+         {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),
+        ('Site Data',
+         {'fields': ('water_temp', 'water_ph', 'depth')}),
+        ('Note',
+         {'fields': ('note',)}),
+
+    ]
+
+    list_display = ('name', 'collection_date', 'collector')
+    search_fields = ('name', 'collector', 'note')
+    list_filter = ('name', 'collector', )
+
+admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRSample, SampleAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
