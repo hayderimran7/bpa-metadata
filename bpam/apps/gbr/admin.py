@@ -2,7 +2,11 @@ from django.contrib import admin
 from django import forms
 from apps.common.admin import SequenceFileAdmin
 
-from models import CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from .models import CollectionEvent
+from .models import GBRSample
+from .models import GBRRun
+from .models import GBRProtocol
+from .models import GBRSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
@@ -66,11 +70,11 @@ class SampleAdmin(admin.ModelAdmin):
              'comments_by_facility',
              'sequencing_notes')}),
         ('Contacts',
-         {'fields': ('contact_scientist', 'contact_bioinformatician',)}),
+         {'fields': ('contact_scientist', 'contact_bioinformatician')}),
         ('',
          {'fields': ('note',)}),
         ('Debug',
-         {'fields': ('debug_note',)})
+         {'fields': ('debug_note',)}),
 
     ]
 
