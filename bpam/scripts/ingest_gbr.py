@@ -86,8 +86,8 @@ def ingest_samples(samples):
             collection_event.water_temp = get_clean_number(entry['water_temp'])
             collection_event.ph = get_clean_number(entry['ph'])
             collection_event.depth = get_clean_number(entry['depth'])
-            collection_event.gps_location = unicode(entry['gps_location'])
-            # collection_event.note = entry['gps_location'] # FIXME
+            collection_event.gps_location = entry['gps_location']
+            collection_event.note = entry['collection_comment']
 
              # sample collector
             collection_event.collector = user_helper.get_user(
@@ -181,6 +181,7 @@ def get_gbr_sample_data(spreadsheet_file):
                   'water_temp',  # NEW
                   'ph', # NEW
                   'depth', # NEW
+                  'collection_comment',
                   'other', # NEW 
                   'requested_sequence_coverage',
                   'sequencing_notes', # NEW
