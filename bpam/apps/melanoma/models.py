@@ -5,7 +5,16 @@ from django.db import models
 from django.conf import settings
 
 from apps.bpaauth.models import BPAUser
-from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification
+
+from apps.common.models import Protocol
+from apps.common.models import Sample
+from apps.common.models import Run
+from apps.common.models import BPAUniqueID
+from apps.common.models import SequenceFile
+from apps.common.models import Organism
+from apps.common.models import URLVerification
+from apps.common.models import DebugNote
+
 from django.utils.translation import ugettext_lazy as _
 
 GENDERS = (('M', 'Male'),
@@ -42,7 +51,7 @@ class Array(models.Model):
         return u'{0} {1} {2}'.format(self.bpa_id, self.array_id, self.mia_id)
 
 
-class MelanomaSample(Sample):
+class MelanomaSample(Sample, DebugNote):
     """
     Melanoma specific Sample
     """

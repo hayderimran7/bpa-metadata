@@ -3,6 +3,7 @@ This module provides some user management tools
 """
 
 import logging
+import pprint
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
@@ -24,7 +25,7 @@ def get_group(name):
     try:
         group = Group.objects.get(name=name)
     except Group.DoesNotExist:
-        print("Group {0} does not exit, adding it".format(name))
+        logger.info("Group {0} does not exit, adding it".format(name))
         group = Group(name=name)
         group.save()
 
@@ -47,7 +48,7 @@ def get_unpacked_user_labels(name):
     return username, first_name, last_name
 
 
-def get_user(name, email, *group_names):
+def get_user(name, email, group_names):
     """
     Get user by email
     """
@@ -92,7 +93,6 @@ def make_new_user(username, contact):
     """
     contact is a dictionary providing the necessary values.
     """
-
     user_class = get_user_model()
     user = user_class()
     user.username = username
@@ -108,3 +108,26 @@ def make_new_user(username, contact):
     group = get_group(contact['Project'])
     user.groups.add(group)
     user.save()
+
+
+def get_user_by_email(email):
+    """
+    See if we can find a contact for this sample based on the email address in the spreadsheet.
+    """
+    try:
+        return get_user_model().objects.get(email=email)
+    except get_user_model().DoesNotExist:
+        logger.warning('No user found with email: {0}'.format(email))
+        return None
+
+
+def get_user_by_full_name(name):
+    """
+    See if we can find a contact for this sample based on the user name
+    """
+    username, first_name, last_name = get_unpacked_user_labels(name)
+    try:
+        return get_user_model().objects.get(username=username)
+    except get_user_model().DoesNotExist:
+        logger.warning('No user found with name: {0}'.format(name))
+        return None

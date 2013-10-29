@@ -198,3 +198,13 @@ class URLVerification(models.Model):
     checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
     status_ok = models.BooleanField()
     status_note = models.TextField()
+
+
+class DebugNote(models.Model):
+    """
+    A text field to use for debugging. Stores the original parsed data.
+    """
+    debug_note = models.TextField(blank=True, null=True)
+
+    class Meta:
+        abstract = True

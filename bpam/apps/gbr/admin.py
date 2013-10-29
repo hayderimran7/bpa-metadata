@@ -2,7 +2,11 @@ from django.contrib import admin
 from django import forms
 from apps.common.admin import SequenceFileAdmin
 
-from models import Collection, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from .models import CollectionEvent
+from .models import GBRSample
+from .models import GBRRun
+from .models import GBRProtocol
+from .models import GBRSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
@@ -46,16 +50,32 @@ class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
          {'fields': (('bpa_id', 'name'),)}),
-        ('DNA Source',
+        ('DNA/RNA Source',
          {'fields': (
-             'organism', 'dna_source', 'dna_extraction_protocol',)}),
+             'organism',
+             'dna_source',
+             'dna_extraction_protocol',
+             ('dna_concentration', 'total_dna', 'dna_rna_concentration', 'total_dna_rna_shipped'),
+         )}),
         ('Sample Management',
          {'fields': (
-             'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'dataset',)}),
+             'dataset',
+             'requested_sequence_coverage',
+             'requested_read_length',
+             'date_sent_to_sequencing_facility',
+             'date_sequenced',
+             # 'date_data_sent',
+             # 'date_data_received',
+             'sequencing_data_eta',
+             'comments_by_facility',
+             'sequencing_notes')}),
         ('Contacts',
-         {'fields': ('contact_scientist', 'contact_bioinformatician',)}),
+         {'fields': ('contact_scientist', 'contact_bioinformatician')}),
         ('',
-         {'fields': ('note',)})
+         {'fields': ('note',)}),
+        ('Debug',
+         {'fields': ('debug_note',)}),
+
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
@@ -63,7 +83,22 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
-admin.site.register(Collection)
+class CollectionEventAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Collection',
+         {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),
+        ('Site Data',
+         {'fields': ('water_temp', 'water_ph', 'depth')}),
+        ('Note',
+         {'fields': ('note',)}),
+
+    ]
+
+    list_display = ('name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
+    search_fields = ('name', 'collector', 'note')
+    list_filter = ('name', )
+
+admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRSample, SampleAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
