@@ -61,14 +61,8 @@ is_root() {
    fi
 }
 
-
-
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings"
-}
-
-demosettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings.demo"
+    export DJANGO_SETTINGS_MODULE="bpam.nsettings.dev"
 }
 
 activate_virtualenv() {
@@ -123,12 +117,10 @@ ci_rpm_publish() {
     time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
-
 # destroy our ci build server
 ci_remote_destroy() {
     ccg ${AWS_BUILD_INSTANCE} destroy
 }
-
 
 # puppet up staging which will install the latest rpm
 ci_staging() {
