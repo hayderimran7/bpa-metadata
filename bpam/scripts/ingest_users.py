@@ -13,8 +13,8 @@ DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
 USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
 
 
-def get_data():
-    with open(USERS_FILE, 'rb') as contacts:
+def get_data(users_file):
+    with open(users_file, 'rb') as contacts:
         fieldnames = ['Project', 'First name', 'Last name', 'Organisation', 'Email', 'Interest', 'Lab']
         reader = csv.DictReader(contacts, fieldnames=fieldnames, restkey='therest')
         return strip_all(reader)
@@ -34,12 +34,12 @@ def filter_contacts(contact):
     return False
 
 
-def ingest_contacts():
+def ingest_contacts(users_file):
     """
     Contacts associated with BPA pojects
     """
 
-    for contact in get_data():
+    for contact in get_data(users_file):
         if filter_contacts(contact):
             continue
 
@@ -54,6 +54,10 @@ def ingest_contacts():
             user_helper.make_new_user(username, contact)
 
 
-def run():
-    ingest_contacts()
+def run(users_file=USERS_FILE):
+    """
+    Pass parameters like below:
+    vpython-bpam manage.py runscript ingest_users --script-args bpa-users.csv
+    """
+    ingest_contacts(users_file)
 
