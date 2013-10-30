@@ -1,5 +1,7 @@
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
+from apps.gbr.models import GBRSequenceFile
+
 from django.db import transaction
 import requests, time, sys
 
@@ -32,6 +34,11 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         time.sleep(sleep_time)
 
 
+def check_gbr(sleep_time):
+    session = requests.Session()
+    process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
+
 def check_melanoma(sleep_time):
     session = requests.Session()
     session.auth = ('bpa', 'm3lan0ma')
@@ -50,5 +57,6 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
     check_melanoma(sleep_time)
+    check_gbr(sleep_time)
 
 

@@ -19,7 +19,7 @@ STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
 #)
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child("bpam.templates"),
+    PROJECT_DIR.child('bpam.templates'),
 )
 
 DEBUG = True
@@ -154,7 +154,7 @@ INSTALLED_APPS = (
     #'django_qbe',
     'bootstrap3',
     'tastypie',
-    'lettuce.django'
+    'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging
