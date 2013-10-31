@@ -265,9 +265,16 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+unittest() {
+    coverage run manage.py test --settings=bpam.nsettings.test
+}
+
 case ${ACTION} in
+    unittest)
+        unittest
+        ;;
     flushdb)
-	flushdb
+	    flushdb
         ;;
     pythonversion)
         pythonversion

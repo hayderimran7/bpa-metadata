@@ -1,32 +1,26 @@
 import os
 from unipath import Path
 
-
-def get_env_variable(var_name):
-    """
-    Get the environment variable or return exception
-    """
-    from django.core.exceptions import ImproperlyConfigured
-
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = 'Set the {0} environment variable'.format(var_name)
-        raise ImproperlyConfigured(error_msg)
-
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 BPA_VERSION = '1.0.4'
-WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_DIR = Path(__file__).ancestor(1)
-MEDIA_ROOT = PROJECT_DIR.child("media")
-STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
+
+PROJECT_ROOT = Path(__file__).ancestor(3)
+
+MEDIA_ROOT = PROJECT_ROOT.child("media")
+
+STATIC_ROOT = Path(__file__).ancestor(1).child("static")
+
+STATICFILES_DIRS = (
+    PROJECT_ROOT.child("assets"),
+)
+
 
 #STATICFILES_DIRS = (
 #    PROJECT_DIR.child("static"),
 #)
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child('bpam.templates'),
+    PROJECT_ROOT.child('bpam.templates'),
 )
 
 DEBUG = True
@@ -193,4 +187,15 @@ LOGGING = {
 
 
 
+def get_env_variable(var_name):
+    """
+    Get the environment variable or return exception
+    """
+    from django.core.exceptions import ImproperlyConfigured
+
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = 'Set the {0} environment variable'.format(var_name)
+        raise ImproperlyConfigured(error_msg)
 
