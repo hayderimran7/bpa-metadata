@@ -12,3 +12,6 @@ class BPAUserTests(TestCase):
 
     def test_list(self):
         self.assertEquals(len(BPAUser.objects.all()), self.USER_COUNT)
+
+    def test_no_user(self):
+        self.assertRaises(BPAUser.DoesNotExist, lambda: BPAUser.objects.get(username='testuser666'))
