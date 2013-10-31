@@ -247,6 +247,7 @@ dev() {
 usage() {
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (unittest|coverage)"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
 }
@@ -265,11 +266,18 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+coverage() {
+    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+}
+
 unittest() {
     coverage run manage.py test --settings=bpam.nsettings.test
 }
 
 case ${ACTION} in
+    coverage)
+        coverage
+        ;;
     unittest)
         unittest
         ;;
