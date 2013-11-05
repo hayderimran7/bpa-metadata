@@ -273,9 +273,22 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+nuclear() {
+    is_root
+    bpam reset_db --router=default
+    bpam syncdb
+    bpam migrate
+    bpam runscript ingest_users --script-args ./data/users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
+    bpam runscript ingest_melanoma --script-args ./data/melanoma/Melanoma_study_metadata.xlsx
+    bpam runscript ingest_gbr --script-args ./BPA_ReFuGe2020_METADATA.xlsx
+}
+
 case ${ACTION} in
     flushdb)
-	flushdb
+	    flushdb
+        ;;
+    nuclear)
+	    nuclear
         ;;
     pythonversion)
         pythonversion
