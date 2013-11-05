@@ -272,11 +272,14 @@ flushdb() {
 }
 
 coverage() {
+    log_info "Running coverage with reports"
+    coverage run manage.py test --settings=bpam.nsettings.test --traceback
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
 }
 
 unittest() {
-    coverage run manage.py test --settings=bpam.nsettings.test
+    log_info "Running Unit Test"
+    python manage.py test --settings=bpam.nsettings.test --traceback
 }
 
 case ${ACTION} in
