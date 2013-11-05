@@ -64,11 +64,7 @@ is_root() {
 
 
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings"
-}
-
-demosettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings.demo"
+    export DJANGO_SETTINGS_MODULE="bpam.nsettings.dev"
 }
 
 activate_virtualenv() {
@@ -255,6 +251,7 @@ dev() {
 usage() {
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (unittest|coverage)"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
 }
@@ -273,17 +270,21 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
-nuclear() {
-    is_root
-    bpam reset_db --router=default
-    bpam syncdb
-    bpam migrate
-    bpam runscript ingest_users --script-args ./data/users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
-    bpam runscript ingest_melanoma --script-args ./data/melanoma/Melanoma_study_metadata.xlsx
-    bpam runscript ingest_gbr --script-args ./BPA_ReFuGe2020_METADATA.xlsx
+coverage() {
+    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+}
+
+unittest() {
+    coverage run manage.py test --settings=bpam.nsettings.test
 }
 
 case ${ACTION} in
+    coverage)
+        coverage
+        ;;
+    unittest)
+        unittest
+        ;;
     flushdb)
 	    flushdb
         ;;

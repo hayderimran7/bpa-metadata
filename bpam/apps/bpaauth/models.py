@@ -18,3 +18,4 @@ class BPAUser(AbstractUser):
 
     def __unicode__(self):
         return self.get_full_name()
+

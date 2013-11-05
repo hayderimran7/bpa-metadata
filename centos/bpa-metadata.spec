@@ -89,7 +89,8 @@ find %{buildinstalldir} -name '*.py' -type f -print0 | xargs -0 sed -i 's:^#!/us
 # Clear out staticfiles data and regenerate
 # fixme: not sure whether staticfiles app will be used
 rm -rf %{installdir}/static/*
-%{nickname} collectstatic --noinput > /dev/null
+echo "collectstatic:" >&2
+%{nickname} collectstatic --noinput # > /dev/null
 # Remove root-owned logged files just created by collectstatic
 rm -rf /var/log/%{name}/*
 # Touch the wsgi file to get the app reloaded by mod_wsgi

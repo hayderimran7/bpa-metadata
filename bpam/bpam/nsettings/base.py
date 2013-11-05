@@ -1,25 +1,26 @@
-# Django settings for bpametadata project.
-
 import os
 from unipath import Path
-from django.core.exceptions import ImproperlyConfigured
 
+BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 BPA_VERSION = '1.0.4'
 
-WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = Path(__file__).ancestor(3)
 
-PROJECT_DIR = Path(__file__).ancestor(1)
+MEDIA_ROOT = PROJECT_ROOT.child("media")
 
-MEDIA_ROOT = PROJECT_DIR.child("media")
+STATIC_ROOT = Path(__file__).ancestor(1).child("static")
 
-STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
+STATICFILES_DIRS = (
+    PROJECT_ROOT.child("assets"),
+)
+
 
 #STATICFILES_DIRS = (
 #    PROJECT_DIR.child("static"),
 #)
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child('bpam.templates'),
+    PROJECT_ROOT.child('bpam.templates'),
 )
 
 DEBUG = True
@@ -100,7 +101,7 @@ SECRET_KEY = '2(3)7aip&90=vw@(qwfzvi@zyw8ll+ekq0_mp4rfd-7hn14mmk'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -109,8 +110,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #Uncomment the next line for simple clickjacking protection:
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -151,10 +152,8 @@ INSTALLED_APPS = (
     #'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
-    #'django_qbe',
     'bootstrap3',
     'tastypie',
-    'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -187,19 +186,16 @@ LOGGING = {
 }
 
 
+
 def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
+    """
+    Get the environment variable or return exception
+    """
+    from django.core.exceptions import ImproperlyConfigured
+
     try:
         return os.environ[var_name]
     except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
+        error_msg = 'Set the {0} environment variable'.format(var_name)
         raise ImproperlyConfigured(error_msg)
 
-BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
-
-try:
-    print "Attempting to import default settings as appsettings.bpam"
-    from appsettings.bpam import *
-    print "Successfully imported appsettings.bpam"
-except ImportError, e:
-    print "Failed to import appsettings.bpam"
