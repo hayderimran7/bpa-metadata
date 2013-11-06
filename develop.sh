@@ -273,7 +273,7 @@ flushdb() {
 
 coverage() {
     log_info "Running coverage with reports"
-    coverage run manage.py test --settings=bpam.nsettings.test --traceback
+    coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
 }
 
