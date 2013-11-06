@@ -5,8 +5,6 @@ TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
 
-set -e
-
 PORT='8000'
 
 PROJECT_NAME='bpa-metadata'
@@ -23,6 +21,8 @@ COLOR_NORMAL=$(tput sgr0)
 COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
 COLOR_GREEN=$(tput setaf 2)
+
+set -e
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
