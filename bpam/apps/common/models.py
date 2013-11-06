@@ -194,6 +194,7 @@ class URLVerification(models.Model):
     for the join.
     The cron script will clean old entries up.
     """
+
     checked_url = models.URLField()
     checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
     status_ok = models.BooleanField()
@@ -204,6 +205,7 @@ class DebugNote(models.Model):
     """
     A text field to use for debugging. Stores the original parsed data.
     """
+
     debug_note = models.TextField(blank=True, null=True)
 
     class Meta:
