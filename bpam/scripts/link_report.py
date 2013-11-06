@@ -9,15 +9,13 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
 
-from apps.common.models import *
 from apps.melanoma.models import MelanomaSequenceFile
+
+MISSING_REPORT_NAME = 'missing_melanoma.xlsx'
 
 
 def make_report(missing):
-    '''
-    Make a missing file report
-    '''
-
+    logger.info('{0} missing Melanoma Sequence files'.format(len(missing)))
     book = xlwt.Workbook()
     sheet = book.add_sheet('Missing Melanoma Sequence Files')
     sheet.write(0, 0, 'BPA ID')
@@ -27,7 +25,8 @@ def make_report(missing):
         sheet.write(i + 1, 0, f.sample.bpa_id.bpa_id)
         sheet.write(i + 1, 1, f.filename)
 
-    book.save('missing_melanoma.xlsx')
+    book.save(MISSING_REPORT_NAME)
+    logger.info('Wrote report {0}'.format(MISSING_REPORT_NAME))
 
 
 def run():
