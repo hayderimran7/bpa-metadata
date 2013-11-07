@@ -415,7 +415,7 @@ class MelanomaArchive(Archive):
         # second header line - assert just to make sure it's still there, file format
         # hasn't changed without script update
         second_header = next(reader)
-        assert (second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
+        
         for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
             ('md5', 'MD5 checksum', None),
             ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
