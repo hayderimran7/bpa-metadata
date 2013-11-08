@@ -415,7 +415,7 @@ class MelanomaArchive(Archive):
         # second header line - assert just to make sure it's still there, file format
         # hasn't changed without script update
         second_header = next(reader)
-        
+
         for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
             ('md5', 'MD5 checksum', None),
             ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
@@ -442,7 +442,7 @@ class MelanomaArchive(Archive):
             ('uid', 'UID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
             ('sample_name', 'Sample Name', None),
-            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('run', 'Run number', None),
         ]):
             if tpl.filename == '':
@@ -504,8 +504,7 @@ class GBRArchive(Archive):
             ('species', 'Species', None),
             ('dataset', 'Dataset', None),
             ('sample_name', 'Sample Description', None),
-            (
-            'date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('run', 'Run number', None),
         ]):
             if tpl.filename == '':
