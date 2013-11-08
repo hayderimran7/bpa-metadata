@@ -2,3 +2,4 @@
 coverage==3.7
 django-discover-runner==1.0
 model-mommy==1.1
+tendo==0.2.4
