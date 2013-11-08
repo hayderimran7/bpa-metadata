@@ -98,6 +98,15 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return False
 
+    def ingest_issue(self):
+        """
+        Any issue raised by the ingest process for this file
+        """
+        if self.url_verification is not None:
+            return self.url_verification.status_note
+        else:
+            return ''
+
     def get_url(self):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
@@ -108,4 +117,5 @@ class MelanomaSequenceFile(SequenceFile):
                 uq(self.filename)))
 
     url = property(get_url)
+    ingest_issue = property(ingest_issue)
 
