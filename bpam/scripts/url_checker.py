@@ -1,15 +1,25 @@
+import time
+import sys
+import logging
+
+import requests
+from pprint import pprint
+
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
 
-from django.db import transaction
-import requests, time, sys
 
-# SLEEP_TIME = 0.2 # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
 SLEEP_TIME = 0.0  # time to rest between checks
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
+
+    problems = []
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:
             uv = URLVerification()
@@ -27,19 +37,24 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         else:
             verifier.status_ok = False
             verifier.status_note = "Status %d: %s" % (r.status_code, r.text)
+            problems.append(obj.filename)
         obj.save()
         sys.stderr.write("%d -> %s\n" % (r.status_code, verifier.status_ok))
         sys.stderr.flush()
         verifier.save()
         time.sleep(sleep_time)
 
+    pprint(problems)
+
 
 def check_gbr(sleep_time):
+    logger.info('Checking GBR')
     session = requests.Session()
     process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
 def check_melanoma(sleep_time):
+    logger.info('Checking Melanoma')
     session = requests.Session()
     session.auth = ('bpa', 'm3lan0ma')
     process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
@@ -56,6 +71,7 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("sleep_time parameter must be a float.\n")
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
+
     check_melanoma(sleep_time)
     check_gbr(sleep_time)
 
