@@ -40,6 +40,7 @@ class RunAdmin(admin.ModelAdmin):
         ('Sequencing',
          {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol')}),
     ]
+
     inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
