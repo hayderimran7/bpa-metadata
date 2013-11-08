@@ -43,7 +43,7 @@ class RunAdmin(admin.ModelAdmin):
     inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility', 'flow_cell_id',)
+    list_filter = ('sequencing_facility',)
 
 
 class SampleAdmin(admin.ModelAdmin):
