@@ -1,5 +1,4 @@
 import os.path
-from pprint import pprint
 
 from setuptools import setup, find_packages
 
