@@ -1,8 +1,8 @@
 import sys
 import pprint
-import logging
-import xlrd
 from datetime import datetime
+
+import xlrd
 from unipath import Path
 
 from apps.bpaauth.models import BPAUser
@@ -10,6 +10,7 @@ from apps.common.models import *
 from apps.melanoma.models import *
 import user_helper
 from .utils import *
+
 
 # some defaults to fall back on
 DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
@@ -228,7 +229,7 @@ def get_array_data(spreadsheet_file):
                   'array_id',
                   'call_rate',
                   'gender',
-                  ]
+    ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
     sheet = wb.sheet_by_name('Array data')
@@ -236,7 +237,7 @@ def get_array_data(spreadsheet_file):
     for row_idx in range(sheet.nrows)[1:]:
         vals = sheet.row_values(row_idx)
 
-         # get rid of "" ID's
+        # get rid of "" ID's
         if vals[2].strip() == "":
             continue
 
@@ -325,7 +326,8 @@ def ingest_runs(sample_data):
         run_number = get_run_number(entry)
 
         try:
-            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number, sample__bpa_id__bpa_id=bpa_id)
+            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
+                                          sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
             run = MelanomaRun()
             run.flow_cell_id = flow_cell_id
