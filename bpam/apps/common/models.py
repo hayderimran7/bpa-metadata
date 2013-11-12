@@ -77,7 +77,6 @@ class Organism(models.Model):
         return self.name()
 
 
-
 class DNASource(models.Model):
     """
     DNA Source
