@@ -4,8 +4,7 @@ from django import forms
 from .models import (BPAProject,
                      BPAUniqueID,
                      Facility,
-                     Protocol,
-                     Organism,                     
+                     Organism,
                      SequenceFile,
                      DNASource,
                      Sequencer,
@@ -82,7 +81,7 @@ class AffiliationAdmin(admin.ModelAdmin):
     
 class BPAProjectAdmin(admin.ModelAdmin):
     fields = (('name', 'description'), 'note')
-    list_display = ('name', 'description')
+    list_display = ('name', 'key', 'description')
     
     
 class BPAUniqueIDAdmin(admin.ModelAdmin):

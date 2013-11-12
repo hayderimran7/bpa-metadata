@@ -10,7 +10,8 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'BPAProject'
         db.create_table(u'common_bpaproject', (
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200, primary_key=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=30, primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=2000, blank=True)),
             ('note', self.gf('tinymce.models.HTMLField')(blank=True)),
         ))
@@ -100,7 +101,8 @@ class Migration(SchemaMigration):
         u'common.bpaproject': {
             'Meta': {'object_name': 'BPAProject'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '30', 'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'note': ('tinymce.models.HTMLField', [], {'blank': 'True'})
         },
         u'common.bpauniqueid': {

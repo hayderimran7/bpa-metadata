@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from tinymce.models import HTMLField
-from apps.bpaauth.models import BPAUser
 
 
 class BPAProject(models.Model):
@@ -11,7 +10,8 @@ class BPAProject(models.Model):
     Examples would be: Melanoma, Coral
     """
 
-    name = models.CharField(max_length=200, primary_key=True)
+    key = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, blank=True)
     note = HTMLField(blank=True)
 
