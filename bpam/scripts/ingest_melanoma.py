@@ -5,7 +5,6 @@ from datetime import datetime
 import xlrd
 from unipath import Path
 
-from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.melanoma.models import *
 import user_helper

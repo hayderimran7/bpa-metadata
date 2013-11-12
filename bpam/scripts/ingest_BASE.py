@@ -2,10 +2,7 @@ import pprint
 import csv
 import re
 import os.path
-from datetime import date
 
-from apps.bpaauth.models import BPAUser
-from apps.common.models import *
 from apps.BASE.models import *
 
 from .utils import *
@@ -49,7 +46,7 @@ def get_sample_data():
                       'profile_position',
                       'drainage_classification',
                       'notes',
-                      ]
+        ]
 
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
         return strip_all(reader)

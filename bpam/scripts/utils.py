@@ -2,13 +2,10 @@ import string
 import logging
 from datetime import date
 import dateutil
-from xlrd import xldate_as_tuple
 
 from django.utils.encoding import smart_text
 
-from bpaauth.models import BPAUser
-from common.models import *
-
+from apps.common.models import Organism, BPAUniqueID, BPAProject, DNASource
 
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
@@ -98,16 +95,16 @@ def ingest_bpa_ids(data, project_name):
         add_bpa_id(bpa_id, project_name)
 
 
-def get_bpa_id(id, project_name, note=INGEST_NOTE):
+def get_bpa_id(idx, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     """
 
     try:
-        bid = BPAUniqueID.objects.get(bpa_id=id)
+        bid = BPAUniqueID.objects.get(bpa_id=idx)
     except BPAUniqueID.DoesNotExist:
-        print("BPA ID {0} does not exit, adding it".format(id))
-        bid = BPAUniqueID(bpa_id=id)
+        print("BPA ID {0} does not exit, adding it".format(idx))
+        bid = BPAUniqueID(bpa_id=idx)
         bid.project = BPAProject.objects.get(name=project_name)
         bid.note = note
         bid.save()

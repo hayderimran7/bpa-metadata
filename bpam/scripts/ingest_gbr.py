@@ -5,7 +5,6 @@ from datetime import datetime
 import xlrd
 from unipath import Path
 
-from apps.bpaauth.models import BPAUser
 from apps.common.models import *
 from apps.gbr.models import *
 from .utils import *
@@ -89,7 +88,7 @@ def ingest_samples(samples):
             collection_event.gps_location = entry['gps_location']
             collection_event.note = entry['collection_comment']
 
-             # sample collector
+            # sample collector
             collection_event.collector = user_helper.get_user(
                 entry['collector_name'],
                 entry['contact_email'],
@@ -176,9 +175,9 @@ def get_gbr_sample_data(spreadsheet_file):
                   'total_dna', # NEW
                   'collection_site', # NEW (model?)
                   'collection_date',
-                  'collector_name',  # NEW
-                  'gps_location',  # NEW
-                  'water_temp',  # NEW
+                  'collector_name', # NEW
+                  'gps_location', # NEW
+                  'water_temp', # NEW
                   'ph', # NEW
                   'depth', # NEW
                   'collection_comment',

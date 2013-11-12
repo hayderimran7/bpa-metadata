@@ -1,9 +1,9 @@
 import time
 import sys
 import logging
+from pprint import pprint
 
 import requests
-from pprint import pprint
 
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
@@ -18,7 +18,6 @@ logger.setLevel(level=logging.INFO)
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
-
     problems = []
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:

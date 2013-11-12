@@ -3,7 +3,6 @@ This module provides some user management tools
 """
 
 import logging
-import pprint
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
