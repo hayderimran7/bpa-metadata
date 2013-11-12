@@ -151,7 +151,6 @@ INSTALLED_APPS = (
     #'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
-    #'django_qbe',
     'bootstrap3',
     'tastypie',
     'lettuce.django',
