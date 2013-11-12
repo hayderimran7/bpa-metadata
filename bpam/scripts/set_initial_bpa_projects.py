@@ -2,9 +2,8 @@ from collections import namedtuple
 import logging
 from apps.common.models import BPAProject
 
-logging.basicConfig()
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('SetProjects')
-logger.setLevel(level=logging.INFO)
 
 Project = namedtuple('Project', 'key name description note')
 projects = (
@@ -36,5 +35,6 @@ def set_bpa_projects():
 
 
 def run():
+    logger.info('BPA Projects')
     set_bpa_projects()
 

@@ -12,9 +12,9 @@ from apps.gbr.models import GBRSequenceFile
 
 SLEEP_TIME = 0.0  # time to rest between checks
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('URLChecker')
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):

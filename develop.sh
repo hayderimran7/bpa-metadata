@@ -1,6 +1,8 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
+set -e
+
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
@@ -22,7 +24,6 @@ COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
 COLOR_GREEN=$(tput setaf 2)
 
-set -e
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}

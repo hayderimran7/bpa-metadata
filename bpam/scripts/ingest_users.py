@@ -1,9 +1,14 @@
 import csv
 import unipath
+import logging
 
 from apps.melanoma.models import *
-from .utils import *
 import user_helper
+import utils
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('IngestUsers')
+
 
 DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
 USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
@@ -13,7 +18,7 @@ def get_data(users_file):
     with open(users_file, 'rb') as contacts:
         fieldnames = ['Project', 'First name', 'Last name', 'Organisation', 'Email', 'Interest', 'Lab']
         reader = csv.DictReader(contacts, fieldnames=fieldnames, restkey='therest')
-        return strip_all(reader)
+        return utils.strip_all(reader)
 
 
 def filter_contacts(contact):

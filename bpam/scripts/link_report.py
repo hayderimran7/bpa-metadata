@@ -5,9 +5,8 @@ Creates a report on missing sequence files
 import logging
 import xlwt
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('LinkReport')
 
 from apps.melanoma.models import MelanomaSequenceFile
 

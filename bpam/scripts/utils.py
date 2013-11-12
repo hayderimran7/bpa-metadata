@@ -10,9 +10,8 @@ from apps.common.models import Organism, BPAUniqueID, BPAProject, DNASource
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('UTILS')
-logger.setLevel(level=logging.INFO)
-
 
 def get_clean_number(val, default=None):
     """

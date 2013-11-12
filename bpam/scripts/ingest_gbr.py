@@ -12,14 +12,15 @@ import utils
 import user_helper
 
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('GBR')
-logger.setLevel(level=logging.INFO)
+
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
 
 BPA_ID = "102.100.100"
-GBR = 'Great Barrier Reef'
+GBR_DESCRIPTION = 'Great Barrier Reef'
 
 
 def get_dna_source(description):
@@ -36,6 +37,7 @@ def get_dna_source(description):
         source = DNASource.objects.get(description=description)
     except DNASource.DoesNotExist:
         source = DNASource(description=description)
+        source.note = 'Added by GBR Project'
         source.save()
 
     return source
@@ -97,7 +99,7 @@ def ingest_samples(samples):
             collection_event.collector = user_helper.get_user(
                 entry['collector_name'],
                 entry['contact_email'],
-                (GBR, ))
+                (GBR_DESCRIPTION, ))
 
             collection_event.save()
 
@@ -133,13 +135,13 @@ def ingest_samples(samples):
         gbr_sample.contact_scientist = user_helper.get_user(
             e['contact_scientist'],
             e['contact_email'],
-            (GBR, e['contact_affiliation']))
+            (GBR_DESCRIPTION, e['contact_affiliation']))
 
         # bioinformatician
         gbr_sample.contact_bioinformatician_name = user_helper.get_user(
             e['contact_bioinformatician_name'],
             e['contact_bioinformatician_email'],
-            (GBR,))
+            (GBR_DESCRIPTION,))
 
         gbr_sample.requested_sequence_coverage = e['requested_sequence_coverage']
         gbr_sample.sequencing_notes = e['sequencing_notes']

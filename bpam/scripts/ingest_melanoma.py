@@ -20,8 +20,8 @@ DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'Melanoma_study_metadata.xlsx'
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('MELANOMA')
-logger.setLevel(level=logging.INFO)
 
 
 def get_dna_source(description):
