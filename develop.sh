@@ -232,6 +232,7 @@ run() {
     python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
 
+    python manage.py runscript set_initial_bpa_projects --traceback
     python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_melanoma --traceback
     python manage.py runscript ingest_gbr --traceback
