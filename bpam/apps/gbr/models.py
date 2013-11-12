@@ -3,11 +3,9 @@ import urllib
 
 from django.db import models
 from django.conf import settings
-
-from apps.bpaauth.models import BPAUser
-from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification, DebugNote
-
 from django.utils.translation import ugettext_lazy as _
+
+from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, URLVerification, DebugNote
 
 
 class CollectionEvent(models.Model):
