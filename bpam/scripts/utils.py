@@ -10,8 +10,7 @@ from apps.common.models import Organism, BPAUniqueID, BPAProject, DNASource
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('UTILS')
 logger.setLevel(level=logging.INFO)
 
 
@@ -68,12 +67,12 @@ def add_organism(genus="", species=""):
     organism.save()
 
 
-def add_bpa_id(id, project_name, note=INGEST_NOTE):
+def add_bpa_id(idx, project_name, note=INGEST_NOTE):
     """
     Add a BPA ID
     """
 
-    lbl = BPAUniqueID(bpa_id=id)
+    lbl = BPAUniqueID(bpa_id=idx)
     lbl.project = BPAProject.objects.get(name=project_name)
     lbl.note = note
     lbl.save()
@@ -95,16 +94,16 @@ def ingest_bpa_ids(data, project_name):
         add_bpa_id(bpa_id, project_name)
 
 
-def get_bpa_id(idx, project_name, note=INGEST_NOTE):
+def get_bpa_id(bpa_id, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     """
 
     try:
-        bid = BPAUniqueID.objects.get(bpa_id=idx)
+        bid = BPAUniqueID.objects.get(bpa_id=bpa_id)
     except BPAUniqueID.DoesNotExist:
-        print("BPA ID {0} does not exit, adding it".format(idx))
-        bid = BPAUniqueID(bpa_id=idx)
+        logger.info("BPA ID {0} does not exit, adding it".format(bpa_id))
+        bid = BPAUniqueID(bpa_id=bpa_id)
         bid.project = BPAProject.objects.get(name=project_name)
         bid.note = note
         bid.save()
@@ -145,9 +144,7 @@ def is_bpa_id(bpa_id):
     """
     Determines if id is a good BPA ID
     """
-
     bpa_id = bpa_id.strip()
-
     # empties
     if bpa_id == '':
         return False

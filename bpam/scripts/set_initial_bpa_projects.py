@@ -1,59 +1,40 @@
-import csv
-import unipath
+from collections import namedtuple
+import logging
+from apps.common.models import BPAProject
 
-from apps.melanoma.models import *
-from .utils import *
-import user_helper
+logging.basicConfig()
+logger = logging.getLogger('SetProjects')
+logger.setLevel(level=logging.INFO)
 
-DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
-USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
+Project = namedtuple('Project', 'key name description note')
+projects = (
+    Project('BASE', 'BASE', 'BASE, Agricultural and Environmental Soil', ''),
+    Project('GBR', 'GBR', 'Great Barrier Reef', 'Coral'),
+    Project('MELANOMA', 'Melanoma', 'Melanoma', 'Human Melanomas'),
+    Project('WHEAT_7A', 'Wheat 7A', 'Wheat Chromosome 7A', ''),
+    Project('WHEAT_CULTIVAR', 'Wheat Cultivars', 'Wheat Cultivars', ''),
+    Project('WHEAT_FUNGAL', 'Wheat Fungal pathogens', 'Wheat Fungal pathogens', ''),
+)
 
 
-def get_data(users_file):
-    with open(users_file, 'rb') as contacts:
-        fieldnames = ['Project', 'First name', 'Last name', 'Organisation', 'Email', 'Interest', 'Lab']
-        reader = csv.DictReader(contacts, fieldnames=fieldnames, restkey='therest')
-        return strip_all(reader)
-
-
-def filter_contacts(contact):
+def set_bpa_projects():
     """
-    If for some reason the contact line is unsuitable, filter it out.
-    """
-    username = user_helper.make_username(contact)
-    if not username:
-        return True
-
-    if contact['Project'].strip() == 'Project':
-        return True
-
-    return False
-
-
-def ingest_contacts(users_file):
-    """
-    Contacts associated with BPA pojects
+    Set BPA Projects if not set already. This is for new DB's
     """
 
-    for contact in get_data(users_file):
-        if filter_contacts(contact):
-            continue
-
-        # if the user already exists, she probably is part of several projects so add her to those groups
-        username = user_helper.make_username(contact)
+    for project in projects:
         try:
-            existing_user = BPAUser.objects.get(username=username)
-            group = user_helper.get_group(contact['Project'])
-            existing_user.groups.add(group)
-            existing_user.save()
-        except BPAUser.DoesNotExist:
-            user_helper.make_new_user(username, contact)
+            BPAProject.objects.get(key=project.key)
+        except BPAProject.DoesNotExist:
+            proj = BPAProject(key=project.key,
+                              name=project.name,
+                              description=project.description,
+                              note=project.note
+                              )
+            proj.save()
+            logger.info('Added project {0}'.format(proj.name))
 
 
-def run(users_file=USERS_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_users --script-args bpa-users.csv
-    """
-    ingest_contacts(users_file)
+def run():
+    set_bpa_projects()
 
