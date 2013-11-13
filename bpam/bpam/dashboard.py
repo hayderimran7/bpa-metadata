@@ -63,6 +63,11 @@ class CustomIndexDashboard(Dashboard):
             models=('apps.melanoma.*',),
         ))
 
+        self.children.append(modules.ModelList(
+            _('Wheat Pathogens'),
+            models=('apps.wheat_pathogens.*',),
+        ))
+
 
         # append a recent actions module
         self.children.append(modules.RecentActions(_('Recent Actions'), 5))
