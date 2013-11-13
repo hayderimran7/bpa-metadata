@@ -237,6 +237,7 @@ run() {
     python manage.py runscript ingest_users --traceback
     python manage.py runscript ingest_melanoma --traceback
     python manage.py runscript ingest_gbr --traceback
+    python manage.py runscript ingest_wheat_pathogens --traceback
 
     # load_base
 
@@ -249,15 +250,16 @@ dev() {
     run
 }
 
+wheat_pathogens_dev() {
+    devsettings
+    python manage.py syncdb --traceback --noinput
+    python manage.py migrate --traceback
 
-usage() {
-    log_warning "Usage ./develop.sh (lint|jslint)"
-    log_warning "Usage ./develop.sh (flushdb)"
-    log_warning "Usage ./develop.sh (unittest|coverage)"
-    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
-    log_warning "Usage ./develop.sh (nuclear)"
+    python manage.py runscript set_initial_bpa_projects --traceback
+    python manage.py runscript ingest_users --traceback
+    python manage.py runscript ingest_wheat_pathogens --traceback
 }
+
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -294,9 +296,23 @@ nuclear() {
    ${CMD} runscript ingest_melanoma --script-args ./Melanoma_study_metadata.xlsx
 }
 
+usage() {
+    log_warning "Usage ./develop.sh (lint|jslint)"
+    log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (unittest|coverage)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    log_warning "Usage ./develop.sh (nuclear)"
+    log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
+}
+
+
 case ${ACTION} in
     coverage)
         coverage
+        ;;
+    wheat_pathogens_dev)
+        wheat_pathogens_dev
         ;;
     unittest)
         unittest
