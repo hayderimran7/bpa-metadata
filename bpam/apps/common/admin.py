@@ -96,7 +96,7 @@ class FacilityAdmin(admin.ModelAdmin):
 
 
 class OrganismAdmin(admin.ModelAdmin):
-    list_display = ('genus', 'species')
+    list_display = ('kingdom', 'phylum', 'genus', 'species')
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
