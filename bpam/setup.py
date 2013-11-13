@@ -40,7 +40,7 @@ setup(
     package_data=get_data_files(),
     include_package_data=True,
     install_requires=[
-        'Django==1.5.4',
+        'Django==1.6.0',
         'Unipath==1.0',
         'South==0.8.2',
         'pygraphviz==1.2',
