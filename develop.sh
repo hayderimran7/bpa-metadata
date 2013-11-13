@@ -14,8 +14,6 @@ PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
-TESTING_MODULES="nose"
-MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 ######### Logging ########## 
@@ -170,7 +168,7 @@ installapp() {
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
     popd
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} ${MODULES}
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -r requirements/dev.txt
 }
 
 
