@@ -64,7 +64,7 @@ class Organism(models.Model):
     domain = models.CharField(max_length=100, blank=True)
     kingdom = models.CharField(max_length=100, blank=True)
     phylum = models.CharField(max_length=100, blank=True)
-    organism_class = models.CharField(max_length=100, blank=True)
+    organism_class = models.CharField('Class', max_length=100, blank=True)
     order = models.CharField(max_length=100, blank=True)
     family = models.CharField(max_length=100, blank=True)
     genus = models.CharField(max_length=100, blank=True)
