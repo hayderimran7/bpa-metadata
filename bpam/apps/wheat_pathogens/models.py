@@ -14,21 +14,13 @@ class PathogenSample(Sample, DebugNote):
     """
 
     organism = models.ForeignKey(Organism)
-    dataset = models.CharField(max_length=100, null=True, blank=True)
-    dna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA Concentration'))
-    total_dna = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA'))
+    official_variety_name = models.CharField(max_length=200, null=True, blank=True)
+    original_source_host_species = models.CharField(max_length=200, null=True, blank=True)
+    collection_location = models.CharField(max_length=200, null=True, blank=True)
+    sample_label = models.CharField(max_length=200, null=True, blank=True)
+    wheat_pathogenicity = models.CharField(max_length=200, null=True, blank=True)
 
-    sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
-    dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration'))
-    total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))
-    comments_by_facility = models.TextField(null=True, blank=True, verbose_name=_('Facility Comments'))
-    sequencing_data_eta = models.DateField(blank=True, null=True, verbose_name=_('Sequence ETA'))
     date_sequenced = models.DateField(blank=True, null=True)
-    requested_read_length = models.IntegerField(blank=True, null=True)
-    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                                 blank=True,
-                                                 null=True,
-                                                 related_name='wheat_pathogen_bioinformatician')
 
     class Meta:
         verbose_name = _('Wheat Pathogen Sample')

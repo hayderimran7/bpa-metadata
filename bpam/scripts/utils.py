@@ -13,6 +13,7 @@ INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('UTILS')
 
+
 def get_clean_number(val, default=None):
     """
     Try to clean up numbers

@@ -12,7 +12,7 @@ projects = (
     Project('MELANOMA', 'Melanoma', 'Melanoma', 'Human Melanomas'),
     Project('WHEAT_7A', 'Wheat 7A', 'Wheat Chromosome 7A', ''),
     Project('WHEAT_CULTIVAR', 'Wheat Cultivars', 'Wheat Cultivars', ''),
-    Project('WHEAT_FUNGAL', 'Wheat Fungal pathogens', 'Wheat Fungal pathogens', ''),
+    Project('WHEAT_PATHOGEN', 'Wheat Pathogens', 'Wheat Pathogens', ''),
 )
 
 
