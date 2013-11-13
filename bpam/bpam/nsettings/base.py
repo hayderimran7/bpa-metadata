@@ -149,7 +149,7 @@ INSTALLED_APPS = (
     'apps.gbr',
     #'apps.BASE',
     #'apps.wheat_cultivars',
-    #'apps.wheat_fungal_pathogens',
+    'apps.wheat_pathogens',
     'south',
     'tinymce',
     'bootstrap3',

@@ -71,7 +71,7 @@ def ingest_samples(samples):
             organism = Organism()
             organism.genus = genus
             organism.species = species
-            organism.note = 'GBR'
+            organism.note = 'GBR Related Organism'
             organism.save()
         return organism
 

@@ -35,15 +35,19 @@ class Migration(SchemaMigration):
 
         # Adding model 'Organism'
         db.create_table(u'common_organism', (
-            ('genus', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('species', self.gf('django.db.models.fields.CharField')(max_length=100, primary_key=True)),
-            ('classification', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('domain', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('kingdom', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('phylum', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('organism_class', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('order', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('family', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('genus', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('species', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('ncbi_classification', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
         db.send_create_signal(u'common', ['Organism'])
-
-        # Adding unique constraint on 'Organism', fields ['genus', 'species']
-        db.create_unique(u'common_organism', ['genus', 'species'])
 
         # Adding model 'DNASource'
         db.create_table(u'common_dnasource', (
@@ -72,9 +76,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Organism', fields ['genus', 'species']
-        db.delete_unique(u'common_organism', ['genus', 'species'])
-
         # Deleting model 'BPAProject'
         db.delete_table(u'common_bpaproject')
 
@@ -124,11 +125,18 @@ class Migration(SchemaMigration):
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },
         u'common.organism': {
-            'Meta': {'unique_together': "(('genus', 'species'),)", 'object_name': 'Organism'},
-            'classification': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'genus': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Meta': {'object_name': 'Organism'},
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'family': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'genus': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'kingdom': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'ncbi_classification': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'species': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'})
+            'order': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'organism_class': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'phylum': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'species': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
         u'common.sequencer': {
             'Meta': {'object_name': 'Sequencer'},

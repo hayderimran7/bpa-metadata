@@ -61,14 +61,20 @@ class Organism(models.Model):
     An Organism
     """
 
-    genus = models.CharField(max_length=100)
-    species = models.CharField(max_length=100, primary_key=True)
-    classification = models.URLField('NCBI organismal classification', blank=True)
+    domain = models.CharField(max_length=100, blank=True)
+    kingdom = models.CharField(max_length=100, blank=True)
+    phylum = models.CharField(max_length=100, blank=True)
+    organism_class = models.CharField(max_length=100, blank=True)
+    order = models.CharField(max_length=100, blank=True)
+    family = models.CharField(max_length=100, blank=True)
+    genus = models.CharField(max_length=100, blank=True)
+    species = models.CharField(max_length=100, blank=True)
+
+    ncbi_classification = models.URLField('NCBI organismal classification', blank=True)
     note = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = _('Organisms')
-        unique_together = ('genus', 'species')
 
     def name(self):
         return u'{0} {1}'.format(self.genus, self.species)

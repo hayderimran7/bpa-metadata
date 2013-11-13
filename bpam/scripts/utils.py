@@ -61,7 +61,7 @@ def strip_all(reader):
     return entries
 
 
-def add_organism(genus="", species=""):
+def add_organism(genus='', species=''):
     organism = Organism(genus=genus, species=species)
     organism.save()
 

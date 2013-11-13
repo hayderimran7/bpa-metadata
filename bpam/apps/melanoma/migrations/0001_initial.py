@@ -160,7 +160,8 @@ class Migration(SchemaMigration):
         u'common.bpaproject': {
             'Meta': {'object_name': 'BPAProject'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'primary_key': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '30', 'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'note': ('tinymce.models.HTMLField', [], {'blank': 'True'})
         },
         u'common.bpauniqueid': {
@@ -182,11 +183,18 @@ class Migration(SchemaMigration):
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },
         u'common.organism': {
-            'Meta': {'unique_together': "(('genus', 'species'),)", 'object_name': 'Organism'},
-            'classification': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'genus': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'Meta': {'object_name': 'Organism'},
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'family': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'genus': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'kingdom': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'ncbi_classification': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'species': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'})
+            'order': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'organism_class': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'phylum': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'species': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
         u'common.sequencer': {
             'Meta': {'object_name': 'Sequencer'},

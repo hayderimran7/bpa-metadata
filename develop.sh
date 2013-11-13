@@ -284,6 +284,16 @@ unittest() {
     python manage.py test --settings=bpam.nsettings.test --traceback
 }
 
+
+nuclear() {
+   CMD='python manage.py'
+   ${CMD} reset_db --router=default
+   ${CMD} syncdb
+   ${CMD} migrate
+   ${CMD} runscript ingest_users --script-args ../users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
+   ${CMD} runscript ingest_melanoma --script-args ./Melanoma_study_metadata.xlsx
+}
+
 case ${ACTION} in
     coverage)
         coverage
