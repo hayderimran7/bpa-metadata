@@ -280,7 +280,7 @@ def ingest_runs(sample_data):
         add_file(e, sequence_run)
 
 
-def ingest_gbr(spreadsheet_file):
+def ingest(spreadsheet_file):
     sample_data = get_pathogen_sample_data(spreadsheet_file)
     utils.ingest_bpa_ids(sample_data, 'Wheat Pathogens')
     ingest_samples(sample_data)
@@ -293,4 +293,4 @@ def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
     vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx
     """
 
-    ingest_gbr(spreadsheet_file)
+    ingest(spreadsheet_file)
