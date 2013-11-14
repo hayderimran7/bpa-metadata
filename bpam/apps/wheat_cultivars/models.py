@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, URLVerification, DebugNote
+from apps.common.models import Protocol, Sample, Run, SequenceFile, URLVerification, DebugNote
 
 
 class CultivarSample(Sample, DebugNote):
@@ -13,14 +13,13 @@ class CultivarSample(Sample, DebugNote):
     Wheat pathogen specific Sample
     """
 
-    organism = models.ForeignKey(Organism)
-    official_variety_name = models.CharField(max_length=200, null=True, blank=True)
-    original_source_host_species = models.CharField(max_length=200, null=True, blank=True)
-    collection_location = models.CharField(max_length=200, null=True, blank=True)
+    sample_name = models.CharField(max_length=200, null=True, blank=True)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
-    wheat_pathogenicity = models.CharField(max_length=200, null=True, blank=True)
-
-    date_sequenced = models.DateField(blank=True, null=True)
+    cultivar_code = models.CharField(max_length=3, null=True, blank=True)
+    extract_name = models.CharField(max_length=200, null=True, blank=True)
+    protocol_reference = models.CharField(max_length=100, null=True, blank=True)
+    casava_version = models.CharField(max_length=10, null=True, blank=True)
+    corrected_sequence_filename = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Wheat Cultivar Sample')
