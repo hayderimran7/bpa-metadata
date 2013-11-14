@@ -43,7 +43,7 @@ class PathogenProtocol(Protocol):
     run = models.OneToOneField(PathogenRun, blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Great Barrier Reef Protocol')
+        verbose_name = _('Cultivar Protocol')
 
 
 class PathogenSequenceFile(SequenceFile):
