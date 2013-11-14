@@ -287,11 +287,12 @@ unittest() {
 
 nuclear() {
    CMD='python manage.py'
-   ${CMD} reset_db --router=default
-   ${CMD} syncdb
-   ${CMD} migrate
-   ${CMD} runscript ingest_users --script-args ../users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
-   ${CMD} runscript ingest_melanoma --script-args ./Melanoma_study_metadata.xlsx
+   ${CMD} reset_db --router=default --traceback
+   ${CMD} syncdb --noinput --traceback
+   ${CMD} migrate --traceback
+   # ${CMD} runscript set_initial_bpa_projects --traceback
+   # ${CMD} runscript ingest_users --script-args ../data/users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
+   # ${CMD} runscript ingest_melanoma --script-args ../data/melanoma/Melanoma_study_metadata.xlsx
 }
 
 usage() {
