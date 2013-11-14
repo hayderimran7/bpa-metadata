@@ -48,7 +48,7 @@ setup(
         'django-admin-tools==0.5.1',
         'feedparser==5.1.3',
         'django-localflavor==1.0',
-        'django-tinymce==1.5.1',
+        'django-tinymce==1.5.2',
         'django-tastypie==0.10.0',
         'django-bootstrap3==0.0.7',
         'mimeparse==0.1.3',
