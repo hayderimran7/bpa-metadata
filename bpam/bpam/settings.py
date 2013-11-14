@@ -152,7 +152,7 @@ INSTALLED_APPS = (
     'tinymce',
     'bootstrap3',
     'tastypie',
-    'lettuce.django',
+    # 'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging
