@@ -95,13 +95,12 @@ def ingest_samples(samples):
             cultivar_sample = CultivarSample()
             cultivar_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
 
-        cultivar_sample.name = e['sample_name']
+        cultivar_sample.name = e['name']
         cultivar_sample.dna_extraction_protocol = e['dna_extraction_protocol']
         cultivar_sample.cultivar_code = e['cultivar_code']
         cultivar_sample.extract_name = e['extract_name']
         cultivar_sample.casava_version = e['casava_version']
         cultivar_sample.protocol_reference = e['protocol_reference']
-        cultivar_sample.corrected_sequence_filename = e['corrected_sequence_filename']
         cultivar_sample.note = e['note']
         cultivar_sample.debug_note = utils.INGEST_NOTE + pprint.pformat(e)
 
@@ -118,7 +117,7 @@ def get_cultivar_sample_data(spreadsheet_file):
     """
 
     fieldnames = ['bpa_id',
-                  'sample_name',
+                  'name',
                   'cultivar_code', # C
                   'dna_extraction_protocol',
                   'extract_name',
@@ -253,6 +252,7 @@ def ingest_runs(sample_data):
             f.index_number = utils.get_clean_number(entry['index_number'])
             f.lane_number = utils.get_clean_number(entry['lane_number'])
             f.filename = file_name
+            f.corrected_sequence_filename = entry['corrected_sequence_filename']
             f.md5 = entry['md5_checksum']
             f.note = pprint.pformat(entry)
             f.save()

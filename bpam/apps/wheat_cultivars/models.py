@@ -13,13 +13,11 @@ class CultivarSample(Sample, DebugNote):
     Wheat pathogen specific Sample
     """
 
-    sample_name = models.CharField(max_length=200, null=True, blank=True)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
     cultivar_code = models.CharField(max_length=3, null=True, blank=True)
     extract_name = models.CharField(max_length=200, null=True, blank=True)
     protocol_reference = models.CharField(max_length=100, null=True, blank=True)
     casava_version = models.CharField(max_length=10, null=True, blank=True)
-    corrected_sequence_filename = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Wheat Cultivar Sample')
@@ -52,6 +50,7 @@ class CultivarSequenceFile(SequenceFile):
 
     sample = models.ForeignKey(CultivarSample)
     run = models.ForeignKey(CultivarRun)
+    corrected_sequence_filename = models.CharField(max_length=200, null=True, blank=True)
     url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):

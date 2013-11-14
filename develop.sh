@@ -227,15 +227,15 @@ load_base() {
     python manage.py runscript ingest_BASE --traceback
 }
 
-run() {   
+devrun() {
     python manage.py syncdb --traceback --noinput
     python manage.py migrate --traceback
 
     python manage.py runscript set_initial_bpa_projects --traceback
     python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_melanoma --traceback
-    python manage.py runscript ingest_gbr --traceback
-    python manage.py runscript ingest_wheat_pathogens --traceback
+    #python manage.py runscript ingest_melanoma --traceback
+    #python manage.py runscript ingest_gbr --traceback
+    #python manage.py runscript ingest_wheat_pathogens --traceback
 
     # load_base
 
@@ -245,7 +245,7 @@ run() {
 
 dev() { 
     devsettings
-    run
+    devrun
 }
 
 wheat_pathogens_dev() {

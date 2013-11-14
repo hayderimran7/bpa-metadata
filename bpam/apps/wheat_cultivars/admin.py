@@ -34,8 +34,6 @@ class RunAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),
-        ('Sequencing Facilities',
-         {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
          {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol')}),
     ]
@@ -43,21 +41,16 @@ class RunAdmin(admin.ModelAdmin):
     inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility',)
 
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'),)}),
+         {'fields': (('bpa_id', 'name', 'cultivar_code', 'extract_name', 'casava_version'),)}),
         ('DNA/RNA Source',
          {'fields': (
-             'organism',
-             'dna_source',
-             'dna_extraction_protocol',
+             'dna_extraction_protocol', 'protocol_reference',
          )}),
-        ('Contacts',
-         {'fields': ('contact_scientist',)}),
         ('',
          {'fields': ('note',)}),
         ('Debug',
@@ -66,28 +59,27 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
-    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
-    list_filter = ('dna_source', 'requested_sequence_coverage',)
+    search_fields = ('bpa_id__bpa_id', 'cultivar_code')
 
 
-class CollectionEventAdmin(admin.ModelAdmin):
+class CultivarsSequenceFileAdmin(SequenceFileAdmin):
     fieldsets = [
-        ('Collection',
-         {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),
-        ('Site Data',
-         {'fields': ('water_temp', 'water_ph', 'depth')}),
-        ('Note',
-         {'fields': ('note',)}),
-
+        (None,
+         {'fields': (
+             ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed',
+             'note'), }),
     ]
 
-    list_display = ('name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
-    search_fields = ('name', 'collector', 'note')
-    list_filter = ('name', )
+    search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
+
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'run')
+    list_filter = ('sample__cultivar_code',)
+
+
 
 admin.site.register(CultivarSample, SampleAdmin)
 admin.site.register(CultivarProtocol, ProtocolAdmin)
-admin.site.register(CultivarSequenceFile, SequenceFileAdmin)
+admin.site.register(CultivarSequenceFile, CultivarsSequenceFileAdmin)
 admin.site.register(CultivarRun, RunAdmin)
 
     
