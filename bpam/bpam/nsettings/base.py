@@ -148,7 +148,7 @@ INSTALLED_APPS = (
     'apps.melanoma',
     'apps.gbr',
     #'apps.BASE',
-    #'apps.wheat_cultivars',
+    'apps.wheat_cultivars',
     'apps.wheat_pathogens',
     'south',
     'tinymce',
