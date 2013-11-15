@@ -173,7 +173,6 @@ class Sample(models.Model):
         abstract = True
         verbose_name = _('Sample')
 
-
     def __unicode__(self):
         return u'{0} {1}'.format(self.bpa_id, self.name)
 
@@ -223,7 +222,7 @@ class SequenceFile(models.Model):
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
     md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
-    analysed = models.BooleanField(blank=True)
+    analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
 
     class Meta:
