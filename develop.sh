@@ -290,9 +290,11 @@ nuclear() {
    ${CMD} reset_db --router=default --traceback
    ${CMD} syncdb --noinput --traceback
    ${CMD} migrate --traceback
-   # ${CMD} runscript set_initial_bpa_projects --traceback
-   # ${CMD} runscript ingest_users --script-args ../data/users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
-   # ${CMD} runscript ingest_melanoma --script-args ../data/melanoma/Melanoma_study_metadata.xlsx
+   ${CMD} runscript set_initial_bpa_projects --traceback
+   ${CMD} runscript ingest_users --script-args ../data/users/BPA_Projects_Participant_Contact_list_26Sept2013.csv
+   ${CMD} runscript ingest_melanoma --script-args ../data/melanoma/Melanoma_study_metadata.xlsx
+   ${CMD} runscript ingest_wheat_pathogens --script-args ../data/wheat_pathogens/Wheat_pathogens_genomic_metadata.xlsx
+   ${CMD} runscript ingest_wheat_cultivars --script-args ../data/wheat_cultivars/Wheat_cultivars.xlsx
 }
 
 usage() {
