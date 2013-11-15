@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, Sample, Run, SequenceFile, URLVerification, DebugNote
+from apps.common.models import Protocol, Sample, Run, SequenceFile, URLVerification, DebugNote, Organism
 
 
 class CultivarSample(Sample, DebugNote):
