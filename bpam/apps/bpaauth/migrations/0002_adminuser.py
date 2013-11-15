@@ -9,6 +9,8 @@ class Migration(DataMigration):
     def forwards(self, orm):
         admin_user = orm.BPAUSer.objects.create(username='admin')
         admin_user.password = "pbkdf2_sha256$10000$KvQsKYKo2Ugt$qgoVPOswLD3qVapi77BJ2W9FMVNQ29nttNXKfAsiS2c="
+        admin_user.is_active = True
+        admin_user.is_superuser = True
         admin_user.save()
 
 
