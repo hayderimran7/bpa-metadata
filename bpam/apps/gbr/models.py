@@ -53,8 +53,7 @@ class GBRSample(Sample, DebugNote):
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
                                                  related_name='bioinformatician')
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Sample')
+
 
 
 class GBRRun(Run):
@@ -63,18 +62,12 @@ class GBRRun(Run):
     """
     sample = models.ForeignKey(GBRSample)
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Run')
-
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class GBRProtocol(Protocol):
     run = models.OneToOneField(GBRRun, blank=True, null=True)
-
-    class Meta:
-        verbose_name = _('Great Barrier Reef Protocol')
 
 
 class GBRSequenceFile(SequenceFile):
@@ -107,5 +100,3 @@ class GBRSequenceFile(SequenceFile):
 
     url = property(get_url)
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Sequence File')

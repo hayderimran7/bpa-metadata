@@ -12,7 +12,6 @@ class PathogenSample(Sample, DebugNote):
     """
     Wheat pathogen specific Sample
     """
-
     organism = models.ForeignKey(Organism)
     official_variety_name = models.CharField(max_length=200, null=True, blank=True)
     original_source_host_species = models.CharField(max_length=200, null=True, blank=True)
@@ -22,9 +21,6 @@ class PathogenSample(Sample, DebugNote):
 
     date_sequenced = models.DateField(blank=True, null=True)
 
-    class Meta:
-        verbose_name = _('Wheat Pathogen Sample')
-
 
 class PathogenRun(Run):
     """
@@ -32,18 +28,12 @@ class PathogenRun(Run):
     """
     sample = models.ForeignKey(PathogenSample)
 
-    class Meta:
-        verbose_name = _('Wheat pathogen Run')
-
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class PathogenProtocol(Protocol):
     run = models.OneToOneField(PathogenRun, blank=True, null=True)
-
-    class Meta:
-        verbose_name = _('Cultivar Protocol')
 
 
 class PathogenSequenceFile(SequenceFile):
@@ -75,6 +65,3 @@ class PathogenSequenceFile(SequenceFile):
             uq(self.filename)))
 
     url = property(get_url)
-
-    class Meta:
-        verbose_name = _('Wheat Pathogen Sequence File')

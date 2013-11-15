@@ -3,7 +3,6 @@ import urllib
 
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol, Sample, Run, SequenceFile, URLVerification, DebugNote, Organism
 
@@ -20,9 +19,6 @@ class CultivarSample(Sample, DebugNote):
     protocol_reference = models.CharField(max_length=100, null=True, blank=True)
     casava_version = models.CharField(max_length=10, null=True, blank=True)
 
-    class Meta:
-        verbose_name = _('Wheat Cultivar Sample')
-
 
 class CultivarRun(Run):
     """
@@ -30,18 +26,12 @@ class CultivarRun(Run):
     """
     sample = models.ForeignKey(CultivarSample)
 
-    class Meta:
-        verbose_name = _('Wheat Cultivar Run')
-
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class CultivarProtocol(Protocol):
     run = models.OneToOneField(CultivarRun, blank=True, null=True)
-
-    class Meta:
-        verbose_name = _('Cultivar Protocol')
 
 
 class CultivarSequenceFile(SequenceFile):
@@ -75,5 +65,3 @@ class CultivarSequenceFile(SequenceFile):
 
     url = property(get_url)
 
-    class Meta:
-        verbose_name = _('Wheat Cultivar Sequence File')

@@ -127,6 +127,7 @@ class Protocol(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Protocol')
         verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
@@ -155,6 +156,8 @@ class Sample(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Sample')
+
 
     def __unicode__(self):
         return u'{0} {1}'.format(self.bpa_id, self.name)
@@ -192,6 +195,7 @@ class Run(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Run')
 
 
 class SequenceFile(models.Model):
@@ -209,6 +213,7 @@ class SequenceFile(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Sequence File')
 
     def __unicode__(self):
         return u'{0}'.format(self.filename)

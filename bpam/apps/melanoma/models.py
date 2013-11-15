@@ -4,8 +4,6 @@ import urllib
 from django.db import models
 from django.conf import settings
 
-from apps.bpaauth.models import BPAUser
-
 from apps.common.models import Protocol
 from apps.common.models import Sample
 from apps.common.models import Run
