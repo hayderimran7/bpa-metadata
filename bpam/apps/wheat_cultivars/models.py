@@ -13,6 +13,7 @@ class CultivarSample(Sample, DebugNote):
     Wheat pathogen specific Sample
     """
 
+    organism = models.ForeignKey(Organism)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
     cultivar_code = models.CharField(max_length=3, null=True, blank=True)
     extract_name = models.CharField(max_length=200, null=True, blank=True)

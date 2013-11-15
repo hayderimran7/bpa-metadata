@@ -9,7 +9,6 @@ from unipath import Path
 from apps.common.models import *
 from apps.wheat_cultivars.models import *
 import utils
-import user_helper
 
 
 logging.basicConfig(level=logging.INFO)
@@ -44,38 +43,11 @@ def get_dna_source(description):
 
 
 def ingest_samples(samples):
-    def get_facility(name):
-        """
-        Return the sequencing facility with this name, or a new facility.
-        """
-        if name.strip() == '':
-            name = 'Unknown'
-        try:
-            facility = Facility.objects.get(name=name)
-        except Facility.DoesNotExist:
-            facility = Facility(name=name)
-            facility.save()
-
-        return facility
-
-    def get_organism(kingdom, phylum, species):
-        """
-        Set the organism
-        """
-        genus, species = species.strip().split()
-
-        try:
-            organism = Organism.objects.get(kingdom=kingdom, phylum=phylum, genus=genus, species=species)
-        except Organism.DoesNotExist:
-            logger.debug('Adding Organism {0} {1} {2} {3}'.format(kingdom, phylum, genus, species))
-            organism = Organism()
-            organism.kingdom = kingdom
-            organism.phylum = phylum
-            organism.genus = genus
-            organism.species = species
-            organism.note = 'Wheat Cultivars Related Organism'
-            organism.save()
-        return organism
+    """
+    Add all the cultivar samples
+    """
+    wheat_organism = Organism(genus='Triticum', species='Aestivum')
+    wheat_organism.save()
 
     def add_sample(e):
         """
@@ -95,6 +67,7 @@ def ingest_samples(samples):
             cultivar_sample = CultivarSample()
             cultivar_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
 
+        cultivar_sample.organism = wheat_organism
         cultivar_sample.name = e['name']
         cultivar_sample.dna_extraction_protocol = e['dna_extraction_protocol']
         cultivar_sample.cultivar_code = e['cultivar_code']
