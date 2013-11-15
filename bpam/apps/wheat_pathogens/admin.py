@@ -49,10 +49,10 @@ class RunAdmin(admin.ModelAdmin):
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'),)}),
+         {'fields': (('bpa_id', 'name'), 'original_source_host_species')}),
         ('DNA/RNA Source',
          {'fields': (
-             'organism',
+             ('organism', 'official_variety_name', 'label'),
              'dna_source',
              'dna_extraction_protocol',
          )}),
@@ -70,24 +70,18 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
-class CollectionEventAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Collection',
-         {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),
-        ('Site Data',
-         {'fields': ('water_temp', 'water_ph', 'depth')}),
-        ('Note',
-         {'fields': ('note',)}),
+class PathogenSequenceFileAdmin(SequenceFileAdmin):
+    def get_organism(self, obj):
+        return obj.sample.organism
+    get_organism.short_description = 'Organism'
+    get_organism.admin_order_field = 'sample__organism'
 
-    ]
-
-    list_display = ('name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
-    search_fields = ('name', 'collector', 'note')
-    list_filter = ('name', )
+    list_display = ('get_sample_id', 'get_organism', 'download_field', 'get_sample_name', 'run')
+    list_filter = ('sample__organism', 'analysed')
 
 admin.site.register(PathogenSample, SampleAdmin)
 admin.site.register(PathogenProtocol, ProtocolAdmin)
-admin.site.register(PathogenSequenceFile, SequenceFileAdmin)
+admin.site.register(PathogenSequenceFile, PathogenSequenceFileAdmin)
 admin.site.register(PathogenRun, RunAdmin)
 
     

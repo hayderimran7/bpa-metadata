@@ -98,7 +98,9 @@ def ingest_samples(samples):
         pathogen_sample.name = e['sample_id']
         pathogen_sample.organism = get_organism(e['kingdom'], e['phylum'], e['species'])
         pathogen_sample.dna_source = get_dna_source(e['sample_dna_source'])
-        pathogen_sample.dna_extraction_protocol = e['dna_extraction_protocol']
+        pathogen_sample.official_variety_name = e['official_variety']
+        pathogen_sample.label = e['other_id']
+        pathogen_sample.original_source_host_species = e['original_source_host_species']
 
         # scientist
         pathogen_sample.contact_scientist = user_helper.get_user(
@@ -123,11 +125,11 @@ def get_pathogen_sample_data(spreadsheet_file):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = ['bpa_id',
-                  'official_variety',
-                  'kingdom',
-                  'phylum',
-                  'species',
+    fieldnames = ['bpa_id', # x
+                  'official_variety', #x
+                  'kingdom', # x
+                  'phylum', # x
+                  'species', # x
                   'sample_id',
                   'other_id',
                   'original_source_host_species',

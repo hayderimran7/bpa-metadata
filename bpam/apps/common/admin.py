@@ -68,8 +68,8 @@ class SequenceFileAdmin(admin.ModelAdmin):
     get_sample_name.admin_order_field = 'sample__name'
 
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
-    list_display = (
-    'get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name',
+                    'date_received_from_sequencing_facility', 'run')
     list_filter = ('date_received_from_sequencing_facility',)
 
 
