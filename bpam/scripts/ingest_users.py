@@ -1,14 +1,15 @@
 import csv
-import unipath
 import logging
 
-from apps.melanoma.models import *
+import unipath
+
 import user_helper
 import utils
+from apps.bpaauth.models import BPAUser
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('IngestUsers')
-
 
 DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
 USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
