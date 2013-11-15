@@ -46,11 +46,26 @@ class Facility(models.Model):
     The Sequencing Facility
     """
 
+    facilities = {'RAM': 'Ramaciotti',
+                  'AGRF': 'AGRF',
+                  'ANU': 'ANU',
+                  '': 'Unknown',
+                  'Unknown': 'Unknown'}
+
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = _('Facilities')
+
+    def get_name(self, key):
+        """
+        Facilities are commonly known by theses names, return standard name.
+        """
+        try:
+            return self.facilities[key]
+        except KeyError:
+            return 'Unknown'
 
     def __unicode__(self):
         return u'{0}'.format(self.name)
