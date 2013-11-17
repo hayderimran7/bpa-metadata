@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('IngestUsers')
 
 DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
-USERS_FILE = unipath.Path(DATA_DIR, 'bpa-users.csv')
+USERS_FILE = unipath.Path(DATA_DIR, 'current')
 
 
 def get_data(users_file):
