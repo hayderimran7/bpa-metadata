@@ -112,6 +112,10 @@ def ingest_samples(samples):
         pathogen_sample.collection_date = utils.check_date(e['collection_date'])
         pathogen_sample.collection_location = e['collection_location']
 
+        pathogen_sample.wheat_pathogenicity = e['wheat_pathogenicity']
+
+
+
         # facilities
         pathogen_sample.sequencing_facility = get_facility('AGRF')
         pathogen_sample.note = e['note']
@@ -129,17 +133,17 @@ def get_pathogen_sample_data(spreadsheet_file):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = ['bpa_id', # x
-                  'official_variety', #x
-                  'kingdom', # x
-                  'phylum', # x
-                  'species', # x
+    fieldnames = ['bpa_id',
+                  'official_variety',
+                  'kingdom',
+                  'phylum',
+                  'species',
                   'sample_id',
                   'other_id',
                   'original_source_host_species',
                   'collection_date',
                   'collection_location',
-                  'pathogenicity_towards_wheat',
+                  'wheat_pathogenicity',
                   'contact_scientist',
                   'sample_dna_source',
                   'dna_extraction_protocol',

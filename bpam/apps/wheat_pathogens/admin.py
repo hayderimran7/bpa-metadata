@@ -49,7 +49,7 @@ class RunAdmin(admin.ModelAdmin):
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'), 'original_source_host_species')}),
+         {'fields': (('bpa_id', 'name'), 'original_source_host_species', 'wheat_pathogenicity')}),
         ('DNA/RNA Source',
          {'fields': (
              ('organism', 'official_variety_name', 'sample_label'),
@@ -60,10 +60,8 @@ class SampleAdmin(admin.ModelAdmin):
          {'fields': (('collection_location', 'collection_date'),)}),
         ('Contacts',
          {'fields': ('contact_scientist',)}),
-        ('',
-         {'fields': ('note',)}),
-        ('Debug',
-         {'fields': ('debug_note',)}),
+        ('Notes',
+         {'fields': ('note', 'debug_note',)}),
 
     ]
 
