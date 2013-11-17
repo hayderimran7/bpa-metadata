@@ -99,7 +99,7 @@ def ingest_samples(samples):
         pathogen_sample.organism = get_organism(e['kingdom'], e['phylum'], e['species'])
         pathogen_sample.dna_source = get_dna_source(e['sample_dna_source'])
         pathogen_sample.official_variety_name = e['official_variety']
-        pathogen_sample.label = e['other_id']
+        pathogen_sample.sample_label = e['other_id']
         pathogen_sample.original_source_host_species = e['original_source_host_species']
 
         # scientist
@@ -107,6 +107,10 @@ def ingest_samples(samples):
             e['contact_scientist'],
             '',
             (DESCRIPTION, ''))
+
+        # collection
+        pathogen_sample.collection_date = utils.check_date(e['collection_date'])
+        pathogen_sample.collection_location = e['collection_location']
 
         # facilities
         pathogen_sample.sequencing_facility = get_facility('AGRF')

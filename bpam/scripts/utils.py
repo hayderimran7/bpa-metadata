@@ -44,6 +44,7 @@ def get_date(val):
     """
     Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
     """
+    print val
     return dateutil.parser.parse(val)
 
 

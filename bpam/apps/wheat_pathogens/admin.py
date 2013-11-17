@@ -52,10 +52,12 @@ class SampleAdmin(admin.ModelAdmin):
          {'fields': (('bpa_id', 'name'), 'original_source_host_species')}),
         ('DNA/RNA Source',
          {'fields': (
-             ('organism', 'official_variety_name', 'label'),
+             ('organism', 'official_variety_name', 'sample_label'),
              'dna_source',
              'dna_extraction_protocol',
          )}),
+        ('Collection',
+         {'fields': (('collection_location', 'collection_date'),)}),
         ('Contacts',
          {'fields': ('contact_scientist',)}),
         ('',

@@ -235,11 +235,10 @@ devrun() {
     python manage.py runscript ingest_users --traceback
     #python manage.py runscript ingest_melanoma --traceback
     #python manage.py runscript ingest_gbr --traceback
-    #python manage.py runscript ingest_wheat_pathogens --traceback
+    python manage.py runscript ingest_wheat_pathogens --traceback
 
     # load_base
 
-    # python manage.py runserver
     startserver
 }
 
