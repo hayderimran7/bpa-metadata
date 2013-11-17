@@ -96,10 +96,10 @@ def ingest_samples(samples):
             pathogen_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
 
         pathogen_sample.name = e['sample_id']
+        pathogen_sample.sample_label = e['other_id']
         pathogen_sample.organism = get_organism(e['kingdom'], e['phylum'], e['species'])
         pathogen_sample.dna_source = get_dna_source(e['sample_dna_source'])
         pathogen_sample.official_variety_name = e['official_variety']
-        pathogen_sample.sample_label = e['other_id']
         pathogen_sample.original_source_host_species = e['original_source_host_species']
 
         # scientist
@@ -111,10 +111,7 @@ def ingest_samples(samples):
         # collection
         pathogen_sample.collection_date = utils.check_date(e['collection_date'])
         pathogen_sample.collection_location = e['collection_location']
-
-        pathogen_sample.wheat_pathogenicity = e['wheat_pathogenicity']
-
-
+        pathogen_sample.dna_extraction_protocol = e['dna_extraction_protocol']
 
         # facilities
         pathogen_sample.sequencing_facility = get_facility('AGRF')
@@ -240,7 +237,7 @@ def ingest_runs(sample_data):
             sys.exit(1)
 
     def get_run_number(entry):
-        run_number = utils.get_clean_number(entry['run_number'])
+        run_number = utils.get_clean_number(entry['run_number'].replace('RUN #', ''))
         return run_number
 
     def add_run(entry):

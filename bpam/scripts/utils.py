@@ -18,7 +18,6 @@ def get_clean_number(val, default=None):
     """
     Try to clean up numbers
     """
-
     if val in (None, ""):
         return default
 

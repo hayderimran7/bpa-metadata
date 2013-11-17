@@ -43,16 +43,16 @@ class RunAdmin(admin.ModelAdmin):
     inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility',)
+    list_filter = ('run_number', )
 
 
 class SampleAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'), 'original_source_host_species', 'wheat_pathogenicity')}),
+         {'fields': (('bpa_id', 'name', 'sample_label'), 'original_source_host_species', 'wheat_pathogenicity')}),
         ('DNA/RNA Source',
          {'fields': (
-             ('organism', 'official_variety_name', 'sample_label'),
+             ('organism', 'official_variety_name',),
              'dna_source',
              'dna_extraction_protocol',
          )}),
@@ -65,7 +65,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
+    list_display = ('bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol')
     search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
