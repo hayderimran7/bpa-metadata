@@ -552,6 +552,7 @@ class WheatCultivarsArchive(Archive):
             ('md5', 'Comment[MD5 checksum]', None),
             ('filename', 'Comment[Corrected file name]', lambda p: p.rsplit('/', 1)[-1]),
             ('uid', 'BPA ID', None),
+            ('flow_cell_id', 'Parameter Value[flow cell identifier]', None),
             ('sample_name', 'Sample Name', None),
             ('code', 'Comment[Sample code]', None),
             ('run', 'Run number', lambda s: s.replace('RUN #', '').replace('?', '')),
