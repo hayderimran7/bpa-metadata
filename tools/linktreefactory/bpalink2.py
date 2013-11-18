@@ -557,7 +557,7 @@ class WheatPathogensArchive(Archive):
             ('official_variety_name', 'Official Variety Name', None),
             ('run', 'Run number', lambda s: s.replace('RUN #', '')),
         ]):
-            if tpl.filename == '':
+            if tpl.filename == '' or tpl.uid == '':
                 continue
                 # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
             metadata.append(tpl)
@@ -571,7 +571,7 @@ class WheatPathogensArchive(Archive):
             objects.append({
                 'bpa_id': meta.uid,
                 'filename': meta.filename,
-                'name': meta.sample_name,
+                'name': meta.official_variety_name,
                 'run': meta.run,
                 'url': url,
             })
