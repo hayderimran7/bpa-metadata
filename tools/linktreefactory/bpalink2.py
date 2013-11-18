@@ -530,6 +530,54 @@ class GBRArchive(Archive):
         return {'object_list': objects}
 
 
+class WheatCultivarsArchive(Archive):
+    metadata_filename = '../../data/wheat_cultivars/current'
+    metadata_sheet = 'a_genome_seq_assay_BPA-Wheat-Cu'
+    container_name = 'Wheat Cultivars'
+    template_name = 'wheat_cultivars.html'
+
+    def __init__(self, bpa_base):
+        self.base = Path(bpa_base)
+        self.fastq = FastqInventory(self.base)
+        self.metadata = self.parse_metadata()
+        self.matches = self.tie_metadata_to_fastq()
+
+    def parse_metadata(self):
+        metadata = []
+
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('WheatCultivarsMeta', reader, header, [
+            ('md5', 'Comment[MD5 checksum]', None),
+            ('filename', 'Comment[Corrected file name]', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'BPA ID', None),
+            ('sample_name', 'Sample Name', None),
+            ('code', 'Comment[Sample code]', None),
+            ('run', 'Run number', lambda s: s.replace('RUN #', '').replace('?', '')),
+        ]):
+            if tpl.filename == '':
+                continue
+            metadata.append(tpl)
+        return metadata
+
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
+        objects = []
+        for fastq, meta in self.get_matches(bpa_id):
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'name': meta.sample_name,
+                'code': meta.code,
+                'run': meta.run,
+                'url': url,
+            })
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
+        return {'object_list': objects}
+
+
 class WheatPathogensArchive(Archive):
     metadata_filename = '../../data/wheat_pathogens/current'
     metadata_sheet = 'Metadata'
@@ -559,7 +607,6 @@ class WheatPathogensArchive(Archive):
         ]):
             if tpl.filename == '' or tpl.uid == '':
                 continue
-                # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
             metadata.append(tpl)
         return metadata
 
@@ -609,12 +656,13 @@ class BASEArchive(NoMetadataArchive):
     template_name = 'base.html'
 
 
+# kep these around for now
 class WheatPathogensArchiveOld(NoMetadataArchive):
     container_name = 'Wheat_Pathogens'
     template_name = 'wheat_pathogens_old.html'
 
 
-class WheatCultivarsArchive(NoMetadataArchive):
+class WheatCultivarsArchiveOld(NoMetadataArchive):
     container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 
