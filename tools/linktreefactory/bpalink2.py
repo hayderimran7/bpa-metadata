@@ -315,7 +315,7 @@ class Archive(object):
                 re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
-                # make public linktree by patient ID / flow cell
+                # make public linktree by BPA ID / flow cell
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
@@ -533,7 +533,7 @@ class GBRArchive(Archive):
 class WheatCultivarsArchive(Archive):
     metadata_filename = '../../data/wheat_cultivars/current'
     metadata_sheet = 'a_genome_seq_assay_BPA-Wheat-Cu'
-    container_name = 'Wheat Cultivars'
+    container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 
     def __init__(self, bpa_base):
