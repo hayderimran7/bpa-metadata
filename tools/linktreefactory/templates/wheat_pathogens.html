@@ -4,8 +4,12 @@
 
 {% block content %}
 
-<h3>Wheat Pathogen Sequence Files</h3>
+<h3>Wheat Pathogens Sequence Files{% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
 
-{% include "file_table.html" %}
+{% include "sequence_table.html" %}
+
+{% if bpa_id %}
+<a href="../">Back to index</a>
+{% endif %}
 
 {% endblock %}
