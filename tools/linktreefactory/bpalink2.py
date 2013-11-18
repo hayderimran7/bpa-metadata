@@ -273,9 +273,9 @@ class Archive(object):
     def build_linktree(self, root):
         for fastq, meta in self.matches:
             folder = meta.uid.replace('/', '.') + '/' + meta.flow_cell_id
-            patient_path = Path(root, folder)
-            patient_path.mkdir(parents=True)
-            link_file = Path(patient_path, meta.filename)
+            bpa_id_path = Path(root, folder)
+            bpa_id_path.mkdir(parents=True)
+            link_file = Path(bpa_id_path, meta.filename)
             link_file.make_relative_link_to(fastq.filename)
 
     def swift_path(self, fastq):
@@ -555,7 +555,7 @@ class WheatCultivarsArchive(Archive):
             ('flow_cell_id', 'Parameter Value[flow cell identifier]', None),
             ('sample_name', 'Sample Name', None),
             ('code', 'Comment[Sample code]', None),
-            ('run', 'Run number', lambda s: s.replace('RUN #', '').replace('?', '')),
+            ('run', 'Parameter Value[run number]', lambda p: p.replace('RUN #', '').replace('?', '')),
         ]):
             if tpl.filename == '':
                 continue
