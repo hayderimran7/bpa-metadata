@@ -1,5 +1,6 @@
 Django==1.6.0
 Django-suit==0.2.5
+MySQL-python==1.2.4
 South==0.8.3
 Unipath==1.0
 argparse==1.2.1

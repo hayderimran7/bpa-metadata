@@ -7,6 +7,8 @@ TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
 
+DEV_SETTINGS="bpam.nsettings.dev"
+
 PORT='8000'
 
 PROJECT_NAME='bpa-metadata'
@@ -61,9 +63,9 @@ is_root() {
 }
 
 
-
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.nsettings.dev"
+    log_info "Setting dev settings to ${DEV_SETTINGS}"
+    export DJANGO_SETTINGS_MODULE="${DEV_SETTINGS}"
 }
 
 activate_virtualenv() {
@@ -209,34 +211,36 @@ purge() {
 
 
 load_base() {
+    CMD='python ./bpam/manage.py'
     # BASE Controlled Vocabularies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
-    python manage.py runscript ingest_BASE --traceback
+    ${CMD} runscript ingest_BASE --traceback
 }
 
 devrun() {
-    python manage.py syncdb --traceback --noinput
-    python manage.py migrate --traceback
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-    python manage.py runscript set_initial_bpa_projects --traceback
-    python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_melanoma --traceback
-    python manage.py runscript ingest_gbr --traceback
-    python manage.py runscript ingest_wheat_pathogens --traceback
-    python manage.py runscript ingest_wheat_cultivars --traceback
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # load_base
 
@@ -250,12 +254,13 @@ dev() {
 
 wheat_pathogens_dev() {
     devsettings
-    python manage.py syncdb --traceback --noinput
-    python manage.py migrate --traceback
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-    python manage.py runscript set_initial_bpa_projects --traceback
-    python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
 }
 
 
@@ -281,7 +286,7 @@ coverage() {
 
 unittest() {
     log_info "Running Unit Test"
-    python manage.py test --settings=bpam.nsettings.test --traceback
+    ${CMD} test --settings=bpam.nsettings.test --traceback
 }
 
 

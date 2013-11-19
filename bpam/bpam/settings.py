@@ -43,9 +43,9 @@ DATABASES = {
     }
 }
 
-ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
-ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
-ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
+#ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
+#ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
+#ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
 
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
@@ -126,10 +126,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
     'bpam',
-    'admin_tools',
-    'admin_tools.theming',
-    'admin_tools.menu',
-    'admin_tools.dashboard',
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

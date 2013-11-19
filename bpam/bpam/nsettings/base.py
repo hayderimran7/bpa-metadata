@@ -14,10 +14,6 @@ STATICFILES_DIRS = (
     PROJECT_ROOT.child("assets"),
 )
 
-SUIT_CONFIG = {
-    'ADMIN_NAME': 'Bio Platforms Australia Metadata'
-}
-
 
 #STATICFILES_DIRS = (
 #    PROJECT_DIR.child("static"),
@@ -48,11 +44,25 @@ DATABASES = {
     }
 }
 
-ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
-ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
-ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
+#ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
+#ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
+#ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
 
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Bio Platforms Australia Metadata',
+    'MENU': (
+        {'app': 'common', 'label': 'Common', },
+        {'app': 'melanoma', 'label': 'Melanoma', },
+        {'app': 'gbr', 'label': 'Great Barrier Reef', },
+        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
+        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
+        '-',
+        {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
+    )
+}
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -186,7 +196,6 @@ LOGGING = {
         },
     }
 }
-
 
 
 def get_env_variable(var_name):
