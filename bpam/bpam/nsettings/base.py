@@ -51,7 +51,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'Bio Platforms Australia Metadata',
+    'ADMIN_NAME': 'Bioplatforms Australia Metadata',
     'MENU': (
         {'app': 'common', 'label': 'Common', },
         {'app': 'melanoma', 'label': 'Melanoma', },
