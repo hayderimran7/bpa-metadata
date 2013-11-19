@@ -122,8 +122,7 @@ class Sequencer(models.Model):
     description = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = _('DNA Source')
-        verbose_name_plural = _('DNA Sources')
+        verbose_name = _('Sequencer')
 
     def __unicode__(self):
         return self.name
