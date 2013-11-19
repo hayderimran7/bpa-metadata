@@ -5,7 +5,6 @@ argparse==1.2.1
 boto==2.15.0
 dateutils==0.6.6
 django-admin-tools==0.5.1
-django-debug-toolbar==0.10.2
 django-extensions==1.2.5
 django-localflavor==1.0
 django-tinymce==1.5.2
