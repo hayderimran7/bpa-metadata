@@ -66,6 +66,7 @@ class CultivarsSequenceFileAdmin(SequenceFileAdmin):
     fieldsets = [
         (None,
          {'fields': (
+             'sample',
              ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed',
              'note'), }),
     ]
