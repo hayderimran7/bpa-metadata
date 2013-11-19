@@ -168,7 +168,7 @@ installapp() {
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
     popd
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -r requirements/dev.txt
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install --upgrade ${PIP_OPTS} -r requirements/dev.txt
 }
 
 
@@ -233,9 +233,10 @@ devrun() {
 
     python manage.py runscript set_initial_bpa_projects --traceback
     python manage.py runscript ingest_users --traceback
-    #python manage.py runscript ingest_melanoma --traceback
-    #python manage.py runscript ingest_gbr --traceback
+    python manage.py runscript ingest_melanoma --traceback
+    python manage.py runscript ingest_gbr --traceback
     python manage.py runscript ingest_wheat_pathogens --traceback
+    python manage.py runscript ingest_wheat_cultivars --traceback
 
     # load_base
 

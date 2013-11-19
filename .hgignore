@@ -19,3 +19,4 @@ setup.cfg
 .idea/tasks.xml
 .coverage
 htmlcov/
+bpam/static/

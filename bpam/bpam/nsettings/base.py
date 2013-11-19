@@ -14,6 +14,10 @@ STATICFILES_DIRS = (
     PROJECT_ROOT.child("assets"),
 )
 
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Bio Platforms Australia Metadata'
+}
+
 
 #STATICFILES_DIRS = (
 #    PROJECT_DIR.child("static"),
@@ -128,9 +132,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 INSTALLED_APPS = (
     'bpam',
     'admin_tools',
-    'admin_tools.theming',
-    'admin_tools.menu',
-    'admin_tools.dashboard',
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
