@@ -8,6 +8,7 @@ ACTION=$1
 shift
 
 DEV_SETTINGS="bpam.nsettings.dev"
+TEST_SETTINGS="bpam.nsettings.test"
 
 PORT='8000'
 
@@ -90,6 +91,7 @@ build_number_head() {
 
 # build RPMs on a remote host from ci environment
 ci_remote_build() {
+    log_info "Building rpm on ${AWS_BUILD_INSTANCE}"
     time ccg ${AWS_BUILD_INSTANCE} boot
     time ccg ${AWS_BUILD_INSTANCE} puppet
     time ccg ${AWS_BUILD_INSTANCE} shutdown:50
@@ -117,6 +119,7 @@ ci_remote_build() {
 
 # publish rpms
 ci_rpm_publish() {
+    log_info "Publishing rpm to testing"
     time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
@@ -165,7 +168,7 @@ installapp() {
     # check requirements
     which virtualenv >/dev/null
 
-    log_info "Install ${PROJECT_NICKNAME}"
+    log_info "Install ${PROJECT_NICKNAME}'s dependencies"
     virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
