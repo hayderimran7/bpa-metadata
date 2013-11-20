@@ -382,7 +382,6 @@ case ${ACTION} in
         clean
         ;;
     purge)
-        settings
         clean
         purge
         ;;
