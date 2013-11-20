@@ -171,9 +171,9 @@ installapp() {
     log_info "Install ${PROJECT_NICKNAME}'s dependencies"
     virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
-    ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
+    ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
     popd
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install --upgrade ${PIP_OPTS} -r requirements/dev.txt
+    # ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install --upgrade ${PIP_OPTS} -r requirements/dev.txt
 }
 
 
