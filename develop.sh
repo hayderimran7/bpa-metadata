@@ -155,14 +155,6 @@ lint() {
     flake8 ${PROJECT_NAME} --ignore=E501 --count
 }
 
-# lint js, assumes closure compiler
-jslint() {
-    JSFILES="${TOPDIR}/mastrms/mastrms/app/static/js/*.js ${TOPDIR}/mastrms/mastrms/app/static/js/repo/*.js"
-    for JS in $JSFILES
-    do
-        java -jar ${CLOSURE} --js $JS --js_output_file output.js --warning_level DEFAULT --summary_detail_level 3
-    done
-}
 
 installapp() {
     # check requirements
@@ -289,6 +281,7 @@ coverage() {
 
 unittest() {
     log_info "Running Unit Test"
+    CMD='python ./bpam/manage.py'
     ${CMD} test --settings=bpam.nsettings.test --traceback
 }
 
@@ -344,9 +337,6 @@ case ${ACTION} in
         ;;
     lint)
         lint
-        ;;
-    jslint)
-        jslint
         ;;
     syncmigrate)
         devsettings

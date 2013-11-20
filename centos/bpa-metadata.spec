@@ -2,7 +2,7 @@
 %define nickname bpam
 %define version 1.0.4
 %define unmangled_version 1.0.4
-%define release 3
+%define release 5
 %define webapps /usr/local/webapps
 %define installdir %{webapps}/%{name}
 %define buildinstalldir %{buildroot}/%{installdir}
