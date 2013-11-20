@@ -4,7 +4,7 @@ import os
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-BPA_VERSION = '1.0.3'
+BPA_VERSION = '1.0.4'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,9 +43,9 @@ DATABASES = {
     }
 }
 
-ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
-ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
-ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
+#ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
+#ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
+#ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
 
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
@@ -126,10 +126,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
     'bpam',
-    'admin_tools',
-    'admin_tools.theming',
-    'admin_tools.menu',
-    'admin_tools.dashboard',
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -144,17 +141,15 @@ INSTALLED_APPS = (
     'apps.geo',
     'apps.bpaauth',
     'apps.common',
+    'apps.wheat_pathogens',
+    'apps.wheat_cultivars',
     'apps.melanoma',
     'apps.gbr',
-    #'apps.BASE',
-    #'apps.wheat_cultivars',
-    #'apps.wheat_fungal_pathogens',
     'south',
     'tinymce',
-    #'django_qbe',
     'bootstrap3',
     'tastypie',
-    'lettuce.django',
+    # 'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging

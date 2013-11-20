@@ -1,9 +1,14 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
+set -e
+
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
+
+DEV_SETTINGS="bpam.nsettings.dev"
+TEST_SETTINGS="bpam.nsettings.test"
 
 PORT='8000'
 
@@ -12,8 +17,6 @@ PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
-TESTING_MODULES="nose"
-MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 ######### Logging ########## 
@@ -22,7 +25,6 @@ COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
 COLOR_GREEN=$(tput setaf 2)
 
-set -e
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
@@ -62,13 +64,9 @@ is_root() {
 }
 
 
-
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings"
-}
-
-demosettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings.demo"
+    log_info "Setting dev settings to ${DEV_SETTINGS}"
+    export DJANGO_SETTINGS_MODULE="${DEV_SETTINGS}"
 }
 
 activate_virtualenv() {
@@ -93,6 +91,7 @@ build_number_head() {
 
 # build RPMs on a remote host from ci environment
 ci_remote_build() {
+    log_info "Building rpm on ${AWS_BUILD_INSTANCE}"
     time ccg ${AWS_BUILD_INSTANCE} boot
     time ccg ${AWS_BUILD_INSTANCE} puppet
     time ccg ${AWS_BUILD_INSTANCE} shutdown:50
@@ -120,6 +119,7 @@ ci_remote_build() {
 
 # publish rpms
 ci_rpm_publish() {
+    log_info "Publishing rpm to testing"
     time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
@@ -168,12 +168,12 @@ installapp() {
     # check requirements
     which virtualenv >/dev/null
 
-    log_info "Install ${PROJECT_NICKNAME}"
+    log_info "Install ${PROJECT_NICKNAME}'s dependencies"
     virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
     pushd ${TOPDIR}/${PROJECT_NICKNAME}
     ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
     popd
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} ${MODULES}
+    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install --upgrade ${PIP_OPTS} -r requirements/dev.txt
 }
 
 
@@ -214,50 +214,58 @@ purge() {
 
 
 load_base() {
+    CMD='python ./bpam/manage.py'
     # BASE Controlled Vocabularies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
-    python manage.py runscript ingest_BASE --traceback
+    ${CMD} runscript ingest_BASE --traceback
 }
 
-run() {   
-    python manage.py syncdb --traceback --noinput
-    python manage.py migrate --traceback
+devrun() {
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-    python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_melanoma --traceback
-    python manage.py runscript ingest_gbr --traceback
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # load_base
 
-    # python manage.py runserver
     startserver
 }
 
 dev() { 
     devsettings
-    run
+    devrun
 }
 
+wheat_pathogens_dev() {
+    devsettings
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-usage() {
-    log_warning "Usage ./develop.sh (lint|jslint)"
-    log_warning "Usage ./develop.sh (flushdb)"
-    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
 }
+
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -273,9 +281,57 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+coverage() {
+    log_info "Running coverage with reports"
+    coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
+    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+}
+
+unittest() {
+    log_info "Running Unit Test"
+    ${CMD} test --settings=bpam.nsettings.test --traceback
+}
+
+
+nuclear() {
+   CMD='python manage.py'
+   ${CMD} reset_db --router=default --traceback
+   ${CMD} syncdb --noinput --traceback
+   ${CMD} migrate --traceback
+   ${CMD} runscript set_initial_bpa_projects --traceback
+   ${CMD} runscript ingest_users --script-args ../data/users/current
+   ${CMD} runscript ingest_gbr --script-args ../data/gbr/current
+   ${CMD} runscript ingest_melanoma --script-args ../data/melanoma/current
+   ${CMD} runscript ingest_wheat_pathogens --script-args ../data/wheat_pathogens/current
+   ${CMD} runscript ingest_wheat_cultivars --script-args ../data/wheat_cultivars/current
+}
+
+usage() {
+    log_warning "Usage ./develop.sh (lint|jslint)"
+    log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (unittest|coverage)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    log_warning "Usage ./develop.sh (nuclear)"
+    log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
+}
+
+
 case ${ACTION} in
+    coverage)
+        coverage
+        ;;
+    wheat_pathogens_dev)
+        wheat_pathogens_dev
+        ;;
+    unittest)
+        unittest
+        ;;
     flushdb)
-	flushdb
+	    flushdb
+        ;;
+    nuclear)
+	    nuclear
         ;;
     pythonversion)
         pythonversion
@@ -329,7 +385,6 @@ case ${ACTION} in
         clean
         ;;
     purge)
-        settings
         clean
         purge
         ;;

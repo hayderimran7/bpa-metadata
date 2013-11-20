@@ -273,9 +273,9 @@ class Archive(object):
     def build_linktree(self, root):
         for fastq, meta in self.matches:
             folder = meta.uid.replace('/', '.') + '/' + meta.flow_cell_id
-            patient_path = Path(root, folder)
-            patient_path.mkdir(parents=True)
-            link_file = Path(patient_path, meta.filename)
+            bpa_id_path = Path(root, folder)
+            bpa_id_path.mkdir(parents=True)
+            link_file = Path(bpa_id_path, meta.filename)
             link_file.make_relative_link_to(fastq.filename)
 
     def swift_path(self, fastq):
@@ -315,7 +315,7 @@ class Archive(object):
                 re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
-                # make public linktree by patient ID / flow cell
+                # make public linktree by BPA ID / flow cell
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
@@ -415,7 +415,7 @@ class MelanomaArchive(Archive):
         # second header line - assert just to make sure it's still there, file format
         # hasn't changed without script update
         second_header = next(reader)
-        assert (second_header[0] == 'Unique identifier provided by BPA (13 digit number)')
+
         for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
             ('md5', 'MD5 checksum', None),
             ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
@@ -442,7 +442,7 @@ class MelanomaArchive(Archive):
             ('uid', 'UID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
             ('sample_name', 'Sample Name', None),
-            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('run', 'Run number', None),
         ]):
             if tpl.filename == '':
@@ -504,8 +504,7 @@ class GBRArchive(Archive):
             ('species', 'Species', None),
             ('dataset', 'Dataset', None),
             ('sample_name', 'Sample Description', None),
-            (
-            'date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
+            ('date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('run', 'Run number', None),
         ]):
             if tpl.filename == '':
@@ -524,6 +523,103 @@ class GBRArchive(Archive):
                 'filename': meta.filename,
                 'name': meta.sample_name,
                 'date_received_from_sequencing_facility': meta.date_received,
+                'run': meta.run,
+                'url': url,
+            })
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
+        return {'object_list': objects}
+
+
+class WheatCultivarsArchive(Archive):
+    metadata_filename = '../../data/wheat_cultivars/current'
+    metadata_sheet = 'a_genome_seq_assay_BPA-Wheat-Cu'
+    container_name = 'Wheat_Cultivars'
+    template_name = 'wheat_cultivars.html'
+
+    def __init__(self, bpa_base):
+        self.base = Path(bpa_base)
+        self.fastq = FastqInventory(self.base)
+        self.metadata = self.parse_metadata()
+        self.matches = self.tie_metadata_to_fastq()
+
+    def parse_metadata(self):
+        metadata = []
+
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('WheatCultivarsMeta', reader, header, [
+            ('md5', 'Comment[MD5 checksum]', None),
+            ('filename', 'Comment[Corrected file name]', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'BPA ID', None),
+            ('flow_cell_id', 'Parameter Value[flow cell identifier]', None),
+            ('sample_name', 'Sample Name', None),
+            ('code', 'Comment[Sample code]', None),
+            ('run', 'Parameter Value[run number]', lambda p: p.replace('RUN #', '').replace('?', '')),
+        ]):
+            if tpl.filename == '':
+                continue
+            metadata.append(tpl)
+        return metadata
+
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
+        objects = []
+        for fastq, meta in self.get_matches(bpa_id):
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'name': meta.sample_name,
+                'code': meta.code,
+                'run': meta.run,
+                'url': url,
+            })
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
+        return {'object_list': objects}
+
+
+class WheatPathogensArchive(Archive):
+    metadata_filename = '../../data/wheat_pathogens/current'
+    metadata_sheet = 'Metadata'
+    container_name = 'Wheat_Pathogens'
+    template_name = 'wheat_pathogens.html'
+
+    def __init__(self, bpa_base):
+        self.base = Path(bpa_base)
+        self.fastq = FastqInventory(self.base)
+        self.metadata = self.parse_metadata()
+        self.matches = self.tie_metadata_to_fastq()
+
+    def parse_metadata(self):
+        metadata = []
+
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('WheatPathogensMeta', reader, header, [
+            ('md5', 'MD5 checksum', None),
+            ('filename', 'FILE NAMES - supplied by AGRF', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'BPA ID', None),
+            ('flow_cell_id', 'Run #:Flow Cell ID', None),
+            ('species', 'Species', None),
+            ('official_variety_name', 'Official Variety Name', None),
+            ('run', 'Run number', lambda s: s.replace('RUN #', '')),
+        ]):
+            if tpl.filename == '' or tpl.uid == '':
+                continue
+            metadata.append(tpl)
+        return metadata
+
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
+        objects = []
+        for fastq, meta in self.get_matches(bpa_id):
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'name': meta.official_variety_name,
                 'run': meta.run,
                 'url': url,
             })
@@ -561,12 +657,13 @@ class BASEArchive(NoMetadataArchive):
     template_name = 'base.html'
 
 
-class WheatPathogensArchive(NoMetadataArchive):
+# kep these around for now
+class WheatPathogensArchiveOld(NoMetadataArchive):
     container_name = 'Wheat_Pathogens'
-    template_name = 'wheat_pathogens.html'
+    template_name = 'wheat_pathogens_old.html'
 
 
-class WheatCultivarsArchive(NoMetadataArchive):
+class WheatCultivarsArchiveOld(NoMetadataArchive):
     container_name = 'Wheat_Cultivars'
     template_name = 'wheat_cultivars.html'
 

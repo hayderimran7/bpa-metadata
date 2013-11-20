@@ -2,27 +2,22 @@ import string
 import logging
 from datetime import date
 import dateutil
-from xlrd import xldate_as_tuple
 
 from django.utils.encoding import smart_text
 
-from bpaauth.models import BPAUser
-from common.models import *
-
+from apps.common.models import Organism, BPAUniqueID, BPAProject, DNASource
 
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('UTILS')
 
 
 def get_clean_number(val, default=None):
     """
     Try to clean up numbers
     """
-
     if val in (None, ""):
         return default
 
@@ -48,6 +43,7 @@ def get_date(val):
     """
     Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
     """
+    print val
     return dateutil.parser.parse(val)
 
 
@@ -66,17 +62,17 @@ def strip_all(reader):
     return entries
 
 
-def add_organism(genus="", species=""):
+def add_organism(genus='', species=''):
     organism = Organism(genus=genus, species=species)
     organism.save()
 
 
-def add_bpa_id(id, project_name, note=INGEST_NOTE):
+def add_bpa_id(idx, project_name, note=INGEST_NOTE):
     """
     Add a BPA ID
     """
 
-    lbl = BPAUniqueID(bpa_id=id)
+    lbl = BPAUniqueID(bpa_id=idx)
     lbl.project = BPAProject.objects.get(name=project_name)
     lbl.note = note
     lbl.save()
@@ -98,16 +94,16 @@ def ingest_bpa_ids(data, project_name):
         add_bpa_id(bpa_id, project_name)
 
 
-def get_bpa_id(id, project_name, note=INGEST_NOTE):
+def get_bpa_id(bpa_id, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     """
 
     try:
-        bid = BPAUniqueID.objects.get(bpa_id=id)
+        bid = BPAUniqueID.objects.get(bpa_id=bpa_id)
     except BPAUniqueID.DoesNotExist:
-        print("BPA ID {0} does not exit, adding it".format(id))
-        bid = BPAUniqueID(bpa_id=id)
+        logger.info("BPA ID {0} does not exit, adding it".format(bpa_id))
+        bid = BPAUniqueID(bpa_id=bpa_id)
         bid.project = BPAProject.objects.get(name=project_name)
         bid.note = note
         bid.save()
@@ -148,9 +144,7 @@ def is_bpa_id(bpa_id):
     """
     Determines if id is a good BPA ID
     """
-
     bpa_id = bpa_id.strip()
-
     # empties
     if bpa_id == '':
         return False

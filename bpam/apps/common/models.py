@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from tinymce.models import HTMLField
-from apps.bpaauth.models import BPAUser
 
 
 class BPAProject(models.Model):
@@ -11,16 +10,17 @@ class BPAProject(models.Model):
     Examples would be: Melanoma, Coral
     """
 
-    name = models.CharField(max_length=200, primary_key=True)
+    key = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, blank=True)
     note = HTMLField(blank=True)
-
-    def __unicode__(self):
-        return self.name
 
     class Meta:
         verbose_name = _('BPA Project')
         verbose_name_plural = _("BPA Projects")
+
+    def __unicode__(self):
+        return self.name
 
 
 class BPAUniqueID(models.Model):
@@ -33,12 +33,12 @@ class BPAUniqueID(models.Model):
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
-    def __unicode__(self):
-        return self.bpa_id
-
     class Meta:
         verbose_name = _('BPA Unique ID')
         verbose_name_plural = _("BPA Unique ID's")
+
+    def __unicode__(self):
+        return self.bpa_id
 
 
 class Facility(models.Model):
@@ -46,14 +46,29 @@ class Facility(models.Model):
     The Sequencing Facility
     """
 
+    facilities = {'RAM': 'Ramaciotti',
+                  'AGRF': 'AGRF',
+                  'ANU': 'ANU',
+                  '': 'Unknown',
+                  'Unknown': 'Unknown'}
+
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
 
-    def __unicode__(self):
-        return u'{0}'.format(self.name)
-
     class Meta:
         verbose_name_plural = _('Facilities')
+
+    def get_name(self, key):
+        """
+        Facilities are commonly known by theses names, return standard name.
+        """
+        try:
+            return self.facilities[key]
+        except KeyError:
+            return 'Unknown'
+
+    def __unicode__(self):
+        return u'{0}'.format(self.name)
 
 
 class Organism(models.Model):
@@ -61,17 +76,26 @@ class Organism(models.Model):
     An Organism
     """
 
-    genus = models.CharField(max_length=100)
-    species = models.CharField(max_length=100, primary_key=True)
-    classification = models.URLField('NCBI organismal classification', blank=True)
-    note = models.TextField(blank=True)
+    domain = models.CharField(max_length=100, blank=True)
+    kingdom = models.CharField(max_length=100, blank=True)
+    phylum = models.CharField(max_length=100, blank=True)
+    organism_class = models.CharField('Class', max_length=100, blank=True)
+    order = models.CharField(max_length=100, blank=True)
+    family = models.CharField(max_length=100, blank=True)
+    genus = models.CharField(max_length=100, blank=True)
+    species = models.CharField(max_length=100, blank=True)
 
-    def __unicode__(self):
-        return u'{0} {1}'.format(self.genus, self.species)
+    ncbi_classification = models.URLField('NCBI organismal classification', blank=True)
+    note = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = _('Organisms')
-        unique_together = ('genus', 'species')
+
+    def name(self):
+        return u'{0} {1}'.format(self.genus, self.species)
+
+    def __unicode__(self):
+        return self.name()
 
 
 class DNASource(models.Model):
@@ -81,12 +105,12 @@ class DNASource(models.Model):
     description = models.CharField(max_length=100)
     note = models.TextField(blank=True)
 
-    def __unicode__(self):
-        return self.description
-
     class Meta:
         verbose_name = _('DNA Source')
         verbose_name_plural = _('DNA Sources')
+
+    def __unicode__(self):
+        return self.description
 
 
 class Sequencer(models.Model):
@@ -96,6 +120,9 @@ class Sequencer(models.Model):
 
     name = models.CharField(max_length=100, primary_key=True)
     description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = _('Sequencer')
 
     def __unicode__(self):
         return self.name
@@ -112,13 +139,15 @@ class Protocol(models.Model):
     library_construction_protocol = models.CharField(max_length=200)
     note = models.TextField(blank=True)
 
-    def __unicode__(self):
-        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type, self.library_construction_protocol)
-
     class Meta:
         abstract = True
+        verbose_name = _('Protocol')
         verbose_name_plural = _('Protocol')
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
+
+    def __unicode__(self):
+        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type,
+                                                           self.library_construction_protocol)
 
 
 class Sample(models.Model):
@@ -131,18 +160,20 @@ class Sample(models.Model):
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
     name = models.CharField(max_length=200, verbose_name=_('Sample name'))
-    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True, verbose_name=_('DNA Extraction Protocol'))
+    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True,
+                                               verbose_name=_('DNA Extraction Protocol'))
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
     collection_date = models.DateField(blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
 
     note = models.TextField(blank=True, null=True)
 
-    def __unicode__(self):
-        return u'{0} {1}'.format(self.bpa_id, self.name)
-
     class Meta:
         abstract = True
+        verbose_name = _('Sample')
+
+    def __unicode__(self):
+        return u'{0} {1}'.format(self.bpa_id, self.name)
 
 
 class Run(models.Model):
@@ -155,9 +186,21 @@ class Run(models.Model):
     passage_number = models.IntegerField(blank=True, null=True)
 
     # facilities
-    sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Sequencing'), related_name='+', blank=True, null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility, verbose_name=_('Whole Genome'), related_name='+', blank=True, null=True)
-    array_analysis_facility = models.ForeignKey(Facility, verbose_name=_('Array Analysis'), related_name='+', blank=True, null=True)
+    sequencing_facility = models.ForeignKey(Facility,
+                                            verbose_name=_('Sequencing'),
+                                            related_name='+',
+                                            blank=True,
+                                            null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(Facility,
+                                                         verbose_name=_('Whole Genome'),
+                                                         related_name='+',
+                                                         blank=True,
+                                                         null=True)
+    array_analysis_facility = models.ForeignKey(Facility,
+                                                verbose_name=_('Array Analysis'),
+                                                related_name='+',
+                                                blank=True,
+                                                null=True)
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
@@ -165,6 +208,7 @@ class Run(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Run')
 
 
 class SequenceFile(models.Model):
@@ -177,14 +221,15 @@ class SequenceFile(models.Model):
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(max_length=300, blank=True, null=True)
     md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
-    analysed = models.BooleanField(blank=True)
+    analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
-
-    def __unicode__(self):
-        return u'{0}'.format(self.filename)
 
     class Meta:
         abstract = True
+        verbose_name = _('Sequence File')
+
+    def __unicode__(self):
+        return u'{0}'.format(self.filename)
 
 
 class URLVerification(models.Model):
@@ -194,6 +239,7 @@ class URLVerification(models.Model):
     for the join.
     The cron script will clean old entries up.
     """
+
     checked_url = models.URLField()
     checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
     status_ok = models.BooleanField()
@@ -204,6 +250,7 @@ class DebugNote(models.Model):
     """
     A text field to use for debugging. Stores the original parsed data.
     """
+
     debug_note = models.TextField(blank=True, null=True)
 
     class Meta:

@@ -1,45 +1,56 @@
 {% extends "admin/base.html" %}
-{% load i18n admin_tools_menu_tags %}
-{% load commontags %}
+{% load admin_static %}
 
-{% block title %}{{ title }} | Bioplatforms Australia Metadata Administration{% endblock %}
+{# Additional <head> content here, some extra meta tags or favicon #}
+{#{% block extrahead %}#}
+{#{% endblock %}#}
 
-{% block extrastyle %}
-{{ block.super }}
-<style type="text/css">
-    .version {
-      border-top: 1px solid #CCC;
-    }
-    .version p {
-      text-align: right;
-      padding-right: 2em;
-    }
-</style>
-{% if user.is_active and user.is_staff %}
-{% if not is_popup %}
-{% admin_tools_render_menu_css %}
-{% endif %}
-{% endif %}
+
+{# Additional CSS includes #}
+{#{% block extrastyle %}#}
+{#  <link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">#}
+{#{% endblock %}#}
+
+
+{# Additional JS files in footer, right before </body> #}
+{#{% block extrajs %}#}
+{#  <script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
+{#{% endblock %}#}
+
+
+{% block footer_links %}
+    <a href="https://downloads.bioplatforms.com" class="icon">Downloads</a>
 {% endblock %}
 
-{% block branding %}
-<h1 id="site-name">{% trans 'Bioplatforms Australia Metadata Administration' %}</h1>
-{% endblock %}
+{# Additional header content like notifications or language switcher #}
+{#{% block header_content %}#}
+{#    {{ block.super }}#}
+{#    <div class="header-content">#}
+{#        <!-- First icon column -->#}
+{#        <div class="header-column icon">#}
+{#            <i class="icon-home"></i><br>#}
+{#            <i class="icon-cog"></i>#}
+{#        </div>#}
+{#        <div class="header-column" style="margin-right: 20px">#}
+{#            <a href="/" class="grey">Front-end</a><br>#}
+{#            <a href="" class="grey">One more link</a>#}
+{#        </div>#}
+{#        <!-- Second icon column -->#}
+{#        <div class="header-column icon">#}
+{#            <i class="icon-comment"></i>#}
+{#        </div>#}
+{#        <div class="header-column">#}
+{#            <a href="" class="grey">5 new messages</a>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
 
-{% block nav-global %}
-{% if user.is_active and user.is_staff %}
-{% if not is_popup %}
-{% admin_tools_render_menu %}
-{% endif %}
-{% endif %}
-{% endblock %}
+{# Footer branding name (center) #}
+{#{% block footer_branding %}#}
+{#{% endblock %}#}
 
-{% block footer %}
 
-<div id="footer">
-    <div class="version">
-      <p>bpa-metadata {% bpam_version %}</p>
-    </div>
-</div>
-
+{% block copyright %}
+    Copyright &copy; 2013 Bioplatforms Australia<br>Developed by
+    <a href="http://ccg.murdoch.edu.au" target="_blank">Center for Comparative Genomics, Murdoch University</a>
 {% endblock %}

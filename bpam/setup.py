@@ -1,5 +1,4 @@
 import os.path
-from pprint import pprint
 
 from setuptools import setup, find_packages
 
@@ -41,28 +40,31 @@ setup(
     package_data=get_data_files(),
     include_package_data=True,
     install_requires=[
-        "Django==1.5.4",
-        "unipath==1.0",
-        "South==0.8.2",
-        "pygraphviz==1.2",
-        "django-extensions==1.2.2",
-        "django-admin-tools==0.5.1",
-        "feedparser==5.1.3",
-        "django-localflavor==1.0",
-        "django-tinymce==1.5.1",
-        "django-qbe==0.2.0",
-        "django-tastypie==0.10.0",
-        "django-bootstrap3==0.0.7",
-        "mimeparse==0.1.3",
-        "requests==1.2.3",
-        'ccg-extras==0.1.6',
-        'python-memcached==1.48',
-        'docutils==0.11',
-        'xlrd==0.9.2'
+        'Django==1.6.0',
+        'Django-suit==0.2.5',
+        'South==0.8.3',
+        'Unipath==1.0',
+        'argparse==1.2.1',
+        'boto==2.15.0',
+        'dateutils==0.6.6',
+        'django-admin-tools==0.5.1',
+        'django-extensions==1.2.5',
+        'django-localflavor==1.0',
+        'django-tinymce==1.5.2',
+        'feedparser==5.1.3',
+        'pygraphviz==1.2',
+        'pytz==2013.7',
+        'sqlparse==0.1.9',
+        'django-bootstrap3==2.0.0',
+        'django-tastypie==0.10.0',
+        'xlrd==0.9.2',
+        'xlwt==0.7.5',
+        'requests==1.2.3',
     ],
     dependency_links=[
         "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz",
         "https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.6.tar.gz",
+        'http://argparse.googlecode.com/files/argparse-1.2.1.tar.gz'
     ],
     zip_safe=False,
 )

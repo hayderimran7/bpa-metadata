@@ -38,12 +38,13 @@ class RunAdmin(admin.ModelAdmin):
         ('Sequencing Facilities',
          {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
         ('Sequencing',
-         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
+         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol')}),
     ]
+
     inlines = (ProtocolInline, )
-    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
+    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility', 'flow_cell_id', )
+    list_filter = ('sequencing_facility',)
 
 
 class SampleAdmin(admin.ModelAdmin):
