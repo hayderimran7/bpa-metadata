@@ -161,7 +161,6 @@ lint() {
     flake8 ${PROJECT_NAME} --ignore=E501 --count
 }
 
-
 running_in_instance() {
     if [ ${USER} == 'ccg-user' ]
     then
@@ -181,7 +180,8 @@ installapp() {
            ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
         )
     else
-        log_warning "Not running in a env where creating a virtualenv would make sense"
+        log_warning "Not running in a env where creating a virtualenv here would make sense"
+        log_warning "shell into your instance and try again, or use the ccg remote command"
     fi
 }
 
