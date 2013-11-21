@@ -16,6 +16,7 @@ PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
+CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
@@ -158,7 +159,7 @@ ci_staging_lettuce() {
 lint() {
     activate_virtualenv
     cd ${TOPDIR}
-    flake8 ${PROJECT_NAME} --ignore=E501 --count
+    flake8 ${PROJECT_NICKNAME} --ignore=E501 --count
 }
 
 is_running_in_instance() {
@@ -320,17 +321,13 @@ coverage() {
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
 }
 
-
-
-function djangotests() {
-    source virt_rdrf/bin/activate
-    virt_rdrf/bin/django-admin.py test rdrf --noinput
-}
-
 unittest() {
     log_info "Running Unit Test"
-    CMD='python ./bpam/manage.py'
-    ${CMD} test --settings=bpam.nsettings.test --traceback
+    activate_virtualenv
+    (
+       cd ${CONFIG_DIR}
+       python manage.py test --settings=bpam.nsettings.test --traceback
+    )
 }
 
 
@@ -357,8 +354,6 @@ usage() {
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
 }
-
-
 
 case ${ACTION} in
     coverage)
