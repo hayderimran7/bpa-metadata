@@ -161,7 +161,7 @@ lint() {
     flake8 ${PROJECT_NAME} --ignore=E501 --count
 }
 
-running_in_instance() {
+is_running_in_instance() {
     if [ ${USER} == 'ccg-user' ]
     then
        return 0
@@ -172,17 +172,41 @@ running_in_instance() {
 
 installapp() {
     log_info "Install ${PROJECT_NICKNAME}'s dependencies"
-    if running_in_instance
+    if is_running_in_instance
     then
         virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
         (
            cd ${TOPDIR}/${PROJECT_NICKNAME}
            ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
         )
+
+        mkdir -p ${HOME}/bin
+        ln -sf ${VIRTUALENV}/bin/python ${HOME}/bin/vpython-${PROJECT_NICKNAME}
+        ln -sf ${VIRTUALENV}/bin/django-admin.py ${HOME}/bin/${PROJECT_NICKNAME}
     else
         log_warning "Not running in a env where creating a virtualenv here would make sense"
         log_warning "shell into your instance and try again, or use the ccg remote command"
     fi
+}
+
+
+########################################
+# local lxc related
+
+make_local_instance() {
+    if ! is_running_in_instance
+    then
+       log_info "Making a local build instance"
+       rm -rf virt_${PROJECT_NICKNAME}
+       ccg --nuke-bootstrap
+       ccg ${PROJECT_NICKNAME} puppet
+    else
+       log_warning "Seems like I'm running in a build instance of some sorts already. Aborting."
+    fi
+}
+
+local_shell() {
+    ccg ${PROJECT_NICKNAME} shell
 }
 
 
@@ -295,7 +319,8 @@ coverage() {
     coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
 }
-# run the tests using django-admin.py
+
+
 
 function djangotests() {
     source virt_rdrf/bin/activate
@@ -323,6 +348,7 @@ nuclear() {
 }
 
 usage() {
+    log_warning "Usage ./develop.sh (make_local_instance)"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
@@ -331,6 +357,7 @@ usage() {
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
 }
+
 
 
 case ${ACTION} in
@@ -403,6 +430,12 @@ case ${ACTION} in
         ;;
     dev)
         dev
+        ;;
+    make_local_instance)
+        make_local_instance
+        ;;
+    local_shell)
+        local_shell
         ;;
     *)
         usage
