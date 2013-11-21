@@ -53,9 +53,11 @@ install_requires = [
     'xlwt==0.7.5',
     'requests==1.2.3',
     'django_compressor==1.3',
+    'mimeparse'
 ]
 
 dev_requires = [
+    'mysql-python',
     'flake8',
     'Werkzeug',
     'django-debug-toolbar',
