@@ -19,6 +19,16 @@ AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
 
+VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
+PYTHON="${VIRTUALENV}/bin/python"
+PIP="${VIRTUALENV}/bin/pip"
+DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
+
+activate_virtualenv() {
+    source ${VIRTUALENV}/bin/activate
+}
+
+
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
 COLOR_RED=$(tput setaf 1)
@@ -63,15 +73,11 @@ is_root() {
    fi
 }
 
-
 devsettings() {
     log_info "Setting dev settings to ${DEV_SETTINGS}"
     export DJANGO_SETTINGS_MODULE="${DEV_SETTINGS}"
 }
 
-activate_virtualenv() {
-    source ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/activate
-}
 
 # ssh setup, make sure our ccg commands can run in an automated environment
 ci_ssh_agent() {
@@ -156,16 +162,27 @@ lint() {
 }
 
 
-installapp() {
-    # check requirements
-    which virtualenv >/dev/null
+running_in_instance() {
+    if [ ${USER} == 'ccg-user' ]
+    then
+       return 0
+    else
+       return 1
+    fi
+}
 
+installapp() {
     log_info "Install ${PROJECT_NICKNAME}'s dependencies"
-    virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
-    pushd ${TOPDIR}/${PROJECT_NICKNAME}
-    ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
-    popd
-    # ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install --upgrade ${PIP_OPTS} -r requirements/dev.txt
+    if running_in_instance
+    then
+        virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
+        (
+           cd ${TOPDIR}/${PROJECT_NICKNAME}
+           ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
+        )
+    else
+        log_warning "Not running in a env where creating a virtualenv would make sense"
+    fi
 }
 
 
@@ -277,6 +294,12 @@ coverage() {
     log_info "Running coverage with reports"
     coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
+}
+# run the tests using django-admin.py
+
+function djangotests() {
+    source virt_rdrf/bin/activate
+    virt_rdrf/bin/django-admin.py test rdrf --noinput
 }
 
 unittest() {
