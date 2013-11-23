@@ -103,7 +103,7 @@ class BPAIDForm(forms.ModelForm):
 
 class BPAUniqueIDAdmin(admin.ModelAdmin):
     form = BPAIDForm
-    fields = (('bpa_id', 'project'), 'note')
+    fields = ('bpa_id', 'project', 'note')
     list_display = ('bpa_id', 'project', 'note')
     search_fields = ('bpa_id', 'project__name', 'note')
 
