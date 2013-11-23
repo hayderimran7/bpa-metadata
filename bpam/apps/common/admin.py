@@ -36,6 +36,8 @@ class SequenceFileForm(forms.ModelForm):
         model = SequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'size': 100}),
+            'sample': LinkedSelect,
+            'run': LinkedSelect
         }
 
 
@@ -45,7 +47,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Sequence File',
          {'fields': (
-             'filename', 'md5', 'lane_number', 'index_number', 'analysed', 'date_received_from_sequencing_facility',
+             'filename', 'md5', 'sample', 'run', 'lane_number', 'index_number', 'analysed', 'date_received_from_sequencing_facility',
              'note'), }),
     ]
 

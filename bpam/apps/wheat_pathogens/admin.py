@@ -2,6 +2,8 @@ from django.contrib import admin
 from django import forms
 from apps.common.admin import SequenceFileAdmin
 
+from suit.widgets import LinkedSelect
+
 from .models import PathogenSample
 from .models import PathogenRun
 from .models import PathogenProtocol
@@ -12,15 +14,15 @@ class ProtocolForm(forms.ModelForm):
     class Meta:
         model = PathogenProtocol
         widgets = {
-            'library_construction_protocol': forms.TextInput(attrs={'size': 100}),
+            'run': LinkedSelect,
         }
 
 
 class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
-    fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
-    search_fields = (
-    'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
+    fields = ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')
+    search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id',
+                     'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
@@ -30,14 +32,28 @@ class ProtocolInline(admin.StackedInline):
     extra = 0
 
 
+class RunForm(forms.ModelForm):
+    class Meta:
+        model = PathogenRun
+        widgets = {
+            'sample': LinkedSelect,
+            'sequencing_facility': LinkedSelect,
+            'array_analysis_facility': LinkedSelect,
+            'whole_genome_sequencing_facility': LinkedSelect,
+            'sequencer': LinkedSelect
+        }
+
+
 class RunAdmin(admin.ModelAdmin):
+    form = RunForm
+
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),
         ('Sequencing Facilities',
-         {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
+         {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
         ('Sequencing',
-         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol')}),
+         {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
 
     inlines = (ProtocolInline, )
@@ -46,18 +62,30 @@ class RunAdmin(admin.ModelAdmin):
     list_filter = ('run_number', )
 
 
+class SampleForm(forms.ModelForm):
+    class Meta:
+        model = PathogenSample
+        widgets = {
+            'bpa_id': LinkedSelect,
+            'organism': LinkedSelect,
+            'dna_source': LinkedSelect,
+            'sequencing_facility': LinkedSelect,
+            'contact_scientist': LinkedSelect,
+            'contact_bioinformatician': LinkedSelect,
+        }
+
+
 class SampleAdmin(admin.ModelAdmin):
+    form = SampleForm
+
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name', 'sample_label'), 'original_source_host_species', 'wheat_pathogenicity')}),
+         {'fields': ('bpa_id', 'name', 'sample_label', 'original_source_host_species', 'wheat_pathogenicity')}),
         ('DNA/RNA Source',
          {'fields': (
-             ('organism', 'official_variety_name',),
-             'dna_source',
-             'dna_extraction_protocol',
-         )}),
+             'organism', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',)}),
         ('Collection',
-         {'fields': (('collection_location', 'collection_date'),)}),
+         {'fields': ('collection_location', 'collection_date',)}),
         ('Contacts',
          {'fields': ('contact_scientist',)}),
         ('Notes',

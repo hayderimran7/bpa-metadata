@@ -54,8 +54,6 @@ class GBRSample(Sample, DebugNote):
                                                  related_name='bioinformatician')
 
 
-
-
 class GBRRun(Run):
     """
     A GBR Run
