@@ -90,11 +90,12 @@ class Organism(models.Model):
     class Meta:
         verbose_name_plural = _('Organisms')
 
+    @property
     def name(self):
         return u'{0} {1}'.format(self.genus, self.species)
 
     def __unicode__(self):
-        return self.name()
+        return self.name
 
 
 class DNASource(models.Model):

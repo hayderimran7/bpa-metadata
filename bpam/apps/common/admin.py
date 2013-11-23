@@ -83,13 +83,13 @@ class BPAProjectForm(forms.ModelForm):
     class Meta:
         model = BPAProject
         widgets = {
-            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-xxlarge'})
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
         }
 
 
 class BPAProjectAdmin(admin.ModelAdmin):
     form = BPAProjectForm
-    fields = (('name', 'description'), 'note')
+    fields = ('name', 'description', 'note')
     list_display = ('name', 'key', 'description')
 
 
@@ -97,7 +97,7 @@ class BPAIDForm(forms.ModelForm):
     class Meta:
         model = BPAUniqueID
         widgets = {
-            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-xxlarge'})
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
         }
 
 
@@ -114,7 +114,14 @@ class FacilityAdmin(admin.ModelAdmin):
 
 
 class OrganismAdmin(admin.ModelAdmin):
-    list_display = ('kingdom', 'phylum', 'genus', 'species')
+    def get_organism_name(self, obj):
+        return obj.name
+
+    get_organism_name.short_description = 'Name'
+    get_organism_name.admin_order_field = 'species'
+
+    list_display = ('get_organism_name', 'kingdom', 'phylum', 'genus')
+
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
