@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from tinymce.models import HTMLField
 
 
 class BPAProject(models.Model):
@@ -13,7 +12,7 @@ class BPAProject(models.Model):
     key = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, blank=True)
-    note = HTMLField(blank=True)
+    note = models.TextField(blank=True)
 
     class Meta:
         verbose_name = _('BPA Project')

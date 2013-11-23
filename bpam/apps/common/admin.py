@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from suit.widgets import AutosizedTextarea
 
 from .models import (BPAProject,
                      BPAUniqueID,
@@ -76,9 +77,18 @@ class SequenceFileAdmin(admin.ModelAdmin):
 class AffiliationAdmin(admin.ModelAdmin):
     fields = (('name', 'description'),)
     list_display = ('name', 'description')
-    
-    
+
+
+class BPAProjectForm(forms.ModelForm):
+    class Meta:
+        model = BPAProject
+        widgets = {
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-xxlarge'})
+        }
+
+
 class BPAProjectAdmin(admin.ModelAdmin):
+    form = BPAProjectForm
     fields = (('name', 'description'), 'note')
     list_display = ('name', 'key', 'description')
     
