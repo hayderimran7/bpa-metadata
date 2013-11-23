@@ -173,7 +173,7 @@ class Sample(models.Model):
         verbose_name = _('Sample')
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.bpa_id, self.name)
+        return u'{0} : {1}'.format(self.bpa_id, self.name)
 
 
 class Run(models.Model):

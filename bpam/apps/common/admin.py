@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from suit.widgets import AutosizedTextarea
+from suit.widgets import LinkedSelect
 
 from .models import (BPAProject,
                      BPAUniqueID,
@@ -42,9 +43,9 @@ class SequenceFileAdmin(admin.ModelAdmin):
     form = SequenceFileForm
 
     fieldsets = [
-        (None,
+        ('Sequence File',
          {'fields': (
-             ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed', 'date_received_from_sequencing_facility',
+             'filename', 'md5', 'lane_number', 'index_number', 'analysed', 'date_received_from_sequencing_facility',
              'note'), }),
     ]
 
@@ -97,6 +98,7 @@ class BPAIDForm(forms.ModelForm):
     class Meta:
         model = BPAUniqueID
         widgets = {
+            'project': LinkedSelect,
             'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
         }
 
