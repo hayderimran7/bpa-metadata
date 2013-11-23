@@ -285,6 +285,7 @@ devrun() {
 }
 
 dev() { 
+    activate_virtualenv
     devsettings
     devrun
 }
