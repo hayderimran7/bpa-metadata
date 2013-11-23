@@ -91,9 +91,18 @@ class BPAProjectAdmin(admin.ModelAdmin):
     form = BPAProjectForm
     fields = (('name', 'description'), 'note')
     list_display = ('name', 'key', 'description')
-    
-    
+
+
+class BPAIDForm(forms.ModelForm):
+    class Meta:
+        model = BPAUniqueID
+        widgets = {
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-xxlarge'})
+        }
+
+
 class BPAUniqueIDAdmin(admin.ModelAdmin):
+    form = BPAIDForm
     fields = (('bpa_id', 'project'), 'note')
     list_display = ('bpa_id', 'project', 'note')
     search_fields = ('bpa_id', 'project__name', 'note')
