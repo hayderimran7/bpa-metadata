@@ -6,15 +6,20 @@ import logging
 import xlrd
 from unipath import Path
 
-from apps.common.models import *
-from apps.wheat_pathogens.models import *
+from apps.common.models import DNASource, BPAUniqueID, Sequencer, Facility
+from apps.wheat_pathogens.models import (
+    Organism,
+    PathogenSample,
+    PathogenProtocol,
+    PathogenRun,
+    PathogenSequenceFile)
+
 import utils
 import user_helper
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('WheatPathogens')
-
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_pathogens/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'Wheat_pathogens_genomic_metadata.xlsx')
