@@ -334,6 +334,10 @@ def ingest_runs(sample_data):
         gbr_run.protocol = get_protocol(e)
         gbr_run.save()
 
+        # FIXME, I'm sure this is wrong
+        gbr_run.protocol.run = gbr_run
+        gbr_run.protocol.save()
+
         return gbr_run
 
     def add_file(entry, gbr_run):
