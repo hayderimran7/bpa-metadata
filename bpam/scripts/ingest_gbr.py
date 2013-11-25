@@ -176,36 +176,36 @@ def get_gbr_sample_data(spreadsheet_file):
 
     fieldnames = ['bpa_id',
                   'species',
-                  'dataset', # NEW (model?)
+                  'dataset',
                   'sample_name',
-                  'dna_concentration', # NEW
-                  'total_dna', # NEW
-                  'collection_site', # NEW (model?)
+                  'dna_concentration',
+                  'total_dna',
+                  'collection_site',
                   'collection_date',
-                  'collector_name', # NEW
-                  'gps_location', # NEW
-                  'water_temp', # NEW
-                  'ph', # NEW
-                  'depth', # NEW
+                  'collector_name',
+                  'gps_location',
+                  'water_temp',
+                  'ph',
+                  'depth',
                   'collection_comment',
-                  'other', # NEW 
+                  'other',
                   'requested_sequence_coverage',
-                  'sequencing_notes', # NEW
+                  'sequencing_notes',
                   'contact_scientist',
                   'contact_affiliation',
                   'contact_email',
                   'sample_dna_source',
                   'dna_extraction_protocol',
-                  'dna_rna_concentration', # NEW
-                  'total_dna_rna_shipped', # NEW
+                  'dna_rna_concentration',
+                  'total_dna_rna_shipped',
                   'sequencing_facility',
                   'date_received',
-                  'comments_by_facility', # NEW
-                  'sequencing_data_eta', # NEW
-                  'date_sequenced', # NEW,
+                  'comments_by_facility',
+                  'sequencing_data_eta',
+                  'date_sequenced',
                   'library',
                   'library_construction',
-                  'requested_read_length', # NEW
+                  'requested_read_length',
                   'library_construction_protocol',
                   'index_number',
                   'sequencer',
@@ -215,10 +215,10 @@ def get_gbr_sample_data(spreadsheet_file):
                   'sequence_filename',
                   'sequence_filetype',
                   'md5_checksum',
-                  'contact_bioinformatician_name', # NEW
-                  'contact_bioinformatician_email', # NEW
-                  'date_data_sent', # NEW
-                  'date_data_received', # NEW
+                  'contact_bioinformatician_name',
+                  'contact_bioinformatician_email',
+                  'date_data_sent',
+                  'date_data_received',
     ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
