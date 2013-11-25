@@ -263,6 +263,10 @@ def ingest_runs(sample_data):
         pathogen_run.protocol = get_protocol(e)
         pathogen_run.save()
 
+        # FIXME, I'm sure this is wrong
+        pathogen_run.protocol.run = pathogen_run
+        pathogen_run.protocol.save()
+
         return pathogen_run
 
     def add_file(entry, pathogen_run):
