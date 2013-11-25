@@ -138,7 +138,7 @@ def ingest_samples(samples):
             e['contact_email'],
             (GBR_DESCRIPTION, e['contact_affiliation']))
 
-        # bioinformatician
+        # bio informatician
         gbr_sample.contact_bioinformatician_name = user_helper.get_user(
             e['contact_bioinformatician_name'],
             e['contact_bioinformatician_email'],
@@ -324,14 +324,15 @@ def ingest_runs(sample_data):
                                          sample__bpa_id__bpa_id=bpa_id)
         except GBRRun.DoesNotExist:
             gbr_run = GBRRun()
-            gbr_run.flow_cell_id = flow_cell_id
-            gbr_run.run_number = run_number
-            gbr_run.sample = get_sample(bpa_id)
-            gbr_run.index_number = utils.get_clean_number(entry['index_number'])
-            gbr_run.sequencer = get_sequencer(entry['sequencer'])
-            gbr_run.lane_number = utils.get_clean_number(entry['lane_number'])
-            gbr_run.protocol = get_protocol(e)
-            gbr_run.save()
+
+        gbr_run.flow_cell_id = flow_cell_id
+        gbr_run.run_number = run_number
+        gbr_run.sample = get_sample(bpa_id)
+        gbr_run.index_number = utils.get_clean_number(entry['index_number'])
+        gbr_run.sequencer = get_sequencer(entry['sequencer'])
+        gbr_run.lane_number = utils.get_clean_number(entry['lane_number'])
+        gbr_run.protocol = get_protocol(e)
+        gbr_run.save()
 
         return gbr_run
 
