@@ -208,6 +208,10 @@ def ingest_runs(sample_data):
         cultivar_run.protocol = get_protocol(e)
         cultivar_run.save()
 
+        # FIXME, I'm sure this is wrong
+        cultivar_run.protocol.run = cultivar_run
+        cultivar_run.protocol.save()
+
         return cultivar_run
 
     def add_file(entry, cultivar_run):
