@@ -118,8 +118,11 @@ ci_remote_build() {
     RSYNC_OPTS="-l"
     time ccg ${AWS_BUILD_INSTANCE} rsync_project:local_dir=./,remote_dir=${TARGET_DIR}/,ssh_opts="${SSH_OPTS}",extra_opts="${RSYNC_OPTS}",exclude="${EXCLUDES}",delete=True
     time ccg ${AWS_BUILD_INSTANCE} build_rpm:centos/${PROJECT_NAME}.spec,src=${TARGET_DIR}
+}
 
+ci_fetch_rpm() {
     mkdir -p build
+    log_info "Fetching rpm from ${AWS_BUILD_INSTANCE}"
     ccg ${AWS_BUILD_INSTANCE} getfile:rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,build/
 }
 
@@ -415,6 +418,9 @@ case ${ACTION} in
     ci_staging_tests)
         ci_ssh_agent
         ci_staging_lettuce
+        ;;
+    ci_fetch_rpm)
+        ci_fetch_rpm
         ;;
     clean)
         settings
