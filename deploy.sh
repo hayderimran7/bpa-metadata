@@ -48,23 +48,56 @@ log() {
 }
 
 
-shell() {
+set_key_permissions() {
    if [ -f ${PROD_KEY_FILE} ]
    then
       chmod 600 ${PROD_KEY_FILE}
    else
       log_error "Production key missing. Install that and try again"
    fi
+}
+
+shell() {
+   set_key_permissions
    ccg ${AWS_PROD_INSTANCE} shell
+}
+
+
+puppet() {
+   set_key_permissions
+   ccg ${AWS_PROD_INSTANCE} puppet
 }
 
 usage() {
     log_warning "Usage ./deploy.sh shell"
+    log_warning "Usage ./deploy.sh puppet"
+    log_warning "Usage ./deploy.sh nuclear"
+}
+
+
+nuclear() {
+    log_info "Total rebuild of DB"
+    sudo bpam reset_db --router=default --traceback
+    sudo bpam syncdb --noinput --traceback
+    sudo bpam migrate --traceback
+    bpam runscript set_initial_bpa_projects --traceback
+    sudo bpam runscript set_initial_bpa_projects --traceback
+    sudo bpam runscript ingest_users --script-args ./data/users/current
+    sudo bpam runscript ingest_gbr --script-args ./data/gbr/current
+    sudo bpam runscript ingest_melanoma --script-args ./data/melanoma/current
+    sudo bpam runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
+    sudo bpam runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
 }
 
 case ${ACTION} in
     shell)
         shell
+        ;;
+    puppet)
+        puppet
+        ;;
+    nuclear)
+        nuclear
         ;;
     *)
         usage
