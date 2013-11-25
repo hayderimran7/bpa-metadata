@@ -199,14 +199,14 @@ def ingest_runs(sample_data):
                                                    sample__bpa_id__bpa_id=bpa_id)
         except CultivarRun.DoesNotExist:
             cultivar_run = CultivarRun()
-            cultivar_run.flow_cell_id = flow_cell_id
-            cultivar_run.run_number = run_number
-            cultivar_run.sample = get_sample(bpa_id)
-            cultivar_run.index_number = utils.get_clean_number(entry['index_number'])
-            cultivar_run.sequencer = get_sequencer(entry['sequencer'])
-            cultivar_run.lane_number = utils.get_clean_number(entry['lane_number'])
-            cultivar_run.protocol = get_protocol(e)
-            cultivar_run.save()
+        cultivar_run.flow_cell_id = flow_cell_id
+        cultivar_run.run_number = run_number
+        cultivar_run.sample = get_sample(bpa_id)
+        cultivar_run.index_number = utils.get_clean_number(entry['index_number'])
+        cultivar_run.sequencer = get_sequencer(entry['sequencer'])
+        cultivar_run.lane_number = utils.get_clean_number(entry['lane_number'])
+        cultivar_run.protocol = get_protocol(e)
+        cultivar_run.save()
 
         return cultivar_run
 
