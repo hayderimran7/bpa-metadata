@@ -6,14 +6,12 @@ import logging
 import xlrd
 from unipath import Path
 
-from apps.common.models import *
-from apps.wheat_cultivars.models import *
+from apps.common.models import DNASource, BPAUniqueID, Sequencer
+from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
 import utils
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('WheatCultivars')
-
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_cultivars/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'Wheat_cultivars.xlsx')
