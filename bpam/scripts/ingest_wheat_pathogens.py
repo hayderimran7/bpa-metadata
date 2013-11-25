@@ -254,14 +254,14 @@ def ingest_runs(sample_data):
                                                    sample__bpa_id__bpa_id=bpa_id)
         except PathogenRun.DoesNotExist:
             pathogen_run = PathogenRun()
-            pathogen_run.flow_cell_id = flow_cell_id
-            pathogen_run.run_number = run_number
-            pathogen_run.sample = get_sample(bpa_id)
-            pathogen_run.index_number = utils.get_clean_number(entry['index_number'])
-            pathogen_run.sequencer = get_sequencer(entry['sequencer'])
-            pathogen_run.lane_number = utils.get_clean_number(entry['lane_number'])
-            pathogen_run.protocol = get_protocol(e)
-            pathogen_run.save()
+        pathogen_run.flow_cell_id = flow_cell_id
+        pathogen_run.run_number = run_number
+        pathogen_run.sample = get_sample(bpa_id)
+        pathogen_run.index_number = utils.get_clean_number(entry['index_number'])
+        pathogen_run.sequencer = get_sequencer(entry['sequencer'])
+        pathogen_run.lane_number = utils.get_clean_number(entry['lane_number'])
+        pathogen_run.protocol = get_protocol(e)
+        pathogen_run.save()
 
         return pathogen_run
 
