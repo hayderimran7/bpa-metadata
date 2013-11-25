@@ -49,12 +49,17 @@ log() {
 
 
 shell() {
-   chmod 600 ${PROD_KEY_FILE}
+   if [ -f ${PROD_KEY_FILE} ]
+   then
+      chmod 600 ${PROD_KEY_FILE}
+   else
+      log_error "Production key missing. Install that and try again"
+   fi
    ccg ${AWS_PROD_INSTANCE} shell
 }
 
 usage() {
-    log_warning "Usage ./develop.sh shell"
+    log_warning "Usage ./deploy.sh shell"
 }
 
 case ${ACTION} in
