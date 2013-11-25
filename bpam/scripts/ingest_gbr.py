@@ -6,8 +6,9 @@ import logging
 import xlrd
 from unipath import Path
 
-from apps.common.models import *
-from apps.gbr.models import *
+from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
+
+from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 import utils
 import user_helper
 
