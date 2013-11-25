@@ -422,6 +422,11 @@ case ${ACTION} in
     ci_fetch_rpm)
         ci_fetch_rpm
         ;;
+    ci_remote_build_and_fetch)
+        ci_ssh_agent
+        ci_remote_build
+        ci_fetch_rpm
+        ;;
     clean)
         settings
         clean
