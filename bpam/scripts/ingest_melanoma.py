@@ -7,8 +7,16 @@ from datetime import date
 import xlrd
 from unipath import Path
 
-from apps.common.models import *
-from apps.melanoma.models import *
+from apps.common.models import DNASource, Facility, Sequencer
+from apps.melanoma.models import (
+    TumorStage,
+    MelanomaSample,
+    Organism,
+    MelanomaProtocol,
+    Array,
+    BPAUniqueID,
+    MelanomaRun,
+    MelanomaSequenceFile)
 
 import utils
 import user_helper
@@ -299,16 +307,16 @@ def ingest_runs(sample_data):
             logger.error("No sample with ID {0}, quiting now".format(bpa_id))
             sys.exit(1)
 
-    def get_run_number(e):
+    def get_run_number(entry):
         """
         ANU does not have their run numbers entered.
         """
 
-        run_number = utils.get_clean_number(e['run_number'])
+        run_number = utils.get_clean_number(entry['run_number'])
         if run_number in (None, ""):
             # see if its ANU and parse the run_number from the filename
-            if e['whole_genome_sequencing_facility'].strip() == 'ANU':
-                filename = e['sequence_filename'].strip()
+            if entry['whole_genome_sequencing_facility'].strip() == 'ANU':
+                filename = entry['sequence_filename'].strip()
                 if filename != "":
                     try:
                         run_number = utils.get_clean_number(filename.split('_')[7])
@@ -327,31 +335,31 @@ def ingest_runs(sample_data):
         run_number = get_run_number(entry)
 
         try:
-            run = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
-                                          sample__bpa_id__bpa_id=bpa_id)
+            nrun = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
+                                           sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
-            run = MelanomaRun()
-            run.flow_cell_id = flow_cell_id
-            run.run_number = run_number
-            run.sample = get_sample(bpa_id)
+            nrun = MelanomaRun()
+            nrun.flow_cell_id = flow_cell_id
+            nrun.run_number = run_number
+            nrun.sample = get_sample(bpa_id)
 
             # Update FIXME
-            run.passage_number = utils.get_clean_number(entry['passage_number'])
-            run.index_number = utils.get_clean_number(entry['index_number'])
-            run.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
-            run.lane_number = utils.get_clean_number(entry['lane_number'])
-            run.sequencing_facility = get_facility(entry['sequencing_facility'])
-            run.array_analysis_facility = get_facility(entry['array_analysis_facility'])
-            run.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
-            run.DNA_extraction_protocol = entry['dna_extraction_protocol']
+            nrun.passage_number = utils.get_clean_number(entry['passage_number'])
+            nrun.index_number = utils.get_clean_number(entry['index_number'])
+            nrun.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
+            nrun.lane_number = utils.get_clean_number(entry['lane_number'])
+            nrun.sequencing_facility = get_facility(entry['sequencing_facility'])
+            nrun.array_analysis_facility = get_facility(entry['array_analysis_facility'])
+            nrun.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
+            nrun.DNA_extraction_protocol = entry['dna_extraction_protocol']
 
-            run.protocol = get_protocol(entry)
-            run.save()
+            nrun.protocol = get_protocol(entry)
+            nrun.save()
             # this just seems wrong to me...
-            run.protocol.run = run
-            run.protocol.save()
+            nrun.protocol.run = nrun
+            nrun.protocol.save()
 
-        return run
+        return nrun
 
     def add_file(entry, run):
         """
