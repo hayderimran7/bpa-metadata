@@ -2,7 +2,7 @@ import os
 from unipath import Path
 
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
-BPA_VERSION = '1.0.4'
+BPA_VERSION = '1.0.5'
 
 PROJECT_ROOT = Path(__file__).ancestor(3)
 
@@ -142,7 +142,6 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 INSTALLED_APPS = (
     'bpam',
     'admin_tools',
-    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -150,6 +149,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'suit',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.gis',
@@ -159,11 +159,10 @@ INSTALLED_APPS = (
     'apps.common',
     'apps.melanoma',
     'apps.gbr',
-    #'apps.BASE',
     'apps.wheat_cultivars',
     'apps.wheat_pathogens',
+    #'apps.BASE',
     'south',
-    'tinymce',
     'bootstrap3',
     'tastypie',
 )
