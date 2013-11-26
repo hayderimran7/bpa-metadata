@@ -213,6 +213,11 @@ local_shell() {
     ccg ${PROJECT_NICKNAME} shell
 }
 
+local_puppet() {
+    log_info "Puppeting ${PROJECT_NICKNAME}"
+    ccg ${PROJECT_NICKNAME} puppet
+}
+
 
 # django syncdb, migrate and collect static
 syncmigrate() {
@@ -279,8 +284,8 @@ devrun() {
     ${CMD} runscript ingest_users --traceback
     ${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-    ${CMD} runscript ingest_wheat_cultivars --traceback
+    # ${CMD} runscript ingest_wheat_pathogens --traceback
+    # ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # load_base
 
@@ -336,16 +341,17 @@ unittest() {
 
 
 nuclear() {
-   CMD='python manage.py'
+   activate_virtualenv	
+   CMD='python ./bpam/manage.py'
    ${CMD} reset_db --router=default --traceback
    ${CMD} syncdb --noinput --traceback
    ${CMD} migrate --traceback
    ${CMD} runscript set_initial_bpa_projects --traceback
-   ${CMD} runscript ingest_users --script-args ../data/users/current
-   ${CMD} runscript ingest_gbr --script-args ../data/gbr/current
-   ${CMD} runscript ingest_melanoma --script-args ../data/melanoma/current
-   ${CMD} runscript ingest_wheat_pathogens --script-args ../data/wheat_pathogens/current
-   ${CMD} runscript ingest_wheat_cultivars --script-args ../data/wheat_cultivars/current
+   ${CMD} runscript ingest_users --script-args ./data/users/current
+   ${CMD} runscript ingest_gbr --script-args ./data/gbr/current
+   ${CMD} runscript ingest_melanoma --script-args ./data/melanoma/current
+   ${CMD} runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
+   ${CMD} runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
 }
 
 usage() {
@@ -443,6 +449,9 @@ case ${ACTION} in
         ;;
     local_shell)
         local_shell
+        ;;
+    local_puppet)
+        local_puppet
         ;;
     *)
         usage
