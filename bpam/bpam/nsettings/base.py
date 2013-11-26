@@ -59,7 +59,7 @@ SUIT_CONFIG = {
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
         '-',
-        {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
+        {'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group',)},
     )
 }
 
