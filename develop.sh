@@ -340,6 +340,13 @@ unittest() {
 }
 
 
+url_checker() {
+   activate_virtualenv	
+   CMD='python ./bpam/manage.py'
+   ${CMD} runscript url_checker --traceback
+}
+
+
 nuclear() {
    activate_virtualenv	
    CMD='python ./bpam/manage.py'
@@ -363,6 +370,7 @@ usage() {
     log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
+    log_warning "Usage ./develop.sh url_checker"
 }
 
 case ${ACTION} in
@@ -452,6 +460,9 @@ case ${ACTION} in
         ;;
     local_puppet)
         local_puppet
+        ;;
+    url_checker)
+        url_checker
         ;;
     *)
         usage
