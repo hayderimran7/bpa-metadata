@@ -8,6 +8,8 @@ import requests
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
+from apps.wheat_cultivars.models import CultivarSequenceFile
+from apps.wheat_pathogens.models import PathogenSequenceFile
 
 
 SLEEP_TIME = 0.0  # time to rest between checks
@@ -53,6 +55,18 @@ def check_gbr(sleep_time):
     process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
+def check_wheat_cultivars(sleep_time):
+    logger.info('Checking Wheat Cultivars')
+    session = requests.Session()
+    process_object(sleep_time, session, CultivarSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
+
+def check_wheat_pathogens(sleep_time):
+    logger.info('Checking Wheat Pathogens')
+    session = requests.Session()
+    process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
+
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
@@ -74,5 +88,7 @@ def run(sleep_time=SLEEP_TIME):
 
     check_melanoma(sleep_time)
     check_gbr(sleep_time)
+    check_wheat_cultivars(sleep_time)
+    check_wheat_pathogens(sleep_time)
 
 
