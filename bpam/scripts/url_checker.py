@@ -1,18 +1,30 @@
+import time
+import sys
+import logging
+from pprint import pprint
+
+import requests
+
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
+from apps.wheat_cultivars.models import CultivarSequenceFile
+from apps.wheat_pathogens.models import PathogenSequenceFile
 
-from django.db import transaction
-import requests, time, sys
 
-# SLEEP_TIME = 0.2 # five requests per second seems fair -- otherwise iVEC killfiles us for a bit
 SLEEP_TIME = 0.0  # time to rest between checks
+MELANOMA_PASS = 'm3lan0ma'  # Melanoma http access password
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('URLChecker')
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
+    problems = []
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:
             uv = URLVerification()
+            uv.status_ok = False
             uv.save()
             setattr(obj, attr_name, uv)
         verifier = getattr(obj, attr_name)
@@ -27,21 +39,38 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         else:
             verifier.status_ok = False
             verifier.status_note = "Status %d: %s" % (r.status_code, r.text)
+            problems.append(obj.filename)
         obj.save()
         sys.stderr.write("%d -> %s\n" % (r.status_code, verifier.status_ok))
         sys.stderr.flush()
         verifier.save()
         time.sleep(sleep_time)
 
+    pprint(problems)
+
 
 def check_gbr(sleep_time):
+    logger.info('Checking GBR')
     session = requests.Session()
     process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
-def check_melanoma(sleep_time):
+def check_wheat_cultivars(sleep_time):
+    logger.info('Checking Wheat Cultivars')
     session = requests.Session()
-    session.auth = ('bpa', 'm3lan0ma')
+    process_object(sleep_time, session, CultivarSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
+
+def check_wheat_pathogens(sleep_time):
+    logger.info('Checking Wheat Pathogens')
+    session = requests.Session()
+    process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
+
+
+def check_melanoma(sleep_time):
+    logger.info('Checking Melanoma')
+    session = requests.Session()
+    session.auth = ('bpa', MELANOMA_PASS)
     process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
@@ -56,7 +85,10 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("sleep_time parameter must be a float.\n")
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
+
     check_melanoma(sleep_time)
     check_gbr(sleep_time)
+    check_wheat_cultivars(sleep_time)
+    check_wheat_pathogens(sleep_time)
 
 

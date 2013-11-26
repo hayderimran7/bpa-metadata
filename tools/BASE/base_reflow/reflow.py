@@ -16,14 +16,16 @@ Options:
 
 """
 
-from unipath import Path
 import logging
 import sys
 import csv
 import pprint
 from collections import namedtuple
+
+from unipath import Path
 from docopt import docopt
 from dateutil.parser import parse as date_parse
+
 
 __author__ = 'ccg'
 __version__ = '0.1'
@@ -101,8 +103,8 @@ AttributeSpec = namedtuple('AttributeSpec', 'column_name validator converter')
 for c_name, col_spec in COLUMNS.items():
     ATTRIBUTES[col_spec.name] = AttributeSpec(c_name, col_spec.validator, col_spec.converter)
 
-class Helper(object):
 
+class Helper(object):
     field_spec = []
 
     def __init__(self, args):
@@ -153,11 +155,7 @@ class Helper(object):
             yield named_tup(*tpl)
 
 
-
-
-
 class SampleHelper(Helper):
-
     field_spec = ['bpa_id', 'depth', 'sample_date', 'latitude', 'longitude']
 
     def write_csv(self, samples):
@@ -169,7 +167,8 @@ class SampleHelper(Helper):
             writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(self.get_header())
             for sample in samples:
-                formatted = [sample.bpa_id, sample.depth, self.get_date_str(sample.sample_date), sample.latitude, sample.longitude]
+                formatted = [sample.bpa_id, sample.depth, self.get_date_str(sample.sample_date), sample.latitude,
+                             sample.longitude]
                 writer.writerow(formatted)
 
     def to_file(self):
@@ -278,7 +277,6 @@ class ChemHelper(Helper):
         """
         file_name = args['OUTPUT_FILE_PREFIX'] + '_chem.csv'
         with open(file_name, 'wb') as csvfile:
-
             writer = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(self.get_header())
             for sample in tuples:
@@ -328,7 +326,6 @@ class ChemHelper(Helper):
 
 
 def main(args):
-
     def do_site():
         site_helper = SiteHelper(args)
         site_helper.to_file()
@@ -354,7 +351,6 @@ def main(args):
         do_site()
         do_samples()
         do_chem()
-
 
 
 def args_check(args):

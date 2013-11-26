@@ -2,6 +2,8 @@ from django.contrib import admin
 from django import forms
 from apps.common.admin import SequenceFileAdmin
 
+from suit.widgets import LinkedSelect
+
 from .models import CollectionEvent
 from .models import GBRSample
 from .models import GBRRun
@@ -13,13 +15,17 @@ class ProtocolForm(forms.ModelForm):
     class Meta:
         model = GBRProtocol
         widgets = {
-            'library_construction_protocol': forms.TextInput(attrs={'size': 100}),
+            'run': LinkedSelect
         }
 
 
 class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
-    fields = (('library_type', 'base_pairs', 'library_construction_protocol'), 'note')
+
+    fieldsets = [
+        ('Protocol', {'fields': ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')})
+    ]
+
     search_fields = (
     'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
@@ -31,32 +37,61 @@ class ProtocolInline(admin.StackedInline):
     extra = 0
 
 
+class RunForm(forms.ModelForm):
+    class Meta:
+        model = GBRRun
+        widgets = {
+            'sample': LinkedSelect,
+            'sequencing_facility': LinkedSelect,
+            'array_analysis_facility': LinkedSelect,
+            'whole_genome_sequencing_facility': LinkedSelect,
+            'sequencer': LinkedSelect
+        }
+
+
 class RunAdmin(admin.ModelAdmin):
+    form = RunForm
+
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),
         ('Sequencing Facilities',
-         {'fields': (('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility'))}),
+         {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
         ('Sequencing',
-         {'fields': (('sequencer', 'run_number', 'flow_cell_id'), 'DNA_extraction_protocol', 'passage_number')}),
+         {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
+
     inlines = (ProtocolInline, )
-    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
+    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility', 'flow_cell_id', )
+    list_filter = ('sequencing_facility',)
+
+
+class SampleForm(forms.ModelForm):
+    class Meta:
+        model = GBRSample
+        widgets = {
+            'bpa_id': LinkedSelect,
+            'organism': LinkedSelect,
+            'dna_source': LinkedSelect,
+            'sequencing_facility': LinkedSelect,
+            'contact_scientist': LinkedSelect,
+            'contact_bioinformatician': LinkedSelect,
+        }
 
 
 class SampleAdmin(admin.ModelAdmin):
+    form = SampleForm
+
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'),)}),
+         {'fields': ('bpa_id', 'name',)}),
         ('DNA/RNA Source',
          {'fields': (
              'organism',
              'dna_source',
              'dna_extraction_protocol',
-             ('dna_concentration', 'total_dna', 'dna_rna_concentration', 'total_dna_rna_shipped'),
-         )}),
+             'dna_concentration', 'total_dna', 'dna_rna_concentration', 'total_dna_rna_shipped',)}),
         ('Sample Management',
          {'fields': (
              'dataset',
@@ -71,11 +106,8 @@ class SampleAdmin(admin.ModelAdmin):
              'sequencing_notes')}),
         ('Contacts',
          {'fields': ('contact_scientist', 'contact_bioinformatician')}),
-        ('',
-         {'fields': ('note',)}),
-        ('Debug',
-         {'fields': ('debug_note',)}),
-
+        ('Notes',
+         {'fields': ('note', 'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
@@ -83,7 +115,17 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
+class CollectionForm(forms.ModelForm):
+    class Meta:
+        model = CollectionEvent
+        widgets = {
+            'collector': LinkedSelect,
+        }
+
+
 class CollectionEventAdmin(admin.ModelAdmin):
+    form = CollectionForm
+
     fieldsets = [
         ('Collection',
          {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),

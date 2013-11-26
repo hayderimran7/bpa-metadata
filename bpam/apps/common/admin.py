@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django import forms
+from suit.widgets import AutosizedTextarea
+from suit.widgets import LinkedSelect
 
 from .models import (BPAProject,
                      BPAUniqueID,
                      Facility,
-                     Protocol,
-                     Organism,                     
+                     Organism,
                      SequenceFile,
                      DNASource,
                      Sequencer,
@@ -35,6 +36,8 @@ class SequenceFileForm(forms.ModelForm):
         model = SequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'size': 100}),
+            'sample': LinkedSelect,
+            'run': LinkedSelect
         }
 
 
@@ -42,51 +45,69 @@ class SequenceFileAdmin(admin.ModelAdmin):
     form = SequenceFileForm
 
     fieldsets = [
-        (None,
+        ('Sequence File',
          {'fields': (
-             ('filename', 'md5'), ('lane_number', 'index_number'), 'analysed', 'date_received_from_sequencing_facility',
+             'filename', 'md5', 'sample', 'run', 'lane_number', 'index_number', 'analysed', 'date_received_from_sequencing_facility',
              'note'), }),
     ]
-
-    search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
 
     def download_field(self, obj):
         if obj.link_ok():
             return '<a href="%s">%s</a>' % (obj.url, obj.filename)
         else:
             return '<a style="color:grey">%s</a>' % obj.filename
-
     download_field.allow_tags = True
     download_field.short_description = 'Filename'
 
-    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility', 'run')
-    list_filter = ('date_received_from_sequencing_facility',)
-
+    # Sample ID
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
-
     get_sample_id.short_description = 'BPA ID'
     get_sample_id.admin_order_field = 'sample__bpa_id'
 
+    # Sample Name
     def get_sample_name(self, obj):
         return obj.sample.name
-
     get_sample_name.short_description = 'Sample Name'
     get_sample_name.admin_order_field = 'sample__name'
+
+    search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name',
+                    'date_received_from_sequencing_facility', 'run')
+    list_filter = ('date_received_from_sequencing_facility',)
 
 
 class AffiliationAdmin(admin.ModelAdmin):
     fields = (('name', 'description'),)
     list_display = ('name', 'description')
-    
-    
+
+
+class BPAProjectForm(forms.ModelForm):
+    class Meta:
+        model = BPAProject
+        widgets = {
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
+        }
+
+
 class BPAProjectAdmin(admin.ModelAdmin):
-    fields = (('name', 'description'), 'note')
-    list_display = ('name', 'description')
-    
-    
+    form = BPAProjectForm
+    fields = ('name', 'description', 'note')
+    list_display = ('name', 'key', 'description')
+
+
+class BPAIDForm(forms.ModelForm):
+    class Meta:
+        model = BPAUniqueID
+        widgets = {
+            'project': LinkedSelect,
+            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
+        }
+
+
 class BPAUniqueIDAdmin(admin.ModelAdmin):
-    fields = (('bpa_id', 'project'), 'note')
+    form = BPAIDForm
+    fields = ('bpa_id', 'project', 'note')
     list_display = ('bpa_id', 'project', 'note')
     search_fields = ('bpa_id', 'project__name', 'note')
 
@@ -97,7 +118,14 @@ class FacilityAdmin(admin.ModelAdmin):
 
 
 class OrganismAdmin(admin.ModelAdmin):
-    list_display = ('genus', 'species')
+    def get_organism_name(self, obj):
+        return obj.name
+
+    get_organism_name.short_description = 'Name'
+    get_organism_name.admin_order_field = 'species'
+
+    list_display = ('get_organism_name', 'kingdom', 'phylum', 'genus')
+
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)

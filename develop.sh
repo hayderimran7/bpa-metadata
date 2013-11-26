@@ -1,11 +1,13 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
+
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
 
-set -e
+DEV_SETTINGS="bpam.nsettings.dev"
+TEST_SETTINGS="bpam.nsettings.test"
 
 PORT='8000'
 
@@ -14,15 +16,26 @@ PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
-TESTING_MODULES="nose"
-MODULES="Werkzeug flake8 coverage==3.6 django-discover-runner==1.0 django-debug-toolbar==0.9.4 dateutils==0.6.6 ${TESTING_MODULES}"
+CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
+
+VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
+PYTHON="${VIRTUALENV}/bin/python"
+PIP="${VIRTUALENV}/bin/pip"
+DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
+
+activate_virtualenv() {
+    source ${VIRTUALENV}/bin/activate
+}
+
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
 COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
 COLOR_GREEN=$(tput setaf 2)
+
+set -e
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
@@ -61,19 +74,11 @@ is_root() {
    fi
 }
 
-
-
 devsettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings"
+    log_info "Setting dev settings to ${DEV_SETTINGS}"
+    export DJANGO_SETTINGS_MODULE="${DEV_SETTINGS}"
 }
 
-demosettings() {
-    export DJANGO_SETTINGS_MODULE="bpam.settings.demo"
-}
-
-activate_virtualenv() {
-    source ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/activate
-}
 
 # ssh setup, make sure our ccg commands can run in an automated environment
 ci_ssh_agent() {
@@ -93,6 +98,7 @@ build_number_head() {
 
 # build RPMs on a remote host from ci environment
 ci_remote_build() {
+    log_info "Building rpm on ${AWS_BUILD_INSTANCE}"
     time ccg ${AWS_BUILD_INSTANCE} boot
     time ccg ${AWS_BUILD_INSTANCE} puppet
     time ccg ${AWS_BUILD_INSTANCE} shutdown:50
@@ -112,14 +118,18 @@ ci_remote_build() {
     RSYNC_OPTS="-l"
     time ccg ${AWS_BUILD_INSTANCE} rsync_project:local_dir=./,remote_dir=${TARGET_DIR}/,ssh_opts="${SSH_OPTS}",extra_opts="${RSYNC_OPTS}",exclude="${EXCLUDES}",delete=True
     time ccg ${AWS_BUILD_INSTANCE} build_rpm:centos/${PROJECT_NAME}.spec,src=${TARGET_DIR}
+}
 
+ci_fetch_rpm() {
     mkdir -p build
+    log_info "Fetching rpm from ${AWS_BUILD_INSTANCE}"
     ccg ${AWS_BUILD_INSTANCE} getfile:rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,build/
 }
 
 
 # publish rpms
 ci_rpm_publish() {
+    log_info "Publishing rpm to testing"
     time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
 }
 
@@ -152,28 +162,60 @@ ci_staging_lettuce() {
 lint() {
     activate_virtualenv
     cd ${TOPDIR}
-    flake8 ${PROJECT_NAME} --ignore=E501 --count
+    flake8 ${PROJECT_NICKNAME} --ignore=E501 --count
 }
 
-# lint js, assumes closure compiler
-jslint() {
-    JSFILES="${TOPDIR}/mastrms/mastrms/app/static/js/*.js ${TOPDIR}/mastrms/mastrms/app/static/js/repo/*.js"
-    for JS in $JSFILES
-    do
-        java -jar ${CLOSURE} --js $JS --js_output_file output.js --warning_level DEFAULT --summary_detail_level 3
-    done
+is_running_in_instance() {
+    if [ ${USER} == 'ccg-user' ]
+    then
+       return 0
+    else
+       return 1
+    fi
 }
 
 installapp() {
-    # check requirements
-    which virtualenv >/dev/null
+    log_info "Install ${PROJECT_NICKNAME}'s dependencies"
+    if is_running_in_instance
+    then
+        virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
+        (
+           cd ${TOPDIR}/${PROJECT_NICKNAME}
+           ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
+        )
 
-    log_info "Install ${PROJECT_NICKNAME}"
-    virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
-    pushd ${TOPDIR}/${PROJECT_NICKNAME}
-    ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .
-    popd
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} ${MODULES}
+        mkdir -p ${HOME}/bin
+        ln -sf ${VIRTUALENV}/bin/python ${HOME}/bin/vpython-${PROJECT_NICKNAME}
+        ln -sf ${VIRTUALENV}/bin/django-admin.py ${HOME}/bin/${PROJECT_NICKNAME}
+    else
+        log_warning "Not running in a env where creating a virtualenv here would make sense"
+        log_warning "shell into your instance and try again, or use the ccg remote command"
+    fi
+}
+
+
+########################################
+# local lxc related
+
+make_local_instance() {
+    if ! is_running_in_instance
+    then
+       log_info "Making a local build instance"
+       rm -rf virt_${PROJECT_NICKNAME}
+       ccg --nuke-bootstrap
+       ccg ${PROJECT_NICKNAME} puppet
+    else
+       log_warning "Seems like I'm running in a build instance of some sorts already. Aborting."
+    fi
+}
+
+local_shell() {
+    ccg ${PROJECT_NICKNAME} shell
+}
+
+local_puppet() {
+    log_info "Puppeting ${PROJECT_NICKNAME}"
+    ccg ${PROJECT_NICKNAME} puppet
 }
 
 
@@ -214,50 +256,59 @@ purge() {
 
 
 load_base() {
+    CMD='python ./bpam/manage.py'
     # BASE Controlled Vocabularies
-    python manage.py loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
-    python manage.py loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
+    ${CMD} loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
 
-    python manage.py runscript ingest_BASE --traceback
+    ${CMD} runscript ingest_BASE --traceback
 }
 
-run() {   
-    python manage.py syncdb --traceback --noinput
-    python manage.py migrate --traceback
+devrun() {
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-    python manage.py runscript ingest_users --traceback
-    python manage.py runscript ingest_melanoma --traceback
-    python manage.py runscript ingest_gbr --traceback
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # load_base
 
-    # python manage.py runserver
     startserver
 }
 
 dev() { 
+    activate_virtualenv
     devsettings
-    run
+    devrun
 }
 
+wheat_pathogens_dev() {
+    devsettings
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
 
-usage() {
-    log_warning "Usage ./develop.sh (lint|jslint)"
-    log_warning "Usage ./develop.sh (flushdb)"
-    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
 }
+
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -273,9 +324,70 @@ flushdb() {
     mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
 }
 
+coverage() {
+    log_info "Running coverage with reports"
+    coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
+    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+}
+
+unittest() {
+    log_info "Running Unit Test"
+    activate_virtualenv
+    (
+       cd ${CONFIG_DIR}
+       python manage.py test --settings=bpam.nsettings.test --traceback
+    )
+}
+
+
+url_checker() {
+   activate_virtualenv	
+   CMD='python ./bpam/manage.py'
+   ${CMD} runscript url_checker --traceback
+}
+
+
+nuclear() {
+   activate_virtualenv	
+   CMD='python ./bpam/manage.py'
+   ${CMD} reset_db --router=default --traceback
+   ${CMD} syncdb --noinput --traceback
+   ${CMD} migrate --traceback
+   ${CMD} runscript set_initial_bpa_projects --traceback
+   ${CMD} runscript ingest_users --script-args ./data/users/current
+   ${CMD} runscript ingest_gbr --script-args ./data/gbr/current
+   ${CMD} runscript ingest_melanoma --script-args ./data/melanoma/current
+   ${CMD} runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
+   ${CMD} runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
+}
+
+usage() {
+    log_warning "Usage ./develop.sh (make_local_instance)"
+    log_warning "Usage ./develop.sh (lint|jslint)"
+    log_warning "Usage ./develop.sh (flushdb)"
+    log_warning "Usage ./develop.sh (unittest|coverage)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    log_warning "Usage ./develop.sh (nuclear)"
+    log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
+    log_warning "Usage ./develop.sh url_checker"
+}
+
 case ${ACTION} in
+    coverage)
+        coverage
+        ;;
+    wheat_pathogens_dev)
+        wheat_pathogens_dev
+        ;;
+    unittest)
+        unittest
+        ;;
     flushdb)
-	flushdb
+	    flushdb
+        ;;
+    nuclear)
+	    nuclear
         ;;
     pythonversion)
         pythonversion
@@ -288,9 +400,6 @@ case ${ACTION} in
         ;;
     lint)
         lint
-        ;;
-    jslint)
-        jslint
         ;;
     syncmigrate)
         devsettings
@@ -324,17 +433,36 @@ case ${ACTION} in
         ci_ssh_agent
         ci_staging_lettuce
         ;;
+    ci_fetch_rpm)
+        ci_fetch_rpm
+        ;;
+    ci_remote_build_and_fetch)
+        ci_ssh_agent
+        ci_remote_build
+        ci_fetch_rpm
+        ;;
     clean)
         settings
         clean
         ;;
     purge)
-        settings
         clean
         purge
         ;;
     dev)
         dev
+        ;;
+    make_local_instance)
+        make_local_instance
+        ;;
+    local_shell)
+        local_shell
+        ;;
+    local_puppet)
+        local_puppet
+        ;;
+    url_checker)
+        url_checker
         ;;
     *)
         usage

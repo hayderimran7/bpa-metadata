@@ -3,11 +3,9 @@ import urllib
 
 from django.db import models
 from django.conf import settings
-
-from apps.bpaauth.models import BPAUser
-from apps.common.models import Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, URLVerification, DebugNote
-
 from django.utils.translation import ugettext_lazy as _
+
+from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, URLVerification, DebugNote
 
 
 class CollectionEvent(models.Model):
@@ -55,9 +53,6 @@ class GBRSample(Sample, DebugNote):
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
                                                  related_name='bioinformatician')
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Sample')
-
 
 class GBRRun(Run):
     """
@@ -65,18 +60,12 @@ class GBRRun(Run):
     """
     sample = models.ForeignKey(GBRSample)
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Run')
-
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class GBRProtocol(Protocol):
     run = models.OneToOneField(GBRRun, blank=True, null=True)
-
-    class Meta:
-        verbose_name = _('Great Barrier Reef Protocol')
 
 
 class GBRSequenceFile(SequenceFile):
@@ -109,5 +98,3 @@ class GBRSequenceFile(SequenceFile):
 
     url = property(get_url)
 
-    class Meta:
-        verbose_name = _('Great Barrier Reef Sequence File')

@@ -17,3 +17,6 @@ setup.cfg
 *.rpm
 .idea/workspace.xml
 .idea/tasks.xml
+.coverage
+htmlcov/
+bpam/static/

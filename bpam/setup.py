@@ -1,5 +1,4 @@
 import os.path
-from pprint import pprint
 
 from setuptools import setup, find_packages
 
@@ -30,6 +29,74 @@ def get_data_files():
         os.chdir(current_dir)
     return data_files
 
+
+install_requires = [
+    'Django==1.6.0',
+    'Django-suit==0.2.5',
+    'python-memcached==1.53',
+    'South==0.8.4',
+    'Unipath==1.0',
+    'argparse==1.2.1',
+    'boto==2.15.0',
+    'dateutils==0.6.6',
+    'django-admin-tools==0.5.1',
+    'django-extensions==1.2.5',
+    'django-localflavor==1.0',
+    'django-tinymce==1.5.2',
+    'feedparser==5.1.3',
+    'pygraphviz==1.2',
+    'pytz==2013.7',
+    'sqlparse==0.1.9',
+    'django-bootstrap3==2.0.0',
+    'django-tastypie==0.10.0',
+    'xlrd==0.9.2',
+    'xlwt==0.7.5',
+    'requests==1.2.3',
+    'django_compressor==1.3',
+    'mimeparse'
+]
+
+dev_requires = [
+    'mysql-python',
+    'flake8',
+    'Werkzeug',
+    'django-debug-toolbar',
+    'coverage',
+    'django-discover-runner',
+    'model-mommy',
+    'tendo',
+    'docutils',
+    'pygments'
+]
+
+tests_require = [
+    'django-nose==1.2',
+    'nose==1.2.1',
+    'dingus',
+]
+
+postgres_requires = [
+    'psycopg2>=2.5.0,<2.6.0',
+]
+
+downloads_requires = [
+    'Jinja2==2.7.1',
+    'swift==1.10.0', # centos: libffi-devel
+    'python-keystoneclient==0.4.1',
+]
+
+
+dependency_links = [
+    "https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.2.1.tar.gz",
+    "https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/django-iprestrict-0.1.tar.gz",
+    'https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.7.tar.gz',
+    'http://ccg-django-extras.googlecode.com/files/ccg-auth-0.3.3.tar.gz',
+    "http://repo.ccgapps.com.au",
+    "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz",
+    'http://argparse.googlecode.com/files/argparse-1.2.1.tar.gz'
+]
+
+
 setup(
     name='bpam',
     version=get_version(),
@@ -40,29 +107,14 @@ setup(
     packages=packages,
     package_data=get_data_files(),
     include_package_data=True,
-    install_requires=[
-        "Django==1.5.4",
-        "unipath==1.0",
-        "South==0.8.2",
-        "pygraphviz==1.2",
-        "django-extensions==1.2.2",
-        "django-admin-tools==0.5.1",
-        "feedparser==5.1.3",
-        "django-localflavor==1.0",
-        "django-tinymce==1.5.1",
-        "django-qbe==0.2.0",
-        "django-tastypie==0.10.0",
-        "django-bootstrap3==0.0.7",
-        "mimeparse==0.1.3",
-        "requests==1.2.3",
-        'ccg-extras==0.1.6',
-        'python-memcached==1.48',
-        'docutils==0.11',
-        'xlrd==0.9.2'
-    ],
-    dependency_links=[
-        "http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz",
-        "https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.6.tar.gz",
-    ],
+    install_requires=install_requires,
+    dependency_links=dependency_links,
+    extras_require={
+        'tests': tests_require,
+        'dev': dev_requires,
+        'postgres': postgres_requires,
+        'downloads': downloads_requires
+    },
+
     zip_safe=False,
 )
