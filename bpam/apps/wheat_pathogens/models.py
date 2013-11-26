@@ -3,7 +3,6 @@ import urllib
 
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, URLVerification, DebugNote
 
@@ -59,7 +58,7 @@ class PathogenSequenceFile(SequenceFile):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
         uq = urllib.quote
-        return uj(settings.BPA_BASE_URL, "wheat_pathogen/%s/%s/%s" % (
+        return uj(settings.BPA_BASE_URL, "Wheat_Pathogens/%s/%s/%s" % (
             uq(bpa_id),
             uq(self.run.flow_cell_id),
             uq(self.filename)))
