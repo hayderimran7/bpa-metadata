@@ -284,8 +284,8 @@ devrun() {
     ${CMD} runscript ingest_users --traceback
     ${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
-    # ${CMD} runscript ingest_wheat_pathogens --traceback
-    # ${CMD} runscript ingest_wheat_cultivars --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # load_base
 
