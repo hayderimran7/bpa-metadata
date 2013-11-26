@@ -34,7 +34,7 @@ install_requires = [
     'Django==1.6.0',
     'Django-suit==0.2.5',
     'python-memcached==1.53',
-    'South==0.8.3',
+    'South==0.8.4',
     'Unipath==1.0',
     'argparse==1.2.1',
     'boto==2.15.0',
