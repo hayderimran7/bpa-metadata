@@ -41,7 +41,7 @@ class CultivarSequenceFile(SequenceFile):
 
     sample = models.ForeignKey(CultivarSample)
     run = models.ForeignKey(CultivarRun)
-    corrected_sequence_filename = models.CharField(max_length=200, null=True, blank=True)
+    original_sequence_filename = models.CharField(max_length=200, null=True, blank=True)
     url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
@@ -58,7 +58,7 @@ class CultivarSequenceFile(SequenceFile):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
         uq = urllib.quote
-        return uj(settings.BPA_BASE_URL, "wheat_cultivars/%s/%s/%s" % (
+        return uj(settings.BPA_BASE_URL, "Wheat_Cultivars/%s/%s/%s" % (
             uq(bpa_id),
             uq(self.run.flow_cell_id),
             uq(self.filename)))
