@@ -11,7 +11,7 @@ from apps.gbr.models import GBRSequenceFile
 
 
 SLEEP_TIME = 0.0  # time to rest between checks
-
+MELANOMA_PASS = 'm3lan0ma'  # Melanoma http access password
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('URLChecker')
@@ -22,6 +22,7 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
     for obj in model.objects.all():
         if getattr(obj, attr_name) is None:
             uv = URLVerification()
+            uv.status_ok = False
             uv.save()
             setattr(obj, attr_name, uv)
         verifier = getattr(obj, attr_name)
@@ -55,7 +56,7 @@ def check_gbr(sleep_time):
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
-    session.auth = ('bpa', 'm3lan0ma')
+    session.auth = ('bpa', MELANOMA_PASS)
     process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
 
 
