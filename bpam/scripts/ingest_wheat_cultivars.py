@@ -219,7 +219,9 @@ def ingest_runs(sample_data):
         Add each sequence file produced by a run
         """
 
-        file_name = entry['sequence_filename'].strip()
+        # Use the corrected sequence filename, as for this project (Wheat Cultivars),
+        # thats what the user wants to see
+        file_name = entry['corrected_sequence_filename'].strip()
         if file_name != "":
             f = CultivarSequenceFile()
             f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
@@ -227,7 +229,7 @@ def ingest_runs(sample_data):
             f.index_number = utils.get_clean_number(entry['index_number'])
             f.lane_number = utils.get_clean_number(entry['lane_number'])
             f.filename = file_name
-            f.corrected_sequence_filename = entry['corrected_sequence_filename']
+            f.original_sequence_filename = entry['sequence_filename']
             f.md5 = entry['md5_checksum']
             f.note = pprint.pformat(entry)
             f.save()
