@@ -65,6 +65,8 @@ dev_requires = [
     'django-discover-runner',
     'model-mommy',
     'tendo',
+    'docutils',
+    'pygments'
 ]
 
 tests_require = [
