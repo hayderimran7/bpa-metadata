@@ -256,21 +256,23 @@ purge() {
 
 
 load_base() {
+    activate_virtualenv
     CMD='python ./bpam/manage.py'
+    FIXTURE_PATH="$(pwd)/bpam/apps/BASE/fixtures"
     # BASE Controlled Vocabularies
-    ${CMD} loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/LandUseCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/TargetGeneCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/TargetCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/PCRPrimerCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/GeneralEcologicalZoneCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/BroadVegetationTypeCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/TillageCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/HorizonCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/SoilClassificationCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/ProfilePositionCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/DrainageClassificationCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/SoilColourCV.json  --traceback
+    ${CMD} loaddata ${FIXTURE_PATH}/SoilTextureCV.json  --traceback
 
     ${CMD} runscript ingest_BASE --traceback
 }
@@ -287,7 +289,7 @@ devrun() {
     ${CMD} runscript ingest_wheat_pathogens --traceback
     ${CMD} runscript ingest_wheat_cultivars --traceback
 
-    # load_base
+    load_base
 
     startserver
 }
@@ -341,7 +343,7 @@ unittest() {
 
 
 url_checker() {
-   activate_virtualenv	
+   activate_virtualenv
    CMD='python ./bpam/manage.py'
    ${CMD} runscript url_checker --traceback
 }
@@ -362,9 +364,10 @@ nuclear() {
 }
 
 usage() {
-    log_warning "Usage ./develop.sh (make_local_instance)"
-    log_warning "Usage ./develop.sh (local_shell)"
-    log_warning "Usage ./develop.sh (local_puppet)"
+    log_warning "Usage ./develop.sh make_local_instance"
+    log_warning "Usage ./develop.sh local_shell"
+    log_warning "Usage ./develop.sh local_puppet"
+    log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
@@ -465,6 +468,9 @@ case ${ACTION} in
         ;;
     url_checker)
         url_checker
+        ;;
+    load_BASE)
+        load_base
         ;;
     *)
         usage

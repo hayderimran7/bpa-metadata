@@ -54,6 +54,7 @@ SUIT_CONFIG = {
         {'app': 'gbr', 'label': 'Great Barrier Reef', },
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
+        {'app': 'BASE', 'label': 'BASE', },
         '-',
         {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
     )
@@ -158,6 +159,7 @@ INSTALLED_APPS = (
     'apps.wheat_cultivars',
     'apps.melanoma',
     'apps.gbr',
+    'apps.BASE',
     'south',
     'tinymce',
     'bootstrap3',
