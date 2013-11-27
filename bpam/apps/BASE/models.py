@@ -1,8 +1,8 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
 from apps.common.models import Sample, BPAUniqueID
 from apps.geo.models import GPSPosition
-
-from django.utils.translation import ugettext_lazy as _
 
 
 class SoilTexture(models.Model):
@@ -57,7 +57,6 @@ class LandUse(models.Model):
 
     class Meta:
         verbose_name_plural = _("Land Uses")
-        unique_together = ('classification', 'description')
 
 
 class GeneralEcologicalZone(models.Model):
