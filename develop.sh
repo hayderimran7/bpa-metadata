@@ -254,29 +254,6 @@ purge() {
     rm *.log
 }
 
-
-load_base() {
-    activate_virtualenv
-    CMD='python ./bpam/manage.py'
-    FIXTURE_PATH="$(pwd)/bpam/apps/BASE/fixtures"
-    # BASE Controlled Vocabularies
-    ${CMD} loaddata ${FIXTURE_PATH}/LandUseCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/TargetGeneCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/TargetCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/PCRPrimerCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/GeneralEcologicalZoneCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/BroadVegetationTypeCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/TillageCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/HorizonCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/SoilClassificationCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/ProfilePositionCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/DrainageClassificationCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/SoilColourCV.json  --traceback
-    ${CMD} loaddata ${FIXTURE_PATH}/SoilTextureCV.json  --traceback
-
-    ${CMD} runscript ingest_BASE --traceback
-}
-
 devrun() {
     CMD='python ./bpam/manage.py'
     ${CMD} syncdb --traceback --noinput
@@ -284,12 +261,11 @@ devrun() {
 
     ${CMD} runscript set_initial_bpa_projects --traceback
     ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_base --traceback
     ${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
     ${CMD} runscript ingest_wheat_pathogens --traceback
     ${CMD} runscript ingest_wheat_cultivars --traceback
-
-    load_base
 
     startserver
 }
