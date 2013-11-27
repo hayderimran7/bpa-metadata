@@ -22,10 +22,22 @@ class SoilClassificationAdmin(admin.ModelAdmin):
     list_display = ('authority', 'classification')
 
 
-admin.site.register(DrainageClassification)
+class SoilTextureAdmin(admin.ModelAdmin):
+    list_display = ('texture', 'description')
+
+
+class DrainageAdmin(admin.ModelAdmin):
+    list_display = ('drainage', 'description')
+
+
+class ColourAdmin(admin.ModelAdmin):
+    list_display = ('colour', 'code')
+
+
+admin.site.register(DrainageClassification, DrainageAdmin)
 admin.site.register(HorizonClassification)
-admin.site.register(SoilColour)
-admin.site.register(SoilTexture)
+admin.site.register(SoilColour, ColourAdmin)
+admin.site.register(SoilTexture, SoilTextureAdmin)
 admin.site.register(ProfilePosition)
 admin.site.register(SoilClassification, SoilClassificationAdmin)
 admin.site.register(TillageType)
