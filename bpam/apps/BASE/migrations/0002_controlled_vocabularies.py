@@ -1,18 +1,53 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
 from south.v2 import DataMigration
-from django.db import models
+
+from apps.BASE import Vocabularies
+
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName". 
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
 
+        for vegetation, note in Vocabularies.BroadVegetationTypeVocabulary:
+            t = orm.BroadVegetationType.objects.create()
+            t.vegetation = vegetation
+            t.note = note
+            t.save()
 
+        for horizon, description in Vocabularies.HorizonClassificationVocabulary:
+            t = orm.HorizonClassification.objects.create()
+            t.horizon = horizon
+            t.description = description
+            t.save()
+
+        for position, _ in Vocabularies.ProfilePositionVocabulary:
+            t = orm.ProfilePosition.objects.create(position=position)
+            t.save()
+
+        for drainage, description in Vocabularies.DrainageClassificationVocabulary:
+            t = orm.DrainageClassification.objects.create()
+            t.drainage = drainage
+            t.description = description
+            t.save()
+
+        for authority, classification in Vocabularies.SoilClassificationVocabulary:
+            t = orm.SoilClassification.objects.create()
+            t.authority = authority
+            t.classification = classification
+            t.save()
+
+        for colour, code in Vocabularies.SoilColourVocabulary:
+            t = orm.SoilColour.objects.create()
+            t.colour = colour
+            t.code = code
+            t.save()
+
+        for texture, description in Vocabularies.SoilTextureVocabulary:
+            t = orm.SoilTexture.objects.create()
+            t.texture = texture
+            t.description = description
+            t.save()
 
 
     def backwards(self, orm):
