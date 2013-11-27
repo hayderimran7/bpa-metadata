@@ -2,10 +2,11 @@ import pprint
 import csv
 import re
 import os.path
+from datetime import date
 
-from apps.BASE.models import *
+from apps.BASE.models import GPSPosition, CollectionSite, SoilSample, ChemicalAnalysis, BPAUniqueID
 
-from .utils import *
+import utils
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
@@ -46,10 +47,10 @@ def get_sample_data():
                       'profile_position',
                       'drainage_classification',
                       'notes',
-        ]
+                      ]
 
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
-        return strip_all(reader)
+        return utils.strip_all(reader)
 
 
 def get_chem_data():
@@ -96,13 +97,13 @@ def get_chem_data():
                       'boron_unit']
 
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
-        return strip_all(reader)
+        return utils.strip_all(reader)
 
 
 def get_collection_site(e):
     """ Add a collection site"""
 
-    POINT_REGEXP = r'\d{1,4}m [S|N]\d{1,2}.\d{5} [E|W]\d{1,3}.\d{5}'
+    point_regexp = r'\d{1,4}m [S|N]\d{1,2}.\d{5} [E|W]\d{1,3}.\d{5}'
 
     def get_gps_description(site):
         """ Construct a GPS description field """
@@ -112,13 +113,13 @@ def get_collection_site(e):
     def add_position(site, e_lat, e_long, e_elevation):
         """ The current spreadsheet has all data in the lat column..."""
 
-        found = re.findall(POINT_REGEXP, e_lat)
+        found = re.findall(point_regexp, e_lat)
 
         for p in found:
             elevation, lat, long = p.split()
-            elevation = get_clean_float(elevation)
-            lat = get_clean_float(lat)
-            long = get_clean_float(long)
+            elevation = utils.get_clean_float(elevation)
+            lat = utils.get_clean_float(lat)
+            long = utils.get_clean_float(long)
 
             gps = GPSPosition(longitude=long, latitude=lat, elevation=elevation)
             gps.description = get_gps_description(site)
@@ -155,7 +156,7 @@ def add_sample(e):
         sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
         sample.name = e['sample_name']
         sample.collection_site = get_collection_site(e)
-        sample.collection_date = get_date(e['collection_date'])
+        sample.collection_date = utils.get_date(e['collection_date'])
         sample.note = pprint.pformat(e)
         sample.save()
         print("Ingested Soil sample {0}".format(sample.name))
@@ -163,7 +164,7 @@ def add_sample(e):
 
 def add_chem_sample(e):
     chema = ChemicalAnalysis()
-    chema.bpa_id = get_bpa_id(e['bpa_id'], project_name='BASE',
+    chema.bpa_id = utils.get_bpa_id(e['bpa_id'], project_name='BASE',
                               note="Created during chem sample ingestion on {0}".format(date.today()))
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
@@ -171,38 +172,38 @@ def add_chem_sample(e):
     chema.colour = e['soilcolour']
     chema.gravel = e['gravel']
     chema.texture = e['texture']
-    chema.ammonium_nitrogen = get_clean_float(e['ammonium_nitrogen'])
+    chema.ammonium_nitrogen = utils.get_clean_float(e['ammonium_nitrogen'])
     chema.nitrate_nitrogen = e['nitrate_nitrogen']  # <>
-    chema.phosphorus_colwell = e['phosphorus_colwell'] # <>
-    chema.potassium_colwell = get_clean_float(e['potassium_colwell'])
-    chema.sulphur_colwell = get_clean_float(e['sulphur_colwell'])
-    chema.organic_carbon = get_clean_float(e['organic_carbon'])
-    chema.conductivity = get_clean_float(e['conductivity'])
-    chema.cacl2_ph = get_clean_float(e['cacl2_ph'])
-    chema.h20_ph = get_clean_float(e['h2o_ph'])
-    chema.dtpa_copper = get_clean_float(e['dtpa_copper'])
-    chema.dtpa_iron = get_clean_float(e['dtpa_iron'])
-    chema.dtpa_manganese = get_clean_float(e['dtpa_manganese'])
-    chema.dtpa_zinc = get_clean_float(e['dtpa_zinc'])
-    chema.exc_aluminium = get_clean_float(e['exc_aluminium'])
-    chema.exc_calcium = get_clean_float(e['exc_calcium'])
-    chema.exc_magnesium = get_clean_float(e['exc_magnesium'])
-    chema.exc_potassium = get_clean_float(e['exc_potassium'])
-    chema.exc_sodium = get_clean_float(e['exc_sodium'])
-    chema.boron_hot_cacl2 = get_clean_float(e['boron_hot_cacl2'])
+    chema.phosphorus_colwell = e['phosphorus_colwell']  # <>
+    chema.potassium_colwell = utils.get_clean_float(e['potassium_colwell'])
+    chema.sulphur_colwell = utils.get_clean_float(e['sulphur_colwell'])
+    chema.organic_carbon = utils.get_clean_float(e['organic_carbon'])
+    chema.conductivity = utils.get_clean_float(e['conductivity'])
+    chema.cacl2_ph = utils.get_clean_float(e['cacl2_ph'])
+    chema.h20_ph = utils.get_clean_float(e['h2o_ph'])
+    chema.dtpa_copper = utils.get_clean_float(e['dtpa_copper'])
+    chema.dtpa_iron = utils.get_clean_float(e['dtpa_iron'])
+    chema.dtpa_manganese = utils.get_clean_float(e['dtpa_manganese'])
+    chema.dtpa_zinc = utils.get_clean_float(e['dtpa_zinc'])
+    chema.exc_aluminium = utils.get_clean_float(e['exc_aluminium'])
+    chema.exc_calcium = utils.get_clean_float(e['exc_calcium'])
+    chema.exc_magnesium = utils.get_clean_float(e['exc_magnesium'])
+    chema.exc_potassium = utils.get_clean_float(e['exc_potassium'])
+    chema.exc_sodium = utils.get_clean_float(e['exc_sodium'])
+    chema.boron_hot_cacl2 = utils.get_clean_float(e['boron_hot_cacl2'])
 
-    chema.clay = get_clean_float(e['clay'])
-    chema.course_sand = get_clean_float(e['course_sand'])
-    chema.fine_sand = get_clean_float(e['fine_sand'])
-    chema.sand = get_clean_float(e['sand'])
-    chema.silt = get_clean_float(e['silt'])
+    chema.clay = utils.get_clean_float(e['clay'])
+    chema.course_sand = utils.get_clean_float(e['course_sand'])
+    chema.fine_sand = utils.get_clean_float(e['fine_sand'])
+    chema.sand = utils.get_clean_float(e['sand'])
+    chema.silt = utils.get_clean_float(e['silt'])
 
     chema.save()
 
 
 def run():
     data = get_sample_data()
-    ingest_bpa_ids(data, 'BASE')
+    utils.ingest_bpa_ids(data, 'BASE')
 
     for e in data:
         add_sample(e)
