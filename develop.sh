@@ -363,6 +363,8 @@ nuclear() {
 
 usage() {
     log_warning "Usage ./develop.sh (make_local_instance)"
+    log_warning "Usage ./develop.sh (local_shell)"
+    log_warning "Usage ./develop.sh (local_puppet)"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
