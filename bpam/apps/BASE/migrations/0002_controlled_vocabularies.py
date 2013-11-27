@@ -9,45 +9,7 @@ class Migration(DataMigration):
     def forwards(self, orm):
         "Write your forwards methods here."
 
-        for vegetation, note in Vocabularies.BroadVegetationTypeVocabulary:
-            t = orm.BroadVegetationType.objects.create()
-            t.vegetation = vegetation
-            t.note = note
-            t.save()
-
-        for horizon, description in Vocabularies.HorizonClassificationVocabulary:
-            t = orm.HorizonClassification.objects.create()
-            t.horizon = horizon
-            t.description = description
-            t.save()
-
-        for position, _ in Vocabularies.ProfilePositionVocabulary:
-            t = orm.ProfilePosition.objects.create(position=position)
-            t.save()
-
-        for drainage, description in Vocabularies.DrainageClassificationVocabulary:
-            t = orm.DrainageClassification.objects.create()
-            t.drainage = drainage
-            t.description = description
-            t.save()
-
-        for authority, classification in Vocabularies.SoilClassificationVocabulary:
-            t = orm.SoilClassification.objects.create()
-            t.authority = authority
-            t.classification = classification
-            t.save()
-
-        for colour, code in Vocabularies.SoilColourVocabulary:
-            t = orm.SoilColour.objects.create()
-            t.colour = colour
-            t.code = code
-            t.save()
-
-        for texture, description in Vocabularies.SoilTextureVocabulary:
-            t = orm.SoilTexture.objects.create()
-            t.texture = texture
-            t.description = description
-            t.save()
+        Vocabularies.load(orm)
 
 
     def backwards(self, orm):
