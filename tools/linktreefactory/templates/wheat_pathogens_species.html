@@ -1,0 +1,41 @@
+{% extends "base_template.html" %}
+
+{% block title %}Wheat Pathogen Species{% endblock %}
+
+{% block content %}
+
+<h3>Wheat Pathogens Species {% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
+
+    <table id="species-list" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Pathogen</th>
+                <th>Isolate</th>
+                <th>Genome-Raw</th>
+                <th>Genome-Analysis</th>
+                <th>Transcript</th>
+                <th>Small RNA</th>
+                <th>Proteomic</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in object_list %}
+            <tr>
+            {% if bpa_id %}
+                <td>{{ obj.bpa_id }}</td>
+            {% else %}
+                <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
+            {% endif %}
+                <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
+                <td>{{ obj.name }}</td>
+                <td>Run {{ obj.run }} for {{ obj.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% if bpa_id %}
+<a href="../">Back to index</a>
+{% endif %}
+
+{% endblock %}
