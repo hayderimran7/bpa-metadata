@@ -66,7 +66,9 @@ dev_requires = [
     'model-mommy',
     'tendo',
     'docutils',
-    'pygments'
+    'pygments',
+    'docopt',
+    'jinja2',
 ]
 
 tests_require = [
