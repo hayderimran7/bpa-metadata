@@ -27,10 +27,10 @@ update_apache() {
     # generate link tree, and if successful update apache config
     mkdir -p /var/www/"$linkmethod"/
     ./bpalink2.py \
-        -a "$cfgtmp" \
-        -s http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
-        -o /var/www/"$linkmethod"/ \
-        -b https://downloads.bioplatforms.com/ \
+        --apacheredirects "$cfgtmp" \
+        --swiftbase http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
+        --htmlbase /var/www/"$linkmethod"/ \
+        --linkbase https://downloads.bioplatforms.com/ \
         "$linkmethod" "$dummy" && (
             test -e "$cfgtmp" && mv "$cfgtmp" "$cfgprod"
         )
