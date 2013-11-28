@@ -16,14 +16,22 @@ Options:
   -b, --linkbase=PUBLICURI            Base URI for files on public interface,  [default: http://downloads.bioplatforms.com/]
 """
 
+import sys
+import re
+import urlparse
+import os
+import json
+import datetime
+from collections import namedtuple
+import logging
+
 from docopt import docopt
 from unipath import Path
-from tendo import colorer
-import StringIO, pprint, sys, csv, re, unipath, xlrd, urlparse, urllib, os, json, datetime
-from collections import namedtuple
+import unipath
+import xlrd
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
-import logging
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -221,7 +229,7 @@ class FastqInventory(object):
                     self.ambiguous_checksum.add(path.name)
                     continue
                 self.inventory.append(self.fastq(path, md5s[path.name]))
-            # lookup by hash table and filename
+                # lookup by hash table and filename
         self.lookup = dict(((t.filename.name, t.md5), t) for t in self.inventory)
 
     def get_path_by_name_md5(self, filename, md5sum):
@@ -267,7 +275,7 @@ class Archive(object):
         problems = ambiguous + no_checksum + unknown
         logging.info(
             "%d BPA %s metadata entries ok, %d problems (%d ambiguous, %d no checksum, %d totally unknown)" % (
-            len(matches), type(self).__name__, problems, ambiguous, no_checksum, unknown))
+                len(matches), type(self).__name__, problems, ambiguous, no_checksum, unknown))
         return matches
 
     def build_linktree(self, root):
@@ -312,7 +320,7 @@ class Archive(object):
                 swift_path = self.swift_path(fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
                 print >> fd, 'RedirectMatch "^%s$" "%s"' % (
-                re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
+                    re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
                 # make public linktree by BPA ID / flow cell
@@ -339,7 +347,7 @@ class Archive(object):
             try:
                 os.mkdir(base)
             except OSError:
-                pass # probably already exists
+                pass  # probably already exists
             template = env.get_template(self.template_name)
             output_filename = os.path.join(base, 'index.html')
             tmpf = output_filename + '.tmp'
@@ -356,11 +364,12 @@ class Archive(object):
 
     def generate_json_metadata(self, output_base, publicuri, swifturi):
         metadata_dict = {}
-        metadata_dict['files'] = [{
-                                      "url": urlparse.urljoin(publicuri, self.public_file_path(fastq)),
-                                      "filename": fastq.filename.name,
-                                      "md5": fastq.md5,
-                                  } for fastq in self.fastq.inventory]
+        metadata_dict['files'] = [
+            {
+                "url": urlparse.urljoin(publicuri, self.public_file_path(fastq)),
+                "filename": fastq.filename.name,
+                "md5": fastq.md5,
+            } for fastq in self.fastq.inventory]
         metadata_dict['matches'] = match_info = []
         if self.matches is not None:
             for fastq, meta in self.matches:
@@ -603,6 +612,7 @@ class WheatPathogensArchive(Archive):
             ('uid', 'BPA ID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
             ('species', 'Species', None),
+            ('isolate', 'Researcher Sample ID', None),
             ('official_variety_name', 'Official Variety Name', None),
             ('run', 'Run number', lambda s: s.replace('RUN #', '')),
         ]):
@@ -622,6 +632,8 @@ class WheatPathogensArchive(Archive):
                 'name': meta.official_variety_name,
                 'run': meta.run,
                 'url': url,
+                'species': meta.species,
+                'isolate': meta.isolate,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return {'object_list': objects}
@@ -655,17 +667,6 @@ class Wheat7aArchive(NoMetadataArchive):
 class BASEArchive(NoMetadataArchive):
     container_name = 'BASE'
     template_name = 'base.html'
-
-
-# kep these around for now
-class WheatPathogensArchiveOld(NoMetadataArchive):
-    container_name = 'Wheat_Pathogens'
-    template_name = 'wheat_pathogens_old.html'
-
-
-class WheatCultivarsArchiveOld(NoMetadataArchive):
-    container_name = 'Wheat_Cultivars'
-    template_name = 'wheat_cultivars.html'
 
 
 if __name__ == '__main__':
