@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Melanoma Index{% endblock %}
+
+{% block content %}
+
+    <h3>Melanoma</h3>
+    <ul>
+        <li><a href="/melanoma/all">All Melanoma Sequence Files</a></li>
+    </ul>
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma-index' %}"/>
+    </form>
+
+{% endblock %}

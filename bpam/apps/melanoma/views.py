@@ -43,3 +43,7 @@ def search_view(request, term):
 
     data['nresults'] += len(data['melanoma_object_list'])
     return render(request, 'common/search_results.html', data)
+
+
+def index(request):
+    return render(request, 'melanoma/index.html')
