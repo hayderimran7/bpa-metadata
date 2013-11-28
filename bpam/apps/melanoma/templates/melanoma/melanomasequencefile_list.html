@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Melanoma Listing{% endblock %}
+
+{% block content %}
+
+    <h3>Melanoma Sequence Files</h3>
+
+    {% include "melanoma/melanomasequencefile_table.html" %}
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma-list' %}"/>
+    </form>
+
+{% endblock %}
