@@ -5,7 +5,7 @@
 # consisting of all files < 1MB in size, and an empty 
 # placeholder file for other files.
 #
-# to be used in conjuction with the bpalink2.py script.
+# to be used in conjunction with the bpalink2.py script.
 #
 
 
