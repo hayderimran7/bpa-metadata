@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 from django.conf import settings
 
 from apps.common.models import Sample, BPAUniqueID
@@ -370,7 +371,6 @@ class SoilSampleDNA(models.Model):
     barcode_sequence = models.CharField(max_length=20, blank=True, null=True)
     performer = models.CharField(max_length=10, blank=True, null=True)
     labeled_extract_name = models.CharField(max_length=10, blank=True, null=True)
-    protocol_ref = models.CharField(max_length=10, blank=True, null=True)
 
     def __unicode__(self):
         return u"Soil DNA Library {0}".format(self.name)
