@@ -18,7 +18,7 @@ logger = logging.getLogger('GBR')
 
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'BPA_ReFuGe2020_METADATA.xlsx')
+DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
 
 BPA_ID = "102.100.100"
 GBR_DESCRIPTION = 'Great Barrier Reef'
