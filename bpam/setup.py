@@ -33,6 +33,7 @@ def get_data_files():
 install_requires = [
     'Django==1.6.0',
     'Django-suit==0.2.5',
+    'django-crispy-forms',
     'python-memcached==1.53',
     'South==0.8.4',
     'Unipath==1.0',

@@ -44,12 +44,8 @@ DATABASES = {
     }
 }
 
-#ADMIN_TOOLS_INDEX_DASHBOARD = 'bpam.dashboard.CustomIndexDashboard'
-#ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'bpam.dashboard.CustomAppIndexDashboard'
-#ADMIN_TOOLS_THEMING_CSS = 'custom_admin_tools/css/theming.css'
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
-
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
     'MENU': (
@@ -142,6 +138,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
     'bpam',
+    'crispy_forms',
     'admin_tools',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -141,6 +141,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 INSTALLED_APPS = (
     'bpam',
     'suit',
+    'crispy_forms',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
