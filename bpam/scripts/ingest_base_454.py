@@ -41,70 +41,35 @@ def get_data(spreadsheet_file):
                   'date_received',
                   # Adelaide extraction
                   'extraction_sample_weight',  # mg
-                  'fluorimetry',  # ng/uL gDNA'
-                  'pcr_inhibition',
-                  'pcr1',
-                  'pcr2',
-                  'shipped_to_agrf_454',
-                  'shipped_to_agrf_miseq',
-                  'shipped_to_ramacciotitti',
+                  'adelaide_fluorimetry',  # ng/uL gDNA'
+                  'adelaide_pcr_inhibition',
+                  'adelaide_pcr1',
+                  'adelaide_pcr2',
+                  'adelaide_shipped_to_agrf_454',
+                  'adelaide_shipped_to_agrf_miseq',
+                  'adelaid_shipped_to_ramacciotitti',
                   # Brisbane 454
-                  '16s_mid',
-                  'its_mid',
-                  'pcr1',
-                  'pcr2',
-                  'pcr3',
-                  'its_pcr1',
-                  'its_pcr2',
-                  'its_pcr3'
-
-
-                  'sample_name',
-                  'dna_concentration',
-                  'total_dna',
-                  'collection_site',
-                  'collection_date',
-                  'collector_name',
-                  'gps_location',
-                  'water_temp',
-                  'ph',
-                  'depth',
-                  'collection_comment',
-                  'other',
-                  'requested_sequence_coverage',
-                  'sequencing_notes',
-                  'contact_scientist',
-                  'contact_affiliation',
-                  'contact_email',
-                  'sample_dna_source',
-                  'dna_extraction_protocol',
-                  'dna_rna_concentration',
-                  'total_dna_rna_shipped',
-                  'sequencing_facility',
-                  'date_received',
-                  'comments_by_facility',
-                  'sequencing_data_eta',
-                  'date_sequenced',
-                  'library',
-                  'library_construction',
-                  'requested_read_length',
-                  'library_construction_protocol',
-                  'index_number',
-                  'sequencer',
-                  'run_number',
-                  'flow_cell_id',
-                  'lane_number',
-                  'sequence_filename',
-                  'sequence_filetype',
-                  'md5_checksum',
-                  'contact_bioinformatician_name',
-                  'contact_bioinformatician_email',
-                  'date_data_sent',
-                  'date_data_received',
-    ]
+                  'brisbane_16s_mid',
+                  'brisbane_its_mid',
+                  'brisbane_16s_pcr1',
+                  'brisbane_16s_pcr2',
+                  'brisbane_16s_pcr3',
+                  'brisbane_its_pcr1_neat',
+                  'brisbane_its_pcr2_1_10',
+                  'brisbane_its_pcr3_fusion',
+                  'brisbane_fluorimetry_16s',  # ng/uL 16S
+                  'brisbane_fluorimetry_its',  # ng/uL 16S
+                  'brisbane_16s_qpcr',
+                  'brisbane_its_qpcr',
+                  'brisbane_i6s_pooled',
+                  'brisbane_its_pooled',
+                  'brisbane_16s_reads',
+                  'brisbane_itss_reads',
+                  'note',
+                  ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
-    sheet = wb.sheet_by_name('DNA library Sequencing - Pilot')
+    sheet = wb.sheet_by_name('Sheet1')
     samples = []
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
@@ -130,4 +95,5 @@ def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
     vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
     """
 
+    data = get_data(spreadsheet_file)
 
