@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from apps.common.models import Sample, BPAUniqueID
 from apps.geo.models import GPSPosition
@@ -24,7 +25,7 @@ class SoilColour(models.Model):
     code = models.CharField(max_length=5, unique=True)
 
     def __unicode__(self):
-        return "{0}".format(self.colour)
+        return u"{0}".format(self.colour)
 
 
 class PCRPrimer(models.Model):
@@ -36,7 +37,7 @@ class PCRPrimer(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.name)
+        return u"{0}".format(self.name)
 
     class Meta:
         verbose_name_plural = _("PCR Primers")
@@ -44,7 +45,7 @@ class PCRPrimer(models.Model):
 
 class LandUse(models.Model):
     """
-    Land use taxonomy
+    Land use Controlled Vocabulary
     http://lrm.nt.gov.au/soil/landuse/classification
     """
 
@@ -53,7 +54,7 @@ class LandUse(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.description)
+        return u"{0}".format(self.description)
 
     class Meta:
         verbose_name_plural = _("Land Uses")
@@ -68,7 +69,7 @@ class GeneralEcologicalZone(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.description)
+        return u"{0}".format(self.description)
 
     class Meta:
         verbose_name_plural = _("General Ecological Zones")
@@ -83,7 +84,7 @@ class BroadVegetationType(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.vegetation)
+        return u"{0}".format(self.vegetation)
 
     class Meta:
         verbose_name_plural = _("Broad Vegetation Types")
@@ -98,7 +99,7 @@ class TillageType(models.Model):
     description = models.TextField()
 
     def __unicode__(self):
-        return "{0}".format(self.tillage)
+        return u"{0}".format(self.tillage)
 
     class Meta:
         verbose_name_plural = _("Tillage Types")
@@ -115,7 +116,7 @@ class HorizonClassification(models.Model):
     description = models.TextField()
 
     def __unicode__(self):
-        return "{0}".format(self.horizon)
+        return u"{0}".format(self.horizon)
 
     class Meta:
         verbose_name_plural = _("Horizon Classification")
@@ -133,7 +134,7 @@ class SoilClassification(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.authority, self.classification)
+        return u"{0} {1}".format(self.authority, self.classification)
 
     class Meta:
         verbose_name_plural = _("Soil Classification")
@@ -148,7 +149,7 @@ class DrainageClassification(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.drainage)
+        return u"{0}".format(self.drainage)
 
     class Meta:
         verbose_name_plural = _("Drainage Classifications")
@@ -163,7 +164,7 @@ class ProfilePosition(models.Model):
     position = models.CharField(max_length=20)
 
     def __unicode__(self):
-        return "{0}".format(self.position)
+        return u"{0}".format(self.position)
 
     class Meta:
         verbose_name_plural = _("Profile Positions")
@@ -178,7 +179,7 @@ class TargetGene(models.Model):
     note = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.name)
+        return u"{0}".format(self.name)
 
     class Meta:
         verbose_name_plural = _("Target Genes")
@@ -193,7 +194,7 @@ class TargetTaxon(models.Model):
     note = models.TextField()
 
     def __unicode__(self):
-        return "{0}".format(self.name)
+        return u"{0}".format(self.name)
 
     class Meta:
         verbose_name_plural = _("Target Taxons")
@@ -210,7 +211,7 @@ class SiteOwner(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0} {1}".format(self.name, self.email)
+        return u"{0} {1}".format(self.name, self.email)
 
     class Meta:
         verbose_name_plural = _("Site Owners")
@@ -233,7 +234,7 @@ class CollectionSiteHistory(models.Model):
     note = models.TextField()
 
     def __unicode__(self):
-        return "Site history on {0}".format(self.history_report_date)
+        return u"Site history on {0}".format(self.history_report_date)
 
     class Meta:
         verbose_name_plural = _("Site History")
@@ -267,10 +268,10 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
+        return u"{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
 
     class Meta:
-        verbose_name_plural = "Collection Sites"
+        verbose_name_plural = _("Collection Sites")
 
 
 class SoilSample(Sample):
@@ -297,7 +298,7 @@ class SequenceConstruct(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return "{0}".format(self.sequence)
+        return u"{0}".format(self.sequence)
 
     class Meta:
         verbose_name_plural = _("Sequence Constructs")
@@ -318,8 +319,8 @@ class ChemicalAnalysis(models.Model):
     texture = models.CharField(max_length=100, blank=True, null=True)
 
     ammonium_nitrogen = models.FloatField(blank=True, null=True)
-    nitrate_nitrogen = models.CharField(max_length=10, null=True) # <>
-    phosphorus_colwell = models.CharField(max_length=10, null=True) # <>
+    nitrate_nitrogen = models.CharField(max_length=10, null=True)  # <>
+    phosphorus_colwell = models.CharField(max_length=10, null=True)  # <>
     potassium_colwell = models.FloatField(blank=True, null=True)
     sulphur_colwell = models.FloatField(blank=True, null=True)
     organic_carbon = models.FloatField(blank=True, null=True)
@@ -344,7 +345,7 @@ class ChemicalAnalysis(models.Model):
     silt = models.FloatField(blank=True, null=True)
 
     def __unicode__(self):
-        return "Chemical Analysis for {0}".format(self.bpa_id)
+        return u"Chemical Analysis for {0}".format(self.bpa_id)
 
     class Meta:
         verbose_name_plural = _("Sample Chemical Essays")
@@ -372,7 +373,28 @@ class SoilSampleDNA(models.Model):
     protocol_ref = models.CharField(max_length=10, blank=True, null=True)
 
     def __unicode__(self):
-        return "Soil DNA Library {0}".format(self.name)
+        return u"Soil DNA Library {0}".format(self.name)
 
     class Meta:
         verbose_name_plural = _("Soil Sample DNA")
+
+
+class Record454(models.Model):
+    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
+    sample_id = models.CharField(max_length=100, blank=True, null=True)
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    aurora_purified = models.BooleanField(default=False)
+    dna_storage_nunc_plate = models.CharField(max_length=12, blank=True, null=True)
+    dna_storage_nunc_tube = models.CharField(max_length=12, blank=True, null=True)
+    dna_storage_nunc_well_location = models.CharField(max_length=3, blank=True, null=True)
+    agrf_batch_number = models.CharField(max_length=15, blank=True, null=True)
+    submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    date_received = models.DateField(blank=True, null=True)
+
+    def __unicode__(self):
+        return u"Soil Sample {0}".format(self.bpa_id)
+
+    class Meta:
+        verbose_name_plural = _("Sample 454 Record")
+
+
