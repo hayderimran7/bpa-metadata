@@ -40,7 +40,7 @@ def get_data(spreadsheet_file):
                   'submitter_name',
                   'date_received',
                   # Adelaide extraction
-                  'extraction_sample_weight',  # mg
+                  'adelaide_extraction_sample_weight',  # mg
                   'adelaide_fluorimetry',  # ng/uL gDNA'
                   'adelaide_pcr_inhibition',
                   'adelaide_pcr1',
