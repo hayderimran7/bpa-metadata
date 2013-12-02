@@ -45,9 +45,9 @@ def get_data(spreadsheet_file):
                   'adelaide_pcr_inhibition',
                   'adelaide_pcr1',
                   'adelaide_pcr2',
-                  'adelaide_shipped_to_agrf_454',
-                  'adelaide_shipped_to_agrf_miseq',
-                  'adelaid_shipped_to_ramacciotitti',
+                  'adelaide_date_shipped_to_agrf_454',
+                  'adelaide_date_shipped_to_agrf_miseq',
+                  'adelaide_date_shipped_to_ramacciotitti',
                   # Brisbane 454
                   'brisbane_16s_mid',
                   'brisbane_its_mid',
