@@ -211,7 +211,8 @@ class FastqInventory(object):
             fastq += sub.listdir(pattern="*txt.bz2", filter=unipath.FILES)
             if len(fastq) == 0:
                 continue
-                # build a dictionary of MD5sums from this subdirectory up to our parent
+
+            # build a dictionary of MD5sums from this subdirectory up to our parent
             md5s = {}
             md5_sub = sub
             while True:
@@ -444,6 +445,7 @@ class MelanomaArchive(Archive):
         if header[0] == '':
             header[0] = 'UID'
 
+        # Pilot data sheet
         current_uid = None
         for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
             ('md5', 'MD5 checksum', None),
