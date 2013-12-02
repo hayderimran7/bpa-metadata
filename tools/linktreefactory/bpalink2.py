@@ -211,7 +211,8 @@ class FastqInventory(object):
             fastq += sub.listdir(pattern="*txt.bz2", filter=unipath.FILES)
             if len(fastq) == 0:
                 continue
-                # build a dictionary of MD5sums from this subdirectory up to our parent
+
+            # build a dictionary of MD5sums from this subdirectory up to our parent
             md5s = {}
             md5_sub = sub
             while True:
