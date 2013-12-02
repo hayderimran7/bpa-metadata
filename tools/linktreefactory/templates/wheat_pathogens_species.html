@@ -1,41 +1,44 @@
 {% extends "base_template.html" %}
 
-{% block title %}Wheat Pathogen Species{% endblock %}
+{% block title %}Wheat Pathogen Isolates{% endblock %}
 
 {% block content %}
 
-<h3>Wheat Pathogens Species {% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
+    <h3>Wheat Pathogens Isolates </h3>
 
-    <table id="species-list" class="table table-striped">
+    <table id="pathogen-list" class="table table-striped">
         <thead>
-            <tr>
-                <th>Pathogen</th>
-                <th>Isolate</th>
-                <th>Genome-Raw</th>
-                <th>Genome-Analysis</th>
-                <th>Transcript</th>
-                <th>Small RNA</th>
-                <th>Proteomic</th>
-            </tr>
+        <tr>
+            <th>Pathogen</th>
+            <th>Isolate</th>
+            <th>Genome-Raw</th>
+            <th>Genome-Analysis</th>
+            <th>Transcript</th>
+            <th>Small RNA</th>
+            <th>Proteomic</th>
+        </tr>
         </thead>
         <tbody>
-            {% for obj in object_list %}
+        {% for obj in object_list %}
             <tr>
-            {% if bpa_id %}
-                <td>{{ obj.bpa_id }}</td>
-            {% else %}
-                <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
-            {% endif %}
-                <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
-                <td>{{ obj.name }}</td>
-                <td>Run {{ obj.run }} for {{ obj.name }}</td>
+                <td><a href="{{ obj.bpa_id|replace("/", ".")}}/">{{ obj.pathogen }}</a></td>
+                <td><a href="">{{ obj.isolate }}</a></td>
+                <td>
+                    <a href="#" class="glyphicon glyphicon-ok "></a>
+                </td>
+                <td>
+                    <a href="#" class="glyphicon glyphicon-ok "></a>
+                </td>
+                <td>yes</td>
+                <td>yes</td>
+                <td>yes</td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 
-{% if bpa_id %}
-<a href="../">Back to index</a>
-{% endif %}
+    {% if bpa_id %}
+        <a href="../">Back to index</a>
+    {% endif %}
 
 {% endblock %}
