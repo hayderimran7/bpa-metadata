@@ -90,6 +90,8 @@ class IsolateIndexer(object):
         ('isolate', 'Researcher Sample ID', None),
         ('official_variety_name', 'Official Variety Name', None),
         ('run', 'Run number', lambda s: s.replace('RUN #', '')),
+        ('genome_analysis', 'Genome-Analysis', lambda s: s.split('_')[0]),
+        ('metadata_file', 'Metadata file', None),
     ]
 
     def parse_to_named_tuple(self, typname, reader, header):
@@ -137,17 +139,19 @@ class IsolateIndexer(object):
         """
         pathogen_isolate = set()
         for e in metadata:
-            pi = (e.pathogen, e.isolate, e.uid)
+            pi = (e.pathogen, e.isolate, e.uid, e.genome_analysis, e.metadata_file)
             pathogen_isolate.add(pi)
         return pathogen_isolate
 
     def get_index_template_environment(self, isolate_set):
         objects = []
-        for pathogen, isolate, uid in isolate_set:
+        for pathogen, isolate, uid, genome_analysis, metadata_file in isolate_set:
             objects.append({
                 'pathogen': pathogen,
                 'isolate': isolate,
-                'bpa_id': uid
+                'bpa_id': uid,
+                'genome_analysis': genome_analysis,
+                'metadata_file': metadata_file,
             })
 
         object_list = sorted(objects, key=itemgetter('pathogen'))

@@ -9,10 +9,11 @@
     <table id="pathogen-list" class="table table-striped">
         <thead>
         <tr>
-            <th>Pathogen</th>
-            <th>Isolate</th>
-            <th>Genome-Raw</th>
-            <th>Genome-Analysis</th>
+            <th>Pathogen Metadata</th>
+            <th>Isolate Analysis</th>
+            <th>
+                <a href="flat_index.html">Genome Sequence Files</a>
+            </th>
             <th>Transcript</th>
             <th>Small RNA</th>
             <th>Proteomic</th>
@@ -21,17 +22,18 @@
         <tbody>
         {% for obj in object_list %}
             <tr>
-                <td><a href="{{ obj.bpa_id|replace("/", ".")}}/">{{ obj.pathogen }}</a></td>
-                <td><a href="">{{ obj.isolate }}</a></td>
+                <td><a href="wmetadata/{{ obj.metadata_file }}">{{ obj.pathogen }}</a></td>
                 <td>
-                    <a href="{{ obj.bpa_id|replace("/", ".")}}/" class="glyphicon glyphicon-ok "></a>
+                    {% if obj.genome_analysis %}
+                        <a href="processed/">{{ obj.isolate }}</a>
+                    {% endif %}
                 </td>
                 <td>
-                    <a href="#" class="glyphicon glyphicon-ok "></a>
+                    <a href="{{ obj.bpa_id|replace("/", ".")}}/" class="glyphicon glyphicon-ok"></a>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><a href=""></a></td>
+                <td><a href=""></a></td>
+                <td><a href=""></a></td>
             </tr>
         {% endfor %}
         </tbody>
