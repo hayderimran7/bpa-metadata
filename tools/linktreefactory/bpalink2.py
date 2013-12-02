@@ -445,6 +445,7 @@ class MelanomaArchive(Archive):
         if header[0] == '':
             header[0] = 'UID'
 
+        # Pilot data sheet
         current_uid = None
         for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
             ('md5', 'MD5 checksum', None),
