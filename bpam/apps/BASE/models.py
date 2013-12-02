@@ -382,13 +382,13 @@ class SoilSampleDNA(models.Model):
 class Record454(models.Model):
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_id = models.CharField(max_length=100, blank=True, null=True)
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_contact_scientist')
     aurora_purified = models.BooleanField(default=False)
     dna_storage_nunc_plate = models.CharField(max_length=12, blank=True, null=True)
     dna_storage_nunc_tube = models.CharField(max_length=12, blank=True, null=True)
     dna_storage_nunc_well_location = models.CharField(max_length=3, blank=True, null=True)
     agrf_batch_number = models.CharField(max_length=15, blank=True, null=True)
-    submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter')
     date_received = models.DateField(blank=True, null=True)
 
     def __unicode__(self):
