@@ -24,14 +24,14 @@
                 <td><a href="{{ obj.bpa_id|replace("/", ".")}}/">{{ obj.pathogen }}</a></td>
                 <td><a href="">{{ obj.isolate }}</a></td>
                 <td>
-                    <a href="#" class="glyphicon glyphicon-ok "></a>
+                    <a href="{{ obj.bpa_id|replace("/", ".")}}/" class="glyphicon glyphicon-ok "></a>
                 </td>
                 <td>
                     <a href="#" class="glyphicon glyphicon-ok "></a>
                 </td>
-                <td>yes</td>
-                <td>yes</td>
-                <td>yes</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         {% endfor %}
         </tbody>

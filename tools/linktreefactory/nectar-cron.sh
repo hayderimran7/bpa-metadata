@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# script run from cron on cortex to update the published 
+# script run from cron on nectar to update the published 
 # link tree.
 cd ~/bpa-metadata/tools/linktreefactory || exit 1
 
 # swift virtualenv
- . ~/swiftev/bin/activate
+. ~/swiftev/bin/activate
 
 # swift credentials
 . ./swift-creds.sh
@@ -37,12 +37,12 @@ update_apache() {
 }
 
 # any new entries here will need a matching include in /etc/apache2/sites-enabled/000-default
-update_apache Melanoma melanoma
-update_apache GBR gbr
-update_apache Wheat7a wheat7a
-update_apache BASE base
+#update_apache Melanoma melanoma
+#update_apache GBR gbr
+#update_apache Wheat7a wheat7a
+#update_apache BASE base
 update_apache Wheat_Pathogens wheat_pathogens
-update_apache Wheat_Cultivars wheat_cultivars
+#update_apache Wheat_Cultivars wheat_cultivars
 
 # requires this line in sudoers:
 # ccg-user ALL=(ALL) NOPASSWD: /usr/sbin/apachectl
