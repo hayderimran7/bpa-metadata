@@ -16,27 +16,16 @@ Options:
   -b, --linkbase=PUBLICURI            Base URI for files on public interface,  [default: http://downloads.bioplatforms.com/]
 """
 
-import sys
-import re
-import urlparse
-import os
-import json
 import datetime
 from collections import namedtuple
 import logging
 from operator import itemgetter
-
-from docopt import docopt
-from unipath import Path
-import unipath
 import xlrd
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
 
 
 logging.basicConfig(level=logging.DEBUG)
-
-
 
 
 def _stringify(s):
@@ -167,7 +156,6 @@ class IsolateIndexer(object):
 
 
 def run():
-    from pprint import pprint
     indexer = IsolateIndexer()
     data = indexer.parse_metadata()
     pathogen_isolate_set = indexer.get_pathogen_isolate_set(data)
