@@ -70,13 +70,20 @@ class IsolateIndexer(object):
     metadata_sheet = 'Metadata'
     index_template = 'wheat_pathogens_species.html'
 
+    def to_string(isolate):
+        try:
+            return int(float(isolate))
+        except ValueError:
+            return isolate
+
+
     fieldspec = [
         ('md5', 'MD5 checksum', None),
         ('filename', 'FILE NAMES - supplied by AGRF', lambda p: p.rsplit('/', 1)[-1]),
         ('uid', 'BPA ID', None),
         ('flow_cell_id', 'Run #:Flow Cell ID', None),
         ('pathogen', 'Species', None),
-        ('isolate', 'Researcher Sample ID', None),
+        ('isolate', 'Researcher Sample ID', to_string),
         ('official_variety_name', 'Official Variety Name', None),
         ('run', 'Run number', lambda s: s.replace('RUN #', '')),
         ('genome_analysis', 'Genome-Analysis', lambda s: s.split('_')[0]),
@@ -128,15 +135,16 @@ class IsolateIndexer(object):
         """
         pathogen_isolate = set()
         for e in metadata:
-            pi = (e.pathogen, e.isolate, e.uid, e.genome_analysis, e.metadata_file)
+            pi = (e.pathogen, e.official_variety_name, e.isolate, e.uid, e.genome_analysis, e.metadata_file)
             pathogen_isolate.add(pi)
         return pathogen_isolate
 
     def get_index_template_environment(self, isolate_set):
         objects = []
-        for pathogen, isolate, uid, genome_analysis, metadata_file in isolate_set:
+        for pathogen, official_variety_name, isolate, uid, genome_analysis, metadata_file in isolate_set:
             objects.append({
                 'pathogen': pathogen,
+                'official_variety_name': official_variety_name,
                 'isolate': isolate,
                 'bpa_id': uid,
                 'genome_analysis': genome_analysis,

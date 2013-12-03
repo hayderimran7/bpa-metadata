@@ -10,6 +10,7 @@
         <thead>
         <tr>
             <th>Pathogen Metadata</th>
+            <th>Official Variety Name</th>
             <th>Isolate Analysis</th>
             <th>
                 <a href="flat_index.html">Genome Sequence Files</a>
@@ -23,9 +24,12 @@
         {% for obj in object_list %}
             <tr>
                 <td><a href="wmetadata/{{ obj.metadata_file }}">{{ obj.pathogen }}</a></td>
+                <td>{{ obj.official_variety_name }}</td>
                 <td>
                     {% if obj.genome_analysis %}
                         <a href="processed/">{{ obj.isolate }}</a>
+                    {% else %}
+                        {{ obj.isolate }}
                     {% endif %}
                 </td>
                 <td>
