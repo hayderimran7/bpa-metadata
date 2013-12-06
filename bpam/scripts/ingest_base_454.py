@@ -12,7 +12,7 @@ from apps.BASE.models import GPSPosition, CollectionSite, SoilSample, ChemicalAn
 
 import utils
 import user_helper
-
+import row_tools
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('BASE 454')
