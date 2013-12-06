@@ -171,6 +171,10 @@ class MD5Load(object):
 
     @classmethod
     def parse_xls_checksum_file(cls, path, checksums):
+        """
+        Parses md5 checksum value and associated filename from excell spreadsheet containing
+        checksum pairs.
+        """
         def xls_iter():
             x = xlrd.open_workbook(path.absolute())
             for sheet in x.sheets():
