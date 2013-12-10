@@ -667,6 +667,7 @@ class BASEMetaGenomicsArchive(Archive):
             ('md5', 'MD5 Checksum', None),
             ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
             ('uid', 'BPA ID', None),
+            ('sample_name', 'Sample ID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
             ('run', 'Run number', None),
         ]):
@@ -683,7 +684,7 @@ class BASEMetaGenomicsArchive(Archive):
             objects.append({
                 'bpa_id': meta.uid,
                 'filename': meta.filename,
-                'name': meta.official_variety_name,
+                'name': meta.sample_name,
                 'run': meta.run,
                 'url': url,
             })
@@ -746,7 +747,7 @@ if __name__ == '__main__':
         elif args['wheat_cultivars']:
             run_archive(WheatCultivarsArchive, args)
         elif args['base']:
-            run_archive(BASEArchive, args)
+            run_archive(BASEMetaGenomicsArchive, args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
