@@ -254,6 +254,7 @@ class Archive(object):
     # empty flow cell ID is valid
     sane_flow_cell_id = re.compile(r'^[A-Z0-9_\.]*$')
     sane_filename = re.compile(r'^[^/]+$')
+    index_name = 'index.html'
 
     def tie_metadata_to_fastq(self):
         """
@@ -354,7 +355,7 @@ class Archive(object):
             except OSError:
                 pass  # probably already exists
             template = env.get_template(self.template_name)
-            output_filename = os.path.join(base, 'index.html')
+            output_filename = os.path.join(base, self.index_name)
             tmpf = output_filename + '.tmp'
             with open(tmpf, 'w') as fd:
                 template_env = self.get_template_environment(publicuri, swifturi, bpa_id)
@@ -720,6 +721,7 @@ class Wheat7aArchive(NoMetadataArchive):
 class BASEArchive(NoMetadataArchive):
     container_name = 'BASE'
     template_name = 'base.html'
+    index_name = 'all.html'
 
 
 if __name__ == '__main__':
@@ -748,6 +750,7 @@ if __name__ == '__main__':
             run_archive(WheatCultivarsArchive, args)
         elif args['base']:
             run_archive(BASEMetaGenomicsArchive, args)
+            run_archive(BASEArchive, args)  # flat for all without metadata
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
