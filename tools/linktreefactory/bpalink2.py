@@ -645,6 +645,53 @@ class WheatPathogensArchive(Archive):
         return {'object_list': objects}
 
 
+class BASEMetaGenomicsArchive(Archive):
+    metadata_filename = '../../data/base/metagenomics'
+    metadata_sheet = 'BASE Metagenomics'
+    container_name = 'BASE'
+    template_name = 'base_metagenomics.html'
+
+    def __init__(self, bpa_base):
+        self.base = Path(bpa_base)
+        self.fastq = FastqInventory(self.base)
+        self.metadata = self.parse_metadata()
+        self.matches = self.tie_metadata_to_fastq()
+
+    def parse_metadata(self):
+        metadata = []
+
+        wrapper = ExcelWrapper(self.metadata_filename)
+        reader = wrapper.sheet_iter(self.metadata_sheet)
+        header = [t.strip() for t in next(reader)]
+        for tpl in parse_to_named_tuple('BASEMetaGenomic', reader, header, [
+            ('md5', 'MD5 Checksum', None),
+            ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+            ('uid', 'BPA ID', None),
+            ('sample_name', 'Sample ID', None),
+            ('flow_cell_id', 'Run #:Flow Cell ID', None),
+            ('run', 'Run number', None),
+        ]):
+            if tpl.filename == '' or tpl.uid == '':
+                continue
+            metadata.append(tpl)
+        return metadata
+
+    def get_template_environment(self, publicuri, swifturi, bpa_id):
+        objects = []
+        for fastq, meta in self.get_matches(bpa_id):
+            swift_path, public_path = self.paths_for_match(meta, fastq)
+            url = urlparse.urljoin(publicuri, public_path)
+            objects.append({
+                'bpa_id': meta.uid,
+                'filename': meta.filename,
+                'name': meta.sample_name,
+                'run': meta.run,
+                'url': url,
+            })
+        objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
+        return {'object_list': objects}
+
+
 class NoMetadataArchive(Archive):
     def __init__(self, bpa_base):
         self.base = Path(bpa_base)
@@ -700,7 +747,7 @@ if __name__ == '__main__':
         elif args['wheat_cultivars']:
             run_archive(WheatCultivarsArchive, args)
         elif args['base']:
-            run_archive(BASEArchive, args)
+            run_archive(BASEMetaGenomicsArchive, args)
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:

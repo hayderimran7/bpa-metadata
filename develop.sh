@@ -17,7 +17,7 @@ AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
-PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
+PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
 
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
 PYTHON="${VIRTUALENV}/bin/python"
