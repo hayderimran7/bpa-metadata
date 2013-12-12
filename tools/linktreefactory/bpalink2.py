@@ -311,7 +311,7 @@ class Archive(object):
         return self.swift_path(fastq), public_path
 
     def build_apache_redirects(self, swiftbase, outf):
-        with open(outf, 'w') as fd:
+        with open(outf, 'a') as fd:
             # RedirectMatch because Redirect (annoyingly) does prefix matches that can't be disabled
             # Apache wants URLs in non-% escaped form; it %-escapes them itself. hence very bodgy escaping
             # to avoid quotation marks in files breaking things
@@ -329,7 +329,8 @@ class Archive(object):
                     re.escape(self.public_file_path(fastq)), apache_escape(swift_uri))
             if self.matches is None:
                 return
-                # make public linktree by BPA ID / flow cell
+
+            # make public linktree by BPA ID / flow cell
             for fastq, meta in self.matches:
                 swift_path, public_path = self.paths_for_match(meta, fastq)
                 swift_uri = urlparse.urljoin(swiftbase, swift_path)
