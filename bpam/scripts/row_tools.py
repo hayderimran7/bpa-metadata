@@ -5,11 +5,11 @@ Tool to manage the import of row-based data.
 This data is typically read from Excel workbooks, or CSV files.
 """
 
+import os
 import datetime
 from collections import namedtuple
 import logging
 import xlrd
-
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -57,11 +57,16 @@ def parse_to_named_tuple(typname, reader, header, fieldspec):
     always adds a 'row' member to the named tuple, which is the row
     number of the entry in the source file (minus header)
     """
+
     typ = namedtuple(typname, ['row'] + [t[0] for t in fieldspec])
     lookup = []
     fns = [t[2] for t in fieldspec]
     for _, field_name, _ in fieldspec:
         idx = header.index(field_name)
+        if idx == -1:
+            logger.error('Expected column name {0} not found, quitting'.format(field_name))
+            os.exit(1)
+
         assert (idx != -1)
         lookup.append(idx)
     for idx, row in enumerate(reader):
