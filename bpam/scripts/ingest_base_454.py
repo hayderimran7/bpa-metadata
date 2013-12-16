@@ -30,42 +30,42 @@ def get_data(spreadsheet_file):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = [('bpa_id', '', None),
-                  ('sample_id', '', None),
-                  ('aurora_purified', '', None),
-                  ('dna_storage_nunc_plate', '', None),
-                  ('dna_storage_nunc_tube', '', None),
-                  ('dna_storage_nunc_well_location', '', None),
-                  ('agrf_batch_number', '', None),
-                  ('submitter_name', '', None),
-                  ('date_received', '', None),
+    fieldnames = [('bpa_id', 'Unique ID', None),
+                  ('sample_id', 'Sample ID', None),
+                  ('aurora_purified', 'Aurora purified', None),
+                  ('dna_storage_nunc_plate', 'DNA Storage Nunc Plate', None),
+                  ('dna_storage_nunc_tube', 'DNA Storage Nunc Tube', None),
+                  ('dna_storage_nunc_well_location', 'DNA Storage Well Location', None),
+                  ('agrf_batch_number', 'AGRF Batch number', None),
+                  ('submitter_name', 'Submitter Name', None),
+                  ('date_received', 'Date received', None),
                   # Adelaide extraction
-                  ('adelaide_extraction_sample_weight', '', None),  # mg
-                  ('adelaide_fluorimetry', '', None),  # ng/uL gDNA'
-                  ('adelaide_pcr_inhibition', '', None),
-                  ('adelaide_pcr1', '', None),
-                  ('adelaide_pcr2', '', None),
-                  ('adelaide_date_shipped_to_agrf_454', '', None),
-                  ('adelaide_date_shipped_to_agrf_miseq', '', None),
-                  ('adelaide_date_shipped_to_ramacciotitti', '', None),
+                  ('adelaide_extraction_sample_weight', 'Extraction Sample Weight (mg)', None),  # mg
+                  ('adelaide_fluorimetry', 'Fluorimetry ng/uL gDNA', None),  # ng/uL gDNA'
+                  ('adelaide_pcr_inhibition', 'PCR Inhibition (neat plus spike) 16S (V3-V8) p=pass, f=fail, NP = not performed', None),
+                  ('adelaide_pcr1', 'PCR1 (neat) 16S (V3-V8) p=pass, f-fail  NP = not performed', None),
+                  ('adelaide_pcr2', 'PCR2 (1:100) 16S (V3-V8) p=pass, f=fail   NP = not performed', None),
+                  ('adelaide_date_shipped_to_agrf_454', 'DNA shipped to AGRF (454)', None),
+                  ('adelaide_date_shipped_to_agrf_miseq', 'DNA shipped to AGRF (MiSeq)', None),
+                  ('adelaide_date_shipped_to_ramacciotitti', 'DNA shipped to Ramaciotti', None),
                   # Brisbane 454
-                  ('brisbane_16s_mid', '', None),
-                  ('brisbane_its_mid', '', None),
-                  ('brisbane_16s_pcr1', '', None),
-                  ('brisbane_16s_pcr2', '', None),
-                  ('brisbane_16s_pcr3', '', None),
-                  ('brisbane_its_pcr1_neat', '', None),
-                  ('brisbane_its_pcr2_1_10', '', None),
-                  ('brisbane_its_pcr3_fusion', '', None),
-                  ('brisbane_fluorimetry_16s', '', None),  # ng/uL 16S
-                  ('brisbane_fluorimetry_its', '', None),  # ng/uL 16S
-                  ('brisbane_16s_qpcr', '', None),
-                  ('brisbane_its_qpcr', '', None),
-                  ('brisbane_i6s_pooled', '', None),
-                  ('brisbane_its_pooled', '', None),
-                  ('brisbane_16s_reads', '', None),
-                  ('brisbane_itss_reads', '', None),
-                  ('note', '', None),
+                  ('brisbane_16s_mid', '16S MID', None),
+                  ('brisbane_its_mid', 'ITS MID', None),
+                  ('brisbane_16s_pcr1', '16S (V1-V3) PCR1 (neat) p=pass, f=fail', None),
+                  ('brisbane_16s_pcr2', '16S (V1-V3) PCR2 (1:10) p=pass, f=fail', None),
+                  ('brisbane_16s_pcr3', '16S (V1-V3) PCR3 (fusion-primer) p=pass, f=fail', None),
+                  ('brisbane_its_pcr1_neat', 'ITS PCR1 (neat) p=pass, f=fail', None),
+                  ('brisbane_its_pcr2_1_10', 'ITS PCR1 (1:10) p=pass, f=fail', None),
+                  ('brisbane_its_pcr3_fusion', 'ITS PCR3 (fusion-primer) p=pass, f=fail', None),
+                  ('brisbane_fluorimetry_16s', 'Fluorimetry ng/uL 16S', None),  # ng/uL 16S
+                  ('brisbane_fluorimetry_its', 'Fluorimetry ng/uL ITS', None),  # ng/uL 16S
+                  ('brisbane_16s_qpcr', '16S qPCR', None),
+                  ('brisbane_its_qpcr', 'ITS qPCR', None),
+                  ('brisbane_i6s_pooled', '16S pooled y=yes, n=no', None),
+                  ('brisbane_its_pooled', 'ITS pooled y=yes, n=no', None),
+                  ('brisbane_16s_reads', '16S >3000 reads - Trim Back 150bp', None),
+                  ('brisbane_itss_reads', 'ITS >3000 reads - Trim Back 150bp Run1', None),
+                  ('note', 'Sample comments', None),
                   ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
