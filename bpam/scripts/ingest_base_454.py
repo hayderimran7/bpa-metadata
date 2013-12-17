@@ -1,18 +1,9 @@
-import sys
 import pprint
-from datetime import datetime
 import logging
 
-import xlrd
 from unipath import Path
 
-from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
-
-from apps.BASE.models import GPSPosition, CollectionSite, SoilSample, ChemicalAnalysis, BPAUniqueID
-
-import utils
-import user_helper
-import row_tools
+from libs.excel_wrapper import ExcelWrapper
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('BASE 454')
@@ -25,12 +16,12 @@ BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 
 
-def get_data(spreadsheet_file):
+def get_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = [('bpa_id', 'Unique ID', None),
+    field_spec = [('bpa_id', 'Unique ID', None),
                   ('sample_id', 'Sample ID', None),
                   ('aurora_purified', 'Aurora purified', None),
                   ('dna_storage_nunc_plate', 'DNA Storage Nunc Plate', None),
@@ -68,32 +59,17 @@ def get_data(spreadsheet_file):
                   ('note', 'Sample comments', None),
                   ]
 
-    wb = xlrd.open_workbook(spreadsheet_file)
-    sheet = wb.sheet_by_name('Sheet1')
-    samples = []
-    for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
-        vals = sheet.row_values(row_idx)
-
-        if not utils.is_bpa_id(vals[0]):
-            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
-            continue
-
-        # for date types try to convert to python dates
-        types = sheet.row_types(row_idx)
-        for i, t in enumerate(types):
-            if t == xlrd.XL_CELL_DATE:
-                vals[i] = datetime(*xlrd.xldate_as_tuple(vals[i], wb.datemode))
-
-        samples.append(dict(zip(fieldnames, vals)))
-
-    return samples
+    wrapper = ExcelWrapper(field_spec, file_name, header_length="Sheet1", column_name_row_index=1)
+    for t in wrapper.parse_to_named_tuple():
+        pprint(t)
 
 
-def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
     """
 
-    data = get_data(spreadsheet_file)
+    get_data(file_name)
+
 
