@@ -31,7 +31,7 @@ def get_data_files():
 
 
 install_requires = [
-    'Django==1.6.0',
+    'Django>=1.6.0',
     'Django-suit==0.2.5',
     'django-crispy-forms',
     'python-memcached==1.53',
@@ -41,7 +41,7 @@ install_requires = [
     'boto==2.15.0',
     'dateutils==0.6.6',
     'django-admin-tools==0.5.1',
-    'django-extensions==1.2.5',
+    'django-extensions>=1.2.5',
     'django-localflavor==1.0',
     'django-tinymce==1.5.2',
     'feedparser==5.1.3',
@@ -54,7 +54,7 @@ install_requires = [
     'xlwt==0.7.5',
     'requests==1.2.3',
     'django_compressor==1.3',
-    'mimeparse'
+    'mimeparse',
 ]
 
 dev_requires = [
