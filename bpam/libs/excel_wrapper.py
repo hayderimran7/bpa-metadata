@@ -40,6 +40,18 @@ def _stringify(s):
 
 
 class ExcelWrapper(object):
+    """
+    Parse a excel file and yield a list of namedtuple instances.
+    fieldspec specifies the columns  to be read in, and the name
+    of the attribute to map them to on the new type
+
+    field_spec: list of (new_name, column_name, callable) tuples
+    file_name: workbook name
+    sheet_name: sheet in workbook
+    header_length: first number of lines to ignore
+    column_name_row_index: row in which colum names are found, typically 0
+    """
+
     def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0):
         self.sheet_name = sheet_name
         self.header_length = header_length
@@ -85,14 +97,8 @@ class ExcelWrapper(object):
 
     def parse_to_named_tuple(self, typname='DataRow'):
         """
-        parse a excel file and yield a list of namedtuple instances.
-        fieldspec specifies the columns  to be read in, and the name
-        of the attribute to map them to on the new type
-        reader should be past the header - clear to read normal rows.
-        the header in which to look up fields must be passed in.
-
         always adds a 'row' member to the named tuple, which is the row
-        number of the entry in the source file (minus header)
+        number of the entry in the source file (minus header(s))
         """
         # row is added so we know where in the spreadsheet this came from
         typ = namedtuple(typname, ['row'] + [t[0] for t in self.field_spec])
