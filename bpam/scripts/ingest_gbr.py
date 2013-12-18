@@ -9,7 +9,7 @@ from unipath import Path
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
 
 from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
-import ingest_utils
+from libs import ingest_utils
 import user_helper
 
 

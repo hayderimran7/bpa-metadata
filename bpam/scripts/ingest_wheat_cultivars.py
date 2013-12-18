@@ -8,7 +8,7 @@ from unipath import Path
 
 from apps.common.models import DNASource, BPAUniqueID, Sequencer
 from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
-import ingest_utils
+from libs import ingest_utils
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('WheatCultivars')

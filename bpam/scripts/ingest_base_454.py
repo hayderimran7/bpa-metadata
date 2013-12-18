@@ -4,6 +4,7 @@ import logging
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
+import ingest_users
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('BASE 454')
@@ -14,6 +15,11 @@ DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
+
+
+def get_BPA_ID(t):
+
+
 
 
 def get_data(file_name):
@@ -61,7 +67,7 @@ def get_data(file_name):
 
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.parse_to_named_tuple():
-        pprint.pprint(t)
+        BPA_ID = get_BPA_ID(t)
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):

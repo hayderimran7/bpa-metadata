@@ -18,7 +18,7 @@ from apps.melanoma.models import (
     MelanomaRun,
     MelanomaSequenceFile)
 
-import ingest_utils
+from libs import ingest_utils
 import user_helper
 
 
