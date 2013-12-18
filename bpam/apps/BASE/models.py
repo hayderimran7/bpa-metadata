@@ -381,7 +381,7 @@ class SoilSampleDNA(models.Model):
 
 class Sample454(models.Model):
 
-    RESULT = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
+    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'),)
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_id = models.CharField(max_length=100, blank=True, null=True)
@@ -424,9 +424,9 @@ class Sample454(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return u'Soil Sample {0}'.format(self.bpa_id)
+        return u'Soil Sample 454 {0}'.format(self.bpa_id)
 
     class Meta:
-        verbose_name_plural = _("Sample 454 Record")
+        verbose_name_plural = _("Sample 454")
 
 
