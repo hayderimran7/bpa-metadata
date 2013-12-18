@@ -1,14 +1,13 @@
 # coding: utf-8
 
 """
-Tool to manage the import of row-based data.
-This data is typically read from Excel workbooks.
+Tool to manage the import of rows from Excel workbooks.
 
 Pass a filename, a sheet_name, a mapping (fieldspec)
 Fieldspec maps spread sheet column names to more manageable names. It provides
 functions associated with each column type that must be used to massage the data found in the column.
 
-It returns a iterator providing a list of named tuples.
+It returns a iterator providing named tuples.
 """
 
 import datetime
@@ -41,7 +40,7 @@ def _stringify(s):
 
 class ExcelWrapper(object):
     """
-    Parse a excel file and yield a list of namedtuple instances.
+    Parse a excel file and yields namedtuples.
     fieldspec specifies the columns  to be read in, and the name
     of the attribute to map them to on the new type
 
@@ -92,7 +91,7 @@ class ExcelWrapper(object):
         """
         Yields sequence of cells
         """
-        for row_idx in xrange(self.sheet.nrows)[self.header_length - 1:]:
+        for row_idx in xrange(self.header_length - 1, self.sheet.nrows - self.header_length):
             yield self.sheet.row(row_idx)
 
     def parse_to_named_tuple(self, typname='DataRow'):
@@ -109,10 +108,12 @@ class ExcelWrapper(object):
             tpl = [idx]
             for fn, i in zip(functions, column_positions):
                 # if the column type is a date, try to handle it as such
-                if row[i].ctype == xlrd.XL_CELL_DATE:
-                    val = datetime(*xlrd.xldate_as_tuple(row[i].value, self.get_date_mode()))
-                else:
-                    val = row[i].decode('utf-8').strip()
+                ctype = row[i].ctype
+                value = row[i].value
+                if ctype == xlrd.XL_CELL_DATE:
+                    val = datetime.datetime(*xlrd.xldate_as_tuple(value, self.get_date_mode()))
+                if ctype == xlrd.XL_CELL_TEXT:
+                    val = value.decode('utf-8').strip()
                 if fn is not None:
                     val = fn(val)
                 tpl.append(val)
