@@ -379,7 +379,7 @@ class SoilSampleDNA(models.Model):
         verbose_name_plural = _("Soil Sample DNA")
 
 
-class Record454(models.Model):
+class Sample454(models.Model):
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_id = models.CharField(max_length=100, blank=True, null=True)
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter')
