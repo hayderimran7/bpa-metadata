@@ -275,9 +275,9 @@ class CollectionSite(models.Model):
         verbose_name_plural = _("Collection Sites")
 
 
-class SoilSample(Sample):
+class SoilMetagenomicsSample(Sample):
     """
-    BASE Soil Sample
+    BASE Metagenomics Soil Sample
     """
 
     collection_site = models.ForeignKey(CollectionSite)
@@ -380,6 +380,9 @@ class SoilSampleDNA(models.Model):
 
 
 class Sample454(models.Model):
+
+    RESULT = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
+
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_id = models.CharField(max_length=100, blank=True, null=True)
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter')
@@ -390,6 +393,36 @@ class Sample454(models.Model):
     agrf_batch_number = models.CharField(max_length=15, blank=True, null=True)
     submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     date_received = models.DateField(blank=True, null=True)
+
+    # AGRF Adelaide extraction
+    adelaide_extraction_sample_weight = models.IntegerField()
+    adelaide_fluorimetry = models.FloatField()
+    adelaide_pcr_inhibition = models.CharField(max_length=2, choices=RESULT)
+    adelaide_pcr1 = models.CharField(max_length=2, choices=RESULT)
+    adelaide_pcr2 = models.CharField(max_length=2, choices=RESULT)
+    adelaide_date_shipped_to_agrf_454 = models.DateField(blank=True, null=True)
+    adelaide_date_shipped_to_agrf_miseq = models.DateField(blank=True, null=True)
+    adelaide_date_shipped_to_ramacciotti = models.DateField(blank=True, null=True)
+
+    # Brisbane 454
+    brisbane_16s_mid = models.CharField(max_length=7, blank=True, null=True)
+    brisbane_its_mid = models.CharField(max_length=7, blank=True, null=True)
+    brisbane_16s_pcr1 = models.CharField(max_length=2, choices=RESULT)
+    brisbane_16s_pcr2 = models.CharField(max_length=2, choices=RESULT)
+    brisbane_16s_pcr3 = models.CharField(max_length=2, choices=RESULT)
+    brisbane_its_pcr1_neat = models.CharField(max_length=2, choices=RESULT)
+    brisbane_its_pcr2_1_10 = models.CharField(max_length=2, choices=RESULT)
+    brisbane_its_pcr3_fusion = models.CharField(max_length=2, choices=RESULT)
+    brisbane_fluorimetry_16s = models.FloatField()
+    brisbane_fluorimetry_its = models.FloatField()
+    brisbane_16s_qpcr = models.FloatField()
+    brisbane_its_qpcr = models.FloatField()
+    brisbane_i6s_pooled = models.BooleanField()
+    brisbane_its_pooled = models.BooleanField()
+    brisbane_16s_reads = models.IntegerField()
+    brisbane_itss_reads = models.IntegerField()
+    note = models.TextField(blank=True, null=True)
+
 
     def __unicode__(self):
         return u"Soil Sample {0}".format(self.bpa_id)
