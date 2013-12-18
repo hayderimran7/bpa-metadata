@@ -4,7 +4,7 @@ import logging
 import unipath
 
 import user_helper
-import utils
+import ingest_utils
 from apps.bpaauth.models import BPAUser
 
 
@@ -19,7 +19,7 @@ def get_data(users_file):
     with open(users_file, 'rb') as contacts:
         fieldnames = ['Project', 'First name', 'Last name', 'Organisation', 'Email', 'Interest', 'Lab']
         reader = csv.DictReader(contacts, fieldnames=fieldnames, restkey='therest')
-        return utils.strip_all(reader)
+        return ingest_utils.strip_all(reader)
 
 
 def filter_contacts(contact):

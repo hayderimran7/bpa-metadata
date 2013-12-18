@@ -8,7 +8,7 @@ from unipath import Path
 
 from apps.common.models import DNASource, BPAUniqueID, Sequencer
 from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
-import utils
+import ingest_utils
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('WheatCultivars')
@@ -54,7 +54,7 @@ def ingest_samples(samples):
 
         bpa_id = e['bpa_id']
 
-        if not utils.is_bpa_id(bpa_id):
+        if not ingest_utils.is_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
@@ -73,7 +73,7 @@ def ingest_samples(samples):
         cultivar_sample.casava_version = e['casava_version']
         cultivar_sample.protocol_reference = e['protocol_reference']
         cultivar_sample.note = e['note']
-        cultivar_sample.debug_note = utils.INGEST_NOTE + pprint.pformat(e)
+        cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
 
         cultivar_sample.save()
         logger.info("Ingested Cultivars sample {0}".format(cultivar_sample.name))
@@ -117,7 +117,7 @@ def get_cultivar_sample_data(spreadsheet_file):
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
 
-        if not utils.is_bpa_id(vals[0]):
+        if not ingest_utils.is_bpa_id(vals[0]):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
             continue
 
@@ -147,7 +147,7 @@ def ingest_runs(sample_data):
                 return 'MP'
             return 'UN'
 
-        base_pairs = utils.get_clean_number(entry['library_construction'])
+        base_pairs = ingest_utils.get_clean_number(entry['library_construction'])
         library_type = get_library_type(entry['library'])
         library_construction_protocol = entry['library_construction_protocol'].replace(',', '').capitalize()
 
@@ -182,7 +182,7 @@ def ingest_runs(sample_data):
             sys.exit(1)
 
     def get_run_number(entry):
-        run_number = utils.get_clean_number(entry['run_number'])
+        run_number = ingest_utils.get_clean_number(entry['run_number'])
         return run_number
 
     def add_run(entry):
@@ -202,9 +202,9 @@ def ingest_runs(sample_data):
         cultivar_run.flow_cell_id = flow_cell_id
         cultivar_run.run_number = run_number
         cultivar_run.sample = get_sample(bpa_id)
-        cultivar_run.index_number = utils.get_clean_number(entry['index_number'])
+        cultivar_run.index_number = ingest_utils.get_clean_number(entry['index_number'])
         cultivar_run.sequencer = get_sequencer(entry['sequencer'])
-        cultivar_run.lane_number = utils.get_clean_number(entry['lane_number'])
+        cultivar_run.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
         cultivar_run.protocol = get_protocol(e)
         cultivar_run.save()
 
@@ -226,8 +226,8 @@ def ingest_runs(sample_data):
             f = CultivarSequenceFile()
             f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
             f.run = cultivar_run
-            f.index_number = utils.get_clean_number(entry['index_number'])
-            f.lane_number = utils.get_clean_number(entry['lane_number'])
+            f.index_number = ingest_utils.get_clean_number(entry['index_number'])
+            f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
             f.filename = file_name
             f.original_sequence_filename = entry['sequence_filename']
             f.md5 = entry['md5_checksum']
@@ -241,7 +241,7 @@ def ingest_runs(sample_data):
 
 def ingest(spreadsheet_file):
     sample_data = get_cultivar_sample_data(spreadsheet_file)
-    utils.ingest_bpa_ids(sample_data, 'Wheat Cultivars')
+    ingest_utils.ingest_bpa_ids(sample_data, 'Wheat Cultivars')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 

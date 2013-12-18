@@ -18,7 +18,7 @@ from apps.melanoma.models import (
     MelanomaRun,
     MelanomaSequenceFile)
 
-import utils
+import ingest_utils
 import user_helper
 
 
@@ -119,7 +119,7 @@ def ingest_samples(samples):
         sample.tumor_stage = get_tumor_stage(e['sample_tumor_stage'])
         sample.gender = get_gender(e['sample_gender'])
         sample.histological_subtype = e['histological_subtype']
-        sample.passage_number = utils.get_clean_number(e['passage_number'])
+        sample.passage_number = ingest_utils.get_clean_number(e['passage_number'])
 
         sample.contact_scientist = get_contact_scientist(e['contact_scientists'])
 
@@ -129,7 +129,7 @@ def ingest_samples(samples):
         sample.sequencing_facility = get_facility(e['sequencing_facility'])
 
         sample.note = u'{0} {1} {2}'.format(e['contact_scientists'], e['contact_affiliation'], e['contact_email'])
-        sample.debug_note = utils.INGEST_NOTE + pprint.pformat(e)
+        sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
         sample.save()
         logger.info("Ingested Melanoma sample {0}".format(sample.name))
 
@@ -155,7 +155,7 @@ def ingest_arrays(arrays):
             array = Array.objects.get(bpa_id__bpa_id=e['bpa_id'])
         except Array.DoesNotExist:
             array = Array()
-            array.bpa_id = utils.get_bpa_id(e['bpa_id'], project_name="Melanoma")
+            array.bpa_id = ingest_utils.get_bpa_id(e['bpa_id'], project_name="Melanoma")
             array.note = u"Created during array ingestion on {0}".format(date.today())
 
         array.batch_number = int(e['batch_no'])
@@ -270,7 +270,7 @@ def ingest_runs(sample_data):
                 return 'MP'
             return 'UN'
 
-        base_pairs = utils.get_clean_number(entry['library_construction'])
+        base_pairs = ingest_utils.get_clean_number(entry['library_construction'])
         library_type = get_library_type(entry['library'])
         library_construction_protocol = entry['library_construction_protocol'].replace(',', '').capitalize()
 
@@ -312,14 +312,14 @@ def ingest_runs(sample_data):
         ANU does not have their run numbers entered.
         """
 
-        run_number = utils.get_clean_number(entry['run_number'])
+        run_number = ingest_utils.get_clean_number(entry['run_number'])
         if run_number in (None, ""):
             # see if its ANU and parse the run_number from the filename
             if entry['whole_genome_sequencing_facility'].strip() == 'ANU':
                 filename = entry['sequence_filename'].strip()
                 if filename != "":
                     try:
-                        run_number = utils.get_clean_number(filename.split('_')[7])
+                        run_number = ingest_utils.get_clean_number(filename.split('_')[7])
                         logger.info("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
                         logger.error("Filename {0} wrong format".format(filename))
@@ -344,10 +344,10 @@ def ingest_runs(sample_data):
             nrun.sample = get_sample(bpa_id)
 
             # Update FIXME
-            nrun.passage_number = utils.get_clean_number(entry['passage_number'])
-            nrun.index_number = utils.get_clean_number(entry['index_number'])
+            nrun.passage_number = ingest_utils.get_clean_number(entry['passage_number'])
+            nrun.index_number = ingest_utils.get_clean_number(entry['index_number'])
             nrun.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
-            nrun.lane_number = utils.get_clean_number(entry['lane_number'])
+            nrun.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
             nrun.sequencing_facility = get_facility(entry['sequencing_facility'])
             nrun.array_analysis_facility = get_facility(entry['array_analysis_facility'])
             nrun.whole_genome_sequencing_facility = get_facility(entry['whole_genome_sequencing_facility'])
@@ -379,10 +379,10 @@ def ingest_runs(sample_data):
             f = MelanomaSequenceFile()
 
         f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
-        f.date_received_from_sequencing_facility = utils.check_date(entry['date_received'])
+        f.date_received_from_sequencing_facility = ingest_utils.check_date(entry['date_received'])
         f.run = run
-        f.index_number = utils.get_clean_number(entry['index_number'])
-        f.lane_number = utils.get_clean_number(entry['lane_number'])
+        f.index_number = ingest_utils.get_clean_number(entry['index_number'])
+        f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
         f.filename = file_name
         f.md5 = md5
         f.note = pprint.pformat(entry)
@@ -395,7 +395,7 @@ def ingest_runs(sample_data):
 
 def ingest_melanoma(spreadsheet_file):
     sample_data = get_melanoma_sample_data(spreadsheet_file)
-    utils.ingest_bpa_ids(sample_data, 'Melanoma')
+    ingest_utils.ingest_bpa_ids(sample_data, 'Melanoma')
     ingest_samples(sample_data)
     ingest_arrays(get_array_data(spreadsheet_file))
     ingest_runs(sample_data)
@@ -408,5 +408,5 @@ def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
     """
 
     logger.info('Ingesting spreadsheet: ' + spreadsheet_file)
-    utils.add_organism(genus="Homo", species="Sapiens")
+    ingest_utils.add_organism(genus="Homo", species="Sapiens")
     ingest_melanoma(spreadsheet_file)

@@ -9,7 +9,7 @@ from unipath import Path
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
 
 from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
-import utils
+import ingest_utils
 import user_helper
 
 
@@ -80,7 +80,7 @@ def ingest_samples(samples):
         """
         The site where the sample has been collected from.
         """
-        collection_date = utils.check_date(entry['collection_date'])
+        collection_date = ingest_utils.check_date(entry['collection_date'])
         try:
             collection_event = CollectionEvent.objects.get(
                 name=entry['collection_site'],
@@ -90,9 +90,9 @@ def ingest_samples(samples):
             collection_event.name = entry['collection_site']
             collection_event.collection_date = collection_date
 
-            collection_event.water_temp = utils.get_clean_number(entry['water_temp'])
-            collection_event.ph = utils.get_clean_number(entry['ph'])
-            collection_event.depth = utils.get_clean_number(entry['depth'])
+            collection_event.water_temp = ingest_utils.get_clean_number(entry['water_temp'])
+            collection_event.ph = ingest_utils.get_clean_number(entry['ph'])
+            collection_event.depth = ingest_utils.get_clean_number(entry['depth'])
             collection_event.gps_location = entry['gps_location']
             collection_event.note = entry['collection_comment']
 
@@ -113,7 +113,7 @@ def ingest_samples(samples):
 
         bpa_id = e['bpa_id']
 
-        if not utils.is_bpa_id(bpa_id):
+        if not ingest_utils.is_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
@@ -129,8 +129,8 @@ def ingest_samples(samples):
         gbr_sample.organism = get_organism(e['species'])
         gbr_sample.dna_source = get_dna_source(e['sample_dna_source'])
         gbr_sample.dna_extraction_protocol = e['dna_extraction_protocol']
-        gbr_sample.dna_concentration = utils.get_clean_number(e['dna_concentration'])
-        gbr_sample.total_dna = utils.get_clean_number(e['total_dna'])
+        gbr_sample.dna_concentration = ingest_utils.get_clean_number(e['dna_concentration'])
+        gbr_sample.total_dna = ingest_utils.get_clean_number(e['total_dna'])
 
         # scientist
         gbr_sample.contact_scientist = user_helper.get_user(
@@ -146,19 +146,19 @@ def ingest_samples(samples):
 
         gbr_sample.requested_sequence_coverage = e['requested_sequence_coverage']
         gbr_sample.sequencing_notes = e['sequencing_notes']
-        gbr_sample.dna_rna_concentration = utils.get_clean_number(e['dna_rna_concentration'])
-        gbr_sample.total_dna_rna_shipped = utils.get_clean_number(e['total_dna_rna_shipped'])
+        gbr_sample.dna_rna_concentration = ingest_utils.get_clean_number(e['dna_rna_concentration'])
+        gbr_sample.total_dna_rna_shipped = ingest_utils.get_clean_number(e['total_dna_rna_shipped'])
         gbr_sample.comments_by_facility = e['comments_by_facility']
-        gbr_sample.sequencing_data_eta = utils.check_date(e['sequencing_data_eta'])
-        gbr_sample.date_sequenced = utils.check_date(e['date_sequenced'])
-        gbr_sample.requested_read_length = utils.get_clean_number(e['requested_read_length'])
-        gbr_sample.date_data_sent = utils.check_date(e['date_data_sent'])
-        gbr_sample.date_data_received = utils.check_date(e['date_data_received'])
+        gbr_sample.sequencing_data_eta = ingest_utils.check_date(e['sequencing_data_eta'])
+        gbr_sample.date_sequenced = ingest_utils.check_date(e['date_sequenced'])
+        gbr_sample.requested_read_length = ingest_utils.get_clean_number(e['requested_read_length'])
+        gbr_sample.date_data_sent = ingest_utils.check_date(e['date_data_sent'])
+        gbr_sample.date_data_received = ingest_utils.check_date(e['date_data_received'])
 
         # facilities
         gbr_sample.sequencing_facility = get_facility(e['sequencing_facility'])
         gbr_sample.note = e['other']
-        gbr_sample.debug_note = utils.INGEST_NOTE + pprint.pformat(e)
+        gbr_sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
 
         gbr_sample.collection_event = get_collection_event(e)
         gbr_sample.save()
@@ -227,7 +227,7 @@ def get_gbr_sample_data(spreadsheet_file):
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
 
-        if not utils.is_bpa_id(vals[0]):
+        if not ingest_utils.is_bpa_id(vals[0]):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
             continue
 
@@ -257,7 +257,7 @@ def ingest_runs(sample_data):
                 return 'MP'
             return 'UN'
 
-        base_pairs = utils.get_clean_number(entry['library_construction'])
+        base_pairs = ingest_utils.get_clean_number(entry['library_construction'])
         library_type = get_library_type(entry['library'])
         library_construction_protocol = entry['library_construction_protocol'].replace(',', '').capitalize()
 
@@ -296,14 +296,14 @@ def ingest_runs(sample_data):
         ANU does not have their run numbers entered.
         """
 
-        run_number = utils.get_clean_number(entry['run_number'])
+        run_number = ingest_utils.get_clean_number(entry['run_number'])
         if run_number is None:
             # see if its ANU and parse the run_number from the filename
             if entry['sequencing_facility'].strip() == 'ANU':
                 filename = entry['sequence_filename'].strip()
                 if filename != "":
                     try:
-                        run_number = utils.get_clean_number(filename.split('_')[7])
+                        run_number = ingest_utils.get_clean_number(filename.split('_')[7])
                         logger.info("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
                         logger.info("Filename {0} wrong format".format(filename))
@@ -328,9 +328,9 @@ def ingest_runs(sample_data):
         gbr_run.flow_cell_id = flow_cell_id
         gbr_run.run_number = run_number
         gbr_run.sample = get_sample(bpa_id)
-        gbr_run.index_number = utils.get_clean_number(entry['index_number'])
+        gbr_run.index_number = ingest_utils.get_clean_number(entry['index_number'])
         gbr_run.sequencer = get_sequencer(entry['sequencer'])
-        gbr_run.lane_number = utils.get_clean_number(entry['lane_number'])
+        gbr_run.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
         gbr_run.protocol = get_protocol(e)
         gbr_run.save()
 
@@ -349,10 +349,10 @@ def ingest_runs(sample_data):
         if file_name != "":
             f = GBRSequenceFile()
             f.sample = GBRSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
-            f.date_received_from_sequencing_facility = utils.check_date(entry['date_received'])
+            f.date_received_from_sequencing_facility = ingest_utils.check_date(entry['date_received'])
             f.run = gbr_run
-            f.index_number = utils.get_clean_number(entry['index_number'])
-            f.lane_number = utils.get_clean_number(entry['lane_number'])
+            f.index_number = ingest_utils.get_clean_number(entry['index_number'])
+            f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
             f.filename = file_name
             f.md5 = entry['md5_checksum']
             f.note = pprint.pformat(entry)
@@ -365,7 +365,7 @@ def ingest_runs(sample_data):
 
 def ingest_gbr(spreadsheet_file):
     sample_data = get_gbr_sample_data(spreadsheet_file)
-    utils.ingest_bpa_ids(sample_data, 'GBR')
+    ingest_utils.ingest_bpa_ids(sample_data, 'GBR')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
