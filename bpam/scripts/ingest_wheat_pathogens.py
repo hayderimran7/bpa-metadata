@@ -14,8 +14,7 @@ from apps.wheat_pathogens.models import (
     PathogenRun,
     PathogenSequenceFile)
 
-from libs import ingest_utils
-import user_helper
+from libs import ingest_utils, user_helper, bpa_id_utils
 
 
 logging.basicConfig(level=logging.INFO)
@@ -89,7 +88,7 @@ def ingest_samples(samples):
 
         bpa_id = e['bpa_id']
 
-        if not ingest_utils.is_bpa_id(bpa_id):
+        if not bpa_id_utils.is_good_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
@@ -177,7 +176,7 @@ def get_pathogen_sample_data(spreadsheet_file):
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
 
-        if not ingest_utils.is_bpa_id(vals[0]):
+        if not bpa_id_utils.is_good_bpa_id(vals[0]):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
             continue
 
@@ -298,7 +297,7 @@ def ingest_runs(sample_data):
 
 def ingest(spreadsheet_file):
     sample_data = get_pathogen_sample_data(spreadsheet_file)
-    ingest_utils.ingest_bpa_ids(sample_data, 'Wheat Pathogens')
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'Wheat Pathogens')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 

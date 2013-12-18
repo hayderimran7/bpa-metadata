@@ -2,9 +2,8 @@ import csv
 import logging
 
 import unipath
-from libs import ingest_utils
+from libs import ingest_utils, user_helper
 
-import user_helper
 from apps.bpaauth.models import BPAUser
 
 

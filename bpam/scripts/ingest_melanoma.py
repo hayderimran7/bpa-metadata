@@ -18,8 +18,8 @@ from apps.melanoma.models import (
     MelanomaRun,
     MelanomaSequenceFile)
 
-from libs import ingest_utils
-import user_helper
+from libs import ingest_utils, user_helper
+from libs import bpa_id_utils
 
 
 # some defaults to fall back on
@@ -155,7 +155,7 @@ def ingest_arrays(arrays):
             array = Array.objects.get(bpa_id__bpa_id=e['bpa_id'])
         except Array.DoesNotExist:
             array = Array()
-            array.bpa_id = ingest_utils.get_bpa_id(e['bpa_id'], project_name="Melanoma")
+            array.bpa_id = bpa_id_utils.get_bpa_id(e['bpa_id'], project_name="Melanoma")
             array.note = u"Created during array ingestion on {0}".format(date.today())
 
         array.batch_number = int(e['batch_no'])
@@ -395,7 +395,7 @@ def ingest_runs(sample_data):
 
 def ingest_melanoma(spreadsheet_file):
     sample_data = get_melanoma_sample_data(spreadsheet_file)
-    ingest_utils.ingest_bpa_ids(sample_data, 'Melanoma')
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'Melanoma')
     ingest_samples(sample_data)
     ingest_arrays(get_array_data(spreadsheet_file))
     ingest_runs(sample_data)

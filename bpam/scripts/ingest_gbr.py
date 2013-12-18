@@ -1,21 +1,19 @@
 import sys
-import pprint
 from datetime import datetime
 import logging
+import pprint
 
 import xlrd
 from unipath import Path
 
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
-
 from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
-from libs import ingest_utils
-import user_helper
+from libs import ingest_utils, user_helper
+from libs import bpa_id_utils
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('GBR')
-
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
@@ -113,7 +111,7 @@ def ingest_samples(samples):
 
         bpa_id = e['bpa_id']
 
-        if not ingest_utils.is_bpa_id(bpa_id):
+        if not bpa_id_utils.is_good_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
@@ -227,7 +225,7 @@ def get_gbr_sample_data(spreadsheet_file):
     for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
         vals = sheet.row_values(row_idx)
 
-        if not ingest_utils.is_bpa_id(vals[0]):
+        if not bpa_id_utils.is_good_bpa_id(vals[0]):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
             continue
 
@@ -365,7 +363,7 @@ def ingest_runs(sample_data):
 
 def ingest_gbr(spreadsheet_file):
     sample_data = get_gbr_sample_data(spreadsheet_file)
-    ingest_utils.ingest_bpa_ids(sample_data, 'GBR')
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'GBR')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 

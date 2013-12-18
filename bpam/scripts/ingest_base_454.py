@@ -1,14 +1,12 @@
-import pprint
 import logging
 
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
-import ingest_users
+import libs.bpa_id_utils as bpa_id_utils
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('BASE 454')
-
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
@@ -17,9 +15,11 @@ BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 
 
-def get_BPA_ID(t):
-
-
+def get_bpa_id(t):
+    if bpa_id_utils.is_good_bpa_id(t.bpa_id):
+        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='BASE 454 Sample')
+    else:
+        return None
 
 
 def get_data(file_name):
@@ -37,9 +37,10 @@ def get_data(file_name):
                   ('submitter_name', 'Submitter Name', None),
                   ('date_received', 'Date received', None),
                   # Adelaide extraction
-                  ('adelaide_extraction_sample_weight', 'Extraction Sample Weight (mg)', None),  # mg
-                  ('adelaide_fluorimetry', 'Fluorimetry ng/uL gDNA', None),  # ng/uL gDNA'
-                  ('adelaide_pcr_inhibition', 'PCR Inhibition (neat plus spike) 16S (V3-V8) p=pass, f=fail, NP = not performed', None),
+                  ('adelaide_extraction_sample_weight', 'Extraction Sample Weight (mg)', None), # mg
+                  ('adelaide_fluorimetry', 'Fluorimetry ng/uL gDNA', None), # ng/uL gDNA'
+                  ('adelaide_pcr_inhibition',
+                   'PCR Inhibition (neat plus spike) 16S (V3-V8) p=pass, f=fail, NP = not performed', None),
                   ('adelaide_pcr1', 'PCR1 (neat) 16S (V3-V8) p=pass, f-fail  NP = not performed', None),
                   ('adelaide_pcr2', 'PCR2 (1:100) 16S (V3-V8) p=pass, f=fail   NP = not performed', None),
                   ('adelaide_date_shipped_to_agrf_454', 'DNA shipped to AGRF (454)', None),
@@ -54,8 +55,8 @@ def get_data(file_name):
                   ('brisbane_its_pcr1_neat', 'ITS PCR1 (neat) p=pass, f=fail', None),
                   ('brisbane_its_pcr2_1_10', 'ITS PCR1 (1:10) p=pass, f=fail', None),
                   ('brisbane_its_pcr3_fusion', 'ITS PCR3 (fusion-primer) p=pass, f=fail', None),
-                  ('brisbane_fluorimetry_16s', 'Fluorimetry ng/uL 16S', None),  # ng/uL 16S
-                  ('brisbane_fluorimetry_its', 'Fluorimetry ng/uL ITS', None),  # ng/uL 16S
+                  ('brisbane_fluorimetry_16s', 'Fluorimetry ng/uL 16S', None), # ng/uL 16S
+                  ('brisbane_fluorimetry_its', 'Fluorimetry ng/uL ITS', None), # ng/uL 16S
                   ('brisbane_16s_qpcr', '16S qPCR', None),
                   ('brisbane_its_qpcr', 'ITS qPCR', None),
                   ('brisbane_i6s_pooled', '16S pooled y=yes, n=no', None),
@@ -67,7 +68,13 @@ def get_data(file_name):
 
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.parse_to_named_tuple():
-        BPA_ID = get_BPA_ID(t)
+        # ID
+        bpa_id = get_bpa_id(t)
+        if bpa_id is None:
+            logger.warning('BPA ID {0} does not look like a proper BPA ID ignoring'.format(t.bpa_id))
+            continue
+
+
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
