@@ -423,9 +423,8 @@ class Sample454(models.Model):
     brisbane_itss_reads = models.IntegerField()
     note = models.TextField(blank=True, null=True)
 
-
     def __unicode__(self):
-        return u"Soil Sample {0}".format(self.bpa_id)
+        return u'Soil Sample {0}'.format(self.bpa_id)
 
     class Meta:
         verbose_name_plural = _("Sample 454 Record")
