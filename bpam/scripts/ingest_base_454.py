@@ -27,7 +27,7 @@ def get_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Unique ID', None),
+    field_spec = [('bpa_id', 'Unique ID', lambda ids: ids.replace('/', '.')),
                   ('sample_id', 'Sample ID', None),
                   ('aurora_purified', 'Aurora purified', None),
                   ('dna_storage_nunc_plate', 'DNA Storage Nunc Plate', None),
