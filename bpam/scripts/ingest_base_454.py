@@ -59,9 +59,9 @@ def get_data(file_name):
                   ('note', 'Sample comments', None),
                   ]
 
-    wrapper = ExcelWrapper(field_spec, file_name, header_length="Sheet1", column_name_row_index=1)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.parse_to_named_tuple():
-        pprint(t)
+        pprint.pprint(t)
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
