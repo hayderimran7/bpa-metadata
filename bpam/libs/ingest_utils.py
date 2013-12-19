@@ -91,8 +91,6 @@ def get_date(dt):
     if dt is None:
         return None
 
-    print(dt)
-
     if isinstance(dt, date):
         return dt
     if isinstance(dt, basestring):
