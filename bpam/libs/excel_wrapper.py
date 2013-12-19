@@ -91,7 +91,7 @@ class ExcelWrapper(object):
         """
         Yields sequence of cells
         """
-        for row_idx in xrange(self.header_length - 1, self.sheet.nrows - self.header_length):
+        for row_idx in xrange(self.header_length, self.sheet.nrows - self.header_length):
             yield self.sheet.row(row_idx)
 
     def parse_to_named_tuple(self, typname='DataRow'):
