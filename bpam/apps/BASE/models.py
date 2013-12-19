@@ -381,22 +381,22 @@ class SoilSampleDNA(models.Model):
 
 class Sample454(models.Model):
 
-    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'),)
+    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'))
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_id = models.CharField(max_length=100, blank=True, null=True)
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter')
-    aurora_purified = models.BooleanField(default=False)
+    aurora_purified = models.BooleanField(_('Aurora Purified'), default=False)
     dna_storage_nunc_plate = models.CharField(max_length=12, blank=True, null=True)
     dna_storage_nunc_tube = models.CharField(max_length=12, blank=True, null=True)
-    dna_storage_nunc_well_location = models.CharField(max_length=3, blank=True, null=True)
+    dna_storage_nunc_well_location = models.CharField(max_length=30, blank=True, null=True)
     agrf_batch_number = models.CharField(max_length=15, blank=True, null=True)
     submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     date_received = models.DateField(blank=True, null=True)
 
     # AGRF Adelaide extraction
-    adelaide_extraction_sample_weight = models.IntegerField()
-    adelaide_fluorimetry = models.FloatField()
+    adelaide_extraction_sample_weight = models.CharField(max_length=30, blank=True, null=True)  # another abused "integer" field
+    adelaide_fluorimetry = models.FloatField(blank=True, null=True)
     adelaide_pcr_inhibition = models.CharField(max_length=2, choices=RESULT)
     adelaide_pcr1 = models.CharField(max_length=2, choices=RESULT)
     adelaide_pcr2 = models.CharField(max_length=2, choices=RESULT)
@@ -413,14 +413,14 @@ class Sample454(models.Model):
     brisbane_its_pcr1_neat = models.CharField(max_length=2, choices=RESULT)
     brisbane_its_pcr2_1_10 = models.CharField(max_length=2, choices=RESULT)
     brisbane_its_pcr3_fusion = models.CharField(max_length=2, choices=RESULT)
-    brisbane_fluorimetry_16s = models.FloatField()
-    brisbane_fluorimetry_its = models.FloatField()
-    brisbane_16s_qpcr = models.FloatField()
-    brisbane_its_qpcr = models.FloatField()
-    brisbane_i6s_pooled = models.BooleanField()
-    brisbane_its_pooled = models.BooleanField()
-    brisbane_16s_reads = models.IntegerField()
-    brisbane_itss_reads = models.IntegerField()
+    brisbane_fluorimetry_16s = models.FloatField(blank=True, null=True)
+    brisbane_fluorimetry_its = models.FloatField(blank=True, null=True)
+    brisbane_16s_qpcr = models.FloatField(blank=True, null=True)
+    brisbane_its_qpcr = models.FloatField(blank=True, null=True)
+    brisbane_i6s_pooled = models.NullBooleanField()
+    brisbane_its_pooled = models.NullBooleanField()
+    brisbane_16s_reads = models.IntegerField(blank=True, null=True)
+    brisbane_its_reads = models.IntegerField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
