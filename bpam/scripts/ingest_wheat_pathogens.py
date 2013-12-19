@@ -113,7 +113,7 @@ def ingest_samples(samples):
             (DESCRIPTION, ''))
 
         # collection
-        pathogen_sample.collection_date = ingest_utils.check_date(e['collection_date'])
+        pathogen_sample.collection_date = ingest_utils.get_date(e['collection_date'])
         pathogen_sample.collection_location = e['collection_location']
         pathogen_sample.dna_extraction_protocol = e['dna_extraction_protocol']
 

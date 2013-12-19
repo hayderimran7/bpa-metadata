@@ -39,12 +39,7 @@ def get_clean_float(val, default=None):
         return default
 
 
-def get_date(val):
-    """
-    Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
-    """
-    print val
-    return dateutil.parser.parse(val)
+
 
 
 def strip_all(reader):
@@ -83,7 +78,7 @@ def get_dna_source(description):
     return source
 
 
-def check_date(dt):
+def get_date(dt):
     """
     When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
     if it wasn't, it may still be a valid date string.
@@ -94,6 +89,7 @@ def check_date(dt):
         if dt.strip() == '':
             return None
         return dateutil.parser.parse(dt)
+    return None
 
 
 
