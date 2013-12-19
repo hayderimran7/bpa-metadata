@@ -381,17 +381,16 @@ class SoilSampleDNA(models.Model):
 
 class Sample454(models.Model):
 
-    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'))
+    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'), ('R', 'Repeat'))
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
-    sample_id = models.CharField(max_length=100, blank=True, null=True)
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter')
+    sample_id = models.CharField(_('Sample ID'), max_length=100, blank=True, null=True)
     aurora_purified = models.BooleanField(_('Aurora Purified'), default=False)
-    dna_storage_nunc_plate = models.CharField(max_length=12, blank=True, null=True)
-    dna_storage_nunc_tube = models.CharField(max_length=12, blank=True, null=True)
-    dna_storage_nunc_well_location = models.CharField(max_length=30, blank=True, null=True)
-    agrf_batch_number = models.CharField(max_length=15, blank=True, null=True)
-    submitter_name = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    dna_storage_nunc_plate = models.CharField(_('DNA Storage Nunc Plate'), max_length=12, blank=True, null=True, default='')
+    dna_storage_nunc_tube = models.CharField(_('DNA Storage Nunc Tube'), max_length=12, blank=True, null=True, default='')
+    dna_storage_nunc_well_location = models.CharField(_('DNA Storage Nunc Well Location'), max_length=30, blank=True, null=True)
+    agrf_batch_number = models.CharField(_('AGRF Batch Number'), max_length=15, blank=True, null=True)
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter', verbose_name=_('Submitter'),)
     date_received = models.DateField(blank=True, null=True)
 
     # AGRF Adelaide extraction
