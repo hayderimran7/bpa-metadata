@@ -276,17 +276,6 @@ dev() {
     devrun
 }
 
-wheat_pathogens_dev() {
-    devsettings
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
-
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-}
-
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -358,6 +347,31 @@ usage() {
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
     log_warning "Usage ./develop.sh url_checker"
     log_warning "Usage ./develop.sh deepclean"
+}
+
+
+# "temporary" dev utilities
+
+wheat_pathogens_dev() {
+    devsettings
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
+
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+}
+
+
+
+load_base() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    deepclean
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users
+    ${CMD} runscript ingest_base_454
 }
 
 case ${ACTION} in
@@ -454,7 +468,7 @@ case ${ACTION} in
     url_checker)
         url_checker
         ;;
-    load_BASE)
+    load_base)
         load_base
         ;;
     *)
