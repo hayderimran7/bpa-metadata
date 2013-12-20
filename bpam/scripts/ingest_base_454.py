@@ -61,6 +61,7 @@ def get_data(file_name):
         if isinstance(_bpa_id, basestring):
             return _bpa_id.strip().replace('/', '.')
         else:
+            logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
             return ''
 
     def set_result(val):
@@ -74,10 +75,16 @@ def get_data(file_name):
             return 'R'
         return val.strip()
 
+    def set_purified(p):
+        print "XXXXXXXXXXXX "  + p
+        return p.lower().find('purified') != -1
+
+
+
 
     field_spec = [('bpa_id', 'Unique ID', set_id),
                   ('sample_id', 'Sample ID', None),
-                  ('aurora_purified', 'Aurora purified', lambda p: p.lower().find('purified') > 0),
+                  ('aurora_purified', 'Aurora purified', set_purified),
                   ('dna_storage_nunc_plate', 'DNA Storage Nunc Plate', None),
                   ('dna_storage_nunc_tube', 'DNA Storage Nunc Tube', None),
                   ('dna_storage_nunc_well_location', 'DNA Storage Well Location', None),

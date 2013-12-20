@@ -11,7 +11,10 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 class Sample454Admin(admin.ModelAdmin):
-    list_display = ('bpa_id', 'sample_id', 'agrf_batch_number')
+    list_display = ('bpa_id', 'sample_id', 'agrf_batch_number',)
+    search_fields = ('bpa_id__bpa_id', 'sample_id',)
+    list_filter = ('bpa_id__bpa_id',)
+
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'gravel', 'texture')
