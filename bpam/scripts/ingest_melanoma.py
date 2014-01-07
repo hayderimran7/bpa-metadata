@@ -379,7 +379,7 @@ def ingest_runs(sample_data):
             f = MelanomaSequenceFile()
 
         f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
-        f.date_received_from_sequencing_facility = ingest_utils.check_date(entry['date_received'])
+        f.date_received_from_sequencing_facility = ingest_utils.get_date(entry['date_received'])
         f.run = run
         f.index_number = ingest_utils.get_clean_number(entry['index_number'])
         f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])

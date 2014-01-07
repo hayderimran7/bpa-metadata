@@ -32,19 +32,18 @@ def get_clean_number(val, default=None):
 
 
 def get_clean_float(val, default=None):
+
+    if isinstance(val, float):
+        return val
+
+    if not isinstance(val, basestring):
+        return default
+
     remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
         return float(val.translate(remove_letters_map))
     except ValueError:
         return default
-
-
-def get_date(val):
-    """
-    Because dates in he spreadsheets comes in all forms, dateutil is used to figure it out.  
-    """
-    print val
-    return dateutil.parser.parse(val)
 
 
 def strip_all(reader):
@@ -83,17 +82,26 @@ def get_dna_source(description):
     return source
 
 
-def check_date(dt):
+def get_date(dt):
     """
     When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
     if it wasn't, it may still be a valid date string.
     """
+
+    if dt is None:
+        return None
+
     if isinstance(dt, date):
         return dt
     if isinstance(dt, basestring):
         if dt.strip() == '':
             return None
-        return dateutil.parser.parse(dt)
+        try:
+            return dateutil.parser.parse(dt)
+        except TypeError, e:
+            logger.error("Date parsing error " + str(e))
+            return None
+    return None
 
 
 

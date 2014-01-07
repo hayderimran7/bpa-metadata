@@ -60,6 +60,31 @@ class ExcelWrapper(object):
         self.workbook = xlrd.open_workbook(file_name)
         self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
+        self.field_to_func_map = self._field_fo_func_map()
+
+    def _field_to_col_map(self):
+        """
+        maps the named field to the actual column in the spreadsheet
+        """
+        cmap = {}
+        for attribute, field_name, _ in self.field_spec:
+            col_index = self.sheet.row_values(self.column_name_row_index).index(field_name)
+            if col_index == -1:
+                raise ColumnNotFoundException(field_name)
+            assert (col_index != -1)
+
+            cmap[attribute] = col_index
+        return cmap
+
+    def _field_fo_func_map(self):
+        """
+        Map the spec fields to their corresponding functions
+        """
+        fmap = {}
+        for field, _, func in self.field_spec:
+            fmap[field] = func
+        return fmap
+
     def get_date_mode(self):
         assert (self.workbook is not None)
         return self.workbook.datemode
@@ -72,26 +97,11 @@ class ExcelWrapper(object):
         except ValueError:
             return s
 
-    def set_column_positions(self):
-        """
-        find the column position
-        """
-        column_positions = []
-
-        for _, field_name, _ in self.field_spec:
-            idx = self.sheet.row_values(self.column_name_row_index).index(field_name)
-            if idx == -1:
-                raise ColumnNotFoundException(field_name)
-            assert (idx != -1)
-            column_positions.append(idx)
-
-        return column_positions
-
     def _get_rows(self):
         """
         Yields sequence of cells
         """
-        for row_idx in xrange(self.header_length - 1, self.sheet.nrows - self.header_length):
+        for row_idx in xrange(self.header_length, self.sheet.nrows):
             yield self.sheet.row(row_idx)
 
     def parse_to_named_tuple(self, typname='DataRow'):
@@ -101,13 +111,11 @@ class ExcelWrapper(object):
         """
         # row is added so we know where in the spreadsheet this came from
         typ = namedtuple(typname, ['row'] + [t[0] for t in self.field_spec])
-        functions = [t[2] for t in self.field_spec]
-        column_positions = self.set_column_positions()
+        field_to_col_map = self._field_to_col_map()
 
         for idx, row in enumerate(self._get_rows()):
             tpl = [idx]
             for fn, i in zip(functions, column_positions):
-                # if the column type is a date, try to handle it as such
                 ctype = row[i].ctype
                 value = row[i].value
                 if ctype == xlrd.XL_CELL_DATE:

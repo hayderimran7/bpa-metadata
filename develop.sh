@@ -276,17 +276,6 @@ dev() {
     devrun
 }
 
-wheat_pathogens_dev() {
-    devsettings
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
-
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-}
-
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -325,12 +314,17 @@ url_checker() {
 }
 
 
-nuclear() {
+deepclean() {
    activate_virtualenv	
    CMD='python ./bpam/manage.py'
    ${CMD} reset_db --router=default --traceback
    ${CMD} syncdb --noinput --traceback
    ${CMD} migrate --traceback
+}
+
+
+nuclear() {
+   deepclean
    ${CMD} runscript set_initial_bpa_projects --traceback
    ${CMD} runscript ingest_users --script-args ./data/users/current
    ${CMD} runscript ingest_gbr --script-args ./data/gbr/current
@@ -352,9 +346,38 @@ usage() {
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
     log_warning "Usage ./develop.sh url_checker"
+    log_warning "Usage ./develop.sh deepclean"
+}
+
+
+# "temporary" dev utilities
+
+wheat_pathogens_dev() {
+    devsettings
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
+
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+}
+
+
+
+load_base() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    deepclean
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users
+    ${CMD} runscript ingest_base_454
 }
 
 case ${ACTION} in
+    deepclean)
+        deepclean
+        ;;
     coverage)
         coverage
         ;;
@@ -445,7 +468,7 @@ case ${ACTION} in
     url_checker)
         url_checker
         ;;
-    load_BASE)
+    load_base)
         load_base
         ;;
     *)

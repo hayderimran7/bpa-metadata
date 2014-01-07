@@ -78,7 +78,7 @@ def ingest_samples(samples):
         """
         The site where the sample has been collected from.
         """
-        collection_date = ingest_utils.check_date(entry['collection_date'])
+        collection_date = ingest_utils.get_date(entry['collection_date'])
         try:
             collection_event = CollectionEvent.objects.get(
                 name=entry['collection_site'],
@@ -147,11 +147,11 @@ def ingest_samples(samples):
         gbr_sample.dna_rna_concentration = ingest_utils.get_clean_number(e['dna_rna_concentration'])
         gbr_sample.total_dna_rna_shipped = ingest_utils.get_clean_number(e['total_dna_rna_shipped'])
         gbr_sample.comments_by_facility = e['comments_by_facility']
-        gbr_sample.sequencing_data_eta = ingest_utils.check_date(e['sequencing_data_eta'])
-        gbr_sample.date_sequenced = ingest_utils.check_date(e['date_sequenced'])
+        gbr_sample.sequencing_data_eta = ingest_utils.get_date(e['sequencing_data_eta'])
+        gbr_sample.date_sequenced = ingest_utils.get_date(e['date_sequenced'])
         gbr_sample.requested_read_length = ingest_utils.get_clean_number(e['requested_read_length'])
-        gbr_sample.date_data_sent = ingest_utils.check_date(e['date_data_sent'])
-        gbr_sample.date_data_received = ingest_utils.check_date(e['date_data_received'])
+        gbr_sample.date_data_sent = ingest_utils.get_date(e['date_data_sent'])
+        gbr_sample.date_data_received = ingest_utils.get_date(e['date_data_received'])
 
         # facilities
         gbr_sample.sequencing_facility = get_facility(e['sequencing_facility'])
@@ -347,7 +347,7 @@ def ingest_runs(sample_data):
         if file_name != "":
             f = GBRSequenceFile()
             f.sample = GBRSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
-            f.date_received_from_sequencing_facility = ingest_utils.check_date(entry['date_received'])
+            f.date_received_from_sequencing_facility = ingest_utils.get_date(entry['date_received'])
             f.run = gbr_run
             f.index_number = ingest_utils.get_clean_number(entry['index_number'])
             f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])

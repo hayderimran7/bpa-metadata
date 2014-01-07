@@ -10,6 +10,12 @@ class SampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'name')
 
 
+class Sample454Admin(admin.ModelAdmin):
+    list_display = ('bpa_id', 'sample_id', 'agrf_batch_number',)
+    search_fields = ('bpa_id__bpa_id', 'sample_id',)
+    list_filter = ('bpa_id__bpa_id',)
+
+
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'gravel', 'texture')
 
@@ -44,7 +50,7 @@ admin.site.register(TillageType)
 admin.site.register(BroadVegetationType)
 admin.site.register(GeneralEcologicalZone)
 admin.site.register(SoilMetagenomicsSample, SampleAdmin)
-admin.site.register(Sample454)
+admin.site.register(Sample454, Sample454Admin)
 admin.site.register(LandUse, LandUseAdmin)
 admin.site.register(SiteOwner)
 admin.site.register(CollectionSiteHistory)
