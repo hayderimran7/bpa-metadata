@@ -76,10 +76,7 @@ def get_data(file_name):
         return val.strip()
 
     def set_purified(p):
-        print "XXXXXXXXXXXX "  + p
         return p.lower().find('purified') != -1
-
-
 
 
     field_spec = [('bpa_id', 'Unique ID', set_id),
@@ -122,7 +119,7 @@ def get_data(file_name):
                   ]
 
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
-    for t in wrapper.parse_to_named_tuple():
+    for t in wrapper.get_all():
         # ID
         bpa_id = get_bpa_id(t)
         if bpa_id is None:

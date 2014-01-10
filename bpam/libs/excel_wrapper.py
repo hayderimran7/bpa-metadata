@@ -7,7 +7,9 @@ Pass a filename, a sheet_name, a mapping (fieldspec)
 Fieldspec maps spread sheet column names to more manageable names. It provides
 functions associated with each column type that must be used to massage the data found in the column.
 
-It returns a iterator providing named tuples.
+It returns a iterator providing named tuples, each tuple contains key/value pairs, the keys
+being the fist column of the fieldspec, the value are found in the column specisied in the second fieldspec field
+as mangled by the provided method.
 """
 
 import datetime
@@ -60,29 +62,42 @@ class ExcelWrapper(object):
         self.workbook = xlrd.open_workbook(file_name)
         self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
-        self.field_to_func_map = self._field_fo_func_map()
+        self.field_names = self._set_field_names()
+        self.name_to_column_map = self.set_name_to_column_map()
+        self.name_to_func_map = self.set_name_fo_func_map()
 
-    def _field_to_col_map(self):
+    def _set_field_names(self):
+        """
+        sets field name list
+        """
+        names = []
+        for attribute, _, _ in self.field_spec:
+            if attribute in names:
+                logger.error('Attribute {0} is listed more than once in the field specification'.format(attribute))
+            names.append(attribute)
+        return names
+
+    def set_name_to_column_map(self):
         """
         maps the named field to the actual column in the spreadsheet
         """
         cmap = {}
-        for attribute, field_name, _ in self.field_spec:
-            col_index = self.sheet.row_values(self.column_name_row_index).index(field_name)
+        for attribute, column_name, _ in self.field_spec:
+            col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             if col_index == -1:
-                raise ColumnNotFoundException(field_name)
+                raise ColumnNotFoundException(column_name)
             assert (col_index != -1)
 
             cmap[attribute] = col_index
         return cmap
 
-    def _field_fo_func_map(self):
+    def set_name_fo_func_map(self):
         """
         Map the spec fields to their corresponding functions
         """
         fmap = {}
-        for field, _, func in self.field_spec:
-            fmap[field] = func
+        for attribute, _, func in self.field_spec:
+            fmap[attribute] = func
         return fmap
 
     def get_date_mode(self):
@@ -104,25 +119,25 @@ class ExcelWrapper(object):
         for row_idx in xrange(self.header_length, self.sheet.nrows):
             yield self.sheet.row(row_idx)
 
-    def parse_to_named_tuple(self, typname='DataRow'):
+    def get_all(self, typname='DataRow'):
         """
-        always adds a 'row' member to the named tuple, which is the row
-        number of the entry in the source file (minus header(s))
+        Returns all rows for the sheet as named tuples.
         """
         # row is added so we know where in the spreadsheet this came from
-        typ = namedtuple(typname, ['row'] + [t[0] for t in self.field_spec])
-        field_to_col_map = self._field_to_col_map()
+        typ = namedtuple(typname, ['row'] + [n for n in self.field_names])
 
         for idx, row in enumerate(self._get_rows()):
             tpl = [idx]
-            for fn, i in zip(functions, column_positions):
+            for name in self.field_names:
+                i = self.name_to_column_map[name]
+                func = self.name_to_func_map[name]
                 ctype = row[i].ctype
-                value = row[i].value
+                val = row[i].value
                 if ctype == xlrd.XL_CELL_DATE:
-                    val = datetime.datetime(*xlrd.xldate_as_tuple(value, self.get_date_mode()))
+                    val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
                 if ctype == xlrd.XL_CELL_TEXT:
-                    val = value.decode('utf-8').strip()
-                if fn is not None:
-                    val = fn(val)
+                    val = val.decode('utf-8').strip()
+                if func is not None:
+                    val = func(val)
                 tpl.append(val)
             yield typ(*tpl)
