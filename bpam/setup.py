@@ -81,7 +81,7 @@ tests_require = [
 downloads_requires = [
     'Jinja2==2.7.1',
     'swift>=1.10',  # centos: libffi-devel
-    'python-keystoneclient==0.4.1',
+    'python-keystoneclient>=0.4.1',
 ]
 
 
