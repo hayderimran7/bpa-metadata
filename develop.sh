@@ -1,7 +1,6 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
-
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 shift
@@ -27,7 +26,6 @@ DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
 activate_virtualenv() {
     source ${VIRTUALENV}/bin/activate
 }
-
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
@@ -232,7 +230,7 @@ syncmigrate() {
 }
 
 startserver() {
-    log_info "Starting server on http://$(hostname -I):${PORT}"
+    log_info "Starting server on http://$(echo $(hostname -I)):${PORT}"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
 
