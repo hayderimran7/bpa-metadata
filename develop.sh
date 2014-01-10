@@ -218,15 +218,37 @@ local_puppet() {
     ccg ${PROJECT_NICKNAME} puppet
 }
 
+ingest_all() {
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
+
+    # BASE
+    ${CMD} runscript ingest_base_454
+}
+
+devrun() {
+    CMD='python ./bpam/manage.py'
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
+    ingest_all
+    startserver
+}
 
 # django syncdb, migrate and collect static
 syncmigrate() {
+    CMD=${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py
     log_info "Running syncdb"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
+    ${CMD} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
     log_info "Running migrate"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
+    ${CMD} migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
     log_info "Running collectstatic"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
+    ${CMD} collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
+
+    ingest_all
 }
 
 startserver() {
@@ -254,28 +276,12 @@ purge() {
     rm *.log
 }
 
-devrun() {
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
-
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_base --traceback
-    ${CMD} runscript ingest_melanoma --traceback
-    ${CMD} runscript ingest_gbr --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-    ${CMD} runscript ingest_wheat_cultivars --traceback
-
-    startserver
-}
 
 dev() { 
     activate_virtualenv
     devsettings
     devrun
 }
-
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -317,7 +323,7 @@ url_checker() {
 deepclean() {
    activate_virtualenv	
    CMD='python ./bpam/manage.py'
-   ${CMD} reset_db --router=default --traceback
+   ${CMD} reset_db --user=postgres --router=default --traceback
    ${CMD} syncdb --noinput --traceback
    ${CMD} migrate --traceback
 }
@@ -362,8 +368,6 @@ wheat_pathogens_dev() {
     ${CMD} runscript ingest_users --traceback
     ${CMD} runscript ingest_wheat_pathogens --traceback
 }
-
-
 
 load_base() {
     activate_virtualenv
