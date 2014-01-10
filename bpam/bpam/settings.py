@@ -34,8 +34,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.mysql',
-        'NAME': 'bpam',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dev_bpam',
         'USER': 'bpam',
         'PASSWORD': 'bpam',
         'HOST': '',
@@ -104,7 +104,7 @@ STATIC_URL = '/bpa-metadata/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
