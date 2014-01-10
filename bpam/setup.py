@@ -31,7 +31,7 @@ def get_data_files():
 
 
 install_requires = [
-    'Django>=1.6.0',
+    'Django>=1.6.1',
     'Django-suit==0.2.5',
     'django-crispy-forms',
     'python-memcached==1.53',
@@ -58,7 +58,7 @@ install_requires = [
 ]
 
 dev_requires = [
-    'mysql-python',
+    'psycopg2>=2.5.0,<2.6.0',
     'flake8',
     'Werkzeug',
     'django-debug-toolbar',
@@ -78,13 +78,9 @@ tests_require = [
     'dingus',
 ]
 
-postgres_requires = [
-    'psycopg2>=2.5.0,<2.6.0',
-]
-
 downloads_requires = [
     'Jinja2==2.7.1',
-    'swift==1.10.0', # centos: libffi-devel
+    'swift>=1.10',  # centos: libffi-devel
     'python-keystoneclient==0.4.1',
 ]
 
@@ -115,7 +111,6 @@ setup(
     extras_require={
         'tests': tests_require,
         'dev': dev_requires,
-        'postgres': postgres_requires,
         'downloads': downloads_requires
     },
 
