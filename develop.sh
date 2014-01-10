@@ -312,7 +312,6 @@ unittest() {
     )
 }
 
-
 url_checker() {
    activate_virtualenv
    CMD='python ./bpam/manage.py'
@@ -328,15 +327,9 @@ deepclean() {
    ${CMD} migrate --traceback
 }
 
-
 nuclear() {
    deepclean
-   ${CMD} runscript set_initial_bpa_projects --traceback
-   ${CMD} runscript ingest_users --script-args ./data/users/current
-   ${CMD} runscript ingest_gbr --script-args ./data/gbr/current
-   ${CMD} runscript ingest_melanoma --script-args ./data/melanoma/current
-   ${CMD} runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
-   ${CMD} runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
+   ingest_all
 }
 
 usage() {
