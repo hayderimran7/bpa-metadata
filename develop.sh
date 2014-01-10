@@ -174,14 +174,16 @@ is_running_in_instance() {
     fi
 }
 
-installapp() {
-    log_info "Install ${PROJECT_NICKNAME}'s dependencies"
+install_bpa_dev() {
+    log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
-        virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
+        virtualenv ${VIRTUALENV}
         (
-           cd ${TOPDIR}/${PROJECT_NICKNAME}
-           ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
+           source ${VIRTUALENV}/bin/activate
+           cd ${CONFIG_DIR}
+           ${PIP} install ${PIP_OPTS} -e .[dev,tests,downloads]
+           deactivate
         )
 
         mkdir -p ${HOME}/bin
@@ -221,11 +223,11 @@ local_puppet() {
 
 # django syncdb, migrate and collect static
 syncmigrate() {
-    log_info "syncdb"
+    log_info "Running syncdb"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
-    log_info "migrate"
+    log_info "Running migrate"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
-    log_info "collectstatic"
+    log_info "Running collectstatic"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
 }
 
@@ -415,7 +417,7 @@ case ${ACTION} in
         ;;
     install)
         devsettings
-        installapp
+        install_bpa_dev
         ;;
     ci_remote_build)
         ci_ssh_agent
