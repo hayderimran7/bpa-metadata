@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="266716988">
-    <data-source source="LOCAL" name="Django default" uuid="a3e848d3-9444-4edb-b36e-d6b8789be08c">
+  <component name="DataSourceManagerImpl" format="xml" hash="2046203754">
+    <data-source source="LOCAL" name="Django default" uuid="1fabc96d-785d-4bf5-ba0d-bbc72bc487dc">
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql:dev_bpam</jdbc-url>
       <user-name>bpam</user-name>

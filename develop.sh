@@ -178,6 +178,7 @@ install_bpa_dev() {
     then
         virtualenv ${VIRTUALENV}
         (
+           PATH=${PATH}:/usr/pgsql-9.3/bin
            source ${VIRTUALENV}/bin/activate
            cd ${CONFIG_DIR}
            ${PIP} install ${PIP_OPTS} -e .[dev,tests,downloads]
