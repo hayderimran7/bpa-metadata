@@ -25,7 +25,8 @@ class Sample454Admin(admin.ModelAdmin):
               ('dna_storage_nunc_plate', 'dna_storage_nunc_tube', 'dna_storage_nunc_well_location', )
          }),
         ('AGRF Adelaide Extraction',
-         {'fields':
+         {'description': 'Extracted at Adelaide Node',
+          'fields':
               ('adelaide_extraction_sample_weight',
                'adelaide_fluorimetry',
                'adelaide_pcr_inhibition',
@@ -36,7 +37,8 @@ class Sample454Admin(admin.ModelAdmin):
                'adelaide_date_shipped_to_ramacciotti')
          }),
         ('Brisbane 454',
-         {'fields':
+         {'description': 'Extracted at Brisbane Node',
+          'fields':
               ('brisbane_16s_mid',
                'brisbane_its_mid',
                'brisbane_16s_pcr1',
@@ -54,7 +56,9 @@ class Sample454Admin(admin.ModelAdmin):
                'brisbane_16s_reads',
                'brisbane_its_reads',)
          }),
-        ('Note', {'fields': ('note', )})
+        ('Comments and Notes',
+         {'description': 'Any notes or comments on this Extraction',
+          'fields': ('note', )})
     ]
 
 
