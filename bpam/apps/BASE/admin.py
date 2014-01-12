@@ -113,6 +113,7 @@ admin.site.register(CollectionSiteHistory)
 admin.site.register(CollectionSite)
 admin.site.register(SequenceConstruct)
 admin.site.register(ChemicalAnalysis, ChemicalAnalysisAdmin)
+
 admin.site.register(PCRPrimer)
 admin.site.register(TargetGene)
 admin.site.register(TargetTaxon)
