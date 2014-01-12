@@ -160,14 +160,13 @@ class Sample(models.Model):
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
-    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
-    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True,
-                                               verbose_name=_('DNA Extraction Protocol'))
+    name = models.CharField(_('Sample name'), max_length=200)
+    dna_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True, null=True)
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
-    collection_date = models.DateField(blank=True, null=True)
-    date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
+    collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
+    date_sent_to_sequencing_facility = models.DateField(_('Date sent to sequencing facility'), blank=True, null=True)
 
-    note = models.TextField(blank=True, null=True)
+    note = models.TextField(_('Note'), blank=True, null=True)
 
     class Meta:
         abstract = True

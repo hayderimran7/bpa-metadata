@@ -10,10 +10,25 @@ from .models import (BPAProject,
                      SequenceFile,
                      DNASource,
                      Sequencer,
+                     Sample
                      )
 
 
+class SampleForm(forms.ModelForm):
+    class Meta:
+        model = Sample
+        widgets = {
+            'bpa_id': LinkedSelect(
+                attrs={'class': 'input-medium',
+                       'style': 'width:50%'}),
+            'name': forms.TextInput(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'})
+        }
+
+
 class SampleAdmin(admin.ModelAdmin):
+    form = SampleForm
     fieldsets = [
         ('Sample Identification',
          {'fields': (('bpa_id', 'name'))}),
@@ -35,9 +50,21 @@ class SequenceFileForm(forms.ModelForm):
     class Meta:
         model = SequenceFile
         widgets = {
-            'filename': forms.TextInput(attrs={'size': 100}),
-            'sample': LinkedSelect,
-            'run': LinkedSelect
+            'filename': forms.TextInput(
+                attrs={'class': 'input-medium',
+                       'style': 'width:50%'}),
+            'md5': forms.TextInput(
+                attrs={'class': 'input-medium',
+                       'style': 'width:50%'}),
+            'sample': LinkedSelect(
+                attrs={'class': 'input-medium',
+                       'style': 'width:40%'}),
+            'run': LinkedSelect(
+                attrs={'class': 'input-medium',
+                       'style': 'width:40%'}),
+            'note': AutosizedTextarea(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'})
         }
 
 
