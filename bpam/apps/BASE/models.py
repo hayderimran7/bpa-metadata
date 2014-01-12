@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.conf import settings
 
-from apps.common.models import Sample, BPAUniqueID
+from apps.common.models import Sample, BPAUniqueID, SequenceFile
 from apps.geo.models import GPSPosition
 
 
@@ -280,7 +280,17 @@ class SoilMetagenomicsSample(Sample):
     BASE Metagenomics Soil Sample
     """
 
-    collection_site = models.ForeignKey(CollectionSite)
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+    class Meta:
+        verbose_name_plural = _("Soil Metagenomics Sample")
+
+
+class MetagenomicsSequenceFile(SequenceFile):
+    """
+    Metagenomics Sequence File
+    """
 
 
 class SequenceConstruct(models.Model):
