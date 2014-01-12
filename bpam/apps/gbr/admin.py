@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django import forms
+from suit.widgets import LinkedSelect, AutosizedTextarea
+
 from apps.common.admin import SequenceFileAdmin
-
-from suit.widgets import LinkedSelect
-
 from .models import CollectionEvent
 from .models import GBRSample
 from .models import GBRRun
@@ -67,21 +66,58 @@ class RunAdmin(admin.ModelAdmin):
     list_filter = ('sequencing_facility',)
 
 
+class SequenceFileInlineForm(forms.ModelForm):
+    class Meta:
+        model = GBRSequenceFile
+        widgets = {
+            'filename': forms.TextInput(attrs={'class': 'input-large',
+                                               'style': 'width:100%'}),
+            'md5': forms.TextInput(attrs={'class': 'input-large',
+                                          'style': 'width:70%'}),
+        }
+
+
+class SequenceFileInline(admin.TabularInline):
+    model = GBRSequenceFile
+    form = SequenceFileInlineForm
+    sortable = 'filename'
+    fields = ('filename', 'md5', 'date_received_from_sequencing_facility', 'analysed')
+    extra = 1
+
+
 class SampleForm(forms.ModelForm):
     class Meta:
         model = GBRSample
         widgets = {
-            'bpa_id': LinkedSelect,
+            'bpa_id': LinkedSelect(
+                attrs={'class': 'input-medium',
+                       'style': 'width:50%'}),
+            'name': forms.TextInput(
+                attrs={'class': 'input-medium',
+                       'style': 'width:50%'}),
             'organism': LinkedSelect,
             'dna_source': LinkedSelect,
             'sequencing_facility': LinkedSelect,
             'contact_scientist': LinkedSelect,
             'contact_bioinformatician': LinkedSelect,
+            'comments_by_facility': AutosizedTextarea(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'}),
+            'sequencing_notes': AutosizedTextarea(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'}),
+            'note': AutosizedTextarea(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'}),
+            'debug_note': AutosizedTextarea(
+                attrs={'class': 'input-large',
+                       'style': 'width:95%'})
         }
 
 
 class SampleAdmin(admin.ModelAdmin):
     form = SampleForm
+    inlines = (SequenceFileInline, )
 
     fieldsets = [
         ('Sample Identification',
