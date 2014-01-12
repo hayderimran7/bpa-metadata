@@ -28,7 +28,7 @@ class ColumnNotFoundException(Exception):
         self.column_name = column_name
 
     def __str__(self):
-        return 'Column {0} not found'.format(self.column_name)
+        return 'Column [{0}] not found'.format(self.column_name)
 
 
 def _stringify(s):
@@ -83,10 +83,10 @@ class ExcelWrapper(object):
         """
         cmap = {}
         for attribute, column_name, _ in self.field_spec:
-            col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
-            if col_index == -1:
+            try:
+                col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
+            except ValueError:
                 raise ColumnNotFoundException(column_name)
-            assert (col_index != -1)
 
             cmap[attribute] = col_index
         return cmap
