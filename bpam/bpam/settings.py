@@ -54,7 +54,7 @@ SUIT_CONFIG = {
         {'app': 'gbr', 'label': 'Great Barrier Reef', },
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
-        {'app': 'BASE', 'label': 'BASE', },
+        {'app': 'base', 'label': 'BASE', },
         '-',
         {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
     )
