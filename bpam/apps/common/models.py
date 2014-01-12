@@ -28,7 +28,8 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField(verbose_name=_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True)
+    bpa_id = models.CharField(verbose_name=_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True,
+                              help_text='Unique BPA ID')
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
