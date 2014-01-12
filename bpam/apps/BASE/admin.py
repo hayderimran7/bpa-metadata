@@ -13,7 +13,7 @@ class SampleAdmin(admin.ModelAdmin):
 class Sample454Admin(admin.ModelAdmin):
     list_display = ('bpa_id', 'sample_id', 'agrf_batch_number',)
     search_fields = ('bpa_id__bpa_id', 'sample_id',)
-    list_filter = ('bpa_id__bpa_id',)
+    list_filter = ('bpa_id__bpa_id', 'sample_id')
 
     radio_fields = {'adelaide_pcr_inhibition': admin.HORIZONTAL,
                     'adelaide_pcr1': admin.HORIZONTAL,
@@ -69,8 +69,6 @@ class Sample454Admin(admin.ModelAdmin):
          {'description': 'Any notes or comments on this Extraction',
           'fields': ('note', )})
     ]
-
-
 admin.site.register(Sample454, Sample454Admin)
 
 
