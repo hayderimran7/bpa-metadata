@@ -15,6 +15,15 @@ class Sample454Admin(admin.ModelAdmin):
     search_fields = ('bpa_id__bpa_id', 'sample_id',)
     list_filter = ('bpa_id__bpa_id',)
 
+    radio_fields = {'adelaide_pcr_inhibition': admin.HORIZONTAL,
+                    'adelaide_pcr1': admin.HORIZONTAL,
+                    'brisbane_16s_pcr1': admin.HORIZONTAL,
+                    'brisbane_16s_pcr2': admin.HORIZONTAL,
+                    'brisbane_16s_pcr3': admin.HORIZONTAL,
+                    'brisbane_its_pcr1_neat': admin.HORIZONTAL,
+                    'brisbane_its_pcr2_1_10': admin.HORIZONTAL,
+                    'brisbane_its_pcr3_fusion': admin.HORIZONTAL}
+
     fieldsets = [
         (None,
          {'fields':
