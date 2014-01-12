@@ -324,7 +324,9 @@ deepclean() {
    activate_virtualenv	
    CMD='python ./bpam/manage.py'
    ${CMD} reset_db --user=postgres --router=default --traceback
+   log_info "Deepclean syncing"
    ${CMD} syncdb --noinput --traceback
+   log_info "Deepclean Migrating"
    ${CMD} migrate --traceback
 }
 

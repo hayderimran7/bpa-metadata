@@ -17,6 +17,7 @@
     <orderEntry type="jdk" jdkName="Python 2.7.4 virtualenv at ~/Envs/bpa" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="yabi" />
+    <orderEntry type="module" module-name="django-suit-examples" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="myDocStringFormat" value="Plain" />
