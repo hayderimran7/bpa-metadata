@@ -40,7 +40,7 @@ def get_sample_454(bpa_id):
     return sample
 
 
-def get_data(file_name):
+def ingest(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -137,7 +137,7 @@ def get_data(file_name):
         sample.date_received = t.date_received
         # adelaide
         sample.adelaide_extraction_sample_weight = t.adelaide_extraction_sample_weight
-        # sample.adelaide_fluorimetry = t.adelaide_fluorimetry
+        sample.adelaide_fluorimetry = t.adelaide_fluorimetry
         sample.adelaide_pcr_inhibition = t.adelaide_pcr_inhibition
         sample.adelaide_pcr1 = t.adelaide_pcr1
         sample.adelaide_pcr2 = t.adelaide_pcr2
@@ -153,10 +153,10 @@ def get_data(file_name):
         sample.brisbane_its_pcr1_neat = t.brisbane_its_pcr1_neat
         sample.brisbane_its_pcr2_1_10 = t.brisbane_its_pcr2_1_10
         sample.brisbane_its_pcr3_fusion = t.brisbane_its_pcr3_fusion
-        #sample.brisbane_fluorimetry_16s = t.brisbane_fluorimetry_16s
-        #sample.brisbane_fluorimetry_its = t.brisbane_fluorimetry_its
-        #sample.brisbane_16s_qpcr = t.brisbane_16s_qpcr
-        #sample.brisbane_its_qpcr = t.brisbane_its_qpcr
+        sample.brisbane_fluorimetry_16s = t.brisbane_fluorimetry_16s
+        sample.brisbane_fluorimetry_its = t.brisbane_fluorimetry_its
+        sample.brisbane_16s_qpcr = t.brisbane_16s_qpcr
+        sample.brisbane_its_qpcr = t.brisbane_its_qpcr
         sample.brisbane_i6s_pooled = t.brisbane_i6s_pooled
         sample.brisbane_16s_reads = t.brisbane_i6s_pooled
         sample.brisbane_its_reads = t.brisbane_its_reads
@@ -170,13 +170,12 @@ def get_data(file_name):
             sys.exit(1)
 
 
-
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
     """
 
-    get_data(file_name)
+    ingest(file_name)
 
 
