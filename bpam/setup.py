@@ -55,6 +55,7 @@ install_requires = [
     'requests==1.2.3',
     'django_compressor==1.3',
     'mimeparse',
+    'rainbow_logging_handler'
 ]
 
 dev_requires = [
