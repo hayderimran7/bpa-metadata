@@ -18,6 +18,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="yabi" />
     <orderEntry type="module" module-name="django-suit-examples" />
+    <orderEntry type="module" module-name="django-suit-examples" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="myDocStringFormat" value="Plain" />

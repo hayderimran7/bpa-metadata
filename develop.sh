@@ -371,8 +371,9 @@ load_base() {
     deepclean
     ${CMD} runscript set_initial_bpa_projects --traceback
     ${CMD} runscript ingest_users --traceback
-    # ${CMD} runscript ingest_base_454 --traceback
+    ${CMD} runscript ingest_base_454 --traceback
     ${CMD} runscript ingest_base_metagenomics --traceback
+
     ${CMD} runscript ingest_gbr --traceback
 }
 
