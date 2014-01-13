@@ -1,18 +1,17 @@
-import logging
-import pprint
 import sys
+import pprint
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
+from libs.logger_utils import get_logger
 from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
 
 from apps.BASE.models import Sample454
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('BASE 454')
 
+logger = get_logger('BASE 454')
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
 
@@ -69,7 +68,13 @@ def ingest(file_name):
             return 'U'
         if not isinstance(val, basestring):
             return 'U'
-        if val.strip() == '':
+
+        val = val.strip().upper()
+        if val not in ('P', 'F', 'R', 'NP'):
+            logger.error('Val must be either P, F, R or NP')
+            return 'U'
+
+        if val == '':
             return 'U'
         if val.strip().lower() == 'repeat':
             return 'R'
@@ -99,22 +104,22 @@ def ingest(file_name):
                   ('adelaide_date_shipped_to_agrf_miseq', 'DNA shipped to AGRF (MiSeq)', ingest_utils.get_date),
                   ('adelaide_date_shipped_to_ramacciotitti', 'DNA shipped to Ramaciotti', ingest_utils.get_date),
                   # Brisbane 454
-                  ('brisbane_16s_mid', '16S MID', None),
-                  ('brisbane_its_mid', 'ITS MID', None),
+                  ('brisbane_16s_mid', '16S MID', ingest_utils.get_clean_float),
+                  ('brisbane_its_mid', 'ITS MID', ingest_utils.get_clean_float),
                   ('brisbane_16s_pcr1', '16S (V1-V3) PCR1 (neat) p=pass, f=fail', set_result),
                   ('brisbane_16s_pcr2', '16S (V1-V3) PCR2 (1:10) p=pass, f=fail', set_result),
                   ('brisbane_16s_pcr3', '16S (V1-V3) PCR3 (fusion-primer) p=pass, f=fail', set_result),
                   ('brisbane_its_pcr1_neat', 'ITS PCR1 (neat) p=pass, f=fail', set_result),
                   ('brisbane_its_pcr2_1_10', 'ITS PCR1 (1:10) p=pass, f=fail', set_result),
                   ('brisbane_its_pcr3_fusion', 'ITS PCR3 (fusion-primer) p=pass, f=fail', set_result),
-                  ('brisbane_fluorimetry_16s', 'Fluorimetry ng/uL 16S', None),  # ng/uL 16S
-                  ('brisbane_fluorimetry_its', 'Fluorimetry ng/uL ITS', None),  # ng/uL 16S
-                  ('brisbane_16s_qpcr', '16S qPCR', None),
-                  ('brisbane_its_qpcr', 'ITS qPCR', None),
+                  ('brisbane_fluorimetry_16s', 'Fluorimetry ng/uL 16S', ingest_utils.get_clean_float),  # ng/uL 16S
+                  ('brisbane_fluorimetry_its', 'Fluorimetry ng/uL ITS', ingest_utils.get_clean_float),  # ng/uL 16S
+                  ('brisbane_16s_qpcr', '16S qPCR', ingest_utils.get_clean_float),
+                  ('brisbane_its_qpcr', 'ITS qPCR', ingest_utils.get_clean_float),
                   ('brisbane_i6s_pooled', '16S pooled y=yes, n=no', set_flag),
                   ('brisbane_its_pooled', 'ITS pooled y=yes, n=no', set_flag),
-                  ('brisbane_16s_reads', '16S >3000 reads - Trim Back 150bp', None),
-                  ('brisbane_its_reads', 'ITS >3000 reads - Trim Back 150bp Run1', None),
+                  ('brisbane_16s_reads', '16S >3000 reads - Trim Back 150bp', ingest_utils.get_clean_number),
+                  ('brisbane_its_reads', 'ITS >3000 reads - Trim Back 150bp Run1', ingest_utils.get_clean_number),
                   ('note', 'Sample comments', None),
                   ]
 
@@ -165,7 +170,7 @@ def ingest(file_name):
         try:
             sample.save()
         except Exception, e:
-            pprint.pprint(e)
+            logger.error(e)
             pprint.pprint(t)
             sys.exit(1)
 
