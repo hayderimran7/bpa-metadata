@@ -26,16 +26,24 @@ def get_bpa_id(t):
         return None
 
 
-def get_sample(bpa_id):
+def get_sample(t):
     """
     Get the Sample by bpa_id
     """
+
+    bpa_id = get_bpa_id(t)
+    if bpa_id is None:
+        return None
 
     try:
         sample = SoilMetagenomicsSample.objects.get(bpa_id=bpa_id)
     except SoilMetagenomicsSample.DoesNotExist:
         logger.debug('Adding Metagenomics Sample ' + bpa_id.bpa_id)
         sample = SoilMetagenomicsSample(bpa_id=bpa_id)
+        sample.name = t.sample_id
+        sample.dna_extraction_protocol = t.library_protocol
+        sample.requested_sequence_coverage = t.library_construction
+        sample.collection_date = t.date_received
     return sample
 
 
@@ -92,10 +100,7 @@ def ingest(file_name):
             continue
 
         sample = get_sample(bpa_id)
-        sample.name = t.sample_id
-        sample.dna_extraction_protocol = t.library_protocol
-        sample.requested_sequence_coverage = t.library_construction
-        sample.collection_date = t.date_received
+
         sample.save()
 
         try:
