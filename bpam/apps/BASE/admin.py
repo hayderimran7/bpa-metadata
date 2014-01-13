@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django import forms
+
 from .models import *
 
 
@@ -10,13 +12,25 @@ class SampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'name')
 
 
+
+class Sample454AdminForm(forms.ModelForm):
+    class Meta:
+        model = Sample454
+        widgets = {
+            'note': forms.TextInput(attrs={'class': 'input-large',
+                                           'style': 'width:95%'}),
+        }
+
+
 class Sample454Admin(admin.ModelAdmin):
+    form = Sample454AdminForm
     list_display = ('bpa_id', 'sample_id', 'agrf_batch_number',)
     search_fields = ('bpa_id__bpa_id', 'sample_id',)
     list_filter = ('bpa_id__bpa_id', 'sample_id')
 
     radio_fields = {'adelaide_pcr_inhibition': admin.HORIZONTAL,
                     'adelaide_pcr1': admin.HORIZONTAL,
+                    'adelaide_pcr2': admin.HORIZONTAL,
                     'brisbane_16s_pcr1': admin.HORIZONTAL,
                     'brisbane_16s_pcr2': admin.HORIZONTAL,
                     'brisbane_16s_pcr3': admin.HORIZONTAL,
