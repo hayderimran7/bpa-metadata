@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django import forms
-
 from .models import *
 
 
@@ -10,7 +9,6 @@ class LandUseAdmin(admin.ModelAdmin):
 
 class SampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'name')
-
 
 
 class Sample454AdminForm(forms.ModelForm):
@@ -110,6 +108,7 @@ class ColourAdmin(admin.ModelAdmin):
     list_display = ('colour', 'code')
 
 
+admin.site.register(MetagenomicsSequenceFile)
 admin.site.register(DrainageClassification, DrainageAdmin)
 admin.site.register(HorizonClassification)
 admin.site.register(SoilColour, ColourAdmin)
