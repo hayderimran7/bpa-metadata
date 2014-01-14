@@ -14,20 +14,18 @@ from .models import (BPAProject,
                      )
 
 
-class SampleForm(forms.ModelForm):
-    class Meta:
-        model = Sample
-        widgets = {
-            'bpa_id': LinkedSelect(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'name': forms.TextInput(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'})
-        }
-
-
 class SampleAdmin(admin.ModelAdmin):
+    class SampleForm(forms.ModelForm):
+        class Meta:
+            model = Sample
+            widgets = {
+                'bpa_id': LinkedSelect(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:50%'}),
+                'name': forms.TextInput(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'})
+            }
     form = SampleForm
     fieldsets = [
         ('Sample Identification',
@@ -46,35 +44,34 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'gender', 'requested_sequence_coverage',)
 
 
-class SequenceFileForm(forms.ModelForm):
-    class Meta:
-        model = SequenceFile
-        widgets = {
-            'filename': forms.TextInput(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'md5': forms.TextInput(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'sample': LinkedSelect(
-                attrs={'class': 'input-medium',
-                       'style': 'width:40%'}),
-            'run': LinkedSelect(
-                attrs={'class': 'input-medium',
-                       'style': 'width:40%'}),
-            'note': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'})
-        }
-
-
 class SequenceFileAdmin(admin.ModelAdmin):
+    class SequenceFileForm(forms.ModelForm):
+        class Meta:
+            model = SequenceFile
+            widgets = {
+                'filename': forms.TextInput(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:50%'}),
+                'md5': forms.TextInput(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:50%'}),
+                'sample': LinkedSelect(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:40%'}),
+                'run': LinkedSelect(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:40%'}),
+                'note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'})
+            }
     form = SequenceFileForm
 
     fieldsets = [
         ('Sequence File',
          {'fields': (
-             'filename', 'md5', 'sample', 'run', 'lane_number', 'index_number', 'analysed', 'date_received_from_sequencing_facility',
+             'filename', 'md5', 'sample', 'run', 'lane_number', 'index_number', 'analysed',
+             'date_received_from_sequencing_facility',
              'note'), }),
     ]
 
@@ -83,18 +80,21 @@ class SequenceFileAdmin(admin.ModelAdmin):
             return '<a href="%s">%s</a>' % (obj.url, obj.filename)
         else:
             return '<a style="color:grey">%s</a>' % obj.filename
+
     download_field.allow_tags = True
     download_field.short_description = 'Filename'
 
     # Sample ID
     def get_sample_id(self, obj):
         return obj.sample.bpa_id
+
     get_sample_id.short_description = 'BPA ID'
     get_sample_id.admin_order_field = 'sample__bpa_id'
 
     # Sample Name
     def get_sample_name(self, obj):
         return obj.sample.name
+
     get_sample_name.short_description = 'Sample Name'
     get_sample_name.admin_order_field = 'sample__name'
 
@@ -104,62 +104,104 @@ class SequenceFileAdmin(admin.ModelAdmin):
     list_filter = ('date_received_from_sequencing_facility',)
 
 
-class AffiliationAdmin(admin.ModelAdmin):
-    fields = (('name', 'description'),)
-    list_display = ('name', 'description')
-
-
-class BPAProjectForm(forms.ModelForm):
-    class Meta:
-        model = BPAProject
-        widgets = {
-            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
-        }
-
-
 class BPAProjectAdmin(admin.ModelAdmin):
+    class BPAProjectForm(forms.ModelForm):
+        class Meta:
+            model = BPAProject
+            widgets = {
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
     form = BPAProjectForm
     fields = ('name', 'description', 'note')
     list_display = ('name', 'key', 'description')
 
-
-class BPAIDForm(forms.ModelForm):
-    class Meta:
-        model = BPAUniqueID
-        widgets = {
-            'project': LinkedSelect,
-            'note': AutosizedTextarea(attrs={'rows': 20, 'class': 'input-large'})
-        }
+admin.site.register(BPAProject, BPAProjectAdmin)
 
 
 class BPAUniqueIDAdmin(admin.ModelAdmin):
+    class BPAIDForm(forms.ModelForm):
+        class Meta:
+            model = BPAUniqueID
+            widgets = {
+                'project': LinkedSelect,
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
+
     form = BPAIDForm
     fields = ('bpa_id', 'project', 'note')
     list_display = ('bpa_id', 'project', 'note')
     search_fields = ('bpa_id', 'project__name', 'note')
 
+admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
+
 
 class FacilityAdmin(admin.ModelAdmin):
+    class Form(forms.ModelForm):
+        class Meta:
+            model = Facility
+            widgets = {
+                'project': LinkedSelect,
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
+    form = Form
     fields = ('name', 'note')
     list_display = ('name',)
 
+admin.site.register(Facility, FacilityAdmin)
+
 
 class OrganismAdmin(admin.ModelAdmin):
+    class Form(forms.ModelForm):
+        class Meta:
+            model = Organism
+            widgets = {
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
+    form = Form
+
     def get_organism_name(self, obj):
         return obj.name
 
     get_organism_name.short_description = 'Name'
     get_organism_name.admin_order_field = 'species'
-
     list_display = ('get_organism_name', 'kingdom', 'phylum', 'genus')
 
-
-admin.site.register(BPAProject, BPAProjectAdmin)
-admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
-admin.site.register(Facility, FacilityAdmin)
 admin.site.register(Organism, OrganismAdmin)
-admin.site.register(DNASource)
+
+
+class DNASourceFormAdmin(admin.ModelAdmin):
+    class DNASourceForm(forms.ModelForm):
+        class Meta:
+            model = DNASource
+            widgets = {
+                'description': forms.TextInput(attrs={'class': 'input-large',
+                                               'style': 'width:95%'}),
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
+    form = DNASourceForm
+
+admin.site.register(DNASource, DNASourceFormAdmin)
+
 admin.site.register(Sequencer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
     
