@@ -3,6 +3,7 @@
 
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
+SECOND_ARGUMENT=$2
 shift
 
 DEV_SETTINGS="bpam.nsettings.dev"
@@ -377,7 +378,18 @@ load_base() {
     ${CMD} runscript ingest_gbr --traceback
 }
 
+migrationupdate() {
+    APP=${SECOND_ARGUMENT}
+    devsettings
+    CMD='python ./bpam/manage.py'
+    ${CMD} schemamigration ${APP} --auto --update
+    ${CMD} migrate ${APP}
+}
+
 case ${ACTION} in
+    migrationupdate)
+        migrationupdate
+        ;;
     deepclean)
         deepclean
         ;;
