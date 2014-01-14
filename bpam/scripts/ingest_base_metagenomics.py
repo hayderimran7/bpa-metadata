@@ -7,7 +7,7 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 
-from apps.BASE.models import SoilMetagenomicsSample
+from apps.BASE.models import SoilMetagenomicsSample, MetagenomicsSequenceFile
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('BASE Metagenomics')
@@ -39,11 +39,14 @@ def get_sample(t):
         sample = SoilMetagenomicsSample.objects.get(bpa_id=bpa_id)
     except SoilMetagenomicsSample.DoesNotExist:
         logger.debug('Adding Metagenomics Sample ' + bpa_id.bpa_id)
-        sample = SoilMetagenomicsSample(bpa_id=bpa_id)
-        sample.name = t.sample_id
-        sample.dna_extraction_protocol = t.library_protocol
-        sample.requested_sequence_coverage = t.library_construction
-        sample.collection_date = t.date_received
+
+    # always update
+    sample = SoilMetagenomicsSample(bpa_id=bpa_id)
+    sample.name = t.sample_id
+    sample.dna_extraction_protocol = t.library_protocol
+    sample.requested_sequence_coverage = t.library_construction
+    sample.collection_date = t.date_received
+
     return sample
 
 
@@ -90,24 +93,37 @@ def ingest(file_name):
                   ('date_data_sent', 'Date data sent/transferred', ingest_utils.get_date),
     ]
 
-    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='BASE Metagenomics', header_length=1,
+    wrapper = ExcelWrapper(field_spec,
+                           file_name,
+                           sheet_name='BASE Metagenomics',
+                           header_length=1,
                            column_name_row_index=0)
-    for t in wrapper.get_all():
+    for file_row in wrapper.get_all():
         # ID
-        bpa_id = get_bpa_id(t)
+        bpa_id = get_bpa_id(file_row)
         if bpa_id is None:
-            logger.warning('BPA ID {0} does not look like a proper BPA ID ignoring'.format(t.bpa_id))
+            logger.warning('BPA ID {0} does not look like a proper BPA ID ignoring'.format(file_row.bpa_id))
             continue
 
         sample = get_sample(bpa_id)
+        if sample is None:
+            logger.error('Could not add sample ' + str(sample))
 
-        sample.save()
+        sequence_file = MetagenomicsSequenceFile()
+        sequence_file.sample = sample
+        sequence_file.filename = file_row.file_name
+        sequence_file.md5 = file_row.md5sum
+        sequence_file.index_number = file_row.index
+        sequence_file.lane_number = file_row.lane_number
+        sequence_file.date_received_from_sequencing_facility = file_row.date_received
+        sequence_file.analysed = file_row.analysed
+        sequence_file.note = file_row.comments
 
         try:
-            sample.save()
+            sequence_file.save()
         except Exception, e:
             pprint.pprint(e)
-            pprint.pprint(t)
+            pprint.pprint(sequence_file)
             sys.exit(1)
 
 
