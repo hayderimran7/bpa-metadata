@@ -292,6 +292,8 @@ class MetagenomicsSequenceFile(SequenceFile):
     Metagenomics Sequence File
     """
 
+    sample = models.ForeignKey(SoilMetagenomicsSample)
+
 
 class SequenceConstruct(models.Model):
     """
