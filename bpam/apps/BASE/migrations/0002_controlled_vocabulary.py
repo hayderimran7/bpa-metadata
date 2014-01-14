@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-from .. import Vocabularies
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName". 
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
-        Vocabularies.load(orm)
+        # Adding field 'MetagenomicsSequenceFile.sample'
+        db.add_column(u'BASE_metagenomicssequencefile', 'sample',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['BASE.SoilMetagenomicsSample']),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Deleting field 'MetagenomicsSequenceFile.sample'
+        db.delete_column(u'BASE_metagenomicssequencefile', 'sample_id')
+
 
     models = {
         u'BASE.broadvegetationtype': {
@@ -126,7 +127,8 @@ class Migration(DataMigration):
             'index_number': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'lane_number': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'md5': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'note': ('django.db.models.fields.TextField', [], {'blank': 'True'})
+            'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'sample': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.SoilMetagenomicsSample']"})
         },
         u'BASE.pcrprimer': {
             'Meta': {'object_name': 'PCRPrimer'},
@@ -343,4 +345,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['BASE']
-    symmetrical = True

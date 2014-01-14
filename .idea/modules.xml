@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/bpa-metadata.iml" filepath="$PROJECT_DIR$/.idea/bpa-metadata.iml" />
       <module fileurl="file://$PROJECT_DIR$/../django-suit-examples/.idea/django-suit-examples.iml" filepath="$PROJECT_DIR$/../django-suit-examples/.idea/django-suit-examples.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../yabi/.idea/yabi.iml" filepath="$PROJECT_DIR$/../yabi/.idea/yabi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../django-suit-examples/.idea/django-suit-examples.iml" filepath="$PROJECT_DIR$/../django-suit-examples/.idea/django-suit-examples.iml" />
     </modules>
   </component>
 </project>

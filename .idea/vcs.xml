@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="hg4idea" />
     <mapping directory="$PROJECT_DIR$/../django-suit-examples" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../django-suit-examples" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../wardabdr" vcs="hg4idea" />
     <mapping directory="$PROJECT_DIR$/../yabi" vcs="hg4idea" />
   </component>
