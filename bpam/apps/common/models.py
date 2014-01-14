@@ -11,7 +11,7 @@ class BPAProject(models.Model):
 
     key = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, blank=True)
+    description = models.CharField(max_length=2000, blank=True, help_text='BPA Project description')
     note = models.TextField(blank=True)
 
     class Meta:
@@ -52,7 +52,7 @@ class Facility(models.Model):
                   '': 'Unknown',
                   'Unknown': 'Unknown'}
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(_('Facility Name'), max_length=100, help_text='Facility short name')
     note = models.TextField(blank=True)
 
     class Meta:
@@ -76,16 +76,16 @@ class Organism(models.Model):
     An Organism
     """
 
-    domain = models.CharField(max_length=100, blank=True)
+    domain = models.CharField('Domain', max_length=100, blank=True)
     kingdom = models.CharField(max_length=100, blank=True)
     phylum = models.CharField(max_length=100, blank=True)
-    organism_class = models.CharField('Class', max_length=100, blank=True)
+    organism_class = models.CharField(_('Class'), max_length=100, blank=True)
     order = models.CharField(max_length=100, blank=True)
     family = models.CharField(max_length=100, blank=True)
     genus = models.CharField(max_length=100, blank=True)
     species = models.CharField(max_length=100, blank=True)
 
-    ncbi_classification = models.URLField('NCBI organismal classification', blank=True)
+    ncbi_classification = models.URLField('NCBI Organismal Classification', blank=True)
     note = models.TextField(blank=True)
 
     class Meta:
