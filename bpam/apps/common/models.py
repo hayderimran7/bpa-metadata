@@ -119,7 +119,7 @@ class Sequencer(models.Model):
     The Sequencer
     """
 
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True, help_text='The sequencer name')
     description = models.TextField(blank=True)
 
     class Meta:
@@ -182,8 +182,8 @@ class Run(models.Model):
     This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
-    DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
-    passage_number = models.IntegerField(blank=True, null=True)
+    DNA_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True)
+    passage_number = models.IntegerField(_('Passage Number'), blank=True, null=True)
 
     # facilities
     sequencing_facility = models.ForeignKey(Facility,
@@ -204,7 +204,7 @@ class Run(models.Model):
 
     sequencer = models.ForeignKey(Sequencer)
     run_number = models.IntegerField(blank=True, null=True)
-    flow_cell_id = models.CharField(max_length=10, blank=True, verbose_name=_('Flow Cell ID'))
+    flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=10, blank=True)
 
     class Meta:
         abstract = True
@@ -216,10 +216,10 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
 
-    index_number = models.IntegerField(blank=True, null=True, verbose_name=_('Index'))
-    lane_number = models.IntegerField(blank=True, null=True, verbose_name=_('Lane'))
+    index_number = models.IntegerField(_('Index'), blank=True, null=True, )
+    lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
-    filename = models.CharField(max_length=300, blank=True, null=True)
+    filename = models.CharField(_('File Name'), max_length=300, blank=True, null=True)
     md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
     analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
