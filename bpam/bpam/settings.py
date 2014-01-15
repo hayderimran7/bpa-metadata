@@ -51,13 +51,17 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
     'MENU': (
         {'app': 'common', 'label': 'Common', },
-        {'app': 'melanoma', 'label': 'Melanoma', },
+        {'app': 'melanoma', 'label': 'Melanoma',
+         'models': ('melanomasample', 'melanomasequencefile', 'array')},
         {'app': 'gbr', 'label': 'Great Barrier Reef', },
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
         {'app': 'base', 'label': 'BASE', },
+        {'label': 'BASE Metagenomics', 'icon': 'icon-leaf',
+         'models': ('base.soilmetagenomicssample', 'base.siteowner')},
         '-',
-        {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
+        {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
+        # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
     )
 }
 
