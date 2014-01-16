@@ -10,15 +10,14 @@ from .models import GBRProtocol
 from .models import GBRSequenceFile
 
 
-class ProtocolForm(forms.ModelForm):
-    class Meta:
-        model = GBRProtocol
-        widgets = {
-            'run': LinkedSelect
-        }
-
-
 class ProtocolAdmin(admin.ModelAdmin):
+    class ProtocolForm(forms.ModelForm):
+        class Meta:
+            model = GBRProtocol
+            widgets = {
+                'run': LinkedSelect
+            }
+
     form = ProtocolForm
 
     fieldsets = [
@@ -26,29 +25,23 @@ class ProtocolAdmin(admin.ModelAdmin):
     ]
 
     search_fields = (
-    'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
+        'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
 
-class ProtocolInline(admin.StackedInline):
-    model = GBRProtocol
-    extra = 0
-
-
-class RunForm(forms.ModelForm):
-    class Meta:
-        model = GBRRun
-        widgets = {
-            'sample': LinkedSelect,
-            'sequencing_facility': LinkedSelect,
-            'array_analysis_facility': LinkedSelect,
-            'whole_genome_sequencing_facility': LinkedSelect,
-            'sequencer': LinkedSelect
-        }
-
-
 class RunAdmin(admin.ModelAdmin):
+    class RunForm(forms.ModelForm):
+        class Meta:
+            model = GBRRun
+            widgets = {
+                'sample': LinkedSelect,
+                'sequencing_facility': LinkedSelect,
+                'array_analysis_facility': LinkedSelect,
+                'whole_genome_sequencing_facility': LinkedSelect,
+                'sequencer': LinkedSelect
+            }
+
     form = RunForm
 
     fieldsets = [
@@ -60,7 +53,12 @@ class RunAdmin(admin.ModelAdmin):
          {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
 
+    class ProtocolInline(admin.StackedInline):
+        model = GBRProtocol
+        extra = 0
+
     inlines = (ProtocolInline, )
+
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
     list_filter = ('sequencing_facility',)
@@ -77,46 +75,45 @@ class SequenceFileInlineForm(forms.ModelForm):
         }
 
 
-class SequenceFileInline(admin.TabularInline):
-    model = GBRSequenceFile
-    form = SequenceFileInlineForm
-    sortable = 'filename'
-    fields = ('filename', 'md5', 'date_received_from_sequencing_facility', 'analysed')
-    extra = 1
-
-
-class SampleForm(forms.ModelForm):
-    class Meta:
-        model = GBRSample
-        widgets = {
-            'bpa_id': LinkedSelect(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'name': forms.TextInput(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'organism': LinkedSelect,
-            'dna_source': LinkedSelect,
-            'sequencing_facility': LinkedSelect,
-            'contact_scientist': LinkedSelect,
-            'contact_bioinformatician': LinkedSelect,
-            'comments_by_facility': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'}),
-            'sequencing_notes': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'}),
-            'note': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'}),
-            'debug_note': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'})
-        }
-
-
 class SampleAdmin(admin.ModelAdmin):
+    class SampleForm(forms.ModelForm):
+        class Meta:
+            model = GBRSample
+            widgets = {
+                'bpa_id': LinkedSelect(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:50%'}),
+                'name': forms.TextInput(
+                    attrs={'class': 'input-medium',
+                           'style': 'width:50%'}),
+                'organism': LinkedSelect,
+                'dna_source': LinkedSelect,
+                'sequencing_facility': LinkedSelect,
+                'contact_scientist': LinkedSelect,
+                'contact_bioinformatician': LinkedSelect,
+                'comments_by_facility': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+                'sequencing_notes': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+                'note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'})
+            }
+
     form = SampleForm
+
+    class SequenceFileInline(admin.TabularInline):
+        model = GBRSequenceFile
+        form = SequenceFileInlineForm
+        sortable = 'filename'
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility', 'analysed')
+        extra = 1
+
     inlines = (SequenceFileInline, )
 
     fieldsets = [
@@ -151,15 +148,20 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
-class CollectionForm(forms.ModelForm):
-    class Meta:
-        model = CollectionEvent
-        widgets = {
-            'collector': LinkedSelect,
-        }
+admin.site.register(GBRSample, SampleAdmin)
 
 
 class CollectionEventAdmin(admin.ModelAdmin):
+    class CollectionForm(forms.ModelForm):
+        class Meta:
+            model = CollectionEvent
+            widgets = {
+                'collector': LinkedSelect,
+                'note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+            }
+
     form = CollectionForm
 
     fieldsets = [
@@ -176,8 +178,9 @@ class CollectionEventAdmin(admin.ModelAdmin):
     search_fields = ('name', 'collector', 'note')
     list_filter = ('name', )
 
+
 admin.site.register(CollectionEvent, CollectionEventAdmin)
-admin.site.register(GBRSample, SampleAdmin)
+
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
 admin.site.register(GBRRun, RunAdmin)
