@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django import forms
+from suit.widgets import LinkedSelect, AutosizedTextarea
+
 from apps.common.admin import SequenceFileAdmin
-
-from suit.widgets import LinkedSelect
-
 from .models import PathogenSample
 from .models import PathogenRun
 from .models import PathogenProtocol
@@ -15,11 +14,15 @@ class ProtocolForm(forms.ModelForm):
         model = PathogenProtocol
         widgets = {
             'run': LinkedSelect,
+            'library_construction_protocol': LinkedSelect,
+            'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                             'style': 'width:95%'})
         }
 
 
 class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
+    radio_fields = {'library_type': admin.HORIZONTAL}
     fields = ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')
     search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id',
                      'run__sample__name')
@@ -27,25 +30,27 @@ class ProtocolAdmin(admin.ModelAdmin):
     list_filter = ('library_type',)
 
 
-class ProtocolInline(admin.StackedInline):
-    model = PathogenProtocol
-    extra = 0
-
-
-class RunForm(forms.ModelForm):
-    class Meta:
-        model = PathogenRun
-        widgets = {
-            'sample': LinkedSelect,
-            'sequencing_facility': LinkedSelect,
-            'array_analysis_facility': LinkedSelect,
-            'whole_genome_sequencing_facility': LinkedSelect,
-            'sequencer': LinkedSelect
-        }
-
-
 class RunAdmin(admin.ModelAdmin):
+    class RunForm(forms.ModelForm):
+        class Meta:
+            model = PathogenRun
+            widgets = {
+                'sample': LinkedSelect,
+                'sequencing_facility': LinkedSelect,
+                'array_analysis_facility': LinkedSelect,
+                'whole_genome_sequencing_facility': LinkedSelect,
+                'sequencer': LinkedSelect
+            }
+
     form = RunForm
+
+    class ProtocolInline(admin.StackedInline):
+        form = ProtocolForm
+        model = PathogenProtocol
+        radio_fields = {'library_type': admin.HORIZONTAL}
+        extra = 0
+
+    inlines = (ProtocolInline, )
 
     fieldsets = [
         ('Sample',
@@ -56,26 +61,28 @@ class RunAdmin(admin.ModelAdmin):
          {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
 
-    inlines = (ProtocolInline, )
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
     list_filter = ('run_number', )
 
 
-class SampleForm(forms.ModelForm):
-    class Meta:
-        model = PathogenSample
-        widgets = {
-            'bpa_id': LinkedSelect,
-            'organism': LinkedSelect,
-            'dna_source': LinkedSelect,
-            'sequencing_facility': LinkedSelect,
-            'contact_scientist': LinkedSelect,
-            'contact_bioinformatician': LinkedSelect,
-        }
-
-
 class SampleAdmin(admin.ModelAdmin):
+    class SampleForm(forms.ModelForm):
+        class Meta:
+            model = PathogenSample
+            widgets = {
+                'bpa_id': LinkedSelect(attrs={'style': 'width:50%'}),
+                'organism': LinkedSelect,
+                'dna_source': LinkedSelect,
+                'sequencing_facility': LinkedSelect,
+                'contact_scientist': LinkedSelect,
+                'contact_bioinformatician': LinkedSelect,
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                       'style': 'width:95%'})
+            }
+
     form = SampleForm
 
     fieldsets = [
