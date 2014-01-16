@@ -43,7 +43,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
 SUIT_CONFIG = {
@@ -52,7 +51,13 @@ SUIT_CONFIG = {
     'MENU': (
         {'app': 'common', 'label': 'Common', },
         {'app': 'melanoma', 'label': 'Melanoma',
-         'models': ('melanomasample', 'melanomasequencefile', 'array')},
+         'models':
+             ('melanomasample',
+              'melanomasequencefile',
+              'array',
+              'melanomaprotocol',
+              'melanomarun',
+              'tumorstage')},
         {'app': 'gbr', 'label': 'Great Barrier Reef', },
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
@@ -211,11 +216,13 @@ def get_env_variable(var_name):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
+
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 
 try:
     print "Attempting to import default settings as appsettings.bpam"
     from appsettings.bpam import *
+
     print "Successfully imported appsettings.bpam"
 except ImportError, e:
     print "Failed to import appsettings.bpam"
