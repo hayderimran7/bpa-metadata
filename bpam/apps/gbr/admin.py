@@ -10,17 +10,18 @@ from .models import GBRProtocol
 from .models import GBRSequenceFile
 
 
-class ProtocolAdmin(admin.ModelAdmin):
-    class ProtocolForm(forms.ModelForm):
-        class Meta:
-            model = GBRProtocol
-            widgets = {
-                'run': LinkedSelect,
-                'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-            }
-    form = ProtocolForm
+class ProtocolForm(forms.ModelForm):
+    class Meta:
+        model = GBRProtocol
+        widgets = {
+            'run': LinkedSelect,
+            'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
+            'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+        }
 
+
+class ProtocolAdmin(admin.ModelAdmin):
+    form = ProtocolForm
     radio_fields = {'library_type': admin.HORIZONTAL}
     fieldsets = [
         ('Protocol', {'fields': ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')})
@@ -37,13 +38,12 @@ class RunAdmin(admin.ModelAdmin):
         class Meta:
             model = GBRRun
             widgets = {
-                'sample': LinkedSelect,
+                'sample': LinkedSelect(attrs={'style': 'width:50%'}),
                 'sequencing_facility': LinkedSelect,
                 'array_analysis_facility': LinkedSelect,
                 'whole_genome_sequencing_facility': LinkedSelect,
                 'sequencer': LinkedSelect
             }
-
     form = RunForm
 
     fieldsets = [
@@ -57,8 +57,9 @@ class RunAdmin(admin.ModelAdmin):
 
     class ProtocolInline(admin.StackedInline):
         model = GBRProtocol
+        form = ProtocolForm
+        radio_fields = {'library_type': admin.HORIZONTAL}
         extra = 0
-
     inlines = (ProtocolInline, )
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
