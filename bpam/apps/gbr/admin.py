@@ -15,11 +15,13 @@ class ProtocolAdmin(admin.ModelAdmin):
         class Meta:
             model = GBRProtocol
             widgets = {
-                'run': LinkedSelect
+                'run': LinkedSelect,
+                'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
             }
-
     form = ProtocolForm
 
+    radio_fields = {'library_type': admin.HORIZONTAL}
     fieldsets = [
         ('Protocol', {'fields': ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')})
     ]
