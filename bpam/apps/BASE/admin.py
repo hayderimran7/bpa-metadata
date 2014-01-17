@@ -11,16 +11,15 @@ class SampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'name')
 
 
-class Sample454AdminForm(forms.ModelForm):
-    class Meta:
-        model = Sample454
-        widgets = {
-            'note': forms.TextInput(attrs={'class': 'input-large',
-                                           'style': 'width:95%'}),
-        }
-
-
 class Sample454Admin(admin.ModelAdmin):
+    class Sample454AdminForm(forms.ModelForm):
+        class Meta:
+            model = Sample454
+            widgets = {
+                'note': forms.TextInput(attrs={'class': 'input-large',
+                                               'style': 'width:95%'}),
+            }
+
     form = Sample454AdminForm
     list_display = ('bpa_id', 'sample_id', 'agrf_batch_number',)
     search_fields = ('bpa_id__bpa_id', 'sample_id',)
