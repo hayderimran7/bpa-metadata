@@ -1,32 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from django.conf import settings
-
 from apps.common.models import Sample, BPAUniqueID, SequenceFile
-from apps.geo.models import GPSPosition
-
-
-class SoilTexture(models.Model):
-    """
-    Soil Texture
-    """
-    texture = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=100)
-
-    def __unicode__(self):
-        return u"{0} {1}".format(self.texture, self.description)
-
-
-class SoilColour(models.Model):
-    """
-    Soil Colour
-    """
-    colour = models.CharField(max_length=100, unique=True)
-    code = models.CharField(max_length=5, unique=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.colour)
 
 
 class PCRPrimer(models.Model):
@@ -42,133 +17,6 @@ class PCRPrimer(models.Model):
 
     class Meta:
         verbose_name_plural = _("PCR Primers")
-
-
-class LandUse(models.Model):
-    """
-    Land use Controlled Vocabulary
-    http://lrm.nt.gov.au/soil/landuse/classification
-    """
-
-    classification = models.IntegerField(unique=True)
-    description = models.CharField(max_length=300)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.description)
-
-    class Meta:
-        verbose_name_plural = _("Land Uses")
-
-
-class GeneralEcologicalZone(models.Model):
-    """
-    General ecological zone taxonomy
-    """
-
-    description = models.CharField(max_length=100, unique=True)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.description)
-
-    class Meta:
-        verbose_name_plural = _("General Ecological Zones")
-
-
-class BroadVegetationType(models.Model):
-    """
-    Broad Vegetation Type
-    """
-
-    vegetation = models.CharField(max_length=100, unique=True)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.vegetation)
-
-    class Meta:
-        verbose_name_plural = _("Broad Vegetation Types")
-
-
-class TillageType(models.Model):
-    """
-    Note method(s) used for tilling; moldboard plow, chisel, no-till, etc.
-    """
-
-    tillage = models.CharField(max_length=100, unique=True)
-    description = models.TextField()
-
-    def __unicode__(self):
-        return u"{0}".format(self.tillage)
-
-    class Meta:
-        verbose_name_plural = _("Tillage Types")
-
-
-class HorizonClassification(models.Model):
-    """
-    Specific layer in the land area which measures parallel to the soil surface and possesses physical characteristics
-    which differ from the layers above and beneath; master horizons (O, A, E,  B, C, R) are rather standard, but
-    sub-designations (subordinate distinctions) will vary by country.
-    """
-
-    horizon = models.CharField(max_length=100, unique=True)
-    description = models.TextField()
-
-    def __unicode__(self):
-        return u"{0}".format(self.horizon)
-
-    class Meta:
-        verbose_name_plural = _("Horizon Classification")
-
-
-class SoilClassification(models.Model):
-    """
-    Australian Soil Classification System (http://www.clw.csiro.au/aclep/asc_re_on_line/soilkey.htm)
-    Soil classification from the FAO World Reference
-    (http://www.fao.org/docrep/w8594e/w8594e05.htm#key%20to%20the%20reference%20soil%20groups%20of%20the%20world%20reference%20base%20for%20soil%20resources)
-    """
-
-    authority = models.CharField(max_length=10)
-    classification = models.CharField(max_length=50)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0} {1}".format(self.authority, self.classification)
-
-    class Meta:
-        verbose_name_plural = _("Soil Classification")
-
-
-class DrainageClassification(models.Model):
-    """
-    Drainage classification from a standard system such as the US Department of Agriculture system.
-    """
-
-    drainage = models.CharField(max_length=50)
-    description = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.drainage)
-
-    class Meta:
-        verbose_name_plural = _("Drainage Classifications")
-
-
-class ProfilePosition(models.Model):
-    """
-    Cross-sectional position in the hill slope where sample was collected; sample area position in relation to
-    surrounding areas
-    """
-
-    position = models.CharField(max_length=20)
-
-    def __unicode__(self):
-        return u"{0}".format(self.position)
-
-    class Meta:
-        verbose_name_plural = _("Profile Positions")
 
 
 class TargetGene(models.Model):
@@ -201,98 +49,6 @@ class TargetTaxon(models.Model):
         verbose_name_plural = _("Target Taxons")
 
 
-class SiteOwner(models.Model):
-    """
-    The Site Owner
-    """
-
-    name = models.CharField(max_length=100, blank=True)
-    email = models.EmailField()
-    address = models.TextField(blank=True)
-    note = models.TextField(blank=True)
-
-    def __unicode__(self):
-        return u"{0} {1}".format(self.name, self.email)
-
-    class Meta:
-        verbose_name_plural = _("Site Owners")
-
-
-class CollectionSiteHistory(models.Model):
-    """
-    Background history for the collection site
-    """
-
-    history_report_date = models.DateField(blank=True, null=True)  # the date this report was compiled
-    current_vegetation = models.CharField(max_length=100, blank=True)
-
-    previous_land_use = models.ForeignKey(LandUse, related_name='previous')
-    current_land_use = models.ForeignKey(LandUse, related_name='current')
-    crop_rotation = models.CharField(max_length=100, blank=True)
-    tillage = models.CharField(max_length=100, blank=True)
-    environment_event = models.CharField(max_length=100, blank=True)  # fire, flood, extreme, other
-
-    note = models.TextField()
-
-    def __unicode__(self):
-        return u"Site history on {0}".format(self.history_report_date)
-
-    class Meta:
-        verbose_name_plural = _("Site History")
-
-
-class CollectionSite(models.Model):
-    """
-    Collection Site Information
-    """
-
-    country = models.CharField(max_length=100, blank=True)
-    state = models.CharField(max_length=100, blank=True)
-    location_name = models.CharField(max_length=100, blank=True)
-    image_url = models.URLField(blank=True, null=True)
-
-    positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
-
-    horizon = models.CharField(max_length=100, blank=True)
-    plot_description = models.TextField(blank=True)
-    collection_depth = models.CharField(max_length=20, blank=True)
-
-    slope_gradient = models.CharField(max_length=20, blank=True)
-    slope_aspect = models.CharField(max_length=20, blank=True)
-    profile_position = models.CharField(max_length=20, blank=True)
-    drainage_classification = models.CharField(max_length=20, blank=True)
-    australian_classification_soil_type = models.CharField(max_length=20, blank=True)
-
-    history = models.ForeignKey(CollectionSiteHistory, null=True)
-    owner = models.ForeignKey(SiteOwner, null=True)
-
-    note = models.TextField(blank=True)
-
-    def __unicode__(self):
-        return u"{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
-
-    class Meta:
-        verbose_name_plural = _("Collection Sites")
-
-
-class SoilMetagenomicsSample(Sample):
-    """
-    BASE Metagenomics Soil Sample
-    """
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)
-
-    class Meta:
-        verbose_name_plural = _("Soil Metagenomics Sample")
-
-
-class MetagenomicsSequenceFile(SequenceFile):
-    """
-    Metagenomics Sequence File
-    """
-
-    sample = models.ForeignKey(SoilMetagenomicsSample)
 
 
 class SequenceConstruct(models.Model):
@@ -324,7 +80,7 @@ class ChemicalAnalysis(models.Model):
 
     # sample = models.ForeignKey(SoilSample)
     bpa_id = models.ForeignKey(BPAUniqueID)
-    lab_name_id = models.CharField(max_length=100, blank=True, null=True)
+    lab_name_id = models.CharField(_('Lab Name ID'), max_length=100, blank=True, null=True)
     customer = models.CharField(max_length=100, blank=True, null=True)
     depth = models.CharField(max_length=100, blank=True, null=True)
     colour = models.CharField(max_length=100, blank=True, null=True)
@@ -338,18 +94,18 @@ class ChemicalAnalysis(models.Model):
     sulphur_colwell = models.FloatField(blank=True, null=True)
     organic_carbon = models.FloatField(blank=True, null=True)
     conductivity = models.FloatField(blank=True, null=True)
-    cacl2_ph = models.FloatField(blank=True, null=True)
-    h20_ph = models.FloatField(blank=True, null=True)
-    dtpa_copper = models.FloatField(blank=True, null=True)
-    dtpa_iron = models.FloatField(blank=True, null=True)
-    dtpa_manganese = models.FloatField(blank=True, null=True)
-    dtpa_zinc = models.FloatField(blank=True, null=True)
-    exc_aluminium = models.FloatField(blank=True, null=True)
-    exc_calcium = models.FloatField(blank=True, null=True)
-    exc_magnesium = models.FloatField(blank=True, null=True)
-    exc_potassium = models.FloatField(blank=True, null=True)
-    exc_sodium = models.FloatField(blank=True, null=True)
-    boron_hot_cacl2 = models.FloatField(blank=True, null=True)
+    cacl2_ph = models.FloatField(_('CaCl2 pH'), blank=True, null=True)
+    h20_ph = models.FloatField(_('H20 pH'), blank=True, null=True)
+    dtpa_copper = models.FloatField(_('DTPA Cu'), blank=True, null=True)
+    dtpa_iron = models.FloatField(_('DTPA Fe'), blank=True, null=True)
+    dtpa_manganese = models.FloatField(_('DTPA Mn'), blank=True, null=True)
+    dtpa_zinc = models.FloatField(_('DTPA Zn'), blank=True, null=True)
+    exc_aluminium = models.FloatField(_('Exc Al'), blank=True, null=True)
+    exc_calcium = models.FloatField(_('Exc Ca'), blank=True, null=True)
+    exc_magnesium = models.FloatField(_('Exc Mg'), blank=True, null=True)
+    exc_potassium = models.FloatField(_('Exc K'), blank=True, null=True)
+    exc_sodium = models.FloatField(_('Exc Na'), blank=True, null=True)
+    boron_hot_cacl2 = models.FloatField(_('B Hot CaCl2'), blank=True, null=True)
 
     clay = models.FloatField(blank=True, null=True)
     course_sand = models.FloatField(blank=True, null=True)
@@ -361,6 +117,7 @@ class ChemicalAnalysis(models.Model):
         return u"Chemical Analysis for {0}".format(self.bpa_id)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("Sample Chemical Essays")
 
 
@@ -388,58 +145,9 @@ class SoilSampleDNA(models.Model):
         return u"Soil DNA Library {0}".format(self.name)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("Soil Sample DNA")
 
 
-class Sample454(models.Model):
-
-    RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'), ('R', 'Repeat'))
-
-    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
-    sample_id = models.CharField(_('Sample ID'), max_length=100, blank=True, null=True)
-    aurora_purified = models.BooleanField(_('Aurora Purified'), default=False)
-    dna_storage_nunc_plate = models.CharField(_('Nunc Plate'), max_length=12, blank=True, null=True, default='')
-    dna_storage_nunc_tube = models.CharField(_('Nunc Tube'), max_length=12, blank=True, null=True, default='')
-    dna_storage_nunc_well_location = models.CharField(_('Well Location'), max_length=30, blank=True, null=True)
-    agrf_batch_number = models.CharField(_('AGRF Batch Number'), max_length=15, blank=True, null=True)
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter', verbose_name=_('Submitter'),)
-    date_received = models.DateField(blank=True, null=True)
-
-    # AGRF Adelaide extraction
-    adelaide_extraction_sample_weight = models.CharField(_('Extraction Sample Weight (mg)'), max_length=30, blank=True,
-                                                         null=True)  # another abused "integer" field
-    adelaide_fluorimetry = models.FloatField(_('Fluorimetry ng/uL gDNA'), blank=True, null=True)
-    adelaide_pcr_inhibition = models.CharField(_('PCR Inhibition (neat plus spike) 16S (V3-V8)'), max_length=2,
-                                               choices=RESULT)
-    adelaide_pcr1 = models.CharField(_('PCR1 (neat) 16S (V3-V8)'), max_length=2, choices=RESULT)
-    adelaide_pcr2 = models.CharField(_('PCR2 (1:100) 16S (V3-V8)'), max_length=2, choices=RESULT)
-    adelaide_date_shipped_to_agrf_454 = models.DateField(_('DNA shipped to AGRF (454)'), blank=True, null=True)
-    adelaide_date_shipped_to_agrf_miseq = models.DateField(_('DNA shipped to AGRF (MiSeq)'), blank=True, null=True)
-    adelaide_date_shipped_to_ramacciotti = models.DateField(_('DNA shipped to Ramaciotti'), blank=True, null=True)
-
-    # Brisbane 454
-    brisbane_16s_mid = models.CharField(_('16S MID'), max_length=7, blank=True, null=True)
-    brisbane_its_mid = models.CharField(_('ITS MID'), max_length=7, blank=True, null=True)
-    brisbane_16s_pcr1 = models.CharField(_('16S (V1-V3) PCR1 (neat)'), max_length=2, choices=RESULT)
-    brisbane_16s_pcr2 = models.CharField(_('16S (V1-V3) PCR2 (1:10)'), max_length=2, choices=RESULT)
-    brisbane_16s_pcr3 = models.CharField(_('16S (V1-V3) PCR3 (fusion-primer)'), max_length=2, choices=RESULT)
-    brisbane_its_pcr1_neat = models.CharField(_('ITS PCR1 (neat)'), max_length=2, choices=RESULT)
-    brisbane_its_pcr2_1_10 = models.CharField(_('ITS PCR1 (1:10)'), max_length=2, choices=RESULT)
-    brisbane_its_pcr3_fusion = models.CharField(_('ITS PCR3 (fusion-primer)'), max_length=2, choices=RESULT)
-    brisbane_fluorimetry_16s = models.FloatField(_('Fluorimetry ng/uL 16S'), blank=True, null=True)
-    brisbane_fluorimetry_its = models.FloatField(_('Fluorimetry ng/uL ITS'), blank=True, null=True)
-    brisbane_16s_qpcr = models.FloatField(_('16S qPCR'), blank=True, null=True)
-    brisbane_its_qpcr = models.FloatField(_('ITS qPCR'), blank=True, null=True)
-    brisbane_i6s_pooled = models.NullBooleanField(_('16S pooled'))
-    brisbane_its_pooled = models.NullBooleanField(_('ITS pooled'))
-    brisbane_16s_reads = models.IntegerField(_('16S >3000 reads - Trim Back 150bp'), blank=True, null=True)
-    brisbane_its_reads = models.IntegerField(_('ITS >3000 reads - Trim Back 150bp Run1'), blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
-
-    def __unicode__(self):
-        return u'Soil Sample 454 {0}'.format(self.bpa_id)
-
-    class Meta:
-        verbose_name_plural = _("Sample 454")
 
 
