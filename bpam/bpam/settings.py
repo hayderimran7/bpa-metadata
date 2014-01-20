@@ -175,6 +175,7 @@ INSTALLED_APPS = (
     'tinymce',
     'bootstrap3',
     'tastypie',
+    'explorer',
     # 'lettuce.django',
 )
 
