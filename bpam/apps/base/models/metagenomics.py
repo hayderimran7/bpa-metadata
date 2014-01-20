@@ -40,6 +40,7 @@ class PCRPrimer(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("PCR Primers")
 
 
@@ -55,6 +56,7 @@ class TargetGene(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("Target Genes")
 
 
@@ -70,6 +72,7 @@ class TargetTaxon(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("Target Taxons")
 
 
@@ -92,6 +95,7 @@ class SequenceConstruct(models.Model):
         return u"{0}".format(self.sequence)
 
     class Meta:
+        app_label = 'base'
         verbose_name_plural = _("Sequence Constructs")
 
 

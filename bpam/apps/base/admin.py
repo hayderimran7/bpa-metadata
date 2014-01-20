@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django import forms
-from .models import *
+from .models.metagenomics import *
+from .models.sample454 import *
+from .models.site import *
+
 from apps.common.admin import SequenceFileAdmin
 
 
