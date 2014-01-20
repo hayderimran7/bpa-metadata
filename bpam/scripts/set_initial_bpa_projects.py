@@ -7,7 +7,7 @@ logger = logging.getLogger('SetProjects')
 
 Project = namedtuple('Project', 'key name description note')
 projects = (
-    Project('BASE', 'BASE', 'BASE, Agricultural and Environmental Soil', ''),
+    Project('base', 'base', 'base, Agricultural and Environmental Soil', ''),
     Project('GBR', 'GBR', 'Great Barrier Reef', 'Coral'),
     Project('MELANOMA', 'Melanoma', 'Melanoma', 'Human Melanomas'),
     Project('WHEAT_7A', 'Wheat 7A', 'Wheat Chromosome 7A', ''),
@@ -25,13 +25,13 @@ def set_bpa_projects():
         try:
             BPAProject.objects.get(key=project.key)
         except BPAProject.DoesNotExist:
-            proj = BPAProject(key=project.key,
-                              name=project.name,
-                              description=project.description,
-                              note=project.note
-                              )
-            proj.save()
-            logger.info('Added project {0}'.format(proj.name))
+            project = BPAProject(key=project.key,
+                                 name=project.name,
+                                 description=project.description,
+                                 note=project.note
+            )
+            project.save()
+            logger.info('Added project {0}'.format(project.name))
 
 
 def run():
