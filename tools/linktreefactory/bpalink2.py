@@ -720,7 +720,7 @@ class Wheat7aArchive(NoMetadataArchive):
 
 
 class BASEArchive(NoMetadataArchive):
-    container_name = 'BASE'
+    container_name = 'base'
     template_name = 'base.html'
     index_name = 'all.html'
 
