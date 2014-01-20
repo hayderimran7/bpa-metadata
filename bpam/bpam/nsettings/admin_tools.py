@@ -30,7 +30,7 @@ INSTALLED_APPS = (
     'apps.common',
     'apps.melanoma',
     'apps.gbr',
-    #'apps.BASE',
+    #'apps.base',
     'apps.wheat_cultivars',
     'apps.wheat_pathogens',
     'south',
