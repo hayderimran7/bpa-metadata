@@ -4,8 +4,6 @@ from .models.metagenomics import *
 from .models.sample454 import *
 from .models.site import *
 
-from apps.common.admin import SequenceFileAdmin
-
 
 class LandUseAdmin(admin.ModelAdmin):
     list_display = ('description', 'classification')
@@ -133,7 +131,7 @@ class ColourAdmin(admin.ModelAdmin):
 
 admin.site.register(SoilColour, ColourAdmin)
 
-admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)
+admin.site.register(MetagenomicsSequenceFile) #, SequenceFileAdmin)
 
 admin.site.register(HorizonClassification)
 admin.site.register(ProfilePosition)
