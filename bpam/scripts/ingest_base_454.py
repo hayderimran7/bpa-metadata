@@ -8,20 +8,20 @@ from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
 
-from apps.BASE.models import Sample454
+from apps.base.models.sample454 import Sample454
 
 
-logger = get_logger('BASE 454')
+logger = get_logger('base 454')
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
 
 BPA_ID = "102.100.100"
-BASE_DESCRIPTION = 'BASE'
+BASE_DESCRIPTION = 'base'
 
 
 def get_bpa_id(t):
     if bpa_id_utils.is_good_bpa_id(t.bpa_id):
-        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='BASE 454 Sample')
+        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='base 454 Sample')
     else:
         return None
 
@@ -138,7 +138,7 @@ def ingest(file_name):
         sample.dna_storage_nunc_tube = t.dna_storage_nunc_tube
         sample.dna_storage_nunc_well_location = t.dna_storage_nunc_well_location
         sample.agrf_batch_number = t.agrf_batch_number
-        sample.submitter = user_helper.get_user(t.submitter_name, '', ('AGRF', 'BASE'))
+        sample.submitter = user_helper.get_user(t.submitter_name, '', ('AGRF', 'base'))
         sample.date_received = t.date_received
         # adelaide
         sample.adelaide_extraction_sample_weight = t.adelaide_extraction_sample_weight

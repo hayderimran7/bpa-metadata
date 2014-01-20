@@ -7,21 +7,21 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 
-from apps.BASE.models import SoilMetagenomicsSample, MetagenomicsSequenceFile
+from apps.base.models.metagenomics import SoilMetagenomicsSample, MetagenomicsSequenceFile
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('BASE Metagenomics')
+logger = logging.getLogger('base Metagenomics')
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'metagenomics')
 
 BPA_ID = "102.100.100"
-BASE_DESCRIPTION = 'BASE'
+BASE_DESCRIPTION = 'base'
 
 
 def get_bpa_id(t):
     if bpa_id_utils.is_good_bpa_id(t.bpa_id):
-        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='BASE Metagenomics Sample')
+        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='base Metagenomics Sample')
     else:
         return None
 
@@ -95,7 +95,7 @@ def ingest(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name='BASE Metagenomics',
+                           sheet_name='base Metagenomics',
                            header_length=1,
                            column_name_row_index=0)
     for file_row in wrapper.get_all():

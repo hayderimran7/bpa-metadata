@@ -4,7 +4,8 @@ import re
 import os.path
 from datetime import date
 
-from apps.BASE.models import GPSPosition, CollectionSite, SoilSample, ChemicalAnalysis, BPAUniqueID
+from apps.base.models.site import GPSPosition, CollectionSite
+from apps.base.models.metagenomics import ChemicalAnalysis, BPAUniqueID
 
 from libs import ingest_utils
 
@@ -164,8 +165,8 @@ def add_sample(e):
 
 def add_chem_sample(e):
     chema = ChemicalAnalysis()
-    chema.bpa_id = ingest_utils.get_bpa_id(e['bpa_id'], project_name='BASE',
-                              note="Created during chem sample ingestion on {0}".format(date.today()))
+    chema.bpa_id = ingest_utils.get_bpa_id(e['bpa_id'], project_name='base',
+                                           note="Created during chem sample ingestion on {0}".format(date.today()))
     chema.lab_name_id = e['lab_name_id']
     chema.customer = e['customer']
     chema.depth = e['depth']
@@ -203,7 +204,7 @@ def add_chem_sample(e):
 
 def run():
     data = get_sample_data()
-    ingest_utils.ingest_bpa_ids(data, 'BASE')
+    ingest_utils.ingest_bpa_ids(data, 'base')
 
     for e in data:
         add_sample(e)
