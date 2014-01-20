@@ -1,10 +1,25 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from django.conf import settings
-
-from apps.common.models import Sample, BPAUniqueID, SequenceFile
 from apps.geo.models import GPSPosition
+
+
+class LandUse(models.Model):
+    """
+    Land use Controlled Vocabulary
+    http://lrm.nt.gov.au/soil/landuse/classification
+    """
+
+    classification = models.IntegerField(unique=True)
+    description = models.CharField(max_length=300)
+    note = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u"{0}".format(self.description)
+
+    class Meta:
+        verbose_name_plural = _("Land Uses")
+        app_label = 'base'
 
 
 class SiteOwner(models.Model):
@@ -97,6 +112,7 @@ class SoilTexture(models.Model):
     class Meta:
         app_label = 'base'
 
+
 class SoilColour(models.Model):
     """
     Soil Colour
@@ -110,22 +126,6 @@ class SoilColour(models.Model):
     class Meta:
         app_label = 'base'
 
-class LandUse(models.Model):
-    """
-    Land use Controlled Vocabulary
-    http://lrm.nt.gov.au/soil/landuse/classification
-    """
-
-    classification = models.IntegerField(unique=True)
-    description = models.CharField(max_length=300)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.description)
-
-    class Meta:
-        verbose_name_plural = _("Land Uses")
-        app_label = 'base'
 
 class GeneralEcologicalZone(models.Model):
     """

@@ -3,12 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.conf import settings
 
-from apps.common.models import Sample, BPAUniqueID, SequenceFile
-from apps.geo.models import GPSPosition
+from apps.common.models import BPAUniqueID
 
 
 class Sample454(models.Model):
-
     RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'), ('R', 'Repeat'))
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
@@ -18,7 +16,8 @@ class Sample454(models.Model):
     dna_storage_nunc_tube = models.CharField(_('Nunc Tube'), max_length=12, blank=True, null=True, default='')
     dna_storage_nunc_well_location = models.CharField(_('Well Location'), max_length=30, blank=True, null=True)
     agrf_batch_number = models.CharField(_('AGRF Batch Number'), max_length=15, blank=True, null=True)
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter', verbose_name=_('Submitter'),)
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter',
+                                  verbose_name=_('Submitter'), )
     date_received = models.DateField(blank=True, null=True)
 
     # AGRF Adelaide extraction
@@ -57,4 +56,4 @@ class Sample454(models.Model):
 
     class Meta:
         verbose_name_plural = _("Sample 454")
-        app_label = 'base'
+        app_label = 'BASE'
