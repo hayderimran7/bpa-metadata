@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
 from .models import *
-from suit.widgets import LinkedSelect, AutosizedTextarea
 from apps.common.admin import SequenceFileAdmin
 
 
@@ -128,12 +127,10 @@ admin.site.register(DrainageClassification, DrainageAdmin)
 class ColourAdmin(admin.ModelAdmin):
     list_display = ('colour', 'code')
 
+
 admin.site.register(SoilColour, ColourAdmin)
 
-
 admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)
-
-
 
 admin.site.register(HorizonClassification)
 admin.site.register(ProfilePosition)

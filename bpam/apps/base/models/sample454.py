@@ -56,4 +56,4 @@ class Sample454(models.Model):
 
     class Meta:
         verbose_name_plural = _("Sample 454")
-        app_label = 'BASE'
+        app_label = 'base'

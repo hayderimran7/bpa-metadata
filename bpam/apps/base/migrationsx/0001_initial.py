@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
             ('texture', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
-        db.send_create_signal(u'BASE', ['SoilTexture'])
+        db.send_create_signal(u'base', ['SoilTexture'])
 
         # Adding model 'SoilColour'
         db.create_table(u'BASE_soilcolour', (
@@ -20,7 +20,7 @@ class Migration(SchemaMigration):
             ('colour', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=5)),
         ))
-        db.send_create_signal(u'BASE', ['SoilColour'])
+        db.send_create_signal(u'base', ['SoilColour'])
 
         # Adding model 'PCRPrimer'
         db.create_table(u'BASE_pcrprimer', (
@@ -28,7 +28,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['PCRPrimer'])
+        db.send_create_signal(u'base', ['PCRPrimer'])
 
         # Adding model 'LandUse'
         db.create_table(u'BASE_landuse', (
@@ -37,7 +37,7 @@ class Migration(SchemaMigration):
             ('description', self.gf('django.db.models.fields.CharField')(max_length=300)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['LandUse'])
+        db.send_create_signal(u'base', ['LandUse'])
 
         # Adding model 'GeneralEcologicalZone'
         db.create_table(u'BASE_generalecologicalzone', (
@@ -45,7 +45,7 @@ class Migration(SchemaMigration):
             ('description', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['GeneralEcologicalZone'])
+        db.send_create_signal(u'base', ['GeneralEcologicalZone'])
 
         # Adding model 'BroadVegetationType'
         db.create_table(u'BASE_broadvegetationtype', (
@@ -53,7 +53,7 @@ class Migration(SchemaMigration):
             ('vegetation', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['BroadVegetationType'])
+        db.send_create_signal(u'base', ['BroadVegetationType'])
 
         # Adding model 'TillageType'
         db.create_table(u'BASE_tillagetype', (
@@ -61,7 +61,7 @@ class Migration(SchemaMigration):
             ('tillage', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('description', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal(u'BASE', ['TillageType'])
+        db.send_create_signal(u'base', ['TillageType'])
 
         # Adding model 'HorizonClassification'
         db.create_table(u'BASE_horizonclassification', (
@@ -69,7 +69,7 @@ class Migration(SchemaMigration):
             ('horizon', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('description', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal(u'BASE', ['HorizonClassification'])
+        db.send_create_signal(u'base', ['HorizonClassification'])
 
         # Adding model 'SoilClassification'
         db.create_table(u'BASE_soilclassification', (
@@ -78,7 +78,7 @@ class Migration(SchemaMigration):
             ('classification', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['SoilClassification'])
+        db.send_create_signal(u'base', ['SoilClassification'])
 
         # Adding model 'DrainageClassification'
         db.create_table(u'BASE_drainageclassification', (
@@ -86,14 +86,14 @@ class Migration(SchemaMigration):
             ('drainage', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['DrainageClassification'])
+        db.send_create_signal(u'base', ['DrainageClassification'])
 
         # Adding model 'ProfilePosition'
         db.create_table(u'BASE_profileposition', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('position', self.gf('django.db.models.fields.CharField')(max_length=20)),
         ))
-        db.send_create_signal(u'BASE', ['ProfilePosition'])
+        db.send_create_signal(u'base', ['ProfilePosition'])
 
         # Adding model 'TargetGene'
         db.create_table(u'BASE_targetgene', (
@@ -101,7 +101,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['TargetGene'])
+        db.send_create_signal(u'base', ['TargetGene'])
 
         # Adding model 'TargetTaxon'
         db.create_table(u'BASE_targettaxon', (
@@ -109,7 +109,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('note', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal(u'BASE', ['TargetTaxon'])
+        db.send_create_signal(u'base', ['TargetTaxon'])
 
         # Adding model 'SiteOwner'
         db.create_table(u'BASE_siteowner', (
@@ -119,7 +119,7 @@ class Migration(SchemaMigration):
             ('address', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['SiteOwner'])
+        db.send_create_signal(u'base', ['SiteOwner'])
 
         # Adding model 'CollectionSiteHistory'
         db.create_table(u'BASE_collectionsitehistory', (
@@ -127,15 +127,15 @@ class Migration(SchemaMigration):
             ('history_report_date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('current_vegetation', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('previous_land_use',
-             self.gf('django.db.models.fields.related.ForeignKey')(related_name='previous', to=orm['BASE.LandUse'])),
+             self.gf('django.db.models.fields.related.ForeignKey')(related_name='previous', to=orm['base.LandUse'])),
             ('current_land_use',
-             self.gf('django.db.models.fields.related.ForeignKey')(related_name='current', to=orm['BASE.LandUse'])),
+             self.gf('django.db.models.fields.related.ForeignKey')(related_name='current', to=orm['base.LandUse'])),
             ('crop_rotation', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('tillage', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('environment_event', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal(u'BASE', ['CollectionSiteHistory'])
+        db.send_create_signal(u'base', ['CollectionSiteHistory'])
 
         # Adding model 'CollectionSite'
         db.create_table(u'BASE_collectionsite', (
@@ -154,17 +154,17 @@ class Migration(SchemaMigration):
             ('australian_classification_soil_type',
              self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
             ('history',
-             self.gf('django.db.models.fields.related.ForeignKey')(to=orm['BASE.CollectionSiteHistory'], null=True)),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['BASE.SiteOwner'], null=True)),
+             self.gf('django.db.models.fields.related.ForeignKey')(to=orm['base.CollectionSiteHistory'], null=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['base.SiteOwner'], null=True)),
             ('note', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['CollectionSite'])
+        db.send_create_signal(u'base', ['CollectionSite'])
 
         # Adding M2M table for field positions on 'CollectionSite'
         m2m_table_name = db.shorten_name(u'BASE_collectionsite_positions')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('collectionsite', models.ForeignKey(orm[u'BASE.collectionsite'], null=False)),
+            ('collectionsite', models.ForeignKey(orm[u'base.collectionsite'], null=False)),
             ('gpsposition', models.ForeignKey(orm[u'geo.gpsposition'], null=False))
         ))
         db.create_unique(m2m_table_name, ['collectionsite_id', 'gpsposition_id'])
@@ -186,7 +186,7 @@ class Migration(SchemaMigration):
             ('date_sent_to_sequencing_facility', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['SoilMetagenomicsSample'])
+        db.send_create_signal(u'base', ['SoilMetagenomicsSample'])
 
         # Adding model 'SequenceConstruct'
         db.create_table(u'BASE_sequenceconstruct', (
@@ -200,7 +200,7 @@ class Migration(SchemaMigration):
             ('reverse_primer', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['SequenceConstruct'])
+        db.send_create_signal(u'base', ['SequenceConstruct'])
 
         # Adding model 'ChemicalAnalysis'
         db.create_table(u'BASE_chemicalanalysis', (
@@ -237,7 +237,7 @@ class Migration(SchemaMigration):
             ('sand', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('silt', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['ChemicalAnalysis'])
+        db.send_create_signal(u'base', ['ChemicalAnalysis'])
 
         # Adding model 'SoilSampleDNA'
         db.create_table(u'BASE_soilsampledna', (
@@ -248,12 +248,12 @@ class Migration(SchemaMigration):
             ('protocol_ref', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
             ('library_selection', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
             ('library_layout', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
-            ('target_taxon', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['BASE.TargetTaxon'])),
+            ('target_taxon', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['base.TargetTaxon'])),
             ('target_gene',
-             self.gf('django.db.models.fields.related.ForeignKey')(related_name='target', to=orm['BASE.TargetGene'])),
+             self.gf('django.db.models.fields.related.ForeignKey')(related_name='target', to=orm['base.TargetGene'])),
             ('target_subfragment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='subfragment',
-                                                                                         to=orm['BASE.TargetGene'])),
-            ('pcr_primer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['BASE.PCRPrimer'])),
+                                                                                         to=orm['base.TargetGene'])),
+            ('pcr_primer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['base.PCRPrimer'])),
             ('pcr_primer_db_ref', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
             ('forward_primer_sequence',
              self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
@@ -267,7 +267,7 @@ class Migration(SchemaMigration):
                 'labeled_extract_name',
                 self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['SoilSampleDNA'])
+        db.send_create_signal(u'base', ['SoilSampleDNA'])
 
         # Adding model 'Sample454'
         db.create_table(u'BASE_sample454', (
@@ -317,7 +317,7 @@ class Migration(SchemaMigration):
             ('brisbane_its_reads', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'BASE', ['Sample454'])
+        db.send_create_signal(u'base', ['Sample454'])
 
 
     def backwards(self, orm):
@@ -389,13 +389,13 @@ class Migration(SchemaMigration):
 
 
     models = {
-        u'BASE.broadvegetationtype': {
+        u'base.broadvegetationtype': {
             'Meta': {'object_name': 'BroadVegetationType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'vegetation': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'})
         },
-        u'BASE.chemicalanalysis': {
+        u'base.chemicalanalysis': {
             'Meta': {'object_name': 'ChemicalAnalysis'},
             'ammonium_nitrogen': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'boron_hot_cacl2': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -432,7 +432,7 @@ class Migration(SchemaMigration):
             'sulphur_colwell': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'texture': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
-        u'BASE.collectionsite': {
+        u'base.collectionsite': {
             'Meta': {'object_name': 'CollectionSite'},
             'australian_classification_soil_type': (
                 'django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
@@ -440,7 +440,7 @@ class Migration(SchemaMigration):
             'country': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'drainage_classification': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'history': ('django.db.models.fields.related.ForeignKey', [],
-                        {'to': u"orm['BASE.CollectionSiteHistory']", 'null': 'True'}),
+                        {'to': u"orm['base.CollectionSiteHistory']", 'null': 'True'}),
             'horizon': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image_url': (
@@ -448,7 +448,7 @@ class Migration(SchemaMigration):
             'location_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'owner': (
-                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.SiteOwner']", 'null': 'True'}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.SiteOwner']", 'null': 'True'}),
             'plot_description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'positions': ('django.db.models.fields.related.ManyToManyField', [],
                           {'symmetrical': 'False', 'to': u"orm['geo.GPSPosition']", 'null': 'True', 'blank': 'True'}),
@@ -457,57 +457,57 @@ class Migration(SchemaMigration):
             'slope_gradient': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.collectionsitehistory': {
+        u'base.collectionsitehistory': {
             'Meta': {'object_name': 'CollectionSiteHistory'},
             'crop_rotation': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'current_land_use': ('django.db.models.fields.related.ForeignKey', [],
-                                 {'related_name': "'current'", 'to': u"orm['BASE.LandUse']"}),
+                                 {'related_name': "'current'", 'to': u"orm['base.LandUse']"}),
             'current_vegetation': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'environment_event': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'history_report_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {}),
             'previous_land_use': ('django.db.models.fields.related.ForeignKey', [],
-                                  {'related_name': "'previous'", 'to': u"orm['BASE.LandUse']"}),
+                                  {'related_name': "'previous'", 'to': u"orm['base.LandUse']"}),
             'tillage': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.drainageclassification': {
+        u'base.drainageclassification': {
             'Meta': {'object_name': 'DrainageClassification'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'drainage': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.generalecologicalzone': {
+        u'base.generalecologicalzone': {
             'Meta': {'object_name': 'GeneralEcologicalZone'},
             'description': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.horizonclassification': {
+        u'base.horizonclassification': {
             'Meta': {'object_name': 'HorizonClassification'},
             'description': ('django.db.models.fields.TextField', [], {}),
             'horizon': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.landuse': {
+        u'base.landuse': {
             'Meta': {'object_name': 'LandUse'},
             'classification': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.pcrprimer': {
+        u'base.pcrprimer': {
             'Meta': {'object_name': 'PCRPrimer'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.profileposition': {
+        u'base.profileposition': {
             'Meta': {'object_name': 'ProfilePosition'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'position': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
-        u'BASE.sample454': {
+        u'base.sample454': {
             'Meta': {'object_name': 'Sample454'},
             'adelaide_date_shipped_to_agrf_454': (
                 'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -559,7 +559,7 @@ class Migration(SchemaMigration):
                           {'blank': 'True', 'related_name': "'454_submitter'", 'null': 'True',
                            'to': u"orm['bpaauth.BPAUser']"})
         },
-        u'BASE.sequenceconstruct': {
+        u'base.sequenceconstruct': {
             'Meta': {'object_name': 'SequenceConstruct'},
             'adapter_sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'barcode_sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
@@ -571,7 +571,7 @@ class Migration(SchemaMigration):
             'sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'target_region': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.siteowner': {
+        u'base.siteowner': {
             'Meta': {'object_name': 'SiteOwner'},
             'address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
@@ -579,20 +579,20 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },
-        u'BASE.soilclassification': {
+        u'base.soilclassification': {
             'Meta': {'object_name': 'SoilClassification'},
             'authority': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'classification': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.soilcolour': {
+        u'base.soilcolour': {
             'Meta': {'object_name': 'SoilColour'},
             'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '5'}),
             'colour': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.soilmetagenomicssample': {
+        u'base.soilmetagenomicssample': {
             'Meta': {'object_name': 'SoilMetagenomicsSample'},
             'bpa_id': ('django.db.models.fields.related.OneToOneField', [],
                        {'to': u"orm['common.BPAUniqueID']", 'unique': 'True'}),
@@ -611,7 +611,7 @@ class Migration(SchemaMigration):
             'requested_sequence_coverage': (
                 'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'})
         },
-        u'BASE.soilsampledna': {
+        u'base.soilsampledna': {
             'Meta': {'object_name': 'SoilSampleDNA'},
             'barcode_label': (
                 'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
@@ -629,7 +629,7 @@ class Migration(SchemaMigration):
             'library_selection': (
                 'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'pcr_primer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.PCRPrimer']"}),
+            'pcr_primer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.PCRPrimer']"}),
             'pcr_primer_db_ref': (
                 'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'pcr_reaction': (
@@ -642,30 +642,30 @@ class Migration(SchemaMigration):
                 'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'submitter': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'target_gene': ('django.db.models.fields.related.ForeignKey', [],
-                            {'related_name': "'target'", 'to': u"orm['BASE.TargetGene']"}),
+                            {'related_name': "'target'", 'to': u"orm['base.TargetGene']"}),
             'target_subfragment': ('django.db.models.fields.related.ForeignKey', [],
-                                   {'related_name': "'subfragment'", 'to': u"orm['BASE.TargetGene']"}),
-            'target_taxon': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.TargetTaxon']"})
+                                   {'related_name': "'subfragment'", 'to': u"orm['base.TargetGene']"}),
+            'target_taxon': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.TargetTaxon']"})
         },
-        u'BASE.soiltexture': {
+        u'base.soiltexture': {
             'Meta': {'object_name': 'SoilTexture'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'texture': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'})
         },
-        u'BASE.targetgene': {
+        u'base.targetgene': {
             'Meta': {'object_name': 'TargetGene'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.targettaxon': {
+        u'base.targettaxon': {
             'Meta': {'object_name': 'TargetTaxon'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {})
         },
-        u'BASE.tillagetype': {
+        u'base.tillagetype': {
             'Meta': {'object_name': 'TillageType'},
             'description': ('django.db.models.fields.TextField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -754,4 +754,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['BASE']
+    complete_apps = ['base']

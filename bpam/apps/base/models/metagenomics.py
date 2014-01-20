@@ -6,7 +6,7 @@ from apps.common.models import Sample, SequenceFile, BPAUniqueID
 
 class SoilMetagenomicsSample(Sample):
     """
-    BASE Metagenomics Soil Sample
+    base Metagenomics Soil Sample
     """
 
     def __unicode__(self):

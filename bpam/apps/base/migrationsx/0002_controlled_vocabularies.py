@@ -18,13 +18,13 @@ class Migration(DataMigration):
 
 
     models = {
-        u'BASE.broadvegetationtype': {
+        u'base.broadvegetationtype': {
             'Meta': {'object_name': 'BroadVegetationType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'vegetation': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'})
         },
-        u'BASE.chemicalanalysis': {
+        u'base.chemicalanalysis': {
             'Meta': {'object_name': 'ChemicalAnalysis'},
             'ammonium_nitrogen': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'boron_hot_cacl2': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -35,7 +35,7 @@ class Migration(DataMigration):
             'conductivity': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'course_sand': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'customer': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'depth': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'dtpa_copper': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'dtpa_iron': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -51,7 +51,7 @@ class Migration(DataMigration):
             'h20_ph': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'lab_name_id': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'nitrate_nitrogen': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True'}),
             'organic_carbon': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'phosphorus_colwell': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True'}),
@@ -61,23 +61,23 @@ class Migration(DataMigration):
             'sulphur_colwell': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'texture': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
-        u'BASE.collectionsite': {
+        u'base.collectionsite': {
             'Meta': {'object_name': 'CollectionSite'},
             'australian_classification_soil_type': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'collection_depth': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'country': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'drainage_classification': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'history': ('django.db.models.fields.related.ForeignKey', [],
-                        {'to': u"orm['BASE.CollectionSiteHistory']", 'null': 'True'}),
+                        {'to': u"orm['base.CollectionSiteHistory']", 'null': 'True'}),
             'horizon': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image_url': (
-            'django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'location_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'owner': (
-            'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.SiteOwner']", 'null': 'True'}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.SiteOwner']", 'null': 'True'}),
             'plot_description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'positions': ('django.db.models.fields.related.ManyToManyField', [],
                           {'symmetrical': 'False', 'to': u"orm['geo.GPSPosition']", 'null': 'True', 'blank': 'True'}),
@@ -86,77 +86,77 @@ class Migration(DataMigration):
             'slope_gradient': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.collectionsitehistory': {
+        u'base.collectionsitehistory': {
             'Meta': {'object_name': 'CollectionSiteHistory'},
             'crop_rotation': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'current_land_use': ('django.db.models.fields.related.ForeignKey', [],
-                                 {'related_name': "'current'", 'to': u"orm['BASE.LandUse']"}),
+                                 {'related_name': "'current'", 'to': u"orm['base.LandUse']"}),
             'current_vegetation': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'environment_event': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'history_report_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {}),
             'previous_land_use': ('django.db.models.fields.related.ForeignKey', [],
-                                  {'related_name': "'previous'", 'to': u"orm['BASE.LandUse']"}),
+                                  {'related_name': "'previous'", 'to': u"orm['base.LandUse']"}),
             'tillage': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.drainageclassification': {
+        u'base.drainageclassification': {
             'Meta': {'object_name': 'DrainageClassification'},
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'drainage': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.generalecologicalzone': {
+        u'base.generalecologicalzone': {
             'Meta': {'object_name': 'GeneralEcologicalZone'},
             'description': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.horizonclassification': {
+        u'base.horizonclassification': {
             'Meta': {'object_name': 'HorizonClassification'},
             'description': ('django.db.models.fields.TextField', [], {}),
             'horizon': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.landuse': {
+        u'base.landuse': {
             'Meta': {'object_name': 'LandUse'},
             'classification': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.pcrprimer': {
+        u'base.pcrprimer': {
             'Meta': {'object_name': 'PCRPrimer'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.profileposition': {
+        u'base.profileposition': {
             'Meta': {'object_name': 'ProfilePosition'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'position': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
-        u'BASE.sample454': {
+        u'base.sample454': {
             'Meta': {'object_name': 'Sample454'},
             'adelaide_date_shipped_to_agrf_454': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'adelaide_date_shipped_to_agrf_miseq': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'adelaide_date_shipped_to_ramacciotti': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'adelaide_extraction_sample_weight': (
-            'django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'adelaide_fluorimetry': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'adelaide_pcr1': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'adelaide_pcr2': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'adelaide_pcr_inhibition': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'agrf_batch_number': (
-            'django.db.models.fields.CharField', [], {'max_length': '15', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '15', 'null': 'True', 'blank': 'True'}),
             'aurora_purified': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'bpa_id': ('django.db.models.fields.related.OneToOneField', [],
                        {'to': u"orm['common.BPAUniqueID']", 'unique': 'True'}),
             'brisbane_16s_mid': (
-            'django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True', 'blank': 'True'}),
             'brisbane_16s_pcr1': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'brisbane_16s_pcr2': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'brisbane_16s_pcr3': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
@@ -166,7 +166,7 @@ class Migration(DataMigration):
             'brisbane_fluorimetry_its': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'brisbane_i6s_pooled': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'brisbane_its_mid': (
-            'django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True', 'blank': 'True'}),
             'brisbane_its_pcr1_neat': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'brisbane_its_pcr2_1_10': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'brisbane_its_pcr3_fusion': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
@@ -179,16 +179,16 @@ class Migration(DataMigration):
             'dna_storage_nunc_tube': ('django.db.models.fields.CharField', [],
                                       {'default': "''", 'max_length': '12', 'null': 'True', 'blank': 'True'}),
             'dna_storage_nunc_well_location': (
-            'django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'sample_id': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'submitter': ('django.db.models.fields.related.ForeignKey', [],
                           {'blank': 'True', 'related_name': "'454_submitter'", 'null': 'True',
                            'to': u"orm['bpaauth.BPAUser']"})
         },
-        u'BASE.sequenceconstruct': {
+        u'base.sequenceconstruct': {
             'Meta': {'object_name': 'SequenceConstruct'},
             'adapter_sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'barcode_sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
@@ -200,7 +200,7 @@ class Migration(DataMigration):
             'sequence': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'target_region': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
-        u'BASE.siteowner': {
+        u'base.siteowner': {
             'Meta': {'object_name': 'SiteOwner'},
             'address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
@@ -208,95 +208,95 @@ class Migration(DataMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },
-        u'BASE.soilclassification': {
+        u'base.soilclassification': {
             'Meta': {'object_name': 'SoilClassification'},
             'authority': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'classification': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.soilcolour': {
+        u'base.soilcolour': {
             'Meta': {'object_name': 'SoilColour'},
             'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '5'}),
             'colour': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'BASE.soilmetagenomicssample': {
+        u'base.soilmetagenomicssample': {
             'Meta': {'object_name': 'SoilMetagenomicsSample'},
             'bpa_id': ('django.db.models.fields.related.OneToOneField', [],
                        {'to': u"orm['common.BPAUniqueID']", 'unique': 'True'}),
             'collection_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'collection_site': (
-            'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.CollectionSite']"}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.CollectionSite']"}),
             'contact_scientist': ('django.db.models.fields.related.ForeignKey', [],
                                   {'to': u"orm['bpaauth.BPAUser']", 'null': 'True', 'blank': 'True'}),
             'date_sent_to_sequencing_facility': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'dna_extraction_protocol': (
-            'django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'dna_source': ('django.db.models.fields.related.ForeignKey', [],
                            {'to': u"orm['common.DNASource']", 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'requested_sequence_coverage': (
-            'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'})
+                'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'})
         },
-        u'BASE.soilsampledna': {
+        u'base.soilsampledna': {
             'Meta': {'object_name': 'SoilSampleDNA'},
             'barcode_label': (
-            'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
             'barcode_sequence': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'dna_conc': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'forward_primer_sequence': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'labeled_extract_name': (
-            'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
             'library_layout': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'library_selection': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'pcr_primer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.PCRPrimer']"}),
+            'pcr_primer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.PCRPrimer']"}),
             'pcr_primer_db_ref': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'pcr_reaction': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'performer': (
-            'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
             'protocol_ref': (
-            'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'reverse_primer_sequence': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'submitter': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'target_gene': ('django.db.models.fields.related.ForeignKey', [],
-                            {'related_name': "'target'", 'to': u"orm['BASE.TargetGene']"}),
+                            {'related_name': "'target'", 'to': u"orm['base.TargetGene']"}),
             'target_subfragment': ('django.db.models.fields.related.ForeignKey', [],
-                                   {'related_name': "'subfragment'", 'to': u"orm['BASE.TargetGene']"}),
-            'target_taxon': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['BASE.TargetTaxon']"})
+                                   {'related_name': "'subfragment'", 'to': u"orm['base.TargetGene']"}),
+            'target_taxon': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['base.TargetTaxon']"})
         },
-        u'BASE.soiltexture': {
+        u'base.soiltexture': {
             'Meta': {'object_name': 'SoilTexture'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'texture': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'})
         },
-        u'BASE.targetgene': {
+        u'base.targetgene': {
             'Meta': {'object_name': 'TargetGene'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'BASE.targettaxon': {
+        u'base.targettaxon': {
             'Meta': {'object_name': 'TargetTaxon'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'note': ('django.db.models.fields.TextField', [], {})
         },
-        u'BASE.tillagetype': {
+        u'base.tillagetype': {
             'Meta': {'object_name': 'TillageType'},
             'description': ('django.db.models.fields.TextField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -314,7 +314,7 @@ class Migration(DataMigration):
                      'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
             'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'content_type': (
-            'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
@@ -356,7 +356,8 @@ class Migration(DataMigration):
         u'common.bpauniqueid': {
             'Meta': {'object_name': 'BPAUniqueID'},
             'bpa_id': (
-            'django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200', 'primary_key': 'True'}),
+                'django.db.models.fields.CharField', [],
+                {'unique': 'True', 'max_length': '200', 'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['common.BPAProject']"})
         },
@@ -384,5 +385,5 @@ class Migration(DataMigration):
         }
     }
 
-    complete_apps = ['BASE']
+    complete_apps = ['base']
     symmetrical = True
