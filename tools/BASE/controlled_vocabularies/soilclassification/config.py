@@ -1,1 +1,1 @@
-model_class = "BASE.soilclassification"
+model_class = "base.soilclassification"
