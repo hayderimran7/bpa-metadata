@@ -17,18 +17,6 @@ class MetagenomicsSample(Sample):
         verbose_name_plural = _("Metagenomics Sample")
 
 
-class MetagenomicsSequenceFile(SequenceFile):
-    """
-    Metagenomics Sequence File
-    """
-
-    sample = models.ForeignKey(MetagenomicsSample)
-
-    class Meta:
-        app_label = 'base'
-        verbose_name_plural = _("Metagenomics Sequence Files")
-
-
 class MetagenomicsRun(Run):
     """
     A Metagenomics sequence file generation Run
@@ -41,3 +29,16 @@ class MetagenomicsRun(Run):
     class Meta:
         app_label = 'base'
         verbose_name_plural = _("Metagenomics Run")
+
+
+class MetagenomicsSequenceFile(SequenceFile):
+    """
+    Metagenomics Sequence File
+    """
+
+    sample = models.ForeignKey(MetagenomicsSample)
+    run = models.ForeignKey(MetagenomicsRun)
+
+    class Meta:
+        app_label = 'base'
+        verbose_name_plural = _("Metagenomics Sequence Files")

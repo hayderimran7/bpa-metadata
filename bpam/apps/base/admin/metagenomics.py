@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea
+from apps.common.admin import SequenceFileAdmin
 
 from ..models.metagenomics import MetagenomicsSequenceFile, MetagenomicsRun, MetagenomicsSample
+
+
+admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)
 
 
 class SequenceFileInlineForm(forms.ModelForm):
