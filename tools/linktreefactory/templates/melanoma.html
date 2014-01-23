@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h3>Melanoma Sequence Files{% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
+    <h3>Melanoma Sequence Files{% if bpa_id %} - {{ bpa_id }}{% endif %}</h3>
     <table id="sequence-list" class="table table-striped">
         <thead>
         <tr>
@@ -36,7 +36,6 @@
                 <td>{{ obj.sex }}</td>
                 <td>{{ obj.dna_source }}</td>
                 <td>{{ obj.tumor_staging }}</td>
-                <td>{{ obj.filename }}</td>
                 <td>{{ obj.md5 }}</td>
             </tr>
         {% endfor %}
@@ -44,7 +43,7 @@
     </table>
 
     {% if bpa_id %}
-<a href="../">Back to index</a>
-{% endif %}
+        <a href="../">Back to index</a>
+    {% endif %}
 
 {% endblock %}
