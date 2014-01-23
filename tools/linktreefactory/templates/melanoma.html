@@ -9,7 +9,6 @@
         <thead>
         <tr>
             <th>BPA ID</th>
-            <th>File Name</th>
             <th>Sample Name</th>
             <th>Sequence Coverage</th>
             <th>Melanoma Contact Scientist</th>
@@ -17,6 +16,7 @@
             <th>Sex</th>
             <th>DNA Source</th>
             <th>Tumor Staging</th>
+            <th>File Name</th>
             <th>MD5</th>
         </tr>
         </thead>
@@ -28,7 +28,6 @@
                 {% else %}
                     <td><a href="{{ obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
                 {% endif %}
-                <td><a rel="nofollow" href="{{ obj.url }}">{{ obj.filename }}</a></td>
                 <td>{{ obj.sample_name }}</td>
                 <td>{{ obj.coverage }}</td>
                 <td>{{ obj.scientist }}</td>
@@ -36,6 +35,7 @@
                 <td>{{ obj.sex }}</td>
                 <td>{{ obj.dna_source }}</td>
                 <td>{{ obj.tumor_staging }}</td>
+                <td><a rel="nofollow" href="{{ obj.url }}">{{ obj.filename }}</a></td>
                 <td>{{ obj.md5 }}</td>
             </tr>
         {% endfor %}

@@ -10,7 +10,6 @@
         <thead>
             <tr>
                 <th>BPA ID</th>
-                <th>Filename</th>
                 <th>Isolate Name</th>
                 <th>Species</th>
                 <th>Original Source</th>
@@ -19,6 +18,7 @@
                 <th>Collection Location</th>
                 <th>Scientist</th>
                 <th>Index</th>
+                <th>Filename</th>
                 <th>MD5</th>
             </tr>
         </thead>
@@ -30,7 +30,6 @@
             {% else %}
                 <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
             {% endif %}
-                <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
                 <td>{{ obj.isolate_name }}</td>
                 <td>{{ obj.species }}</td>
                 <td>{{ obj.original_source_host_species }}</td>
@@ -39,6 +38,7 @@
                 <td>{{ obj.collection_location }}</td>
                 <td>{{ obj.scientist }}</td>
                 <td>{{ obj.index }}</td>
+                <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
                 <td>{{ obj.md5 }}</td>
             </tr>
             {% endfor %}
