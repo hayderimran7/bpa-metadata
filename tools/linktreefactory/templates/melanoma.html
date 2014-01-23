@@ -29,9 +29,15 @@
                     <td><a href="{{ obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
                 {% endif %}
                 <td><a rel="nofollow" href="{{ obj.url }}">{{ obj.filename }}</a></td>
-                <td>{{ obj.name }}</td>
-                <td>{{ obj.date_received_from_sequencing_facility }}</td>
-                <td>Run {{ obj.run }} for {{ obj.name }}</td>
+                <td>{{ obj.coverage }}</td>
+                <td>{{ obj.sample_name }}</td>
+                <td>{{ obj.scientist }}</td>
+                <td>{{ obj.affiliation }}</td>
+                <td>{{ obj.sex }}</td>
+                <td>{{ obj.dna_source }}</td>
+                <td>{{ obj.tumor_staging }}</td>
+                <td>{{ obj.filename }}</td>
+                <td>{{ obj.md5 }}</td>
             </tr>
         {% endfor %}
         </tbody>
