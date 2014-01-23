@@ -491,7 +491,7 @@ class MelanomaArchive(Archive):
                 'tumor_staging': meta.tumor_staging,
                 'filename': meta.filename,
                 'md5': meta.md5,
-
+                'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return {'object_list': objects}
