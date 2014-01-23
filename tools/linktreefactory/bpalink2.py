@@ -617,14 +617,18 @@ class WheatPathogensArchive(Archive):
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('WheatPathogensMeta', reader, header, [
+            ('uid', 'BPA ID', None),
+            ('isolate_name', 'Isolate name', None),
+            ('species', 'Species', None),
+            ('original_source_host_species', 'Original source host species', None),
+            ('collection_date', 'Collection date', None),
+            ('collection_location', 'Collection location', None),
+            ('pathogenicity', 'Pathogenicity towards wheat', None),
+            ('scientist', 'Contact scientist', None),
+            ('index', 'index', None),
             ('md5', 'MD5 checksum', None),
             ('filename', 'FILE NAMES - supplied by AGRF', lambda p: p.rsplit('/', 1)[-1]),
-            ('uid', 'BPA ID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
-            ('species', 'Species', None),
-            ('isolate', 'Researcher Sample ID', None),
-            ('official_variety_name', 'Official Variety Name', None),
-            ('run', 'Run number', lambda s: s.replace('RUN #', '')),
         ]):
             if tpl.filename == '' or tpl.uid == '':
                 continue
@@ -639,11 +643,16 @@ class WheatPathogensArchive(Archive):
             objects.append({
                 'bpa_id': meta.uid,
                 'filename': meta.filename,
-                'name': meta.official_variety_name,
-                'run': meta.run,
-                'url': url,
+                'isolate_name': meta.isolate_name,
                 'species': meta.species,
-                'isolate': meta.isolate,
+                'original_source_host_species': meta.original_source_host_species,
+                'collection_date': meta.collection_date,
+                'collection_location': meta.collection_location,
+                'pathogenicity': meta.pathogenicity,
+                'scientist': meta.scientist,
+                'index': meta.index,
+                'md5': meta.md5,
+                'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return {'object_list': objects}

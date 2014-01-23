@@ -11,8 +11,15 @@
             <tr>
                 <th>BPA ID</th>
                 <th>Filename</th>
-                <th>Sample Name</th>
-                <th>Run Description</th>
+                <th>Isolate Name</th>
+                <th>Species</th>
+                <th>Original Source</th>
+                <th>Collection Date</th>
+                <th>collection Location</th>
+                <th>pathogenicity</th>
+                <th>scientist</th>
+                <th>index</th>
+                <th>md5</th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +31,14 @@
                 <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
             {% endif %}
                 <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
-                <td>{{ obj.name }}</td>
-                <td>Run {{ obj.run }} for {{ obj.name }}</td>
+                <td>{{ obj.isolate_name }}</td>
+                <td>{{ obj.species }}</td>
+                <td>{{ obj.original_source_host_species }}</td>
+                <td>{{ obj.collection_location }}</td>
+                <td>{{ obj.pathogenicity }}</td>
+                <td>{{ obj.scientist }}</td>
+                <td>{{ obj.index }}</td>
+                <td>{{ obj.md5 }}</td>
             </tr>
             {% endfor %}
         </tbody>
