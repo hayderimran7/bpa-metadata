@@ -625,7 +625,7 @@ class WheatPathogensArchive(Archive):
             ('collection_location', 'Collection location', None),
             ('pathogenicity', 'Pathogenicity towards wheat', None),
             ('scientist', 'Contact scientist', None),
-            ('index', 'index', None),
+            ('index', 'Index', None),
             ('md5', 'MD5 checksum', None),
             ('filename', 'FILE NAMES - supplied by AGRF', lambda p: p.rsplit('/', 1)[-1]),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),

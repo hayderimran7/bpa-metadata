@@ -14,12 +14,12 @@
                 <th>Isolate Name</th>
                 <th>Species</th>
                 <th>Original Source</th>
+                <th>Pathogenicity</th>
                 <th>Collection Date</th>
-                <th>collection Location</th>
-                <th>pathogenicity</th>
-                <th>scientist</th>
-                <th>index</th>
-                <th>md5</th>
+                <th>Collection Location</th>
+                <th>Scientist</th>
+                <th>Index</th>
+                <th>MD5</th>
             </tr>
         </thead>
         <tbody>
@@ -34,8 +34,9 @@
                 <td>{{ obj.isolate_name }}</td>
                 <td>{{ obj.species }}</td>
                 <td>{{ obj.original_source_host_species }}</td>
-                <td>{{ obj.collection_location }}</td>
                 <td>{{ obj.pathogenicity }}</td>
+                <td>{{ obj.collection_date }}</td>
+                <td>{{ obj.collection_location }}</td>
                 <td>{{ obj.scientist }}</td>
                 <td>{{ obj.index }}</td>
                 <td>{{ obj.md5 }}</td>
