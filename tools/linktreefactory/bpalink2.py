@@ -736,6 +736,12 @@ class BASEArchive(NoMetadataArchive):
     index_name = 'all.html'
 
 
+class GBRAllArchive(NoMetadataArchive):
+    container_name = 'gbr'
+    template_name = 'gbrall.html'
+    index_name = 'all.html'
+
+
 if __name__ == '__main__':
     def sanity_check(args):
         def test_path(path):
@@ -754,6 +760,7 @@ if __name__ == '__main__':
             run_archive(MelanomaArchive, args)
         elif args['gbr']:
             run_archive(GBRArchive, args)
+            run_archive(GBRAllArchive, args) # flat view for wget
         elif args['wheat7a']:
             run_archive(Wheat7aArchive, args)
         elif args['wheat_pathogens']:
@@ -762,7 +769,7 @@ if __name__ == '__main__':
             run_archive(WheatCultivarsArchive, args)
         elif args['base']:
             run_archive(BASEMetaGenomicsArchive, args)
-            run_archive(BASEArchive, args)  # flat for all without metadata
+            run_archive(BASEArchive, args)  # flat for all without metadata, usefull for wget
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
