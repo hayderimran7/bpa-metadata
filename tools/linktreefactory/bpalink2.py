@@ -428,6 +428,7 @@ class MelanomaArchive(Archive):
         ('tumor_staging', 'Tumor Staging (where applicable)', None),
         ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
         ('md5', 'MD5 checksum', None),
+        ('flow_cell_id', 'Run #:Flow Cell ID', None),
     ]
 
     def __init__(self, bpa_base):
