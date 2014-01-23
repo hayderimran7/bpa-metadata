@@ -175,6 +175,7 @@ class MD5Load(object):
         Parses md5 checksum value and associated filename from excell spreadsheet containing
         checksum pairs.
         """
+
         def xls_iter():
             x = xlrd.open_workbook(path.absolute())
             for sheet in x.sheets():
@@ -416,6 +417,18 @@ class MelanomaArchive(Archive):
     pilot_sheet = 'Melanoma_pilot_study'
     container_name = 'Melanoma'
     template_name = 'melanoma.html'
+    header_list = [
+        ('uid', 'Unique Identifier', None),
+        ('sample_name', 'Sample Name', None),
+        ('coverage', 'Sequence coverage', None),
+        ('scientist', 'Melanoma contact scientist', None),
+        ('affiliation', 'Contact affiliation', None),
+        ('sex', 'Sex', None),
+        ('dna_source', 'DNA Source', None),
+        ('tumor_staging', 'Tumor Staging (where applicable)', None),
+        ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
+        ('md5', 'MD5 checksum', None),
+    ]
 
     def __init__(self, bpa_base):
         self.base = Path(bpa_base)
@@ -432,15 +445,7 @@ class MelanomaArchive(Archive):
         # hasn't changed without script update
         second_header = next(reader)
 
-        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
-            ('md5', 'MD5 checksum', None),
-            ('filename', 'Sequence file names - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-            ('uid', 'Unique Identifier', None),
-            ('flow_cell_id', 'Run #:Flow Cell ID', None),
-            ('sample_name', 'Sample Name', None),
-            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s) ),
-            ('run', 'Run number', None),
-        ]):
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, self.header_list):
             if tpl.filename == '':
                 continue
                 # tpl.filename = tpl.filename.rsplit('/', 1)[-1]
@@ -453,15 +458,7 @@ class MelanomaArchive(Archive):
 
         # Pilot data sheet
         current_uid = None
-        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, [
-            ('md5', 'MD5 checksum', None),
-            ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-            ('uid', 'UID', None),
-            ('flow_cell_id', 'Run #:Flow Cell ID', None),
-            ('sample_name', 'Sample Name', None),
-            ('date_received', 'Date Received', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
-            ('run', 'Run number', None),
-        ]):
+        for tpl in parse_to_named_tuple('MelanomaMeta', reader, header, self.header_list):
             if tpl.filename == '':
                 continue
             if tpl.uid == '':
@@ -484,12 +481,16 @@ class MelanomaArchive(Archive):
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
                 'bpa_id': meta.uid,
+                'sample_name': meta.sample_name,
+                'coverage': meta.coverage,
+                'scientist': meta.scientist,
+                'affiliation': meta.affiliation,
+                'sex': meta.sex,
+                'dna_source': meta.dna_source,
+                'tumor_staging': meta.tumor_staging,
                 'filename': meta.filename,
                 'md5': meta.md5,
-                'name': meta.sample_name,
-                'date_received_from_sequencing_facility': meta.date_received,
-                'run': meta.run,
-                'url': url,
+
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
         return {'object_list': objects}
