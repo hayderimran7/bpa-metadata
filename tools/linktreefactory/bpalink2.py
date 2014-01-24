@@ -516,15 +516,16 @@ class GBRArchive(Archive):
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
+            ('uid', 'Unique ID', None),
+            ('dna_rna_source', 'DNA/RNA Source ', None),
+            ('library', 'Library ', None),
+            ('library_construction', 'Library Construction (insert size bp)', None),
+            ('library_construction_protocol', 'Library construction protocol', None),
+            ('index', 'Index sequence', None),
+            ('sequencer', 'Sequencer', None),
             ('md5', 'MD5 checksum', None),
             ('filename', 'FILE NAMES - supplied by sequencing facility', lambda p: p.rsplit('/', 1)[-1]),
-            ('uid', 'Unique ID', None),
             ('flow_cell_id', 'Run #:Flow Cell ID', None),
-            ('species', 'Species', None),
-            ('dataset', 'Dataset', None),
-            ('sample_name', 'Sample Description', None),
-            ('date_received', 'Date data sent/transferred', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
-            ('run', 'Run number', None),
         ]):
             if tpl.filename == '':
                 continue
@@ -540,9 +541,12 @@ class GBRArchive(Archive):
             objects.append({
                 'bpa_id': meta.uid,
                 'filename': meta.filename,
-                'name': meta.sample_name,
-                'date_received_from_sequencing_facility': meta.date_received,
-                'run': meta.run,
+                'dna_rna_source': meta.dna_rna_source,
+                'library': meta.library,
+                'library_construction': meta.library_construction,
+                'library_construction_protocol': meta.library_construction_protocol,
+                'index': meta.index,
+                'sequencer': meta.sequencer,
                 'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))
@@ -621,7 +625,7 @@ class WheatPathogensArchive(Archive):
             ('isolate_name', 'Isolate name', None),
             ('species', 'Species', None),
             ('original_source_host_species', 'Original source host species', None),
-            ('collection_date', 'Collection date', None),
+            ('collection_date', 'Collection date', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('collection_location', 'Collection location', None),
             ('pathogenicity', 'Pathogenicity towards wheat', None),
             ('scientist', 'Contact scientist', None),
