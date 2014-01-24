@@ -573,13 +573,17 @@ class WheatCultivarsArchive(Archive):
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('WheatCultivarsMeta', reader, header, [
+            ('uid', 'Unique ID', None),
+            ('variety', 'Variety', None),
+            ('library', 'Library', None),
+            ('library_nominal_fragment_size', 'Library nominal fragment size', None),
+            ('index', 'Index', None),
+            ('extract_name', 'Extract Name', None),
+            ('sequencing_instrument', 'Sequencing instrument', None),
+            ('casava', 'CASAVA version', None),
             ('md5', 'Comment[MD5 checksum]', None),
             ('filename', 'Comment[Corrected file name]', lambda p: p.rsplit('/', 1)[-1]),
-            ('uid', 'BPA ID', None),
             ('flow_cell_id', 'Parameter Value[flow cell identifier]', None),
-            ('sample_name', 'Sample Name', None),
-            ('code', 'Comment[Sample code]', None),
-            ('run', 'Parameter Value[run number]', lambda p: p.replace('RUN #', '').replace('?', '')),
         ]):
             if tpl.filename == '':
                 continue
@@ -593,10 +597,15 @@ class WheatCultivarsArchive(Archive):
             url = urlparse.urljoin(publicuri, public_path)
             objects.append({
                 'bpa_id': meta.uid,
+                'variety': meta.variety,
+                'library': meta.library,
+                'library_nominal_fragment_size': meta.library_nominal_fragment_size,
+                'index': meta.index,
+                'extract_name': meta.extract_name,
+                'sequencing_instrument': meta.sequencing_instrument,
+                'casava': meta.casava,
+                'md5': meta.md5,
                 'filename': meta.filename,
-                'name': meta.sample_name,
-                'code': meta.code,
-                'run': meta.run,
                 'url': url,
             })
         objects.sort(key=lambda o: self.bpa_sort_key(o['bpa_id']))

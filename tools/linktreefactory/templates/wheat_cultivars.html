@@ -10,10 +10,15 @@
         <thead>
             <tr>
                 <th>BPA ID</th>
+                <th>Variety</th>
+                <th>Library</th>
+                <th>Library nominal fragment size</th>
+                <th>Index</th>
+                <th>Extract Name</th>
+                <th>Sequencing instrument</th>
+                <th>CASAVA version</th>
                 <th>Filename</th>
-                <th>Sample Name</th>
-                <th>Cultivar Code</th>
-                <th>Run Description</th>
+                <th>MD5</th>
             </tr>
         </thead>
         <tbody>
@@ -24,10 +29,15 @@
             {% else %}
                 <td><a href="{{obj.bpa_id|replace("/", ".")}}/">{{ obj.bpa_id }}</a></td>
             {% endif %}
+                <td>{{ obj.variety }}</td>
+                <td>{{ obj.library }}</td>
+                <td>{{ obj.library_nominal_fragment_size }}</td>
+                <td>{{ obj.index }}</td>
+                <td>{{ obj.extract_name }}</td>
+                <td>{{ obj.sequencing_instrument }}</td>
+                <td>{{ obj.casava }}</td>
                 <td><a rel="nofollow" href="{{obj.url}}">{{ obj.filename }}</a></td>
-                <td>{{ obj.name }}</td>
-                <td>{{ obj.code }}</td>
-                <td>Run {{ obj.run }} for {{ obj.name }}</td>
+                <td>{{ obj.md5 }}</td>
             </tr>
             {% endfor %}
         </tbody>
