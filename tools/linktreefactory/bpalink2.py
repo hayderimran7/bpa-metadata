@@ -517,8 +517,8 @@ class GBRArchive(Archive):
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
             ('uid', 'Unique ID', None),
-            ('dna_rna_source', 'DNA/RNA Source ', None),
-            ('library', 'Library ', None),
+            ('dna_rna_source', 'DNA/RNA Source', None),
+            ('library', 'Library', None),
             ('library_construction', 'Library Construction (insert size bp)', None),
             ('library_construction_protocol', 'Library construction protocol', None),
             ('index', 'Index sequence', None),
@@ -541,6 +541,7 @@ class GBRArchive(Archive):
             objects.append({
                 'bpa_id': meta.uid,
                 'filename': meta.filename,
+                'md5': meta.md5,
                 'dna_rna_source': meta.dna_rna_source,
                 'library': meta.library,
                 'library_construction': meta.library_construction,
