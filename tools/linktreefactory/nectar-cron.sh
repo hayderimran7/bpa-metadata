@@ -41,8 +41,8 @@ update_apache() {
 #update_apache GBR gbr
 #update_apache Wheat7a wheat7a
 #update_apache BASE base
-update_apache Wheat_Pathogens wheat_pathogens
-#update_apache Wheat_Cultivars wheat_cultivars
+#update_apache Wheat_Pathogens wheat_pathogens
+update_apache Wheat_Cultivars wheat_cultivars
 
 # requires this line in sudoers:
 # ccg-user ALL=(ALL) NOPASSWD: /usr/sbin/apachectl
