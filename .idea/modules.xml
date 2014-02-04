@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../bpa-downloads-web-site/.idea/bpa-downloads-web-site.iml" filepath="$PROJECT_DIR$/../bpa-downloads-web-site/.idea/bpa-downloads-web-site.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/bpa-metadata.iml" filepath="$PROJECT_DIR$/.idea/bpa-metadata.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ccg/.idea/ccg.iml" filepath="$PROJECT_DIR$/../ccg/.idea/ccg.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ccgplatform/.idea/ccgplatform.iml" filepath="$PROJECT_DIR$/../ccgplatform/.idea/ccgplatform.iml" />

@@ -1,13 +1,18 @@
 #!/bin/bash
 
-TARGET="/home/ubuntu/"
 
-DOWNLOADS_REPO="ssh://hg@bitbucket.org/ccgmurdoch/bpa-downloads-web-site"
-DOWNLOADS_DEST="${TARGET}/bpa-downloads-web-site"
+clone_repo() {
+    # this should only happen in production
+    TARGET="/home/ubuntu/"
 
-METADATA_REPO="ssh://hg@bitbucket.org/ccgmurdoch/bpa-metadata"
-METADATA_DEST="${TARGET}/bpa-metadata"
+    METADATA_REPO="ssh://hg@bitbucket.org/ccgmurdoch/bpa-metadata"
+    METADATA_DEST="${TARGET}/bpa-metadata"
 
-hg clone ${DOWNLOADS_REPO} ${DOWNLOADS_DEST}
-hg clone ${METADATA_REPO} ${METADATA_DEST}
+    hg clone ${DOWNLOADS_REPO} ${DOWNLOADS_DEST}
+}
+
+if [[ ! -d ~/bpa-metadata ]]
+then
+    ln -s /usr/local/src/ ~/bpa-metadata
+fi
 

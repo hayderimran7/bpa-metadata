@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# script run from cron on cortex to update the published 
-# link tree.
-cd ~/bpa-metadata/tools/linktreefactory || exit 1
+# script run from cron to update the published link tree.
+cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
 
 # swift virtualenv
 . ~/swiftev/bin/activate

@@ -21,7 +21,6 @@
     <orderEntry type="module" module-name="django-suit-examples" />
     <orderEntry type="module" module-name="ccgplatform" />
     <orderEntry type="module" module-name="ccg" />
-    <orderEntry type="module" module-name="bpa-downloads-web-site" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="myDocStringFormat" value="Plain" />
