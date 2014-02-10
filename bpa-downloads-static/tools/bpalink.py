@@ -351,11 +351,15 @@ class Archive(object):
         env = Environment()
         env.loader = FileSystemLoader('templates/')
 
-        def render_directory(base, bpa_id=None):
+        def make_directories(base):
             try:
                 os.mkdir(base)
-            except OSError:
+            except OSError, e:
+                logging.info(e)
                 pass  # probably already exists
+
+        def render_directory(base, bpa_id=None):
+            make_directories(base)
             template = env.get_template(self.template_name)
             output_filename = os.path.join(base, self.index_name)
             tmpf = output_filename + '.tmp'
