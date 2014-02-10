@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKING_DIR="/home/ubuntu/"
+WORKING_DIR=${HOME}
 
 # script run from cron to update the published link tree.
 cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
@@ -19,7 +19,7 @@ mkdir -p "$apachedir"
 update_apache() {
     container="$1"
     linkmethod="$2"
-    dummy=~/var/linktree/"$container"
+    dummy=${WORKING_DIR}/var/linktree/"$container"
     # make or update a dummy BPA archive
     mkdir -p "$dummy"
     ./swift-dummy.sh "$container" "$dummy"
