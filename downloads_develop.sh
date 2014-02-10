@@ -1,9 +1,9 @@
 #!/bin/bash
 
 PROJECT_NAME="bpa_downloads"
-PROJECT_SOURCE="bpa-downloads-static/tools/"
+PROJECT_SOURCE="bpa-downloads-static"
 TOPDIR=$(cd $(dirname $0); pwd)
-SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE}"
+SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE/tools/}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
 
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
@@ -99,8 +99,14 @@ activate_virtualenv() {
     source ${VIRTUALENV}/bin/activate
 }
 
+deploy_webroot() {
+    cp -r ${PROJECT_SOURCE/webroot/*} /var/www/
+}
+
 linksource
 install_downloads_virtualenv
+deploy_webroot
+
 activate_virtualenv
 ${PROJECT_SOURCE}/nectar-cron.sh
 
