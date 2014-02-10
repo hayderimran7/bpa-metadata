@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJECT_NAME="bpa_downloads"
-PROJECT_SOURCE="bpa-downloads-static"
+PROJECT_SOURCE="bpa-downloads-static/tools/"
 TOPDIR=$(cd $(dirname $0); pwd)
 SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE}"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
@@ -72,6 +72,8 @@ is_running_in_instance() {
     fi
 }
 
+# make the virtualenv and install all the dependencies to build the linktree
+# this includes the swift client
 install_downloads_virtualenv() {
     log_info "Installing ${PROJECT_NAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
@@ -93,8 +95,14 @@ install_downloads_virtualenv() {
     fi
 }
 
+activate_virtualenv() {
+    source ${VIRTUALENV}/bin/activate
+}
+
 linksource
 install_downloads_virtualenv
+activate_virtualenv
+${PROJECT_SOURCE}/nectar-cron.sh
 
 
 

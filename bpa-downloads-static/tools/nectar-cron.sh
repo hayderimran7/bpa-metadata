@@ -1,16 +1,18 @@
 #!/bin/bash
 
+WORKING_DIR="/home/ubuntu/"
+
 # script run from cron to update the published link tree.
 cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
 
 # swift virtualenv
-. ~/swiftev/bin/activate
+. ${WORKING_DIR}/virt_bpa_downloads/bin/activate
 
 # swift credentials
-. ./swift-creds.sh
+. /etc/bpaswift/swift_creds.sh
 
-tmpdir=~/var/linktree/tmp/
-apachedir=~/var/linktree/apache/
+tmpdir=${WORKING_DIR}/var/linktree/tmp/
+apachedir=${WORKING_DIR}/var/linktree/apache/
 mkdir -p "$tmpdir"
 mkdir -p "$apachedir"
 

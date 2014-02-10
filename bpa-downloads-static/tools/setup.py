@@ -1,12 +1,11 @@
 from setuptools import setup
 from pip.req import parse_requirements
-from bpalink import __version__
 
 requirements = [str(ir.req) for ir in parse_requirements('./requirements.txt')]
 
 setup(
     name='bpalink',
-    version=__version__,
+    version='0.0.1',
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
     description='Builds Melanoma Link tree',
