@@ -19,6 +19,7 @@ Options:
 import sys
 import re
 import urlparse
+import shutil
 import os
 import json
 import datetime
@@ -758,6 +759,14 @@ class GBRAllArchive(NoMetadataArchive):
     container_name = 'gbr'
     template_name = 'gbrall.html'
     index_name = 'all.html'
+
+
+def make_landing_page():
+    """
+    Make the bpa downloads landing page
+    """
+
+    shutil.copytree()
 
 
 if __name__ == '__main__':
