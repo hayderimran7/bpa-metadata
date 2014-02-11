@@ -3,7 +3,7 @@
 PROJECT_NAME="bpa_downloads"
 PROJECT_SOURCE="bpa-downloads-static"
 TOPDIR=$(cd $(dirname $0); pwd)
-SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE/tools/}"
+SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE}/tools/"
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
 
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
@@ -108,7 +108,7 @@ install_downloads_virtualenv
 deploy_webroot
 
 activate_virtualenv
-${PROJECT_SOURCE}/nectar-cron.sh
+${PROJECT_SOURCE}/tools/nectar-cron.sh
 
 
 
