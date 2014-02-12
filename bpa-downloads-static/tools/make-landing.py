@@ -49,10 +49,11 @@ def make_landing_page(args):
         output_filename = os.path.join(args['WEB_ROOT'], 'index.html')
         tmpf = output_filename + '.tmp'
         with open(tmpf, 'w') as fd:
-            template_data = {}
-            template_data['now'] = datetime.datetime.now()
+            template_data = {'now': datetime.datetime.now()}
             fd.write(template.render(template_data))
-            os.rename(tmpf, output_filename)
+        # backup old index
+        os.rename(output_filename, output_filename + '.old')
+        os.rename(tmpf, output_filename)
 
     copy_statics()
     make_index()
