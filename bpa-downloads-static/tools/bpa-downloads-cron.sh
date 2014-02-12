@@ -17,23 +17,23 @@ mkdir -p "$tmpdir"
 mkdir -p "$apachedir"
 
 update_apache() {
-    container="$1"
-    linkmethod="$2"
-    dummy=${WORKING_DIR}/var/linktree/"$container"
+    container="$1"   # the swift container name
+    linkmethod="$2"  #
+    dummy=${WORKING_DIR}/var/linktree/"${container}"
     # make or update a dummy BPA archive
-    mkdir -p "$dummy"
-    ./swift-dummy.sh "$container" "$dummy"
-    cfgtmp="$tmpdir/$container.cfg"
-    cfgprod="$apachedir/$container.cfg"
+    mkdir -p "${dummy}"
+    ./swift-dummy.sh "$container" "${dummy}"
+    cfgtmp="$tmpdir/${container}.cfg"
+    cfgprod="$apachedir/${container}.cfg"
     # generate link tree, and if successful update apache config
-    mkdir -p /var/www/"$linkmethod"/
+    mkdir -p /var/www/"${linkmethod}"/
     ./bpalink.py \
-        --apacheredirects "$cfgtmp" \
-        --swiftbase http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"$container" \
-        --htmlbase /var/www/"$linkmethod"/ \
+        --apacheredirects "${cfgtmp}" \
+        --swiftbase http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"${container}" \
+        --htmlbase /var/www/"${linkmethod}"/ \
         --linkbase https://downloads.bioplatforms.com/ \
-        "$linkmethod" "$dummy" && (
-            test -e "$cfgtmp" && mv "$cfgtmp" "$cfgprod"
+        "${linkmethod}" "${dummy}" && (
+            test -e "${cfgtmp}" && mv "${cfgtmp}" "${cfgprod}"
         )
 }
 
