@@ -5,7 +5,7 @@
 bpalink.py builds download link trees with file names provided.
 
 Usage: 
-  bpalink.py [options] (melanoma | gbr | wheat7a | wheat_cultivars | wheat_pathogens | base ) SUBARCHIVE_ROOT
+  bpalink.py [options] ( landing_page | melanoma | gbr | wheat7a | wheat_cultivars | wheat_pathogens | base ) SUBARCHIVE_ROOT
 
 Options:
   -v, --verbose                       Verbose mode.
@@ -19,7 +19,6 @@ Options:
 import sys
 import re
 import urlparse
-import shutil
 import os
 import json
 import datetime
@@ -761,16 +760,8 @@ class GBRAllArchive(NoMetadataArchive):
     index_name = 'all.html'
 
 
-def make_landing_page():
-    """
-    Make the bpa downloads landing page
-    """
-
-    shutil.copytree()
-
-
 if __name__ == '__main__':
-    def sanity_check(args):
+    def sanity_check():
         def test_path(path):
             if not Path(path).exists():
                 sys.exit("The folder {0} does not exist. Quitting".format(path))
@@ -778,7 +769,7 @@ if __name__ == '__main__':
         # does the source folder exist ?
         test_path(args['SUBARCHIVE_ROOT'])
 
-    def run_archive(cls, args):
+    def run_archive(cls):
         archive = cls(args['SUBARCHIVE_ROOT'])
         archive.process(args)
 
@@ -787,7 +778,7 @@ if __name__ == '__main__':
             run_archive(MelanomaArchive, args)
         elif args['gbr']:
             run_archive(GBRArchive, args)
-            run_archive(GBRAllArchive, args) # flat view for wget
+            run_archive(GBRAllArchive, args)  # flat view for wget
         elif args['wheat7a']:
             run_archive(Wheat7aArchive, args)
         elif args['wheat_pathogens']:
@@ -796,10 +787,10 @@ if __name__ == '__main__':
             run_archive(WheatCultivarsArchive, args)
         elif args['base']:
             run_archive(BASEMetaGenomicsArchive, args)
-            run_archive(BASEArchive, args)  # flat for all without metadata, usefull for wget
+            run_archive(BASEArchive, args)  # flat for all without metadata, useful for wget
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
         logging.info(args)
-    sanity_check(args)
+    sanity_check()
     run()
