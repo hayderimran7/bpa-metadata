@@ -3,12 +3,12 @@ from setuptools import setup
 # requirements = [str(ir.req) for ir in parse_requirements('./requirements.txt')]
 
 requirements = (
-    'Unipath==1.0',
-    'docopt==0.6.1',
-    'tendo==0.2.3',
-    'xlrd==0.9.2',
-    'Jinja2==2.7.1',
-    'xlrd==0.9.2',
+    'Unipath>=1.0',
+    'docopt>=0.6.1',
+    'tendo>=0.2.3',
+    'xlrd>=0.9.2',
+    'Jinja2>=2.7.1',
+    'xlrd>=0.9.2',
     'python-keystoneclient',
     'python-swiftclient',
 )
