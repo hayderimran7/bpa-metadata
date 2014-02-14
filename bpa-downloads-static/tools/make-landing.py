@@ -5,11 +5,12 @@
 ake-landing.py creates the bpa downloads
 
 Usage:
-  bpalink.py [options] WEB_ROOT
+  bpalink.py [options]
 
 Options:
-  -v, --verbose               Verbose mode.
+  -r, --www-root=<WWW_ROOT>   The site root folder [default: /var/www/]
   -u, --site-url=<SITE_URL>   The site URL [default: https://downloads.bioplatforms.com].
+  -v, --verbose               Verbose mode.
 """
 
 __version__ = '0.0.1'
@@ -22,7 +23,6 @@ import logging
 
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
-
 from docopt import docopt
 from unipath import Path
 
@@ -38,8 +38,8 @@ def make_landing_page(args):
     def copy_statics():
         # copy statics
         root_source = Path(Path(os.path.abspath(__file__)).ancestor(2), "webroot/")
-        logging.info('Copying statics from {0} to {1}'.format(root_source, args['WEB_ROOT']))
-        distutils.dir_util.copy_tree(root_source, args['WEB_ROOT'])
+        logging.info('Copying statics from {0} to {1}'.format(root_source, args['--www-root']))
+        distutils.dir_util.copy_tree(root_source, args['--www-root'])
 
     def make_index():
         # make index.html fom template
@@ -68,7 +68,7 @@ if __name__ == '__main__':
                 sys.exit("The folder {0} does not exist. Quitting".format(path))
 
         # does the source folder exist ?
-        test_path(args['WEB_ROOT'])
+        test_path(args['--www-root'])
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
