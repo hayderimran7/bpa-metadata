@@ -15,8 +15,8 @@ cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
 
 tmpdir=${WORKING_DIR}/var/linktree/tmp/
 apachedir=${WORKING_DIR}/var/linktree/apache/
-mkdir -p "$tmpdir"
-mkdir -p "$apachedir"
+mkdir -p "${tmpdir}"
+mkdir -p "${apachedir}"
 
 update_apache() {
     container="$1"   # the swift container name
