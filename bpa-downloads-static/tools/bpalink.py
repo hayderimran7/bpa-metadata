@@ -775,18 +775,18 @@ if __name__ == '__main__':
 
     def run():
         if args['melanoma']:
-            run_archive(MelanomaArchive, args)
+            run_archive(MelanomaArchive)
         elif args['gbr']:
-            run_archive(GBRArchive, args)
-            run_archive(GBRAllArchive, args)  # flat view for wget
+            run_archive(GBRArchive)
+            run_archive(GBRAllArchive)  # flat view for wget
         elif args['wheat7a']:
-            run_archive(Wheat7aArchive, args)
+            run_archive(Wheat7aArchive)
         elif args['wheat_pathogens']:
-            run_archive(WheatPathogensArchive, args)
+            run_archive(WheatPathogensArchive)
         elif args['wheat_cultivars']:
-            run_archive(WheatCultivarsArchive, args)
+            run_archive(WheatCultivarsArchive)
         elif args['base']:
-            run_archive(BASEMetaGenomicsArchive, args)
+            run_archive(BASEMetaGenomicsArchive)
             run_archive(BASEArchive, args)  # flat for all without metadata, useful for wget
 
     args = docopt(__doc__, version=__version__)
