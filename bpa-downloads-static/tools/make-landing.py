@@ -8,7 +8,8 @@ Usage:
   bpalink.py [options] WEB_ROOT
 
 Options:
-  -v, --verbose    Verbose mode.
+  -v, --verbose               Verbose mode.
+  -u, --site-url=<SITE_URL>   The site URL [default: https://downloads.bioplatforms.com].
 """
 
 __version__ = '0.0.1'
@@ -49,7 +50,8 @@ def make_landing_page(args):
         output_filename = os.path.join(args['WEB_ROOT'], 'index.html')
         tmpf = output_filename + '.tmp'
         with open(tmpf, 'w') as fd:
-            template_data = {'now': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+            template_data = {'now': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                             'site_url': args['--site-url']}
             fd.write(template.render(template_data))
         # backup old index
         os.rename(output_filename, output_filename + '.old')
