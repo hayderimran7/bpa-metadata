@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# This script periodically checks the bpa archive for new files and re-build the BPA
+# static downloads site allowing the new files to be downloaded via the static site.
+
 WORKING_DIR=${HOME}
 LINKBASE=${1:-"https://downloads.bioplatforms.com"}
-echo ${LINKBASE}
 
 # script run from cron to update the published link tree.
 cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
