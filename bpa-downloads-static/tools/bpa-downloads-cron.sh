@@ -1,6 +1,8 @@
 #!/bin/bash
 
 WORKING_DIR=${HOME}
+LINKBASE=${1:-"https://downloads.bioplatforms.com"}
+echo ${LINKBASE}
 
 # script run from cron to update the published link tree.
 cd ~/bpa-metadata/bpa-downloads-static/tools || exit 1
@@ -31,7 +33,7 @@ update_apache() {
         --apacheredirects "${cfgtmp}" \
         --swiftbase http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"${container}" \
         --htmlbase /var/www/"${linkmethod}"/ \
-        --linkbase https://downloads.bioplatforms.com/ \
+        --linkbase ${LINKBASE} \
         "${linkmethod}" "${dummy}" && (
             test -e "${cfgtmp}" && mv "${cfgtmp}" "${cfgprod}"
         )
@@ -43,7 +45,7 @@ update_apache GBR gbr
 #update_apache Wheat7a wheat7a
 #update_apache BASE base
 #update_apache Wheat_Pathogens wheat_pathogens
-update_apache Wheat_Cultivars wheat_cultivars
+#update_apache Wheat_Cultivars wheat_cultivars
 
 # requires this line in sudoers:
 # ccg-user ALL=(ALL) NOPASSWD: /usr/sbin/apachectl
