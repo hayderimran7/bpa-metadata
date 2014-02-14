@@ -47,7 +47,7 @@ def make_landing_page(args):
         env.loader = FileSystemLoader('templates/')
         template = env.get_template('landing_page.html')
 
-        output_filename = os.path.join(args['WEB_ROOT'], 'index.html')
+        output_filename = os.path.join(args['--www-root'], 'index.html')
         tmpf = output_filename + '.tmp'
         with open(tmpf, 'w') as fd:
             template_data = {'now': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
