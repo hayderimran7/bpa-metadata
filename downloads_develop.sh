@@ -108,7 +108,7 @@ install_downloads_virtualenv
 deploy_webroot
 
 activate_virtualenv
-${PROJECT_SOURCE}/tools/nectar-cron.sh
+${PROJECT_SOURCE}/tools/bpa-downloads-cron.sh
 
 
 
