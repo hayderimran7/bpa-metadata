@@ -4,6 +4,7 @@ PROJECT_NAME="bpa_downloads"
 PROJECT_SOURCE="bpa-downloads-static"
 TOPDIR=$(cd $(dirname $0); pwd)
 SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE}/tools/"
+TOOLS_PATH=${SETUP_PATH} # being pedantic is hard
 PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
 
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
@@ -103,10 +104,18 @@ deploy_webroot() {
     cp -r ${PROJECT_SOURCE/webroot/*} /var/www/
 }
 
+make_landing_page() {
+    activate_virtualenv
+    # hostname -i in lxc gets confused because lxc instances are currently named the same
+    (   cd ${TOOLS_PATH}/
+        ./make-landing.py -u http://$(ip addr show eth0 | grep "inet " | awk '{print $2}' | awk -F '/' '{print $1}')
+    )
+}
+
 linksource
 install_downloads_virtualenv
 deploy_webroot
-
+make_landing_page
 activate_virtualenv
 ${PROJECT_SOURCE}/tools/bpa-downloads-cron.sh
 
