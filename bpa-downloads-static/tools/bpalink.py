@@ -31,6 +31,7 @@ import unipath
 import xlrd
 from jinja2 import FileSystemLoader
 from jinja2.environment import Environment
+from six import string_types
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -516,12 +517,21 @@ class GBRArchive(Archive):
     def parse_metadata(self):
         metadata = []
 
+        def to_string(v):
+            if isinstance(v, string_types):
+                return v
+            try:
+                newval = int(v)
+            except ValueError:
+                logging.warning('DNA/RNA Source name conversion error: {0}'.format(v))
+            return str(newval)
+
         wrapper = ExcelWrapper(self.metadata_filename)
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
             ('uid', 'Unique ID', None),
-            ('dna_rna_source', 'DNA/RNA Source', None),
+            ('dna_rna_source', 'DNA/RNA Source', to_string),
             ('library', 'Library', None),
             ('library_construction', 'Library Construction (insert size bp)', None),
             ('library_construction_protocol', 'Library construction protocol', None),
