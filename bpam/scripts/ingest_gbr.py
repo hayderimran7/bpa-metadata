@@ -1,9 +1,6 @@
 import sys
-from datetime import datetime
-import logging
 import pprint
 
-import xlrd
 from unipath import Path
 
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
@@ -11,9 +8,9 @@ from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRPro
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
+from libs.excel_wrapper import ExcelWrapper
 
 
-logging.basicConfig(level=logging.INFO)
 logger = get_logger('GBR')
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
@@ -168,7 +165,7 @@ def ingest_samples(samples):
         add_sample(sample)
 
 
-def get_gbr_sample_data(spreadsheet_file):
+def get_gbr_sample_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -216,25 +213,13 @@ def get_gbr_sample_data(spreadsheet_file):
         ('date_data_sent', 'Date data sent/transferred', None),
     ]
 
-    wb = xlrd.open_workbook(spreadsheet_file)
-    sheet = wb.sheet_by_name('DNA library Sequencing - Pilot')
-    samples = []
-    for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
-        vals = sheet.row_values(row_idx)
-
-        if not bpa_id_utils.is_good_bpa_id(vals[0]):
-            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
-            continue
-
-        # for date types try to convert to python dates
-        types = sheet.row_types(row_idx)
-        for i, t in enumerate(types):
-            if t == xlrd.XL_CELL_DATE:
-                vals[i] = datetime(*xlrd.xldate_as_tuple(vals[i], wb.datemode))
-
-        samples.append(dict(zip(fieldnames, vals)))
-
-    return samples
+    wrapper = ExcelWrapper(
+        field_spec,
+        file_name,
+        sheet_name='DNA library Sequencing - Pilot',
+        header_length=1,
+        column_name_row_index=0)
+    return wrapper.get_all()
 
 
 def ingest_runs(sample_data):
@@ -358,17 +343,17 @@ def ingest_runs(sample_data):
         add_file(e, sequence_run)
 
 
-def ingest_gbr(spreadsheet_file):
-    sample_data = get_gbr_sample_data(spreadsheet_file)
+def ingest(file_name):
+    sample_data = get_gbr_sample_data(file_name)
     bpa_id_utils.ingest_bpa_ids(sample_data, 'GBR')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
 
-def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
     """
 
-    ingest_gbr(spreadsheet_file)
+    ingest(file_name)
