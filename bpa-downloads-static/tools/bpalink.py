@@ -48,7 +48,7 @@ def _stringify(s):
     elif isinstance(s, unicode):
         return str(s.encode('utf8'))
     else:
-        return str(s)
+        return s
 
 
 def stringify(s):
@@ -100,7 +100,10 @@ def parse_to_named_tuple(typname, reader, header, fieldspec):
     for idx, row in enumerate(reader):
         tpl = [idx]
         for fn, i in zip(fns, lookup):
-            val = row[i].decode('utf-8').strip()
+            # val = row[i].decode('utf-8').strip()
+            val = row[i]
+            if isinstance(val, string_types):
+                val = val.decode('utf-8').strip()
             if fn is not None:
                 val = fn(val)
             tpl.append(val)
@@ -635,10 +638,10 @@ class WheatPathogensArchive(Archive):
             if isinstance(v, string_types):
                 return v
             try:
-                newval = int(v)
+                new_val = int(v)
             except ValueError:
                 logging.warning('DNA/RNA Source name conversion error: {0}'.format(v))
-            return str(newval)
+            return str(new_val)
 
         metadata = []
         wrapper = ExcelWrapper(self.metadata_filename)
