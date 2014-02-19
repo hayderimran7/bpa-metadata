@@ -513,24 +513,16 @@ class GBRArchive(Archive):
         self.fastq = FastqInventory(self.base)
         self.metadata = self.parse_metadata()
         self.matches = self.tie_metadata_to_fastq()
+
     def parse_metadata(self):
         metadata = []
-
-        def to_string(v):
-            if isinstance(v, string_types):
-                return v
-            try:
-                newval = int(v)
-            except ValueError:
-                logging.warning('DNA/RNA Source name conversion error: {0}'.format(v))
-            return str(newval)
 
         wrapper = ExcelWrapper(self.metadata_filename)
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('GBRMeta', reader, header, [
             ('uid', 'Unique ID', None),
-            ('dna_rna_source', 'DNA/RNA Source', to_string),
+            ('dna_rna_source', 'DNA/RNA Source', None),
             ('library', 'Library', None),
             ('library_construction', 'Library Construction (insert size bp)', None),
             ('library_construction_protocol', 'Library construction protocol', None),
@@ -638,14 +630,23 @@ class WheatPathogensArchive(Archive):
         self.matches = self.tie_metadata_to_fastq()
 
     def parse_metadata(self):
-        metadata = []
 
+        def to_string(v):
+            if isinstance(v, string_types):
+                return v
+            try:
+                newval = int(v)
+            except ValueError:
+                logging.warning('DNA/RNA Source name conversion error: {0}'.format(v))
+            return str(newval)
+
+        metadata = []
         wrapper = ExcelWrapper(self.metadata_filename)
         reader = wrapper.sheet_iter(self.metadata_sheet)
         header = [t.strip() for t in next(reader)]
         for tpl in parse_to_named_tuple('WheatPathogensMeta', reader, header, [
             ('uid', 'BPA ID', None),
-            ('isolate_name', 'Isolate name', None),
+            ('isolate_name', 'Isolate name', to_string),
             ('species', 'Species', None),
             ('original_source_host_species', 'Original source host species', None),
             ('isolate_collection_date', 'Isolate collection date', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
