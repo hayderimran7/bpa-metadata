@@ -513,7 +513,6 @@ class GBRArchive(Archive):
         self.fastq = FastqInventory(self.base)
         self.metadata = self.parse_metadata()
         self.matches = self.tie_metadata_to_fastq()
-
     def parse_metadata(self):
         metadata = []
 
@@ -797,7 +796,7 @@ if __name__ == '__main__':
             run_archive(WheatCultivarsArchive)
         elif args['base']:
             run_archive(BASEMetaGenomicsArchive)
-            run_archive(BASEArchive, args)  # flat for all without metadata, useful for wget
+            run_archive(BASEArchive)  # flat for all without metadata, useful for wget
 
     args = docopt(__doc__, version=__version__)
     if args['--verbose']:
