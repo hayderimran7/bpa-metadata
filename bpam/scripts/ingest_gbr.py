@@ -10,10 +10,11 @@ from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
 from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
+from libs.logger_utils import get_logger
 
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('GBR')
+logger = get_logger('GBR')
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
@@ -172,51 +173,47 @@ def get_gbr_sample_data(spreadsheet_file):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = ['bpa_id',
-                  'species',
-                  'dataset',
-                  'sample_name',
-                  'dna_concentration',
-                  'total_dna',
-                  'collection_site',
-                  'collection_date',
-                  'collector_name',
-                  'gps_location',
-                  'water_temp',
-                  'ph',
-                  'depth',
-                  'collection_comment',
-                  'other',
-                  'requested_sequence_coverage',
-                  'sequencing_notes',
-                  'contact_scientist',
-                  'contact_affiliation',
-                  'contact_email',
-                  'sample_dna_source',
-                  'dna_extraction_protocol',
-                  'dna_rna_concentration',
-                  'total_dna_rna_shipped',
-                  'sequencing_facility',
-                  'date_received',
-                  'comments_by_facility',
-                  'sequencing_data_eta',
-                  'date_sequenced',
-                  'library',
-                  'library_construction',
-                  'requested_read_length',
-                  'library_construction_protocol',
-                  'index_number',
-                  'sequencer',
-                  'run_number',
-                  'flow_cell_id',
-                  'lane_number',
-                  'sequence_filename',
-                  'sequence_filetype',
-                  'md5_checksum',
-                  'contact_bioinformatician_name',
-                  'contact_bioinformatician_email',
-                  'date_data_sent',
-                  'date_data_received',
+    field_spec = [
+        ('bpa_id', 'Unique ID', None),
+        ('species', 'Species', None),
+        ('dataset', 'Dataset', None),
+        ('sample_description', 'Sample Description', None),
+        ('collection_site', 'Site of collection', None),
+        ('collection_date', 'Date of collection', None),
+        ('collector_name', 'Collector', None),
+        ('gps_location', 'GPS Location', None),
+        ('water_temp', 'water temp', None),
+        ('ph', 'pH', None),
+        ('depth', 'Depth (m)', None),
+        ('collection_comment', 'Comment (free text)', None),
+        ('other', 'Other', None),  # more comments
+        ('sequencing_notes', 'Sequencing Notes', None),
+        ('contact_scientist', 'contact scientist', None),
+        ('contact_affiliation', 'Contact affiliation', None),
+        ('contact_email', 'Contact email', None),
+        ('dna_rna_source', 'DNA/RNA Source', None),
+        ('dna_extraction_protocol', 'DNA extraction protocol', None),
+        ('dna_rna_concentration', 'DNA/RNA conc (ng/ul)', None),
+        ('total_dna_rna_shipped', 'Total volume of DNA/RNA shipped (uL)', None),
+        ('genome_sequencing_facility', 'Genome Sequencing Facility', None),
+        ('date_received_by_genome_sequencing_facility', 'Date Received by sequencing facility', None),
+        ('comments_by_facility', 'Comments by sequencing facility', None),
+        ('date_sequenced', 'Date sequenced', None),
+        ('library', 'Library', None),
+        ('library_construction', 'Library Construction (insert size bp)', None),
+        ('requested_read_length', 'Requested read length (bp)', None),
+        ('library_construction_protocol', 'Library construction protocol', None),
+        ('index_number', 'Index sequence', None),
+        ('sequencer', 'Sequencer', None),
+        ('run_number', 'Run number', None),
+        ('flow_cell_id', 'Run #:Flow Cell ID', None),
+        ('lane_number', 'Lane number', None),
+        ('sequence_filename', 'FILE NAMES - supplied by sequencing facility', None),
+        ('sequence_filetype', 'file type', None),
+        ('md5_checksum', 'MD5 checksum', None),
+        ('contact_bioinformatician_name', 'Contact bioinformatician', None),
+        ('contact_bioinformatician_email', 'Email contact', None),
+        ('date_data_sent', 'Date data sent/transferred', None),
     ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
