@@ -1,11 +1,12 @@
 import string
 from datetime import date
-import dateutil
 
+import dateutil
 from django.utils.encoding import smart_text
 
 from apps.common.models import Organism, DNASource
 from logger_utils import get_logger
+
 
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
@@ -66,8 +67,14 @@ def strip_all(reader):
 
 
 def add_organism(genus='', species=''):
-    organism = Organism(genus=genus, species=species)
-    organism.save()
+    """
+    Only add organism if it does not already exist
+    """
+    try:
+        Organism.objects.get(genus=genus, species=species)
+    except Organism.DoesNotExist:
+        organism = Organism(genus=genus, species=species)
+        organism.save()
 
 
 def get_dna_source(description):
