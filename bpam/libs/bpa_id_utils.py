@@ -1,6 +1,8 @@
-from apps.common.models import BPAUniqueID, BPAProject
 import logging
 from datetime import date
+
+from apps.common.models import BPAUniqueID, BPAProject
+
 
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
@@ -28,7 +30,10 @@ def ingest_bpa_ids(data, project_name):
 
     id_set = set()
     for e in data:
-        bpa_id = e['bpa_id'].strip()
+        if isinstance(e, dict):
+            bpa_id = e['bpa_id'].strip()
+        elif isinstance(e, tuple):
+            bpa_id = e.bpa_id.strip()
         if is_good_bpa_id(bpa_id):
             id_set.add(bpa_id)
 
