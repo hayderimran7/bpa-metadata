@@ -220,7 +220,15 @@ local_puppet() {
     ccg ${PROJECT_NICKNAME} puppet
 }
 
+
+runingest() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    ${CMD} runscript ${SECOND_ARGUMENT} --traceback
+}
+
 ingest_all() {
+    CMD='python ./bpam/manage.py'
     ${CMD} runscript set_initial_bpa_projects --traceback
     ${CMD} runscript ingest_users --traceback
     ${CMD} runscript ingest_melanoma --traceback
@@ -485,6 +493,9 @@ case ${ACTION} in
         ;;
     load_base)
         load_base
+        ;;
+    runingest)
+        runingest
         ;;
     *)
         usage
