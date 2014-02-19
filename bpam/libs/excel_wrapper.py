@@ -15,7 +15,9 @@ as mangled by the provided method.
 import datetime
 from collections import namedtuple
 import logging
+
 import xlrd
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -50,7 +52,7 @@ class ExcelWrapper(object):
     file_name: workbook name
     sheet_name: sheet in workbook
     header_length: first number of lines to ignore
-    column_name_row_index: row in which colum names are found, typically 0
+    column_name_row_index: row in which column names are found, typically 0
     """
 
     def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0):
@@ -95,10 +97,10 @@ class ExcelWrapper(object):
         """
         Map the spec fields to their corresponding functions
         """
-        fmap = {}
+        function_map = {}
         for attribute, _, func in self.field_spec:
-            fmap[attribute] = func
-        return fmap
+            function_map[attribute] = func
+        return function_map
 
     def get_date_mode(self):
         assert (self.workbook is not None)
