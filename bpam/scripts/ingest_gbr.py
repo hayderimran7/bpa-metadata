@@ -27,7 +27,7 @@ def get_dna_source(description):
     Get a DNA source if it exists, if it doesn't make it.
     """
 
-    description = description.strip().capitalize()
+    description = str(description).strip().capitalize()
     if description == '':
         logger.debug('Set blank description to unknown')
         description = 'Unknown'
