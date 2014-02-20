@@ -21,6 +21,14 @@ def add_bpa_id(idx, project_name, note=INGEST_NOTE):
     logger.info("Added BPA Unique ID: " + str(lbl))
 
 
+def add_id_set(id_set, project_name):
+    """
+    Add the id's in the given set
+    """
+    for bpa_id in id_set:
+        add_bpa_id(bpa_id, project_name)
+
+
 def ingest_bpa_ids(data, project_name):
     """
     The BPA ID's are unique
@@ -35,8 +43,7 @@ def ingest_bpa_ids(data, project_name):
         if is_good_bpa_id(bpa_id):
             id_set.add(bpa_id)
 
-    for bpa_id in id_set:
-        add_bpa_id(bpa_id, project_name)
+    add_id_set(id_set, project_name)
 
 
 def get_bpa_id(bpa_id, project_name, note=INGEST_NOTE):
