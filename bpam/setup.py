@@ -31,32 +31,32 @@ def get_data_files():
 
 
 install_requires = [
-    'Django>=1.6.1',
-    'Django-suit==0.2.5',
+    'Django>=1.6.2',
+    'Django-suit>=0.2.5',
     'django-crispy-forms',
     'python-memcached==1.53',
-    'South==0.8.4',
-    'Unipath==1.0',
-    'argparse==1.2.1',
-    'boto==2.15.0',
-    'dateutils==0.6.6',
-    'django-admin-tools==0.5.1',
+    'South>=0.8.4',
+    'Unipath>=1.0',
+    'argparse>=1.2.1',
+    'boto>=2.15.0',
+    'dateutils>=0.6.6',
+    'django-admin-tools>=0.5.1',
     'django-extensions>=1.2.5',
-    'django-localflavor==1.0',
-    'django-tinymce==1.5.2',
-    'feedparser==5.1.3',
-    'pygraphviz==1.2',
-    'pytz==2013.7',
+    'django-localflavor>=1.0',
+    'django-tinymce>=1.5.2',
+    'feedparser>=5.1.3',
+    'pygraphviz>=1.2',
+    'pytz>=2013.7',
     'sqlparse==0.1.9',
-    'django-bootstrap3==2.0.0',
-    'django-tastypie==0.10.0',
-    'xlrd==0.9.2',
-    'xlwt==0.7.5',
-    'requests==1.2.3',
-    'django_compressor==1.3',
+    'django-bootstrap3>=2.0.0',
+    'django-tastypie>=0.10.0',
+    'xlrd>=0.9.2',
+    'xlwt>=0.7.5',
+    'requests>=1.2.3',
+    'django_compressor>=1.3',
     'mimeparse',
     'rainbow_logging_handler',
-    'django-sql-explorer'
+    'django-sql-explorer',
 ]
 
 dev_requires = [
@@ -75,13 +75,13 @@ dev_requires = [
 ]
 
 tests_require = [
-    'django-nose==1.2',
-    'nose==1.2.1',
+    'django-nose>=1.2',
+    'nose>=1.2.1',
     'dingus',
 ]
 
 downloads_requires = [
-    'Jinja2==2.7.1',
+    'Jinja2>=2.7.1',
     'swift>=1.10',  # centos: libffi-devel
     'python-keystoneclient>=0.4.1',
 ]
