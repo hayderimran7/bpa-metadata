@@ -12,6 +12,7 @@ INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
 logger = get_logger('Ingest Utils')
 
+
 def get_clean_number(val, default=None):
     """
     Try to clean up numbers
@@ -48,7 +49,6 @@ def get_clean_float(val, default=None):
     except TypeError:
         logger.error("TypeError Value [{0}] not floatable".format(val))
         return default
-
 
 
 def strip_all(reader):
