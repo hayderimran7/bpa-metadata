@@ -65,7 +65,7 @@ class GBRRun(Run):
 
 
 class GBRProtocol(Protocol):
-    run = models.OneToOneField(GBRRun, blank=True, null=True)
+    run = models.ForeignKey(GBRRun, blank=True, null=True)
 
 
 class GBRSequenceFile(SequenceFile):
