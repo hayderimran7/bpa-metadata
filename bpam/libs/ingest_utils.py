@@ -9,7 +9,7 @@ from apps.common.models import Organism, DNASource
 from logger_utils import get_logger
 
 
-INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
+INGEST_NOTE = "Ingested from GoogleDocs on {0}\n".format(date.today())
 
 logger = get_logger('Ingest Utils')
 
