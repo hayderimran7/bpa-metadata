@@ -1,4 +1,5 @@
 import string
+import pprint
 from datetime import date
 
 import dateutil
@@ -114,5 +115,11 @@ def get_date(dt):
             return None
     return None
 
+
+def pretty_print_namedtuple(named_tuple):
+    """
+    pretty prints the namedtuple
+    """
+    return pprint.pformat(named_tuple._asdict())
 
 
