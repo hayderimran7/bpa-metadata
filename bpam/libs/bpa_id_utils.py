@@ -1,14 +1,12 @@
-import logging
 from datetime import date
 
 from apps.common.models import BPAUniqueID, BPAProject
-
+from logger_utils import get_logger
 
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('BPA ID Utils')
+logger = get_logger('BPA ID Utils')
 
 
 def add_bpa_id(idx, project_name, note=INGEST_NOTE):
