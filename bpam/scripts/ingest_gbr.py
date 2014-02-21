@@ -121,8 +121,8 @@ def ingest_samples(samples):
         gbr_sample.name = e.sample_description
         gbr_sample.organism = get_organism(e.species)
         gbr_sample.dna_source = get_dna_source(e.dna_rna_source)
+        gbr_sample.dataset = e.dataset
         gbr_sample.dna_extraction_protocol = e.dna_extraction_protocol
-        gbr_sample.dna_concentration = ingest_utils.get_clean_number(e.dna_rna_concentration)  # FIXME
 
         # scientist
         gbr_sample.contact_scientist = user_helper.get_user(
@@ -137,8 +137,8 @@ def ingest_samples(samples):
             (GBR_DESCRIPTION,))
 
         gbr_sample.sequencing_notes = e.sequencing_notes
-        gbr_sample.dna_rna_concentration = ingest_utils.get_clean_number(e.dna_rna_concentration)
-        gbr_sample.total_dna_rna_shipped = ingest_utils.get_clean_number(e.total_dna_rna_shipped)
+        gbr_sample.dna_rna_concentration = ingest_utils.get_clean_float(e.dna_rna_concentration)
+        gbr_sample.total_dna_rna_shipped = ingest_utils.get_clean_float(e.total_dna_rna_shipped)
         gbr_sample.comments_by_facility = e.comments_by_facility
         gbr_sample.date_sequenced = ingest_utils.get_date(e.date_sequenced)
         gbr_sample.requested_read_length = ingest_utils.get_clean_number(e.requested_read_length)
