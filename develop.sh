@@ -17,8 +17,7 @@ AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
-PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
-
+PIP_OPTS="--download-cache ~/.pip/cache --upgrade --process-dependency-links"
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
 PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
@@ -231,13 +230,13 @@ ingest_all() {
     CMD='python ./bpam/manage.py'
     ${CMD} runscript set_initial_bpa_projects --traceback
     ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_melanoma --traceback
+    #${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-    ${CMD} runscript ingest_wheat_cultivars --traceback
+    #${CMD} runscript ingest_wheat_pathogens --traceback
+    #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
-    ${CMD} runscript ingest_base_454
+    #${CMD} runscript ingest_base_454
 }
 
 devrun() {
@@ -250,6 +249,7 @@ devrun() {
 
 # django syncdb, migrate and collect static
 syncmigrate() {
+    activate_virtualenv
     CMD=${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py
     log_info "Running syncdb"
     ${CMD} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
@@ -358,6 +358,7 @@ usage() {
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
     log_warning "Usage ./develop.sh url_checker"
     log_warning "Usage ./develop.sh deepclean"
+    log_warning "Usage ./develop.sh migrationupdate APP"
 }
 
 
@@ -387,6 +388,7 @@ load_base() {
 }
 
 migrationupdate() {
+    activate_virtualenv
     APP=${SECOND_ARGUMENT}
     devsettings
     CMD='python ./bpam/manage.py'
