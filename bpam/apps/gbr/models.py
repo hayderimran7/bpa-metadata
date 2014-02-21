@@ -38,12 +38,9 @@ class GBRSample(Sample, DebugNote):
 
     organism = models.ForeignKey(Organism)
     dataset = models.CharField(max_length=100, null=True, blank=True)
-    total_dna = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA'))
-
     collection_event = models.ForeignKey(CollectionEvent)
-
     sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
-    dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration'))
+    dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration (ng/uL)'))
     total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))
     comments_by_facility = models.TextField(null=True, blank=True, verbose_name=_('Facility Comments'))
     sequencing_data_eta = models.DateField(blank=True, null=True, verbose_name=_('Sequence ETA'))
