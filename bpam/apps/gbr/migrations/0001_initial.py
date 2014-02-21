@@ -43,7 +43,6 @@ class Migration(SchemaMigration):
             ('debug_note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('organism', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Organism'])),
             ('dataset', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('total_dna', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('collection_event', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['gbr.CollectionEvent'])),
             ('sequencing_notes', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('dna_rna_concentration', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
@@ -324,7 +323,6 @@ class Migration(SchemaMigration):
                 'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'}),
             'sequencing_data_eta': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'sequencing_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'total_dna': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'total_dna_rna_shipped': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
         },
         u'gbr.gbrsequencefile': {
