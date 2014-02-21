@@ -33,23 +33,37 @@ def get_clean_number(val, default=None):
 
 def get_clean_float(val, default=None):
     """
-    Returns a float from a value
+    Try to hammer an arb value into a float
     """
+
+    def to_float(var):
+        try:
+            return float(var)
+        except ValueError:
+            logger.warning("ValueError Value '{0}' not floatable, returning default '{1}'".format(var, default))
+            return default
+        except TypeError:
+            logger.warning("TypeError Value '{0}' not floatable, returning default '{1}'".format(var, default))
+            return default
+
+    # if its a float, its probably ok
     if isinstance(val, float):
         return val
 
+    # if its an integer, make it a float
+    if isinstance(val, int):
+        return to_float(val)
+
+    # the empty string gets the default
+    if val == '':
+        return default
+
+    # if its not a string, forget it, return the default
     if not isinstance(val, basestring):
         return default
 
     remove_letters_map = dict((ord(char), None) for char in string.letters)
-    try:
-        return float(val.translate(remove_letters_map))
-    except ValueError:
-        logger.error("ValueError Value [{0}] not floatable".format(val))
-        return default
-    except TypeError:
-        logger.error("TypeError Value [{0}] not floatable".format(val))
-        return default
+    return to_float(val.translate(None, string.letters))
 
 
 def strip_all(reader):
