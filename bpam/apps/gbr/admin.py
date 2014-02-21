@@ -127,7 +127,7 @@ class SampleAdmin(admin.ModelAdmin):
              'organism',
              'dna_source',
              'dna_extraction_protocol',
-             'dna_concentration', 'total_dna', 'dna_rna_concentration', 'total_dna_rna_shipped',)}),
+             'total_dna', 'dna_rna_concentration', 'total_dna_rna_shipped',)}),
         ('Sample Management',
          {'fields': (
              'dataset',

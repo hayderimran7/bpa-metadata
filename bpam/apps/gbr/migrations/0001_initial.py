@@ -43,7 +43,6 @@ class Migration(SchemaMigration):
             ('debug_note', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('organism', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Organism'])),
             ('dataset', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('dna_concentration', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('total_dna', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('collection_event', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['gbr.CollectionEvent'])),
             ('sequencing_notes', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
@@ -150,7 +149,7 @@ class Migration(SchemaMigration):
                      'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
             'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'content_type': (
-            'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
@@ -192,7 +191,8 @@ class Migration(SchemaMigration):
         u'common.bpauniqueid': {
             'Meta': {'object_name': 'BPAUniqueID'},
             'bpa_id': (
-            'django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200', 'primary_key': 'True'}),
+                'django.db.models.fields.CharField', [],
+                {'unique': 'True', 'max_length': '200', 'primary_key': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['common.BPAProject']"})
         },
@@ -230,7 +230,8 @@ class Migration(SchemaMigration):
         u'common.urlverification': {
             'Meta': {'object_name': 'URLVerification'},
             'checked_at': (
-            'django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateTimeField', [],
+                {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
             'checked_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'status_note': ('django.db.models.fields.TextField', [], {}),
@@ -252,7 +253,7 @@ class Migration(SchemaMigration):
                            'to': u"orm['bpaauth.BPAUser']"}),
             'depth': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'gps_location': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
@@ -272,7 +273,7 @@ class Migration(SchemaMigration):
         },
         u'gbr.gbrrun': {
             'DNA_extraction_protocol': (
-            'django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'Meta': {'object_name': 'GBRRun'},
             'array_analysis_facility': ('django.db.models.fields.related.ForeignKey', [],
                                         {'blank': 'True', 'related_name': "'+'", 'null': 'True',
@@ -296,7 +297,7 @@ class Migration(SchemaMigration):
                        {'to': u"orm['common.BPAUniqueID']", 'unique': 'True'}),
             'collection_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'collection_event': (
-            'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['gbr.CollectionEvent']"}),
+                'django.db.models.fields.related.ForeignKey', [], {'to': u"orm['gbr.CollectionEvent']"}),
             'comments_by_facility': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'contact_bioinformatician': ('django.db.models.fields.related.ForeignKey', [],
                                          {'blank': 'True', 'related_name': "'bioinformatician'", 'null': 'True',
@@ -304,14 +305,13 @@ class Migration(SchemaMigration):
             'contact_scientist': ('django.db.models.fields.related.ForeignKey', [],
                                   {'to': u"orm['bpaauth.BPAUser']", 'null': 'True', 'blank': 'True'}),
             'dataset': (
-            'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'date_sent_to_sequencing_facility': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'date_sequenced': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'debug_note': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'dna_concentration': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'dna_extraction_protocol': (
-            'django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'dna_rna_concentration': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'dna_source': ('django.db.models.fields.related.ForeignKey', [],
                            {'to': u"orm['common.DNASource']", 'null': 'True', 'blank': 'True'}),
@@ -321,7 +321,7 @@ class Migration(SchemaMigration):
             'organism': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['common.Organism']"}),
             'requested_read_length': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'requested_sequence_coverage': (
-            'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '6', 'blank': 'True'}),
             'sequencing_data_eta': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'sequencing_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'total_dna': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
@@ -332,9 +332,9 @@ class Migration(SchemaMigration):
             'analysed': (
                 'django.db.models.fields.NullBooleanField', [], {'default': 'False', 'null': 'True', 'blank': 'True'}),
             'date_received_from_sequencing_facility': (
-            'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'filename': (
-            'django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
+                'django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'index_number': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'lane_number': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),

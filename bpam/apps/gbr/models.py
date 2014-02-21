@@ -38,7 +38,6 @@ class GBRSample(Sample, DebugNote):
 
     organism = models.ForeignKey(Organism)
     dataset = models.CharField(max_length=100, null=True, blank=True)
-    dna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA Concentration'))
     total_dna = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA'))
 
     collection_event = models.ForeignKey(CollectionEvent)
