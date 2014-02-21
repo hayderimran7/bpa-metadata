@@ -44,6 +44,7 @@ class RunAdmin(admin.ModelAdmin):
                 'whole_genome_sequencing_facility': LinkedSelect,
                 'sequencer': LinkedSelect
             }
+
     form = RunForm
 
     fieldsets = [
@@ -60,6 +61,7 @@ class RunAdmin(admin.ModelAdmin):
         form = ProtocolForm
         radio_fields = {'library_type': admin.HORIZONTAL}
         extra = 0
+
     inlines = (ProtocolInline, )
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
