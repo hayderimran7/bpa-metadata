@@ -147,7 +147,7 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
-    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
+    search_fields = ('bpa_id__bpa_id', 'name',)
     list_filter = ('dna_source', 'requested_sequence_coverage',)
 
 
@@ -183,7 +183,6 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CollectionEvent, CollectionEventAdmin)
-
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
 admin.site.register(GBRRun, RunAdmin)
