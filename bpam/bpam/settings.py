@@ -1,10 +1,12 @@
 # Django settings for bpametadata project.
 
 import os
+
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-BPA_VERSION = '1.0.4'
+
+BPA_VERSION = '1.0.5'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,7 +29,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-# ('Your Name', 'your_email@example.com'),
+    # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
@@ -51,14 +53,19 @@ SUIT_CONFIG = {
     'MENU': (
         {'app': 'common', 'label': 'Common', },
         {'app': 'melanoma', 'label': 'Melanoma',
-         'models':
-             ('melanomasample',
-              'melanomasequencefile',
-              'array',
-              'melanomaprotocol',
-              'melanomarun',
-              'tumorstage')},
-        {'app': 'gbr', 'label': 'Great Barrier Reef', },
+         'models': ('melanomasample',
+                    'melanomasequencefile',
+                    'array',
+                    'melanomaprotocol',
+                    'melanomarun',
+                    'tumorstage')},
+        {'app': 'gbr', 'label': 'Great Barrier Reef',
+         'models': ('gbrsample',
+                    'gbrsequencefile',
+                    'collectionevent',
+                    'gbrrun',
+                    'gbrprotocol',)},
+
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
         {'label': 'BASE Metagenomics',
