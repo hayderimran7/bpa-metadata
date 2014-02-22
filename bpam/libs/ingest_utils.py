@@ -62,7 +62,7 @@ def get_clean_float(val, default=None):
     if not isinstance(val, basestring):
         return default
 
-    remove_letters_map = dict((ord(char), None) for char in string.letters)
+    # remove_letters_map = dict((ord(char), None) for char in string.letters)
     return to_float(val.translate(None, string.letters))
 
 
@@ -121,6 +121,15 @@ class TestGetCleanFloat(unittest.TestCase):
     def test_get_clean_float(self):
         for f in self.floats:
             self.assertTrue(f == get_clean_float(f))
+
+    def test_xxx(self):
+        self.assertTrue(get_clean_float('', 'XXX') == 'XXX')
+
+    def test_none(self):
+        self.assertTrue(get_clean_float('') is None)
+
+    def test_int(self):
+        self.assertTrue(get_clean_float(123) == 123)
 
 
 if __name__ == '__main__':
