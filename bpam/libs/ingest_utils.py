@@ -1,11 +1,11 @@
 import string
 import pprint
 from datetime import date
+import unittest
 
 import dateutil
 from django.utils.encoding import smart_text
 
-from apps.common.models import Organism, DNASource
 from logger_utils import get_logger
 
 
@@ -81,33 +81,6 @@ def strip_all(reader):
     return entries
 
 
-def add_organism(genus='', species=''):
-    """
-    Only add organism if it does not already exist
-    """
-    try:
-        Organism.objects.get(genus=genus, species=species)
-    except Organism.DoesNotExist:
-        organism = Organism(genus=genus, species=species)
-        organism.save()
-
-
-def get_dna_source(description):
-    """
-    Get a DNA source if it exists, if it doesn't make it.
-    """
-
-    description = description.capitalize()
-
-    try:
-        source = DNASource.objects.get(description=description)
-    except DNASource.DoesNotExist:
-        source = DNASource(description=description)
-        source.save()
-
-    return source
-
-
 def get_date(dt):
     """
     When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
@@ -137,3 +110,18 @@ def pretty_print_namedtuple(named_tuple):
     return pprint.pformat(named_tuple._asdict())
 
 
+class TestGetCleanFloat(unittest.TestCase):
+    """
+    get_clean_float tester
+    """
+
+    def setUp(self):
+        self.floats = (12131.5345, 22.444, 33.0)
+
+    def test_get_clean_float(self):
+        for f in self.floats:
+            self.assertTrue(f == get_clean_float(f))
+
+
+if __name__ == '__main__':
+    unittest.main()
