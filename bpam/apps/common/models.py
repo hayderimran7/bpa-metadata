@@ -160,7 +160,7 @@ class Sample(models.Model):
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
-    name = models.CharField(_('Sample name'), max_length=200)
+    name = models.CharField(_('Sample Name'), max_length=200)
     dna_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True, null=True)
     requested_sequence_coverage = models.CharField(max_length=6, blank=True)
     collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
