@@ -1,12 +1,11 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
 from django.conf import settings
 
-from apps.common.models import BPAUniqueID
+from apps.common.models import BPAUniqueID, DebugNote
 
 
-class Sample454(models.Model):
+class Sample454(DebugNote):
     RESULT = (('P', 'Pass'), ('F', 'Failed'), ('NP', 'Not Performed'), ('U', 'Unknown'), ('R', 'Repeat'))
 
     bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
@@ -50,6 +49,7 @@ class Sample454(models.Model):
     brisbane_16s_reads = models.IntegerField(_('16S >3000 reads - Trim Back 150bp'), blank=True, null=True)
     brisbane_its_reads = models.IntegerField(_('ITS >3000 reads - Trim Back 150bp Run1'), blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+
 
     def __unicode__(self):
         return u'Soil Sample 454 {0}'.format(self.bpa_id)

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from ..models.sample454 import *
 
@@ -9,8 +10,14 @@ class Sample454Admin(admin.ModelAdmin):
         class Meta:
             model = Sample454
             widgets = {
-                'note': forms.TextInput(attrs={'class': 'input-large',
-                                               'style': 'width:95%'}),
+                'bpa_id': LinkedSelect,
+                'submitter': LinkedSelect,
+                'date_received': SuitDateWidget,
+                'adelaide_date_shipped_to_agrf_454': SuitDateWidget,
+                'adelaide_date_shipped_to_agrf_miseq': SuitDateWidget,
+                'adelaide_date_shipped_to_ramacciotti': SuitDateWidget,
+                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
             }
 
     form = Sample454AdminForm
@@ -71,7 +78,7 @@ class Sample454Admin(admin.ModelAdmin):
          }),
         ('Comments and Notes',
          {'description': 'Any notes or comments on this Extraction',
-          'fields': ('note', )})
+          'fields': ('note', 'debug_note')})
     ]
 
 
