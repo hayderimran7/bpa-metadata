@@ -65,6 +65,7 @@ def ingest_samples(samples):
             collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
             collection_event.ph = ingest_utils.get_clean_number(entry.ph)
             collection_event.depth = entry.depth
+            # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
             collection_event.gps_location = entry.gps_location
             collection_event.note = entry.collection_comment
 
