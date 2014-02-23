@@ -1,13 +1,14 @@
 from collections import namedtuple
-import logging
-from apps.common.models import BPAProject
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('SetProjects')
+from apps.common.models import BPAProject
+import libs.logger_utils as logger_utils
+
+
+logger = logger_utils.get_logger('Add Projects')
 
 Project = namedtuple('Project', 'key name description note')
 projects = (
-    Project('base', 'base', 'base, Agricultural and Environmental Soil', ''),
+    Project('BASE', 'BASE', 'BASE, Agricultural and Environmental Soil', ''),
     Project('GBR', 'GBR', 'Great Barrier Reef', 'Coral'),
     Project('MELANOMA', 'Melanoma', 'Melanoma', 'Human Melanomas'),
     Project('WHEAT_7A', 'Wheat 7A', 'Wheat Chromosome 7A', ''),
@@ -22,16 +23,11 @@ def set_bpa_projects():
     """
 
     for project in projects:
-        try:
-            BPAProject.objects.get(key=project.key)
-        except BPAProject.DoesNotExist:
-            project = BPAProject(key=project.key,
-                                 name=project.name,
-                                 description=project.description,
-                                 note=project.note
-            )
-            project.save()
-            logger.info('Added project {0}'.format(project.name))
+        BPAProject.objects.get_or_create(key=project.key,
+                                         name=project.name,
+                                         description=project.description,
+                                         note=project.note)
+        logger.info('BPA Project {0} Added'.format(project.name))
 
 
 def run():
