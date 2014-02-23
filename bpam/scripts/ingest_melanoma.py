@@ -1,6 +1,4 @@
 import sys
-import pprint
-import logging
 from datetime import datetime
 from datetime import date
 
@@ -17,9 +15,9 @@ from apps.melanoma.models import (
     BPAUniqueID,
     MelanomaRun,
     MelanomaSequenceFile)
-
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
+
 
 
 # some defaults to fall back on
@@ -28,8 +26,7 @@ DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'Melanoma_study_metadata.xlsx'
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('MELANOMA')
+logger = ingest_utils.get_logger('Melanoma')
 
 
 def get_dna_source(description):
@@ -129,7 +126,7 @@ def ingest_samples(samples):
         sample.sequencing_facility = get_facility(e['sequencing_facility'])
 
         sample.note = u'{0} {1} {2}'.format(e['contact_scientists'], e['contact_affiliation'], e['contact_email'])
-        sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
+        sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
         sample.save()
         logger.info("Ingested Melanoma sample {0}".format(sample.name))
 
@@ -172,38 +169,35 @@ def get_melanoma_sample_data(spreadsheet_file):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = ['bpa_id',
-                  'sample_name',
-                  'sequence_coverage',
-                  'sequencing_facility',
-                  'species',
-                  'contact_scientists',
-                  'contact_affiliation',
-                  'contact_email',
-                  'sample_gender',
-                  'sample_dna_source',
-                  'sample_tumor_stage',
-                  'histological_subtype',
-                  'passage_number',
-                  'dna_extraction_protocol',
-                  'array_analysis_facility',
-                  'date_sent_for_sequencing',
-                  'whole_genome_sequencing_facility',
-                  'date_received',
-                  'library',
-                  'library_construction',
-                  'library_construction_protocol',
-                  'index_number',
-                  'sequencer',
-                  'run_number',
-                  'flow_cell_id',
-                  'lane_number',
-                  'sequence_filename',
-                  'md5_checksum',
-                  'file_path',
-                  'file_url',
-                  'analysed',
-                  'analysed_url']
+    field_spec = [('bpa_id', 'Unique Identifier', None),
+                  ('sample_name', 'Sample Name', None),
+                  ('sequence_coverage', 'Sequence coverage', None),
+                  ('sequencing_facility', 'Sequencing faciltiy', None),
+                  ('species', 'Species', None),
+                  ('contact_scientists', 'Melanoma contact scientist', None),
+                  ('contact_affiliation', 'Contact affiliation', None),
+                  ('contact_email', 'Contact email', None),
+                  ('sample_gender', 'Sex', None),
+                  ('sample_dna_source', 'DNA Source', None),
+                  ('sample_tumor_stage', 'Tumor Staging (where applicable)', None),
+                  ('histological_subtype', 'histological subtype', None),
+                  ('passage_number', 'Passage Number (if known)', None),
+                  ('dna_extraction_protocol', 'DNA extraction protocol', None),
+                  ('array_analysis_facility', 'Array analysis facility', None),
+                  ('date_sent_for_sequencing', 'Date sent to sequencing Facility', None),
+                  ('whole_genome_sequencing_facility', 'Name of Whole Genome Sequencing Facility', None),
+                  ('date_received', 'Date Received', None),
+                  ('library', 'Library', None),
+                  ('library_construction', 'Library Construction', None),
+                  ('library_construction_protocol', 'Library construction protocol', None),
+                  ('index_number', 'Index #', None),
+                  ('sequencer', 'Sequencer', None),
+                  ('run_number', 'Run number', None),
+                  ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                  ('lane_number', 'Lane number', None),
+                  ('sequence_filename', 'Sequence file names - supplied by sequencing facility', None),
+                  ('md5_checksum', 'MD5 checksum', None),
+    ]
 
     wb = xlrd.open_workbook(spreadsheet_file)
     sheet = wb.sheet_by_name('Melanoma_study_metadata')
@@ -385,7 +379,7 @@ def ingest_runs(sample_data):
         f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
         f.filename = file_name
         f.md5 = md5
-        f.note = pprint.pformat(entry)
+        f.debug_note = ingest_utils.pretty_print_namedtuple(entry)
         f.save()
 
     for e in sample_data:
