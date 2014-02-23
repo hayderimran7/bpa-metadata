@@ -14,13 +14,12 @@ as mangled by the provided method.
 
 import datetime
 from collections import namedtuple
-import logging
 
+import logger_utils
+
+
+logger = logger_utils.get_logger('Excel Wrapper')
 import xlrd
-
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 
 class ColumnNotFoundException(Exception):
