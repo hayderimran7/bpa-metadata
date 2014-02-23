@@ -1,5 +1,5 @@
 import sys
-import pprint
+
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
@@ -7,7 +7,6 @@ from libs.logger_utils import get_logger
 from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
-
 from apps.base.models.sample454 import Sample454
 
 
@@ -16,7 +15,7 @@ DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
 
 BPA_ID = "102.100.100"
-BASE_DESCRIPTION = 'base'
+BASE_DESCRIPTION = 'BASE'
 
 
 def get_bpa_id(t):
@@ -64,21 +63,29 @@ def ingest(file_name):
             return ''
 
     def set_result(val):
+        """
+        The result must be either P, F, R or NP
+        """
+
+        # non strings
         if val is None:
             return 'U'
         if not isinstance(val, basestring):
             return 'U'
 
+        # at least we are dealing with a string now
         val = val.strip().upper()
-        if val not in ('P', 'F', 'R', 'NP'):
-            logger.error('Val must be either P, F, R or NP')
-            return 'U'
-
         if val == '':
             return 'U'
-        if val.strip().lower() == 'repeat':
+
+        if val == 'REPEAT':
             return 'R'
-        return val.strip()
+
+        if val not in ('P', 'F', 'R', 'NP'):
+            logger.warning("Val must be either P, F, R or NP not '{0}'".format(val))
+            return 'U'
+
+        return val
 
     def set_purified(p):
         return p.lower().find('purified') != -1
@@ -138,7 +145,7 @@ def ingest(file_name):
         sample.dna_storage_nunc_tube = t.dna_storage_nunc_tube
         sample.dna_storage_nunc_well_location = t.dna_storage_nunc_well_location
         sample.agrf_batch_number = t.agrf_batch_number
-        sample.submitter = user_helper.get_user(t.submitter_name, '', ('AGRF', 'base'))
+        sample.submitter = user_helper.get_user(t.submitter_name, '', ('AGRF', 'BASE'))
         sample.date_received = t.date_received
         # adelaide
         sample.adelaide_extraction_sample_weight = t.adelaide_extraction_sample_weight
@@ -166,12 +173,12 @@ def ingest(file_name):
         sample.brisbane_16s_reads = t.brisbane_i6s_pooled
         sample.brisbane_its_reads = t.brisbane_its_reads
         sample.note = t.note
+        sample.debug_note = ingest_utils.pretty_print_namedtuple(t)
 
         try:
             sample.save()
         except Exception, e:
             logger.error(e)
-            pprint.pprint(t)
             sys.exit(1)
 
 
