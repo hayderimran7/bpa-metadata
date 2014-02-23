@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 
 from apps.common.admin import SequenceFileAdmin
 from .models import CollectionEvent
@@ -159,6 +159,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
+                'gps_location': EnclosedInput(prepend='icon-map-marker', append=''),
                 'collection_date': SuitDateWidget,
                 'collector': LinkedSelect,
                 'note': AutosizedTextarea(
