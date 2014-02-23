@@ -64,7 +64,7 @@ def ingest_samples(samples):
         if created:
             collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
             collection_event.ph = ingest_utils.get_clean_number(entry.ph)
-            collection_event.depth = ingest_utils.get_clean_number(entry.depth)
+            collection_event.depth = entry.depth
             collection_event.gps_location = entry.gps_location
             collection_event.note = entry.collection_comment
 
