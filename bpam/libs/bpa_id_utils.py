@@ -9,26 +9,6 @@ INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 logger = logger_utils.get_logger('BPA ID Utils')
 
 
-def add_bpa_id(idx, project_name, note=INGEST_NOTE):
-    """
-    Add a BPA ID
-    """
-
-    lbl = BPAUniqueID(bpa_id=idx)
-    lbl.project = BPAProject.objects.get(name=project_name)
-    lbl.note = note
-    lbl.save()
-    logger.info("Added BPA Unique ID: " + str(lbl))
-
-
-def add_id_set(id_set, project_name):
-    """
-    Add the id's in the given set
-    """
-    for bpa_id in id_set:
-        add_bpa_id(bpa_id, project_name)
-
-
 def ingest_bpa_ids(data, project_name):
     """
     The BPA ID's are unique
@@ -46,21 +26,26 @@ def ingest_bpa_ids(data, project_name):
     add_id_set(id_set, project_name)
 
 
-def get_bpa_id(bpa_id, project_name, note=INGEST_NOTE):
+def get_bpa_id(bpa_idx, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     """
+    project, _ = BPAProject.objects.get_or_create(name=project_name)
+    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=project)
+    if created:
+        logger.info("New BPA ID {0}".format(bpa_idx))
+        bpa_id.note = note
+        bpa_id.save()
 
-    try:
-        bid = BPAUniqueID.objects.get(bpa_id=bpa_id)
-    except BPAUniqueID.DoesNotExist:
-        logger.info("BPA ID {0} does not exit, adding it".format(bpa_id))
-        bid = BPAUniqueID(bpa_id=bpa_id)
-        bid.project = BPAProject.objects.get(name=project_name)
-        bid.note = note
-        bid.save()
+    return bpa_id
 
-    return bid
+
+def add_id_set(id_set, project_name):
+    """
+    Add the id's in the given set
+    """
+    for bpa_id in id_set:
+        get_bpa_id(bpa_id, project_name)
 
 
 def is_good_bpa_id(bpa_id):
