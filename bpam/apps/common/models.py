@@ -11,12 +11,12 @@ class BPAProject(models.Model):
 
     key = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, blank=True, help_text='BPA Project description')
+    description = models.CharField(_('Description'), max_length=2000, blank=True, help_text='BPA Project description')
     note = models.TextField(blank=True)
 
     class Meta:
         verbose_name = _('BPA Project')
-        verbose_name_plural = _("BPA Projects")
+        verbose_name_plural = _('BPA Projects')
 
     def __unicode__(self):
         return self.name
@@ -28,7 +28,7 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField(verbose_name=_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True,
+    bpa_id = models.CharField(_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True,
                               help_text='Unique BPA ID')
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
@@ -76,7 +76,7 @@ class Organism(models.Model):
     An Organism
     """
 
-    domain = models.CharField('Domain', max_length=100, blank=True)
+    domain = models.CharField(_('Domain'), max_length=100, blank=True)
     kingdom = models.CharField(max_length=100, blank=True)
     phylum = models.CharField(max_length=100, blank=True)
     organism_class = models.CharField(_('Class'), max_length=100, blank=True)
@@ -90,6 +90,7 @@ class Organism(models.Model):
 
     class Meta:
         verbose_name_plural = _('Organisms')
+
 
     @property
     def name(self):
@@ -135,9 +136,10 @@ class Protocol(models.Model):
     """
 
     LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
-    library_type = models.CharField(max_length=2, choices=LIB_TYPES)
-    base_pairs = models.IntegerField(blank=True, null=True)
-    library_construction_protocol = models.CharField(max_length=200)
+    library_type = models.CharField(_('Type'), max_length=2, choices=LIB_TYPES)
+    library_construction = models.CharField(_('Construction'), max_length=200, blank=True, null=True)
+    base_pairs = models.IntegerField(_('Base Pairs'), blank=True, null=True)
+    library_construction_protocol = models.CharField(_('Construction Protocol'), max_length=200)
     note = models.TextField(blank=True)
 
     class Meta:
