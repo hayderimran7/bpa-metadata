@@ -230,7 +230,8 @@ def ingest_runs(sample_data):
                 return 'MP'
             return 'UN'
 
-        base_pairs = ingest_utils.get_clean_number(entry.library_construction)
+
+        base_pairs = ingest_utils.get_clean_number(entry.requested_read_length)
         library_type = get_library_type(entry.library)
         library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
 
@@ -242,6 +243,7 @@ def ingest_runs(sample_data):
             protocol = GBRProtocol(base_pairs=base_pairs,
                                    library_type=library_type,
                                    library_construction_protocol=library_construction_protocol)
+            protocol.library_construction = entry.library_construction
             protocol.save()
         return protocol
 
