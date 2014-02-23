@@ -40,33 +40,15 @@ def get_dna_source(description):
 
 
 def ingest_samples(samples):
-    def get_facility(name):
-        """
-        Return the sequencing facility with this name, or a new facility.
-        """
-        if name.strip() == '':
-            name = 'Unknown'
-        try:
-            facility = Facility.objects.get(name=name)
-        except Facility.DoesNotExist:
-            facility = Facility(name=name)
-            facility.save()
-
-        return facility
 
     def get_organism(name):
         """
         Set the organism
         """
         genus, species = name.strip().split()
-
-        try:
-            organism = Organism.objects.get(genus=genus, species=species)
-        except Organism.DoesNotExist:
-            logger.debug('Adding Organism ' + name)
-            organism = Organism()
-            organism.genus = genus
-            organism.species = species
+        organism, created = Organism.objects.get_or_create(genus=genus, species=species)
+        if created:
+            logger.info('Adding Organism {0}'.format(name))
             organism.note = 'GBR Related Organism'
             organism.save()
         return organism
@@ -76,15 +58,10 @@ def ingest_samples(samples):
         The site where the sample has been collected from.
         """
         collection_date = ingest_utils.get_date(entry.collection_date)
-        try:
-            collection_event = CollectionEvent.objects.get(
-                name=entry.collection_site,
-                collection_date=collection_date)
-        except CollectionEvent.DoesNotExist:
-            collection_event = CollectionEvent()
-            collection_event.name = entry.collection_site
-            collection_event.collection_date = collection_date
-
+        collection_event, created = CollectionEvent.objects.get_or_create(
+            site_name=entry.collection_site,
+            collection_date=collection_date)
+        if created:
             collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
             collection_event.ph = ingest_utils.get_clean_number(entry.ph)
             collection_event.depth = ingest_utils.get_clean_number(entry.depth)
@@ -145,7 +122,7 @@ def ingest_samples(samples):
         gbr_sample.date_data_sent = ingest_utils.get_date(e.date_data_sent)
 
         # facilities
-        gbr_sample.sequencing_facility = get_facility(e.sequencing_facility)
+        gbr_sample.sequencing_facility = Facility.objects.add(name=e.sequencing_facility)
         gbr_sample.note = e.other
         gbr_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
 
