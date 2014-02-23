@@ -29,7 +29,13 @@ def ingest_bpa_ids(data, project_name):
 def get_bpa_id(bpa_idx, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
+    It also creates the necessary project.
     """
+
+    if not is_good_bpa_id(bpa_idx):
+        logger.warning('Given ID string failed good ID test')
+        return None
+
     project, _ = BPAProject.objects.get_or_create(name=project_name)
     bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=project)
     if created:
@@ -55,10 +61,12 @@ def is_good_bpa_id(bpa_id):
     bpa_id = bpa_id.strip()
     # empties
     if bpa_id == '':
+        logger.warning('Empty string for ID')
         return False
 
     # no BPA prefix
     if bpa_id.find(BPA_ID) == -1:
+        logger.warning('No {0} identifying the string as a BPA ID'.format(BPA_ID))
         return False
 
     # this function has failed to find a reason why this can't be a BPA ID....
