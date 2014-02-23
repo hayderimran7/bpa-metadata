@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import AutosizedTextarea
-from suit.widgets import LinkedSelect
+from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
 
 from .models import (BPAProject,
                      BPAUniqueID,
@@ -11,7 +10,7 @@ from .models import (BPAProject,
                      DNASource,
                      Sequencer,
                      Sample
-                     )
+)
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -26,6 +25,7 @@ class SampleAdmin(admin.ModelAdmin):
                     attrs={'class': 'input-large',
                            'style': 'width:95%'})
             }
+
     form = SampleForm
     fieldsets = [
         ('Sample Identification',
@@ -49,6 +49,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
         class Meta:
             model = SequenceFile
             widgets = {
+                'date_received_from_sequencing_facility': SuitDateWidget,
                 'filename': forms.TextInput(
                     attrs={'class': 'input-medium',
                            'style': 'width:50%'}),
@@ -65,6 +66,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
                     attrs={'class': 'input-large',
                            'style': 'width:95%'})
             }
+
     form = SequenceFileForm
 
     fieldsets = [
@@ -112,9 +114,11 @@ class BPAProjectAdmin(admin.ModelAdmin):
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'})
             }
+
     form = BPAProjectForm
     fields = ('name', 'description', 'note')
     list_display = ('name', 'key', 'description')
+
 
 admin.site.register(BPAProject, BPAProjectAdmin)
 
@@ -134,6 +138,7 @@ class BPAUniqueIDAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'project', 'note')
     search_fields = ('bpa_id', 'project__name', 'note')
 
+
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
 
 
@@ -146,9 +151,11 @@ class FacilityAdmin(admin.ModelAdmin):
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'})
             }
+
     form = Form
     fields = ('name', 'note')
     list_display = ('name',)
+
 
 admin.site.register(Facility, FacilityAdmin)
 
@@ -161,6 +168,7 @@ class OrganismAdmin(admin.ModelAdmin):
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'})
             }
+
     form = Form
 
     def get_organism_name(self, obj):
@@ -169,6 +177,7 @@ class OrganismAdmin(admin.ModelAdmin):
     get_organism_name.short_description = 'Name'
     get_organism_name.admin_order_field = 'species'
     list_display = ('get_organism_name', 'kingdom', 'phylum', 'genus')
+
 
 admin.site.register(Organism, OrganismAdmin)
 
@@ -179,11 +188,13 @@ class DNASourceFormAdmin(admin.ModelAdmin):
             model = DNASource
             widgets = {
                 'description': forms.TextInput(attrs={'class': 'input-large',
-                                               'style': 'width:95%'}),
+                                                      'style': 'width:95%'}),
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'})
             }
+
     form = DNASourceForm
+
 
 admin.site.register(DNASource, DNASourceFormAdmin)
 
