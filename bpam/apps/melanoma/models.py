@@ -1,8 +1,6 @@
-import urlparse
-import urllib
-
 from django.db import models
-from django.conf import settings
+
+from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol
 from apps.common.models import Sample
@@ -10,10 +8,7 @@ from apps.common.models import Run
 from apps.common.models import BPAUniqueID
 from apps.common.models import SequenceFile
 from apps.common.models import Organism
-from apps.common.models import URLVerification
 from apps.common.models import DebugNote
-
-from django.utils.translation import ugettext_lazy as _
 
 GENDERS = (('M', 'Male'),
            ('F', 'Female'),
@@ -83,9 +78,9 @@ class MelanomaSequenceFile(SequenceFile):
     Sequence Files resulting from a run
     """
 
+    project_name = 'Melanoma'
     sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
-    url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run, self.filename)
@@ -105,15 +100,5 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return ''
 
-    def get_url(self):
-        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
-        uj = urlparse.urljoin
-        uq = urllib.quote
-        return uj(settings.BPA_BASE_URL, "Melanoma/%s/%s/%s" % (
-                uq(bpa_id),
-                uq(self.run.flow_cell_id),
-                uq(self.filename)))
-
-    url = property(get_url)
     ingest_issue = property(ingest_issue)
 

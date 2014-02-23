@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Sample, SequenceFile, Run
+from apps.common.models import Sample, SequenceFile, Run, DebugNote
 
 
-class MetagenomicsSample(Sample):
+class MetagenomicsSample(Sample, DebugNote):
     """
-    base Metagenomics Soil Sample
+    BASE Meta genomics Soil Sample
     """
 
     def __unicode__(self):
@@ -19,7 +19,7 @@ class MetagenomicsSample(Sample):
 
 class MetagenomicsRun(Run):
     """
-    A Metagenomics sequence file generation Run
+    A Meta genomics sequence file generation Run
     """
     sample = models.ForeignKey(MetagenomicsSample)
 
@@ -33,11 +33,11 @@ class MetagenomicsRun(Run):
 
 class MetagenomicsSequenceFile(SequenceFile):
     """
-    Metagenomics Sequence File
+    Meta genomics Sequence File
     """
 
     sample = models.ForeignKey(MetagenomicsSample)
-    run = models.ForeignKey(MetagenomicsRun)
+    run = models.ForeignKey(MetagenomicsRun, null=True)  # FIXME
 
     class Meta:
         app_label = 'base'

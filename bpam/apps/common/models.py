@@ -1,3 +1,6 @@
+import urlparse
+import urllib
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
@@ -228,27 +231,6 @@ class Run(models.Model):
         verbose_name = _('Run')
 
 
-class SequenceFile(models.Model):
-    """
-    A sequence file resulting from a sequence run
-    """
-
-    index_number = models.IntegerField(_('Index'), blank=True, null=True, )
-    lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
-    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
-    filename = models.CharField(_('File Name'), max_length=300, blank=True, null=True)
-    md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
-    analysed = models.NullBooleanField(default=False)
-    note = models.TextField(blank=True)
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Sequence File')
-
-    def __unicode__(self):
-        return u'{0}'.format(self.filename)
-
-
 class URLVerification(models.Model):
     """
     Notes whether a sequence file could be accessed via HTTP. As SequenceFile is abstract
@@ -261,6 +243,49 @@ class URLVerification(models.Model):
     checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
     status_ok = models.BooleanField()
     status_note = models.TextField()
+
+
+class SequenceFile(models.Model):
+    """
+    A sequence file resulting from a sequence run
+    """
+
+    project_name = 'UNSET'  # children sequence files need to set this
+
+    index_number = models.IntegerField(_('Index'), blank=True, null=True, )
+    lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
+    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
+    filename = models.CharField(_('File Name'), max_length=300, blank=True, null=True)
+    md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
+    analysed = models.NullBooleanField(default=False)
+    note = models.TextField(blank=True)
+
+    url_verification = models.OneToOneField(URLVerification, null=True)
+
+    class Meta:
+        abstract = True
+        verbose_name = _('Sequence File')
+
+    def __unicode__(self):
+        return u'{0}'.format(self.filename)
+
+    def link_ok(self):
+        if self.url_verification is not None:
+            return self.url_verification.status_ok
+        else:
+            return False
+
+    def get_url(self):
+        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
+        uj = urlparse.urljoin
+        uq = urllib.quote
+        return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
+            self.projectname,
+            uq(bpa_id),
+            uq(self.run.flow_cell_id),
+            uq(self.filename)))
+
+    url = property(get_url)
 
 
 class DebugNote(models.Model):
