@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
 from .models import CollectionEvent
@@ -73,10 +73,9 @@ class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
         model = GBRSequenceFile
         widgets = {
-            'filename': forms.TextInput(attrs={'class': 'input-large',
-                                               'style': 'width:100%'}),
-            'md5': forms.TextInput(attrs={'class': 'input-large',
-                                          'style': 'width:70%'}),
+            'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
+            'md5': forms.TextInput(attrs={'class': 'input-xlarge'}),
+            'date_received_from_sequencing_facility': SuitDateWidget,
         }
 
 
@@ -116,7 +115,7 @@ class SampleAdmin(admin.ModelAdmin):
         model = GBRSequenceFile
         form = SequenceFileInlineForm
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility', 'analysed')
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
         extra = 1
 
     inlines = (SequenceFileInline, )
@@ -138,8 +137,6 @@ class SampleAdmin(admin.ModelAdmin):
              'requested_read_length',
              'date_sent_to_sequencing_facility',
              'date_sequenced',
-             # 'date_data_sent',
-             # 'date_data_received',
              'sequencing_data_eta',
              'comments_by_facility',
              'sequencing_notes')}),
@@ -162,6 +159,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
+                'collection_date': SuitDateWidget,
                 'collector': LinkedSelect,
                 'note': AutosizedTextarea(
                     attrs={'class': 'input-large',
