@@ -13,22 +13,22 @@ class CollectionEvent(models.Model):
     Data surrounding a Coral collection
     """
 
-    name = models.CharField(max_length=100, null=True, blank=True)
-    collection_date = models.DateField(blank=True, null=True)
+    site_name = models.CharField(_('Site Name'), max_length=100, null=True, blank=True)
+    collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
     # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
-    gps_location = models.CharField(max_length=100, null=True, blank=True)
-    water_temp = models.FloatField(null=True, blank=True)
-    water_ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
-    depth = models.CharField(max_length=20, null=True, blank=True)
+    gps_location = models.CharField(_('GPS Location'), max_length=100, null=True, blank=True)
+    water_temp = models.FloatField(_('Water Temperature'), null=True, blank=True)
+    water_ph = models.FloatField(_('Water pH'), null=True, blank=True)
+    depth = models.CharField(_('Water Depth'), max_length=20, null=True, blank=True)
 
     note = models.TextField(blank=True)
 
     class Meta:
-        unique_together = (('name', 'collection_date'))
+        unique_together = (('site_name', 'collection_date'))
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.name, self.collection_date)
+        return u'{0} {1}'.format(self.site_name, self.collection_date)
 
 
 class GBRSample(Sample, DebugNote):

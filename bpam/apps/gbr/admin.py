@@ -170,7 +170,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     fieldsets = [
         ('Collection',
-         {'fields': ('name', 'collection_date', 'collector', 'gps_location')}),
+         {'fields': ('site_name', 'collection_date', 'collector', 'gps_location')}),
         ('Site Data',
          {'fields': ('water_temp', 'water_ph', 'depth')}),
         ('Note',
@@ -178,9 +178,9 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
-    search_fields = ('name', 'collector', 'note')
-    list_filter = ('name', )
+    list_display = ('site_name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
+    search_fields = ('site_name', 'collector', 'note')
+    list_filter = ('site_name', )
 
 
 admin.site.register(CollectionEvent, CollectionEventAdmin)
