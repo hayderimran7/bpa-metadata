@@ -41,6 +41,21 @@ class BPAUniqueID(models.Model):
         return self.bpa_id
 
 
+class FacilityManager(models.Manager):
+    """
+    Facility model manager
+    """
+
+    def add(self, name):
+        """
+        I the name is empty return the Unknown Facility
+        """
+        if name.strip() == '':
+            name = 'Unknown'
+        facility, _ = self.get_or_create(name=name)
+        return facility
+
+
 class Facility(models.Model):
     """
     The Sequencing Facility
@@ -54,6 +69,7 @@ class Facility(models.Model):
 
     name = models.CharField(_('Facility Name'), max_length=100, help_text='Facility short name')
     note = models.TextField(blank=True)
+    objects = FacilityManager()
 
     class Meta:
         verbose_name_plural = _('Facilities')
@@ -90,7 +106,6 @@ class Organism(models.Model):
 
     class Meta:
         verbose_name_plural = _('Organisms')
-
 
     @property
     def name(self):
@@ -149,8 +164,8 @@ class Protocol(models.Model):
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
     def __unicode__(self):
-        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type,
-                                                           self.library_construction_protocol)
+        return u'Size:{0}, Type:{1}, Protocol:{2}'.format(self.base_pairs, self.library_type,
+                                                          self.library_construction_protocol)
 
 
 class Sample(models.Model):
@@ -175,7 +190,7 @@ class Sample(models.Model):
         verbose_name = _('Sample')
 
     def __unicode__(self):
-        return u'{0} : {1}'.format(self.bpa_id, self.name)
+        return u'{0}:{1}'.format(self.bpa_id, self.name)
 
 
 class Run(models.Model):

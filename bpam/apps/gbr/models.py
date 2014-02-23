@@ -57,7 +57,7 @@ class GBRRun(Run):
     sample = models.ForeignKey(GBRSample)
 
     def __unicode__(self):
-        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
+        return u'Run #{0} for Sample:{1}'.format(self.run_number, self.sample.name)
 
 
 class GBRProtocol(Protocol):
