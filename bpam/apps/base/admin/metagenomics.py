@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea
-from apps.common.admin import SequenceFileAdmin
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
+from apps.common.admin import SequenceFileAdmin
 from ..models.metagenomics import MetagenomicsSequenceFile, MetagenomicsRun, MetagenomicsSample
 
 
@@ -13,10 +13,9 @@ class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
         model = MetagenomicsSequenceFile
         widgets = {
-            'filename': forms.TextInput(attrs={'class': 'input-large',
-                                               'style': 'width:100%'}),
-            'md5': forms.TextInput(attrs={'class': 'input-large',
-                                          'style': 'width:70%'}),
+            'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
+            'md5': forms.TextInput(attrs={'class': 'input-xlarge'}),
+            'date_received_from_sequencing_facility': SuitDateWidget,
         }
 
 
@@ -31,23 +30,14 @@ class SampleAdmin(admin.ModelAdmin):
                 'name': forms.TextInput(
                     attrs={'class': 'input-medium',
                            'style': 'width:50%'}),
-                'organism': LinkedSelect,
-                'dna_source': LinkedSelect,
                 'sequencing_facility': LinkedSelect,
-                'contact_scientist': LinkedSelect,
-                'contact_bioinformatician': LinkedSelect,
-                'comments_by_facility': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
-                'sequencing_notes': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
                 'note': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(
                     attrs={'class': 'input-large',
-                           'style': 'width:95%'})
+                           'style': 'width:95%'}),
+                'date_sent_to_sequencing_facility': SuitDateWidget
             }
 
     form = SampleForm
@@ -56,7 +46,7 @@ class SampleAdmin(admin.ModelAdmin):
         model = MetagenomicsSequenceFile
         form = SequenceFileInlineForm
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility', 'analysed')
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility')
         extra = 1
 
     inlines = (SequenceFileInline, )
@@ -71,12 +61,12 @@ class SampleAdmin(admin.ModelAdmin):
         ('Contacts',
          {'fields': ('contact_scientist',)}),
         ('Notes',
-         {'fields': ('note',)}),
+         {'fields': ('note', 'debug_note')}),
     ]
 
-    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
-    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
-    list_filter = ('dna_source', 'requested_sequence_coverage',)
+    list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
+    search_fields = ('bpa_id__bpa_id', 'name')
+    list_filter = ('bpa_id', 'name', 'dna_extraction_protocol')
 
 
 admin.site.register(MetagenomicsSample, SampleAdmin)
@@ -104,13 +94,6 @@ class MetagenomicsRunAdmin(admin.ModelAdmin):
         ('Sequencing',
          {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
-
-    #class ProtocolInline(admin.StackedInline):
-    #    model = GBRProtocol
-    #    form = ProtocolForm
-    #    radio_fields = {'library_type': admin.HORIZONTAL}
-    #    extra = 0
-    #inlines = (ProtocolInline, )
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
