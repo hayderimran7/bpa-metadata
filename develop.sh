@@ -228,7 +228,9 @@ runingest() {
 
 ingest_all() {
     CMD='python ./bpam/manage.py'
-    ${CMD} runscript set_initial_bpa_projects --traceback
+    log_info "Ingest BPA Projects"
+    ${CMD} runscript ingest_bpa_projects --traceback
+    log_info "Ingest BPA Users"
     ${CMD} runscript ingest_users --traceback
     #${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
@@ -236,7 +238,8 @@ ingest_all() {
     #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
-    #${CMD} runscript ingest_base_454
+    # ${CMD} runscript ingest_base_454
+    ${CMD} runscript ingest_base_metagenomics --traceback
 }
 
 devrun() {
