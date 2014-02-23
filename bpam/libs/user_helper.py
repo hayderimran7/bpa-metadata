@@ -2,13 +2,13 @@
 This module provides some user management tools
 """
 
-import logging
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
+import logger_utils
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('UserHelper')
+
+logger = logger_utils.get_logger('User Helper')
 
 
 def format_group_name(name):
