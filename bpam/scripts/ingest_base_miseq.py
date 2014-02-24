@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import pprint
 import csv
 import re
@@ -6,8 +7,8 @@ from datetime import date
 
 from apps.base.models.site import GPSPosition, CollectionSite
 from apps.base.models.metagenomics import ChemicalAnalysis, BPAUniqueID
-
 from libs import ingest_utils
+
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
