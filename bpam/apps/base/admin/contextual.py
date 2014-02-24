@@ -4,6 +4,13 @@ from ..models.site import *
 from ..models.contextual import *
 
 
+class CollectionSiteAdmin(admin.ModelAdmin):
+    list_display = ('location_name', 'lat', 'lon')
+
+
+admin.site.register(CollectionSite, CollectionSiteAdmin)
+
+
 class LandUseAdmin(admin.ModelAdmin):
     list_display = ('description', 'classification')
 
@@ -16,10 +23,6 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ChemicalAnalysis, ChemicalAnalysisAdmin)
-
-
-class CollectionSiteAdmin(admin.ModelAdmin):
-    list_display = ('country', 'state', 'location_name')
 
 
 class SoilClassificationAdmin(admin.ModelAdmin):
@@ -56,7 +59,7 @@ admin.site.register(BroadVegetationType)
 admin.site.register(GeneralEcologicalZone)
 admin.site.register(SiteOwner)
 admin.site.register(CollectionSiteHistory)
-admin.site.register(CollectionSite)
+
 admin.site.register(SequenceConstruct)
 admin.site.register(PCRPrimer)
 admin.site.register(TargetGene)
