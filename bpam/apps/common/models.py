@@ -182,7 +182,7 @@ class Sample(models.Model):
 
     name = models.CharField(_('Sample Name'), max_length=200)
     dna_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True, null=True)
-    requested_sequence_coverage = models.CharField(max_length=6, blank=True)
+    requested_sequence_coverage = models.CharField(max_length=50, blank=True)
     collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(_('Date sent to sequencing facility'), blank=True, null=True)
 
