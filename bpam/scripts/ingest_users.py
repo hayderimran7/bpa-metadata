@@ -1,14 +1,12 @@
 import csv
-import logging
 
 import unipath
-from libs import ingest_utils, user_helper
 
+from libs import ingest_utils, user_helper, logger_utils
 from apps.bpaauth.models import BPAUser
 
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('IngestUsers')
+logger = logger_utils.get_logger('IngestUsers')
 
 DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
 USERS_FILE = unipath.Path(DATA_DIR, 'current')
