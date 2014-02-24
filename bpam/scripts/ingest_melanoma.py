@@ -19,6 +19,7 @@ from libs import bpa_id_utils
 
 
 
+
 # some defaults to fall back on
 DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
 DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'Melanoma_study_metadata.xlsx')
@@ -163,7 +164,7 @@ def ingest_arrays(arrays):
         array.save()
 
 
-def get_melanoma_sample_data(spreadsheet_file):
+def get_melanoma_sample_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
