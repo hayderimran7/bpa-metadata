@@ -20,7 +20,7 @@ BASE_DESCRIPTION = 'BASE'
 
 def get_bpa_id(t):
     if bpa_id_utils.is_good_bpa_id(t.bpa_id):
-        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, note='base 454 Sample')
+        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, 'BASE', note='base 454 Sample')
     else:
         return None
 
