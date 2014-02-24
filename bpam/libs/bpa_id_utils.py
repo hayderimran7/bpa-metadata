@@ -9,7 +9,7 @@ INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 logger = logger_utils.get_logger('BPA ID Utils')
 
 
-def ingest_bpa_ids(data, project_name):
+def ingest_bpa_ids(data, project_key, project_name):
     """
     The BPA ID's are unique
     """
@@ -23,10 +23,10 @@ def ingest_bpa_ids(data, project_name):
         if is_good_bpa_id(bpa_id):
             id_set.add(bpa_id)
 
-    add_id_set(id_set, project_name)
+    add_id_set(id_set, project_key, project_name)
 
 
-def get_bpa_id(bpa_idx, project_name, note=INGEST_NOTE):
+def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     It also creates the necessary project.
@@ -36,7 +36,7 @@ def get_bpa_id(bpa_idx, project_name, note=INGEST_NOTE):
         logger.warning('Given ID string failed good ID test')
         return None
 
-    project, _ = BPAProject.objects.get_or_create(name=project_name)
+    project, _ = BPAProject.objects.get_or_create(key=project_key, name=project_name)
     bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=project)
     if created:
         logger.info("New BPA ID {0}".format(bpa_idx))
@@ -46,12 +46,12 @@ def get_bpa_id(bpa_idx, project_name, note=INGEST_NOTE):
     return bpa_id
 
 
-def add_id_set(id_set, project_name):
+def add_id_set(id_set, project_key, project_name):
     """
     Add the id's in the given set
     """
     for bpa_id in id_set:
-        get_bpa_id(bpa_id, project_name)
+        get_bpa_id(bpa_id, project_key, project_name)
 
 
 def is_good_bpa_id(bpa_id):

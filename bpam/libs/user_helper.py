@@ -42,7 +42,10 @@ def get_unpacked_user_labels(name):
         last_name = name
         first_name = ''
 
-    username = first_name[0].lower() + last_name.lower()
+    if len(first_name) > 0:
+        username = first_name[0].lower() + last_name.lower()
+    else:
+        username = last_name.lower()
 
     return username, first_name, last_name
 

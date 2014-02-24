@@ -137,7 +137,13 @@ class ExcelWrapper(object):
                 if ctype == xlrd.XL_CELL_DATE:
                     val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
                 if ctype == xlrd.XL_CELL_TEXT:
-                    val = val.decode('utf-8').strip()
+                    pass
+                    #try:
+                    #    val = val.decode('utf-8').strip()
+                    #except UnicodeEncodeError:
+                    #    #logger.error('Unicoderror for {0}'.format(val))
+                    #    pass
+
                 if func is not None:
                     val = func(val)
                 tpl.append(val)

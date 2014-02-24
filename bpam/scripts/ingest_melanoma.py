@@ -1,12 +1,11 @@
-import sys
 from datetime import date
 
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, BPAUniqueID, \
-    MelanomaRun, MelanomaSequenceFile
+from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, \
+    MelanomaSequenceFile
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 
 
@@ -91,35 +90,39 @@ def ingest_samples(samples):
         return user_helper.get_user_by_full_name(names)
 
     def add_sample(e):
-        bpa_id = e.bpa_id
+        bpa_idx = e.bpa_id
+        if not bpa_id_utils.is_good_bpa_id(bpa_idx):
+            logger.warning("Ignoring '{0}', not a good BPA ID".format(bpa_id_utils))
+            return
+
         try:
-            # Test if sample already exists
-            sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
+            # Test if sample already exists, the first sample wins, that's how it is
+            MelanomaSample.objects.get(bpa_id__bpa_id=bpa_idx)
         except MelanomaSample.DoesNotExist:
             sample = MelanomaSample()
 
-        sample.bpa_id = BPAUniqueID.objects.get_or_create(bpa_id=bpa_id)
-        sample.name = e.sample_name
-        sample.requested_sequence_coverage = e.sequence_coverage.upper()
-        sample.organism = Organism.objects.get(genus="Homo", species="Sapiens")
-        sample.dna_source = get_dna_source(e.sample_dna_source)
-        sample.dna_extraction_protocol = e.dna_extraction_protocol
-        sample.tumor_stage = get_tumor_stage(e.sample_tumor_stage)
-        sample.gender = get_gender(e.sample_gender)
-        sample.histological_subtype = e.histological_subtype
-        sample.passage_number = ingest_utils.get_clean_number(e.passage_number)
+            sample.bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma')
+            sample.name = e.sample_name
+            sample.requested_sequence_coverage = e.sequence_coverage.upper()
+            sample.organism, _ = Organism.objects.get_or_create(genus="Homo", species="Sapiens")
+            sample.dna_source = get_dna_source(e.sample_dna_source)
+            sample.dna_extraction_protocol = e.dna_extraction_protocol
+            sample.tumor_stage = get_tumor_stage(e.sample_tumor_stage)
+            sample.gender = get_gender(e.sample_gender)
+            sample.histological_subtype = e.histological_subtype
+            sample.passage_number = ingest_utils.get_clean_number(e.passage_number)
 
-        sample.contact_scientist = get_contact_scientist(e.contact_scientists)
+            sample.contact_scientist = get_contact_scientist(e.contact_scientists)
 
-        # facilities
-        sample.array_analysis_facility = get_facility(e.array_analysis_facility)
-        sample.whole_genome_sequencing_facility = get_facility(e.whole_genome_sequencing_facility)
-        sample.sequencing_facility = get_facility(e.sequencing_facility)
+            # facilities
+            sample.array_analysis_facility = get_facility(e.array_analysis_facility)
+            sample.whole_genome_sequencing_facility = get_facility(e.whole_genome_sequencing_facility)
+            sample.sequencing_facility = get_facility(e.sequencing_facility)
 
-        sample.note = u'{0} {1} {2}'.format(e.contact_scientists, e.contact_affiliation, e.contact_email)
-        sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
-        sample.save()
-        logger.info("Ingested Melanoma sample {0}".format(sample.name))
+            sample.note = u'{0} {1} {2}'.format(e.contact_scientists, e.contact_affiliation, e.contact_email)
+            sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
+            sample.save()
+            logger.info("Ingested Melanoma sample {0}".format(sample.name))
 
     for s in samples:
         add_sample(s)
@@ -143,7 +146,7 @@ def ingest_arrays(arrays):
             array = Array.objects.get(bpa_id__bpa_id=e.bpa_id)
         except Array.DoesNotExist:
             array = Array()
-            array.bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, project_name="Melanoma")
+            array.bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma')
             array.note = u"Created during array ingestion on {0}".format(date.today())
 
         array.batch_number = int(e.batch_no)
@@ -205,19 +208,19 @@ def get_array_data(file_name):
     """
 
     field_spec = [
-        ('batch_no', '', None),
-        ('well_id', '', None),
-        ('bpa_id', '', None),
-        ('mia_id', '', None),
-        ('array_id', '', None),
-        ('call_rate', '', None),
-        ('gender', '', None),
+        ('batch_no', 'Batch No', None),
+        ('well_id', 'Well ID', None),
+        ('bpa_id', 'BPA ID', None),
+        ('mia_id', 'MIA ID', None),
+        ('array_id', 'Array ID', None),
+        ('call_rate', 'Call Rate', None),
+        ('gender', 'Gender', None),
     ]
 
     wrapper = ExcelWrapper(
         field_spec,
         file_name,
-        sheet_name='Array Data',
+        sheet_name='Array data',
         header_length=1,
         column_name_row_index=0)
     return wrapper.get_all()
@@ -273,7 +276,7 @@ def ingest_runs(sample_data):
             return sample
         except MelanomaSample.DoesNotExist:
             logger.error("No sample with ID {0}, quiting now".format(bpa_id))
-            sys.exit(1)
+            return None
 
     def get_run_number(entry):
         """
@@ -298,12 +301,18 @@ def ingest_runs(sample_data):
         """
         The run produced several files
         """
-        flow_cell_id = entry.flow_cell_id.strip()
+
         bpa_id = entry.bpa_id.strip()
+        if not bpa_id_utils.is_good_bpa_id(bpa_id):
+            logger.warning('Ignoring entry with invalid BPA ID:{0}'.format(bpa_id))
+            return None
+
         run_number = get_run_number(entry)
+        flow_cell_id = entry.flow_cell_id.strip()
 
         try:
-            nrun = MelanomaRun.objects.get(flow_cell_id=flow_cell_id, run_number=run_number,
+            nrun = MelanomaRun.objects.get(flow_cell_id=flow_cell_id,
+                                           run_number=run_number,
                                            sample__bpa_id__bpa_id=bpa_id)
         except MelanomaRun.DoesNotExist:
             nrun = MelanomaRun()
@@ -346,7 +355,7 @@ def ingest_runs(sample_data):
         except MelanomaSequenceFile.DoesNotExist:
             f = MelanomaSequenceFile()
 
-        f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
+        f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
         f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
         f.run = run
         f.index_number = ingest_utils.get_clean_number(entry.index_number)
@@ -358,12 +367,14 @@ def ingest_runs(sample_data):
 
     for e in sample_data:
         sequence_run = add_run(e)
-        add_file(e, sequence_run)
+        if sequence_run:
+            add_file(e, sequence_run)
 
 
 def ingest(spreadsheet_file):
     sample_data = list(get_melanoma_sample_data(spreadsheet_file))
-    bpa_id_utils.ingest_bpa_ids(sample_data, 'Melanoma')
+    # add all the ID's
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'MELANOMA', 'Melanoma')
     ingest_samples(sample_data)
     ingest_arrays(list(get_array_data(spreadsheet_file)))
     ingest_runs(sample_data)
