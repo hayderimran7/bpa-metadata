@@ -5,28 +5,19 @@ from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.melanoma.models import (
-    TumorStage,
-    MelanomaSample,
-    Organism,
-    MelanomaProtocol,
-    Array,
-    BPAUniqueID,
-    MelanomaRun,
-    MelanomaSequenceFile)
-from libs import ingest_utils, user_helper
-from libs import bpa_id_utils
-
+from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, BPAUniqueID, \
+    MelanomaRun, MelanomaSequenceFile
+from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 
 
 
 # some defaults to fall back on
 DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
-DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'Melanoma_study_metadata.xlsx')
+DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'current')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-logger = ingest_utils.get_logger('Melanoma')
+logger = logger_utils.get_logger('Melanoma')
 
 
 def get_dna_source(description):
@@ -100,7 +91,7 @@ def ingest_samples(samples):
         return user_helper.get_user_by_full_name(names)
 
     def add_sample(e):
-        bpa_id = e['bpa_id']
+        bpa_id = e.bpa_id
         try:
             # Test if sample already exists
             sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
@@ -289,7 +280,7 @@ def ingest_runs(sample_data):
         ANU does not have their run numbers entered.
         """
 
-        run_number = ingest_utils.get_clean_number(entry['run_number'])
+        run_number = ingest_utils.get_clean_number(entry.run_number)
         if run_number in (None, ""):
             # see if its ANU and parse the run_number from the filename
             if entry.whole_genome_sequencing_facility.strip() == 'ANU':
@@ -307,8 +298,8 @@ def ingest_runs(sample_data):
         """
         The run produced several files
         """
-        flow_cell_id = entry['flow_cell_id'].strip()
-        bpa_id = entry['bpa_id'].strip()
+        flow_cell_id = entry.flow_cell_id.strip()
+        bpa_id = entry.bpa_id.strip()
         run_number = get_run_number(entry)
 
         try:
@@ -370,7 +361,7 @@ def ingest_runs(sample_data):
         add_file(e, sequence_run)
 
 
-def ingest_melanoma(spreadsheet_file):
+def ingest(spreadsheet_file):
     sample_data = list(get_melanoma_sample_data(spreadsheet_file))
     bpa_id_utils.ingest_bpa_ids(sample_data, 'Melanoma')
     ingest_samples(sample_data)
@@ -385,5 +376,5 @@ def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
     """
 
     logger.info('Ingesting spreadsheet: ' + spreadsheet_file)
-    Organism.objects.get_or_create(genus="Homo", species="Sapiens")
-    ingest_melanoma(spreadsheet_file)
+    # Organism.objects.get_or_create(genus="Homo", species="Sapiens")
+    ingest(spreadsheet_file)
