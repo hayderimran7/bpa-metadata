@@ -233,14 +233,15 @@ ingest_all() {
     ${CMD} runscript ingest_bpa_projects --traceback
     log_info "Ingest BPA Users"
     ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_melanoma --traceback
-    ${CMD} runscript ingest_gbr --traceback
+    #${CMD} runscript ingest_melanoma --traceback
+    # ${CMD} runscript ingest_gbr --traceback
     #${CMD} runscript ingest_wheat_pathogens --traceback
     #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
     ${CMD} runscript ingest_base_454
     ${CMD} runscript ingest_base_metagenomics --traceback
+    ${CMD} runscript ingest_base_contextual --traceback
 }
 
 devrun() {
@@ -388,8 +389,6 @@ load_base() {
     ${CMD} runscript ingest_users --traceback
     ${CMD} runscript ingest_base_454 --traceback
     ${CMD} runscript ingest_base_metagenomics --traceback
-
-    ${CMD} runscript ingest_gbr --traceback
 }
 
 migrationupdate() {
