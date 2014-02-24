@@ -1,4 +1,4 @@
-# coding: utf-8
+# _*_ coding: utf-8 _*_
 
 """
 Tool to manage the import of rows from Excel workbooks.
@@ -87,6 +87,7 @@ class ExcelWrapper(object):
             try:
                 col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             except ValueError:
+                logger.error('column name {0} not found'.format(column_name))
                 raise ColumnNotFoundException(column_name)
 
             cmap[attribute] = col_index
