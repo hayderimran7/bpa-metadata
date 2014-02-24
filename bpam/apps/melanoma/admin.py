@@ -67,7 +67,7 @@ class ArrayAdmin(admin.ModelAdmin):
     radio_fields = {'gender': admin.HORIZONTAL}
     list_display = ('bpa_id', 'array_id', 'mia_id')
     search_fields = ('bpa_id__bpa_id', 'array_id', 'mia_id')
-    list_filter = ('array_id',)
+    list_filter = ('bpa_id', 'array_id', 'mia_id')
 
 
 admin.site.register(Array, ArrayAdmin)
@@ -90,7 +90,7 @@ class ProtocolAdmin(admin.ModelAdmin):
     search_fields = (
         'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
     list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
-    list_filter = ('library_type',)
+    list_filter = ('library_type', 'base_pairs')
 
 
 admin.site.register(MelanomaProtocol, ProtocolAdmin)
@@ -109,7 +109,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
         class Meta:
             model = MelanomaRun
             widgets = {
-                'sample': LinkedSelect,
+                'sample': LinkedSelect(attrs={'class': 'input-xxlarge'}),
                 'sequencing_facility': LinkedSelect,
                 'array_analysis_facility': LinkedSelect,
                 'whole_genome_sequencing_facility': LinkedSelect,
