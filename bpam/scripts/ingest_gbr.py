@@ -320,7 +320,7 @@ def ingest_runs(sample_data):
 
 def ingest(file_name):
     sample_data = list(get_gbr_sample_data(file_name))
-    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR')
+    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
