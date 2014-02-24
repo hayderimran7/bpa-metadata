@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+# http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 BroadVegetationTypeVocabulary = (
     ('Marsh/bog', ''),
