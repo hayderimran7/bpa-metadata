@@ -1,11 +1,8 @@
 from django.contrib import admin
 from django import forms
-
-from suit.widgets import LinkedSelect
-from suit.widgets import AutosizedTextarea
+from suit.widgets import LinkedSelect, SuitDateWidget, AutosizedTextarea
 
 from apps.common.admin import SequenceFileAdmin
-
 from models import (TumorStage,
                     Array,
                     MelanomaSample,
@@ -20,7 +17,8 @@ class SampleAdmin(admin.ModelAdmin):
         class Meta:
             model = MelanomaSample
             widgets = {
-                'bpa_id': LinkedSelect,
+                'bpa_id': LinkedSelect(attrs={'class': 'input-medium'}),
+                'name': forms.TextInput(attrs={'class': 'input-medium', 'style': 'width:50%'}),
                 'organism': LinkedSelect,
                 'dna_source': LinkedSelect,
                 'tumor_stage': LinkedSelect,
@@ -29,6 +27,7 @@ class SampleAdmin(admin.ModelAdmin):
                                                        'style': 'width:95%'}, ),
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'}),
+                'date_sent_to_sequencing_facility': SuitDateWidget,
             }
 
     form = SampleForm
