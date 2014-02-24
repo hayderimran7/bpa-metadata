@@ -26,6 +26,14 @@ def ingest_bpa_ids(data, project_key, project_name):
     add_id_set(id_set, project_key, project_name)
 
 
+def get_project(key, name):
+    project, created = BPAProject.objects.get_or_create(key=key)
+    if created:
+        project.name = name
+        project.save()
+    return project
+
+
 def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
@@ -36,8 +44,7 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
         logger.warning('Given ID string failed good ID test')
         return None
 
-    project, _ = BPAProject.objects.get_or_create(key=project_key, name=project_name)
-    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=project)
+    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=get_project(project_key, project_name))
     if created:
         logger.info("New BPA ID {0}".format(bpa_idx))
         bpa_id.note = note
