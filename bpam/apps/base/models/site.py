@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.geo.models import GPSPosition
-
 
 class LandUse(models.Model):
     """
@@ -72,9 +70,12 @@ class CollectionSite(models.Model):
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
     location_name = models.CharField(max_length=100, blank=True)
-    image_url = models.URLField(blank=True, null=True)
+    image_url = models.URLField(_('Site Photo'), blank=True, null=True)
 
-    positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
+    # positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
+    # TODO make use of geodjango
+    lat = models.FloatField(_('Latitude'))
+    lon = models.FloatField(_('Longitude'))
 
     horizon = models.CharField(max_length=100, blank=True)
     plot_description = models.TextField(blank=True)
@@ -97,6 +98,7 @@ class CollectionSite(models.Model):
     class Meta:
         app_label = 'base'
         verbose_name_plural = _("Collection Sites")
+        unique_together = ('lat', 'lon',)
 
 
 class SoilTexture(models.Model):
