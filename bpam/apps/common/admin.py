@@ -103,7 +103,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
     list_display = ('get_sample_id', 'download_field', 'get_sample_name',
                     'date_received_from_sequencing_facility', 'run')
-    list_filter = ('date_received_from_sequencing_facility',)
+    list_filter = ('sample__bpa_id', 'sample__name', 'date_received_from_sequencing_facility',)
 
 
 class BPAProjectAdmin(admin.ModelAdmin):
