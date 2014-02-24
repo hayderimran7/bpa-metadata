@@ -227,18 +227,19 @@ runingest() {
 }
 
 ingest_all() {
+    activate_virtualenv
     CMD='python ./bpam/manage.py'
     log_info "Ingest BPA Projects"
     ${CMD} runscript ingest_bpa_projects --traceback
     log_info "Ingest BPA Users"
     ${CMD} runscript ingest_users --traceback
-    #${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
     #${CMD} runscript ingest_wheat_pathogens --traceback
     #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
-    # ${CMD} runscript ingest_base_454
+    ${CMD} runscript ingest_base_454
     ${CMD} runscript ingest_base_metagenomics --traceback
 }
 
@@ -362,6 +363,7 @@ usage() {
     log_warning "Usage ./develop.sh url_checker"
     log_warning "Usage ./develop.sh deepclean"
     log_warning "Usage ./develop.sh migrationupdate APP"
+    log_warning "Usage ./develop.sh runingest ingest_script"
 }
 
 
