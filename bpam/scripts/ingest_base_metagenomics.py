@@ -21,7 +21,7 @@ def get_sample(e):
     Get the Sample by bpa_id
     """
 
-    bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, BASE_DESCRIPTION, note='BASE Metagenomics Sample')
+    bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, BASE_DESCRIPTION, 'BASE', note='BASE Metagenomics Sample')
     if bpa_id is None:
         return None
 
