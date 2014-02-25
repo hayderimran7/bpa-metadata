@@ -4,7 +4,7 @@ from apps.common.models import BPAProject
 import libs.logger_utils as logger_utils
 
 
-logger = logger_utils.get_logger('Add Projects')
+logger = logger_utils.get_logger(__name__)
 
 Project = namedtuple('Project', 'key name description note')
 projects = (

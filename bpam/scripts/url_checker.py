@@ -1,8 +1,6 @@
 import time
 import sys
-import logging
 from pprint import pprint
-
 import requests
 
 from apps.common.models import URLVerification
@@ -15,8 +13,10 @@ from apps.wheat_pathogens.models import PathogenSequenceFile
 SLEEP_TIME = 0.0  # time to rest between checks
 MELANOMA_PASS = 'm3lan0ma'  # Melanoma http access password
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('URLChecker')
+from libs.logger_utils import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):

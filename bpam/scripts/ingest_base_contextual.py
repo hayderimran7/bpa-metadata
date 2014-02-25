@@ -9,7 +9,7 @@ from libs import logger_utils
 from apps.base_contextual.models import CollectionSite
 
 
-logger = logger_utils.get_logger('BASE Contextual')
+logger = logger_utils.get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'contextual')

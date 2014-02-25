@@ -1,5 +1,4 @@
 import sys
-
 from unipath import Path
 
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
@@ -10,7 +9,7 @@ from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
 
 
-logger = get_logger('GBR')
+logger = get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')

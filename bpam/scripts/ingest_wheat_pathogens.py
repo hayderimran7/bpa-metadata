@@ -1,8 +1,6 @@
 import sys
 import pprint
 from datetime import datetime
-import logging
-
 import xlrd
 from unipath import Path
 
@@ -13,12 +11,11 @@ from apps.wheat_pathogens.models import (
     PathogenProtocol,
     PathogenRun,
     PathogenSequenceFile)
-
 from libs import ingest_utils, user_helper, bpa_id_utils
+from libs.logger_utils import get_logger
 
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('WheatPathogens')
+logger = get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_pathogens/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'Wheat_pathogens_genomic_metadata.xlsx')

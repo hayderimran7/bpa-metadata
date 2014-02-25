@@ -7,7 +7,7 @@ from libs import logger_utils
 from apps.base_metagenomics.models import MetagenomicsSample, MetagenomicsSequenceFile
 
 
-logger = logger_utils.get_logger('BASE Metagenomics')
+logger = logger_utils.get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'metagenomics')

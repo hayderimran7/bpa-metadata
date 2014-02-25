@@ -1,5 +1,4 @@
 from datetime import date
-
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
@@ -16,7 +15,7 @@ DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'current')
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-logger = logger_utils.get_logger('Melanoma')
+logger = logger_utils.get_logger(__name__)
 
 
 def get_dna_source(description):

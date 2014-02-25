@@ -2,11 +2,12 @@
 Creates a report on missing sequence files
 """
 
-import logging
 import xlwt
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('LinkReport')
+from libs.logger_utils import get_logger
+
+
+logger = get_logger(__name__)
 
 from apps.melanoma.models import MelanomaSequenceFile
 

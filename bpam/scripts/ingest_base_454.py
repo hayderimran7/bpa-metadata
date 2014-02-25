@@ -1,5 +1,4 @@
 import sys
-
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
@@ -10,7 +9,7 @@ from libs import ingest_utils
 from apps.base_454.models import Sample454
 
 
-logger = get_logger('base 454')
+logger = get_logger(__name__)
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
 
@@ -128,7 +127,7 @@ def ingest(file_name):
                   ('brisbane_16s_reads', '16S >3000 reads - Trim Back 150bp', ingest_utils.get_clean_number),
                   ('brisbane_its_reads', 'ITS >3000 reads - Trim Back 150bp Run1', ingest_utils.get_clean_number),
                   ('note', 'Sample comments', None),
-                  ]
+    ]
 
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.get_all():
