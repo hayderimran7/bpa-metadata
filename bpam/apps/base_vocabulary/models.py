@@ -29,9 +29,6 @@ class SoilTexture(models.Model):
     def __unicode__(self):
         return u"{0} {1}".format(self.texture, self.description)
 
-    class Meta:
-        # app_label = 'base'
-        pass
 
 
 class SoilColour(models.Model):
@@ -43,10 +40,6 @@ class SoilColour(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.colour)
-
-    class Meta:
-        # app_label = 'base'
-        pass
 
 
 class GeneralEcologicalZone(models.Model):
@@ -62,7 +55,6 @@ class GeneralEcologicalZone(models.Model):
 
     class Meta:
         verbose_name_plural = _("General Ecological Zones")
-        # app_label = 'base'
 
 
 class BroadVegetationType(models.Model):
@@ -78,7 +70,6 @@ class BroadVegetationType(models.Model):
 
     class Meta:
         verbose_name_plural = _("Broad Vegetation Types")
-        # app_label = 'base'
 
 
 class TillageType(models.Model):
@@ -93,7 +84,6 @@ class TillageType(models.Model):
         return u"{0}".format(self.tillage)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Tillage Types")
 
 
@@ -111,7 +101,6 @@ class HorizonClassification(models.Model):
         return u"{0}".format(self.horizon)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Horizon Classification")
 
 
@@ -130,7 +119,6 @@ class SoilClassification(models.Model):
         return u"{0} {1}".format(self.authority, self.classification)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Soil Classification")
 
 
@@ -146,7 +134,6 @@ class DrainageClassification(models.Model):
         return u"{0}".format(self.drainage)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Drainage Classifications")
 
 
@@ -162,5 +149,4 @@ class ProfilePosition(models.Model):
         return u"{0}".format(self.position)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Profile Positions")
