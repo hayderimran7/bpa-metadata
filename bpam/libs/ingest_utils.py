@@ -1,9 +1,10 @@
 import string
 import pprint
 from datetime import date
-import unittest
 
+import unittest
 import dateutil
+
 from django.utils.encoding import smart_text
 
 import logger_utils
@@ -11,7 +12,7 @@ import logger_utils
 
 INGEST_NOTE = "Ingested from GoogleDocs on {0}\n".format(date.today())
 
-logger = logger_utils.get_logger('Ingest Utils')
+logger = logger_utils.get_logger(__name__)
 
 
 def get_clean_number(val, default=None):

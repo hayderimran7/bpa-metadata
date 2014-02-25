@@ -18,7 +18,7 @@ from collections import namedtuple
 import logger_utils
 
 
-logger = logger_utils.get_logger('Excel Wrapper')
+logger = logger_utils.get_logger(__name__)
 import xlrd
 
 

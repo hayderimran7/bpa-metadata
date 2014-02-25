@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 import logger_utils
 
 
-logger = logger_utils.get_logger('User Helper')
+logger = logger_utils.get_logger(__name__)
 
 
 def format_group_name(name):

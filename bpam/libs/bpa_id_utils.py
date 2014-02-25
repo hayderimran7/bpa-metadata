@@ -6,7 +6,7 @@ import logger_utils
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
-logger = logger_utils.get_logger('BPA ID Utils')
+logger = logger_utils.get_logger(__name__)
 
 
 def ingest_bpa_ids(data, project_key, project_name):
