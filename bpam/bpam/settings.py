@@ -75,6 +75,7 @@ SUIT_CONFIG = {
          'models': ('metagenomicssample',
                     'metagenomicssequencefile',
                     'metagenomicsrun')},
+        {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
         {'app': 'base_contextual', 'label': 'BASE Contextual', },
         {'app': 'base_454', 'label': 'BASE 454', },
         '-',
@@ -181,6 +182,7 @@ INSTALLED_APPS = (
     'apps.common',
     # base
     'apps.base_metagenomics',
+    'apps.base_vocabulary',
     'apps.base_contextual',
     'apps.base_454',
     # wheat
