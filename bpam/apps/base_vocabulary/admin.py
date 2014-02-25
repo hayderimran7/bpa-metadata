@@ -1,14 +1,11 @@
 from django.contrib import admin
 
-from models import (SoilClassification, DrainageClassification, SoilTexture, SoilColour, HorizonClassification,
+from models import (AustralianSoilClassification, FAOSoilClassification, DrainageClassification, SoilTexture, SoilColour, HorizonClassification,
                     ProfilePosition, TillageType, BroadVegetationType, GeneralEcologicalZone, LandUse)
 
 
-class SoilClassificationAdmin(admin.ModelAdmin):
-    list_display = ('authority', 'classification')
-
-
-admin.site.register(SoilClassification, SoilClassificationAdmin)
+admin.site.register(AustralianSoilClassification)
+admin.site.register(FAOSoilClassification)
 
 
 class DrainageAdmin(admin.ModelAdmin):

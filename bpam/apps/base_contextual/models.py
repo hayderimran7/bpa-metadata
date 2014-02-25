@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import BPAUniqueID
-from apps.base_vocabulary.models import LandUse
+from apps.common.models import BPAUniqueID, DebugNote
+from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, AustralianSoilClassification, FAOSoilClassification
 
 
 class SiteOwner(models.Model):
@@ -32,7 +32,6 @@ class CollectionSiteHistory(models.Model):
     current_vegetation = models.CharField(max_length=100, blank=True)
 
     previous_land_use = models.ForeignKey(LandUse, related_name='previous')
-    current_land_use = models.ForeignKey(LandUse, related_name='current')
     crop_rotation = models.CharField(max_length=100, blank=True)
     tillage = models.CharField(max_length=100, blank=True)
     environment_event = models.CharField(max_length=100, blank=True)  # fire, flood, extreme, other
@@ -47,7 +46,7 @@ class CollectionSiteHistory(models.Model):
         verbose_name_plural = _("Site History")
 
 
-class CollectionSite(models.Model):
+class CollectionSite(DebugNote):
     """
     Collection Site Information
     """
@@ -62,15 +61,28 @@ class CollectionSite(models.Model):
     lat = models.FloatField(_('Latitude'))
     lon = models.FloatField(_('Longitude'))
 
-    horizon = models.CharField(max_length=100, blank=True)
-    plot_description = models.TextField(blank=True)
-    collection_depth = models.CharField(max_length=20, blank=True)
+    # controlled vocabularies
+    horizon_classification = models.ForeignKey(HorizonClassification, null=True)
+    current_land_use = models.ForeignKey(LandUse, related_name='current', null=True)
+    general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True)
+    vegetation_type = models.ForeignKey(BroadVegetationType, null=True)
+    soil_type_australian_classification = models.ForeignKey(AustralianSoilClassification, null=True)
+    soil_type_fao_classification = models.ForeignKey(FAOSoilClassification, null=True)
 
-    slope_gradient = models.CharField(max_length=20, blank=True)
-    slope_aspect = models.CharField(max_length=20, blank=True)
+    vegetation_type_descriptive = models.CharField(max_length=200, blank=True)
+    vegetation_total_cover = models.CharField(max_length=200, blank=True)
+    vegetation_dominant_trees = models.CharField(max_length=1000, blank=True)
+
+    elevation = models.CharField(max_length=20, blank=True)
+    slope = models.CharField(max_length=20, blank=True)
+    slope_aspect = models.CharField(max_length=100, blank=True)
+
     profile_position = models.CharField(max_length=20, blank=True)
     drainage_classification = models.CharField(max_length=20, blank=True)
-    australian_classification_soil_type = models.CharField(max_length=20, blank=True)
+
+
+    plot_description = models.TextField(blank=True)
+    collection_depth = models.CharField(max_length=20, blank=True)
 
     history = models.ForeignKey(CollectionSiteHistory, null=True)
     owner = models.ForeignKey(SiteOwner, null=True)
@@ -78,7 +90,7 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
+        return u','.join(s for s in (self.country, self.state, self.location_name, self.plot_description) if s)
 
     class Meta:
         # app_label = 'base'

@@ -117,6 +117,8 @@ def add_site(data):
         site, created = CollectionSite.objects.get_or_create(lat=-1 * e.lat, lon=e.lon)
         if created:
             site.location_name = e.description
+            site.note = e.note + '\n' + e.other_comments
+            site.debug_note = ingest_utils.pretty_print_namedtuple(e)
             site.save()
 
 

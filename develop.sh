@@ -239,7 +239,7 @@ ingest_all() {
     #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
-    ${CMD} runscript ingest_base_454
+    # ${CMD} runscript ingest_base_454
     ${CMD} runscript ingest_base_metagenomics --traceback
     ${CMD} runscript ingest_base_contextual --traceback
 }
