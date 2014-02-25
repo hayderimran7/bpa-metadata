@@ -1,4 +1,6 @@
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
+from suit.admin import SortableModelAdmin
 
 from models import (AustralianSoilClassification, FAOSoilClassification, DrainageClassification, SoilTexture, SoilColour, HorizonClassification,
                     ProfilePosition, TillageType, BroadVegetationType, GeneralEcologicalZone, LandUse)
@@ -29,8 +31,18 @@ class ColourAdmin(admin.ModelAdmin):
 admin.site.register(SoilColour, ColourAdmin)
 
 
-class LandUseAdmin(admin.ModelAdmin):
-    list_display = ('description', 'classification')
+class LandUseAdmin(MPTTModelAdmin, SortableModelAdmin):
+    """
+    Example of django-mptt and sortable together. Important note:
+    If used together MPTTModelAdmin must be before SortableModelAdmin
+    """
+    mptt_level_indent = 20
+    search_fields = ('description', )
+    # prepopulated_fields = {'slug': ('name',)}
+    list_display = ('description',)
+    list_display_links = ('description',)
+    sortable = 'order'
+
 
 
 admin.site.register(LandUse, LandUseAdmin)

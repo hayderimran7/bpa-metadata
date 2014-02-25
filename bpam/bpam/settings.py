@@ -177,15 +177,16 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.gis',
     'localflavor',
+    'mptt',
     'apps.geo',
     'apps.bpaauth',
     'apps.common',
-    # base
+    # base suit
     'apps.base_metagenomics',
     'apps.base_vocabulary',
     'apps.base_contextual',
     'apps.base_454',
-    # wheat
+    # wheat suit
     'apps.wheat_pathogens',
     'apps.wheat_cultivars',
     'apps.melanoma',

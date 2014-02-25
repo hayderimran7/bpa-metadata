@@ -1,16 +1,18 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 
-
-class LandUse(models.Model):
+class LandUse(MPTTModel):
     """
     Land use Controlled Vocabulary
     http://lrm.nt.gov.au/soil/landuse/classification
     """
 
-    classification = models.IntegerField(unique=True)
     description = models.CharField(max_length=300)
     note = models.TextField(null=True, blank=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    order = models.IntegerField()
 
     def __unicode__(self):
         return u"{0}".format(self.description)
@@ -18,6 +20,12 @@ class LandUse(models.Model):
     class Meta:
         verbose_name_plural = _("Land Uses")
 
+    class MPTTMeta:
+        order_insertion_by = ['order']
+
+    def save(self, *args, **kwargs):
+        super(LandUse, self).save(*args, **kwargs)
+        LandUse.objects.rebuild()
 
 class SoilTexture(models.Model):
     """

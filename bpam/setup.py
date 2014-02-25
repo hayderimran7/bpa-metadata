@@ -57,6 +57,7 @@ install_requires = [
     'mimeparse>=0.1.3,<1.0',
     'rainbow_logging_handler',
     'django-sql-explorer',
+    'django-mptt>=0.5.5',
 ]
 
 dev_requires = [
