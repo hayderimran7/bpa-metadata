@@ -65,14 +65,18 @@ SUIT_CONFIG = {
                     'collectionevent',
                     'gbrrun',
                     'gbrprotocol',)},
-
+        '-',
+        # Wheat
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
-        {'label': 'BASE Metagenomics',
-         'models': ('base.metagenomicssample',
-                    'base.metagenomicssequencefile',
-                    'base.metagenomicsrun')},
-        {'app': 'base', 'label': 'BASE All', },
+        '-',
+        # Base
+        {'app': 'base_metagenomics', 'label': 'BASE Metagenomics',
+         'models': ('metagenomicssample',
+                    'metagenomicssequencefile',
+                    'metagenomicsrun')},
+        {'app': 'base_contextual', 'label': 'BASE Contextual', },
+        {'app': 'base_454', 'label': 'BASE 454', },
         '-',
         {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
         # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
@@ -175,7 +179,11 @@ INSTALLED_APPS = (
     'apps.geo',
     'apps.bpaauth',
     'apps.common',
-    'apps.base',
+    # base
+    'apps.base_metagenomics',
+    'apps.base_contextual',
+    'apps.base_454',
+    # wheat
     'apps.wheat_pathogens',
     'apps.wheat_cultivars',
     'apps.melanoma',

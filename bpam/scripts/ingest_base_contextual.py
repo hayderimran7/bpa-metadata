@@ -6,7 +6,7 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
-from apps.base.models.site import CollectionSite
+from apps.base_contextual.models import CollectionSite
 
 
 logger = logger_utils.get_logger('BASE Contextual')

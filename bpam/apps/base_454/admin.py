@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
-from ..models.sample454 import *
+from models import *
 
 
 class Sample454Admin(admin.ModelAdmin):

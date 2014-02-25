@@ -50,10 +50,8 @@ class Sample454(DebugNote):
     brisbane_its_reads = models.IntegerField(_('ITS >3000 reads - Trim Back 150bp Run1'), blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
-
     def __unicode__(self):
         return u'Soil Sample 454 {0}'.format(self.bpa_id)
 
     class Meta:
         verbose_name_plural = _("Sample 454")
-        app_label = 'base'

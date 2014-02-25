@@ -7,7 +7,7 @@ from libs.logger_utils import get_logger
 from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
-from apps.base.models.sample454 import Sample454
+from apps.base_454.models import Sample454
 
 
 logger = get_logger('base 454')

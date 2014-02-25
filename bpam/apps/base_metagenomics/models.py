@@ -1,6 +1,48 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from apps.common.models import BPAUniqueID
+
+from apps.common.models import Sample, SequenceFile, Run, DebugNote
+from django.db import models
+
+
+class MetagenomicsSample(Sample, DebugNote):
+    """
+    BASE Meta genomics Soil Sample
+    """
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+    class Meta:
+        # app_label = 'base'
+        verbose_name_plural = _("Metagenomics Sample")
+
+
+class MetagenomicsRun(Run):
+    """
+    A Meta genomics sequence file generation Run
+    """
+    sample = models.ForeignKey(MetagenomicsSample)
+
+    def __unicode__(self):
+        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
+
+    class Meta:
+        # app_label = 'base'
+        verbose_name_plural = _("Metagenomics Run")
+
+
+class MetagenomicsSequenceFile(SequenceFile):
+    """
+    Meta genomics Sequence File
+    """
+
+    sample = models.ForeignKey(MetagenomicsSample)
+    run = models.ForeignKey(MetagenomicsRun, null=True)  # FIXME
+
+    class Meta:
+        # app_label = 'base'
+        verbose_name_plural = _("Metagenomics Sequence Files")
 
 
 class PCRPrimer(models.Model):
@@ -15,7 +57,7 @@ class PCRPrimer(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("PCR Primers")
 
 
@@ -31,7 +73,7 @@ class TargetGene(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Target Genes")
 
 
@@ -47,7 +89,7 @@ class TargetTaxon(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Target Taxons")
 
 
@@ -70,56 +112,8 @@ class SequenceConstruct(models.Model):
         return u"{0}".format(self.sequence)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Sequence Constructs")
-
-
-class ChemicalAnalysis(models.Model):
-    """
-    Chemical Analysis assay
-    """
-
-    # sample = models.ForeignKey(SoilSample)
-    bpa_id = models.ForeignKey(BPAUniqueID)
-    lab_name_id = models.CharField(_('Lab Name ID'), max_length=100, blank=True, null=True)
-    customer = models.CharField(max_length=100, blank=True, null=True)
-    depth = models.CharField(max_length=100, blank=True, null=True)
-    colour = models.CharField(max_length=100, blank=True, null=True)
-    gravel = models.CharField(max_length=100, blank=True, null=True)
-    texture = models.CharField(max_length=100, blank=True, null=True)
-
-    ammonium_nitrogen = models.FloatField(blank=True, null=True)
-    nitrate_nitrogen = models.CharField(max_length=10, null=True)  # <>
-    phosphorus_colwell = models.CharField(max_length=10, null=True)  # <>
-    potassium_colwell = models.FloatField(blank=True, null=True)
-    sulphur_colwell = models.FloatField(blank=True, null=True)
-    organic_carbon = models.FloatField(blank=True, null=True)
-    conductivity = models.FloatField(blank=True, null=True)
-    cacl2_ph = models.FloatField(_('CaCl2 pH'), blank=True, null=True)
-    h20_ph = models.FloatField(_('H20 pH'), blank=True, null=True)
-    dtpa_copper = models.FloatField(_('DTPA Cu'), blank=True, null=True)
-    dtpa_iron = models.FloatField(_('DTPA Fe'), blank=True, null=True)
-    dtpa_manganese = models.FloatField(_('DTPA Mn'), blank=True, null=True)
-    dtpa_zinc = models.FloatField(_('DTPA Zn'), blank=True, null=True)
-    exc_aluminium = models.FloatField(_('Exc Al'), blank=True, null=True)
-    exc_calcium = models.FloatField(_('Exc Ca'), blank=True, null=True)
-    exc_magnesium = models.FloatField(_('Exc Mg'), blank=True, null=True)
-    exc_potassium = models.FloatField(_('Exc K'), blank=True, null=True)
-    exc_sodium = models.FloatField(_('Exc Na'), blank=True, null=True)
-    boron_hot_cacl2 = models.FloatField(_('B Hot CaCl2'), blank=True, null=True)
-
-    clay = models.FloatField(blank=True, null=True)
-    course_sand = models.FloatField(blank=True, null=True)
-    fine_sand = models.FloatField(blank=True, null=True)
-    sand = models.FloatField(blank=True, null=True)
-    silt = models.FloatField(blank=True, null=True)
-
-    def __unicode__(self):
-        return u"Chemical Analysis for {0}".format(self.bpa_id)
-
-    class Meta:
-        app_label = 'base'
-        verbose_name_plural = _("Sample Chemical Essays")
 
 
 class SoilSampleDNA(models.Model):
@@ -146,5 +140,5 @@ class SoilSampleDNA(models.Model):
         return u"Soil DNA Library {0}".format(self.name)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Soil Sample DNA")

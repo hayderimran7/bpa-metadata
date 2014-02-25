@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from apps.common.models import BPAUniqueID
+
 
 class LandUse(models.Model):
     """
@@ -17,7 +19,6 @@ class LandUse(models.Model):
 
     class Meta:
         verbose_name_plural = _("Land Uses")
-        app_label = 'base'
 
 
 class SiteOwner(models.Model):
@@ -34,7 +35,7 @@ class SiteOwner(models.Model):
         return u"{0} {1}".format(self.name, self.email)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Site Owners")
 
 
@@ -58,7 +59,7 @@ class CollectionSiteHistory(models.Model):
         return u"Site history on {0}".format(self.history_report_date)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Site History")
 
 
@@ -96,9 +97,57 @@ class CollectionSite(models.Model):
         return u"{0}, {1}, {2} {3}".format(self.country, self.state, self.location_name, self.plot_description)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Collection Sites")
         unique_together = ('lat', 'lon',)
+
+
+class ChemicalAnalysis(models.Model):
+    """
+    Chemical Analysis assay
+    """
+
+    # sample = models.ForeignKey(SoilSample)
+    bpa_id = models.ForeignKey(BPAUniqueID)
+    lab_name_id = models.CharField(_('Lab Name ID'), max_length=100, blank=True, null=True)
+    customer = models.CharField(max_length=100, blank=True, null=True)
+    depth = models.CharField(max_length=100, blank=True, null=True)
+    colour = models.CharField(max_length=100, blank=True, null=True)
+    gravel = models.CharField(max_length=100, blank=True, null=True)
+    texture = models.CharField(max_length=100, blank=True, null=True)
+
+    ammonium_nitrogen = models.FloatField(blank=True, null=True)
+    nitrate_nitrogen = models.CharField(max_length=10, null=True)  # <>
+    phosphorus_colwell = models.CharField(max_length=10, null=True)  # <>
+    potassium_colwell = models.FloatField(blank=True, null=True)
+    sulphur_colwell = models.FloatField(blank=True, null=True)
+    organic_carbon = models.FloatField(blank=True, null=True)
+    conductivity = models.FloatField(blank=True, null=True)
+    cacl2_ph = models.FloatField(_('CaCl2 pH'), blank=True, null=True)
+    h20_ph = models.FloatField(_('H20 pH'), blank=True, null=True)
+    dtpa_copper = models.FloatField(_('DTPA Cu'), blank=True, null=True)
+    dtpa_iron = models.FloatField(_('DTPA Fe'), blank=True, null=True)
+    dtpa_manganese = models.FloatField(_('DTPA Mn'), blank=True, null=True)
+    dtpa_zinc = models.FloatField(_('DTPA Zn'), blank=True, null=True)
+    exc_aluminium = models.FloatField(_('Exc Al'), blank=True, null=True)
+    exc_calcium = models.FloatField(_('Exc Ca'), blank=True, null=True)
+    exc_magnesium = models.FloatField(_('Exc Mg'), blank=True, null=True)
+    exc_potassium = models.FloatField(_('Exc K'), blank=True, null=True)
+    exc_sodium = models.FloatField(_('Exc Na'), blank=True, null=True)
+    boron_hot_cacl2 = models.FloatField(_('B Hot CaCl2'), blank=True, null=True)
+
+    clay = models.FloatField(blank=True, null=True)
+    course_sand = models.FloatField(blank=True, null=True)
+    fine_sand = models.FloatField(blank=True, null=True)
+    sand = models.FloatField(blank=True, null=True)
+    silt = models.FloatField(blank=True, null=True)
+
+    def __unicode__(self):
+        return u"Chemical Analysis for {0}".format(self.bpa_id)
+
+    class Meta:
+        # app_label = 'base'
+        verbose_name_plural = _("Sample Chemical Essays")
 
 
 class SoilTexture(models.Model):
@@ -112,7 +161,8 @@ class SoilTexture(models.Model):
         return u"{0} {1}".format(self.texture, self.description)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
+        pass
 
 
 class SoilColour(models.Model):
@@ -126,7 +176,8 @@ class SoilColour(models.Model):
         return u"{0}".format(self.colour)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
+        pass
 
 
 class GeneralEcologicalZone(models.Model):
@@ -142,7 +193,7 @@ class GeneralEcologicalZone(models.Model):
 
     class Meta:
         verbose_name_plural = _("General Ecological Zones")
-        app_label = 'base'
+        # app_label = 'base'
 
 
 class BroadVegetationType(models.Model):
@@ -158,7 +209,7 @@ class BroadVegetationType(models.Model):
 
     class Meta:
         verbose_name_plural = _("Broad Vegetation Types")
-        app_label = 'base'
+        # app_label = 'base'
 
 
 class TillageType(models.Model):
@@ -173,7 +224,7 @@ class TillageType(models.Model):
         return u"{0}".format(self.tillage)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Tillage Types")
 
 
@@ -191,7 +242,7 @@ class HorizonClassification(models.Model):
         return u"{0}".format(self.horizon)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Horizon Classification")
 
 
@@ -210,7 +261,7 @@ class SoilClassification(models.Model):
         return u"{0} {1}".format(self.authority, self.classification)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Soil Classification")
 
 
@@ -226,7 +277,7 @@ class DrainageClassification(models.Model):
         return u"{0}".format(self.drainage)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Drainage Classifications")
 
 
@@ -242,5 +293,5 @@ class ProfilePosition(models.Model):
         return u"{0}".format(self.position)
 
     class Meta:
-        app_label = 'base'
+        # app_label = 'base'
         verbose_name_plural = _("Profile Positions")

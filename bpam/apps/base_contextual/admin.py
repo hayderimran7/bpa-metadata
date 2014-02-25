@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from ..models.site import *
-from ..models.contextual import *
+from models import *
 
 
 class CollectionSiteAdmin(admin.ModelAdmin):
@@ -60,10 +59,7 @@ admin.site.register(GeneralEcologicalZone)
 admin.site.register(SiteOwner)
 admin.site.register(CollectionSiteHistory)
 
-admin.site.register(SequenceConstruct)
-admin.site.register(PCRPrimer)
-admin.site.register(TargetGene)
-admin.site.register(TargetTaxon)
+
 
 
     
