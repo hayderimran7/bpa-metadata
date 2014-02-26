@@ -1,8 +1,19 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
+from suit.widgets import LinkedSelect, AutosizedTextarea
+from mptt.forms import TreeNodeChoiceField
 
-from models import CollectionSite, ChemicalAnalysis, SiteOwner, CollectionSiteHistory
+from models import CollectionSite, ChemicalAnalysis, SiteOwner, CollectionSiteHistory, LandUse
+
+
+class LandUseInlineForm(forms.ModelForm):
+    current_land_use = TreeNodeChoiceField(queryset=LandUse.objects.all())
+
+
+class LandUseInline(admin.TabularInline):
+    model = LandUse
+    form = LandUseInlineForm
+    extra = 1
 
 
 class CollectionSiteAdmin(admin.ModelAdmin):
@@ -20,12 +31,13 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'horizon_classification': LinkedSelect,
                 'soil_type_australian_classification': LinkedSelect,
                 'soil_type_fao_classification': LinkedSelect,
-                'current_land_use': LinkedSelect,
+                # 'current_land_use': TreeNodeChoiceField(queryset=LandUse.objects.all()),
                 'general_ecological_zone': LinkedSelect,
                 'vegetation_type': LinkedSelect
             }
 
     form = CollectionForm
+    # inlines = (LandUseInline, )
 
     fieldsets = [
         ('Location Description',
@@ -64,7 +76,6 @@ class CollectionSiteAdmin(admin.ModelAdmin):
         ('Notes', {'fields': ('note', 'debug_note', )})
 
     ]
-
 
     list_display = ('location_name', 'lat', 'lon')
 
