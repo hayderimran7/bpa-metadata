@@ -4,20 +4,19 @@ from apps.base_vocabulary.models import LandUse
 
 logger = get_logger(__name__)
 
-import pprint
-
 def run():
-    def add(section, parent=None):
-        if isinstance(section, tuple):
-            for sect in section:
-                parent = add(sect, parent)
+    for u1 in LandUseVocabulary:
+        parent_name_u1 = u1[0]
+        parent_u1 = LandUse.objects.create(order=0, description=parent_name_u1)
+        for u2 in u1[1:]:
+            parent_name_u2 = u2[0]
+            parent_u2 = LandUse.objects.create(order=0, description=parent_name_u2, parent=parent_u1)
+            for u3 in u2[1]:
+                LandUse.objects.create(order=0, description=u3, parent=parent_u2)
 
-        if isinstance(section, str):
-            logger.warning(section)
-            return LandUse.objects.create(order=0, description=section, parent=parent)
 
-    for entry in LandUseVocabulary:
-        add(entry)
+
+
 
 
 
