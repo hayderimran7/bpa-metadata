@@ -100,15 +100,25 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
+def get_bpa_id(e):
+    """
+    Get or make BPA ID
+    """
+    idx = '{0}.{1}'.format(BPA_ID_PREFIX, e.sample_id)  # make a BPA ID string
+    bpa_id = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE')
+    if not bpa_id:
+        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+        return None
+    return bpa_id
+
+
 def add_site(data):
     """
     Add site
     """
     for e in data:
-        idx = '{0}.{1}'.format(BPA_ID_PREFIX, e.sample_id)  # make a BPA ID string
-        bpa_id = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE')
-        if not bpa_id:
-            logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+        bpa_id = get_bpa_id(e)
+        if bpa_id is None:
             continue
 
         # only make a site once, the first entry wins
