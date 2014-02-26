@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 from mptt.forms import TreeNodeChoiceField
 
 from models import CollectionSite, ChemicalAnalysis, SiteOwner, CollectionSiteHistory, LandUse
@@ -27,13 +27,17 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_type_descriptive': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_dominant_trees': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'fire_history': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'fire_intensity': EnclosedInput(prepend='icon-fire'),
                 'vegetation_total_cover': forms.TextInput(attrs={'class': 'input-xlarge'}),
-                'horizon_classification': LinkedSelect,
+                'horizon_classification1': LinkedSelect,
+                'horizon_classification2': LinkedSelect,
                 'soil_type_australian_classification': LinkedSelect,
                 'soil_type_fao_classification': LinkedSelect,
-                # 'current_land_use': TreeNodeChoiceField(queryset=LandUse.objects.all()),
+                'current_land_use': LinkedSelect,
                 'general_ecological_zone': LinkedSelect,
-                'vegetation_type': LinkedSelect
+                'vegetation_type': LinkedSelect,
+                'date_sampled': SuitDateWidget,
             }
 
     form = CollectionForm
@@ -44,40 +48,54 @@ class CollectionSiteAdmin(admin.ModelAdmin):
          {'fields': (
              'location_name',
              'plot_description',
-             ('lat', 'lon'),
+             'date_sampled',
+             ('lat', 'lon', 'elevation'),
              'country',
              'state',
              'image_url',
          )}),
         ('Vegetation',
-         {'fields': (
-             'current_land_use',
-             'vegetation_type',
-             'general_ecological_zone',
-             'vegetation_type_descriptive',
-             'vegetation_total_cover',
-             'vegetation_dominant_trees',
-         )}),
+         {'description': 'Vegetation found on site',
+          'fields': (
+              'current_land_use',
+              'vegetation_type',
+              'general_ecological_zone',
+              'vegetation_type_descriptive',
+              'vegetation_total_cover',
+              'vegetation_dominant_trees',
+          )}),
         ('Context',
-         {'fields': (
-             'horizon_classification',
-             'collection_depth',
-             'elevation',
-             ('slope', 'slope_aspect'),
-             'profile_position',
-             'drainage_classification',
-             'soil_type_australian_classification'
-         )}),
+         {  #'classes': ('suit-tab suit-tab-general',),
+            'description': 'Sample site contextual information',
+            'fields': (
+                'horizon_classification1',
+                'horizon_classification2',
+                'upper_depth',
+                'lower_depth',
+                ('slope', 'slope_aspect'),
+                'profile_position',
+                'drainage_classification',
+                ('soil_type_australian_classification', 'soil_type_fao_classification'),
+            )}),
+        ('Fire',
+         {'description': 'Site Fire History',
+          'fields': (
+              'fire_history',
+              'fire_intensity'
+          )}),
         ('History',
-         {'fields': (
-             'owner',
-             'history'
-         )}),
+         {'description': 'General Site History',
+          'fields': (
+              'owner',
+              'history'
+          )}),
         ('Notes', {'fields': ('note', 'debug_note', )})
 
     ]
-
-    list_display = ('location_name', 'lat', 'lon')
+    list_select_related = True
+    search_fields = ('location_name', 'plot_description', 'note', 'vegetation_type_descriptive',)
+    list_filter = ('location_name', 'date_sampled', 'vegetation_type', 'vegetation_type_descriptive', )
+    list_display = ('location_name', 'vegetation_type_descriptive', 'lat', 'lon', 'elevation')
 
 
 admin.site.register(CollectionSite, CollectionSiteAdmin)

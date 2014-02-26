@@ -29,7 +29,7 @@ def get_data(file_name):
                   ('lon', 'lon', ingest_utils.get_clean_float),
                   ('upper_depth', 'Upper Depth', None),
                   ('lower_depth', 'Lower depth', None),
-                  ('horizon', 'Horizon controlled vocab (1)', None),
+                  ('horizon_classification', 'Horizon controlled vocab (1)', None),
                   ('note', 'Notes', None),
                   ('description', 'Description', None),
                   ('current_land_use', 'Current land-use controlled vocab (2)', None),
@@ -37,8 +37,8 @@ def get_data(file_name):
                   ('vegetation_type_descriptive', 'Vegetation Type (descriptive)', None),
                   ('vegetation_type_controlled_vocab', 'Vegetation Type Controlled vocab (4)', None),
                   ('vegetation_total_cover', 'Vegetation Total cover (%)', None),
-                  ('vegetation_dom_trees', 'Vegetation Dom. Trees (%)', None),
-                  ('elevation', 'Elevation ()', None),
+                  ('vegetation_dominant_trees', 'Vegetation Dom. Trees (%)', None),
+                  ('elevation', 'Elevation ()', ingest_utils.get_clean_number),
                   ('slope', 'Slope (%)', None),
                   ('slope_aspect', u'Slope Aspect (Direction or degrees; e.g., NW or 315°)', None),
                   ('profile_position', 'Profile Position controlled vocab (5)', None),
@@ -54,7 +54,7 @@ def get_data(file_name):
                   ('crop_rotation_5', 'Crop rotation 5yrs since present', None),
                   ('agrochemical_additions', 'Agrochemical Additions', None),
                   ('tillage', 'Tillage controlled vocab (9)', None),
-                  ('last_fire', 'Fire', None),
+                  ('fire_history', 'Fire', None),
                   ('fire_intensity', 'fire intensity if known', None),
                   ('flooding', 'Flooding', None),
                   ('extreme_events', 'Extreme Events', None),
@@ -116,9 +116,25 @@ def add_site(data):
             continue
         site, created = CollectionSite.objects.get_or_create(lat=-1 * e.lat, lon=e.lon)
         if created:
+            site.elevation = e.elevation
+            site.date_sampled = e.date_sampled
             site.location_name = e.description
             site.note = e.note + '\n' + e.other_comments
             site.debug_note = ingest_utils.pretty_print_namedtuple(e)
+
+            site.vegetation_type_descriptive = e.vegetation_type_descriptive
+            site.vegetation_total_cover = e.vegetation_total_cover
+            site.vegetation_dominant_trees = e.vegetation_dominant_trees
+
+            site.upper_depth = e.upper_depth
+            site.lower_depth = e.lower_depth
+
+            site.slope = e.slope
+            site.slope_aspect = e.slope_aspect
+
+            site.fire_history = e.fire_history
+            site.fire_intensity = e.fire_intensity
+
             site.save()
 
 

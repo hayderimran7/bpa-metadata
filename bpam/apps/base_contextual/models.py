@@ -53,39 +53,53 @@ class CollectionSite(DebugNote):
 
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
-    location_name = models.CharField(max_length=100, blank=True)
+    location_name = models.CharField(_('Location Name'), max_length=100, blank=True)
     image_url = models.URLField(_('Site Photo'), blank=True, null=True)
-
+    date_sampled = models.DateField(_('Date Sampled'), null=True)
     # positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
     # TODO make use of geodjango
     lat = models.FloatField(_('Latitude'))
     lon = models.FloatField(_('Longitude'))
+    elevation = models.IntegerField(_('Elevation'), null=True)
 
     # controlled vocabularies
-    horizon_classification = models.ForeignKey(HorizonClassification, null=True)
-    current_land_use = models.ForeignKey(LandUse, related_name='current', null=True)
-    general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True)
-    vegetation_type = models.ForeignKey(BroadVegetationType, null=True)
-    soil_type_australian_classification = models.ForeignKey(AustralianSoilClassification, null=True)
-    soil_type_fao_classification = models.ForeignKey(FAOSoilClassification, null=True)
+    horizon_classification1 = models.ForeignKey(HorizonClassification, null=True, related_name='one',
+                                                verbose_name=_('Horizon Classification One'))
+    horizon_classification2 = models.ForeignKey(HorizonClassification, null=True, related_name='two',
+                                                verbose_name=_('Horizon Classification Two'))
 
-    vegetation_type_descriptive = models.CharField(max_length=200, blank=True)
-    vegetation_total_cover = models.CharField(max_length=200, blank=True)
-    vegetation_dominant_trees = models.CharField(max_length=1000, blank=True)
+    current_land_use = models.ForeignKey(LandUse, related_name='current', null=True, verbose_name=_('Current Land Use'))
+    general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True,
+                                                verbose_name=_('General Ecological Zone'))
+    vegetation_type = models.ForeignKey(BroadVegetationType, null=True, verbose_name=_('Vegetation Type'))
+    soil_type_australian_classification = models.ForeignKey(AustralianSoilClassification,
+                                                            verbose_name=_('Australian Soil Type Classification'),
+                                                            null=True)
+    soil_type_fao_classification = models.ForeignKey(FAOSoilClassification,
+                                                     verbose_name=_('FAO Soil Type Classification'),
+                                                     null=True)
 
-    elevation = models.CharField(max_length=20, blank=True)
+    vegetation_type_descriptive = models.CharField(_('Vegetation Description'), max_length=200, blank=True)
+    vegetation_total_cover = models.CharField(_('Vegetation Total Cover'), max_length=200,
+                                              blank=True)  # free text in column
+    vegetation_dominant_trees = models.CharField(_('Vegetation Dominant Trees'), max_length=1000, blank=True)
+
     slope = models.CharField(max_length=20, blank=True)
-    slope_aspect = models.CharField(max_length=100, blank=True)
+    slope_aspect = models.CharField(_('Slope Aspect'), max_length=100, blank=True)
 
-    profile_position = models.CharField(max_length=20, blank=True)
-    drainage_classification = models.CharField(max_length=20, blank=True)
+    profile_position = models.CharField(_('Profile Position'), max_length=20, blank=True)
+    drainage_classification = models.CharField(_('Drainage Classification'), max_length=20, blank=True)
 
+    plot_description = models.TextField(_('Plot Description'), blank=True)
 
-    plot_description = models.TextField(blank=True)
-    collection_depth = models.CharField(max_length=20, blank=True)
+    upper_depth = models.CharField(_('Soil Upper Depth'), max_length=20, blank=True)
+    lower_depth = models.CharField(_('Soil Lower Depth'), max_length=20, blank=True)
 
     history = models.ForeignKey(CollectionSiteHistory, null=True)
     owner = models.ForeignKey(SiteOwner, null=True)
+
+    fire_history = models.CharField(_('Fire History'), max_length=500, blank=True)
+    fire_intensity = models.CharField(_('Fire Intensity'), max_length=500, blank=True)
 
     note = models.TextField(blank=True)
 
