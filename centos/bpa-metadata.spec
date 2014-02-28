@@ -1,7 +1,7 @@
 %define name bpa-metadata
 %define nickname bpam
-%define version 1.0.5
-%define unmangled_version 1.0.5
+%define version 1.0.6
+%define unmangled_version 1.0.6
 %define release 1
 %define webapps /usr/local/webapps
 %define installdir %{webapps}/%{name}
@@ -26,8 +26,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 BuildArch: x86_64
 Vendor: Centre for Comparative Genomics <web@ccg.murdoch.edu.au>
-BuildRequires: python-setuptools python-devel graphviz-devel
-Requires: python-setuptools httpd mod_wsgi
+BuildRequires: python-setuptools python-devel graphviz-devel postgresql-devel
+Requires: python-setuptools httpd mod_wsgi postgresql-libs
 
 %description
 BPA Metadata Management
@@ -69,6 +69,7 @@ cp -r ./tools* %{buildinstalldir}/
 
 # Install package into the prefix
 export PYTHONPATH=%{buildinstalldir}/lib
+export PATH=${PATH}:/usr/pgsql-9.3/bin/  # postgress 
 easy_install -O1 --prefix %{buildinstalldir} --install-dir %{buildinstalldir}/lib .
 
 # Create settings symlink so we can run collectstatic with the default settings
