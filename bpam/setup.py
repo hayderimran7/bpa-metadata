@@ -58,6 +58,7 @@ install_requires = [
     'rainbow_logging_handler',
     'django-sql-explorer',
     'django-mptt>=0.5.5',
+    'ccg-extras==0.1.6',
 ]
 
 dev_requires = [
@@ -92,8 +93,8 @@ dependency_links = [
     #'https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.2.1.tar.gz',
     #'https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/django-iprestrict-0.1.tar.gz',
     #'https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.7.tar.gz',
-    #'http://ccg-django-extras.googlecode.com/files/ccg-auth-0.3.3.tar.gz',
-    #'http://repo.ccgapps.com.au',
+    'http://ccg-django-extras.googlecode.com/files/ccg-auth-0.3.3.tar.gz',
+    'http://repo.ccgapps.com.au',
     #'http://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz',
     #'http://argparse.googlecode.com/files/argparse-1.2.1.tar.gz',
     'https://alastairs-place.net/projects/netifaces/netifaces-0.8.tar.gz'
