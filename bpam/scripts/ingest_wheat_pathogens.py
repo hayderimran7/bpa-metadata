@@ -72,7 +72,7 @@ def ingest_samples(samples):
         Adds new sample or updates existing sample
         """
 
-        bpa_id = e['bpa_id']
+        bpa_id = e.bpa_id
 
         if not bpa_id_utils.is_good_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
@@ -116,40 +116,41 @@ def get_pathogen_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', '', None),
-                  ('official_variety', '', None),
-                  ('kingdom', '', None),
-                  ('phylum', '', None),
-                  ('species', '', None),
-                  ('sample_id', '', None),
-                  ('other_id', '', None),
-                  ('original_source_host_species', '', None),
-                  ('collection_date', '', None),
-                  ('collection_location', '', None),
-                  ('wheat_pathogenicity', '', None),
-                  ('contact_scientist', '', None),
-                  ('sample_dna_source', '', None),
-                  ('dna_extraction_protocol', '', None),
-                  ('library', '', None),
-                  ('library_construction', '', None),
-                  ('library_construction_protocol', '', None),
-                  ('sequencer', '', None),
-                  ('sample_label', '', None),
-                  ('library_id', '', None),
-                  ('index_number', '', None),
-                  ('index_sequence', '', None),
-                  ('run_number', '', None),
-                  ('flow_cell_id', '', None),
-                  ('lane_number', '', None),
-                  ('qc_software', '', None),  # empty
-                  ('sequence_filename', '', None),
-                  ('sequence_filetype', '', None),
-                  ('md5_checksum', '', None),
-                  ('reported_file_size', '', None),
-                  ('analysis_performed', '', None),
-                  ('genbank_project', '', None),
-                  ('locus_tag', '', None),
-                  ('note', '', None)
+    field_spec = [('bpa_id', 'BPA ID', None),
+                  ('official_variety', 'Isolate name', None),
+                  ('kingdom', 'Kingdom', None),
+                  ('phylum', 'Phylum', None),
+                  ('species', 'Species', None),
+                  ('sample_id', 'Researcher Sample ID', None),
+                  ('other_id', 'Other IDs', None),
+                  ('original_source_host_species', 'Original source host species', None),
+                  ('collection_date', 'Isolate collection date', None),
+                  ('collection_location', 'Isolate collection location', None),
+                  ('wheat_pathogenicity', 'Pathogenicity towards wheat', None),
+                  ('contact_scientist', 'Contact scientist', None),
+                  ('sample_dna_source', 'DNA Source', None),
+                  ('dna_extraction_protocol', 'DNA extraction protocol', None),
+                  ('library', 'Library', None),
+                  ('library_construction', 'Library Construction', None),
+                  ('library_construction_protocol', 'Library construction protocol', None),
+                  ('sequencer', 'Sequencer', None),
+                  ('sample_label', 'Sample (AGRF Labelling)', None),
+                  ('library_id', 'Library ID', None),
+                  ('index_number', 'Index #', None),
+                  ('index_sequence', 'Index', None),
+                  ('run_number', 'Run number', None),
+                  ('flow_cell_id', 'Run #:Flow Cell ID', None),
+                  ('lane_number', 'Lane number', None),
+                  ('qc_software', 'AGRF DATA QC software (please include version)', None),  # empty
+                  ('sequence_filename', 'FILE NAMES - supplied by AGRF', None),
+                  ('sequence_filetype', 'file type', None),
+                  ('md5_checksum', 'MD5 checksum', None),
+                  ('reported_file_size', 'Size', None),
+                  ('analysis_performed', 'analysis performed (to date)', None),
+                  ('genbank_project', 'GenBank Project', None),
+                  ('locus_tag', 'Locus tag', None),
+                  ('genome_analysis', 'Genome-Analysis', None),
+                  ('metdata_file', 'Metadata file', None)
     ]
 
     wrapper = ExcelWrapper(
@@ -186,18 +187,15 @@ def ingest_runs(sample_data):
             library_construction_protocol=library_construction_protocol)
 
         if created:
-            logger.debug("Created Protocol {0}".format(protocol))
+            logger.debug('Created Protocol {0}'.format(protocol))
 
         return protocol
 
     def get_sequencer(name):
-        if name == "":
-            name = "Unknown"
-        try:
-            sequencer = Sequencer.objects.get(name=name)
-        except Sequencer.DoesNotExist:
-            sequencer = Sequencer(name=name)
-            sequencer.save()
+        if name == '':
+            name = u'Unknown'
+
+        sequencer, created = Sequencer.objects.get_or_create(name=name)
         return sequencer
 
     def get_sample(bpa_id):
@@ -215,8 +213,12 @@ def ingest_runs(sample_data):
         The run produced several files
         """
         flow_cell_id = entry.flow_cell_id.strip()
-        bpa_id = entry.bpa_id.strip()
         run_number = get_run_number(entry)
+
+        bpa_id = entry.bpa_id
+        if not bpa_id_utils.is_good_bpa_id(bpa_id):
+            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
+            return
 
         pathogen_run, created = PathogenRun.objects.get_or_create(
             flow_cell_id=flow_cell_id,
@@ -244,7 +246,7 @@ def ingest_runs(sample_data):
         Add each sequence file produced by a run
         """
 
-        file_name = entry['sequence_filename'].strip()
+        file_name = entry.sequence_filename.strip()
         if file_name != "":
             f = PathogenSequenceFile()
             f.sample = PathogenSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
@@ -263,7 +265,7 @@ def ingest_runs(sample_data):
 
 def ingest(file_name):
     sample_data = list(get_pathogen_sample_data(file_name))
-    bpa_id_utils.ingest_bpa_ids(sample_data, 'Wheat Pathogens')
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_PATHOGEN', 'Wheat Pathogens')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
