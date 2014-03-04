@@ -1,5 +1,3 @@
-import sys
-import pprint
 from unipath import Path
 
 from apps.common.models import DNASource, BPAUniqueID, Sequencer
@@ -71,7 +69,7 @@ def ingest_samples(samples):
         cultivar_sample.extract_name = e.extract_name
         cultivar_sample.casava_version = e.casava_version
         cultivar_sample.protocol_reference = e.protocol_reference
-        cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
+        cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
 
         cultivar_sample.save()
         logger.info("Ingested Cultivars sample {0}".format(cultivar_sample.name))
@@ -157,13 +155,10 @@ def ingest_runs(sample_data):
         return sequencer
 
     def get_sample(bpa_id):
-        try:
-            sample = CultivarSample.objects.get(bpa_id__bpa_id=bpa_id)
-            logger.debug("Found sample {0}".format(sample))
-            return sample
-        except CultivarSample.DoesNotExist:
-            logger.error("No sample with ID {0}, quiting now".format(bpa_id))
-            sys.exit(1)
+        sample, created = CultivarSample.objects.get_or_create(bpa_id__bpa_id=bpa_id)
+        if created:
+            logger.info("New sample with ID {0}".format(bpa_id))
+        return sample
 
     def get_run_number(entry):
         run_number = ingest_utils.get_clean_number(entry.run_number)
@@ -177,12 +172,12 @@ def ingest_runs(sample_data):
         bpa_id = entry.bpa_id.strip()
         run_number = get_run_number(entry)
 
-        try:
-            cultivar_run = CultivarRun.objects.get(flow_cell_id=flow_cell_id,
-                                                   run_number=run_number,
-                                                   sample__bpa_id__bpa_id=bpa_id)
-        except CultivarRun.DoesNotExist:
-            cultivar_run = CultivarRun()
+        cultivar_run, created = CultivarRun.objects.get_or_create(
+            flow_cell_id=flow_cell_id,
+            run_number=run_number,
+            sample__bpa_id__bpa_id=bpa_id)
+
+        # just update
         cultivar_run.flow_cell_id = flow_cell_id
         cultivar_run.run_number = run_number
         cultivar_run.sample = get_sample(bpa_id)
@@ -215,7 +210,7 @@ def ingest_runs(sample_data):
             f.filename = file_name
             f.original_sequence_filename = entry.sequence_filename
             f.md5 = entry.md5_checksum
-            f.note = pprint.pformat(entry)
+            f.note = ingest_utils.pretty_print_namedtuple(entry)
             f.save()
 
     for e in sample_data:
