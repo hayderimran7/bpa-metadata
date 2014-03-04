@@ -1,7 +1,5 @@
 import sys
 import pprint
-from datetime import datetime
-import xlrd
 from unipath import Path
 
 from apps.common.models import DNASource, BPAUniqueID, Sequencer
@@ -9,6 +7,7 @@ from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSamp
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
+from libs.excel_wrapper import ExcelWrapper
 
 
 logger = get_logger(__name__)
@@ -52,7 +51,7 @@ def ingest_samples(samples):
         Adds new sample or updates existing sample
         """
 
-        bpa_id = e['bpa_id']
+        bpa_id = e.bpa_id
 
         if not bpa_id_utils.is_good_bpa_id(bpa_id):
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
@@ -66,13 +65,13 @@ def ingest_samples(samples):
             cultivar_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
 
         cultivar_sample.organism = wheat_organism
-        cultivar_sample.name = e['name']
-        cultivar_sample.dna_extraction_protocol = e['dna_extraction_protocol']
-        cultivar_sample.cultivar_code = e['cultivar_code']
-        cultivar_sample.extract_name = e['extract_name']
-        cultivar_sample.casava_version = e['casava_version']
-        cultivar_sample.protocol_reference = e['protocol_reference']
-        cultivar_sample.note = e['note']
+        cultivar_sample.name = e.name
+        cultivar_sample.dna_extraction_protocol = e.dna_extraction_protocol
+        cultivar_sample.cultivar_code = e.cultivar_code
+        cultivar_sample.extract_name = e.extract_name
+        cultivar_sample.casava_version = e.casava_version
+        cultivar_sample.protocol_reference = e.protocol_reference
+        cultivar_sample.note = e.note
         cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
 
         cultivar_sample.save()
@@ -82,54 +81,42 @@ def ingest_samples(samples):
         add_sample(sample)
 
 
-def get_cultivar_sample_data(spreadsheet_file):
+def get_cultivar_sample_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    fieldnames = ['bpa_id',
-                  'name',
-                  'cultivar_code', # C
-                  'dna_extraction_protocol',
-                  'extract_name',
-                  'library_construction_protocol',
-                  'library_construction',
-                  'library',
-                  'index_sequence',
-                  'extract_name',
-                  'protocol_reference',
-                  'index_number', # cycle count CHECK
-                  'sequencer',
-                  'casava_version',
-                  'run_number',
-                  'flow_cell_id',
-                  'lane_number',
-                  'sequence_filename',
-                  'corrected_sequence_filename',
-                  'sequence_filetype',
-                  'md5_checksum',
-                  'note'
+    field_spec = [('bpa_id', 'Unique ID', None),
+                  ('name', 'Variety', None),
+                  ('cultivar_code', 'Comment[Sample code]', None),  # C
+                  ('dna_extraction_protocol', 'Protocol REF', None),
+                  ('extract_name', 'Extract Name', None),
+                  ('library_construction_protocol', 'Protocol REF', None),
+                  ('library_construction', 'Library nominal fragment size', None),
+                  ('library', 'Library', None),
+                  ('index_sequence', 'Index', None),
+                  ('extract_name', 'Extract Name', None),
+                  ('protocol_reference', 'Protocol REF', None),
+                  ('index_number', 'Parameter Value[Cycle count]', None),  # cycle count CHECK
+                  ('sequencer', 'Sequencing instrument', None),
+                  ('casava_version', 'CASAVA version', None),
+                  ('run_number', 'Parameter Value[run number]', None),
+                  ('flow_cell_id', 'Parameter Value[flow cell identifier]', None),
+                  ('lane_number', 'Parameter Value[lane number]', None),
+                  ('sequence_filename', 'Raw Data File', None),
+                  ('corrected_sequence_filename', 'Comment[Corrected file name]', None),
+                  ('sequence_filetype', 'Comment[file format]', None),
+                  ('md5_checksum', 'Comment[MD5 checksum]', None),
+                  ('note' '', None),
     ]
 
-    wb = xlrd.open_workbook(spreadsheet_file)
-    sheet = wb.sheet_by_name('a_genome_seq_assay_BPA-Wheat-Cu')
-    samples = []
-    for row_idx in range(sheet.nrows)[2:]:  # the first two lines are headers
-        vals = sheet.row_values(row_idx)
-
-        if not bpa_id_utils.is_good_bpa_id(vals[0]):
-            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(vals[0]))
-            continue
-
-        # for date types try to convert to python dates
-        types = sheet.row_types(row_idx)
-        for i, t in enumerate(types):
-            if t == xlrd.XL_CELL_DATE:
-                vals[i] = datetime(*xlrd.xldate_as_tuple(vals[i], wb.datemode))
-
-        samples.append(dict(zip(fieldnames, vals)))
-
-    return samples
+    wrapper = ExcelWrapper(
+        field_spec,
+        file_name,
+        sheet_name='a_genome_seq_assay_BPA-Wheat-Cu',
+        header_length=1,
+        column_name_row_index=0)
+    return wrapper.get_all()
 
 
 def ingest_runs(sample_data):
@@ -147,9 +134,9 @@ def ingest_runs(sample_data):
                 return 'MP'
             return 'UN'
 
-        base_pairs = ingest_utils.get_clean_number(entry['library_construction'])
-        library_type = get_library_type(entry['library'])
-        library_construction_protocol = entry['library_construction_protocol'].replace(',', '').capitalize()
+        base_pairs = ingest_utils.get_clean_number(entry.library_construction)
+        library_type = get_library_type(entry.library)
+        library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
 
         try:
             protocol = CultivarProtocol.objects.get(base_pairs=base_pairs,
@@ -189,8 +176,8 @@ def ingest_runs(sample_data):
         """
         The run produced several files
         """
-        flow_cell_id = entry['flow_cell_id'].strip()
-        bpa_id = entry['bpa_id'].strip()
+        flow_cell_id = entry.flow_cell_id.strip()
+        bpa_id = entry.bpa_id.strip()
         run_number = get_run_number(entry)
 
         try:
@@ -202,9 +189,9 @@ def ingest_runs(sample_data):
         cultivar_run.flow_cell_id = flow_cell_id
         cultivar_run.run_number = run_number
         cultivar_run.sample = get_sample(bpa_id)
-        cultivar_run.index_number = ingest_utils.get_clean_number(entry['index_number'])
-        cultivar_run.sequencer = get_sequencer(entry['sequencer'])
-        cultivar_run.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
+        cultivar_run.index_number = ingest_utils.get_clean_number(entry.index_number)
+        cultivar_run.sequencer = get_sequencer(entry.sequencer)
+        cultivar_run.lane_number = ingest_utils.get_clean_number(entry.lane_number)
         cultivar_run.protocol = get_protocol(e)
         cultivar_run.save()
 
@@ -221,16 +208,16 @@ def ingest_runs(sample_data):
 
         # Use the corrected sequence filename, as for this project (Wheat Cultivars),
         # thats what the user wants to see
-        file_name = entry['corrected_sequence_filename'].strip()
+        file_name = entry.corrected_sequence_filename.strip()
         if file_name != "":
             f = CultivarSequenceFile()
-            f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry['bpa_id'])
+            f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
             f.run = cultivar_run
-            f.index_number = ingest_utils.get_clean_number(entry['index_number'])
-            f.lane_number = ingest_utils.get_clean_number(entry['lane_number'])
+            f.index_number = ingest_utils.get_clean_number(entry.index_number)
+            f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
             f.filename = file_name
-            f.original_sequence_filename = entry['sequence_filename']
-            f.md5 = entry['md5_checksum']
+            f.original_sequence_filename = entry.sequence_filename
+            f.md5 = entry.md5_checksum
             f.note = pprint.pformat(entry)
             f.save()
 
@@ -240,16 +227,16 @@ def ingest_runs(sample_data):
 
 
 def ingest(spreadsheet_file):
-    sample_data = get_cultivar_sample_data(spreadsheet_file)
+    sample_data = list(get_cultivar_sample_data(spreadsheet_file))
     bpa_id_utils.ingest_bpa_ids(sample_data, 'Wheat Cultivars')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
 
-def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
+def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_cultivars.xlsx
     """
 
-    ingest(spreadsheet_file)
+    ingest(file_name)
