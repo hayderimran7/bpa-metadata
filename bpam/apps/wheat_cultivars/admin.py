@@ -93,7 +93,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
     search_fields = ('bpa_id__bpa_id', 'cultivar_code')
-    list_filter = ('cultivar_code', 'note')
+    list_filter = ('cultivar_code',)
 
 
 class CultivarsSequenceFileAdmin(SequenceFileAdmin):
