@@ -68,7 +68,11 @@ SUIT_CONFIG = {
         '-',
         # Wheat
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
-        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
+        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
+         'models': ('cultivarsample',
+                    'cultivarsequencefile',
+                    'cultivarrun',
+                    'cultivarprotocol')},
         '-',
         # Base
         {'app': 'base_metagenomics', 'label': 'BASE Metagenomics',
