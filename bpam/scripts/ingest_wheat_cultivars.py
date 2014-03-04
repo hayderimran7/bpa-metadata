@@ -13,7 +13,7 @@ from libs.excel_wrapper import ExcelWrapper
 logger = get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_cultivars/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'Wheat_cultivars.xlsx')
+DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
 
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Cultivars'
@@ -71,7 +71,6 @@ def ingest_samples(samples):
         cultivar_sample.extract_name = e.extract_name
         cultivar_sample.casava_version = e.casava_version
         cultivar_sample.protocol_reference = e.protocol_reference
-        cultivar_sample.note = e.note
         cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + pprint.pformat(e)
 
         cultivar_sample.save()
@@ -95,7 +94,6 @@ def get_cultivar_sample_data(file_name):
                   ('library_construction', 'Library nominal fragment size', None),
                   ('library', 'Library', None),
                   ('index_sequence', 'Index', None),
-                  ('extract_name', 'Extract Name', None),
                   ('protocol_reference', 'Protocol REF', None),
                   ('index_number', 'Parameter Value[Cycle count]', None),  # cycle count CHECK
                   ('sequencer', 'Sequencing instrument', None),
@@ -107,7 +105,6 @@ def get_cultivar_sample_data(file_name):
                   ('corrected_sequence_filename', 'Comment[Corrected file name]', None),
                   ('sequence_filetype', 'Comment[file format]', None),
                   ('md5_checksum', 'Comment[MD5 checksum]', None),
-                  ('note' '', None),
     ]
 
     wrapper = ExcelWrapper(
@@ -169,7 +166,7 @@ def ingest_runs(sample_data):
             sys.exit(1)
 
     def get_run_number(entry):
-        run_number = ingest_utils.get_clean_number(entry['run_number'])
+        run_number = ingest_utils.get_clean_number(entry.run_number)
         return run_number
 
     def add_run(entry):
@@ -207,7 +204,7 @@ def ingest_runs(sample_data):
         """
 
         # Use the corrected sequence filename, as for this project (Wheat Cultivars),
-        # thats what the user wants to see
+        # that's what the user wants to see
         file_name = entry.corrected_sequence_filename.strip()
         if file_name != "":
             f = CultivarSequenceFile()
@@ -227,10 +224,12 @@ def ingest_runs(sample_data):
 
 
 def ingest(spreadsheet_file):
+    logger.info('Starting Wheat Cultivar metadata import')
     sample_data = list(get_cultivar_sample_data(spreadsheet_file))
-    bpa_id_utils.ingest_bpa_ids(sample_data, 'Wheat Cultivars')
+    bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
+    logger.info('Wheat Cultivar metadata import complete')
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
