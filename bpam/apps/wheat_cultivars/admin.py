@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django import forms
-from apps.common.admin import SequenceFileAdmin
-
 from suit.widgets import LinkedSelect, AutosizedTextarea
 
+from apps.common.admin import SequenceFileAdmin
 from .models import CultivarSample
 from .models import CultivarRun
 from .models import CultivarProtocol
@@ -94,6 +93,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
     search_fields = ('bpa_id__bpa_id', 'cultivar_code')
+    list_filter = ('cultivar_code', 'note')
 
 
 class CultivarsSequenceFileAdmin(SequenceFileAdmin):
