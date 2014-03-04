@@ -67,7 +67,11 @@ SUIT_CONFIG = {
                     'gbrprotocol',)},
         '-',
         # Wheat
-        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
+        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens',
+         'models': ('pathogensample',
+                    'pathogensequencefile',
+                    'pathogenrun',
+                    'pathogenprotocol')},
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
          'models': ('cultivarsample',
                     'cultivarsequencefile',

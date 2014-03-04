@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
 from .models import PathogenSample
@@ -76,6 +76,7 @@ class SampleAdmin(admin.ModelAdmin):
                 'dna_source': LinkedSelect,
                 'sequencing_facility': LinkedSelect,
                 'contact_scientist': LinkedSelect,
+                'collection_date': SuitDateWidget,
                 'contact_bioinformatician': LinkedSelect,
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
                                                  'style': 'width:95%'}),
@@ -108,11 +109,13 @@ class SampleAdmin(admin.ModelAdmin):
 class PathogenSequenceFileAdmin(SequenceFileAdmin):
     def get_organism(self, obj):
         return obj.sample.organism
+
     get_organism.short_description = 'Organism'
     get_organism.admin_order_field = 'sample__organism'
 
     list_display = ('get_sample_id', 'get_organism', 'download_field', 'get_sample_name', 'run')
     list_filter = ('sample__organism', 'analysed')
+
 
 admin.site.register(PathogenSample, SampleAdmin)
 admin.site.register(PathogenProtocol, ProtocolAdmin)
