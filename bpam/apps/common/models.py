@@ -280,7 +280,7 @@ class SequenceFile(models.Model):
         uj = urlparse.urljoin
         uq = urllib.quote
         return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
-            self.projectname,
+            self.project_name,
             uq(bpa_id),
             uq(self.run.flow_cell_id),
             uq(self.filename)))
