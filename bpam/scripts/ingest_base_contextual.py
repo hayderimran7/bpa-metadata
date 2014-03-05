@@ -7,7 +7,7 @@ from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
 from apps.base_contextual.models import CollectionSite
-
+from apps.base_vocabulary.models import HorizonClassification
 
 logger = logger_utils.get_logger(__name__)
 
@@ -18,10 +18,42 @@ BPA_ID_PREFIX = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 
 
+def get_horizon_classifications(classification_str):
+    """
+    map the classification string to the classification object
+    """
+
+    def parse_classifiers(classification_str):
+        """
+        Return a tuple with the classifier or None
+        """
+        splitted = map(lambda s: s.strip(), classification_str.split(','))
+        if len(splitted) == 1:
+            tup = splitted[0], u''
+        if len(splitted) == 2:
+            tup = splitted
+
+        return tup
+
+    def get_classifier(class_str):
+        print ">>>>" + class_str
+        if not class_str.strip():
+            return None
+
+        try:
+            return HorizonClassification.objects.get(horizon=class_str)
+        except HorizonClassification.DoesNotExist:
+            logger.warning('No such Horizon Classification as >{0}<'.format(class_str))
+            return None
+
+    return map(get_classifier, parse_classifiers(classification_str))
+
+
 def get_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
+
     field_spec = [('full_id', 'FULL_ID', None),
                   ('sample_id', 'Sample_id', None),  # the one I care about 102.100.100 + sample_id
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
@@ -124,28 +156,34 @@ def add_site(data):
         # only make a site once, the first entry wins
         if e.lat is None or e.lon is None:
             continue
+
         site, created = CollectionSite.objects.get_or_create(lat=-1 * e.lat, lon=e.lon)
-        if created:
-            site.elevation = e.elevation
-            site.date_sampled = e.date_sampled
-            site.location_name = e.description
-            site.note = e.note + '\n' + e.other_comments
-            site.debug_note = ingest_utils.pretty_print_namedtuple(e)
+        # always update
+        site.elevation = e.elevation
+        site.date_sampled = e.date_sampled
+        site.location_name = e.description
+        site.note = e.note + '\n' + e.other_comments
+        site.debug_note = ingest_utils.pretty_print_namedtuple(e)
 
-            site.vegetation_type_descriptive = e.vegetation_type_descriptive
-            site.vegetation_total_cover = e.vegetation_total_cover
-            site.vegetation_dominant_trees = e.vegetation_dominant_trees
+        site.vegetation_type_descriptive = e.vegetation_type_descriptive
+        site.vegetation_total_cover = e.vegetation_total_cover
+        site.vegetation_dominant_trees = e.vegetation_dominant_trees
 
-            site.upper_depth = e.upper_depth
-            site.lower_depth = e.lower_depth
+        site.upper_depth = e.upper_depth
+        site.lower_depth = e.lower_depth
 
-            site.slope = e.slope
-            site.slope_aspect = e.slope_aspect
+        site.slope = e.slope
+        site.slope_aspect = e.slope_aspect
 
-            site.fire_history = e.fire_history
-            site.fire_intensity = e.fire_intensity
+        site.fire_history = e.fire_history
+        site.fire_intensity = e.fire_intensity
 
-            site.save()
+        # horizons
+        horizons = get_horizon_classifications(e.horizon_classification)
+        site.horizon_classification1 = horizons[0]
+        site.horizon_classification2 = horizons[1]
+
+        site.save()
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):

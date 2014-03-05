@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
+
 class LandUse(MPTTModel):
     """
     Land use Controlled Vocabulary
@@ -26,6 +27,7 @@ class LandUse(MPTTModel):
     def save(self, *args, **kwargs):
         super(LandUse, self).save(*args, **kwargs)
         LandUse.objects.rebuild()
+
 
 class SoilTexture(models.Model):
     """
@@ -105,7 +107,7 @@ class HorizonClassification(models.Model):
     description = models.TextField()
 
     def __unicode__(self):
-        return u"{0}".format(self.horizon)
+        return u'{0}'.format(self.horizon)
 
     class Meta:
         verbose_name_plural = _("Horizon Classification")
