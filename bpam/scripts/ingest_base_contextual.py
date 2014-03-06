@@ -6,7 +6,7 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
-from apps.base_contextual.models import CollectionSite
+from apps.base_contextual.models import CollectionSite, CollectionSample
 from apps.base_vocabulary.models import HorizonClassification
 
 logger = logger_utils.get_logger(__name__)
@@ -36,7 +36,6 @@ def get_horizon_classifications(classification_str):
         return tup
 
     def get_classifier(class_str):
-        print ">>>>" + class_str
         if not class_str.strip():
             return None
 
@@ -55,7 +54,7 @@ def get_data(file_name):
     """
 
     field_spec = [('full_id', 'FULL_ID', None),
-                  ('sample_id', 'Sample_id', None),  # the one I care about 102.100.100 + sample_id
+                  ('sample_id', 'Sample_id', ingest_utils.get_int),  # the one I care about 102.100.100 + sample_id
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
                   ('lat', 'lat (-)', ingest_utils.get_clean_float),
                   ('lon', 'lon', ingest_utils.get_clean_float),
@@ -144,46 +143,63 @@ def get_bpa_id(e):
     return bpa_id
 
 
-def add_site(data):
+def get_site(entry):
     """
-    Add site
+    Add or get a site
+    """
+
+    # only make a site once, the first entry wins
+    if entry.lat is None or entry.lon is None:
+        logger.warning('Site lat/lon empty, not creating site {0}'.format(entry.description))
+        return None
+
+    site, created = CollectionSite.objects.get_or_create(lat=-1 * entry.lat, lon=entry.lon)
+    # the first set of site data wins
+    if created:
+        site.elevation = entry.elevation
+        site.date_sampled = entry.date_sampled
+        site.location_name = entry.description
+        site.note = entry.note + '\n' + entry.other_comments
+        site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+
+        site.vegetation_type_descriptive = entry.vegetation_type_descriptive
+        site.vegetation_total_cover = entry.vegetation_total_cover
+        site.vegetation_dominant_trees = entry.vegetation_dominant_trees
+
+        site.slope = entry.slope
+        site.slope_aspect = entry.slope_aspect
+
+        site.fire_history = entry.fire_history
+        site.fire_intensity = entry.fire_intensity
+
+        site.save()
+
+    return site
+
+
+def add_samples(data):
+    """
+    Add samples. There is a sample per line for the source document
     """
     for e in data:
         bpa_id = get_bpa_id(e)
         if bpa_id is None:
             continue
 
-        # only make a site once, the first entry wins
-        if e.lat is None or e.lon is None:
-            continue
-
-        site, created = CollectionSite.objects.get_or_create(lat=-1 * e.lat, lon=e.lon)
-        # always update
-        site.elevation = e.elevation
-        site.date_sampled = e.date_sampled
-        site.location_name = e.description
-        site.note = e.note + '\n' + e.other_comments
-        site.debug_note = ingest_utils.pretty_print_namedtuple(e)
-
-        site.vegetation_type_descriptive = e.vegetation_type_descriptive
-        site.vegetation_total_cover = e.vegetation_total_cover
-        site.vegetation_dominant_trees = e.vegetation_dominant_trees
-
-        site.upper_depth = e.upper_depth
-        site.lower_depth = e.lower_depth
-
-        site.slope = e.slope
-        site.slope_aspect = e.slope_aspect
-
-        site.fire_history = e.fire_history
-        site.fire_intensity = e.fire_intensity
+        sample, created = CollectionSample.objects.get_or_create(bpa_id=bpa_id)
+        # always update, if the sample id is repeated more than once in the document, the last one wins
+        sample.bpa_id = bpa_id
+        sample.site = get_site(e)
+        sample.upper_depth = e.upper_depth
+        sample.lower_depth = e.lower_depth
 
         # horizons
         horizons = get_horizon_classifications(e.horizon_classification)
-        site.horizon_classification1 = horizons[0]
-        site.horizon_classification2 = horizons[1]
+        sample.horizon_classification1 = horizons[0]
+        sample.horizon_classification2 = horizons[1]
 
-        site.save()
+        sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
+        sample.save()
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
@@ -193,6 +209,7 @@ def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
 
     data = list(get_data(file_name))
-    add_site(data)
+    add_samples(data)
+
 
 
