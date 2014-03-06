@@ -77,16 +77,23 @@ usage() {
 
 nuclear() {
     log_info "Total rebuild of DB"
-    sudo bpam reset_db --router=default --traceback
-    sudo bpam syncdb --noinput --traceback
-    sudo bpam migrate --traceback
+    bpam reset_db --router=default --traceback
+    bpam syncdb --noinput --traceback
+    bpam migrate --traceback
     bpam runscript set_initial_bpa_projects --traceback
-    sudo bpam runscript set_initial_bpa_projects --traceback
-    sudo bpam runscript ingest_users --script-args ./data/users/current
-    sudo bpam runscript ingest_gbr --script-args ./data/gbr/current
-    sudo bpam runscript ingest_melanoma --script-args ./data/melanoma/current
-    sudo bpam runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
-    sudo bpam runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
+    bpam runscript ingest_users
+    bpam runscript ingest_gbr
+    bpam runscript ingest_melanoma
+    # wheat
+    bpam runscript ingest_wheat_pathogens
+    bpam runscript ingest_wheat_cultivars
+    # base
+    bpam runscript ingest_landuse
+    bpam runscript ingest_base_454
+    bpam runscript ingest_base_contextual
+    bpam runscript ingest_base_metagenomics
+    # links
+    bpam runscript url_checker
 }
 
 case ${ACTION} in
