@@ -7,7 +7,7 @@ from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
 from apps.base_contextual.models import CollectionSite, CollectionSample
-from apps.base_vocabulary.models import HorizonClassification
+from apps.base_vocabulary.models import HorizonClassification, LandUse
 
 logger = logger_utils.get_logger(__name__)
 
@@ -177,6 +177,14 @@ def get_site(entry):
     return site
 
 
+def get_landuse(landuse_str):
+    try:
+        return LandUse.objects.get(description=landuse_str)
+    except LandUse.DoesNotExist:
+        logger.warning('Land Use description "{0}" not known'.format(landuse_str))
+        return None
+
+
 def add_samples(data):
     """
     Add samples. There is a sample per line for the source document
@@ -197,6 +205,9 @@ def add_samples(data):
         horizons = get_horizon_classifications(e.horizon_classification)
         sample.horizon_classification1 = horizons[0]
         sample.horizon_classification2 = horizons[1]
+
+        # land use
+        sample.current_land_use = get_landuse(e.current_land_use)
 
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
         sample.save()
