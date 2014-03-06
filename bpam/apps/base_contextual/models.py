@@ -2,7 +2,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
-from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, AustralianSoilClassification, FAOSoilClassification
+from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, \
+    AustralianSoilClassification, FAOSoilClassification
 
 
 class SiteOwner(models.Model):
@@ -63,10 +64,6 @@ class CollectionSite(DebugNote):
     elevation = models.IntegerField(_('Elevation'), null=True)
 
     # controlled vocabularies
-    horizon_classification1 = models.ForeignKey(HorizonClassification, null=True, related_name='one',
-                                                verbose_name=_('Horizon Classification One'))
-    horizon_classification2 = models.ForeignKey(HorizonClassification, null=True, related_name='two',
-                                                verbose_name=_('Horizon Classification Two'))
 
     current_land_use = models.ForeignKey(LandUse, related_name='current', null=True, verbose_name=_('Current Land Use'))
     general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True,
@@ -92,9 +89,6 @@ class CollectionSite(DebugNote):
 
     plot_description = models.TextField(_('Plot Description'), blank=True)
 
-    upper_depth = models.CharField(_('Soil Upper Depth'), max_length=20, blank=True)
-    lower_depth = models.CharField(_('Soil Lower Depth'), max_length=20, blank=True)
-
     history = models.ForeignKey(CollectionSiteHistory, null=True)
     owner = models.ForeignKey(SiteOwner, null=True)
 
@@ -104,7 +98,7 @@ class CollectionSite(DebugNote):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u','.join(s for s in (self.country, self.state, self.location_name, self.plot_description) if s)
+        return u','.join(str(s) for s in (self.location_name, self.lat, self.lon, self.plot_description) if s)
 
     class Meta:
         # app_label = 'base'
@@ -160,3 +154,28 @@ class ChemicalAnalysis(models.Model):
         verbose_name_plural = _("Sample Chemical Essays")
 
 
+class CollectionSample(DebugNote):
+    """
+    A sample to collect sample specific info for contextual data.
+    """
+
+    bpa_id = models.ForeignKey(BPAUniqueID)
+    site = models.ForeignKey(CollectionSite, null=True)  # there may be no site set
+
+    horizon_classification1 = models.ForeignKey(HorizonClassification, null=True, related_name='one',
+                                                verbose_name=_('Horizon Classification One'))
+    horizon_classification2 = models.ForeignKey(HorizonClassification, null=True, related_name='two',
+                                                verbose_name=_('Horizon Classification Two'))
+    upper_depth = models.CharField(_('Soil Upper Depth'), max_length=20, blank=True)
+    lower_depth = models.CharField(_('Soil Lower Depth'), max_length=20, blank=True)
+
+    def __unicode__(self):
+        return u"{0} {1}".format(
+            self.bpa_id,
+            self.horizon_classification1,
+            self.horizon_classification2,
+            self.upper_depth,
+            self.lower_depth)
+
+    class Meta:
+        verbose_name_plural = _('Collection Sample')

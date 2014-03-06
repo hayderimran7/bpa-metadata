@@ -1,10 +1,8 @@
 import string
 import pprint
 from datetime import date
-
 import unittest
 import dateutil
-
 from django.utils.encoding import smart_text
 
 import logger_utils
@@ -29,6 +27,16 @@ def get_clean_number(val, default=None):
     try:
         return int(val.translate(remove_letters_map))
     except ValueError:
+        return default
+
+
+def get_int(val, default=None):
+    """
+    get a int from a string containing other alpha characters
+    """
+    try:
+        return int(get_clean_number(val, default))
+    except TypeError:
         return default
 
 
