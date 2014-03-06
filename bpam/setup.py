@@ -44,6 +44,7 @@ install_requires = [
     'django-extensions>=1.2.5',
     'django-localflavor>=1.0',
     'django-tinymce>=1.5.2',
+    'django-localflavor',
     'feedparser>=5.1.3',
     'pygraphviz>=1.2',
     'pytz>=2013.7',
