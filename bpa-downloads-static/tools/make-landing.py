@@ -53,9 +53,13 @@ def make_landing_page(args):
             template_data = {'now': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                              'site_url': args['--site-url']}
             fd.write(template.render(template_data))
+
         # backup old index
-        os.rename(output_filename, output_filename + '.old')
-        os.rename(tmpf, output_filename)
+        try:
+            os.rename(output_filename, output_filename + '.old')
+            os.rename(tmpf, output_filename)
+        except OSError:
+            logging.info('No file to backup')
 
     copy_statics()
     make_index()
