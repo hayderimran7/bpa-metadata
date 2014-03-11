@@ -5,7 +5,7 @@ PROJECT_SOURCE="bpa-downloads-static"
 TOPDIR=$(cd $(dirname $0); pwd)
 SETUP_PATH="${TOPDIR}/${PROJECT_SOURCE}/tools/"
 TOOLS_PATH=${SETUP_PATH} # being pedantic is hard
-PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://simple.crate.io"
+PIP_OPTS="-M --download-cache ~/.pip/cache"
 
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
 PYTHON="${VIRTUALENV}/bin/python"
@@ -65,7 +65,7 @@ linksource() {
 }
 
 is_running_in_instance() {
-    if [ ${USER} == 'ubuntu' ]
+    if [[ ${USER} == 'ubuntu' || ${USER} == 'ec2-user' ]]
     then
        return 0
     else
