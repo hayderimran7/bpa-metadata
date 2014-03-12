@@ -26,7 +26,7 @@ class LandUse(MPTTModel):
 
     def save(self, *args, **kwargs):
         super(LandUse, self).save(*args, **kwargs)
-        LandUse.objects.rebuild()
+        # LandUse.objects.rebuild()
 
 
 class SoilTexture(models.Model):
