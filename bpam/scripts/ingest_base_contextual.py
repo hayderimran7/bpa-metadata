@@ -172,6 +172,9 @@ def get_site(entry):
         site.fire_history = entry.fire_history
         site.fire_intensity = entry.fire_intensity
 
+        # land use
+        site.current_land_use = get_landuse(entry.current_land_use)
+
         site.save()
 
     return site
@@ -179,7 +182,9 @@ def get_site(entry):
 
 def get_landuse(landuse_str):
     try:
-        return LandUse.objects.get(description=landuse_str)
+        lu = LandUse.objects.get(description__iexact=landuse_str)
+        logger.info('Land Use description "{0}" found'.format(landuse_str))
+        return lu
     except LandUse.DoesNotExist:
         logger.warning('Land Use description "{0}" not known'.format(landuse_str))
         return None
@@ -205,9 +210,6 @@ def add_samples(data):
         horizons = get_horizon_classifications(e.horizon_classification)
         sample.horizon_classification1 = horizons[0]
         sample.horizon_classification2 = horizons[1]
-
-        # land use
-        sample.current_land_use = get_landuse(e.current_land_use)
 
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
         sample.save()
