@@ -22,7 +22,7 @@ mkdir -p "${apachedir}"
 
 update_apache() {
     container="$1"   # the swift container name
-    linkmethod="$2"  #
+    container_link="$2"  #
     dummy=${WORKING_DIR}/var/linktree/"${container}"
     # make or update a dummy BPA archive
     mkdir -p "${dummy}"
@@ -30,13 +30,13 @@ update_apache() {
     cfgtmp="$tmpdir/${container}.cfg"
     cfgprod="$apachedir/${container}.cfg"
     # generate link tree, and if successful update apache config
-    mkdir -p /var/www/"${linkmethod}"/
+    mkdir -p /var/www/"${container_link}"/
     ./bpalink.py \
         --apacheredirects "${cfgtmp}" \
         --swiftbase http://swift.bioplatforms.com/v1/AUTH_b154c0aff02345fba80bd118a54177ea/"${container}" \
-        --htmlbase /var/www/"${linkmethod}"/ \
+        --htmlbase /var/www/"${container_link}"/ \
         --linkbase ${LINKBASE} \
-        "${linkmethod}" "${dummy}" && (
+        "${container_link}" "${dummy}" && (
             test -e "${cfgtmp}" && mv "${cfgtmp}" "${cfgprod}"
         )
 }
