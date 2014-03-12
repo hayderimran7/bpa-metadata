@@ -1,12 +1,13 @@
 # Django settings for bpametadata project.
 
 import os
+import sys
 
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
 
-BPA_VERSION = '1.0.5'
+BPA_VERSION = '1.0.7'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -225,7 +226,11 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'rainbow': {
+            'level': 'DEBUG',
+            'class': 'rainbow_logging_handler.RainbowLoggingHandler',
+            'stream': sys.stderr}
     },
     'loggers': {
         'django.request': {
@@ -233,6 +238,9 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        '': {
+            'handlers': ['rainbow']
+        }
     }
 }
 
