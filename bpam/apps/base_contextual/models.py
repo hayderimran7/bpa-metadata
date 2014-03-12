@@ -64,7 +64,6 @@ class CollectionSite(DebugNote):
     elevation = models.IntegerField(_('Elevation'), null=True)
 
     # controlled vocabularies
-
     current_land_use = models.ForeignKey(LandUse, related_name='current', null=True, verbose_name=_('Current Land Use'))
     general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True,
                                                 verbose_name=_('General Ecological Zone'))
