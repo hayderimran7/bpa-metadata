@@ -22,7 +22,7 @@ mkdir -p "${apachedir}"
 
 update_apache() {
     container="$1"   # the swift container name
-    container_link="$2"  #
+    container_link="$2"  # the folder name used for the web front-end
     dummy=${WORKING_DIR}/var/linktree/"${container}"
     # make or update a dummy BPA archive
     mkdir -p "${dummy}"
