@@ -59,7 +59,7 @@ def make_landing_page(args):
             os.rename(output_filename, output_filename + '.old')
             os.rename(tmpf, output_filename)
         except OSError:
-            logging.info('No file to backup')
+            logging.info('No old file to backup, proceeding..')
 
     copy_statics()
     make_index()
