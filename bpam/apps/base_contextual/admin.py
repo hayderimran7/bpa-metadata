@@ -70,7 +70,6 @@ class CollectionSiteAdmin(admin.ModelAdmin):
             widgets = {
                 'location_name': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'plot_description': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_type_descriptive': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_dominant_trees': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
@@ -106,7 +105,6 @@ class CollectionSiteAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-description',),
           'fields': (
               'location_name',
-              'plot_description',
               'date_sampled',
               'lat',
               'lon',
@@ -157,7 +155,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
 
     ]
     list_select_related = True
-    search_fields = ('location_name', 'plot_description', 'note', 'vegetation_type_descriptive',)
+    search_fields = ('location_name', 'note', 'vegetation_type_descriptive',)
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
                    'vegetation_type_descriptive', )
     list_display = ('location_name', 'current_land_use', 'vegetation_type', 'lat', 'lon', 'elevation')
