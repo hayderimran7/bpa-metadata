@@ -6,8 +6,8 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
-from apps.base_contextual.models import CollectionSite, CollectionSample
-from apps.base_vocabulary.models import HorizonClassification, LandUse
+from apps.base_contextual.models import *
+
 
 logger = logger_utils.get_logger(__name__)
 
@@ -143,6 +143,53 @@ def get_bpa_id(e):
     return bpa_id
 
 
+def get_landuse(entry):
+    landuse_str = entry.current_land_use
+    if landuse_str == '':
+        return None
+
+    try:
+        return LandUse.objects.get(description__iexact=landuse_str)
+    except LandUse.DoesNotExist:
+        logger.warning('Land Use description "{0}" on line {1} not known'.format(landuse_str, entry.row))
+        return None
+
+
+def get_general_ecological_zone(entry):
+    zone_str = entry.general_ecological_zone
+    if zone_str == '':
+        return None
+
+    try:
+        return GeneralEcologicalZone.objects.get(description__iexact=zone_str)
+    except GeneralEcologicalZone.DoesNotExist:
+        logger.warning('General Ecological Zone "{0}" on line {1} not known'.format(zone_str, entry.row))
+        return None
+
+
+def get_vegetation_type(entry):
+    veg_str = entry.vegetation_type_controlled_vocab
+    if veg_str == '':
+        return None
+
+    try:
+        return BroadVegetationType.objects.get(vegetation__iexact=veg_str)
+    except BroadVegetationType.DoesNotExist:
+        logger.warning('Broad Vegetation Type "{0}" on line {1} not known'.format(veg_str, entry.row))
+        return None
+
+
+def get_australian_soil_classification(entry):
+    classifcation_str = entry.australian_soil_classification
+    if classifcation_str == 'None':
+        return None
+    try:
+        return AustralianSoilClassification.objects.get(classification__iexact=classifcation_str)
+    except AustralianSoilClassification.DoesNotExist:
+        logger.warning('Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        return None
+
+
 def get_site(entry):
     """
     Add or get a site
@@ -155,37 +202,33 @@ def get_site(entry):
 
     site, created = CollectionSite.objects.get_or_create(lat=-1 * entry.lat, lon=entry.lon)
     # the first set of site data wins
-    if created:
-        site.elevation = entry.elevation
-        site.date_sampled = entry.date_sampled
-        site.location_name = entry.description
-        site.note = entry.note + '\n' + entry.other_comments
-        site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+    # if created:
 
-        site.vegetation_type_descriptive = entry.vegetation_type_descriptive
-        site.vegetation_total_cover = entry.vegetation_total_cover
-        site.vegetation_dominant_trees = entry.vegetation_dominant_trees
+    site.elevation = entry.elevation
+    site.date_sampled = entry.date_sampled
+    site.location_name = entry.description
+    site.note = entry.note + '\n' + entry.other_comments
+    site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
-        site.slope = entry.slope
-        site.slope_aspect = entry.slope_aspect
+    site.vegetation_type_descriptive = entry.vegetation_type_descriptive
+    site.vegetation_total_cover = entry.vegetation_total_cover
+    site.vegetation_dominant_trees = entry.vegetation_dominant_trees
 
-        site.fire_history = entry.fire_history
-        site.fire_intensity = entry.fire_intensity
+    site.slope = entry.slope
+    site.slope_aspect = entry.slope_aspect
 
-        # land use
-        site.current_land_use = get_landuse(entry.current_land_use)
+    site.fire_history = entry.fire_history
+    site.fire_intensity = entry.fire_intensity
 
-        site.save()
+    # controlled vocabularies
+    site.current_land_use = get_landuse(entry)
+    site.general_ecological_zone = get_general_ecological_zone(entry)
+    site.vegetation_type = get_vegetation_type(entry)
+    site.soil_type_australian_classification = get_australian_soil_classification(entry)
+
+    site.save()
 
     return site
-
-
-def get_landuse(landuse_str):
-    try:
-        return LandUse.objects.get(description__iexact=landuse_str)
-    except LandUse.DoesNotExist:
-        logger.warning('Land Use description "{0}" not known'.format(landuse_str))
-        return None
 
 
 def add_samples(data):
