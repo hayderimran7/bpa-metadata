@@ -83,6 +83,10 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'general_ecological_zone': LinkedSelect,
                 'vegetation_type': LinkedSelect,
                 'date_sampled': SuitDateWidget,
+                'profile_position': LinkedSelect,
+                'drainage_classification': LinkedSelect,
+                'soil_type_australian_classification': LinkedSelect,
+                'soil_type_fao_classification': LinkedSelect,
             }
 
     form = CollectionForm

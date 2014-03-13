@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
 from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, \
-    AustralianSoilClassification, FAOSoilClassification
+    AustralianSoilClassification, FAOSoilClassification, ProfilePosition, DrainageClassification
 
 
 class SiteOwner(models.Model):
@@ -11,10 +11,10 @@ class SiteOwner(models.Model):
     The Site Owner
     """
 
-    name = models.CharField(max_length=100, blank=True)
-    email = models.EmailField()
-    address = models.TextField(blank=True)
-    note = models.TextField(blank=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return u"{0} {1}".format(self.name, self.email)
@@ -83,11 +83,9 @@ class CollectionSite(DebugNote):
     slope = models.CharField(max_length=20, blank=True)
     slope_aspect = models.CharField(_('Slope Aspect'), max_length=100, blank=True)
 
-    profile_position = models.CharField(_('Profile Position'), max_length=20, blank=True)
-    drainage_classification = models.CharField(_('Drainage Classification'), max_length=20, blank=True)
-
-    plot_description = models.TextField(_('Plot Description'), blank=True)
-
+    profile_position = models.ForeignKey(ProfilePosition, verbose_name=_('Profile Position'), null=True)
+    drainage_classification = models.ForeignKey(DrainageClassification, verbose_name=_('Drainage Classification'),
+                                                null=True)
     history = models.ForeignKey(CollectionSiteHistory, null=True)
     owner = models.ForeignKey(SiteOwner, null=True)
 
@@ -97,7 +95,7 @@ class CollectionSite(DebugNote):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u','.join(str(s) for s in (self.location_name, self.lat, self.lon, self.plot_description) if s)
+        return u','.join(str(s) for s in (self.location_name, self.lat, self.lon,) if s)
 
     class Meta:
         # app_label = 'base'
