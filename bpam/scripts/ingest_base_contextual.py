@@ -89,16 +89,17 @@ def get_data(file_name):
                   ('fire_intensity', 'fire intensity if known', None),
                   ('flooding', 'Flooding', None),
                   ('extreme_events', 'Extreme Events', None),
-                  # nice data
-                  ('soil_moisture', 'Soil moisture (%)', None),
-                  ('soil_color', 'Color controlled vocab (10)', None),
+                  # soil structual
+                  ('soil_moisture', 'Soil moisture (%)', ingest_utils.get_clean_float),
+                  ('soil_colour', 'Color controlled vocab (10)', None),
                   ('gravel', 'Gravel (%) - ( >2.0 mm)', None),
-                  ('texture', 'Texture ()', None),
-                  ('course_sand', u'Course Sand (%) (200-2000 µm)', None),
-                  ('fine_sand', u'Fine Sand (%) - (20-200 µm)', None),
-                  ('sand', 'Sand (%)', None),
-                  ('silt', u'Silt  (%) (2-20 µm)', None),
-                  ('clay', u'Clay (%) (<2 µm)', None),
+                  ('texture', 'Texture ()', ingest_utils.get_clean_float),
+                  ('course_sand', u'Course Sand (%) (200-2000 µm)', ingest_utils.get_clean_float),
+                  ('fine_sand', u'Fine Sand (%) - (20-200 µm)', ingest_utils.get_clean_float),
+                  ('sand', 'Sand (%)', ingest_utils.get_clean_float),
+                  ('silt', u'Silt  (%) (2-20 µm)', ingest_utils.get_clean_float),
+                  ('clay', u'Clay (%) (<2 µm)', ingest_utils.get_clean_float),
+                  # soil chemical
                   ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', None),
                   ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', None),
                   ('phosphorus_collwell', 'Phosphorus Colwell (mg/Kg)', None),
@@ -213,6 +214,17 @@ def get_profile_position(entry):
         return None
 
 
+def get_soil_colour(entry):
+    colour_str = entry.soil_colour
+    if colour_str == '':
+        return None
+    try:
+        return SoilColour.objects.get(code=colour_str)
+    except SoilColour.DoesNotExist:
+        logger.warning('Soil Colour "{0}" on line {1} not known'.format(colour_str, entry.row))
+        return None
+
+
 def get_site(entry):
     """
     Add or get a site
@@ -281,6 +293,31 @@ def add_samples(data):
         sample.save()
 
 
+def add_chemical_analysis(data):
+    """
+    Add the chemical analysis
+    """
+
+    for e in data:
+        bpa_id = get_bpa_id(e)
+        if bpa_id is None:
+            continue
+
+        analysis, created = ChemicalAnalysis.objects.get_or_create(bpa_id=bpa_id)
+        analysis.depth = e.upper_depth
+        analysis.moisture = e.soil_moisture
+        analysis.colour = get_soil_colour(e)
+        analysis.gravel = e.gravel
+        analysis.texture = e.texture
+        analysis.course_sand = e.course_sand
+        analysis.fine_sand = e.fine_sand
+        analysis.sand = e.sand
+        analysis.silt = e.silt
+        analysis.clay = e.clay
+
+        analysis.save()
+
+
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
@@ -289,6 +326,7 @@ def run(file_name=DEFAULT_SPREADSHEET_FILE):
 
     data = list(get_data(file_name))
     add_samples(data)
+    add_chemical_analysis(data)
 
 
 

@@ -14,7 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/bpam" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tools" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 2.6.6(ssh://ccg-user@172.16.2.188:22/usr/local/src/virt_bpam/bin/python2.6)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 2.6.6(ssh://ccg-user@172.16.2.128:22/usr/local/src/virt_bpam/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="django-suit-examples" />
     <orderEntry type="module" module-name="django-suit-examples" />

@@ -163,7 +163,21 @@ admin.site.register(CollectionSite, CollectionSiteAdmin)
 
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
-    list_display = ('bpa_id', 'lab_name_id', 'depth', 'colour', 'gravel', 'texture')
+
+    class Form(forms.ModelForm):
+        class Meta:
+            model = ChemicalAnalysis
+            widgets = {
+                'bpa_id': LinkedSelect,
+                'colour': LinkedSelect,
+                'moisture': EnclosedInput(prepend='icon-tint', append='%'),
+                'gravel': EnclosedInput(append='%'),
+            }
+
+    form = Form
+
+    list_display = ('bpa_id', 'depth', 'colour', 'gravel', 'texture')
+    search_fields = ('colour__colour', 'colour__code',)
 
 
 admin.site.register(ChemicalAnalysis, ChemicalAnalysisAdmin)

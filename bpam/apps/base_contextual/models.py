@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
 from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, \
-    AustralianSoilClassification, FAOSoilClassification, ProfilePosition, DrainageClassification
+    AustralianSoilClassification, FAOSoilClassification, ProfilePosition, DrainageClassification, SoilColour
 
 
 class SiteOwner(models.Model):
@@ -108,14 +110,20 @@ class ChemicalAnalysis(models.Model):
     Chemical Analysis assay
     """
 
-    # sample = models.ForeignKey(SoilSample)
-    bpa_id = models.ForeignKey(BPAUniqueID)
-    lab_name_id = models.CharField(_('Lab Name ID'), max_length=100, blank=True, null=True)
-    customer = models.CharField(max_length=100, blank=True, null=True)
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
+
     depth = models.CharField(max_length=100, blank=True, null=True)
-    colour = models.CharField(max_length=100, blank=True, null=True)
-    gravel = models.CharField(max_length=100, blank=True, null=True)
-    texture = models.CharField(max_length=100, blank=True, null=True)
+    moisture = models.FloatField(_('Soil Moisture'), blank=True, null=True)
+    colour = models.ForeignKey(SoilColour, verbose_name=_('Soil Colour'), null=True)
+    gravel = models.CharField(_('Gravel'), max_length=100, blank=True, null=True,
+                              help_text=_(u'>2.0mm'))
+    texture = models.FloatField(max_length=100, blank=True, null=True)
+    course_sand = models.FloatField(blank=True, null=True,
+                                    help_text=_(u'200-2000 µm'))
+    fine_sand = models.FloatField(blank=True, null=True)
+    sand = models.FloatField(blank=True, null=True)
+    silt = models.FloatField(blank=True, null=True)
+    clay = models.FloatField(blank=True, null=True)
 
     ammonium_nitrogen = models.FloatField(blank=True, null=True)
     nitrate_nitrogen = models.CharField(max_length=10, null=True)  # <>
@@ -137,11 +145,7 @@ class ChemicalAnalysis(models.Model):
     exc_sodium = models.FloatField(_('Exc Na'), blank=True, null=True)
     boron_hot_cacl2 = models.FloatField(_('B Hot CaCl2'), blank=True, null=True)
 
-    clay = models.FloatField(blank=True, null=True)
-    course_sand = models.FloatField(blank=True, null=True)
-    fine_sand = models.FloatField(blank=True, null=True)
-    sand = models.FloatField(blank=True, null=True)
-    silt = models.FloatField(blank=True, null=True)
+
 
     def __unicode__(self):
         return u"Chemical Analysis for {0}".format(self.bpa_id)
