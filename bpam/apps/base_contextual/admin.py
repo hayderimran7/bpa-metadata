@@ -156,7 +156,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     search_fields = ('location_name', 'plot_description', 'note', 'vegetation_type_descriptive',)
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
                    'vegetation_type_descriptive', )
-    list_display = ('location_name', 'current_land_use', 'vegetation_type_descriptive', 'lat', 'lon', 'elevation')
+    list_display = ('location_name', 'current_land_use', 'vegetation_type', 'lat', 'lon', 'elevation')
 
 
 admin.site.register(CollectionSite, CollectionSiteAdmin)
