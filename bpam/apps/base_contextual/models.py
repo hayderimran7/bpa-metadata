@@ -86,8 +86,8 @@ class CollectionSite(DebugNote):
     profile_position = models.ForeignKey(ProfilePosition, verbose_name=_('Profile Position'), null=True)
     drainage_classification = models.ForeignKey(DrainageClassification, verbose_name=_('Drainage Classification'),
                                                 null=True)
-    history = models.ForeignKey(CollectionSiteHistory, null=True)
-    owner = models.ForeignKey(SiteOwner, null=True)
+    history = models.ForeignKey(CollectionSiteHistory, null=True, blank=True)
+    owner = models.ForeignKey(SiteOwner, null=True, blank=True)
 
     fire_history = models.CharField(_('Fire History'), max_length=500, blank=True)
     fire_intensity = models.CharField(_('Fire Intensity'), max_length=500, blank=True)
@@ -159,9 +159,13 @@ class CollectionSample(DebugNote):
     bpa_id = models.ForeignKey(BPAUniqueID)
     site = models.ForeignKey(CollectionSite, null=True)  # there may be no site set
 
-    horizon_classification1 = models.ForeignKey(HorizonClassification, null=True, related_name='one',
+    horizon_classification1 = models.ForeignKey(HorizonClassification,
+                                                null=True,
+                                                related_name='one',
                                                 verbose_name=_('Horizon Classification One'))
-    horizon_classification2 = models.ForeignKey(HorizonClassification, null=True, related_name='two',
+    horizon_classification2 = models.ForeignKey(HorizonClassification,
+                                                null=True,
+                                                related_name='two',
                                                 verbose_name=_('Horizon Classification Two'))
     upper_depth = models.CharField(_('Soil Upper Depth'), max_length=20, blank=True)
     lower_depth = models.CharField(_('Soil Lower Depth'), max_length=20, blank=True)
