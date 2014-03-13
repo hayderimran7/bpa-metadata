@@ -6,7 +6,7 @@ from apps.common.models import Sample, SequenceFile, Run, DebugNote
 
 class AmpliconSample(Sample, DebugNote):
     """
-    BASE Meta genomics Soil Sample
+    BASE Amplicon Soil Sample
     """
 
     def __unicode__(self):
@@ -14,7 +14,7 @@ class AmpliconSample(Sample, DebugNote):
 
     class Meta:
         # app_label = 'base'
-        verbose_name_plural = _("Metagenomics Sample")
+        verbose_name_plural = _("Amplicon Sample")
 
 
 class AmpliconRun(Run):
@@ -28,12 +28,12 @@ class AmpliconRun(Run):
 
     class Meta:
         # app_label = 'base'
-        verbose_name_plural = _("Metagenomics Run")
+        verbose_name_plural = _("Amplicon Run")
 
 
 class AmpliconSequenceFile(SequenceFile):
     """
-    Meta genomics Sequence File
+    Amplicon Sequence File
     """
 
     sample = models.ForeignKey(AmpliconSample)
@@ -41,7 +41,7 @@ class AmpliconSequenceFile(SequenceFile):
 
     class Meta:
         # app_label = 'base'
-        verbose_name_plural = _("Metagenomics Sequence Files")
+        verbose_name_plural = _("Amplicon Sequence Files")
 
 
 class PCRPrimer(models.Model):
@@ -139,5 +139,4 @@ class SoilSampleDNA(models.Model):
         return u"Soil DNA Library {0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Soil Sample DNA")
