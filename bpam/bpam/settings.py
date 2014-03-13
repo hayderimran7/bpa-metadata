@@ -194,6 +194,7 @@ INSTALLED_APPS = (
     'apps.base_metagenomics',
     'apps.base_vocabulary',
     'apps.base_contextual',
+    'apps.base_amplicon',
     'apps.base_454',
     # wheat suit
     'apps.wheat_pathogens',
