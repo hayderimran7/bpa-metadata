@@ -181,12 +181,35 @@ def get_vegetation_type(entry):
 
 def get_australian_soil_classification(entry):
     classifcation_str = entry.australian_soil_classification
-    if classifcation_str == 'None':
+    if classifcation_str == '':
         return None
     try:
         return AustralianSoilClassification.objects.get(classification__iexact=classifcation_str)
     except AustralianSoilClassification.DoesNotExist:
-        logger.warning('Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        logger.warning(
+            'Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        return None
+
+
+def get_fao_soil_classification(entry):
+    classifcation_str = entry.fao
+    if classifcation_str == '':
+        return None
+    try:
+        return FAOSoilClassification.objects.get(classification__iexact=classifcation_str)
+    except FAOSoilClassification.DoesNotExist:
+        logger.warning('FAO Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        return None
+
+
+def get_profile_position(entry):
+    profile_str = entry.profile_position
+    if profile_str == '':
+        return None
+    try:
+        return ProfilePosition.objects.get(position__iexact=profile_str)
+    except ProfilePosition.DoesNotExist:
+        logger.warning('Profile Position "{0}" on line {1} not known'.format(profile_str, entry.row))
         return None
 
 
@@ -217,15 +240,17 @@ def get_site(entry):
     site.slope = entry.slope
     site.slope_aspect = entry.slope_aspect
 
-    site.fire_history = entry.fire_history
-    site.fire_intensity = entry.fire_intensity
-
     # controlled vocabularies
     site.current_land_use = get_landuse(entry)
     site.general_ecological_zone = get_general_ecological_zone(entry)
     site.vegetation_type = get_vegetation_type(entry)
     site.soil_type_australian_classification = get_australian_soil_classification(entry)
+    site.soil_type_fao_classification = get_fao_soil_classification(entry)
 
+    site.profile_position = get_profile_position(entry)
+
+    site.fire_history = entry.fire_history
+    site.fire_intensity = entry.fire_intensity
     site.save()
 
     return site
