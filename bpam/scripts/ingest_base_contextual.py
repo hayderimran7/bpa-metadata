@@ -182,9 +182,7 @@ def get_site(entry):
 
 def get_landuse(landuse_str):
     try:
-        lu = LandUse.objects.get(description__iexact=landuse_str)
-        logger.info('Land Use description "{0}" found'.format(landuse_str))
-        return lu
+        return LandUse.objects.get(description__iexact=landuse_str)
     except LandUse.DoesNotExist:
         logger.warning('Land Use description "{0}" not known'.format(landuse_str))
         return None
