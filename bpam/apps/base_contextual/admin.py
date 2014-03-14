@@ -153,8 +153,8 @@ class CollectionSiteAdmin(admin.ModelAdmin):
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': ('note', 'debug_note', )})
-
     ]
+
     list_select_related = True
     search_fields = ('location_name', 'note', 'vegetation_type_descriptive',)
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
@@ -166,18 +166,90 @@ admin.site.register(CollectionSite, CollectionSiteAdmin)
 
 
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
-
-    class Form(forms.ModelForm):
+    class ChemicalAnalysisForm(forms.ModelForm):
         class Meta:
             model = ChemicalAnalysis
             widgets = {
                 'bpa_id': LinkedSelect,
                 'colour': LinkedSelect,
-                'moisture': EnclosedInput(prepend='icon-tint', append='%'),
+                'moisture': EnclosedInput(append='%'),
                 'gravel': EnclosedInput(append='%'),
+                'course_sand': EnclosedInput(append='%'),
+                'fine_sand': EnclosedInput(append='%'),
+                'sand': EnclosedInput(append='%'),
+                'clay': EnclosedInput(append='%'),
+
+                'ammonium_nitrogen': EnclosedInput(append='mg/Kg'),
+                'nitrate_nitrogen': EnclosedInput(append='mg/Kg'),
+                'phosphorus_colwell': EnclosedInput(append='mg/Kg'),
+                'potassium_colwell': EnclosedInput(append='mg/Kg'),
+                'sulphur_colwell': EnclosedInput(append='mg/Kg'),
+                'organic_carbon': EnclosedInput(append='%'),
+                'conductivity': EnclosedInput(append='dS/m'),
+                'cacl2_ph': EnclosedInput(append='pH'),
+                'h20_ph': EnclosedInput(append='pH'),
+                'dtpa_copper': EnclosedInput(append='mg/Kg'),
+                'dtpa_iron': EnclosedInput(append='mg/Kg'),
+                'dtpa_manganese': EnclosedInput(append='mg/Kg'),
+                'dtpa_zinc': EnclosedInput(append='mg/Kg'),
+
+                'exc_aluminium': EnclosedInput(append='meq/100g'),
+                'exc_calcium': EnclosedInput(append='meq/100g'),
+                'exc_magnesium': EnclosedInput(append='meq/100g'),
+                'exc_potassium': EnclosedInput(append='meq/100g'),
+                'exc_sodium': EnclosedInput(append='meq/100g'),
+
+                'boron_hot_cacl2': EnclosedInput(append='mg/Kg'),
             }
 
-    form = Form
+    form = ChemicalAnalysisForm
+    suit_form_tabs = (
+        ('structure', 'Soil Structure'),
+        ('chemical', 'Chemical'),
+    )
+
+    fieldsets = [
+        (None,  # structual
+         {'classes': ('suit-tab suit-tab-structure',),
+          'description': 'Soil Structure',
+          'fields': (
+              'bpa_id',
+              'colour',
+              'texture',
+              'moisture',
+              'gravel',
+              'course_sand',
+              'fine_sand',
+              'sand',
+              'clay',
+          )}),
+        (None,  # chemical
+         {'classes': ('suit-tab suit-tab-chemical',),
+          'description': 'Chemical Analysis',
+          'fields': (
+              'ammonium_nitrogen',
+              'nitrate_nitrogen',
+              'phosphorus_colwell',
+              'potassium_colwell',
+              'sulphur_colwell',
+              'organic_carbon',
+              'conductivity',
+              'cacl2_ph',
+              'h20_ph',
+              'dtpa_copper',
+              'dtpa_iron',
+              'dtpa_manganese',
+              'dtpa_zinc',
+              'exc_aluminium',
+              'exc_calcium',
+              'exc_magnesium',
+              'exc_potassium',
+              'exc_sodium',
+              'boron_hot_cacl2',
+              'total_nitrogen',
+              'total_carbon'
+          )})
+    ]
 
     list_display = ('bpa_id', 'depth', 'colour', 'gravel', 'texture')
     search_fields = ('colour__colour', 'colour__code',)

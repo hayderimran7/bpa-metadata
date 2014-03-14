@@ -127,31 +127,31 @@ class ChemicalAnalysis(models.Model):
     clay = models.FloatField(blank=True, null=True, help_text=_(u'<2 µm'))
 
     # chemical
-    ammonium_nitrogen = models.FloatField(_('Ammonium Nitrogen'), blank=True, null=True, help_text=_('mg/Kg'))
-    nitrate_nitrogen = models.CharField(_('Nitrate Nitrogen'), max_length=10, null=True, help_text=_('mg/Kg'))  # <>
-    phosphorus_colwell = models.CharField(_('Phosphorus Colwell'), max_length=10, null=True, help_text=_('mg/Kg'))  # <>
-    potassium_colwell = models.FloatField(_('Potassium Colwell'), blank=True, null=True, help_text=_('mg/Kg'))
-    sulphur_colwell = models.FloatField(blank=True, null=True, help_text=_('mg/Kg'))
-    organic_carbon = models.FloatField(blank=True, null=True, help_text=_('%'))
-    conductivity = models.FloatField(blank=True, null=True, help_text=_('dS/m'))
+    ammonium_nitrogen = models.FloatField(_('Ammonium Nitrogen'), blank=True, null=True)
+    nitrate_nitrogen = models.CharField(_('Nitrate Nitrogen'), max_length=10, blank=True, null=True)  # <>
+    phosphorus_colwell = models.CharField(_('Phosphorus Colwell'), max_length=10, blank=True, null=True)  # <>
+    potassium_colwell = models.FloatField(_('Potassium Colwell'), blank=True, null=True)
+    sulphur_colwell = models.FloatField(blank=True, null=True)
+    organic_carbon = models.FloatField(blank=True, null=True)
+    conductivity = models.FloatField(blank=True, null=True)
     # pH
-    cacl2_ph = models.FloatField(_('pH Level CaCl2'), blank=True, null=True, help_text=_('pH'))
-    h20_ph = models.FloatField(_('pH Level H20'), blank=True, null=True, help_text=_('pH'))
+    cacl2_ph = models.FloatField(_('pH Level CaCl2'), blank=True, null=True)
+    h20_ph = models.FloatField(_('pH Level H20'), blank=True, null=True)
     # DTPA
-    dtpa_copper = models.FloatField(_('DTPA Copper'), blank=True, null=True, help_text=_('mg/Kg'))
-    dtpa_iron = models.FloatField(_('DTPA Iron'), blank=True, null=True, help_text=_('mg/Kg'))
-    dtpa_manganese = models.FloatField(_('DTPA Manganse'), blank=True, null=True, help_text=_('mg/Kg'))
-    dtpa_zinc = models.FloatField(_('DTPA Zinc'), blank=True, null=True, help_text=_('mg/Kg'))
+    dtpa_copper = models.FloatField(_('DTPA Copper'), blank=True, null=True)
+    dtpa_iron = models.FloatField(_('DTPA Iron'), blank=True, null=True)
+    dtpa_manganese = models.FloatField(_('DTPA Manganse'), blank=True, null=True)
+    dtpa_zinc = models.FloatField(_('DTPA Zinc'), blank=True, null=True)
     # exc
-    exc_aluminium = models.FloatField(_('Exc. Aluminium'), blank=True, null=True, help_text=_('meq/100g'))
-    exc_calcium = models.FloatField(_('Exc. Calsium'), blank=True, null=True, help_text=_('meq/100g'))
-    exc_magnesium = models.FloatField(_('Exc. Magnesium'), blank=True, null=True, help_text=_('meq/100g'))
-    exc_potassium = models.FloatField(_('Exc. Potassium'), blank=True, null=True, help_text=_('meq/100g'))
-    exc_sodium = models.FloatField(_('Exc. Sodium'), blank=True, null=True, help_text=_('meq/100g'))
-    boron_hot_cacl2 = models.FloatField(_('Boron Hot CaCl2'), blank=True, null=True, help_text=_('mg/Kg'))
+    exc_aluminium = models.FloatField(_('Exc. Aluminium'), blank=True, null=True)
+    exc_calcium = models.FloatField(_('Exc. Calsium'), blank=True, null=True)
+    exc_magnesium = models.FloatField(_('Exc. Magnesium'), blank=True, null=True)
+    exc_potassium = models.FloatField(_('Exc. Potassium'), blank=True, null=True)
+    exc_sodium = models.FloatField(_('Exc. Sodium'), blank=True, null=True)
+    boron_hot_cacl2 = models.FloatField(_('Boron Hot CaCl2'), blank=True, null=True)
 
-    total_nitrogen = models.FloatField(_('Total Nitrogen'), blank=True, null=True, )
-    total_carbon = models.FloatField(_('Total carbon'), blank=True, null=True, )
+    total_nitrogen = models.FloatField(_('Total Nitrogen'), blank=True, null=True)
+    total_carbon = models.FloatField(_('Total Carbon'), blank=True, null=True)
 
 
     def __unicode__(self):

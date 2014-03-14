@@ -100,27 +100,27 @@ def get_data(file_name):
                   ('silt', u'Silt  (%) (2-20 µm)', ingest_utils.get_clean_float),
                   ('clay', u'Clay (%) (<2 µm)', ingest_utils.get_clean_float),
                   # soil chemical
-                  ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', None),
-                  ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', None),
-                  ('phosphorus_collwell', 'Phosphorus Colwell (mg/Kg)', None),
-                  ('potassium_collwell', 'Potassium Colwell (mg/Kg)', None),
-                  ('sulphur', 'Sulphur (mg/Kg)', None),
-                  ('organic_carbon', 'Organic Carbon (%)', None),
-                  ('conductivity', 'Conductivity (dS/m)', None),
-                  ('cacl_ph', 'pH Level (CaCl2) (pH)', None),
-                  ('h20_ph', 'pH Level (H2O) (pH)', None),
-                  ('dtpa_copper', 'DTPA Copper (mg/Kg)', None),
-                  ('dtpa_iron', 'DTPA Iron (mg/Kg)', None),
-                  ('dtpa_manganese', 'DTPA Manganese (mg/Kg)', None),
-                  ('dtpa_zinc', 'DTPA Zinc (mg/Kg)', None),
-                  ('exc_aluminium', 'Exc. Aluminium (meq/100g)', None),
-                  ('exc_calcium', 'Exc. Calcium (meq/100g)', None),
-                  ('exc_magnesium', 'Exc. Magnesium (meq/100g)', None),
-                  ('exc_potassium', 'Exc. Potassium (meq/100g)', None),
-                  ('exc_sodium', 'Exc. Sodium (meq/100g)', None),
-                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', None),
-                  ('total_nitrogen', 'Total Nitrogen', None),
-                  ('total_carbon', 'Total Carbon', None),
+                  ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', ingest_utils.get_clean_float),
+                  ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', ingest_utils.get_clean_float),
+                  ('phosphorus_collwell', 'Phosphorus Colwell (mg/Kg)', ingest_utils.get_clean_float),
+                  ('potassium_collwell', 'Potassium Colwell (mg/Kg)', ingest_utils.get_clean_float),
+                  ('sulphur', 'Sulphur (mg/Kg)', ingest_utils.get_clean_float),
+                  ('organic_carbon', 'Organic Carbon (%)', ingest_utils.get_clean_float),
+                  ('conductivity', 'Conductivity (dS/m)', ingest_utils.get_clean_float),
+                  ('cacl_ph', 'pH Level (CaCl2) (pH)', ingest_utils.get_clean_float),
+                  ('h20_ph', 'pH Level (H2O) (pH)', ingest_utils.get_clean_float),
+                  ('dtpa_copper', 'DTPA Copper (mg/Kg)', ingest_utils.get_clean_float),
+                  ('dtpa_iron', 'DTPA Iron (mg/Kg)', ingest_utils.get_clean_float),
+                  ('dtpa_manganese', 'DTPA Manganese (mg/Kg)', ingest_utils.get_clean_float),
+                  ('dtpa_zinc', 'DTPA Zinc (mg/Kg)', ingest_utils.get_clean_float),
+                  ('exc_aluminium', 'Exc. Aluminium (meq/100g)', ingest_utils.get_clean_float),
+                  ('exc_calcium', 'Exc. Calcium (meq/100g)', ingest_utils.get_clean_float),
+                  ('exc_magnesium', 'Exc. Magnesium (meq/100g)', ingest_utils.get_clean_float),
+                  ('exc_potassium', 'Exc. Potassium (meq/100g)', ingest_utils.get_clean_float),
+                  ('exc_sodium', 'Exc. Sodium (meq/100g)', ingest_utils.get_clean_float),
+                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', ingest_utils.get_clean_float),
+                  ('total_nitrogen', 'Total Nitrogen', ingest_utils.get_clean_float),
+                  ('total_carbon', 'Total Carbon', ingest_utils.get_clean_float),
     ]
 
     wrapper = ExcelWrapper(field_spec,
@@ -304,6 +304,7 @@ def add_chemical_analysis(data):
             continue
 
         analysis, created = ChemicalAnalysis.objects.get_or_create(bpa_id=bpa_id)
+        # structure
         analysis.depth = e.upper_depth
         analysis.moisture = e.soil_moisture
         analysis.colour = get_soil_colour(e)
@@ -314,6 +315,28 @@ def add_chemical_analysis(data):
         analysis.sand = e.sand
         analysis.silt = e.silt
         analysis.clay = e.clay
+        # soil chemical
+        analysis.ammonium_nitrogen = e.ammonium_nitrogen
+        analysis.nitrate_nitrogen = e.nitrate_nitrogen
+        analysis.phosphorus_collwell = e.phosphorus_collwell
+        analysis.potassium_collwell = e.potassium_collwell
+        analysis.sulphur = e.sulphur
+        analysis.organic_carbon = e.organic_carbon
+        analysis.conductivity = e.conductivity
+        analysis.cacl_ph = e.cacl_ph
+        analysis.h20_ph = e.h20_ph
+        analysis.dtpa_copper = e.dtpa_copper
+        analysis.dtpa_iron = e.dtpa_iron
+        analysis.dtpa_manganese = e.dtpa_manganese
+        analysis.dtpa_zinc = e.dtpa_zinc
+        analysis.exc_aluminium = e.exc_aluminium
+        analysis.exc_calcium = e.exc_calcium
+        analysis.exc_magnesium = e.exc_magnesium
+        analysis.exc_potassium = e.exc_potassium
+        analysis.exc_sodium = e.exc_sodium
+        analysis.boron_hot_cacl2 = e.boron_hot_cacl2
+        analysis.total_nitrogen = e.total_nitrogen
+        analysis.total_carbon = e.total_carbon
 
         analysis.save()
 
