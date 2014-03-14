@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
@@ -73,6 +75,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_type_descriptive': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_dominant_trees': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'slope': EnclosedInput(append='%'),
                 'fire_history': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'fire_intensity': EnclosedInput(prepend='icon-fire'),
                 'vegetation_total_cover': forms.TextInput(attrs={'class': 'input-xlarge'}),
