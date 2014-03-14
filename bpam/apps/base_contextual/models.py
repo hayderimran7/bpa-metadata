@@ -5,48 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
 from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralEcologicalZone, BroadVegetationType, \
-    AustralianSoilClassification, FAOSoilClassification, ProfilePosition, DrainageClassification, SoilColour
-
-
-class SiteOwner(models.Model):
-    """
-    The Site Owner
-    """
-
-    name = models.CharField(max_length=100, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
-
-    def __unicode__(self):
-        return u"{0} {1}".format(self.name, self.email)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("Site Owners")
-
-
-class CollectionSiteHistory(models.Model):
-    """
-    Background history for the collection site
-    """
-
-    history_report_date = models.DateField(blank=True, null=True)  # the date this report was compiled
-    current_vegetation = models.CharField(max_length=100, blank=True)
-
-    previous_land_use = models.ForeignKey(LandUse, related_name='previous')
-    crop_rotation = models.CharField(max_length=100, blank=True)
-    tillage = models.CharField(max_length=100, blank=True)
-    environment_event = models.CharField(max_length=100, blank=True)  # fire, flood, extreme, other
-
-    note = models.TextField()
-
-    def __unicode__(self):
-        return u"Site history on {0}".format(self.history_report_date)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("Site History")
+    AustralianSoilClassification, FAOSoilClassification, ProfilePosition, DrainageClassification, SoilColour, \
+    TillageType
 
 
 class CollectionSite(DebugNote):
@@ -61,8 +21,8 @@ class CollectionSite(DebugNote):
     date_sampled = models.DateField(_('Date Sampled'), null=True)
     # positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
     # TODO make use of geodjango
-    lat = models.FloatField(_('Latitude'))
-    lon = models.FloatField(_('Longitude'))
+    lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'))
+    lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'))
     elevation = models.IntegerField(_('Elevation'), null=True)
 
     # controlled vocabularies
@@ -91,13 +51,49 @@ class CollectionSite(DebugNote):
     profile_position = models.ForeignKey(ProfilePosition, verbose_name=_('Profile Position'), null=True)
     drainage_classification = models.ForeignKey(DrainageClassification, verbose_name=_('Drainage Classification'),
                                                 null=True)
-    history = models.ForeignKey(CollectionSiteHistory, null=True, blank=True)
-    owner = models.ForeignKey(SiteOwner, null=True, blank=True)
 
+    # some history for this site
+    environment_event = models.CharField(max_length=100, blank=True)  # fire, flood, extreme, other
+    # fire
     fire_history = models.CharField(_('Fire History'), max_length=500, blank=True)
     fire_intensity = models.CharField(_('Fire Intensity'), max_length=500, blank=True)
+    # land use
+    date_since_change_in_land_use = models.DateField(_('Date Since Land Use Change'), blank=True, null=True)
+    immediate_previous_land_use = models.ForeignKey(LandUse, related_name='previous', blank=True, null=True)
+    crop_rotation_1 = models.ForeignKey(LandUse,
+                                        verbose_name=_('Crop rotation 1 year ago'),
+                                        related_name='crop_rotation_1',
+                                        max_length=100,
+                                        blank=True,
+                                        null=True)
+    crop_rotation_2 = models.ForeignKey(LandUse,
+                                        verbose_name=_('Crop rotation 2 years ago'),
+                                        related_name='crop_rotation_2',
+                                        max_length=100,
+                                        blank=True,
+                                        null=True)
+    crop_rotation_3 = models.ForeignKey(LandUse,
+                                        verbose_name=_('Crop rotation 3 years ago'),
+                                        related_name='crop_rotation_3',
+                                        max_length=100,
+                                        blank=True,
+                                        null=True)
+    crop_rotation_4 = models.ForeignKey(LandUse,
+                                        verbose_name=_('Crop rotation 4 years ago'),
+                                        related_name='crop_rotation_4',
+                                        max_length=100,
+                                        blank=True, null=True)
+    crop_rotation_5 = models.ForeignKey(LandUse,
+                                        verbose_name=_('Crop rotation 5 years ago'),
+                                        related_name='crop_rotation_5',
+                                        max_length=100,
+                                        blank=True,
+                                        null=True)
 
-    note = models.TextField(blank=True)
+    agrochemical_additions = models.CharField(_('Agrochemical Additions'), max_length=300, blank=True, null=True)
+    tillage = models.ForeignKey(TillageType, blank=True, null=True)
+
+    note = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return u','.join(str(s) for s in (self.location_name, self.lat, self.lon,) if s)
@@ -191,3 +187,6 @@ class CollectionSample(DebugNote):
 
     class Meta:
         verbose_name_plural = _('Collection Sample')
+
+
+

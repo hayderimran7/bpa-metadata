@@ -76,8 +76,9 @@ def get_data(file_name):
                   ('other_comments', 'Other comments', None),
                   ('australian_soil_classification', 'Australian Soil Classification controlled vocab (6)', None),
                   ('fao', 'FAO soil classification controlled vocab (7)', None),
+                  # historic data
                   ('immediate_previous_land_use', 'Immediate Previous Land Use controlled vocab (2)', None),
-                  ('date_since_change_in_land_use', 'Date since change in Land Use', None),
+                  ('date_since_change_in_land_use', 'Date since change in Land Use', ingest_utils.get_date),
                   ('crop_rotation_1', 'Crop rotation 1yr since present', None),
                   ('crop_rotation_2', 'Crop rotation 2yrs since present', None),
                   ('crop_rotation_3', 'Crop rotation 3yrs since present', None),
@@ -144,15 +145,16 @@ def get_bpa_id(e):
     return bpa_id
 
 
-def get_landuse(entry):
-    landuse_str = entry.current_land_use
-    if landuse_str == '':
+def get_land_use(land_use_str, row):
+    """
+    Translate the land use string to a the landuse controlled vocabulary
+    """
+    if land_use_str == '':
         return None
-
     try:
-        return LandUse.objects.get(description__iexact=landuse_str)
+        return LandUse.objects.get(description__iexact=land_use_str)
     except LandUse.DoesNotExist:
-        logger.warning('Land Use description "{0}" on line {1} not known'.format(landuse_str, entry.row))
+        logger.warning('Land Use description "{0}" on line {1} not known'.format(land_use_str, row))
         return None
 
 
@@ -225,6 +227,17 @@ def get_soil_colour(entry):
         return None
 
 
+def get_tillage(entry):
+    tillage_str = entry.tillage
+    if tillage_str == '':
+        return None
+    try:
+        return TillageType.objects.get(tillage__iexact=tillage_str)
+    except TillageType.DoesNotExist:
+        logger.warning('Tillage Type "{0}" on line {1} not known'.format(tillage_str, entry.row))
+        return None
+
+
 def get_site(entry):
     """
     Add or get a site
@@ -253,7 +266,7 @@ def get_site(entry):
     site.slope_aspect = entry.slope_aspect
 
     # controlled vocabularies
-    site.current_land_use = get_landuse(entry)
+    site.current_land_use = get_land_use(entry.current_land_use, entry.row)
     site.general_ecological_zone = get_general_ecological_zone(entry)
     site.vegetation_type = get_vegetation_type(entry)
     site.soil_type_australian_classification = get_australian_soil_classification(entry)
@@ -261,8 +274,20 @@ def get_site(entry):
 
     site.profile_position = get_profile_position(entry)
 
+    # history
+    site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use, entry.row)
+    site.date_since_change_in_land_use = entry.date_since_change_in_land_use
+    site.crop_rotation_1 = get_land_use(entry.crop_rotation_1, entry.row)
+    site.crop_rotation_2 = get_land_use(entry.crop_rotation_2, entry.row)
+    site.crop_rotation_3 = get_land_use(entry.crop_rotation_3, entry.row)
+    site.crop_rotation_4 = get_land_use(entry.crop_rotation_4, entry.row)
+    site.crop_rotation_5 = get_land_use(entry.crop_rotation_5, entry.row)
+    site.agrochemical_additions = entry.agrochemical_additions
+    site.tillage = get_tillage(entry)
     site.fire_history = entry.fire_history
     site.fire_intensity = entry.fire_intensity
+    site.flooding = entry.flooding
+    site.extreme_events = entry.extreme_events
     site.save()
 
     return site

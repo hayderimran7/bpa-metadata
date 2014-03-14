@@ -5,7 +5,7 @@ from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 from mptt.forms import TreeNodeChoiceField
 
-from models import CollectionSite, CollectionSample, ChemicalAnalysis, SiteOwner, CollectionSiteHistory, LandUse
+from models import CollectionSite, CollectionSample, ChemicalAnalysis, LandUse
 
 
 class CollectionSampleAdmin(admin.ModelAdmin):
@@ -82,21 +82,30 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'soil_type_australian_classification': LinkedSelect,
                 'soil_type_fao_classification': LinkedSelect,
                 'current_land_use': LinkedSelect,
+                'immediate_previous_land_use': LinkedSelect,
+                'date_since_change_in_land_use': SuitDateWidget,
+                'crop_rotation_1': LinkedSelect,
+                'crop_rotation_2': LinkedSelect,
+                'crop_rotation_3': LinkedSelect,
+                'crop_rotation_4': LinkedSelect,
+                'crop_rotation_5': LinkedSelect,
                 'general_ecological_zone': LinkedSelect,
                 'vegetation_type': LinkedSelect,
                 'date_sampled': SuitDateWidget,
                 'profile_position': LinkedSelect,
                 'drainage_classification': LinkedSelect,
+                'tillage': LinkedSelect,
+                'agrochemical_additions': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
             }
 
     form = CollectionForm
     inlines = (CollectionSampleInline, )
     suit_form_tabs = (
         ('description', 'Location Description'),
-        ('vegetation', 'Vegetation'),
         ('context', 'Context'),
+        ('landuse', 'Land Use'),
+        ('vegetation', 'Vegetation'),
         ('fire', 'Fire'),
-        ('history', 'History'),
         ('samples', 'Collection Samples'),
         ('notes', 'Notes')
     )
@@ -118,12 +127,26 @@ class CollectionSiteAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-vegetation',),
           'description': 'Vegetation found on site',
           'fields': (
-              'current_land_use',
               'vegetation_type',
               'general_ecological_zone',
               'vegetation_type_descriptive',
               'vegetation_total_cover',
               'vegetation_dominant_trees',
+          )}),
+        (None,  # Land use,
+         {'classes': ('suit-tab suit-tab-landuse',),
+          'description': 'Current and previous Land Use',
+          'fields': (
+              'current_land_use',
+              'immediate_previous_land_use',
+              'date_since_change_in_land_use',
+              'crop_rotation_1',
+              'crop_rotation_2',
+              'crop_rotation_3',
+              'crop_rotation_4',
+              'crop_rotation_5',
+              'tillage',
+              'agrochemical_additions',
           )}),
         (None,  # 'Context',
          {'classes': ('suit-tab suit-tab-context',),
@@ -143,22 +166,15 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'fire_history',
               'fire_intensity'
           )}),
-        (None,  # 'History',
-         {'classes': ('suit-tab suit-tab-history',),
-          'description': 'General Site History',
-          'fields': (
-              'owner',
-              'history'
-          )}),
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': ('note', 'debug_note', )})
     ]
 
     list_select_related = True
-    search_fields = ('location_name', 'note', 'vegetation_type_descriptive',)
+    search_fields = ('location_name', 'note', 'vegetation_type_descriptive', 'vegetation_dominant_trees')
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
-                   'vegetation_type_descriptive', )
+                   'vegetation_type_descriptive', 'vegetation_dominant_trees')
     list_display = ('location_name', 'current_land_use', 'vegetation_type', 'lat', 'lon', 'elevation')
 
 
@@ -251,14 +267,14 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
           )})
     ]
 
-    list_display = ('bpa_id', 'depth', 'colour', 'gravel', 'texture')
+    list_display = ('bpa_id', 'depth', 'colour', 'texture', 'gravel', 'sand', 'course_sand', 'fine_sand', 'clay',)
+    list_filter = ('bpa_id', 'depth', 'colour',)
     search_fields = ('colour__colour', 'colour__code',)
 
 
 admin.site.register(ChemicalAnalysis, ChemicalAnalysisAdmin)
 
-admin.site.register(SiteOwner)
-admin.site.register(CollectionSiteHistory)
+
 
 
 
