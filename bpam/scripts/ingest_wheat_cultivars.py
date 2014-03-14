@@ -1,6 +1,6 @@
 from unipath import Path
 
-from apps.common.models import DNASource, BPAUniqueID, Sequencer
+from apps.common.models import DNASource, Sequencer
 from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils
@@ -27,40 +27,38 @@ def get_dna_source(description):
         logger.debug('Set blank description to unknown')
         description = 'Unknown'
 
-    try:
-        source = DNASource.objects.get(description=description)
-    except DNASource.DoesNotExist:
-        source = DNASource(description=description)
+    source, created = DNASource.objects.get_or_create(description=description)
+    if created:
         source.note = 'Added by Cultivars Project'
         source.save()
 
     return source
 
 
+def get_bpa_id(e):
+    """
+    Get or make BPA ID
+    """
+    idx = e.bpa_id
+    bpa_id = bpa_id_utils.get_bpa_id(idx, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
+    if not bpa_id:
+        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+        return None
+    return bpa_id
+
+
 def ingest_samples(samples):
     """
     Add all the cultivar samples
     """
-    wheat_organism = Organism(genus='Triticum', species='Aestivum')
-    wheat_organism.save()
-
     def add_sample(e):
         """
         Adds new sample or updates existing sample
         """
 
-        bpa_id = e.bpa_id
-
-        if not bpa_id_utils.is_good_bpa_id(bpa_id):
-            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
-            return
-
-        try:
-            # Test if sample already exists
-            cultivar_sample = CultivarSample.objects.get(bpa_id__bpa_id=bpa_id)
-        except CultivarSample.DoesNotExist:
-            cultivar_sample = CultivarSample()
-            cultivar_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
+        bpa_id = get_bpa_id(e)
+        wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
+        cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
         cultivar_sample.organism = wheat_organism
         cultivar_sample.name = e.name
@@ -133,15 +131,9 @@ def ingest_runs(sample_data):
         library_type = get_library_type(entry.library)
         library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
 
-        try:
-            protocol = CultivarProtocol.objects.get(base_pairs=base_pairs,
-                                                    library_type=library_type,
-                                                    library_construction_protocol=library_construction_protocol)
-        except CultivarProtocol.DoesNotExist:
-            protocol = CultivarProtocol(base_pairs=base_pairs,
-                                        library_type=library_type,
-                                        library_construction_protocol=library_construction_protocol)
-            protocol.save()
+        protocol, created = CultivarProtocol.objects.get_or_create(base_pairs=base_pairs,
+                                                                   library_type=library_type,
+                                                                   library_construction_protocol=library_construction_protocol)
         return protocol
 
     def get_sequencer(name):
@@ -155,7 +147,8 @@ def ingest_runs(sample_data):
         return sequencer
 
     def get_sample(bpa_id):
-        sample, created = CultivarSample.objects.get_or_create(bpa_id__bpa_id=bpa_id)
+        wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
+        sample, created = CultivarSample.objects.get_or_create(bpa_id__bpa_id=bpa_id, organism=wheat_organism)
         if created:
             logger.info("New sample with ID {0}".format(bpa_id))
         return sample
@@ -169,18 +162,18 @@ def ingest_runs(sample_data):
         The run produced several files
         """
         flow_cell_id = entry.flow_cell_id.strip()
-        bpa_id = entry.bpa_id.strip()
+        bpa_id = get_bpa_id(e)
         run_number = get_run_number(entry)
+        sample = get_sample(bpa_id)
 
-        cultivar_run, created = CultivarRun.objects.get_or_create(
+        cultivar_run, _ = CultivarRun.objects.get_or_create(
             flow_cell_id=flow_cell_id,
             run_number=run_number,
-            sample__bpa_id__bpa_id=bpa_id)
+            sample=sample)
 
         # just update
         cultivar_run.flow_cell_id = flow_cell_id
         cultivar_run.run_number = run_number
-        cultivar_run.sample = get_sample(bpa_id)
         cultivar_run.index_number = ingest_utils.get_clean_number(entry.index_number)
         cultivar_run.sequencer = get_sequencer(entry.sequencer)
         cultivar_run.lane_number = ingest_utils.get_clean_number(entry.lane_number)

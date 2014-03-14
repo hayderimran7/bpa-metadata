@@ -222,7 +222,7 @@ class Run(models.Model):
                                                 blank=True,
                                                 null=True)
 
-    sequencer = models.ForeignKey(Sequencer)
+    sequencer = models.ForeignKey(Sequencer, blank=True, null=True)
     run_number = models.IntegerField(blank=True, null=True)
     flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=10, blank=True)
 

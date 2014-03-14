@@ -78,6 +78,7 @@ class SampleAdmin(admin.ModelAdmin):
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large',
                                                        'style': 'width:95%'})
             }
+
     form = SampleForm
 
     fieldsets = [
