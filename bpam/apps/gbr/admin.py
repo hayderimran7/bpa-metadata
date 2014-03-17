@@ -186,6 +186,9 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
+                'site_name': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
                 'gps_location': EnclosedInput(prepend='icon-map-marker'),
                 'water_temp': EnclosedInput(append=u'°C'),
                 'water_ph': EnclosedInput(append='pH'),
