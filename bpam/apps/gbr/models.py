@@ -34,17 +34,19 @@ class GBRSample(Sample, DebugNote):
     """
 
     organism = models.ForeignKey(Organism)
-    dataset = models.CharField(max_length=100, null=True, blank=True)
     collection_event = models.ForeignKey(CollectionEvent)
-    sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
-    dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration (ng/uL)'))
-    total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))
-    comments_by_facility = models.TextField(null=True, blank=True, verbose_name=_('Facility Comments'))
-    sequencing_data_eta = models.DateField(blank=True, null=True, verbose_name=_('Sequence ETA'))
-    date_sequenced = models.DateField(blank=True, null=True)
-    requested_read_length = models.IntegerField(blank=True, null=True)
+
+    dataset = models.CharField(_('Data Set'), max_length=100, null=True, blank=True)
+    sequencing_notes = models.TextField(_('Sequencing Notes'), null=True, blank=True)
+    dna_rna_concentration = models.FloatField(_('DNA/RNA Concentration'), null=True, blank=True)
+    total_dna_rna_shipped = models.FloatField(_('Total DNA/RNA Shipped'), null=True, blank=True)
+    comments_by_facility = models.TextField(_('Facility Comments'), null=True, blank=True)
+    sequencing_data_eta = models.DateField(_('Sequence ETA'), blank=True, null=True)
+    date_sequenced = models.DateField(_('Date Sequenced'), blank=True, null=True)
+    requested_read_length = models.IntegerField(_('Requested Read Length'), blank=True, null=True)
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
-                                                 related_name='bioinformatician')
+                                                 related_name='bioinformatician',
+                                                 verbose_name=_('Contact Bioinformatician'))
 
 
 class GBRRun(Run):

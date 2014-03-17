@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
@@ -106,7 +108,12 @@ class SampleAdmin(admin.ModelAdmin):
                            'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(
                     attrs={'class': 'input-large',
-                           'style': 'width:95%'})
+                           'style': 'width:95%'}),
+                'dna_rna_concentration': EnclosedInput(append=u'ng/µL'),
+                'date_sequenced': SuitDateWidget,
+                'sequencing_data_eta': SuitDateWidget,
+                'date_sent_to_sequencing_facility': SuitDateWidget
+
             }
 
     form = SampleForm
@@ -114,36 +121,56 @@ class SampleAdmin(admin.ModelAdmin):
     class SequenceFileInline(admin.TabularInline):
         model = GBRSequenceFile
         form = SequenceFileInlineForm
+        suit_classes = 'suit-tab suit-tab-id'
         sortable = 'filename'
         fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
         extra = 1
 
     inlines = (SequenceFileInline, )
 
+    suit_form_tabs = (
+        ('id', 'Sample ID and Sequence Files'),
+        ('dna', 'DNA'),
+        ('management', 'Sample Management',),
+        ('contacts', 'Contacts',),
+        ('notes', 'Source Data Note')
+    )
+
     fieldsets = [
-        ('Sample Identification',
-         {'fields': ('bpa_id', 'name',)}),
-        ('DNA/RNA Source',
-         {'fields': (
-             'organism',
-             'dna_source',
-             'dna_extraction_protocol',
-             'dna_rna_concentration',
-             'total_dna_rna_shipped',)}),
-        ('Sample Management',
-         {'fields': (
-             'dataset',
-             'requested_sequence_coverage',
-             'requested_read_length',
-             'date_sent_to_sequencing_facility',
-             'date_sequenced',
-             'sequencing_data_eta',
-             'comments_by_facility',
-             'sequencing_notes')}),
-        ('Contacts',
-         {'fields': ('contact_scientist', 'contact_bioinformatician')}),
-        ('Notes',
-         {'fields': ('note', 'debug_note')}),
+        ('ID',
+         {'classes': ('suit-tab suit-tab-id',),
+          'fields': (
+              'bpa_id',
+              'name',)}),
+        (None,  # 'DNA/RNA Source',
+         {'classes': ('suit-tab suit-tab-dna',),
+          'fields': (
+              'organism',
+              'dna_source',
+              'dna_extraction_protocol',
+              'dna_rna_concentration',
+              'total_dna_rna_shipped',)}),
+        (None,  # 'Sample Management',
+         {'classes': ('suit-tab suit-tab-management',),
+          'fields': (
+              'dataset',
+              'requested_sequence_coverage',
+              'requested_read_length',
+              'date_sent_to_sequencing_facility',
+              'date_sequenced',
+              'sequencing_data_eta',
+              'comments_by_facility',
+              'sequencing_notes')}),
+        (None,  # 'Contacts',
+         {'classes': ('suit-tab suit-tab-contacts',),
+          'fields': (
+              'contact_scientist',
+              'contact_bioinformatician')}),
+        (None,  # 'Notes',
+         {'classes': ('suit-tab suit-tab-notes',),
+          'fields': (
+              'note',
+              'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
@@ -159,7 +186,10 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
-                'gps_location': EnclosedInput(prepend='icon-map-marker', append=''),
+                'gps_location': EnclosedInput(prepend='icon-map-marker'),
+                'water_temp': EnclosedInput(append=u'°C'),
+                'water_ph': EnclosedInput(append='pH'),
+                'depth': EnclosedInput(append='m'),
                 'collection_date': SuitDateWidget,
                 'collector': LinkedSelect,
                 'note': AutosizedTextarea(
@@ -171,9 +201,16 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     fieldsets = [
         ('Collection',
-         {'fields': ('site_name', 'collection_date', 'collector', 'gps_location')}),
+         {'fields': (
+             'site_name',
+             'collection_date',
+             'collector',
+             'gps_location')}),
         ('Site Data',
-         {'fields': ('water_temp', 'water_ph', 'depth')}),
+         {'fields': (
+             'water_temp',
+             'water_ph',
+             'depth')}),
         ('Note',
          {'fields': ('note',)}),
 
