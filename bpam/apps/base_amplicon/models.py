@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from apps.common.models import Sample, SequenceFile, Run, DebugNote
+from apps.common.models import Sample, SequenceFile, Run, DebugNote, Facility
 
 
 class AmpliconSample(Sample, DebugNote):
@@ -9,11 +9,33 @@ class AmpliconSample(Sample, DebugNote):
     BASE Amplicon Soil Sample
     """
 
+    sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=100, unique=True)
+    sequencing_facility = models.ForeignKey(Facility,
+                                            verbose_name=_('Sequencing facility'),
+                                            related_name='base_amplicon',
+                                            blank=True,
+                                            null=True)
+
+    target = models.CharField(_('Type'), max_length=2,
+                              choices=(('16S', '16S'), ('ITS', 'ITS'), ('18S', '18S'), ('A16S', 'A16S')))
+
+    index = models.CharField(_('Index'), max_length=12, blank=True, null=True)
+
+    PASS_OR_FAIL = (('P', 'Pass'), ('F', 'Fail'))
+    pcr_1_to_10 = models.CharField(_('PCR 1:10'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    pcr_1_to_100 = models.CharField(_('PCR 1:100'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    pcr_neat = models.CharField(_('Neat PCR'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    dilution = models.CharField(_('Dilution Used'), max_length=1, blank=True, null=True,
+                                choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
+
+    analysis_software_version = models.CharField(_('Analysis Software Version'), max_length=100, blank=True, null=True)
+    reads = models.IntegerField(_('# of Reads'), blank=True, null=True)
+
+
     def __unicode__(self):
         return u"{0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Amplicon Sample")
 
 
@@ -40,103 +62,7 @@ class AmpliconSequenceFile(SequenceFile):
     run = models.ForeignKey(AmpliconRun, null=True)  # FIXME
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Amplicon Sequence Files")
 
 
-class PCRPrimer(models.Model):
-    """
-    PCR Primers
-    """
 
-    name = models.CharField(max_length=100, unique=True)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("PCR Primers")
-
-
-class TargetGene(models.Model):
-    """
-    Target Gene
-    """
-
-    name = models.CharField(max_length=100, unique=True)
-    note = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("Target Genes")
-
-
-class TargetTaxon(models.Model):
-    """
-    Target Taxon
-    """
-
-    name = models.CharField(max_length=100, unique=True)
-    note = models.TextField()
-
-    def __unicode__(self):
-        return u"{0}".format(self.name)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("Target Taxons")
-
-
-class SequenceConstruct(models.Model):
-    """
-    The Sequence Construct
-    """
-
-    adapter_sequence = models.CharField(max_length=100, blank=True)
-    barcode_sequence = models.CharField(max_length=100, blank=True)
-    forward_primer = models.CharField(max_length=100, blank=True)
-    primer_sequence = models.CharField(max_length=100, blank=True)
-    target_region = models.CharField(max_length=100, blank=True)
-    sequence = models.CharField(max_length=100, blank=True)
-    reverse_primer = models.CharField(max_length=100, blank=True)
-
-    note = models.TextField(blank=True)
-
-    def __unicode__(self):
-        return u"{0}".format(self.sequence)
-
-    class Meta:
-        # app_label = 'base'
-        verbose_name_plural = _("Sequence Constructs")
-
-
-class SoilSampleDNA(models.Model):
-    name = models.CharField(max_length=20)
-    submitter = models.CharField(max_length=20)
-    dna_conc = models.CharField(max_length=20, blank=True, null=True)
-    protocol_ref = models.CharField(max_length=20, blank=True, null=True, choices=(('S', 'Single'), ('P', 'Paired')))
-    library_selection = models.CharField(max_length=20, blank=True, null=True)
-    library_layout = models.CharField(max_length=20, blank=True, null=True)
-    target_taxon = models.ForeignKey(TargetTaxon)
-    target_gene = models.ForeignKey(TargetGene, related_name='target')
-    target_subfragment = models.ForeignKey(TargetGene, related_name='subfragment')
-    pcr_primer = models.ForeignKey(PCRPrimer)
-    pcr_primer_db_ref = models.CharField(max_length=20, blank=True, null=True)
-    forward_primer_sequence = models.CharField(max_length=100, blank=True, null=True)
-    reverse_primer_sequence = models.CharField(max_length=100, blank=True, null=True)
-    pcr_reaction = models.CharField(max_length=100, blank=True, null=True)
-    barcode_label = models.CharField(max_length=10, blank=True, null=True)
-    barcode_sequence = models.CharField(max_length=20, blank=True, null=True)
-    performer = models.CharField(max_length=10, blank=True, null=True)
-    labeled_extract_name = models.CharField(max_length=10, blank=True, null=True)
-
-    def __unicode__(self):
-        return u"Soil DNA Library {0}".format(self.name)
-
-    class Meta:
-        verbose_name_plural = _("Soil Sample DNA")
