@@ -63,12 +63,21 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-id',),
           'fields': (
               'bpa_id',
-              'name',)}),
+              'name',
+              'sample_extraction_id')}),
         (None,  # 'Sample Management',
          {'classes': ('suit-tab suit-tab-management',),
           'fields': (
               'requested_sequence_coverage',
-              'date_sent_to_sequencing_facility', )}),
+              'date_sent_to_sequencing_facility',
+              'target',
+              'index',
+              'reads',
+              'pcr_1_to_10',
+              'pcr_1_to_100',
+              'pcr_neat',
+              'dilution',
+              'analysis_software_version')}),
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': (
@@ -76,8 +85,8 @@ class SampleAdmin(admin.ModelAdmin):
               'debug_note')}),
     ]
 
-    list_display = ('bpa_id', 'name', )
-    search_fields = ('bpa_id__bpa_id', 'name')
+    list_display = ('bpa_id', 'name', 'target', 'sequencing_facility')
+    search_fields = ('bpa_id', 'name')
     list_filter = ('bpa_id', 'name', )
 
 
