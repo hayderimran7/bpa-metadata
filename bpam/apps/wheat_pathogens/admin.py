@@ -66,7 +66,27 @@ class RunAdmin(admin.ModelAdmin):
     list_filter = ('run_number', )
 
 
+class SequenceFileInlineForm(forms.ModelForm):
+    class Meta:
+        model = PathogenSequenceFile
+        widgets = {
+            'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
+            'md5': forms.TextInput(attrs={'class': 'input-xlarge'}),
+            'date_received_from_sequencing_facility': SuitDateWidget,
+        }
+
+
 class SampleAdmin(admin.ModelAdmin):
+    class SequenceFileInline(admin.TabularInline):
+        model = PathogenSequenceFile
+        form = SequenceFileInlineForm
+        suit_classes = 'suit-tab suit-tab-id'
+        sortable = 'filename'
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
+        extra = 0
+
+    inlines = (SequenceFileInline, )
+
     class SampleForm(forms.ModelForm):
         class Meta:
             model = PathogenSample
@@ -78,26 +98,50 @@ class SampleAdmin(admin.ModelAdmin):
                 'contact_scientist': LinkedSelect,
                 'collection_date': SuitDateWidget,
                 'contact_bioinformatician': LinkedSelect,
-                'note': AutosizedTextarea(attrs={'class': 'input-large',
-                                                 'style': 'width:95%'}),
-                'debug_note': AutosizedTextarea(attrs={'class': 'input-large',
-                                                       'style': 'width:95%'})
+                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'collection_location': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})
             }
 
     form = SampleForm
 
+    suit_form_tabs = (
+        ('id', 'Sample ID and Sequence Files'),
+        ('dna', 'DNA/RNA'),
+        ('collection', 'Collection'),
+        ('contacts', 'Contacts'),
+        ('notes', 'Notes')
+    )
+
     fieldsets = [
-        ('Sample Identification',
-         {'fields': ('bpa_id', 'name', 'sample_label', 'original_source_host_species', 'wheat_pathogenicity')}),
-        ('DNA/RNA Source',
-         {'fields': (
-             'organism', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',)}),
-        ('Collection',
-         {'fields': ('collection_location', 'collection_date',)}),
-        ('Contacts',
-         {'fields': ('contact_scientist',)}),
-        ('Notes',
-         {'fields': ('note', 'debug_note',)}),
+        (None,  # 'Sample Identification',
+         {'classes': ('suit-tab suit-tab-id',),
+          'fields': (
+              'bpa_id',
+              'name',
+              'sample_label',
+              'original_source_host_species',
+              'wheat_pathogenicity')}),
+        (None,  # 'DNA/RNA Source',
+         {'classes': ('suit-tab suit-tab-dna',),
+          'fields': (
+              'organism',
+              'official_variety_name',
+              'dna_source',
+              'dna_extraction_protocol',)}),
+        (None,  # 'Collection',
+         {'classes': ('suit-tab suit-tab-collection',),
+          'fields': (
+              'collection_location',
+              'collection_date',)}),
+        (None,  # 'Contacts',
+         {'classes': ('suit-tab suit-tab-contacts',),
+          'fields': ('contact_scientist',)}),
+        (None,  # 'Notes',
+         {'classes': ('suit-tab suit-tab-notes',),
+          'fields': (
+              'note',
+              'debug_note',)}),
 
     ]
 
