@@ -136,14 +136,13 @@ class ExcelWrapper(object):
                 ctype = row[i].ctype
                 val = row[i].value
                 if ctype == xlrd.XL_CELL_DATE:
-                    val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
+                    try:
+                        val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
+                    except ValueError, e:
+                        logger.error("Error '{0}' column:{1}".format(e, i))
+                        val = val  # keep the original value
                 if ctype == xlrd.XL_CELL_TEXT:
-                    pass
-                    #try:
-                    #    val = val.decode('utf-8').strip()
-                    #except UnicodeEncodeError:
-                    #    #logger.error('Unicoderror for {0}'.format(val))
-                    #    pass
+                    val = val.strip()
 
                 if func is not None:
                     val = func(val)
