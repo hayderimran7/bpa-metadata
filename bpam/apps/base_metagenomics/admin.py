@@ -45,29 +45,46 @@ class SampleAdmin(admin.ModelAdmin):
     class SequenceFileInline(admin.TabularInline):
         model = MetagenomicsSequenceFile
         form = SequenceFileInlineForm
+        suit_classes = 'suit-tab suit-tab-id'
         sortable = 'filename'
         fields = ('filename', 'md5', 'date_received_from_sequencing_facility')
-        extra = 1
+        extra = 0
 
     inlines = (SequenceFileInline, )
 
+    suit_form_tabs = (
+        ('id', 'Sample ID and Sequence Files'),
+        ('management', 'Management'),
+        ('contacts', 'Contacts'),
+        ('notes', 'Notes')
+    )
+
     fieldsets = [
-        ('Sample Identification',
-         {'fields': ('bpa_id', 'name',)}),
-        ('Sample Management',
-         {'fields': (
-             'requested_sequence_coverage',
-             'date_sent_to_sequencing_facility', )}),
-        ('Contacts',
-         {'fields': ('contact_scientist',)}),
-        ('Notes',
-         {'fields': ('note', 'debug_note')}),
+        (None,  # 'Sample Identification',
+         {'classes': ('suit-tab suit-tab-id',),
+          'description': 'Sample Identification Detail',
+          'fields': ('bpa_id',
+                     'name',)}),
+        (None,  # 'Sample Management',
+         {'classes': ('suit-tab suit-tab-management',),
+          'description': 'Sample Management Detail',
+          'fields': (
+              'requested_sequence_coverage',
+              'date_sent_to_sequencing_facility', )}),
+        (None,  # 'Contacts',
+         {'classes': ('suit-tab suit-tab-contacts',),
+          'description': 'Contacts associated with this sample',
+          'fields': ('contact_scientist',)}),
+        (None,  # 'Notes',
+         {'classes': ('suit-tab suit-tab-notes',),
+          'description': 'Motes',
+          'fields': ('note',
+                     'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
     search_fields = ('bpa_id__bpa_id', 'name')
     list_filter = ('bpa_id', 'name', 'dna_extraction_protocol')
-
 
 admin.site.register(MetagenomicsSample, SampleAdmin)
 
