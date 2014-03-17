@@ -84,7 +84,11 @@ SUIT_CONFIG = {
          'models': ('metagenomicssample',
                     'metagenomicssequencefile',
                     'metagenomicsrun')},
-        {'app': 'base_amplicon', 'label': 'BASE Amplicons', },
+        {'app': 'base_amplicon', 'label': 'BASE Amplicons',
+         'models': ('ampliconsample',
+                    'ampliconsequencefile',
+                    'ampliconrun')
+        },
         {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
         {'app': 'base_contextual', 'label': 'BASE Contextual', },
         {'app': 'base_454', 'label': 'BASE 454', },
