@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from suit.widgets import LinkedSelect, AutosizedTextarea
+from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
 from .models import CultivarSample
@@ -62,6 +62,16 @@ class RunAdmin(admin.ModelAdmin):
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
 
 
+class SequenceFileInlineForm(forms.ModelForm):
+    class Meta:
+        model = CultivarSequenceFile
+        widgets = {
+            'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
+            'md5': forms.TextInput(attrs={'class': 'input-xlarge'}),
+            'date_received_from_sequencing_facility': SuitDateWidget,
+        }
+
+
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
@@ -81,15 +91,43 @@ class SampleAdmin(admin.ModelAdmin):
 
     form = SampleForm
 
+    class SequenceFileInline(admin.TabularInline):
+        model = CultivarSequenceFile
+        form = SequenceFileInlineForm
+        suit_classes = 'suit-tab suit-tab-id'
+        sortable = 'filename'
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
+        extra = 0
+
+    inlines = (SequenceFileInline, )
+
+    suit_form_tabs = (
+        ('id', 'Sample ID and Sequence Files'),
+        ('dna', 'DNA'),
+        ('notes', 'Source Data Note')
+    )
+
     fieldsets = [
-        ('Sample Identification',
-         {'fields': ('bpa_id', 'name', 'cultivar_code', 'extract_name', 'casava_version',)}),
-        ('DNA/RNA Source',
-         {'fields': (
-             'dna_extraction_protocol', 'protocol_reference',
-         )}),
-        ('Notes',
-         {'fields': ('note', 'debug_note')}),
+        (None,  # 'Sample Identification',
+         {'classes': ('suit-tab suit-tab-id',),
+          'fields': (
+              'bpa_id',
+              'name',
+              'cultivar_code',
+              'extract_name',
+              'casava_version',)}),
+        (None,  # 'DNA/RNA Source',
+         {'classes': ('suit-tab suit-tab-dna',),
+          'fields': (
+              'dna_extraction_protocol',
+              'protocol_reference',
+          )}),
+        (None,  # 'Notes',
+         {'classes': ('suit-tab suit-tab-notes',),
+          'fields': (
+              'note',
+              'debug_note')}
+        ),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
