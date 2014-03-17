@@ -9,7 +9,7 @@ from models import (TumorStage,
                     MelanomaRun,
                     MelanomaSequenceFile,
                     MelanomaProtocol,
-                    )
+)
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -31,20 +31,40 @@ class SampleAdmin(admin.ModelAdmin):
             }
 
     form = SampleForm
-
     radio_fields = {'gender': admin.HORIZONTAL}
+
+    suit_form_tabs = (
+        ('id', 'Sample ID and Sequence Files'),
+        ('dna', 'DNA Source'),
+        ('management', 'Sample Management',),
+        ('notes', 'Source Data Note')
+    )
+
     fieldsets = [
         ('Sample Identification',
-         {'fields': (('bpa_id', 'name'))}),
+         {'classes': ('suit-tab suit-tab-id',),
+          'fields': (
+              ('bpa_id',
+               'name'))}),
         ('DNA Source',
-         {'fields': (
-             'organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage', 'histological_subtype')}),
+         {'classes': ('suit-tab suit-tab-dna',),
+          'fields': (
+              'organism',
+              'dna_source',
+              'dna_extraction_protocol',
+              'gender',
+              'tumor_stage',
+              'histological_subtype')}),
         ('Sample Management',
-         {'fields': (
-             'requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist',
-             'note')}),
+         {'classes': ('suit-tab suit-tab-management',),
+          'fields': (
+              'requested_sequence_coverage',
+              'date_sent_to_sequencing_facility',
+              'contact_scientist',
+              'note')}),
         ('Source Data Note',
-         {'fields': ('debug_note',)}),
+         {'classes': ('suit-tab suit-tab-notes',),
+          'fields': ('debug_note',)}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
