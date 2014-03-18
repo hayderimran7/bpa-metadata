@@ -68,7 +68,6 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'Sample Management',
          {'classes': ('suit-tab suit-tab-management',),
           'fields': (
-              'requested_sequence_coverage',
               'date_sent_to_sequencing_facility',
               'target',
               'index',

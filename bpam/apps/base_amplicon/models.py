@@ -29,7 +29,7 @@ class AmpliconSample(Sample, DebugNote):
                                 choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
 
     analysis_software_version = models.CharField(_('Analysis Software Version'), max_length=100, blank=True, null=True)
-    reads = models.IntegerField(_('# of Reads'), blank=True, null=True)
+    reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
 
 
     def __unicode__(self):
