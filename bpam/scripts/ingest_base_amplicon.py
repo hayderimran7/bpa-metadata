@@ -1,6 +1,7 @@
-from unipath import Path
+import unipath
 
 from libs.excel_wrapper import ExcelWrapper
+from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 from apps.common.models import Facility
@@ -9,8 +10,8 @@ from apps.base_amplicon.models import AmpliconSample
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/amplicons")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'amplicon_test')
+# all the Excel sheets and md5sums should be in here
+DATA_DIR = unipath.Path(unipath.Path('~').expand_user(), 'var/amplicon_metadata/')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -35,7 +36,7 @@ def get_data(file_name):
 
     field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
                   ('sample_extraction_id', 'Sample extraction ID', None),
-                  ('genome_sequencing_facility', 'Sequencing facility', None),
+                  ('sequencing_facility', 'Sequencing facility', None),
                   ('target', 'Target', lambda s: s.upper()),
                   ('index', 'Index', None),
                   ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', None),
@@ -44,7 +45,7 @@ def get_data(file_name):
                   ('dilution', 'Dilution used', None),
                   ('run_number', 'Sequencing run number', None),
                   ('flow_cell_id', 'Flowcell', None),
-                  ('reads', '# of reads', None),
+                  ('reads', '# of reads', ingest_utils.get_int),
                   ('name', 'Sample name on sample sheet', None),
                   ('analysis_software_version', 'AnalysisSoftwareVersion', None),
                   ('comments', 'Comments', None),
@@ -59,19 +60,6 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
-def get_facility(entry):
-    """
-    Get teh facility
-    """
-    facility_str = entry.genome_sequencing_facility
-    if facility_str == '':
-        return None
-    try:
-        return Facility.objects.get(name__iexact=facility_str)
-    except Facility.DoesNotExist:
-        logger.warning('Facility "{0}" on line {1} not known'.format(facility_str, entry.row))
-        return None
-
 
 def add_samples(data):
     """
@@ -80,7 +68,7 @@ def add_samples(data):
     for entry in data:
         bpa_id = get_bpa_id(entry)
         if bpa_id is None:
-            logger.warning('Could not add entry '.format(entry))
+            logger.warning('Could not add entry on row {0}'.format(entry.row))
             continue
 
         sample, created = AmpliconSample.objects.get_or_create(bpa_id=bpa_id)
@@ -88,7 +76,7 @@ def add_samples(data):
         sample.sample_extraction_id = entry.sample_extraction_id
         sample.name = entry.name
 
-        sample.genome_sequencing_facility = get_facility(entry)
+        sample.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
         sample.index = entry.index
         sample.target = entry.target
         sample.pcr_1_to_10 = entry.pcr_1_to_10
@@ -100,17 +88,22 @@ def add_samples(data):
         sample.reads = entry.reads
 
         sample.note = entry.comments
+        sample.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
         sample.save()
 
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
-    """
+def is_metadata(path):
+    if path.isfile() and path.ext == '.xlsx':
+        return True
 
-    samples = list(get_data(file_name))
-    add_samples(samples)
+
+def run():
+    # find all the spreadsheets in the data directory and ingest them
+    logger.info('Ingesting BASE Amplicon metadata from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing BASE Amplicon Metadata file {0}'.format(metadata_file))
+        samples = list(get_data(metadata_file))
+        add_samples(samples)
 
 
