@@ -122,7 +122,7 @@ def ingest_samples(samples):
         gbr_sample.date_data_sent = ingest_utils.get_date(e.date_data_sent)
 
         # facilities
-        gbr_sample.sequencing_facility = Facility.objects.add(name=e.sequencing_facility)
+        gbr_sample.sequencing_facility, _ = Facility.objects.get_or_create(name=e.sequencing_facility)
         gbr_sample.note = e.other
         gbr_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
 
