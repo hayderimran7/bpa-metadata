@@ -1,4 +1,5 @@
 # this module was more useful before I added rainbow to django
+# https://pypi.python.org/pypi/rainbow_logging_handler
 
 import logging
 
