@@ -53,7 +53,8 @@ class FacilityManager(models.Manager):
         """
         I the name is empty return the Unknown Facility
         """
-        if name.strip() == '':
+        name = name.strip().upper()
+        if name == '':
             name = 'Unknown'
         facility, _ = self.get_or_create(name=name)
         return facility
@@ -65,17 +66,19 @@ class Facility(models.Model):
     """
 
     facilities = {'RAM': 'Ramaciotti',
+                  'UNSW': 'UNSW',
                   'AGRF': 'AGRF',
                   'ANU': 'ANU',
                   '': 'Unknown',
                   'Unknown': 'Unknown'}
 
-    name = models.CharField(_('Facility Name'), max_length=100, help_text='Facility short name')
+    name = models.CharField(_('Facility Name'), max_length=100, help_text='Facility short name', unique=True)
     note = models.TextField(blank=True)
     objects = FacilityManager()
 
     class Meta:
         verbose_name_plural = _('Facilities')
+
 
     def get_name(self, key):
         """
