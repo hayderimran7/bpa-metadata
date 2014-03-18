@@ -14,12 +14,11 @@ as mangled by the provided method.
 
 import datetime
 from collections import namedtuple
+import xlrd
 
 import logger_utils
 
-
 logger = logger_utils.get_logger(__name__)
-import xlrd
 
 
 class ColumnNotFoundException(Exception):
