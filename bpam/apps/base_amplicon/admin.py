@@ -30,13 +30,13 @@ class SampleAdmin(admin.ModelAdmin):
                 'name': forms.TextInput(
                     attrs={'class': 'input-medium',
                            'style': 'width:50%'}),
-                'sequencing_facility': LinkedSelect,
                 'note': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
+                'sequencing_facility': LinkedSelect,
                 'date_sent_to_sequencing_facility': SuitDateWidget
             }
 
@@ -68,6 +68,7 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'Sample Management',
          {'classes': ('suit-tab suit-tab-management',),
           'fields': (
+              'sequencing_facility',
               'date_sent_to_sequencing_facility',
               'target',
               'index',
@@ -85,8 +86,8 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = ('bpa_id', 'name', 'target', 'sequencing_facility')
-    search_fields = ('bpa_id', 'name')
-    list_filter = ('bpa_id', 'name', )
+    search_fields = ('bpa_id', 'sequencing_facility')
+    list_filter = ('bpa_id', 'sequencing_facility', )
 
 
 admin.site.register(AmpliconSample, SampleAdmin)
