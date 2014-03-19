@@ -76,22 +76,26 @@ usage() {
 
 
 nuclear() {
-    log_info "Total rebuild of DB"
-    bpam reset_db --router=default --traceback
-    bpam syncdb --noinput --traceback
-    bpam migrate --traceback
-    bpam runscript set_initial_bpa_projects --traceback
-    bpam runscript ingest_users
-    bpam runscript ingest_gbr
-    bpam runscript ingest_melanoma
-    # wheat
-    bpam runscript ingest_wheat_pathogens
-    bpam runscript ingest_wheat_cultivars
-    # base
-    bpam runscript ingest_landuse
-    bpam runscript ingest_base_454
-    bpam runscript ingest_base_contextual
-    bpam runscript ingest_base_metagenomics
+    CMD="bpam"
+
+    ${CMD} syncdb --traceback --noinput
+    ${CMD} migrate --traceback
+
+    log_info "Ingest BPA Projects"
+    ${CMD} runscript ingest_bpa_projects --traceback
+    log_info "Ingest BPA Users"
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
+
+    # BASE
+    ${CMD} runscript ingest_base_454
+    ${CMD} runscript ingest_base_metagenomics --traceback
+    ${CMD} runscript ingest_landuse --traceback
+    ${CMD} runscript ingest_base_contextual --traceback
+
     # links
     bpam runscript url_checker
 }
