@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.contrib.gis.geos import Point
+
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
@@ -95,6 +97,10 @@ class CollectionSite(DebugNote):
 
     note = models.TextField(blank=True, null=True)
 
+    @property
+    def geom(self):
+        return Point(self.lon, self.lat, srid=4326)
+
     def __unicode__(self):
         return u','.join(str(s) for s in (self.location_name, self.lat, self.lon,) if s)
 
@@ -163,7 +169,7 @@ class CollectionSample(DebugNote):
     A sample to collect sample specific info for contextual data.
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID)
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
     site = models.ForeignKey(CollectionSite, null=True)  # there may be no site set
 
     horizon_classification1 = models.ForeignKey(HorizonClassification,
