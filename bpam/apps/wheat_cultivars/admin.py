@@ -130,8 +130,8 @@ class SampleAdmin(admin.ModelAdmin):
         ),
     ]
 
-    list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol')
-    search_fields = ('bpa_id__bpa_id', 'cultivar_code')
+    list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
+    search_fields = ('bpa_id__bpa_id', 'cultivar_code', 'name', )
     list_filter = ('cultivar_code',)
 
 
