@@ -60,6 +60,7 @@ install_requires = [
     'django-sql-explorer',
     'django-mptt>=0.5.5',
     'ccg-extras==0.1.6',
+    'django-leaflet',
 ]
 
 dev_requires = [

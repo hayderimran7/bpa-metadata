@@ -211,6 +211,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'tastypie',
     'explorer',
+    'leaflet',
     # 'lettuce.django',
 )
 
