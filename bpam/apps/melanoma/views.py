@@ -2,7 +2,6 @@ from django.views.generic.list import ListView
 from django.shortcuts import render
 
 from apps.melanoma.models import MelanomaSequenceFile
-from apps.common.models import BPAUniqueID
 
 
 class MelanomaSequenceFileListView(ListView):
