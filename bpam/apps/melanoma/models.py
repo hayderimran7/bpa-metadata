@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol
@@ -91,6 +90,7 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return False
 
+    @property
     def ingest_issue(self):
         """
         Any issue raised by the ingest process for this file
@@ -100,5 +100,4 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return ''
 
-    ingest_issue = property(ingest_issue)
 
