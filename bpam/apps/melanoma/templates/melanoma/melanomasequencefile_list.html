@@ -6,7 +6,40 @@
 
     <h3>Melanoma Sequence Files</h3>
 
-    {% include "melanoma/melanomasequencefile_table.html" %}
+    <table id="sequence-list" class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
+            <th>Sample Name</th>
+            <th>Run Date</th>
+            <th>Run Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in object_list %}
+            <tr>
+                <td>
+                    {% if obj.url_verification.status_ok %}
+                        <span title="Last checked {{ obj.url_verification.checked_at }}"
+                              class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                        <span title="Error {{ obj.url_verification.status_note }} at {{ obj.url_verification.checked_at }}"
+                              class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>{{ obj.sample.bpa_id }}</td>
+                <td><a href="{{ obj.get_url }}">{{ obj.filename }}</a></td>
+                <td>{{ obj.md5 }}</td>
+                <td>{{ obj.sample.name }}</td>
+                <td>{{ obj.date_received_from_sequencing_facility }}</td>
+                <td>{{ obj.run }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     <form>
         <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma-list' %}"/>
