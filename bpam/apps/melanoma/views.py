@@ -6,7 +6,7 @@ from apps.melanoma.models import MelanomaSequenceFile, Array
 
 class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
-
+    context_object_name = 'sequencefiles'
 
     # def get_queryset(self):
     #     return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
