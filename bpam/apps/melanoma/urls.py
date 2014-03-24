@@ -16,4 +16,8 @@ urlpatterns = patterns(
         regex=r'search/(.*)$',
         view=views.search_view,
         name="search"),
+    url(
+        regex=r'^$',
+        view=views.index,
+        name='index'),
 )
