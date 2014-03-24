@@ -13,6 +13,7 @@ v1_api.register(MelanomaSequenceFileResource())
 
 urlpatterns = patterns(
     '',
+    url(r'^base_contextual/', include('apps.base_contextual.urls')),
     url(r'^melanoma/', include('apps.melanoma.urls')),
     ('^accounts/', include('django.contrib.auth.urls')),
     (r'^api/', include(v1_api.urls)),
