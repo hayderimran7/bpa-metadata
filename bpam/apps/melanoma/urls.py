@@ -12,12 +12,8 @@ urlpatterns = patterns(
         regex=r'^arrays',
         view=views.ArrayListView.as_view(),
         name='arrays'),
-    # url(
-    #     r'^all$',
-    #     login_required(MelanomaSequenceFileListView.as_view()),
-    #     name="all"),
-    # url(
-    #     r'search/(.*)$',
-    #     login_required(search_view),
-    #     name="search"),
+    url(
+        regex=r'search/(.*)$',
+        view=views.search_view,
+        name="search"),
 )
