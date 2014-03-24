@@ -5,3 +5,4 @@ from .models import ChemicalAnalysis
 
 class ChemicalAnalysisListView(ListView):
     model = ChemicalAnalysis
+    context_object_name = 'reports'

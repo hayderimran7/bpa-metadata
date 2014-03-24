@@ -36,39 +36,39 @@
     </tr>
     </thead>
     <tbody>
-    {% for obj in object_list %}
+    {% for analysis in reports %}
         <tr>
-            <td>{{ obj.bpa_id }}</td>
-            <td>{{ obj.depth }}</td>
-            <td>{% if obj.moisture %} {{ obj.moisture }} {% endif %}</td>
-            <td>{{ obj.colour }}</td>
-            <td>{{ obj.gravel }}</td>
-            <td>{{ obj.texture }}</td>
-            <td>{% if obj.course_sand %} {{ obj.course_sand }} {% endif %}</td>
-            <td>{% if obj.fine_sand %} {{ obj.fine_sand }} {% endif %}</td>
-            <td>{% if obj.sand %} {{ obj.sand }} {% endif %}</td>
-            <td>{% if obj.silt %} {{ obj.silt }} {% endif %}</td>
-            <td>{% if obj.clay %} {{ obj.clay }} {% endif %}</td>
-            <td>{% if obj.ammonium_nitrogen %} {{ obj.ammonium_nitrogen }} {% endif %}</td>
-            <td>{% if obj.nitrate_nitrogen %} {{ obj.nitrate_nitrogen }} {% endif %}</td>
-            <td>{% if obj.phosphorus_colwell %} {{ obj.phosphorus_colwell }} {% endif %}</td>
-            <td>{% if obj.sulphur_colwell %} {{ obj.sulphur_colwell }} {% endif %}</td>
-            <td>{% if obj.organic_carbon %} {{ obj.organic_carbon }} {% endif %}</td>
-            <td>{% if obj.conducivity %} {{ obj.conductivity }} {% endif %}</td>
-            <td>{% if obj.cacl2_ph %} {{ obj.cacl2_ph }} {% endif %}</td>
-            <td>{% if obj.cacl2_ph %} {{ obj.cacl2_ph }} {% endif %}</td>
-            <td>{% if obj.dtpa_copper %} {{ obj.dtpa_copper }} {% endif %}</td>
-            <td>{% if obj.dtpa_iron %} {{ obj.dtpa_iron }} {% endif %}</td>
-            <td>{% if obj.dtpa_manganese %} {{ obj.dtpa_manganese }} {% endif %}</td>
-            <td>{% if obj.dtpa_zinc %} {{ obj.dtpa_zinc }} {% endif %}</td>
-            <td>{% if obj.exc_aluminium %} {{ obj.exc_aluminium }} {% endif %}</td>
-            <td>{% if obj.exc_calcium %} {{ obj.exc_calcium }} {% endif %}</td>
-            <td>{% if obj.exc_magnesium %} {{ obj.exc_magnesium }} {% endif %}</td>
-            <td>{% if obj.exc_potassium %} {{ obj.exc_potassium }} {% endif %}</td>
-            <td>{% if obj.exc_sodium %} {{ obj.exc_sodium }} {% endif %}</td>
-            <td>{% if obj.boron_hot_cacl2 %} {{ obj.boron_hot_cacl2 }} {% endif %}</td>
-            <td>{% if obj.total_nitrogen %} {{ obj.total_nitrogen }} {% endif %}</td>
-            <td>{% if obj.total_carbon %} {{ obj.total_carbon }} {% endif %}</td>
+            <td>{{ analysis.bpa_id }}</td>
+            <td>{{ analysis.depth }}</td>
+            <td>{% if analysis.moisture %} {{ analysis.moisture }} {% endif %}</td>
+            <td>{{ analysis.colour }}</td>
+            <td>{{ analysis.gravel }}</td>
+            <td>{{ analysis.texture }}</td>
+            <td>{% if analysis.course_sand %} {{ analysis.course_sand }} {% endif %}</td>
+            <td>{% if analysis.fine_sand %} {{ analysis.fine_sand }} {% endif %}</td>
+            <td>{% if analysis.sand %} {{ analysis.sand }} {% endif %}</td>
+            <td>{% if analysis.silt %} {{ analysis.silt }} {% endif %}</td>
+            <td>{% if analysis.clay %} {{ analysis.clay }} {% endif %}</td>
+            <td>{% if analysis.ammonium_nitrogen %} {{ analysis.ammonium_nitrogen }} {% endif %}</td>
+            <td>{% if analysis.nitrate_nitrogen %} {{ analysis.nitrate_nitrogen }} {% endif %}</td>
+            <td>{% if analysis.phosphorus_colwell %} {{ analysis.phosphorus_colwell }} {% endif %}</td>
+            <td>{% if analysis.sulphur_colwell %} {{ analysis.sulphur_colwell }} {% endif %}</td>
+            <td>{% if analysis.organic_carbon %} {{ analysis.organic_carbon }} {% endif %}</td>
+            <td>{% if analysis.conducivity %} {{ analysis.conductivity }} {% endif %}</td>
+            <td>{% if analysis.cacl2_ph %} {{ analysis.cacl2_ph }} {% endif %}</td>
+            <td>{% if analysis.cacl2_ph %} {{ analysis.cacl2_ph }} {% endif %}</td>
+            <td>{% if analysis.dtpa_copper %} {{ analysis.dtpa_copper }} {% endif %}</td>
+            <td>{% if analysis.dtpa_iron %} {{ analysis.dtpa_iron }} {% endif %}</td>
+            <td>{% if analysis.dtpa_manganese %} {{ analysis.dtpa_manganese }} {% endif %}</td>
+            <td>{% if analysis.dtpa_zinc %} {{ analysis.dtpa_zinc }} {% endif %}</td>
+            <td>{% if analysis.exc_aluminium %} {{ analysis.exc_aluminium }} {% endif %}</td>
+            <td>{% if analysis.exc_calcium %} {{ analysis.exc_calcium }} {% endif %}</td>
+            <td>{% if analysis.exc_magnesium %} {{ analysis.exc_magnesium }} {% endif %}</td>
+            <td>{% if analysis.exc_potassium %} {{ analysis.exc_potassium }} {% endif %}</td>
+            <td>{% if analysis.exc_sodium %} {{ analysis.exc_sodium }} {% endif %}</td>
+            <td>{% if analysis.boron_hot_cacl2 %} {{ analysis.boron_hot_cacl2 }} {% endif %}</td>
+            <td>{% if analysis.total_nitrogen %} {{ analysis.total_nitrogen }} {% endif %}</td>
+            <td>{% if analysis.total_carbon %} {{ analysis.total_carbon }} {% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>
