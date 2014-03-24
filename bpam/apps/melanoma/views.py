@@ -1,20 +1,25 @@
 from django.views.generic import ListView
 from django.shortcuts import render
 
-from apps.melanoma.models import MelanomaSequenceFile
+from apps.melanoma.models import MelanomaSequenceFile, Array
 
 
 class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
 
-    def get_queryset(self):
-        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
-                                                           'url_verification', 'md5')
 
-    def get_context_data(self, **kwargs):
-        context = super(MelanomaSequenceFileListView, self).get_context_data(**kwargs)
-        context['catalog'] = 'melanoma'
-        return context
+    # def get_queryset(self):
+    #     return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
+    #                                                        'url_verification', 'md5')
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super(MelanomaSequenceFileListView, self).get_context_data(**kwargs)
+    #     context['catalog'] = 'melanoma'
+    #     return context
+
+
+class ArrayListView(ListView):
+    model = Array
 
 
 def search_view(request, term):
