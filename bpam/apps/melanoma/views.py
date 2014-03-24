@@ -20,6 +20,7 @@ class MelanomaSequenceFileListView(ListView):
 
 class ArrayListView(ListView):
     model = Array
+    context_object_name = 'arrays'
 
 
 def search_view(request, term):

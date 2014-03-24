@@ -18,15 +18,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for obj in object_list %}
+        {% for array in arrays %}
             <tr>
-                <td>{{ obj.bpa_id }}</td>
-                <td>{{ obj.array_id }}</td>
-                <td>{{ obj.batch_number }}</td>
-                <td>{{ obj.well_id }}</td>
-                <td>{{ obj.mia_id }}</td>
-                <td>{{ obj.call_rate }}</td>
-                <td>{{ obj.gender }}</td>
+                <td>{{ array.bpa_id }}</td>
+                <td>{{ array.array_id }}</td>
+                <td>{{ array.batch_number }}</td>
+                <td>{{ array.well_id }}</td>
+                <td>{{ array.mia_id }}</td>
+                <td>{{ array.call_rate }}</td>
+                <td>{{ array.gender }}</td>
             </tr>
         {% endfor %}
         </tbody>
