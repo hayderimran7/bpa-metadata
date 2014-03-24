@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}All Chemical Analysis {% endblock %}
+
+{% block content %}
+
+    <h3>Chemical Analysis</h3>
+
+    {% include "base_contextual/chemicalanalysis_table.html" %}
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'chemicalanalysis' %}"/>
+    </form>
+
+{% endblock %}
