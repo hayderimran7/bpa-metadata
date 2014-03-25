@@ -7,7 +7,7 @@ from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
 
-BPA_VERSION = '1.0.7'
+BPA_VERSION = '1.0.10'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -218,7 +218,6 @@ INSTALLED_APPS = (
     'tastypie',
     'explorer',
     'leaflet',
-    # 'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging
