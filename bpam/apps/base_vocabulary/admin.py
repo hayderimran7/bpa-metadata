@@ -1,6 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
-from suit.admin import SortableModelAdmin, AutosizedTextarea
+from suit.admin import SortableModelAdmin
+from suit.widgets import AutosizedTextarea
 from django import forms
 
 from models import (AustralianSoilClassification, FAOSoilClassification, DrainageClassification, SoilTexture,
