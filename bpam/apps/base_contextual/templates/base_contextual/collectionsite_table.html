@@ -1,0 +1,23 @@
+<table id="sequence-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Location Name</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Elevation</th>
+        <th>Current Land Use</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for site in sites %}
+        <tr>
+            <td>{% if site.location_name %}
+                <a href="{% url 'collectionsitedetail' site.pk %}">{{ site.location_name }}</a> {% endif %}</td>
+            <td>{{ site.lat }}</td>
+            <td>{{ site.lon }}</td>
+            <td>{% if site.elevation %} {{ site.elevation }} {% endif %}</td>
+            <td>{% if site.current_land_use %} {{ site.current_land_use }} {% endif %} </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

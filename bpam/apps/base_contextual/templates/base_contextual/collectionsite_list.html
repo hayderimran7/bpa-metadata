@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Contextual Collection Sites {% endblock %}
+
+{% block content %}
+
+    <h3>Collection Sites</h3>
+
+    {% include "base_contextual/collectionsite_table.html" %}
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'collectionsites' %}"/>
+    </form>
+
+{% endblock %}

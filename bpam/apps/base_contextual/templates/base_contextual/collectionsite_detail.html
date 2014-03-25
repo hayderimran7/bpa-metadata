@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Contextual Site Detail {% endblock %}
+
+{% block content %}
+
+    <h3>BASE Collection Site {{ collectionsite.location_name }}</h3>
+    <table id="key-vals" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, value in collectionsite.get_fields %}
+            <tr>
+                <td> {{ key }} </td>
+                <td> {{ value }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

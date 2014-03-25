@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.contrib.gis.geos import Point
-
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID, DebugNote
@@ -103,6 +102,9 @@ class CollectionSite(DebugNote):
 
     def __unicode__(self):
         return u','.join(str(s) for s in (self.location_name, self.lat, self.lon,) if s)
+
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in CollectionSite._meta.fields]
 
     class Meta:
         # app_label = 'base'
