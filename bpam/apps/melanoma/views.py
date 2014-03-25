@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.shortcuts import render
 
 from apps.melanoma.models import MelanomaSequenceFile, Array
