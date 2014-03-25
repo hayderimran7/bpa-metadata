@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 {% load bootstrap3 %}
 {% load commontags %}
+{% load leaflet_tags %}
+
 <html>
 <head>
     <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8"/>
+
+    {% leaflet_js %}
+    {% leaflet_css %}
     {% bootstrap_css %}
+
     <style>
         .content-div {
             padding-left: 1em;
@@ -21,7 +27,19 @@
             text-align: right;
             padding-right: 2em;
         }
+
+        .leaflet-container {
+            /* all maps */
+            width: 800px;
+            height: 500px;
+        }
+
+        #specialbigmap {
+            height: 800px;
+        }
+
     </style>
+
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
@@ -64,6 +82,7 @@
 {% bootstrap_javascript jquery=True %}
 {% load staticfiles %}
 <script src="{% static "bpam/base.js" %}"></script>
+
 
 </body>
 </html>

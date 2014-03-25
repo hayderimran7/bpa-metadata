@@ -48,6 +48,12 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-24.0, 133.0),
+    'DEFAULT_ZOOM': 5,
+    'ATTRIBUTION_PREFIX': ''
+}
+
 SUIT_CONFIG = {
     'SHOW_REQUIRED_ASTERISK': True,
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
