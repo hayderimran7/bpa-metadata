@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from django.db import models
 from django.contrib.gis.geos import Point
 from django.utils.translation import ugettext_lazy as _
@@ -105,6 +106,13 @@ class CollectionSite(DebugNote):
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in CollectionSite._meta.fields]
+
+    @classmethod
+    def get_json_postitions(cls):
+        """
+        List of jsonified positions
+        """
+        return json.dumps([(site.lat, site.lon) for site in CollectionSite.objects.all()])
 
     class Meta:
         # app_label = 'base'

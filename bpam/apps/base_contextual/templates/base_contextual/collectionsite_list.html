@@ -1,8 +1,20 @@
 {% extends "base.html" %}
+{% load leaflet_tags %}
 
 {% block title %}BASE Contextual Collection Sites {% endblock %}
 
 {% block content %}
+
+    <script type="text/javascript">
+        function map_init_basic(map, options) {
+            var positions = {{ positions }};
+            for (i = 0; i < positions.length; i++) {
+                var latlng = L.latLng(positions[i]);
+                L.marker(latlng).addTo(map);
+            }
+        }
+    </script>
+    {% leaflet_map "site_map" callback="window.map_init_basic" %}
 
     <h3>Collection Sites</h3>
 
