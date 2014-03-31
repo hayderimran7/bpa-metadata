@@ -58,14 +58,11 @@ def get_data(file_name):
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
                   ('lat', 'lat (-)', ingest_utils.get_clean_float),
                   ('lon', 'lon', ingest_utils.get_clean_float),
-                  ('upper_depth', 'Upper Depth', None),
-                  ('lower_depth', 'Lower depth', None),
+                  ('depth', 'Depth', None),
                   ('horizon_classification', 'Horizon controlled vocab (1)', None),
-                  ('note', 'Notes', None),
                   ('description', 'Description', None),
                   ('current_land_use', 'Current land-use controlled vocab (2)', None),
                   ('general_ecological_zone', 'General Ecological Zone controlled vocab (3)', None),
-                  ('vegetation_type_descriptive', 'Vegetation Type (descriptive)', None),
                   ('vegetation_type_controlled_vocab', 'Vegetation Type Controlled vocab (4)', None),
                   ('vegetation_total_cover', 'Vegetation Total cover (%)', None),
                   ('vegetation_dominant_trees', 'Vegetation Dom. Trees (%)', None),
@@ -73,7 +70,6 @@ def get_data(file_name):
                   ('slope', 'Slope (%)', None),
                   ('slope_aspect', u'Slope Aspect (Direction or degrees; e.g., NW or 315°)', None),
                   ('profile_position', 'Profile Position controlled vocab (5)', None),
-                  ('other_comments', 'Other comments', None),
                   ('australian_soil_classification', 'Australian Soil Classification controlled vocab (6)', None),
                   ('fao', 'FAO soil classification controlled vocab (7)', None),
                   # historic data
@@ -122,6 +118,8 @@ def get_data(file_name):
                   ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', ingest_utils.get_clean_float),
                   ('total_nitrogen', 'Total Nitrogen', ingest_utils.get_clean_float),
                   ('total_carbon', 'Total Carbon', ingest_utils.get_clean_float),
+                  ('methodological_notes', 'Methodological notes', None),
+                  ('other_comments', 'Other comments', None),
     ]
 
     wrapper = ExcelWrapper(field_spec,
@@ -255,10 +253,7 @@ def get_site(entry):
     site.elevation = entry.elevation
     site.date_sampled = entry.date_sampled
     site.location_name = entry.description
-    site.note = entry.note + '\n' + entry.other_comments
-    site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
-    site.vegetation_type_descriptive = entry.vegetation_type_descriptive
     site.vegetation_total_cover = entry.vegetation_total_cover
     site.vegetation_dominant_trees = entry.vegetation_dominant_trees
 
@@ -288,6 +283,12 @@ def get_site(entry):
     site.fire_intensity = entry.fire_intensity
     site.flooding = entry.flooding
     site.extreme_events = entry.extreme_events
+
+    # notes
+    site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+    site.methodological_notes = entry.methodological_notes
+    site.other_comments = entry.other_comments
+
     site.save()
 
     return site
@@ -306,8 +307,7 @@ def add_samples(data):
         # always update, if the sample id is repeated more than once in the document, the last one wins
         sample.bpa_id = bpa_id
         sample.site = get_site(e)
-        sample.upper_depth = e.upper_depth
-        sample.lower_depth = e.lower_depth
+        sample.depth = e.depth
 
         # horizons
         horizons = get_horizon_classifications(e.horizon_classification)
@@ -330,7 +330,7 @@ def add_chemical_analysis(data):
 
         analysis, created = ChemicalAnalysis.objects.get_or_create(bpa_id=bpa_id)
         # structure
-        analysis.depth = e.upper_depth
+        analysis.depth = e.depth
         analysis.moisture = e.soil_moisture
         analysis.colour = get_soil_colour(e)
         analysis.gravel = e.gravel

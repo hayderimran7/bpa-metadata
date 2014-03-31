@@ -39,7 +39,6 @@ class CollectionSite(DebugNote):
                                                      verbose_name=_('FAO Soil Type Classification'),
                                                      null=True)
 
-    vegetation_type_descriptive = models.CharField(_('Vegetation Description'), max_length=200, blank=True)
     vegetation_total_cover = models.CharField(_('Vegetation Total Cover'), max_length=200,
                                               blank=True)  # free text in column
     vegetation_dominant_trees = models.CharField(_('Vegetation Dominant Trees'), max_length=1000, blank=True)
@@ -95,7 +94,7 @@ class CollectionSite(DebugNote):
     agrochemical_additions = models.CharField(_('Agrochemical Additions'), max_length=300, blank=True, null=True)
     tillage = models.ForeignKey(TillageType, blank=True, null=True)
 
-    note = models.TextField(blank=True, null=True)
+    other_comments = models.TextField(_('Comments'), blank=True, null=True)
 
     @property
     def geom(self):
@@ -190,16 +189,15 @@ class CollectionSample(DebugNote):
                                                 null=True,
                                                 related_name='two',
                                                 verbose_name=_('Horizon Classification Two'))
-    upper_depth = models.CharField(_('Soil Upper Depth'), max_length=20, blank=True)
-    lower_depth = models.CharField(_('Soil Lower Depth'), max_length=20, blank=True)
+    depth = models.CharField(_('Soil Depth'), max_length=20, blank=True)
+    methodological_notes = models.TextField(_('Methodological Notes'), blank=True, null=True)
 
     def __unicode__(self):
         return u"{0} {1}".format(
             self.bpa_id,
             self.horizon_classification1,
             self.horizon_classification2,
-            self.upper_depth,
-            self.lower_depth)
+            self.depth)
 
     class Meta:
         verbose_name_plural = _('Collection Sample')

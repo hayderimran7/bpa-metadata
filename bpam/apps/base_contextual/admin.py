@@ -18,6 +18,7 @@ class CollectionSampleAdmin(admin.ModelAdmin):
                 'horizon_classification1': LinkedSelect,
                 'horizon_classification2': LinkedSelect,
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'methodological_notes': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
             }
 
     form = SampleForm
@@ -30,15 +31,15 @@ class CollectionSampleAdmin(admin.ModelAdmin):
               'site',
               'horizon_classification1',
               'horizon_classification2',
-              'upper_depth',
-              'lower_depth',
+              'depth',
+              'methodological_notes'
           )}),
         ('Notes', {'fields': ('debug_note', )}),
     ]
     list_select_related = True
-    search_fields = ('horizon_classification1', 'horizon_classification2',)
-    list_filter = ('bpa_id', )
-    list_display = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'upper_depth', 'lower_depth',)
+    search_fields = ('horizon_classification1', 'horizon_classification2', 'methodological_notes')
+    list_filter = ('bpa_id', 'site', 'depth', )
+    list_display = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth',)
 
 
 admin.site.register(CollectionSample, CollectionSampleAdmin)
@@ -63,7 +64,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
         suit_classes = 'suit-tab suit-tab-samples'
         model = CollectionSample
         form = CollectionSampleInlineForm
-        fields = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'upper_depth', 'lower_depth')
+        fields = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth')
         extra = 0
 
     class CollectionForm(forms.ModelForm):
@@ -71,9 +72,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
             model = CollectionSite
             widgets = {
                 'location_name': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'vegetation_type_descriptive': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'vegetation_dominant_trees': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'slope': EnclosedInput(append='%'),
                 'fire_history': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
@@ -96,6 +95,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
                 'drainage_classification': LinkedSelect,
                 'tillage': LinkedSelect,
                 'agrochemical_additions': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                'other_comments': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
             }
 
     form = CollectionForm
@@ -129,7 +129,6 @@ class CollectionSiteAdmin(admin.ModelAdmin):
           'fields': (
               'vegetation_type',
               'general_ecological_zone',
-              'vegetation_type_descriptive',
               'vegetation_total_cover',
               'vegetation_dominant_trees',
           )}),
@@ -147,6 +146,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'crop_rotation_5',
               'tillage',
               'agrochemical_additions',
+              'other_comments',
           )}),
         (None,  # 'Context',
          {'classes': ('suit-tab suit-tab-context',),
@@ -168,13 +168,15 @@ class CollectionSiteAdmin(admin.ModelAdmin):
           )}),
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
-          'fields': ('note', 'debug_note', )})
+          'fields': (
+              'debug_note',
+          )})
     ]
 
     list_select_related = True
-    search_fields = ('location_name', 'note', 'vegetation_type_descriptive', 'vegetation_dominant_trees')
+    search_fields = ('location_name', 'other_comments', 'vegetation_type_descriptive', 'vegetation_dominant_trees')
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
-                   'vegetation_type_descriptive', 'vegetation_dominant_trees')
+                   'vegetation_dominant_trees')
     list_display = ('location_name', 'current_land_use', 'vegetation_type', 'lat', 'lon', 'elevation')
 
 
