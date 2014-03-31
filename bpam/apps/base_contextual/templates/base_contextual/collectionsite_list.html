@@ -8,7 +8,7 @@
     <script type="text/javascript">
         function map_init_basic(map, options) {
             var positions = {{ positions }};
-            for (i = 0; i < positions.length; i++) {
+            for (var i = 0; i < positions.length; i++) {
                 var latlng = L.latLng(positions[i]);
                 L.marker(latlng).addTo(map);
             }
