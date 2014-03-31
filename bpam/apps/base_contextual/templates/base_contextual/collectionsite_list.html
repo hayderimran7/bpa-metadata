@@ -12,7 +12,6 @@
                 var latlng = L.latLng(positions[i]);
                 L.marker(latlng).addTo(map);
             }
-            map.setZoom(4);
         }
     </script>
     {% leaflet_map "site_map" callback="window.map_init_basic" %}
