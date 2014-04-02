@@ -11,10 +11,12 @@
     <tbody>
     {% for sample in samples %}
         <tr>
-            <td>{{ sample.bpa_id }}</td>
+            <td>
+                <a href="{% url 'basecontextual:sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
+            </td>
             <td>
                 {% if sample.site %}
-                    <a href="{% url 'collectionsitedetail' sample.site.pk %}">{{ sample.site.get_location_name }}</a>
+                    <a href="{% url 'basecontextual:collectionsitedetail' sample.site.pk %}">{{ sample.site.get_location_name }}</a>
                 {% endif %}
             </td>
             <td>{{ sample.get_horizon_description }} </td>

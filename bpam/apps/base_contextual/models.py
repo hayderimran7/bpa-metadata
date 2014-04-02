@@ -209,7 +209,6 @@ class CollectionSample(DebugNote):
                 desc.append(c.horizon)
         return u",".join(desc)
 
-
     def __unicode__(self):
         return u"{0} {1}".format(
             self.bpa_id,
@@ -217,8 +216,10 @@ class CollectionSample(DebugNote):
             self.horizon_classification2,
             self.depth)
 
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in CollectionSample._meta.fields]
+
+
     class Meta:
-        verbose_name_plural = _('Collection Sample')
-
-
+        verbose_name_plural = _('Collection Samples')
 

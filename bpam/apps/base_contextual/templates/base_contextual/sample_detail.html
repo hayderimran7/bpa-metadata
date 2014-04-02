@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <h3>BASE Collection Sample Detail for sample {{ collectionsite.bpa_id }}</h3>
+    <h3>BASE Collection Sample Detail for sample {{ collectionsample.bpa_id }}</h3>
 
     <h3>All Data</h3>
     <table id="key-vals" class="table table-striped">
@@ -16,7 +16,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for key, value in sample.get_fields %}
+        {% for key, value in collectionsample.get_fields %}
             <tr>
                 <td> {{ key }} </td>
                 <td> {{ value }} </td>

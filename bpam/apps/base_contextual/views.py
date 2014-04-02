@@ -4,7 +4,7 @@ from .models import ChemicalAnalysis, CollectionSite, CollectionSample
 
 
 class LandingView(TemplateView):
-    template_name = 'base_contextual/landing.html'
+    template_name = 'base_contextual/index.html'
 
 
 class ChemicalAnalysisListView(ListView):

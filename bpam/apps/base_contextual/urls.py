@@ -7,7 +7,7 @@ urlpatterns = patterns(
     url(
         regex=r'^$',
         view=views.LandingView.as_view(),
-        name='contextuallanding'),
+        name='index'),
     url(
         regex=r'^chemical',
         view=views.ChemicalAnalysisListView.as_view(),
@@ -23,7 +23,7 @@ urlpatterns = patterns(
     url(
         regex=r'^sample/(?P<pk>\d+)/$',
         view=views.SampleDetailView.as_view(),
-        name='samplesdetail'),
+        name='sampledetail'),
     url(
         regex=r'^samples',
         view=views.SampleListView.as_view(),

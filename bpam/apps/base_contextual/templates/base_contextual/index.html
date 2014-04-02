@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Contextual Data {% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h2>BASE Contextual Data</h2>
+
+        <div class="list-group">
+            <a class="list-group-item" href="{% url 'basecontextual:samples' %}">Samples</a>
+            <a class="list-group-item" href="{% url 'basecontextual:collectionsites' %}">Sites</a>
+            <a class="list-group-item" href="{% url 'basecontextual:chemicalanalysis' %}">Chemical Analysis</a>
+        </div>
+    </div>
+{% endblock %}
