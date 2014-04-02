@@ -96,6 +96,14 @@ class CollectionSite(DebugNote):
 
     other_comments = models.TextField(_('Comments'), blank=True, null=True)
 
+    def get_location_name(self):
+        """
+        Get location name or lon, lat, no location name is available
+        """
+        if self.location_name:
+            return self.location_name
+        return u'{0}, {1}'.format(self.lon, self.lat)
+
     @property
     def geom(self):
         return Point(self.lon, self.lat, srid=4326)
@@ -163,7 +171,6 @@ class ChemicalAnalysis(models.Model):
 
     total_nitrogen = models.FloatField(_('Total Nitrogen'), blank=True, null=True)
     total_carbon = models.FloatField(_('Total Carbon'), blank=True, null=True)
-
 
     def __unicode__(self):
         return u"Chemical Analysis for {0}".format(self.bpa_id)

@@ -1,0 +1,26 @@
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Collection Site</th>
+        <th>Horizon Classifications</th>
+        <th>Depth</th>
+        <th>Methodological Notes</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+        <tr>
+            <td>{{ sample.bpa_id }}</td>
+            <td>
+                {% if sample.site %}
+                    <a href="{% url 'collectionsitedetail' sample.site.pk %}">{{ sample.site.get_location_name }}</a>
+                {% endif %}
+            </td>
+            <td>{{ sample.get_horizon_description }} </td>
+            <td>{{ sample.depth }}</td>
+            <td>{{ sample.methodological_notes }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

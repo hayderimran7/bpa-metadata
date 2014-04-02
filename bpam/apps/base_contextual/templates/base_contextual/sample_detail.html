@@ -5,17 +5,7 @@
 
 {% block content %}
 
-    <h3>BASE Collection Site {{ collectionsite.location_name }}</h3>
-
-
-    <script type="text/javascript">
-        function map_init_basic(map, options) {
-            var latlng = L.latLng({{ collectionsite.lat }}, {{ collectionsite.lon }});
-            L.marker(latlng).addTo(map);
-            map.panTo(latlng);
-        }
-    </script>
-    {% leaflet_map "site_map" callback="window.map_init_basic" %}
+    <h3>BASE Collection Sample Detail for sample {{ collectionsite.bpa_id }}</h3>
 
     <h3>All Data</h3>
     <table id="key-vals" class="table table-striped">
@@ -26,7 +16,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for key, value in collectionsite.get_fields %}
+        {% for key, value in sample.get_fields %}
             <tr>
                 <td> {{ key }} </td>
                 <td> {{ value }} </td>
@@ -34,5 +24,6 @@
         {% endfor %}
         </tbody>
     </table>
+
 {% endblock %}
 
