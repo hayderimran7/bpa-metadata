@@ -202,6 +202,7 @@ INSTALLED_APPS = (
     'apps.bpaauth',
     'apps.common',
     # base suit
+    'apps.base',
     'apps.base_metagenomics',
     'apps.base_vocabulary',
     'apps.base_contextual',
