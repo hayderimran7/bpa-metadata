@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Contextual Data {% endblock %}
+
+{% block content %}
+
+    <ul>
+        <li><a href="{% url 'collectionsites' %}">All Sites</a></li>
+        <li><a href="{% url 'chemicalanalysis' %}">All Chemical Analysis</a></li>
+    </ul>
+
+{% endblock %}

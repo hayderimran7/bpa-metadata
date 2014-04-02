@@ -5,6 +5,10 @@ from . import views
 urlpatterns = patterns(
     '',
     url(
+        regex=r'^$',
+        view=views.LandingView.as_view(),
+        name='contextuallanding'),
+    url(
         regex=r'^chemical',
         view=views.ChemicalAnalysisListView.as_view(),
         name='chemicalanalysis'),
