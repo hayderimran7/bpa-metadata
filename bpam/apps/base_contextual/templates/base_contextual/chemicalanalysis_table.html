@@ -38,7 +38,9 @@
     <tbody>
     {% for analysis in reports %}
         <tr>
-            <td>{{ analysis.bpa_id }}</td>
+            <td>
+                <a href="{% url 'basecontextual:sampledetail' analysis.bpa_id %}">{{ analysis.bpa_id }}</a>
+            </td>
             <td>{{ analysis.depth }}</td>
             <td>{% if analysis.moisture %} {{ analysis.moisture }} {% endif %}</td>
             <td>{{ analysis.colour }}</td>
