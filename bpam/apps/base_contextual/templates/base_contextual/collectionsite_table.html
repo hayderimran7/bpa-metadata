@@ -1,5 +1,5 @@
-<table id="sequence-list" class="table table-striped">
-    <thead>
+<table id="sitelist" class="table table-striped tablesorter">
+<thead>
     <tr>
         <th>Location Name</th>
         <th>Latitude</th>
@@ -21,3 +21,11 @@
     {% endfor %}
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sitelist").tablesorter();
+        });
+    });
+</script>
