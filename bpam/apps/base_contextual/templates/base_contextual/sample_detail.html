@@ -5,27 +5,37 @@
 
 {% block content %}
 
-    <h3>BASE Collection Sample Detail for sample {{ collectionsample.bpa_id }}</h3>
+    <div class="panel panel-default">
+        <div class="panel-heading">BASE Collection Sample Detail for sample {{ collectionsample.bpa_id }}</div>
 
-
-
-    <h3>Raw Data</h3>
-    <table id="key-vals" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Key</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for key, value in collectionsample.get_fields %}
+        <table id="nice" class="table">
+            <tbody>
             <tr>
-                <td> {{ key }} </td>
-                <td> {{ value }} </td>
+                <td><b>Site</b></td>
+                <td>
+                    <a href="{% url 'basecontextual:collectionsitedetail' collectionsample.site.pk %}">{{ collectionsample.site.get_location_name }}</a>
+                </td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <tr>
+                <td><b>Horizon Classification 1</b></td>
+                <td>{{ collectionsample.horizon_classification1 }}</td>
+            </tr>
+            <tr>
+                <td><b>Horizon Classification 2</b></td>
+                <td>{{ collectionsample.horizon_classification2 }}</td>
+            </tr>
+            <tr>
+                <td><b>Depth</b></td>
+                <td>{{ collectionsample.depth }}</td>
+            </tr>
+            <tr>
+                <td><b>Methodological Notes</b></td>
+                <td>{{ collectionsample.methodological_notes }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
 
 {% endblock %}
 
