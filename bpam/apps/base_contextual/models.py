@@ -192,6 +192,17 @@ class CollectionSample(DebugNote):
     depth = models.CharField(_('Soil Depth'), max_length=20, blank=True)
     methodological_notes = models.TextField(_('Methodological Notes'), blank=True, null=True)
 
+    def get_horizon_description(self):
+        """
+        String combing horizon classifications
+        """
+        desc = []
+        for c in (self.horizon_classification1, self.horizon_classification2):
+            if c is not None:
+                desc.append(c.horizon)
+        return u",".join(desc)
+
+
     def __unicode__(self):
         return u"{0} {1}".format(
             self.bpa_id,
