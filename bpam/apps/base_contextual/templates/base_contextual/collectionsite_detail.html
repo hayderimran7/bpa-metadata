@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <h3>BASE Collection Site {{ collectionsite.location_name }}</h3>
+    <h3>BASE Collection Site {{ collectionsite.get_location_name }}</h3>
 
 
     <script type="text/javascript">
@@ -17,24 +17,129 @@
     </script>
     {% leaflet_map "site_map" callback="window.map_init_basic" %}
 
+    <br>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">Collection Site {{ collectionsite.get_location_name }} detail</div>
 
-    <h3>Raw Data</h3>
-    <table id="key-vals" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Key</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for key, value in collectionsite.get_fields %}
+        <table id="nice" class="table">
+            <tbody>
             <tr>
-                <td> {{ key }} </td>
-                <td> {{ value }} </td>
+                <td><b>Last Sample Date</b></td>
+                <td>{{ collectionsite.date_sampled }}</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <tr>
+                <td><b>Latitude</b></td>
+                <td>{{ collectionsite.lat }}</td>
+            </tr>
+            <tr>
+                <td><b>Longitude</b></td>
+                <td>{{ collectionsite.lon }}</td>
+            </tr>
+            <tr>
+                <td><b>Elevation</b></td>
+                <td>{{ collectionsite.elevation }}</td>
+            </tr>
+            <tr>
+                <td><b>Current Land Use</b></td>
+                <td>{{ collectionsite.current_land_use }}</td>
+            </tr>
+            <tr>
+                <td><b>General Ecological Zone</b></td>
+                <td>{{ collectionsite.general_ecological_zone }}</td>
+            </tr>
+            <tr>
+                <td><b>Vegetation Type</b></td>
+                <td>{{ collectionsite.vegetation_type.vegetation }}</td>
+            </tr>
+            <tr>
+                <td><b>Australian Soil Type Classification</b></td>
+                <td>{{ collectionsite.soil_type_australian_classification }}</td>
+            </tr>
+            <tr>
+                <td><b>FAO Soil Type Classification</b></td>
+                <td>{{ collectionsite.soil_type_fao_classification }}</td>
+            </tr>
+            <tr>
+                <td><b>Vegetation Total Cover</b></td>
+                <td>{{ collectionsite.vegetation_total_cover }}</td>
+            </tr>
+            <tr>
+                <td><b>Vegetation Dominant Trees</b></td>
+                <td>{{ collectionsite.vegetation_dominant_trees }}</td>
+            </tr>
+            <tr>
+                <td><b>Slope</b></td>
+                <td>{{ collectionsite.slope }}</td>
+            </tr>
+            <tr>
+                <td><b>Slope Aspect</b></td>
+                <td>{{ collectionsite.slope_aspect }}</td>
+            </tr>
+            <tr>
+                <td><b>Profile Position</b></td>
+                <td>{{ collectionsite.profile_position }}</td>
+            </tr>
+            <tr>
+                <td><b>Drainage Classification</b></td>
+                <td>{{ collectionsite.drainage_classification }}</td>
+            </tr>
+            <tr>
+                <td><b>Environment Event</b></td>
+                <td>{{ collectionsite.environment_event }}</td>
+            </tr>
+            <tr>
+                <td><b>Fire History</b></td>
+                <td>{{ collectionsite.fire_history }}</td>
+            </tr>
+            <tr>
+                <td><b>Fire Intensity</b></td>
+                <td>{{ collectionsite.fire_intensity }}</td>
+            </tr>
+            <tr>
+                <td><b>Date since change in land use</b></td>
+                <td>{{ collectionsite.date_since_change_in_land_use }}</td>
+            </tr>
+            <tr>
+                <td><b>Immediate previous land use</b></td>
+                <td>{{ collectionsite.immediate_previous_land_use }}</td>
+            </tr>
+            <tr>
+                <td><b>Crop rotation 1</b></td>
+                <td>{{ collectionsite.crop_rotation_1 }}</td>
+            </tr>
+            <tr>
+                <td><b>Crop rotation 2</b></td>
+                <td>{{ collectionsite.crop_rotation_2 }}</td>
+            </tr>
+            <tr>
+                <td><b>Crop rotation 3</b></td>
+                <td>{{ collectionsite.crop_rotation_3 }}</td>
+            </tr>
+            <tr>
+                <td><b>Crop rotation 4</b></td>
+                <td>{{ collectionsite.crop_rotation_4 }}</td>
+            </tr>
+            <tr>
+                <td><b>Crop rotation 5</b></td>
+                <td>{{ collectionsite.crop_rotation_5 }}</td>
+            </tr>
+            <tr>
+                <td><b>Agrochemical Additions</b></td>
+                <td>{{ collectionsite.agrochemical_additions }}</td>
+            </tr>
+            <tr>
+                <td><b>Tillage</b></td>
+                <td>{{ collectionsite.tillage }}</td>
+            </tr>
+            <tr>
+                <td><b>Comments</b></td>
+                <td>{{ collectionsite.comments }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
 {% endblock %}
 
