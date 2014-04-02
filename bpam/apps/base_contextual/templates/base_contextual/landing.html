@@ -3,11 +3,13 @@
 {% block title %}BASE Contextual Data {% endblock %}
 
 {% block content %}
+    <div class="jumbotron">
+        <h2>BASE Contextual Data</h2>
 
-    <ul>
-        <li><a href="{% url 'collectionsites' %}">All Sites</a></li>
-        <li><a href="{% url 'chemicalanalysis' %}">All Chemical Analysis</a></li>
-        <li><a href="{% url 'samples' %}">All Samples</a></li>
-    </ul>
-
+        <div class="list-group">
+            <a class="list-group-item" href="{% url 'samples' %}">All Samples</a>
+            <a class="list-group-item" href="{% url 'collectionsites' %}">All Sites</a>
+            <a class="list-group-item" href="{% url 'chemicalanalysis' %}">All Chemical Analysis</a>
+        </div>
+    </div>
 {% endblock %}

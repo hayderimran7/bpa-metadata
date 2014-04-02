@@ -1,5 +1,5 @@
-<table id="sample-list" class="table table-striped">
-    <thead>
+<table id="contextsamples" class="table table-striped tablesorter">
+<thead>
     <tr>
         <th>BPA ID</th>
         <th>Collection Site</th>
@@ -24,3 +24,14 @@
     {% endfor %}
     </tbody>
 </table>
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#contextsamples").tablesorter();
+            alert('sdddd');
+        });
+    });
+
+</script>
