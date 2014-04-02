@@ -3,10 +3,14 @@
 
 
 {% block content %}
-    <h3>BASE</h3>
-    <ul>
-        <li><a href="{% url 'contextuallanding' %}">Contextual Data</a></li>
-    </ul>
+    <div class="jumbotron">
+        <h2>BASE Index</h2>
 
+        <div class="list-group">
+            <a class="list-group-item" href="{% url 'basecontextual:index' %}">Contextual Data</a>
+            <a class="list-group-item" href="">Amplicon Data</a>
+            <a class="list-group-item" href="">Metagenomics</a>
+            <a class="list-group-item" href="">454</a>
+        </div>
+    </div>
 {% endblock %}
-
