@@ -235,6 +235,13 @@ LOGGING = {
         }
     },
     'handlers': {
+        'logfile': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': "ingest-logfile",
+            'maxBytes': 50000,
+            'backupCount': 2,
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -246,6 +253,10 @@ LOGGING = {
             'stream': sys.stderr}
     },
     'loggers': {
+        'scripts.ingest_base_contextual': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
