@@ -1,0 +1,16 @@
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+        <tr>
+            <td>{{ sample.bpa_id }}</td>
+            <td>{{ sample.name }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

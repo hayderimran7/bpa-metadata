@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load leaflet_tags %}
+
+{% block title %}BASE Metagenomics Samples {% endblock %}
+
+{% block content %}
+
+    <h3>Samples</h3>
+
+    {% include "base_metagenomics/sample_table.html" %}
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'collectionsites' %}"/>
+    </form>
+
+{% endblock %}

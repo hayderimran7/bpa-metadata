@@ -1,8 +1,7 @@
-from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
 
 from apps.common.models import Sample, SequenceFile, Run, DebugNote
-from django.db import models
 
 
 class MetagenomicsSample(Sample, DebugNote):
@@ -14,7 +13,6 @@ class MetagenomicsSample(Sample, DebugNote):
         return u"{0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Metagenomics Sample")
 
 
@@ -28,7 +26,6 @@ class MetagenomicsRun(Run):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Metagenomics Run")
 
 
@@ -41,7 +38,6 @@ class MetagenomicsSequenceFile(SequenceFile):
     run = models.ForeignKey(MetagenomicsRun, null=True)  # FIXME
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Metagenomics Sequence Files")
 
 
@@ -57,7 +53,6 @@ class PCRPrimer(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("PCR Primers")
 
 
@@ -73,7 +68,6 @@ class TargetGene(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Target Genes")
 
 
@@ -89,7 +83,6 @@ class TargetTaxon(models.Model):
         return u"{0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Target Taxons")
 
 
@@ -112,7 +105,6 @@ class SequenceConstruct(models.Model):
         return u"{0}".format(self.sequence)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Sequence Constructs")
 
 
@@ -140,5 +132,4 @@ class SoilSampleDNA(models.Model):
         return u"Soil DNA Library {0}".format(self.name)
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Soil Sample DNA")
