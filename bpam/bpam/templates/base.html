@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load bootstrap3 %}
+{% bootstrap_javascript jquery=True %}
 {% load commontags %}
 {% load leaflet_tags %}
 
@@ -8,6 +9,10 @@
     <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8"/>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/jquery.tablesorter.min.js"></script>
+
 
     {% leaflet_js %}
     {% leaflet_css %}
@@ -76,10 +81,10 @@
 </div>
 
 <div class="version">
-    <p>bpa-metadata {% bpam_version %}</p>
+    <p>BPA Metadata {% bpam_version %}</p>
 </div>
 
-{% bootstrap_javascript jquery=True %}
+
 {% load staticfiles %}
 <script src="{% static "bpam/base.js" %}"></script>
 
