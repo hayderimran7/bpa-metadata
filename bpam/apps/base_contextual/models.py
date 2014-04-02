@@ -185,7 +185,7 @@ class CollectionSample(DebugNote):
     A sample to collect sample specific info for contextual data.
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'), primary_key=True)
     site = models.ForeignKey(CollectionSite, null=True)  # there may be no site set
 
     horizon_classification1 = models.ForeignKey(HorizonClassification,
