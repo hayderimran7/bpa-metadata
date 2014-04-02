@@ -241,12 +241,18 @@ def get_site(entry):
     Add or get a site
     """
 
+    def get_fixed_lat():
+        if entry.lat > 0:
+            return -1 * entry.lat
+        else:
+            return entry.lat
+
     # only make a site once, the first entry wins
     if entry.lat is None or entry.lon is None:
         logger.warning('Site lat/lon empty, not creating site {0}'.format(entry.description))
         return None
 
-    site, created = CollectionSite.objects.get_or_create(lat=-1 * entry.lat, lon=entry.lon)
+    site, created = CollectionSite.objects.get_or_create(lat=get_fixed_lat(), lon=entry.lon)
     # the first set of site data wins
     # if created:
 
@@ -286,7 +292,6 @@ def get_site(entry):
 
     # notes
     site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-    site.methodological_notes = entry.methodological_notes
     site.other_comments = entry.other_comments
 
     site.save()
@@ -315,6 +320,7 @@ def add_samples(data):
         sample.horizon_classification2 = horizons[1]
 
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
+        sample.methodological_notes = e.methodological_notes
         sample.save()
 
 
