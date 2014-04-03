@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_map.html" %}
 {% load leaflet_tags %}
 {% block title %}BASE Contextual Site Detail {% endblock %}
 
@@ -7,15 +7,14 @@
 
     <h3>BASE Collection Site {{ collectionsite.get_location_name }}</h3>
 
-
     <script type="text/javascript">
-        function map_init_basic(map, options) {
-            var latlng = L.latLng({{ collectionsite.lat }}, {{ collectionsite.lon }});
-            L.marker(latlng).addTo(map);
-            map.panTo(latlng);
-        }
+      var collectionsite = {
+      lat: {{ collectionsite.lat }},
+      lon: {{ collectionsite.lon }}
+      };
     </script>
-    {% leaflet_map "site_map" callback="window.map_init_basic" %}
+
+    {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
 
     <br>
 

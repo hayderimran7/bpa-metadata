@@ -1,0 +1,13 @@
+.content-div {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.version {
+    border-top: 1px solid #CCC;
+}
+
+.version p {
+    text-align: right;
+    padding-right: 2em;
+}
