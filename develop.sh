@@ -17,7 +17,8 @@ AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
-PIP_OPTS="--download-cache ~/.pip/cache --upgrade --process-dependency-links"
+PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"
+PIP5_OPTS="${PIP_OPTS} --process-dependency-links --allow-all-external"
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
 PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
@@ -180,7 +181,8 @@ install_bpa_dev() {
            PATH=${PATH}:/usr/pgsql-9.3/bin
            source ${VIRTUALENV}/bin/activate
            cd ${CONFIG_DIR}
-           ${PIP} install ${PIP_OPTS} -e .[dev,tests,downloads]
+           ${PIP} install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
+           ${PIP} install ${PIP5_OPTS} -e .[dev,tests,downloads]
            deactivate
         )
 
