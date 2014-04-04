@@ -4,10 +4,16 @@
 {% block title %}BASE Contextual Collection Sites {% endblock %}
 
 {% block content %}
-    {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
+    </div>
+    <div class="col-md-4" id="sitelist-container">
+      <h3>Collection Sites</h3>
 
-    <h3>Collection Sites</h3>
-
-    {% include "base_contextual/collectionsite_table.html" %}
-
+      {% include "base_contextual/collectionsite_table.html" %}
+    </div>
+  </div>
+</div>
 {% endblock %}

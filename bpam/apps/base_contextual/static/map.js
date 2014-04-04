@@ -17,6 +17,20 @@ var BPAM = (function() {
             content.load(href + " table#collectionsite");
           });
         });
+
+      $(window).resize(function() {
+        var targets = $("#site_map, #sitelist-container");
+        var footer = $(".version");
+        var unknown_pad = 12;
+
+        // bootstrap limit for .col-md
+        var stacked = $(window).width() < 980;
+
+        targets.each(function(index, el) {
+          var height = stacked ? "" : $(window).height() - $(el).offset().top - footer.outerHeight() - unknown_pad;
+          $(el).height(height);
+        });
+      }).resize();
     },
     map_init_detail: function(map, options) {
       var latlng = L.latLng(window.collectionsite.lat, window.collectionsite.lon);
