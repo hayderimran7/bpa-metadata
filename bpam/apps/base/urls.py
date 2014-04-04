@@ -9,4 +9,8 @@ urlpatterns = patterns(
         regex=r'^$',
         view=views.BaseView.as_view(),
         name='index'),
+    url(
+        regex=r'^search',
+        view=views.OTUSearchView.as_view(),
+        name='otusearch'),
 )
