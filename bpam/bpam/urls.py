@@ -13,7 +13,7 @@ v1_api.register(MelanomaSequenceFileResource())
 
 urlpatterns = patterns(
     '',
-    url(r'^base$', include('apps.base.urls', namespace='base')),
+    url(r'^base/?', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/', include('apps.base_metagenomics.urls', namespace='basemetagenomics')),
     url(r'^base/contextual/', include('apps.base_contextual.urls', namespace='basecontextual')),
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
