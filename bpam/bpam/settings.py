@@ -51,7 +51,8 @@ AUTH_USER_MODEL = 'bpaauth.BPAUser'
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-25.27, 133.775),
     'DEFAULT_ZOOM': 4,
-    'ATTRIBUTION_PREFIX': ''
+    'ATTRIBUTION_PREFIX': '',
+    'TILES': 'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
 }
 
 SUIT_CONFIG = {
