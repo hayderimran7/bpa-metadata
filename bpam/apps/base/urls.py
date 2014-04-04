@@ -6,7 +6,7 @@ from . import views
 urlpatterns = patterns(
     '',
     url(
-        regex=r'',
+        regex=r'^$',
         view=views.BaseView.as_view(),
-        name='baselanding'),
+        name='index'),
 )
