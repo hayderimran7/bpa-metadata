@@ -15,7 +15,8 @@
 
 .leaflet-popup-content .site-popup-table {
     max-height: 300px;
-    overflow: scroll;
+    overflow-x: hide;
+    overflow-y: auto;
 }
 
 
