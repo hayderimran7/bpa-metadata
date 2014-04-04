@@ -12,3 +12,8 @@
     max-height: 300px;
     overflow: scroll;
 }
+
+
+#sitelist .lat, #sitelist .lng {
+    display: none;
+}
