@@ -4,6 +4,26 @@
     height: 500px;
 }
 
+#site_map {
+    width: 100%;
+    height: 400px;
+}
+
 #specialbigmap {
     height: 800px;
+}
+
+.leaflet-popup-content .site-popup-table {
+    max-height: 300px;
+    overflow: scroll;
+}
+
+
+#sitelist .lat, #sitelist .lng {
+    display: none;
+}
+
+#sitelist-container {
+    overflow-y: auto;
+    overflow-x: hide;
 }
