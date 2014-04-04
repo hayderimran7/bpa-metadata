@@ -8,10 +8,10 @@
     <h3>BASE Collection Site {{ collectionsite.get_location_name }}</h3>
 
     <script type="text/javascript">
-      var collectionsite = {
-      lat: {{ collectionsite.lat }},
-      lon: {{ collectionsite.lon }}
-      };
+        var collectionsite = {
+            lat: {{ collectionsite.lat }},
+            lon: {{ collectionsite.lon }}
+        };
     </script>
 
     {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
