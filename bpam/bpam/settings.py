@@ -98,6 +98,7 @@ SUIT_CONFIG = {
         },
         {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
         {'app': 'base_contextual', 'label': 'BASE Contextual', },
+        {'app': 'base_otu', 'label': 'BASE OTU', },
         {'app': 'base_454', 'label': 'BASE 454', },
         '-',
         {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
@@ -208,6 +209,7 @@ INSTALLED_APPS = (
     'apps.base_vocabulary',
     'apps.base_contextual',
     'apps.base_amplicon',
+    'apps.base_otu',
     'apps.base_454',
     # wheat suit
     'apps.wheat_pathogens',

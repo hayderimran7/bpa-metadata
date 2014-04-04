@@ -19,7 +19,6 @@
     overflow-y: auto;
 }
 
-
 #sitelist .lat, #sitelist .lng {
     display: none;
 }
