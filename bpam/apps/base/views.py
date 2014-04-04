@@ -3,3 +3,7 @@ from django.views.generic import TemplateView
 
 class BaseView(TemplateView):
     template_name = 'base/index.html'
+
+
+class OTUSearchView(TemplateView):
+    template_name = 'base/otu_search.html'
