@@ -7,3 +7,8 @@
 #specialbigmap {
     height: 800px;
 }
+
+.leaflet-popup-content .site-popup-table {
+    max-height: 300px;
+    overflow: scroll;
+}

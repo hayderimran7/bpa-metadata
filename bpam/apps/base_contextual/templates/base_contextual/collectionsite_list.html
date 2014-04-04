@@ -4,10 +4,6 @@
 {% block title %}BASE Contextual Collection Sites {% endblock %}
 
 {% block content %}
-    <script>
-      var positions = {{ positions }};
-    </script>
-
     {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
 
     <h3>Collection Sites</h3>
