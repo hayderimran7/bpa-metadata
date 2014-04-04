@@ -1,5 +1,4 @@
-syntax: glob
-^.idea
+syntax:glob
 *.swp
 *~
 *.pyc
@@ -21,3 +20,7 @@ setup.cfg
 .coverage
 htmlcov/
 bpam/static/
+syntax:regexp
+\.idea
+syntax:glob
+
