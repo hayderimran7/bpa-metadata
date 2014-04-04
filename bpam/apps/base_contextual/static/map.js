@@ -30,6 +30,8 @@ var BPAM = (function() {
           var height = stacked ? "" : $(window).height() - $(el).offset().top - footer.outerHeight() - unknown_pad;
           $(el).height(height);
         });
+
+        map.invalidateSize();
       }).resize();
     },
     map_init_detail: function(map, options) {
