@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import OperationalTaxonomicUnit
+from .models import OperationalTaxonomicUnit, SampleOTU
 
 
 class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
@@ -17,3 +17,4 @@ class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OperationalTaxonomicUnit, OperationalTaxonomicUnitAdmin)
+admin.site.register(SampleOTU)

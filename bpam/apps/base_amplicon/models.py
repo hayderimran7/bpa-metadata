@@ -1,10 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from apps.common.models import Sample, SequenceFile, Run, DebugNote, Facility
+from apps.common.models import SequenceFile, Run, Facility, DebugNote
+from apps.base.models import BaseSample
 
 
-class AmpliconSample(Sample, DebugNote):
+class AmpliconSample(BaseSample, DebugNote):
     """
     BASE Amplicon Soil Sample
     """
