@@ -27,3 +27,7 @@
     overflow-y: auto;
     overflow-x: hide;
 }
+
+h3.unstacked {
+    margin-top: 0px;
+}

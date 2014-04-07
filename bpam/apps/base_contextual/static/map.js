@@ -38,6 +38,8 @@ var BPAM = (function() {
                     $(el).height(height);
                 });
 
+                $("h3").toggleClass("unstacked", !stacked);
+
                 map.invalidateSize();
             }).resize();
 
