@@ -4,24 +4,21 @@
 
 
 {% block content %}
+<script type="text/javascript">
+  var collectionsite = [{{ collectionsite.lat }}, {{ collectionsite.lon }}];
+</script>
 
-    <h3>BASE Collection Site {{ collectionsite.get_location_name }}</h3>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
+    </div>
+    <div class="col-md-4" id="sitelist-container">
+      <h3 class="unstacked">BASE Collection Site {{ collectionsite.get_location_name }}</h3>
 
-    <script type="text/javascript">
-        var collectionsite = {
-            lat: {{ collectionsite.lat }},
-            lon: {{ collectionsite.lon }}
-        };
-    </script>
-
-    {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
-
-    <br>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">Collection Site {{ collectionsite.get_location_name }} detail</div>
+      <div id="sitelist-container">
         <table id="collectionsite" class="table">
-            <tbody>
+          <tbody>
             <tr>
                 <td><b>Last Sample Date</b></td>
                 <td>{{ collectionsite.date_sampled }}</td>
@@ -134,10 +131,10 @@
                 <td><b>Comments</b></td>
                 <td>{{ collectionsite.comments }}</td>
             </tr>
-            </tbody>
+          </tbody>
         </table>
+      </div>
     </div>
-
-
+  </div>
+</div>
 {% endblock %}
-
