@@ -3,7 +3,9 @@ var BPAM = (function() {
 
     return {
         map_init_list: function(map, options) {
-            $("#sitelist tbody tr").each(function(index, el) {
+            var markers = {};
+
+            var rows = $("#sitelist tbody tr").each(function(index, el) {
                 var get = function(cls) { return $(el).find("td." + cls).text(); };
                 var marker = L.marker([get("lat"), get("lng")], {
                     title: get("name")
@@ -20,6 +22,7 @@ var BPAM = (function() {
                         ev.popup.update();
                     });
                 });
+                markers[href] = marker;
             });
 
             $(window).resize(function() {
@@ -37,6 +40,48 @@ var BPAM = (function() {
 
                 map.invalidateSize();
             }).resize();
+
+            var searchbox = $("#sitelist-container input[type='search']")
+                .on("change", function(ev) {
+                    refilter($(this).val());
+                });
+            searchbox.next().find("button").click(function() {
+                refilter(searchbox.val())
+            });
+
+            var refilter = function(text) {
+                var bounds = null;
+                var extendBounds = function(latLng) {
+                    if (bounds) {
+                        bounds.extend(latLng);
+                    } else {
+                        bounds = L.latLngBounds([latLng]);
+                    }
+                };
+
+                var total = 0, shown = 0;
+                rows.each(function(index, el) {
+                    var name = $(el).find(".name").text().toLowerCase();
+                    var href = $(el).find("td.name a").attr("href");
+                    var show = name.indexOf(text.toLowerCase()) >= 0;
+                    $(el).toggle(show);
+                    markers[href].setOpacity(show ? 1.0 : 0.0);
+                    total++;
+                    if (show) {
+                        shown++;
+                        extendBounds(markers[href].getLatLng());
+                    }
+                });
+
+                if (shown !== 0) {
+                    map.fitBounds(bounds);
+                }
+
+                $("#search-num-results").toggle(text !== "")
+                    .text(shown == 0 ? "No sites match"
+                          : shown + "/" + total + " sites match");
+                $("#sitelist").toggle(shown !== 0);
+            };
         },
         map_init_detail: function(map, options) {
             var latlng = L.latLng(window.collectionsite.lat, window.collectionsite.lon);
