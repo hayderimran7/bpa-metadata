@@ -1,6 +1,26 @@
 var BPAM = (function() {
     'use strict';
 
+    var make_fluid = function(map) {
+        $(window).resize(function() {
+            var targets = $("#site_map, #sitelist-container");
+            var footer = $(".version");
+            var unknown_pad = 12;
+
+            // bootstrap limit for .col-md
+            var stacked = $(window).width() < 980;
+
+            targets.each(function(index, el) {
+                var height = stacked ? "" : $(window).height() - $(el).offset().top - footer.outerHeight() - unknown_pad;
+                $(el).height(height);
+            });
+
+            $("h3").toggleClass("unstacked", !stacked);
+
+            map.invalidateSize();
+        }).resize();
+    };
+
     return {
         map_init_list: function(map, options) {
             var markers = {};
@@ -31,23 +51,7 @@ var BPAM = (function() {
                 return false;
             });
 
-            $(window).resize(function() {
-                var targets = $("#site_map, #sitelist-container");
-                var footer = $(".version");
-                var unknown_pad = 12;
-
-                // bootstrap limit for .col-md
-                var stacked = $(window).width() < 980;
-
-                targets.each(function(index, el) {
-                    var height = stacked ? "" : $(window).height() - $(el).offset().top - footer.outerHeight() - unknown_pad;
-                    $(el).height(height);
-                });
-
-                $("h3").toggleClass("unstacked", !stacked);
-
-                map.invalidateSize();
-            }).resize();
+            make_fluid(map);
 
             var searchbox = $("#sitelist-container input[type='search']")
                 .on("change", function(ev) {
@@ -92,9 +96,11 @@ var BPAM = (function() {
             };
         },
         map_init_detail: function(map, options) {
-            var latlng = L.latLng(window.collectionsite.lat, window.collectionsite.lon);
+            var latlng = L.latLng(window.collectionsite);
             L.marker(latlng).addTo(map);
             map.panTo(latlng);
+
+            make_fluid(map);
         }
     };
 })();
