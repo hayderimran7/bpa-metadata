@@ -12,9 +12,10 @@ var BPAM = (function() {
                 });
                 var href = $(el).find("td.name a").attr("href");
                 var content = $("<div class='site-popup-table'>Loading...</div>");
+                var header = $("<h3/>").wrapInner($("<a/>").attr("href", href).text(get("name")));
                 marker.addTo(map);
                 marker.bindPopup(content.wrap("<div/>").parent()
-                                 .prepend("<h3>" + get("name") + "</h3>")[0]);
+                                 .prepend(header)[0]);
                 marker.on("popupopen", function(ev) {
                     content.load(href + " table#collectionsite", function() {
                         // after loading content, update popup so it gets the
@@ -23,6 +24,11 @@ var BPAM = (function() {
                     });
                 });
                 markers[href] = marker;
+            });
+
+            rows.find("td.name a").on("click", function(ev) {
+                markers[$(this).attr("href")].openPopup();
+                return false;
             });
 
             $(window).resize(function() {
