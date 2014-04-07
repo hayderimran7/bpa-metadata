@@ -53,14 +53,6 @@ var BPAM = (function() {
 
             make_fluid(map);
 
-            var searchbox = $("#sitelist-container input[type='search']")
-                .on("change", function(ev) {
-                    refilter($(this).val());
-                });
-            searchbox.next().find("button").click(function() {
-                refilter(searchbox.val())
-            });
-
             var refilter = function(text) {
                 var bounds = null;
                 var extendBounds = function(latLng) {
@@ -94,6 +86,18 @@ var BPAM = (function() {
                           : shown + "/" + total + " sites match");
                 $("#sitelist").toggle(shown !== 0);
             };
+
+            var searchbox = $("#sitelist-container input[type='search']")
+                .on("change", function(ev) {
+                    refilter($(this).val());
+                });
+            searchbox.next().find("button").click(function() {
+                refilter(searchbox.val());
+                return false;
+            });
+            if (searchbox.val()) {
+                refilter(searchbox.val());
+            }
         },
         map_init_detail: function(map, options) {
             var latlng = L.latLng(window.collectionsite);
