@@ -77,7 +77,7 @@ usage() {
 
 nuclear() {
     CMD="bpam"
-
+    ${CMD} reset_db --router=default --traceback
     ${CMD} syncdb --traceback --noinput
     ${CMD} migrate --traceback
 
