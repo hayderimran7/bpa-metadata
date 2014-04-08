@@ -13,7 +13,8 @@ class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
             }
 
     form = Form
-    list_display = ('name',)
+    list_display = ('name', 'kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species', )
+    search_fields = ('name', 'kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species', )
 
 
 admin.site.register(OperationalTaxonomicUnit, OperationalTaxonomicUnitAdmin)

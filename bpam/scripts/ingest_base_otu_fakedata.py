@@ -44,21 +44,23 @@ def ensure_data_file_is_available(file_name):
 
 
 def ingest_otu(file_name):
+    logger.info('Ingesting OTUs')
     with open(file_name, 'r') as f:
         for line in f:
             #  split on space then ;
             otu_name, rest = line.split()
-            kingdom, phylum, otu_class, order, family, genus, species = rest.split(';')[:7]
+            kingdom, phylum, otu_class, order, family, genus, species = map(lambda s: s.split('(')[0],
+                                                                            rest.split(';')[:7])
 
             otu, created = OperationalTaxonomicUnit.objects.get_or_create(
                 name=otu_name,
                 kingdom=kingdom,
-                phylum=phylum,
-                otu_class=otu_class,
-                order=order,
-                family=family,
-                genus=genus,
-                species=species)
+                phylum='p_' + phylum,
+                otu_class='c_' + otu_class,
+                order='o_' + order,
+                family='f_' + family,
+                genus='g_' + genus,
+                species='s_' + species)
 
 
 def run(file_name=DEFAULT_OTU_FILE):
