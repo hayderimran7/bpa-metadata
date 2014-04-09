@@ -1,12 +1,44 @@
-from apps.base_contextual.models import CollectionSample
+from apps.base_contextual.models import CollectionSample, ChemicalAnalysis
 import logging
 logger = logging.getLogger("rainbow")
+
 
 
 def search_strategy_horizon_desc(searcher):
     for collection_sample in CollectionSample.objects.all():
         if searcher.search_value == collection_sample.get_horizon_description():
             yield collection_sample
+
+
+class SearchStrategy(object):
+    """
+    Represents a method of searching for matching samples
+    """
+    def __init__(self, model, search_path=None, return_model=CollectionSample):
+        self.model = model  # The model class to search over ( e.g. ChemicalAnalysis)
+        self.return_model = return_model # the  related model class ( by BPA ID ) to return
+        self.search_path = search_path
+
+    def __call__(self, searcher):
+        """
+        :param searcher: a Searcher instance ( holds search parameters )
+        :return: a queryset of models of type return_model type related via bpa_id
+        of those picked out by the search query on the nominated model
+        """
+        if self.search_path is None:
+            search_field = searcher.search_field
+        else:
+            search_field = self.search_path  # set when navigating through subobjects of model related via foreign key
+
+        if searcher.search_type == searcher.SEARCH_TYPE_FIELD:
+            # field = value
+            filter_dict = {search_field: searcher.search_value}
+        else:
+            # range ( value between max and min )
+            filter_dict = {search_field + "__range": (searcher.search_value_min, searcher.search_value_max)}
+
+        matches = self.model.objects.filter(**filter_dict)
+        return self.return_model.objects.filter(bpa_id__in=[match.bpa_id for match in matches])
 
 
 class Searcher(object):
@@ -19,15 +51,56 @@ class Searcher(object):
                            "lat": "site__lat",
                            "lon": "site__lon",
                            "depth": "depth",
-                           "horizon1": "horizon_classification1__horizon",
-                           "horizon2": "horizon_classification2__horizon",
-                           "description": search_strategy_horizon_desc,
+                           "description": search_strategy_horizon_desc,  # check!
                            "current_land_use": "site__current_land_use__description",
                            "general_ecological_zone": "site__general_ecological_zone__description",
                            "vegetation_type": "site__vegetation_type__vegetation",
                            "vegetation_total_cover": "site__vegetation_total_cover",
-                           "vegetation_dominant_trees": "site_vegetation_dominant_trees",
+                           "vegetation_dominant_trees": "site__vegetation_dominant_trees",
+                           "elevation": "site__elevation",
+                           "australian_soil_classification": "site__soil_type_australian_classification__classification",
+                           "fao_soil_type": "site__soil_type_fao_classification",
+                           "immediate_previous_land_use": "site__immediate_previous_land_use",
+                           "agrochemical_additions": "site__agrochemical_additions",
+                           "tillage": "site__tillage__tillage",
+                           "fire_history": "site__fire_history",
+                           "fire_intensity": "site__fire_intensity",
+                           "environment_events": "site__environment_events",
+        },
+
+        ChemicalAnalysis: {
+            "moisture": SearchStrategy(ChemicalAnalysis),
+            "colour": SearchStrategy(ChemicalAnalysis, search_path="colour__code"),
+            "texture": SearchStrategy(ChemicalAnalysis),
+            "gravel": SearchStrategy(ChemicalAnalysis),
+            "course_sand": SearchStrategy(ChemicalAnalysis),
+            "fine_sand": SearchStrategy(ChemicalAnalysis),
+            "sand": SearchStrategy(ChemicalAnalysis),
+            "silt": SearchStrategy(ChemicalAnalysis),
+            "clay": SearchStrategy(ChemicalAnalysis),
+            "ammonium_nitrogen": SearchStrategy(ChemicalAnalysis),
+            "nitrate_nitrogen": SearchStrategy(ChemicalAnalysis),
+            "phosphorus_colwell": SearchStrategy(ChemicalAnalysis),
+            "potassium_colwell": SearchStrategy(ChemicalAnalysis),
+            "sulphur_colwell": SearchStrategy(ChemicalAnalysis),
+            "organic_carbon": SearchStrategy(ChemicalAnalysis),
+            "conductivity": SearchStrategy(ChemicalAnalysis),
+            "cacl2_ph": SearchStrategy(ChemicalAnalysis),
+            "h20_ph": SearchStrategy(ChemicalAnalysis),
+            "dtpa_copper": SearchStrategy(ChemicalAnalysis),
+            "dtpa_iron": SearchStrategy(ChemicalAnalysis),
+            "dtpa_manganese": SearchStrategy(ChemicalAnalysis),
+            "dtpa_zinc": SearchStrategy(ChemicalAnalysis),
+            "exc_aluminium": SearchStrategy(ChemicalAnalysis),
+            "exc_calcium": SearchStrategy(ChemicalAnalysis),
+            "exc_magnesium": SearchStrategy(ChemicalAnalysis),
+            "exc_potassium": SearchStrategy(ChemicalAnalysis),
+            "exc_sodium": SearchStrategy(ChemicalAnalysis),
+            "boron_hot_cacl2": SearchStrategy(ChemicalAnalysis),
+            "total_nitrogen": SearchStrategy(ChemicalAnalysis),
+            "total_carbon": SearchStrategy(ChemicalAnalysis),
         }
+
     }
 
     def _get_matching_samples(self):
@@ -37,13 +110,19 @@ class Searcher(object):
                 if callable(search_strategy):
                     first_level_results = search_strategy(self)
                 else:
-                    filter_dict = {search_strategy: self.search_value}
+                    if self.search_type == Searcher.SEARCH_TYPE_FIELD:
+                        filter_dict = {search_strategy: self.search_value}
+                    elif self.search_type == Searcher.SEARCH_TYPE_RANGE:
+                        search_strategy += "__range"
+                        filter_dict = {search_strategy: (self.search_range_min, self.search_range_max)}
+
                     first_level_results = model_class.objects.filter(**filter_dict)
 
                 return self._filter_on_taxonomy(first_level_results)
+        return []
 
     def _filter_on_taxonomy(self, results):
-        return results # TODO filter on taxonommic results
+        return results # todo
 
 
 

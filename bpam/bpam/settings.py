@@ -200,7 +200,6 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'localflavor',
     'mptt',
-    'apps.geo',
     'apps.bpaauth',
     'apps.common',
     # base suit

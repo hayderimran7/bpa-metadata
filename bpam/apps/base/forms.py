@@ -3,6 +3,7 @@ from django import forms
 
 
 class OTUSearchForm(forms.Form):
+
     search_field = forms.ChoiceField(choices=[
                             ("----", "----"),
                             ("sample_id", "Sample Id"),
@@ -10,104 +11,93 @@ class OTUSearchForm(forms.Form):
                             ("lat", "Latitude"),
                             ("lon", "Longitude"),
                             ("depth", "Soil Depth"),
-                            ("horizon1", "Horizon Classification One"),
-                            ("horizon2", "Horizon Classification Two"),
                             ("description", "Description"),  # Horizon Description?
                             ("current_land_use", "Current land-use"),
                             ("general_ecological_zone", "General Ecological Zone"),
                             ("vegetation_type", "Vegetation Type"),
                             ("vegetation_total_cover", "Vegetation Total cover (%)"),
                             ("vegetation_dominant_trees", "Vegetation Dom. Trees"),
-                            ("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
-                            ("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
-                            ("Elevation (m)", "Elevation (m)"),
-                            #("Slope (%)", "Slope (%)"),
-                            #("Slope Aspect ", "Slope Aspect "),
-                            #("Profile Position", "Profile Position"),
-                            ("Australian Soil Classification", "Australian Soil Classification"),
-                            ("FAO soil classification", "FAO soil classification"),
-                            ("Immediate Previous Land Use", "Immediate Previous Land Use"),
-                            #("Date since change in Land Use", "Date since change in Land Use"),
-                            #("Crop rotation 1yr since present", "Crop rotation 1yr since present"),
-                            #("Crop rotation 2yrs since present", "Crop rotation 2yrs since present"),
-                            #("Crop rotation 3yrs since present", "Crop rotation 3yrs since present"),
-                            #(" Crop rotation 4yrs since present", " Crop rotation 4yrs since present"),
-                            #("Crop rotation 5yrs since present", "Crop rotation 5yrs since present"),
-                            ("Agrochemical Additions", "Agrochemical Additions"),
-                            ("Tillage", "Tillage"),
-                            ("Fire", "Fire"),
-                            # Fire intensity if known
-                            # Flooding
-                            # Extreme Events
-                            # Soil moisture (%)
-                            # Color
-                            # Texture
-                            # Gravel (%) - ( >2.0 mm)
-                            # Course Sand (%) (200-2000 µm)
-                            # Fine Sand (%) - (20-200 µm)
-                            # Sand (%)
-                            # Silt (%) (2-20 µm)
-                            # Clay (%) (<2 µm)
-                            # Ammonium Nitrogen (mg/Kg)
-                            # Nitrate Nitrogen (mg/Kg)
-                            # Phosphorus Colwell (mg/Kg)
-                            # Potassium Colwell (mg/Kg)
-                            # Sulphur (mg/Kg)
-                            # Organic Carbon (%)
-                            # Conductivity (dS/m)
-                            # pH Level (CaCl2) (pH)
-                            # pH Level (H2O) (pH)
-                            # DTPA Copper (mg/Kg)
-                            # DTPA Iron (mg/Kg)
-                            # DTPA Manganese (mg/Kg)
-                            # DTPA Zinc (mg/Kg)
-                            # Exc. Aluminium (meq/100g)
-                            # Exc. Calcium (meq/100g)
-                            # Exc. Magnesium (meq/100g)
-                            # Exc. Potassium (meq/100g)
-                            # Exc. Sodium (meq/100g)
-                            # Boron Hot CaCl2 (mg/Kg)
-                            # Total Nitrogen
-                            # Total Carbon
+                            #("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
+                            #("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
+                            ("elevation", "Elevation (m)"),
+                            ("australian_soil_classification", "Australian Soil Classification"),
+                            ("fao_soil_type", "FAO soil classification"),
+                            ("immediate_previous_land_use", "Immediate Previous Land Use"),
+                            ("agrochemical_additions", "Agrochemical Additions"),
+                            ("tillage", "Tillage"),
+                            ("fire_history", "Fire History"),
+                            ("fire_intensity","Fire Intensity"),
+                            #("flooding", "")
+                            ("environment_events", "Environment Events"),
+                            ("moisture", "Soil moisture (%)"),
+                            ("colour", "Soil Colour"),
+                            ("texture", "Texture"),
+                            ("gravel", "Gravel (%) - ( >2.0 mm)"),
+                            ("course_sand", "Course Sand (%) (200-2000 µm)"),
+                            ("fine_sand", "Fine Sand (%) - (20-200 µm)"),
+                            ("sand", "Sand (%)"),
+                            ("silt", "Silt (%) (2-20 µm)"),
+                            ("clay", "Clay (%) (<2 µm)"),
+                            ("ammonium_nitrogen", "Ammonium Nitrogen (mg/Kg)"),
+                            ("nitrate_nitrogen", "Nitrate Nitrogen (mg/Kg)"),
+                            ("phosphorus_colwell", "Phosphorus Colwell (mg/Kg)"),
+                            ("potassium_colwell", "Potassium Colwell (mg/Kg)"),
+                            ("sulphur_colwell", "Sulphur (mg/Kg)"),
+                            ("organic_carbon", "Organic Carbon (%)"),
+                            ("conductivity", "Conductivity (dS/m)"),
+                            ("cacl2_ph", "pH Level (CaCl2) (pH)"),
+                            ("h20_ph", "pH Level (H2O) (pH)"),
+                            ("dtpa_copper", "DTPA Copper (mg/Kg)"),
+                            ("dtpa_iron", "DTPA Iron (mg/Kg)"),
+                            ("dtpa_manganese", "DTPA Manganese (mg/Kg)"),
+                            ("dtpa_zinc", "DTPA Zinc (mg/Kg)"),
+                            ("exc_aluminium", "Exc. Aluminium (meq/100g)"),
+                            ("exc_calcium", "Exc. Calcium (meq/100g)"),
+                            ("exc_magnesium", "Exc. Magnesium (meq/100g)"),
+                            ("exc_potassium", "Exc. Potassium (meq/100g)"),
+                            ("exc_sodium", "Exc. Sodium (meq/100g)"),
+                            ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
+                            ("total_nitrogen", "Total Nitrogen"),
+                            ("total_carbon", "Total Carbon"),
                             ])
 
 
     search_value = forms.CharField(max_length=100)
 
     search_range = forms.ChoiceField(choices=[
-                                        ("----", "----"),
-                                        ("lat (-)", "lat (-)"),
-                                        ("lon", "lon"),
-                                        ("Depth", "Depth"),
-                                        ("Elevation (m)", "Elevation (m)"),
-                                        ("Texture", "Texture"),
-                                        ("Gravel (%) - ( >2.0 mm)", "Gravel (%) - ( >2.0 mm)"),
-                                        ("Course Sand (%) (200-2000 µm)", "Course Sand (%) (200-2000 µm)"),
-                                        ("Fine Sand (%) - (20-200 µm)", "Fine Sand (%) - (20-200 µm)"),
-                                        ("Sand (%)", "Sand (%)"),
-                                        ("Silt  (%) (2-20 µm)", "Silt  (%) (2-20 µm)"),
-                                        ("Clay (%) (<2 µm)", "Clay (%) (<2 µm)"),
-                                        ("Ammonium Nitrogen (mg/Kg)", "Ammonium Nitrogen (mg/Kg)"),
-                                        ("Nitrate Nitrogen (mg/Kg)", "Nitrate Nitrogen (mg/Kg)"),
-                                        ("Phosphorus Colwell (mg/Kg)", "Phosphorus Colwell (mg/Kg)"),
-                                        ("Potassium Colwell (mg/Kg)", "Potassium Colwell (mg/Kg)"),
-                                        ("Sulphur (mg/Kg)", "Sulphur (mg/Kg)"),
-                                        ("Organic Carbon (%)", "Organic Carbon (%)"),
-                                        ("Conductivity (dS/m)", "Conductivity (dS/m)"),
-                                        ("pH Level (CaCl2) (pH)", "pH Level (CaCl2) (pH)"),
-                                        ("pH Level (H2O) (pH)", "pH Level (H2O) (pH)"),
-                                        ("DTPA Copper (mg/Kg)", "DTPA Copper (mg/Kg)"),
-                                        ("DTPA Iron (mg/Kg)", "DTPA Iron (mg/Kg)"),
-                                        ("DTPA Manganese (mg/Kg)", "DTPA Manganese (mg/Kg)"),
-                                        ("DTPA Zinc (mg/Kg)", "DTPA Zinc (mg/Kg)"),
-                                        ("Exc. Aluminium (meq/100g)", "Exc. Aluminium (meq/100g)"),
-                                        ("Exc. Calcium (meq/100g)", "Exc. Calcium (meq/100g)"),
-                                        ("Exc. Magnesium (meq/100g)", "Exc. Magnesium (meq/100g)"),
-                                        ("Exc. Potassium (meq/100g)", "Exc. Potassium (meq/100g)"),
-                                        ("Exc. Sodium (meq/100g)", "Exc. Sodium (meq/100g)"),
-                                        ("Boron Hot CaCl2 (mg/Kg)", "Boron Hot CaCl2 (mg/Kg)"),
-                                        ("Total Nitrogen", "Total Nitrogen"),
-                                        ("Total Carbon", "Total Carbon")])
+                            ("----", "----"),
+                            ("lat", "Latitude"),
+                            ("lon", "Longitude"),
+                            ("depth", "Soil Depth"),
+                            ("elevation", "Elevation (m)"),
+                            ("texture", "Texture"),
+                            ("gravel", "Gravel (%) - ( >2.0 mm)"),
+                            ("course_sand", "Course Sand (%) (200-2000 µm)"),
+                            ("fine_sand", "Fine Sand (%) - (20-200 µm)"),
+                            ("sand", "Sand (%)"),
+                            ("silt", "Silt (%) (2-20 µm)"),
+                            ("clay", "Clay (%) (<2 µm)"),
+                            ("ammonium_nitrogen", "Ammonium Nitrogen (mg/Kg)"),
+                            ("nitrate_nitrogen", "Nitrate Nitrogen (mg/Kg)"),
+                            ("phosphorus_colwell", "Phosphorus Colwell (mg/Kg)"),
+                            ("potassium_colwell", "Potassium Colwell (mg/Kg)"),
+                            ("sulphur_colwell", "Sulphur (mg/Kg)"),
+                            ("organic_carbon", "Organic Carbon (%)"),
+                            ("conductivity", "Conductivity (dS/m)"),
+                            ("cacl2_ph", "pH Level (CaCl2) (pH)"),
+                            ("h20_ph", "pH Level (H2O) (pH)"),
+                            ("dtpa_copper", "DTPA Copper (mg/Kg)"),
+                            ("dtpa_iron", "DTPA Iron (mg/Kg)"),
+                            ("dtpa_manganese", "DTPA Manganese (mg/Kg)"),
+                            ("dtpa_zinc", "DTPA Zinc (mg/Kg)"),
+                            ("exc_aluminium", "Exc. Aluminium (meq/100g)"),
+                            ("exc_calcium", "Exc. Calcium (meq/100g)"),
+                            ("exc_magnesium", "Exc. Magnesium (meq/100g)"),
+                            ("exc_potassium", "Exc. Potassium (meq/100g)"),
+                            ("exc_sodium", "Exc. Sodium (meq/100g)"),
+                            ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
+                            ("total_nitrogen", "Total Nitrogen"),
+                            ("total_carbon", "Total Carbon")])
     search_range_min = forms.DecimalField()
     search_range_max = forms.DecimalField()
 
