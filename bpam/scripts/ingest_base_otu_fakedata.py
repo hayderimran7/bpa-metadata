@@ -6,15 +6,20 @@ import requests
 from libs import logger_utils
 from apps.base_otu.models import *
 
+from libs.excel_wrapper import ExcelWrapper
+from libs import bpa_id_utils
+from libs import ingest_utils
+
 
 logger = logger_utils.get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_OTU_FILE = Path(DATA_DIR, 'fake_otu.txt')
+DEFAULT_MAP_FILE = Path(DATA_DIR, 'base_otu.xlst')
 
 # we were asked to use this for the time being
 TEST_TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_OTUs.silva.wang.taxonomy'
-
+BASE_OTU_MAP='https://downloads.bioplatforms.com/base/metadata/BASE_biological_data.xlst'
 
 def download_url(url, local_name=None):
     """
@@ -33,13 +38,13 @@ def download_url(url, local_name=None):
     return local_name
 
 
-def ensure_data_file_is_available(file_name):
+def ensure_data_file_is_available(url, file_name):
     """
     get the data file of the webserver if not locally available
     """
     logger.info('Is {0} in {1} ?'.format(file_name, DATA_DIR))
     if not Path.isfile(file_name):
-        download_url(TEST_TAXONOMY_URL, file_name)
+        download_url(url, file_name)
     logger.info('Yes, it is now')
 
 
@@ -63,11 +68,20 @@ def ingest_otu(file_name):
                 species='s_' + species)
 
 
-def run(file_name=DEFAULT_OTU_FILE):
-    ensure_data_file_is_available(file_name)
-    ingest_otu(file_name)
+def ingest_sample_to_otu(file_name):
+    """
+    populate the link table
+    """
 
 
+
+def run():
+    # OTU
+    ensure_data_file_is_available(TEST_TAXONOMY_URL, DEFAULT_OTU_FILE)
+    ingest_otu(DEFAULT_OTU_FILE)
+    # OTU->Sample
+    ensure_data_file_is_available(BASE_OTU_MAP, DEFAULT_MAP_FILE)
+    ingest_sample_to_otu(DEFAULT_MAP_FILE)
 
 
 
