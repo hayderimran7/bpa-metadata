@@ -1,20 +1,23 @@
 # coding=utf-8
 from django import forms
 
+
 class OTUSearchForm(forms.Form):
-    search = forms.ChoiceField(choices=[
-                            ("Sample_id", "Sample_id"),
-                            ("Date sampled", "Date sampled"),
-                            ("lat (-)", "lat (-)"),
-                            ("lon", "lon"),
-                            ("Depth", "Depth"),
-                            ("Horizon", "Horizon"),
-                            ("Description", "Description"),
-                            ("Current land-use", "Current land-use"),
-                            ("General Ecological Zone", "General Ecological Zone"),
-                            ("Vegetation Type", "Vegetation Type"),
-                            ("Vegetation Total cover (%)", "Vegetation Total cover (%)"),
-                            ("Vegetation Dom. Trees", "Vegetation Dom. Trees"),
+    search_field = forms.ChoiceField(choices=[
+                            ("----", "----"),
+                            ("sample_id", "Sample Id"),
+                            ("date_sampled", "Date sampled"),
+                            ("lat", "Latitude"),
+                            ("lon", "Longitude"),
+                            ("depth", "Soil Depth"),
+                            ("horizon1", "Horizon Classification One"),
+                            ("horizon2", "Horizon Classification Two"),
+                            ("description", "Description"),  # Horizon Description?
+                            ("current_land_use", "Current land-use"),
+                            ("general_ecological_zone", "General Ecological Zone"),
+                            ("vegetation_type", "Vegetation Type"),
+                            ("vegetation_total_cover", "Vegetation Total cover (%)"),
+                            ("vegetation_dominant_trees", "Vegetation Dom. Trees"),
                             ("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
                             ("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
                             ("Elevation (m)", "Elevation (m)"),
@@ -33,12 +36,46 @@ class OTUSearchForm(forms.Form):
                             ("Agrochemical Additions", "Agrochemical Additions"),
                             ("Tillage", "Tillage"),
                             ("Fire", "Fire"),
-                            ("", "")])
+                            # Fire intensity if known
+                            # Flooding
+                            # Extreme Events
+                            # Soil moisture (%)
+                            # Color
+                            # Texture
+                            # Gravel (%) - ( >2.0 mm)
+                            # Course Sand (%) (200-2000 µm)
+                            # Fine Sand (%) - (20-200 µm)
+                            # Sand (%)
+                            # Silt (%) (2-20 µm)
+                            # Clay (%) (<2 µm)
+                            # Ammonium Nitrogen (mg/Kg)
+                            # Nitrate Nitrogen (mg/Kg)
+                            # Phosphorus Colwell (mg/Kg)
+                            # Potassium Colwell (mg/Kg)
+                            # Sulphur (mg/Kg)
+                            # Organic Carbon (%)
+                            # Conductivity (dS/m)
+                            # pH Level (CaCl2) (pH)
+                            # pH Level (H2O) (pH)
+                            # DTPA Copper (mg/Kg)
+                            # DTPA Iron (mg/Kg)
+                            # DTPA Manganese (mg/Kg)
+                            # DTPA Zinc (mg/Kg)
+                            # Exc. Aluminium (meq/100g)
+                            # Exc. Calcium (meq/100g)
+                            # Exc. Magnesium (meq/100g)
+                            # Exc. Potassium (meq/100g)
+                            # Exc. Sodium (meq/100g)
+                            # Boron Hot CaCl2 (mg/Kg)
+                            # Total Nitrogen
+                            # Total Carbon
+                            ])
 
 
     search_value = forms.CharField(max_length=100)
 
     search_range = forms.ChoiceField(choices=[
+                                        ("----", "----"),
                                         ("lat (-)", "lat (-)"),
                                         ("lon", "lon"),
                                         ("Depth", "Depth"),

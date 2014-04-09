@@ -77,7 +77,7 @@ usage() {
 
 nuclear() {
     CMD="bpam"
-
+    ${CMD} reset_db --router=default --traceback
     ${CMD} syncdb --traceback --noinput
     ${CMD} migrate --traceback
 
@@ -95,6 +95,7 @@ nuclear() {
     ${CMD} runscript ingest_base_metagenomics --traceback
     ${CMD} runscript ingest_landuse --traceback
     ${CMD} runscript ingest_base_contextual --traceback
+    ${CMD} runscript ingest_base_otu_fakedata --traceback	
 
     # links
     bpam runscript url_checker

@@ -69,7 +69,8 @@ var BPAM = (function() {
                     var href = $(el).find("td.name a").attr("href");
                     var show = name.indexOf(text.toLowerCase()) >= 0;
                     $(el).toggle(show);
-                    markers[href].setOpacity(show ? 1.0 : 0.0);
+                    markers[href]._icon.style.display = show ? '' : 'none';
+                    markers[href]._shadow.style.display = show ? '' : 'none';
                     total++;
                     if (show) {
                         shown++;

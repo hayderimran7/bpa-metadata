@@ -16,11 +16,6 @@ class CollectionSiteListView(ListView):
     model = CollectionSite
     context_object_name = 'sites'
 
-    def get_context_data(self, **kwargs):
-        context = super(CollectionSiteListView, self).get_context_data(**kwargs)
-        context['positions'] = CollectionSite.get_json_postitions()
-        return context
-
 
 class CollectionSiteDetailView(DetailView):
     model = CollectionSite
