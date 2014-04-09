@@ -1,8 +1,14 @@
 # coding=utf-8
 from django import forms
 
+KINGDOMS = (('Bacteria', 'Bacteria'),
+                ('Archea', 'Archea'),
+                ('Eukaryote', 'Eukaryote'),
+                ('Fungi', 'Fungi'))
+
 
 class OTUSearchForm(forms.Form):
+
 
     search_field = forms.ChoiceField(choices=[
                             ("----", "----"),
@@ -101,8 +107,10 @@ class OTUSearchForm(forms.Form):
     search_range_min = forms.DecimalField()
     search_range_max = forms.DecimalField()
 
+    search_kingdom = forms.ChoiceField(choices=KINGDOMS)
     search_phylum = forms.CharField(max_length=100)
     search_class = forms.CharField(max_length=100)
     search_order = forms.CharField(max_length=100)
     search_family = forms.CharField(max_length=100)
     search_genus = forms.CharField(max_length=100)
+    search_species = forms.CharField(max_length=100)

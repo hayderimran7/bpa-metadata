@@ -1,13 +1,23 @@
 from apps.base_contextual.models import CollectionSample, ChemicalAnalysis
+from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
+from django.db.models import Q
 import logging
 logger = logging.getLogger("rainbow")
 
 
-
 def search_strategy_horizon_desc(searcher):
+    """
+    Custom search for horizon desc as this is a method call
+    :param searcher: searcher i
+    :return: a queryset ( so we chain filters for taxonomy)
+    """
+    ids = []
+
     for collection_sample in CollectionSample.objects.all():
         if searcher.search_value == collection_sample.get_horizon_description():
-            yield collection_sample
+            ids.append(collection_sample.bpa_id)
+
+    return CollectionSample.objects.filter(bpa_id__in=ids)
 
 
 class SearchStrategy(object):
@@ -121,12 +131,44 @@ class Searcher(object):
                 return self._filter_on_taxonomy(first_level_results)
         return []
 
-    def _filter_on_taxonomy(self, results):
-        return results # todo
+    def _filter_on_taxonomy(self, samples):
+        """
+        :param results: a query set to filter based on taxonomy
+        :return:
+        """
+        from operator import and_
 
+        def query_pair(field, s):
+            """
+            :param field: E.g family or phylum
+            :param s: "rhibo*" or somefullstring  NB. foo*bar or *foobar not supported ( case insensitive search)
+            :return: the filtered results
+            """
+            if "*" in s:
+                return field + "__istartswith", s[:-1]
+            else:
+                return field + "__iexact", s
 
+        taxonomy_filters = []
 
+        if self.search_kingdom:
+            taxonomy_filters.append(query_pair("kingdom", self.search_kingdom))
+        if self.search_phylum:
+            taxonomy_filters.append(query_pair("phylum", self.search_phylum))
+        if self.search_class:
+            taxonomy_filters.append(query_pair("otu_class", self.search_class))
+        if self.search_family:
+            taxonomy_filters.append(query_pair("family", self.search_family))
+        if self.search_genus:
+            taxonomy_filters.append(query_pair("genus", self.search_genus))
+        if self.search_order:
+            taxonomy_filters.append(query_pair("order", self.search_order))
+        if self.search_species:
+            taxonomy_filters.append(query_pair("species", self.search_species))
 
+        otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
+
+        return samples.filter(otu__in=otus)
 
     def __init__(self, parameters):
         logger.debug("searcher search parameters = %s" % parameters)
@@ -138,11 +180,13 @@ class Searcher(object):
         self.search_range_min = self.parameters.get("search_range_min", None)
         self.search_range_max = self.parameters.get("search_range_max", None)
 
+        self.search_kingdom = self.parameters.get("search_kingdom", None)
         self.search_phylum = self.parameters.get("search_phylum", None)
         self.search_class = self.parameters.get("search_class", None)
         self.search_order = self.parameters.get("search_order", None)
         self.search_family = self.parameters.get("search_family", None)
         self.search_genus = self.parameters.get("search_genus", None)
+        self.search_species = self.parameters.get("search_species", None)
 
         if self.search_field == Searcher.UNSET:
             self.search_type = Searcher.SEARCH_TYPE_RANGE
@@ -150,8 +194,6 @@ class Searcher(object):
         else:
             self.search_type = Searcher.SEARCH_TYPE_FIELD
             logger.debug("search search type = field")
-
-
 
     def _get_range_search_query(self):
 
