@@ -19,10 +19,14 @@ TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
 PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"
 PIP5_OPTS="${PIP_OPTS} --process-dependency-links --allow-all-external"
+PYVENV="virtualenv-2.7"
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
 PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
 DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
+
+export PATH=/usr/pgsql-9.3/bin:${PATH}
+
 
 activate_virtualenv() {
     source ${VIRTUALENV}/bin/activate
@@ -176,13 +180,12 @@ install_bpa_dev() {
     log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
-        virtualenv ${VIRTUALENV}
+        ${PYVENV} ${VIRTUALENV}
         (
-           PATH=${PATH}:/usr/pgsql-9.3/bin
            source ${VIRTUALENV}/bin/activate
            cd ${CONFIG_DIR}
-           ${PIP} install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
-           ${PIP} install ${PIP5_OPTS} -e .[dev,tests,downloads]
+           pip install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
+           pip install ${PIP5_OPTS} -e .[dev,tests,downloads]
            deactivate
         )
 
@@ -248,9 +251,8 @@ ingest_all() {
 }
 
 devrun() {
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
+    ${DJANGO_ADMIN} syncdb --traceback --noinput
+    ${DJANGO_ADMIN} migrate --traceback
     ingest_all
     startserver
 }
@@ -258,13 +260,12 @@ devrun() {
 # django syncdb, migrate and collect static
 syncmigrate() {
     activate_virtualenv
-    CMD=${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py
     log_info "Running syncdb"
-    ${CMD} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
+    ${DJANGO_ADMIN} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
     log_info "Running migrate"
-    ${CMD} migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
+    ${DJANGO_ADMIN} migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
     log_info "Running collectstatic"
-    ${CMD} collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
+    ${DJANGO_ADMIN} collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
 
     ingest_all
 }
@@ -332,8 +333,7 @@ unittest() {
 
 url_checker() {
    activate_virtualenv
-   CMD='python ./bpam/manage.py'
-   ${CMD} runscript url_checker --traceback
+   ${DJANGO_ADMIN} runscript url_checker --traceback
 }
 
 
@@ -375,13 +375,12 @@ usage() {
 
 wheat_pathogens_dev() {
     devsettings
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
+    ${DJANGO_ADMIN} syncdb --traceback --noinput
+    ${DJANGO_ADMIN} migrate --traceback
 
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${DJANGO_ADMIN} runscript set_initial_bpa_projects --traceback
+    ${DJANGO_ADMIN} runscript ingest_users --traceback
+    ${DJANGO_ADMIN} runscript ingest_wheat_pathogens --traceback
 }
 
 load_base() {
@@ -398,9 +397,8 @@ migrationupdate() {
     activate_virtualenv
     APP=${SECOND_ARGUMENT}
     devsettings
-    CMD='python ./bpam/manage.py'
-    ${CMD} schemamigration ${APP} --auto --update
-    ${CMD} migrate ${APP}
+    ${DJANGO_ADMIN} schemamigration ${APP} --auto --update
+    ${DJANGO_ADMIN} migrate ${APP}
 }
 
 case ${ACTION} in
