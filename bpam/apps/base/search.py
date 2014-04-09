@@ -25,8 +25,6 @@ class SearchStrategy(object):
         :return: a queryset of models of type return_model type related via bpa_id
         of those picked out by the search query on the nominated model
         """
-        import pdb
-        pdb.set_trace()
         if self.search_path is None:
             search_field = searcher.search_field
         else:
@@ -124,7 +122,7 @@ class Searcher(object):
         return []
 
     def _filter_on_taxonomy(self, results):
-        return results # TODO filter on taxonommic results
+        return results # todo
 
 
 
