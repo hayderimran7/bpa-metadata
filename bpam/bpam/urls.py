@@ -1,15 +1,19 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-admin.autodiscover()
-
 from apps.melanoma.api.resources import MelanomaSequenceFileResource
 from django.views.generic import TemplateView
 
 from tastypie.api import Api
+from django.db.models.loading import cache as model_cache
+
+if not model_cache.loaded:
+    model_cache.get_models()
 
 v1_api = Api(api_name='v1')
 v1_api.register(MelanomaSequenceFileResource())
+
+admin.autodiscover()
 
 urlpatterns = patterns(
     '',
