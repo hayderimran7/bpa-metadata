@@ -3,31 +3,24 @@ import os
 import sys
 import pwd
 
-(uid, gid, gecos, homedir) = pwd.getpwnam('apache')[2:6]
-os.setgid(gid)
-os.setuid(uid)
-os.environ["HOME"] = homedir
+USER = "apache"
+
+try:
+    (uid, gid, gecos, homedir) = pwd.getpwnam(USER)[2:6]
+    os.setgid(gid)
+    os.setuid(uid)
+    os.environ["HOME"] = homedir
+except OSError as e:
+    sys.stderr.write("warning: Couldn't switch to the %s user: %s\n" % (USER, e))
 
 if __name__ == "__main__":
-
     webapp_name = "bpa-metadata"
     os.environ.setdefault('CCG_WEBAPPS_PREFIX', '/usr/local/webapps')
     webapp_root = os.path.join(os.environ['CCG_WEBAPPS_PREFIX'], webapp_name)
 
-    # Path hackery to make sure all the project's paths appear
-    # before the system paths in sys.path. addsitedir always
-    # appends unfortunately.
-    import site
-    oldpath = sys.path[1:]
-    sys.path = sys.path[:1]
-    site.addsitedir(webapp_root)
-    site.addsitedir(os.path.join(webapp_root, "lib"))
-    site.addsitedir("/etc/ccgapps")
-    site.addsitedir("/usr/local/etc/ccgapps")
+    # Allow appsettings to be imported
+    sys.path.insert(0, "/etc/ccgapps")
 
-    sys.path.extend(oldpath)
-
-    # setup the settings module for the WSGI app
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'defaultsettings.bpam')
     os.environ.setdefault('PROJECT_DIRECTORY', webapp_root)
     os.environ.setdefault('WEBAPP_ROOT', webapp_root)

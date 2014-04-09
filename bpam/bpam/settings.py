@@ -223,6 +223,8 @@ INSTALLED_APPS = (
     'leaflet',
 )
 
+CCG_LOG_DIRECTORY = os.path.join(WEBAPP_ROOT, "log")
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -240,7 +242,7 @@ LOGGING = {
         'logfile': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': "ingest-logfile",
+            'filename': os.path.join(CCG_LOG_DIRECTORY, "ingest-logfile"),
             'maxBytes': 50000,
             'backupCount': 2,
         },

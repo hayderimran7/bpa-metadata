@@ -7,11 +7,10 @@ packages = [p.replace(".", "/") for p in sorted(find_packages())]
 
 def get_version():
     """
-    The VERSION file in project root sets the version
+    The VERSION file in package root sets the version
     """
-    project_dir = os.path.join(os.path.dirname(__file__), '../')
-    with open(os.path.join(project_dir, 'VERSION'), 'r') as version_file:
-        return version_file.readline().strip()
+    version_file = os.path.join(os.path.dirname(__file__), "VERSION")
+    return open(version_file).readline().strip()
 
 
 def get_data_files():
@@ -37,7 +36,6 @@ install_requires = [
     'python-memcached>=1.53,<2.0',
     'South>=0.8.4,<1.0',
     'Unipath>=1.0,<2.0',
-    'argparse>=1.2.1,<2.0',
     'boto>=2.15.0',
     'dateutils>=0.6.6',
     'django-admin-tools>=0.5.1',
@@ -46,7 +44,6 @@ install_requires = [
     'django-tinymce>=1.5.2',
     'django-localflavor',
     'feedparser>=5.1.3',
-    'pygraphviz>=1.2',
     'pytz>=2013.7',
     'sqlparse>=0.1.9,<1.0',
     'django-bootstrap3>=3.0',
@@ -116,4 +113,5 @@ setup(
         'downloads': downloads_requires
     },
     zip_safe=False,
+    scripts=["scripts/bpam-manage.py"],
 )
