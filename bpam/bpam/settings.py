@@ -7,7 +7,7 @@ from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
 
-BPA_VERSION = '1.0.12'
+BPA_VERSION = '1.0.13'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -200,7 +200,6 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'localflavor',
     'mptt',
-    'apps.geo',
     'apps.bpaauth',
     'apps.common',
     # base suit
