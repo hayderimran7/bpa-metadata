@@ -144,7 +144,7 @@ class Searcher(object):
             :param s: "rhibo*" or somefullstring  NB. foo*bar or *foobar not supported ( case insensitive search)
             :return: the filtered results
             """
-            if "*" in s:
+            if s.endswith("*"):
                 return field + "__istartswith", s[:-1]
             else:
                 return field + "__iexact", s
@@ -166,9 +166,12 @@ class Searcher(object):
         if self.search_species:
             taxonomy_filters.append(query_pair("species", self.search_species))
 
-        otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
-
-        return samples.filter(otu__in=otus)
+        filters = [Q(tf) for tf in taxonomy_filters]
+        if filters:
+            otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
+            return samples.filter(otu__in=otus)
+        else:
+            return samples
 
     def __init__(self, parameters):
         logger.debug("searcher search parameters = %s" % parameters)
