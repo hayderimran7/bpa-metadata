@@ -90,7 +90,11 @@ def ingest_sample_to_otu(file_name):
                 otuname = 'OTU_' + str(int(sheet.cell_value(curr_otu, 0)))
                 bpa_id_name= '102.100.100.' + str(ingest_utils.get_int(sheet.cell_value(0, curr_sample)))
                 otu = OperationalTaxonomicUnit.objects.get(name=otuname)
-                bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id_name)
+                try:
+                    bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id_name)
+                except BPAUniqueID.DoesNotExist:
+                    logger.warning('BPAUniqeID {} not currently in DB'.format(bpa_id_name))
+                    continue
                 try:
                     sample = BaseSample.objects.get(bpa_id=bpa_id)
                 except BaseSample.DoesNotExist:

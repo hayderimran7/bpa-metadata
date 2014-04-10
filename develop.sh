@@ -243,11 +243,11 @@ ingest_all() {
     #${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE
-    ${CMD} runscript ingest_base_otu_fakedata --traceback
     ${CMD} runscript ingest_base_454
     ${CMD} runscript ingest_base_metagenomics --traceback
     ${CMD} runscript ingest_landuse --traceback
     ${CMD} runscript ingest_base_contextual --traceback
+    ${CMD} runscript ingest_base_otu_fakedata --traceback
 }
 
 devrun() {
