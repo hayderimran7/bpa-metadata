@@ -60,8 +60,7 @@ class AbstractSearchableListView(ListView, FormMixin):
     def post(self, request):
         self.form_data = {}
         for key in request.POST:
-            if key != "csrftoken":
-                self.form_data[key] = request.POST[key]
+            self.form_data[key] = request.POST[key]
 
         return self.get(request)
 
@@ -88,7 +87,6 @@ class AbstractSearchableListView(ListView, FormMixin):
 
 
 class OTUSearchView(AbstractSearchableListView):
-
 
     def get_form_class(self):
         return OTUSearchForm
