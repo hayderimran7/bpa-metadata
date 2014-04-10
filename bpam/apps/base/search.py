@@ -36,7 +36,7 @@ class SearchStrategy(object):
         of those picked out by the search query on the nominated model
         """
         if self.search_path is None:
-            search_field = searcher.search_field
+            search_field = searcher.search_field if searcher.search_type == Searcher.SEARCH_TYPE_FIELD else searcher.search_range
         else:
             search_field = self.search_path  # set when navigating through subobjects of model related via foreign key
 
@@ -45,9 +45,13 @@ class SearchStrategy(object):
             filter_dict = {search_field: searcher.search_value}
         else:
             # range ( value between max and min )
-            filter_dict = {search_field + "__range": (searcher.search_value_min, searcher.search_value_max)}
+            filter_dict = {search_field + "__range": (searcher.search_range_min, searcher.search_range_max)}
+
+        logger.debug("SearchStrategy filters = %s" % filter_dict)
 
         matches = self.model.objects.filter(**filter_dict)
+        for match in matches:
+            logger.debug("match ! = %s" % match)
         return self.return_model.objects.filter(bpa_id__in=[match.bpa_id for match in matches])
 
 
@@ -114,21 +118,33 @@ class Searcher(object):
     }
 
     def _get_matching_samples(self):
+        if self.search_type == Searcher.SEARCH_TYPE_FIELD:
+            field = self.search_field
+        else:
+            field = self.search_range
+            
         for model_class in Searcher.SEARCH_TABLE:
-            if self.search_field in Searcher.SEARCH_TABLE[model_class]:
-                search_strategy = Searcher.SEARCH_TABLE[model_class][self.search_field]
+            if field in Searcher.SEARCH_TABLE[model_class]:
+                logger.debug("%s in %s" % (field, model_class))
+                search_strategy = Searcher.SEARCH_TABLE[model_class][field]
+                logger.debug("search strategy = %s" % search_strategy)
                 if callable(search_strategy):
+                    logger.debug("calling strategy ...")
                     first_level_results = search_strategy(self)
                 else:
                     if self.search_type == Searcher.SEARCH_TYPE_FIELD:
                         filter_dict = {search_strategy: self.search_value}
                     elif self.search_type == Searcher.SEARCH_TYPE_RANGE:
+                        logger.debug("range search")
                         search_strategy += "__range"
                         filter_dict = {search_strategy: (self.search_range_min, self.search_range_max)}
 
                     first_level_results = model_class.objects.filter(**filter_dict)
 
+                logger.debug("filtering on taxonomy if present ..")
                 return self._filter_on_taxonomy(first_level_results)
+
+        logger.debug("could not find search field %s in search table" % self.search_field)
         return []
 
     def _filter_on_taxonomy(self, samples):
@@ -169,7 +185,10 @@ class Searcher(object):
         filters = [Q(tf) for tf in taxonomy_filters]
         if filters:
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
-            return samples.filter(otu__in=otus)
+            our_ids = [ s.bpa_id for s in samples]
+            from apps.base_otu.models import SampleOTU
+            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=our_ids).filter(otu__in=otus)
+            return samples.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
         else:
             return samples
 
@@ -191,13 +210,9 @@ class Searcher(object):
         self.search_genus = self.parameters.get("search_genus", None)
         self.search_species = self.parameters.get("search_species", None)
 
-        if self.search_field == Searcher.UNSET:
+        if self.search_field == "":
             self.search_type = Searcher.SEARCH_TYPE_RANGE
             logger.debug("searcher search type = range")
         else:
             self.search_type = Searcher.SEARCH_TYPE_FIELD
             logger.debug("search search type = field")
-
-    def _get_range_search_query(self):
-
-        return []  # todo range search
