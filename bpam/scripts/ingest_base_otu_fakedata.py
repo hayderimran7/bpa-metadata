@@ -4,18 +4,18 @@ from unipath import Path
 import requests
 
 from libs import logger_utils
-from apps.base_otu.models import *
-
-from libs.excel_wrapper import ExcelWrapper
-from libs import bpa_id_utils
 from libs import ingest_utils
+from apps.base_otu.models import *
+from apps.common.models import BPAUniqueID
 
+import xlrd
 
 logger = logger_utils.get_logger(__name__)
 
 DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
 DEFAULT_OTU_FILE = Path(DATA_DIR, 'fake_otu.txt')
 DEFAULT_MAP_FILE = Path(DATA_DIR, 'base_otu.xlst')
+DEV_MAP_FILE = Path(DATA_DIR, 'small_otu.xlst')
 
 # we were asked to use this for the time being
 TEST_TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_OTUs.silva.wang.taxonomy'
@@ -72,7 +72,32 @@ def ingest_sample_to_otu(file_name):
     """
     populate the link table
     """
+    logger.info('Now ingesting {0}'.format(file_name))
+    workbook = xlrd.open_workbook(file_name)
+    sheet = workbook.sheet_by_index(0) # the first sheet looks ok...
 
+    otu_total = sheet.nrows - 1
+    sample_total = sheet.ncols - 1
+    curr_otu = 0 # skip header
+    
+    while curr_otu < otu_total:
+        curr_otu += 1
+        curr_sample = 0 # first col is otu id
+        while curr_sample < sample_total:
+            curr_sample += 1
+            count = sheet.cell_value(curr_otu, curr_sample)
+            if count > 0:
+                otuname = 'OTU_' + str(int(sheet.cell_value(curr_otu, 0)))
+                bpa_id_name= '102.100.100.' + str(ingest_utils.get_int(sheet.cell_value(0, curr_sample)))
+                otu = OperationalTaxonomicUnit.objects.get(name=otuname)
+                bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id_name)
+                try:
+                    sample = BaseSample.objects.get(bpa_id=bpa_id)
+                except BaseSample.DoesNotExist:
+                    logger.warning('BASE Sample with bpa_id {} not currently in DB'.format(bpa_id_name))
+                    continue
+
+                sample_otu, created = SampleOTU.objects.get_or_create(otu=otu, count=count, sample=sample)
 
 
 def run():
