@@ -174,7 +174,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     ]
 
     list_select_related = True
-    search_fields = ('location_name', 'other_comments', 'vegetation_type_descriptive', 'vegetation_dominant_trees')
+    search_fields = ('location_name', 'other_comments', 'vegetation_type__vegetation', 'vegetation_dominant_trees')
     list_filter = ('location_name', 'date_sampled', 'current_land_use__description', 'vegetation_type',
                    'vegetation_dominant_trees')
     list_display = ('location_name', 'current_land_use', 'vegetation_type', 'lat', 'lon', 'elevation')
