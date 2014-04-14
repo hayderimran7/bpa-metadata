@@ -67,7 +67,19 @@ class SearchTestCase(TestCase):
         found_sample = samples[0]
         assert found_sample.__class__.__name__ == "CollectionSample"
 
+    def testFailingSearchOnSiteSubObjectField(self):
+        self.collection_site.elevation = 25
+        self.collection_site.save()
 
+        search_parameters = {"search_range": "elevation",
+                             "search_field": "",
+                             "search_range_min": "22",
+                             "search_range_max": "24"
+        }
+
+        searcher = Searcher(search_parameters)
+        samples = searcher.get_matching_samples()
+        assert len(samples) == 0, "Expected zero matching samples - got %s" % len(samples)
 
 
 
