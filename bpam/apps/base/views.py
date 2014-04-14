@@ -80,7 +80,7 @@ class AbstractSearchableListView(ListView, FormMixin):
         if not search_parameters:
             return []
         searcher = Searcher(search_parameters)
-        return searcher._get_matching_samples()
+        return searcher.get_matching_samples()
 
 
 class OTUSearchView(AbstractSearchableListView):

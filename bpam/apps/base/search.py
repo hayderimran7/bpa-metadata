@@ -51,7 +51,7 @@ class SearchStrategy(object):
 
         matches = self.model.objects.filter(**filter_dict)
         for match in matches:
-            logger.debug("match ! = %s" % match)
+            logger.debug("got a match! = %s" % match)
         return self.return_model.objects.filter(bpa_id__in=[match.bpa_id for match in matches])
 
 
@@ -117,7 +117,7 @@ class Searcher(object):
 
     }
 
-    def _get_matching_samples(self):
+    def get_matching_samples(self):
         if self.search_type == Searcher.SEARCH_TYPE_FIELD:
             field = self.search_field
         else:
@@ -182,10 +182,15 @@ class Searcher(object):
         if self.search_species:
             taxonomy_filters.append(query_pair("species", self.search_species))
 
+        logger.debug("taxonomic filters = %s" % taxonomy_filters)
+
         filters = [Q(tf) for tf in taxonomy_filters]
         if filters:
+
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
+            logger.debug("otus matching taxonomic filters = %s" % otus)
             our_ids = [ s.bpa_id for s in samples]
+            logger.debug("bpa ids of samples from non-taxonommic search = %s" % our_ids)
             from apps.base_otu.models import SampleOTU
             sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=our_ids).filter(otu__in=otus)
             return samples.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
