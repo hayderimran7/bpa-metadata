@@ -3,17 +3,66 @@
 {% block content %}
     {% if search_form %}
         <form action="" class="form-inline" role="form" method="post">{% csrf_token %}
-              <div class="panel panel-primary">
+              <div class="panel panel-default">
                   <div class="panel-heading">Search Form</div>
                   <div class="panel-body">
                        {{ search_form.as_p }}
                   </div>
               </div>
-            <input type="submit" value="Search" />
+            <input type="submit" class="btn btn-default" value="Search" />
+            <div id="search_selection">
+            <input class="form-control" name="search_type" type="radio" value="field" checked="checked">Field Search</>
+            <input class="form-control" name="search_type" type="radio" value="range">Range Search</>
+            </div>
         </form>
+        <script>
+             $(document).ready(function () {
+
+                function clearRangeFields() {
+                    $("#id_search_range").val("");
+                    $("#id_search_range_min").val("");
+                    $("#id_search_range_max").val("");
+                }
+
+                function clearSingleFields() {
+                    $("#id_search_field").val("");
+                    $("#id_search_value").val("");
+                }
+
+                var rangeSearchFields = "label[for='id_search_range']," +
+                        "#id_search_range," +
+                        "label[for='id_search_range_min']," +
+                        "#id_search_range_min," +
+                        "label[for='id_search_range_max']," +
+                        "#id_search_range_max";
+
+                var singleSearchFields = "label[for='id_search_field']," +
+                        "#id_search_field," +
+                        "label[for='id_search_value'],"+
+                        "#id_search_value";
+
+                $(rangeSearchFields).hide();
+                $(singleSearchFields).show();
+
+                 $("input[name='search_type']").change(function (){
+                     var sel = $("input[name='search_type']:checked").val();
+                     if (sel == 'field'){
+                        clearRangeFields();
+                        $(rangeSearchFields).hide();
+                        $(singleSearchFields).show();
+                     }
+                     else {
+                           clearSingleFields();
+                           $(singleSearchFields).hide();
+                           $(rangeSearchFields).show();
+
+                     }
+                 });
+                });
+        </script>
     {% endif %}
     {% if request.POST %}
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
         <div class="panel-heading">Results</div>
         <div class="panel-body">
         {% if result_type == "base_contextual" %}
