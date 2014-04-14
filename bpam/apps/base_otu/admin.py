@@ -17,5 +17,18 @@ class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
     search_fields = ('name', 'kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species', )
 
 
+
+class SampleOTUAdmin(admin.ModelAdmin):
+    class Form(forms.ModelForm):
+        class Meta:
+            model = SampleOTU
+            widgets = {
+                'name': forms.TextInput(),
+            }
+
+    form = Form
+    list_display = ('sample', 'otu', 'count', )
+    search_fields = ('sample__bpa_id__bpa_id', )
+
 admin.site.register(OperationalTaxonomicUnit, OperationalTaxonomicUnitAdmin)
-admin.site.register(SampleOTU)
+admin.site.register(SampleOTU, SampleOTUAdmin)
