@@ -1,22 +1,27 @@
 {% extends "base.html" %}
-
 {% block title %}Search Results {% endblock %}
-
 {% block content %}
-        {% if search_form %}
-        <h3>
-           Search Form
-        </h3>
-        <form action="" method="post">{% csrf_token %}
-        {{ search_form.as_p }}
-        <input type="submit" value="Search" />
-    </form>
+    {% if search_form %}
+        <form action="" class="form-inline" role="form" method="post">{% csrf_token %}
+              <div class="panel panel-primary">
+                  <div class="panel-heading">Search Form</div>
+                  <div class="panel-body">
+                       {{ search_form.as_p }}
+                  </div>
+              </div>
+            <input type="submit" value="Search" />
+        </form>
     {% endif %}
-    <h3>Samples</h3>
-    {% if result_type == "base_contextual" %}
-        {% include "base_contextual/sample_table.html" %}
-    {% elif result_type == "base_metagenomics" %}
-        {% include "base_metagenomics/sample_table.html" %}
+    {% if request.POST %}
+        <div class="panel panel-primary">
+        <div class="panel-heading">Results</div>
+        <div class="panel-body">
+        {% if result_type == "base_contextual" %}
+            {% include "base_contextual/sample_table.html" %}
+        {% elif result_type == "base_metagenomics" %}
+            {% include "base_metagenomics/sample_table.html" %}
+        {% endif %}
+    </div>
+    </div>
     {% endif %}
-
 {% endblock %}ml>
