@@ -33,6 +33,22 @@ class SearchTestCase(TestCase):
         found_sample = samples[0]
         assert found_sample.__class__.__name__ == "CollectionSample"
 
+    def testRangeSearch(self):
+        self.chemical_analysis.boron_hot_cacl2 = 0.5
+        self.chemical_analysis.save()
+
+        search_parameters = {"search_range": "boron_hot_cacl2",
+                             "search_field": "",
+                             "search_range_min": "0.2",
+                             "search_range_max": "23.67"
+        }
+
+        searcher = Searcher(search_parameters)
+        samples = searcher.get_matching_samples()
+        assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
+        found_sample = samples[0]
+        assert found_sample.__class__.__name__ == "CollectionSample"
+
 
 
 
