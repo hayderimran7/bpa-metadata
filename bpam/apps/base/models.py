@@ -15,7 +15,7 @@ class BaseSample(Sample, DebugNote):
     otu = models.ManyToManyField('base_otu.OperationalTaxonomicUnit', through='base_otu.SampleOTU')
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return u"{0}: {1}".format(self.name, self.bpa_id)
 
     class Meta:
         # abstract = True
