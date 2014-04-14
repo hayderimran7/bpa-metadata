@@ -11,12 +11,25 @@
               </div>
             <input type="submit" class="btn btn-default" value="Search" />
             <div id="search_selection">
-            <input class="form-control" name="search_type" type="radio" value="field" checked="checked">Field Search</>
-            <input class="form-control" name="search_type" type="radio" value="range">Range Search</>
+            <input class="form-control" name="search_type" type="radio" id="field" value="field" checked="checked">Field Search</>
+            <input class="form-control" name="search_type" type="radio" id="range" value="range">Range Search</>
             </div>
         </form>
         <script>
              $(document).ready(function () {
+                function showCorrectSearchFields() {
+                    var isSingleSearch = $("#id_search_field").val() != "";
+                    if (isSingleSearch) {
+                         $(rangeSearchFields).hide();
+                         $(singleSearchFields).show();
+                         $("#field").prop("checked",true);
+                    }
+                    else {
+                         $(rangeSearchFields).show();
+                         $(singleSearchFields).hide();
+                        $("#range").prop("checked",true);
+                    }
+                }
 
                 function clearRangeFields() {
                     $("#id_search_range").val("");
@@ -41,10 +54,9 @@
                         "label[for='id_search_value'],"+
                         "#id_search_value";
 
-                $(rangeSearchFields).hide();
-                $(singleSearchFields).show();
+                showCorrectSearchFields();
 
-                 $("input[name='search_type']").change(function (){
+                $("input[name='search_type']").change(function (){
                      var sel = $("input[name='search_type']:checked").val();
                      if (sel == 'field'){
                         clearRangeFields();
@@ -52,10 +64,9 @@
                         $(singleSearchFields).show();
                      }
                      else {
-                           clearSingleFields();
-                           $(singleSearchFields).hide();
-                           $(rangeSearchFields).show();
-
+                        clearSingleFields();
+                        $(singleSearchFields).hide();
+                        $(rangeSearchFields).show();
                      }
                  });
                 });
