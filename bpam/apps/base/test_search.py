@@ -13,7 +13,9 @@ class SearchTestCase(TestCase):
         super(SearchTestCase, self).setUp()
         self.base_sample = mommy.make(BaseSample)
         self.bpa_id = self.base_sample.bpa_id
-        self.collection_sample = mommy.make(CollectionSample, bpa_id=self.bpa_id)
+        self.collection_site = mommy.make(CollectionSite)
+
+        self.collection_sample = mommy.make(CollectionSample, bpa_id=self.bpa_id, site=self.collection_site)
         self.chemical_analysis = mommy.make(ChemicalAnalysis, bpa_id=self.bpa_id)
         self.otu = mommy.make(OperationalTaxonomicUnit)
         self.sample_otu = mommy.make(SampleOTU, sample=self.base_sample, otu=self.otu)
@@ -48,6 +50,23 @@ class SearchTestCase(TestCase):
         assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
         found_sample = samples[0]
         assert found_sample.__class__.__name__ == "CollectionSample"
+
+    def testSearchOnSiteSubObjectField(self):
+        self.collection_site.elevation = 23
+        self.collection_site.save()
+
+        search_parameters = {"search_range": "elevation",
+                             "search_field": "",
+                             "search_range_min": "22",
+                             "search_range_max": "24"
+        }
+
+        searcher = Searcher(search_parameters)
+        samples = searcher.get_matching_samples()
+        assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
+        found_sample = samples[0]
+        assert found_sample.__class__.__name__ == "CollectionSample"
+
 
 
 
