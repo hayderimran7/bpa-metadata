@@ -4,10 +4,12 @@
 
 {% block content %}
     <div class="jumbotron">
-        <h2>OTU Search</h2>
+        <h2>Search</h2>
     </div>
-    <form action="" method="post">{% csrf_token %}
+    <form action="" class="form-inline" role="form" method="post">{% csrf_token %}
+        <div class="form-group">
         {{ form.as_p }}
-        <input type="submit" value="Search" />
+        <input class="form-control" type="submit" value="Search" />
+       </div>
     </form>
 {% endblock %}

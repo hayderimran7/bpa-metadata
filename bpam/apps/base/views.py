@@ -63,7 +63,18 @@ class AbstractSearchableListView(ListView, FormMixin):
         return self.get(request)
 
     def get_form(self, form_class):
-        return form_class(data=self.form_data, initial=self.form_data)
+        form_instance = form_class(data=self.form_data, initial=self.form_data)
+        return self._addcss_attributes(form_instance)
+
+    def _addcss_attributes(self, form):
+        """
+        bootstrapify
+        """
+        for field_name in form.fields:
+            field_object = form.fields[field_name]
+            if hasattr(field_object, "widget"):
+                field_object.widget.attrs["class"] = "form-control"
+        return form
 
     def get_search_items_name(self):
         raise NotImplementedError("get_search_items_name subclass responsibility")
