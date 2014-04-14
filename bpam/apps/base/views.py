@@ -52,8 +52,6 @@ class AbstractSearchableListView(ListView, FormMixin):
                 else:
                     raise Exception("unknown module: %s" % module_name)
 
-
-
     def get_model(self):
         raise NotImplementedError("get_model subclass responsibility")
 
@@ -80,8 +78,7 @@ class AbstractSearchableListView(ListView, FormMixin):
     def get_queryset(self):
         search_parameters = self.form.data
         if not search_parameters:
-            return self.get_model().objects.all()
-
+            return []
         searcher = Searcher(search_parameters)
         return searcher._get_matching_samples()
 
