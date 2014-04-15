@@ -111,3 +111,41 @@ class OTUSearchView(AbstractSearchableListView):
 
     def get_allow_empty(self):
         return True
+
+# This view might be better implemented as part of the rest api.
+# It just provides data for the bootstrap typeahead widget
+
+from django.http import HttpResponse
+from django.views.generic.base import View
+import json
+
+from ..base_otu.models import OperationalTaxonomicUnit
+
+class OTUAutoCompleteView(View):
+    def get(self, request, thing=None):
+        query = request.GET.get("q", None)
+
+        otu_fields = {
+            "kingdom": None,
+            "phylum": None,
+            "class": "otu_class",
+            "order": None,
+            "family": None,
+            "genus": None,
+            "species": None,
+        }
+
+        response = HttpResponse(content_type="application/json")
+
+        if thing in otu_fields.keys():
+            field = otu_fields[thing] or thing
+            q = OperationalTaxonomicUnit.objects.filter(**{ "%s__icontains" % field: query })
+            q = q.order_by(field).distinct(field)
+            q = q.values_list("id", field)
+            options = [{"id": id, "name": name} for (id, name) in q]
+        else:
+            response.status_code = 404
+            options = []
+
+        json.dump(options, response)
+        return response

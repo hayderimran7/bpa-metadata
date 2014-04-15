@@ -15,6 +15,9 @@
 {% bootstrap_javascript jquery=True %}
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/jquery.tablesorter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
 
     {% bootstrap_css %}
 
@@ -68,9 +71,7 @@
     <p>BPA Metadata {% bpam_version %}</p>
 </div>
 
-{% comment %}
-<script src="{% static "bpam/base.js" %}"></script>
-{% endcomment %}
+<script src="{% static "base.js" %}"></script>
 
 </body>
 </html>
