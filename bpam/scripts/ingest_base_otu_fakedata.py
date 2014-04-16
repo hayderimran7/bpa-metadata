@@ -7,8 +7,7 @@ import xlrd
 from libs import logger_utils
 from libs import ingest_utils
 from apps.base_otu.models import *
-from apps.common.models import BPAUniqueID
-from apps.base import BASESample
+from apps.base.models import BASESample
 
 BPA_PREFIX = '102.100.100.'
 
