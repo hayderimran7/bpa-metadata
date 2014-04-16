@@ -5,7 +5,7 @@ from apps.common.models import SequenceFile, Run, Facility, DebugNote
 from apps.base.models import BaseSample
 
 
-class AmpliconSample(BaseSample, DebugNote):
+class AmpliconSequencingMetadata(BaseSample, DebugNote):
     """
     BASE Amplicon Soil Sample
     """
@@ -37,20 +37,9 @@ class AmpliconSample(BaseSample, DebugNote):
         return u"{0}".format(self.name)
 
     class Meta:
-        verbose_name_plural = _("Amplicon Sample")
+        verbose_name_plural = _("Amplicon Sequencing Metadata")
 
 
-class AmpliconRun(Run):
-    """
-    A Meta genomics sequence file generation Run
-    """
-    sample = models.ForeignKey(AmpliconSample)
-
-    def __unicode__(self):
-        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
-
-    class Meta:
-        verbose_name_plural = _("Amplicon Run")
 
 
 class AmpliconSequenceFile(SequenceFile):
@@ -58,8 +47,7 @@ class AmpliconSequenceFile(SequenceFile):
     Amplicon Sequence File
     """
 
-    sample = models.ForeignKey(AmpliconSample)
-    run = models.ForeignKey(AmpliconRun, null=True)  # FIXME
+    sample = models.ForeignKey(AmpliconSequencingMetadata)
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")

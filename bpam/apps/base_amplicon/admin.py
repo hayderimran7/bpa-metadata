@@ -22,7 +22,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
-            model = AmpliconSample
+            model = AmpliconSequencingMetadata
             widgets = {
                 'bpa_id': LinkedSelect(
                     attrs={'class': 'input-medium',
@@ -90,7 +90,7 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('bpa_id', 'sequencing_facility', )
 
 
-admin.site.register(AmpliconSample, SampleAdmin)
+admin.site.register(AmpliconSequencingMetadata, SampleAdmin)
 
 
 class AmpliconRunAdmin(admin.ModelAdmin):

@@ -5,13 +5,13 @@ from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 from mptt.forms import TreeNodeChoiceField
 
-from models import CollectionSite, CollectionSample, ChemicalAnalysis, LandUse
+from models import CollectionSite, SampleContext, ChemicalAnalysis, LandUse
 
 
 class CollectionSampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
-            model = CollectionSample
+            model = SampleContext
             widgets = {
                 'bpa_id': LinkedSelect,
                 'site': LinkedSelect,
@@ -42,7 +42,7 @@ class CollectionSampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth',)
 
 
-admin.site.register(CollectionSample, CollectionSampleAdmin)
+admin.site.register(SampleContext, CollectionSampleAdmin)
 
 
 class LandUseInlineForm(forms.ModelForm):
@@ -59,10 +59,10 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     class CollectionSampleInline(admin.TabularInline):
         class CollectionSampleInlineForm(forms.ModelForm):
             class Meta:
-                model = CollectionSample
+                model = SampleContext
 
         suit_classes = 'suit-tab suit-tab-samples'
-        model = CollectionSample
+        model = SampleContext
         form = CollectionSampleInlineForm
         fields = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth')
         extra = 0
