@@ -213,5 +213,5 @@ class SampleContext(DebugNote):
 
 
     class Meta:
-        verbose_name_plural = _('Sample Context')
+        verbose_name_plural = _('Collection Samples')
 
