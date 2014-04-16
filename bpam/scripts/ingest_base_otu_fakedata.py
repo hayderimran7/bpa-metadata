@@ -96,6 +96,21 @@ class BASESampleCache(object):
             return None
 
 
+class OTUCache(object):
+    """
+    Caches OTU's locally to reduce DB hits
+    """
+
+    cache = {}
+
+    def get(self, otu_name):
+        if self.cache.has_key(otu_name):
+            return self.cache[otu_name]
+        else:
+            otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
+            self.cache[otu_name] = otu
+            return otu
+
 def ingest_sample_to_otu(file_name):
     """
     populate the link table
@@ -109,6 +124,7 @@ def ingest_sample_to_otu(file_name):
     curr_otu = 0  # skip header
 
     base_sample_cache = BASESampleCache()
+    otu_cache = OTUCache()
 
     while curr_otu < otu_total:
         curr_otu += 1
@@ -119,7 +135,7 @@ def ingest_sample_to_otu(file_name):
             if count > 0:
                 otu_name = 'OTU_' + str(int(sheet.cell_value(curr_otu, 0)))
                 bpa_id_name = BPA_PREFIX + str(ingest_utils.get_int(sheet.cell_value(0, curr_sample)))
-                otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
+                otu = otu_cache.get(otu_name)
 
                 sample = base_sample_cache.get(bpa_id_name)
                 if sample:
