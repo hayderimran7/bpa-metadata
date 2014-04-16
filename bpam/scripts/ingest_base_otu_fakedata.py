@@ -93,6 +93,7 @@ class BASESampleCache(object):
         except BASESample.DoesNotExist:
             logger.warning('BASE Sample with bpa_id {} not currently in DB'.format(bpa_idx))
             self.ignore_list.append(bpa_idx)
+            return None
 
 
 def ingest_sample_to_otu(file_name):
