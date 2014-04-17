@@ -308,7 +308,7 @@ def add_samples(data):
         if bpa_id is None:
             continue
 
-        sample, created = CollectionSample.objects.get_or_create(bpa_id=bpa_id)
+        sample, created = SampleContext.objects.get_or_create(bpa_id=bpa_id)
         # always update, if the sample id is repeated more than once in the document, the last one wins
         sample.bpa_id = bpa_id
         sample.site = get_site(e)

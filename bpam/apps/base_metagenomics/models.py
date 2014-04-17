@@ -2,10 +2,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 from apps.common.models import SequenceFile, Run, DebugNote
-from apps.base.models import BaseSample
+from apps.base.models import BASESample
 
 
-class MetagenomicsSample(BaseSample, DebugNote):
+class MetagenomicsSample(BASESample, DebugNote):
     """
     BASE Meta genomics Soil Sample
     """

@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, TemplateView
 
-from .models import ChemicalAnalysis, CollectionSite, CollectionSample
+from .models import ChemicalAnalysis, CollectionSite, SampleContext
 
 
 class LandingView(TemplateView):
@@ -23,11 +23,11 @@ class CollectionSiteDetailView(DetailView):
 
 
 class SampleListView(ListView):
-    model = CollectionSample
+    model = SampleContext
     context_object_name = 'samples'
     template_name = 'base_contextual/sample_list.html'
 
 
 class SampleDetailView(DetailView):
-    model = CollectionSample
+    model = SampleContext
     template_name = 'base_contextual/sample_detail.html'

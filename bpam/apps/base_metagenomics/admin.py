@@ -86,6 +86,7 @@ class SampleAdmin(admin.ModelAdmin):
     search_fields = ('bpa_id__bpa_id', 'name')
     list_filter = ('bpa_id', 'name', 'dna_extraction_protocol')
 
+
 admin.site.register(MetagenomicsSample, SampleAdmin)
 
 

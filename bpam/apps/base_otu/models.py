@@ -1,9 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import BPAUniqueID
-from apps.base.models import BaseSample
-
 
 class OperationalTaxonomicUnit(models.Model):
     """
@@ -37,8 +34,7 @@ class SampleOTU(models.Model):
     Links Sample with OTU
     """
 
-    sample = models.ForeignKey(BaseSample)
-    # bpa_id = models.ForeignKey(BPAUniqueID)
+    sample = models.ForeignKey('base.BASESample')
     otu = models.ForeignKey(OperationalTaxonomicUnit)
     count = models.IntegerField(_('OTU Count'))
 

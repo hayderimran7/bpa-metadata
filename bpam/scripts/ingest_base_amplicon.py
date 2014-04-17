@@ -5,7 +5,7 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 from apps.common.models import Facility
-from apps.base_amplicon.models import AmpliconSample
+from apps.base_amplicon.models import AmpliconSequenceMetadata
 
 
 logger = logger_utils.get_logger(__name__)
@@ -71,7 +71,7 @@ def add_samples(data):
             logger.warning('Could not add entry on row {0}'.format(entry.row))
             continue
 
-        sample, created = AmpliconSample.objects.get_or_create(bpa_id=bpa_id)
+        sample, created = AmpliconSequenceMetadata.objects.get_or_create(bpa_id=bpa_id)
 
         sample.sample_extraction_id = entry.sample_extraction_id
         sample.name = entry.name

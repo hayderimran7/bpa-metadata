@@ -6,7 +6,19 @@ from apps.common.admin import SequenceFileAdmin
 from models import *
 
 
-admin.site.register(AmpliconSequenceFile, SequenceFileAdmin)
+class AmpliconSequenceFileAdmin(SequenceFileAdmin):
+    # removed run
+    fieldsets = [
+        ('Sequence File',
+         {'fields': (
+             'filename', 'md5', 'sample', 'lane_number', 'index_number', 'analysed',
+             'date_received_from_sequencing_facility','note'),
+         }),
+    ]
+
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility',)
+
+admin.site.register(AmpliconSequenceFile, AmpliconSequenceFileAdmin)
 
 
 class SequenceFileInlineForm(forms.ModelForm):
@@ -22,7 +34,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
-            model = AmpliconSample
+            model = AmpliconSequencingMetadata
             widgets = {
                 'bpa_id': LinkedSelect(
                     attrs={'class': 'input-medium',
@@ -63,7 +75,6 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-id',),
           'fields': (
               'bpa_id',
-              'name',
               'sample_extraction_id')}),
         (None,  # 'Sample Management',
          {'classes': ('suit-tab suit-tab-management',),
@@ -85,42 +96,42 @@ class SampleAdmin(admin.ModelAdmin):
               'debug_note')}),
     ]
 
-    list_display = ('bpa_id', 'name', 'target', 'sequencing_facility')
+    list_display = ('bpa_id', 'target', 'sequencing_facility')
     search_fields = ('bpa_id', 'sequencing_facility')
     list_filter = ('bpa_id', 'sequencing_facility', )
 
 
-admin.site.register(AmpliconSample, SampleAdmin)
+admin.site.register(AmpliconSequencingMetadata, SampleAdmin)
 
 
-class AmpliconRunAdmin(admin.ModelAdmin):
-    class RunForm(forms.ModelForm):
-        class Meta:
-            model = AmpliconRun
-            widgets = {
-                'sample': LinkedSelect(attrs={'style': 'width:50%'}),
-                'sequencing_facility': LinkedSelect,
-                'sequencer': LinkedSelect
-            }
-
-    form = RunForm
-
-    fieldsets = [
-        ('Sample',
-         {'fields': ('sample',)}),
-        ('Sequencing',
-         {'fields': (
-             'sequencing_facility',
-             'sequencer',
-             'run_number',
-             'flow_cell_id',
-         )}),
-    ]
-
-    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
-    search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility',)
-
-
-admin.site.register(AmpliconRun, AmpliconRunAdmin)
+# class AmpliconRunAdmin(admin.ModelAdmin):
+#     class RunForm(forms.ModelForm):
+#         class Meta:
+#             model = AmpliconRun
+#             widgets = {
+#                 'sample': LinkedSelect(attrs={'style': 'width:50%'}),
+#                 'sequencing_facility': LinkedSelect,
+#                 'sequencer': LinkedSelect
+#             }
+#
+#     form = RunForm
+#
+#     fieldsets = [
+#         ('Sample',
+#          {'fields': ('sample',)}),
+#         ('Sequencing',
+#          {'fields': (
+#              'sequencing_facility',
+#              'sequencer',
+#              'run_number',
+#              'flow_cell_id',
+#          )}),
+#     ]
+#
+#     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
+#     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
+#     list_filter = ('sequencing_facility',)
+#
+#
+# admin.site.register(AmpliconRun, AmpliconRunAdmin)
 

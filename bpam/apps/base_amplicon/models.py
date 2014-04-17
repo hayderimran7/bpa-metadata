@@ -1,15 +1,14 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from apps.common.models import SequenceFile, Run, Facility, DebugNote
-from apps.base.models import BaseSample
+from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID
 
-
-class AmpliconSample(BaseSample, DebugNote):
+class AmpliconSequencingMetadata(DebugNote):
     """
     BASE Amplicon Soil Sample
     """
 
+    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
                                             verbose_name=_('Sequencing facility'),
@@ -37,20 +36,9 @@ class AmpliconSample(BaseSample, DebugNote):
         return u"{0}".format(self.name)
 
     class Meta:
-        verbose_name_plural = _("Amplicon Sample")
+        verbose_name_plural = _("Amplicon Sequencing Metadata")
 
 
-class AmpliconRun(Run):
-    """
-    A Meta genomics sequence file generation Run
-    """
-    sample = models.ForeignKey(AmpliconSample)
-
-    def __unicode__(self):
-        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
-
-    class Meta:
-        verbose_name_plural = _("Amplicon Run")
 
 
 class AmpliconSequenceFile(SequenceFile):
@@ -58,8 +46,7 @@ class AmpliconSequenceFile(SequenceFile):
     Amplicon Sequence File
     """
 
-    sample = models.ForeignKey(AmpliconSample)
-    run = models.ForeignKey(AmpliconRun, null=True)  # FIXME
+    sample = models.ForeignKey('base.BASESample')
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")

@@ -1,7 +1,8 @@
-from apps.base_contextual.models import CollectionSample, ChemicalAnalysis
-from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
+from apps.base_contextual.models import SampleContext, ChemicalAnalysis
+from apps.base_otu.models import OperationalTaxonomicUnit
 from django.db.models import Q
 import logging
+
 logger = logging.getLogger("rainbow")
 
 
@@ -13,20 +14,21 @@ def search_strategy_horizon_desc(searcher):
     """
     ids = []
 
-    for collection_sample in CollectionSample.objects.all():
+    for collection_sample in SampleContext.objects.all():
         if searcher.search_value == collection_sample.get_horizon_description():
             ids.append(collection_sample.bpa_id)
 
-    return CollectionSample.objects.filter(bpa_id__in=ids)
+    return SampleContext.objects.filter(bpa_id__in=ids)
 
 
 class SearchStrategy(object):
     """
     Represents a method of searching for matching samples
     """
-    def __init__(self, model, search_path=None, return_model=CollectionSample):
+
+    def __init__(self, model, search_path=None, return_model=SampleContext):
         self.model = model  # The model class to search over ( e.g. ChemicalAnalysis)
-        self.return_model = return_model # the  related model class ( by BPA ID ) to return
+        self.return_model = return_model  # the  related model class ( by BPA ID ) to return
         self.search_path = search_path
 
     def __call__(self, searcher):
@@ -60,26 +62,26 @@ class Searcher(object):
     SEARCH_TYPE_FIELD = "FIELD"
     UNSET = "----"
     SEARCH_TABLE = {
-        CollectionSample: {"sample_id": "bpa_id__bpa_id",
-                           "date_sampled": "site__date_sampled",
-                           "lat": "site__lat",
-                           "lon": "site__lon",
-                           "depth": "depth",
-                           "description": search_strategy_horizon_desc,  # check!
-                           "current_land_use": "site__current_land_use__description",
-                           "general_ecological_zone": "site__general_ecological_zone__description",
-                           "vegetation_type": "site__vegetation_type__vegetation",
-                           "vegetation_total_cover": "site__vegetation_total_cover",
-                           "vegetation_dominant_trees": "site__vegetation_dominant_trees",
-                           "elevation": "site__elevation",
-                           "australian_soil_classification": "site__soil_type_australian_classification__classification",
-                           "fao_soil_type": "site__soil_type_fao_classification",
-                           "immediate_previous_land_use": "site__immediate_previous_land_use",
-                           "agrochemical_additions": "site__agrochemical_additions",
-                           "tillage": "site__tillage__tillage",
-                           "fire_history": "site__fire_history",
-                           "fire_intensity": "site__fire_intensity",
-                           "environment_events": "site__environment_events",
+        SampleContext: {"sample_id": "bpa_id__bpa_id",
+                        "date_sampled": "site__date_sampled",
+                        "lat": "site__lat",
+                        "lon": "site__lon",
+                        "depth": "depth",
+                        "description": search_strategy_horizon_desc,  # check!
+                        "current_land_use": "site__current_land_use__description",
+                        "general_ecological_zone": "site__general_ecological_zone__description",
+                        "vegetation_type": "site__vegetation_type__vegetation",
+                        "vegetation_total_cover": "site__vegetation_total_cover",
+                        "vegetation_dominant_trees": "site__vegetation_dominant_trees",
+                        "elevation": "site__elevation",
+                        "australian_soil_classification": "site__soil_type_australian_classification__classification",
+                        "fao_soil_type": "site__soil_type_fao_classification",
+                        "immediate_previous_land_use": "site__immediate_previous_land_use",
+                        "agrochemical_additions": "site__agrochemical_additions",
+                        "tillage": "site__tillage__tillage",
+                        "fire_history": "site__fire_history",
+                        "fire_intensity": "site__fire_intensity",
+                        "environment_events": "site__environment_events",
         },
 
         ChemicalAnalysis: {
@@ -122,7 +124,7 @@ class Searcher(object):
             field = self.search_field
         else:
             field = self.search_range
-            
+
         for model_class in Searcher.SEARCH_TABLE:
             if field in Searcher.SEARCH_TABLE[model_class]:
                 logger.debug("%s in %s" % (field, model_class))
@@ -189,9 +191,10 @@ class Searcher(object):
 
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
-            our_ids = [ s.bpa_id for s in samples]
+            our_ids = [s.bpa_id for s in samples]
             logger.debug("bpa ids of samples from non-taxonommic search = %s" % our_ids)
             from apps.base_otu.models import SampleOTU
+
             sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=our_ids).filter(otu__in=otus)
             return samples.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
         else:

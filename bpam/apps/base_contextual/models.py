@@ -172,7 +172,7 @@ class ChemicalAnalysis(models.Model):
         verbose_name_plural = _("Sample Chemical Essays")
 
 
-class CollectionSample(DebugNote):
+class SampleContext(DebugNote):
     """
     A sample to collect sample specific info for contextual data.
     """
@@ -209,9 +209,9 @@ class CollectionSample(DebugNote):
             self.depth)
 
     def get_fields(self):
-        return [(field.name, field.value_to_string(self)) for field in CollectionSample._meta.fields]
+        return [(field.name, field.value_to_string(self)) for field in SampleContext._meta.fields]
 
 
     class Meta:
-        verbose_name_plural = _('Collection Samples')
+        verbose_name_plural = _('Sample Context')
 
