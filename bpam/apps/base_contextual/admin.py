@@ -8,7 +8,7 @@ from mptt.forms import TreeNodeChoiceField
 from models import CollectionSite, SampleContext, ChemicalAnalysis, LandUse
 
 
-class CollectionSampleAdmin(admin.ModelAdmin):
+class SampleContextAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
             model = SampleContext
@@ -42,7 +42,7 @@ class CollectionSampleAdmin(admin.ModelAdmin):
     list_display = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth',)
 
 
-admin.site.register(SampleContext, CollectionSampleAdmin)
+admin.site.register(SampleContext, SampleContextAdmin)
 
 
 class LandUseInlineForm(forms.ModelForm):
@@ -56,14 +56,14 @@ class LandUseInline(admin.TabularInline):
 
 
 class CollectionSiteAdmin(admin.ModelAdmin):
-    class CollectionSampleInline(admin.TabularInline):
-        class CollectionSampleInlineForm(forms.ModelForm):
+    class SampleContextInline(admin.TabularInline):
+        class SampleContextInlineForm(forms.ModelForm):
             class Meta:
                 model = SampleContext
 
         suit_classes = 'suit-tab suit-tab-samples'
         model = SampleContext
-        form = CollectionSampleInlineForm
+        form = SampleContextInlineForm
         fields = ('bpa_id', 'horizon_classification1', 'horizon_classification2', 'depth')
         extra = 0
 
@@ -99,7 +99,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
             }
 
     form = CollectionForm
-    inlines = (CollectionSampleInline, )
+    inlines = (SampleContextInline, )
     suit_form_tabs = (
         ('description', 'Location Description'),
         ('context', 'Context'),
