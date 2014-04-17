@@ -1,0 +1,58 @@
+{% if sample_contexts %}
+<table id="contextsamples" class="table table-striped tablesorter">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Collection Site</th>
+        <th>Horizon Classifications</th>
+        <th>Depth</th>
+        <th>Methodological Notes</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for context in sample_contexts %}
+    <tr>
+        <td>
+            <a href="{% url 'basecontextual:sampledetail' context.pk %}">{{ context.bpa_id }}</a>
+        </td>
+        <td>
+            {% if context.site %}
+            <a href="{% url 'basecontextual:collectionsitedetail' context.site.pk %}">
+                {{ context.site.get_location_name }}</a>
+            {% endif %}
+        </td>
+        <td>{{ context.get_horizon_description }}</td>
+        <td>{{ context.depth }}</td>
+        <td>{{ context.methodological_notes }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div class="pagination">
+    <span class="page-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#contextsamples").tablesorter();
+        });
+    });
+</script>
+
+{% else %}
+<h3> No Contextual data is currently available </h3>
+{% endif %}

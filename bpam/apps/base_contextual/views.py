@@ -22,12 +22,12 @@ class CollectionSiteDetailView(DetailView):
     template_name = 'base_contextual/collectionsite_detail.html'
 
 
-class SampleListView(ListView):
+class SampleContextListView(ListView):
     model = SampleContext
-    context_object_name = 'samples'
-    template_name = 'base_contextual/sample_list.html'
+    context_object_name = 'sample_contexts'
+    template_name = 'base_contextual/sample_context_list.html'
+    paginate_by = 25
 
-
-class SampleDetailView(DetailView):
+class SampleContextDetailView(DetailView):
     model = SampleContext
-    template_name = 'base_contextual/sample_detail.html'
+    template_name = 'base_contextual/sample_context_detail.html'
