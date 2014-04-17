@@ -1,13 +1,14 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from apps.common.models import SequenceFile, Facility, DebugNote
+from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID
 
 class AmpliconSequencingMetadata(DebugNote):
     """
     BASE Amplicon Soil Sample
     """
 
+    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
                                             verbose_name=_('Sequencing facility'),
@@ -45,7 +46,7 @@ class AmpliconSequenceFile(SequenceFile):
     Amplicon Sequence File
     """
 
-    sample = models.ForeignKey(AmpliconSequencingMetadata)
+    sample = models.ForeignKey('base.BASESample')
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")
