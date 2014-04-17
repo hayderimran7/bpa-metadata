@@ -1,11 +1,10 @@
 from django.http import Http404
 from django.views.generic import TemplateView
-from django.views.generic import FormView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
+
 from .search import Searcher
 from .forms import OTUSearchForm
-from apps.base_contextual.models import CollectionSample
 
 
 class BaseView(TemplateView):
@@ -95,12 +94,12 @@ class AbstractSearchableListView(ListView, FormMixin):
 
 
 class OTUSearchView(AbstractSearchableListView):
-
     def get_form_class(self):
         return OTUSearchForm
 
     def get_model(self):
         from apps.base_metagenomics.models import MetagenomicsSample
+
         return MetagenomicsSample
 
     def get_search_items_name(self):
@@ -121,6 +120,7 @@ import json
 
 from ..base_otu.models import OperationalTaxonomicUnit
 
+
 class OTUAutoCompleteView(View):
     def get(self, request, thing=None):
         query = request.GET.get("q", None)
@@ -139,7 +139,7 @@ class OTUAutoCompleteView(View):
 
         if thing in otu_fields.keys():
             field = otu_fields[thing] or thing
-            q = OperationalTaxonomicUnit.objects.filter(**{ "%s__icontains" % field: query })
+            q = OperationalTaxonomicUnit.objects.filter(**{"%s__icontains" % field: query})
             q = q.order_by(field).distinct(field)
             q = q.values_list("id", field)
             options = [{"id": id, "name": name} for (id, name) in q]

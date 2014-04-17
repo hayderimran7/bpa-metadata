@@ -75,7 +75,6 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-id',),
           'fields': (
               'bpa_id',
-              'name',
               'sample_extraction_id')}),
         (None,  # 'Sample Management',
          {'classes': ('suit-tab suit-tab-management',),
@@ -97,7 +96,7 @@ class SampleAdmin(admin.ModelAdmin):
               'debug_note')}),
     ]
 
-    list_display = ('bpa_id', 'name', 'target', 'sequencing_facility')
+    list_display = ('bpa_id', 'target', 'sequencing_facility')
     search_fields = ('bpa_id', 'sequencing_facility')
     list_filter = ('bpa_id', 'sequencing_facility', )
 
