@@ -33,7 +33,7 @@ class SearchTestCase(TestCase):
         samples = searcher.get_matching_samples()
         assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
         found_sample = samples[0]
-        assert found_sample.__class__.__name__ == "SampleContext"
+        assert found_sample.__class__.__name__ == "BASESample"
 
     def testRangeSearch(self):
         self.chemical_analysis.boron_hot_cacl2 = 0.5
@@ -49,7 +49,7 @@ class SearchTestCase(TestCase):
         samples = searcher.get_matching_samples()
         assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
         found_sample = samples[0]
-        assert found_sample.__class__.__name__ == "SampleContext"
+        assert found_sample.__class__.__name__ == "BASESample"
 
     def testSearchOnSiteSubObjectField(self):
         self.collection_site.elevation = 23
@@ -65,7 +65,7 @@ class SearchTestCase(TestCase):
         samples = searcher.get_matching_samples()
         assert len(samples) == 1, "Expected one matching sample - got %s" % len(samples)
         found_sample = samples[0]
-        assert found_sample.__class__.__name__ == "SampleContext"
+        assert found_sample.__class__.__name__ == "BASESample"
 
     def testFailingSearchOnSiteSubObjectField(self):
         self.collection_site.elevation = 25
