@@ -1,3 +1,4 @@
+from apps.base.models import BASESample
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_otu.models import OperationalTaxonomicUnit
 from django.db.models import Q
@@ -26,7 +27,7 @@ class SearchStrategy(object):
     Represents a method of searching for matching samples
     """
 
-    def __init__(self, model, search_path=None, return_model=SampleContext):
+    def __init__(self, model, search_path=None, return_model=BASESample):
         self.model = model  # The model class to search over ( e.g. ChemicalAnalysis)
         self.return_model = return_model  # the  related model class ( by BPA ID ) to return
         self.search_path = search_path
@@ -52,8 +53,6 @@ class SearchStrategy(object):
         logger.debug("SearchStrategy filters = %s" % filter_dict)
 
         matches = self.model.objects.filter(**filter_dict)
-        for match in matches:
-            logger.debug("got a match! = %s" % match)
         return self.return_model.objects.filter(bpa_id__in=[match.bpa_id for match in matches])
 
 
@@ -141,7 +140,8 @@ class Searcher(object):
                         search_strategy += "__range"
                         filter_dict = {search_strategy: (self.search_range_min, self.search_range_max)}
 
-                    first_level_results = model_class.objects.filter(**filter_dict)
+                    first_level_related_models = model_class.objects.filter(**filter_dict)
+                    first_level_results = BASESample.objects.filter(bpa_id__in=[m.bpa_id for m in first_level_related_models])
 
                 logger.debug("filtering on taxonomy if present ..")
                 return self._filter_on_taxonomy(first_level_results)

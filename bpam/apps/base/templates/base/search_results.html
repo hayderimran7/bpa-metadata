@@ -102,11 +102,71 @@
         <div class="panel panel-default">
         <div class="panel-heading">Results</div>
         <div class="panel-body">
-        {% if result_type == "base_contextual" %}
-            {% include "base_contextual/sample_context_table.html" %}
-        {% elif result_type == "base_metagenomics" %}
-            {% include "base_metagenomics/sample_table.html" %}
-        {% endif %}
+
+        {% if samples %}
+            <table id="samples" class="table table-striped tablesorter">
+                <thead>
+                    <tr>
+                        <th>BPA ID</th>
+                        <th>Sample Context</th>
+                        <th>Chemical Analysis</th>
+                        <th>XXX</th>
+                        <th>YYY</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            {{ sample.bpa_id }}
+        </td>
+        <td>
+            <a href="{% url 'basecontextual:sampledetail' sample.context.pk %}">Sample Context</a>
+        </td>
+        <td>
+
+            <a href="todo">Chemical Analysis</a>
+
+        </td>
+        <td>todo</td>
+        <td>todo</td>
+        <td>todo</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<ul class="pagination pagination-centered">
+    {% if page_obj.has_previous %}
+    <li><a href="?page=1"><<</a></li>
+    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+    <li
+    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
+    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#samples").tablesorter();
+        });
+    });
+</script>
+
+{% else %}
+<h3> No Results </h3>
+{% endif %}
     </div>
     </div>
     {% endif %}
