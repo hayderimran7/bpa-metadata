@@ -110,8 +110,7 @@
                         <th>BPA ID</th>
                         <th>Sample Context</th>
                         <th>Chemical Analysis</th>
-                        <th>XXX</th>
-                        <th>YYY</th>
+
     </tr>
     </thead>
     <tbody>
@@ -124,13 +123,8 @@
             <a href="{% url 'basecontextual:sampledetail' sample.context.pk %}">Sample Context</a>
         </td>
         <td>
-
-            <a href="todo">Chemical Analysis</a>
-
+            <a href="{% url 'basecontextual:chemicalanalysisdetail' sample.chemical_analysis.pk %}">Chemical Analysis</a>
         </td>
-        <td>todo</td>
-        <td>todo</td>
-        <td>todo</td>
     </tr>
     {% endfor %}
     </tbody>
