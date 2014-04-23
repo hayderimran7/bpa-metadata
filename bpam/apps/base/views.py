@@ -32,24 +32,8 @@ class AbstractSearchableListView(ListView, FormMixin):
                           % {'class_name': self.__class__.__name__})
 
         context = self.get_context_data(object_list=self.object_list, search_form=self.form)
-
-        context["result_type"] = self._get_search_result_type()
-
         return self.render_to_response(context)
 
-    def _get_search_result_type(self):
-        if self.object_list is None:
-            return "base_metagenomics"
-        else:
-            if hasattr(self.object_list, "model"):
-                # queryset
-                module_name = self.object_list.model.__module__
-                if "base_contextual" in module_name:
-                    return "base_contextual"
-                elif "base_metagenomics" in module_name:
-                    return "base_metagenomics"
-                else:
-                    raise Exception("unknown module: %s" % module_name)
 
     def get_model(self):
         raise NotImplementedError("get_model subclass responsibility")
@@ -106,6 +90,7 @@ class BASESearchView(AbstractSearchableListView):
     def get_model(self):
         from apps.base.models import BASESample
         return BASESample
+
 
     def get_search_items_name(self):
         """
