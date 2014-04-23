@@ -19,3 +19,20 @@ class BASESample(Sample, DebugNote):
     class Meta:
         # abstract = True
         verbose_name_plural = _("Biome of Australia Soil Environment Samples")
+
+    @property
+    def context(self):
+        try:
+            from apps.base_contextual.models import SampleContext
+            return SampleContext.get(bpa_id=self.bpa_id)
+        except SampleContext.DoesNotExist:
+            return None
+
+    @property
+    def chemical_analysis(self):
+        try:
+            from apps.base_contextual.models import ChemicalAnalysis
+            return ChemicalAnalysis.get(bpa_id=self.bpa_id)
+        except ChemicalAnalysis.DoesNotExist:
+            return None
+
