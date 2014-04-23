@@ -217,7 +217,7 @@ class AutoCompleteView(View):
         model, field = self._get_standardised_vocab(search_field)
 
         if model is None:
-            response.status_code = 404
+            #response.status_code = 404
             options = []
         else:
             q = model.objects.filter(**{"%s__icontains" % field: query})

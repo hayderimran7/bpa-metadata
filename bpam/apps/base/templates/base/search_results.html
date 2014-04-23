@@ -74,11 +74,7 @@
                  });
 
                  $("#id_search_field").change(function () {
-                      var parent = $(".twitter-typeahead").parent();
-                      var html = parent.html();
-                      $(".twitter-typeahead").remove();
-                      //parent.html(html);
-
+                      $(".typeahead").unbind();
                       var standardisedVocabularyOptions = new Bloodhound({
                       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -107,7 +103,7 @@
         <div class="panel-heading">Results</div>
         <div class="panel-body">
         {% if result_type == "base_contextual" %}
-            {% include "base_contextual/sample_table.html" %}
+            {% include "base_contextual/sample_context_table.html" %}
         {% elif result_type == "base_metagenomics" %}
             {% include "base_metagenomics/sample_table.html" %}
         {% endif %}
