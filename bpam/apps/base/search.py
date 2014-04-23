@@ -130,7 +130,6 @@ class Searcher(object):
                 search_strategy = Searcher.SEARCH_TABLE[model_class][field]
                 logger.debug("search strategy = %s" % search_strategy)
                 if callable(search_strategy):
-                    logger.debug("calling strategy ...")
                     first_level_results = search_strategy(self)
                 else:
                     if self.search_type == Searcher.SEARCH_TYPE_FIELD:
