@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}BASE Contextual Site Detail {% endblock %}
+
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">BASE Chemical Analysis Detail for Sample {{ ca.bpa_id }}</div>
+
+        <table id="nice" class="table">
+            <thead>
+                <td>Property</td>
+                <td>Value</td>
+            </thead>
+            <tbody>
+            <tr>
+                <td>BPA ID</td>
+                <td>{{ca.bpa_id}}</td>
+            </tr>
+            <tr>
+                <td>Depth</td>
+                <td>{{ca.depth}}</td>
+            </tr>
+            <tr>
+                 <td>Moisture</td>
+                 <td>{{ca.moisture}}</td>
+            </tr>
+            <tr>
+                <td>Colour</td>
+                <td>{{ca.colour}}</td>
+            </tr>
+            <tr>
+                <td>Gravel</td>
+                <td>{{ca.gravel}}</td>
+            </tr>
+            <tr>
+                <td>Texture</td>
+                <td>{{ca.texture}}</td>
+            </tr>
+            <tr>
+                <td>Course Sand</td>
+                <td>{{ca.course_sand}}</td>
+            </tr>
+            <tr>
+                <td>Fine Sand</td>
+                <td>{{ca.fine_sand}}</td>
+            </tr>
+            <tr>
+                <td>Sand</td>
+                <td>{{ca.sand}}</td>
+            </tr>
+            <tr>
+                <td>Silt</td>
+                <td>{{ca.silt}}</td>
+            </tr>
+            <tr>
+                <td>Clay</td>
+                <td>{{ca.clay}}</td>
+            </tr>
+            <tr>
+                <td>NH<sub>3</sub>-N</td>
+                <td>{{ca.ammonium_nitrogen}}</td>
+            </tr>
+            <tr>
+                <td>NO<sub>3</sub><sup>−</sup></td>
+                <td>{{ca.nitrate_nitrogen}}</td>
+            </tr>
+            <tr>
+                <td>Colwell P</td>
+                <td>{{ca.phosphorus_colwell}}</td>
+            </tr>
+            <tr>
+                <td>Colwell K</td>
+                <td>{{ca.potassium_colwell}}</td>
+            </tr>
+            <tr>
+                <td>Colwell S</td>
+                <td>{{ca.sulphur_colwell}}</td>
+            </tr>
+            <tr>
+                <td>Organic Carbon</td>
+                <td>{{ca.organic_carbon}}</td>
+            </tr>
+            <tr>
+                <td>Conductivity</td>
+                <td>{{ca.conductivity}}</td>
+            </tr>
+            <tr>
+                <td>CaCl<sub>2</sub> pH</td>
+                <td>{{ca.cacl2_ph}}</td>
+            </tr>
+            <tr>
+                <td>H<sub>2</sub>O pH</td>
+                <td>{{ca.h20_ph}}</td>
+            </tr>
+            <tr>
+                <td>DTPA Cu</td>
+                <td>{{ca.dtpa_copper}}</td>
+            </tr>
+            <tr>
+                <td>DTPA Fe</td>
+                <td>{{ca.dtpa_iron}}</td>
+            </tr>
+            <tr>
+                <td>DTPA Mn</td>
+                <td>{{ca.dtpa_manganese}}</td>
+            </tr>
+            <tr>
+                <td>DTPA Zn</td>
+                <td>{{ca.dtpa_zinc}}</td>
+            </tr>
+            <tr>
+                 <td>Exc Al</td>
+                 <td>{{ca.exc_aluminium}}</td>
+            </tr>
+            <tr>
+                <td>Exc Ca</td>
+                <td>{{ca.exc_calcium}}</td>
+            </tr>
+            <tr>
+                 <td>Exc Mg</td>
+                <td>{{ca.exc_magnesium}}</td>
+            </tr>
+            <tr>
+                <td>Exc K</td>
+                <td>{{ca.exc_potassium}}</td>
+            </tr>
+            <tr>
+                <td>Exc Na</td>
+                <td>{{exc_sodium}}</td>
+            </tr>
+            <tr>
+                <td>B Hot CaCl<sub>2</sub></td>
+                <td>{{ca.boron_hot_cacl2}}</td>
+            </tr>
+            <tr>
+                 <td>Total N</td>
+                 <td>{{ca.total_nitrogen}}</td>
+            </tr>
+            <tr>
+                <td>Total C</td>
+                <td>{{ca.total_carbon}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}
+

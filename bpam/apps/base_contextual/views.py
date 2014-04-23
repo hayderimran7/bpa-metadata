@@ -31,3 +31,11 @@ class SampleContextListView(ListView):
 class SampleContextDetailView(DetailView):
     model = SampleContext
     template_name = 'base_contextual/sample_context_detail.html'
+
+
+class ChemicalAnalysisDetailView(DetailView):
+    model = ChemicalAnalysis
+    context_object_name = 'ca'
+    template_name = 'base_contextual/chemicalanalysis_detail.html'
+
+
