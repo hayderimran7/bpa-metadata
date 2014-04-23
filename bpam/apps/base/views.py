@@ -99,7 +99,7 @@ class AbstractSearchableListView(ListView, FormMixin):
         return searcher.get_matching_samples()
 
 
-class OTUSearchView(AbstractSearchableListView):
+class BASESearchView(AbstractSearchableListView):
     def get_form_class(self):
         return OTUSearchForm
 
