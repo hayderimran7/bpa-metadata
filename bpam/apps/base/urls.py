@@ -14,7 +14,7 @@ urlpatterns = patterns(
         view=views.OTUSearchView.as_view(),
         name='otusearch'),
     url(
-        regex=r'^options/(?P<search_field>\w*)',
+        regex=r'^autocomplete/(?P<search_field>.*)',
         view=views.AutoCompleteView.as_view(),
-        name='search_auto_complete'),
+        name='auto_complete'),
 )

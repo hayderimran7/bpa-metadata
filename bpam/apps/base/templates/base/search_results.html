@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Search Results {% endblock %}
 {% block content %}
-
     {% if search_form %}
 
         <form  action="" class="form-inline" role="form" method="post">{% csrf_token %}
@@ -19,6 +18,8 @@
         </form>
         <script>
              $(document).ready(function () {
+                var auto_complete_url = "{% url 'base:auto_complete' None  %}".replace("None","");
+
                 function showCorrectSearchFields() {
                     var isSingleSearch = $("#id_search_field").val() != "";
                     if (isSingleSearch) {
@@ -72,13 +73,31 @@
                      }
                  });
 
-                $("#id_search_value").select2({
-                    minimumInputLength: 1,
-                    placeHolder: "Enter Search Term",
+                 $("#id_search_field").change(function () {
+                      var parent = $(".twitter-typeahead").parent();
+                      var html = parent.html();
+                      $(".twitter-typeahead").remove();
+                      //parent.html(html);
 
-                });
+                      var standardisedVocabularyOptions = new Bloodhound({
+                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                      queryTokenizer: Bloodhound.tokenizers.whitespace,
+                      remote: auto_complete_url + $('#id_search_field').val() + "?q=%QUERY"
+                     });
 
-                });
+                      standardisedVocabularyOptions.initialize();
+
+                     $("#id_search_value").typeahead(null, {
+                          name: 'standardised-vocabulary-options',
+                          displayKey: 'name',
+                          source: standardisedVocabularyOptions.ttAdapter()
+                     });
+
+                 })
+
+
+             });
+
         </script>
 
     {% endif %}

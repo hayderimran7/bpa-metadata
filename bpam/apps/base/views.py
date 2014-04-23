@@ -74,7 +74,8 @@ class AbstractSearchableListView(ListView, FormMixin):
             if hasattr(field_object, "widget"):
                 field_object.widget.attrs["class"] = "form-control"
                 if field_name in ["search_value"]:
-                    field_object.widget.attrs["class"] += " query-value"
+                    field_object.widget.attrs["class"] += " typeahead"
+                    field_object.widget.attrs["placeholder"] = "Enter Search Term"
                 elif field_name in ["search_field"]:
                     field_object.widget.attrs["class"] += " query-field"
 
@@ -211,8 +212,6 @@ class AutoCompleteView(View):
     }
 
     def get(self, request, search_field=None):
-        import pdb
-        pdb.set_trace()
         query = request.GET.get("q", None)
         response = HttpResponse(content_type="application/json")
         model, field = self._get_standardised_vocab(search_field)
