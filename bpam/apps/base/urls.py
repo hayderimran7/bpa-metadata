@@ -11,7 +11,7 @@ urlpatterns = patterns(
         name='index'),
     url(
         regex=r'^search/?$',
-        view=views.OTUSearchView.as_view(),
+        view=views.BASESearchView.as_view(),
         name='otusearch'),
     url(
         regex=r'^autocomplete/(?P<search_field>.*)',
