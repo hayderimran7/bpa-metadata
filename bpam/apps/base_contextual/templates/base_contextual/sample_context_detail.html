@@ -5,31 +5,31 @@
 {% block content %}
 
     <div class="panel panel-default">
-        <div class="panel-heading">BASE Collection Sample Detail for sample {{ collectionsample.bpa_id }}</div>
+        <div class="panel-heading">BASE Contextual Detail for Sample {{ samplecontext.bpa_id }}</div>
 
         <table id="nice" class="table">
             <tbody>
             <tr>
                 <td><b>Site</b></td>
                 <td>
-                    <a href="{% url 'basecontextual:collectionsitedetail' collectionsample.site.pk %}">{{ collectionsample.site.get_location_name }}</a>
+                    <a href="{% url 'basecontextual:collectionsitedetail' samplecontext.site.pk %}">{{ samplecontext.site.get_location_name }}</a>
                 </td>
             </tr>
             <tr>
                 <td><b>Horizon Classification 1</b></td>
-                <td>{{ collectionsample.horizon_classification1 }}</td>
+                <td>{{ samplecontext.horizon_classification1 }}</td>
             </tr>
             <tr>
                 <td><b>Horizon Classification 2</b></td>
-                <td>{{ collectionsample.horizon_classification2 }}</td>
+                <td>{{ samplecontext.horizon_classification2 }}</td>
             </tr>
             <tr>
                 <td><b>Depth</b></td>
-                <td>{{ collectionsample.depth }}</td>
+                <td>{{ samplecontext.depth }}</td>
             </tr>
             <tr>
                 <td><b>Methodological Notes</b></td>
-                <td>{{ collectionsample.methodological_notes }}</td>
+                <td>{{ samplecontext.methodological_notes }}</td>
             </tr>
             </tbody>
         </table>
