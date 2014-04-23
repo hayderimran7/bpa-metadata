@@ -4,7 +4,7 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 
 from .search import Searcher
-from .forms import OTUSearchForm
+from .forms import BASESearchForm
 
 
 class BaseView(TemplateView):
@@ -101,12 +101,11 @@ class AbstractSearchableListView(ListView, FormMixin):
 
 class BASESearchView(AbstractSearchableListView):
     def get_form_class(self):
-        return OTUSearchForm
+        return BASESearchForm
 
     def get_model(self):
-        from apps.base_metagenomics.models import MetagenomicsSample
-
-        return MetagenomicsSample
+        from apps.base.models import BASESample
+        return BASESample
 
     def get_search_items_name(self):
         """

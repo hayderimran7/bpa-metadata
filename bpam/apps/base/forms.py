@@ -8,7 +8,7 @@ KINGDOMS = (("", "----"),
             ('Fungi', 'Fungi'))
 
 
-class OTUSearchForm(forms.Form):
+class BASESearchForm(forms.Form):
 
     search_field = forms.ChoiceField(choices=[
         ("", "----"),
@@ -115,7 +115,7 @@ class OTUSearchForm(forms.Form):
     search_species = forms.CharField(max_length=100, required=False)
 
     def clean(self):
-        cleaned_data = super(OTUSearchForm, self).clean()
+        cleaned_data = super(BASESearchForm, self).clean()
         search_field = cleaned_data.get("search_field")
         search_range = cleaned_data.get("search_range")
         if search_field == "" and search_range == "":
