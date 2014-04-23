@@ -24,7 +24,7 @@ class BASESample(Sample, DebugNote):
     def context(self):
         try:
             from apps.base_contextual.models import SampleContext
-            return SampleContext.get(bpa_id=self.bpa_id)
+            return SampleContext.objects.get(bpa_id=self.bpa_id)
         except SampleContext.DoesNotExist:
             return None
 
@@ -32,7 +32,7 @@ class BASESample(Sample, DebugNote):
     def chemical_analysis(self):
         try:
             from apps.base_contextual.models import ChemicalAnalysis
-            return ChemicalAnalysis.get(bpa_id=self.bpa_id)
+            return ChemicalAnalysis.objects.get(bpa_id=self.bpa_id)
         except ChemicalAnalysis.DoesNotExist:
             return None
 
