@@ -141,7 +141,7 @@ def get_gbr_sample_data(file_name):
     """
 
     field_spec = [
-        ('bpa_id', 'Unique ID', None),
+        ('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
         ('species', 'Species', None),
         ('dataset', 'Dataset', None),
         ('sample_description', 'Sample Description', None),
