@@ -1,3 +1,17 @@
-from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 
-# Create your views here.
+from .models import Sample454
+
+
+class Sample454ListView(ListView):
+    model = Sample454
+    context_object_name = 'samples'
+    template_name = 'base_454/454_list.html'
+    paginate_by = 25
+
+
+class Sample454DetailView(DetailView):
+    model = Sample454
+    context_object_name = 'sample'
+    template_name = 'base_454/454_detail.html'
+

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load leaflet_tags %}
+{% block title %}BASE Contextual Site Detail {% endblock %}
+
+
+{% block content %}
+
+    <h3>BASE 454 Sample {{ sample.bpa_id }}</h3>
+
+    <h3>All Data</h3>
+    <table id="key-vals" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, value in sample.get_fields %}
+            <tr>
+                <td> {{ key }} </td>
+                <td> {{ value }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
