@@ -7,10 +7,12 @@
     </thead>
     <tbody>
     {% for sample in samples %}
-        <tr>
-            <td>{{ sample.bpa_id }}</td>
-            <td>{{ sample.name }}</td>
-        </tr>
+    <tr>
+        <td>
+            <a href="{% url 'basemetagenomics:sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>

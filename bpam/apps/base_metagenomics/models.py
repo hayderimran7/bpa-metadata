@@ -13,6 +13,9 @@ class MetagenomicsSample(BASESample, DebugNote):
     def __unicode__(self):
         return u"{0}".format(self.name)
 
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in MetagenomicsSample._meta.fields]
+
     class Meta:
         verbose_name_plural = _("Metagenomics Sample")
 

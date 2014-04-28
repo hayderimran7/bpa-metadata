@@ -8,4 +8,8 @@ urlpatterns = patterns(
         regex=r'^samples',
         view=views.SampleListView.as_view(),
         name='metagenomicssamples'),
+    url(
+        regex=r'^sample/(?P<pk>.*)/$',
+        view=views.SampleListDetailView.as_view(),
+        name='sampledetail'),
 )
