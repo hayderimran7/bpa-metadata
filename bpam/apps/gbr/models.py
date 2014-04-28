@@ -48,6 +48,10 @@ class GBRSample(Sample, DebugNote):
                                                  related_name='bioinformatician',
                                                  verbose_name=_('Contact Bioinformatician'))
 
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
+
+
 
 class GBRRun(Run):
     """

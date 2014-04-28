@@ -1,0 +1,63 @@
+{% if samples %}
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Name</th>
+        <th>DNA/RNA Source</th>
+        <th>Library</th>
+        <th>Library Construction</th>
+        <th>Protocol</th>
+        <th>Index</th>
+        <th>Sequencer</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            <a href="{% url 'gbr:sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+        <td>{{ sample.dna_source.description }}</td>
+        <td></td>
+        <td></td>
+        <td>{{ sample.dna_extraction_protocol }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<ul class="pagination pagination-centered">
+    {% if page_obj.has_previous %}
+    <li><a href="?page=1"><<</a></li>
+    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+    <li
+    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
+    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sample-list").tablesorter();
+        });
+    });
+</script>
+
+{% else %}
+<h3> No Great Barrier Reef Sample Data is currently available </h3>
+{% endif %}
