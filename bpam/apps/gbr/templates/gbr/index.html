@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Great Barrier Reef{% endblock %}
+
+
+{% block content %}
+    <div class="jumbotron">
+        <h2>
+            <a> Great Barrier Reef</a>
+        </h2>
+
+        <div class="list-group">
+            <a class="list-group-item" href="{% url 'gbr:samples' %}">Samples</a>
+        </div>
+    </div>
+{% endblock %}

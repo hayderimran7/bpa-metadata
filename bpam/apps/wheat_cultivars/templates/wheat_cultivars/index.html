@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Great Barrier Reef{% endblock %}
+
+
+{% block content %}
+    <div class="jumbotron">
+        <h2>
+            <a>Wheat Pathogens</a>
+        </h2>
+
+        <div class="list-group">
+            <a class="list-group-item" href="{% url 'wheat_pathogens:samples' %}">Samples</a>
+        </div>
+    </div>
+{% endblock %}

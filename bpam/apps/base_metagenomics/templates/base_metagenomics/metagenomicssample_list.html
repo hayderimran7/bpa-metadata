@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    {% if search_form %}
+  <!--  {% if search_form %}
         <h3>
            Search Form
         </h3>
@@ -13,14 +13,14 @@
         {{ search_form.as_p }}
         <input type="submit" value="Search" />
     </form>
-    {% endif %}
+    {% endif %}-->
 
     <h3>Samples</h3>
 
     {% include "base_metagenomics/sample_table.html" %}
 
-    <form>
+   <!-- <form>
         <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:collectionsites' %}"/>
-    </form>
+    </form>-->
 
 {% endblock %}
