@@ -16,6 +16,6 @@ urlpatterns = patterns(
         name='samples'),
     url(
         regex=r'^sample/(?P<pk>.*)/$',
-        view=views.SampleListDetailView.as_view(),
+        view=views.SampleDetailView.as_view(),
         name='sampledetail'),
 )
