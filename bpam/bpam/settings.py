@@ -283,6 +283,7 @@ def get_env_variable(var_name):
 
 
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
+DEFAULT_PAGINATION = 50
 
 try:
     print "Attempting to import default settings as appsettings.bpam"
