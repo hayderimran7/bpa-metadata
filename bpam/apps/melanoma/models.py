@@ -56,6 +56,13 @@ class MelanomaSample(Sample, DebugNote):
     histological_subtype = models.CharField(max_length=50, null=True)
 
 
+    def is_male(self):
+        return self.gender == 'M'
+
+    def is_female(self):
+        return self.gender == 'F'
+
+
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in MelanomaSample._meta.fields]
 
