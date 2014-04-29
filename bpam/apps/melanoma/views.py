@@ -6,7 +6,10 @@ from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 from django.conf import settings
 
 
-class MelanomaSequenceFileListView(ListView):
+class IndexView(TemplateView):
+    template_name = 'melanoma/index.html'
+
+class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
     paginate_by = settings.DEFAULT_PAGINATION
@@ -25,6 +28,14 @@ class ArrayListView(ListView):
     model = Array
     context_object_name = 'arrays'
     paginate_by = settings.DEFAULT_PAGINATION
+
+
+class SampleListView(ListView):
+    model = MelanomaSample
+    context_object_name = 'samples'
+    paginate_by = settings.DEFAULT_PAGINATION
+    template_name = 'melanoma/melanoma_sample_list.html'
+
 
 class SampleDetailView(DetailView):
     model = MelanomaSample
@@ -59,6 +70,4 @@ def search_view(request, term):
     return render(request, 'melanoma/search_results.html', data)
 
 
-class IndexView(TemplateView):
-    template_name = 'melanoma/index.html'
 

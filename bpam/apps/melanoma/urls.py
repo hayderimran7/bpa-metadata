@@ -5,13 +5,17 @@ from . import views
 urlpatterns = patterns(
     '',
     url(
-        regex=r'^sequencefiles',
-        view=views.MelanomaSequenceFileListView.as_view(),
-        name='sequencefiles'),
+        regex=r'^samples',
+        view=views.SampleListView.as_view(),
+        name='samples'),
     url(
         regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
         name='sampledetail'),
+    url(
+        regex=r'^sequencefiles',
+        view=views.SequenceFileListView.as_view(),
+        name='sequencefiles'),
     url(
         regex=r'^arrays',
         view=views.ArrayListView.as_view(),

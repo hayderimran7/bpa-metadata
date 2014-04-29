@@ -1,0 +1,59 @@
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Sample Name</th>
+        <th>Tumour Stage</th>
+        <th>Sequence Coverage</th>
+        <th>Melanoma Contact Scientist</th>
+        <th>Contact affiliation</th>
+        <th>Sex</th>
+        <th>DNA Source</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            <a href="{% url 'melanoma:sampledetail' sample.bpa_id %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+        <td>{{ sample.tumor_stage }}</td>
+        <td>{{ sample.requested_sequence_coverage }}</td>
+        <td>{{ sample.contact_scientist }}</td>
+        <td>{{ sample.contact_scientist.organisation }}</td>
+        <td>{{ sample.gender }}</td>
+        <td>{{ sample.dna_source }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<ul class="pagination pagination-centered">
+    {% if page_obj.has_previous %}
+    <li><a href="?page=1"><<</a></li>
+    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+    <li
+    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
+    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sample-list").tablesorter();
+        });
+    });
+</script>
+
