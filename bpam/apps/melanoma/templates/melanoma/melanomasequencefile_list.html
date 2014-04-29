@@ -3,13 +3,17 @@
 {% block title %}Melanoma Listing{% endblock %}
 
 {% block content %}
+{% if sequencefiles %}
+<h3>Melanoma Sequence Files</h3>
 
-    <h3>Melanoma Sequence Files</h3>
+{% include "melanoma/melanomasequencefile_table.html" %}
 
-    {% include "melanoma/melanomasequencefile_table.html" %}
+<form>
+    <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma:sequencefiles' %}"/>
+</form>
 
-    <form>
-        <input type="hidden" id="bpa-catalog-base" value="{% url 'sequencefiles' %}"/>
-    </form>
+{% else %}
+<h3> No Melanoma Sequence Data is currently available </h3>
+{% endif %}
 
 {% endblock %}

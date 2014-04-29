@@ -3,32 +3,69 @@
 {% block title %}Melanoma Arrays{% endblock %}
 
 {% block content %}
-    <h2>Melanoma Arrays</h2>
+{% if arrays %}
+<h2>Melanoma Arrays</h2>
 
-    <table id="array-list" class="table table-striped">
-        <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Array ID</th>
-            <th>Batch Number</th>
-            <th>Well ID</th>
-            <th>MIA ID</th>
-            <th>Call Rate</th>
-            <th>Gender</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for array in arrays %}
-            <tr>
-                <td>{{ array.bpa_id }}</td>
-                <td>{{ array.array_id }}</td>
-                <td>{{ array.batch_number }}</td>
-                <td>{{ array.well_id }}</td>
-                <td>{{ array.mia_id }}</td>
-                <td>{{ array.call_rate }}</td>
-                <td>{{ array.gender }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+<table id="array-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Array ID</th>
+        <th>Batch Number</th>
+        <th>Well ID</th>
+        <th>MIA ID</th>
+        <th>Call Rate</th>
+        <th>Gender</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for array in arrays %}
+    <tr>
+        <td>
+            <a href="{% url 'melanoma:sampledetail' sample.pk %}">{{ array.bpa_id }}</a>
+        </td>
+        <td>{{ array.array_id }}</td>
+        <td>{{ array.batch_number }}</td>
+        <td>{{ array.well_id }}</td>
+        <td>{{ array.mia_id }}</td>
+        <td>{{ array.call_rate }}</td>
+        <td>{{ array.gender }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<ul class="pagination pagination-centered">
+    {% if page_obj.has_previous %}
+    <li><a href="?page=1"><<</a></li>
+    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+    <li
+    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
+    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#array-list").tablesorter();
+        });
+    });
+</script>
+
+
+{% else %}
+<h3> No Melanoma Array Data is currently available </h3>
+{% endif %}
 
 {% endblock %}

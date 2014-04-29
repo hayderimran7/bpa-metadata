@@ -9,6 +9,10 @@ urlpatterns = patterns(
         view=views.MelanomaSequenceFileListView.as_view(),
         name='sequencefiles'),
     url(
+        regex=r'^sample/(?P<pk>.*)/$',
+        view=views.SampleDetailView.as_view(),
+        name='sampledetail'),
+    url(
         regex=r'^arrays',
         view=views.ArrayListView.as_view(),
         name='arrays'),
@@ -18,6 +22,6 @@ urlpatterns = patterns(
         name="search"),
     url(
         regex=r'^$',
-        view=views.index,
+        view=views.IndexView.as_view(),
         name='index'),
 )

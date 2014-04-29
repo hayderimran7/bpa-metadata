@@ -1,12 +1,14 @@
-from django.views.generic import ListView, View
+from django.views.generic import ListView, TemplateView
 from django.shortcuts import render
 
-from apps.melanoma.models import MelanomaSequenceFile, Array
+from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 
+from django.conf import settings
 
 class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
+    paginate_by = settings.DEFAULT_PAGINATION
 
     # def get_queryset(self):
     #     return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
@@ -22,6 +24,9 @@ class ArrayListView(ListView):
     model = Array
     context_object_name = 'arrays'
 
+class SampleDetailView(TemplateView):
+    model = MelanomaSample
+    template_name = 'melanoma/melanoma_sample_detail.html'
 
 def search_view(request, term):
     data = {
@@ -50,5 +55,6 @@ def search_view(request, term):
     return render(request, 'melanoma/search_results.html', data)
 
 
-def index(request):
-    return render(request, 'melanoma/index.html')
+class IndexView(TemplateView):
+    template_name = 'melanoma/index.html'
+

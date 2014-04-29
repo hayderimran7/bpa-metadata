@@ -1,17 +1,16 @@
 {% extends "base.html" %}
+{% block title %}Melanoma{% endblock %}
 
-{% block title %}Melanoma Index{% endblock %}
 
 {% block content %}
+<div class="jumbotron">
+    <h2>
+        <a>Melanoma</a>
+    </h2>
 
-    <h3>Melanoma</h3>
-    <ul>
-        <li><a href="/melanoma/sequencefiles">All Melanoma Sequence Files</a></li>
-        <li><a href="/melanoma/arrays">All Melanoma Arrays</a></li>
-    </ul>
-
-    <form>
-        <input type="hidden" id="bpa-catalog-base" value="{% url 'index' %}"/>
-    </form>
-
+    <div class="list-group">
+        <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}">Melanoma Sequence Files</a>
+        <a class="list-group-item" href="{% url 'melanoma:arrays' %}">Melanoma Arrays</a>
+    </div>
+</div>
 {% endblock %}
