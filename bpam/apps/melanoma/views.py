@@ -1,9 +1,10 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 from django.shortcuts import render
 
 from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 
 from django.conf import settings
+
 
 class MelanomaSequenceFileListView(ListView):
     model = MelanomaSequenceFile
@@ -23,10 +24,13 @@ class MelanomaSequenceFileListView(ListView):
 class ArrayListView(ListView):
     model = Array
     context_object_name = 'arrays'
+    paginate_by = settings.DEFAULT_PAGINATION
 
-class SampleDetailView(TemplateView):
+class SampleDetailView(DetailView):
     model = MelanomaSample
+    context_object_name = 'sample'
     template_name = 'melanoma/melanoma_sample_detail.html'
+
 
 def search_view(request, term):
     data = {

@@ -1,4 +1,3 @@
-
 <table id="sequence-list" class="table table-striped">
     <thead>
     <tr>
@@ -13,23 +12,25 @@
     </thead>
     <tbody>
     {% for sfile in sequencefiles %}
-        <tr>
-            <td>
-                {% if sfile.url_verification.status_ok %}
+    <tr>
+        <td>
+            {% if sfile.url_verification.status_ok %}
                     <span title="Last checked {{ sfile.url_verification.checked_at }}"
                           class="glyphicon glyphicon-ok"></span>
-                {% else %}
+            {% else %}
                     <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
                           class="glyphicon glyphicon-remove"></span>
-                {% endif %}
-            </td>
-            <td>{{ sfile.sample.bpa_id }}</td>
-            <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-            <td>{{ sfile.md5 }}</td>
-            <td>{{ sfile.sample.name }}</td>
-            <td>{{ sfile.date_received_from_sequencing_facility }}</td>
-            <td>{{ sfile.run }}</td>
-        </tr>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'melanoma:sampledetail' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
+        </td>
+        <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
+        <td>{{ sfile.md5 }}</td>
+        <td>{{ sfile.sample.name }}</td>
+        <td>{{ sfile.date_received_from_sequencing_facility }}</td>
+        <td>{{ sfile.run }}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>

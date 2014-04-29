@@ -59,6 +59,7 @@ class MelanomaSample(Sample, DebugNote):
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in MelanomaSample._meta.fields]
 
+
 class MelanomaRun(Run):
     """
     A Melanoma Run
