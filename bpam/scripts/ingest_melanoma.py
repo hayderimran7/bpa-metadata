@@ -162,7 +162,7 @@ def get_melanoma_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Unique Identifier', None),
+    field_spec = [('bpa_id', 'Unique Identifier', lambda s: s.replace('/', '.')),
                   ('sample_name', 'Sample Name', None),
                   ('sequence_coverage', 'Sequence coverage', None),
                   ('sequencing_facility', 'Sequencing faciltiy', None),
@@ -209,7 +209,7 @@ def get_array_data(file_name):
     field_spec = [
         ('batch_no', 'Batch No', None),
         ('well_id', 'Well ID', None),
-        ('bpa_id', 'BPA ID', None),
+        ('bpa_id', 'BPA ID', lambda s: s.replace('/', '.')),
         ('mia_id', 'MIA ID', None),
         ('array_id', 'Array ID', None),
         ('call_rate', 'Call Rate', None),
