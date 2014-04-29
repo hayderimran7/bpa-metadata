@@ -43,6 +43,12 @@ class SampleDetailView(DetailView):
     template_name = 'melanoma/melanoma_sample_detail.html'
 
 
+    def get_context_data(self, **kwargs):
+        context = super(SampleDetailView, self).get_context_data(**kwargs)
+        context['sequencefiles'] = MelanomaSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+
+        return context
+
 def search_view(request, term):
     data = {
         'catalog': 'melanoma',
