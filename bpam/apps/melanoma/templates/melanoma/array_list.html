@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 {% block title %}Melanoma Arrays{% endblock %}
 
 {% block content %}
@@ -29,7 +29,14 @@
         <td>{{ array.well_id }}</td>
         <td>{{ array.mia_id }}</td>
         <td>{{ array.call_rate }}</td>
-        <td>{{ array.gender }}</td>
+        <td>
+            {% if array.is_male %}
+            <img width="20px" src="{% static 'male.svg' %}" alt="BASE">
+            {% elif array.is_female %}
+            <img width="20px" src="{% static 'woman.svg' %}" alt="BASE">
+            {% endif %}
+        </td>
+
     </tr>
     {% endfor %}
     </tbody>

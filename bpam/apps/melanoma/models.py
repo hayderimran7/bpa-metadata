@@ -38,6 +38,12 @@ class Array(models.Model):
     call_rate = models.FloatField()
     gender = models.CharField(max_length=1, choices=GENDERS)
 
+    def is_male(self):
+        return self.gender == 'M'
+
+    def is_female(self):
+        return self.gender == 'F'
+
     def __unicode__(self):
         return u'{0} {1} {2}'.format(self.bpa_id, self.array_id, self.mia_id)
 
