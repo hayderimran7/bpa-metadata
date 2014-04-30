@@ -25,6 +25,10 @@ PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
 DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
 
+# tests need extra python modules
+TESTING_MODULES="PyVirtualDisplay selenium nose sure>=1.2.1 Werkzeug"
+CI_MODULES="coverage==3.6"
+
 export PATH=/usr/pgsql-9.3/bin:${PATH}
 
 
@@ -176,6 +180,8 @@ is_running_in_instance() {
     fi
 }
 
+
+
 install_bpa_dev() {
     log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
@@ -186,6 +192,7 @@ install_bpa_dev() {
            cd ${CONFIG_DIR}
            pip install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
            pip install ${PIP5_OPTS} -e .[dev,tests,downloads]
+           pip install ${PIP5_OPTS} ${CI_MODULES} ${TESTING_MODULES}
            deactivate
         )
 
@@ -317,6 +324,7 @@ flushdb() {
 }
 
 coverage() {
+    activate_virtualenv
     log_info "Running coverage with reports"
     coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
