@@ -39,7 +39,7 @@ class MetagenomicsSequenceFile(SequenceFile):
     """
 
     sample = models.ForeignKey(MetagenomicsSample)
-    run = models.ForeignKey(MetagenomicsRun, null=True)  # FIXME
+    run = models.ForeignKey(MetagenomicsRun, null=True)
 
     class Meta:
         verbose_name_plural = _("Metagenomics Sequence Files")
