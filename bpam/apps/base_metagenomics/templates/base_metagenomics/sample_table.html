@@ -3,6 +3,8 @@
     <tr>
         <th>BPA ID</th>
         <th>Name</th>
+        <th>Sequence Coverage</th>
+        <th>DNA Extraction Protocol</th>
     </tr>
     </thead>
     <tbody>
@@ -12,6 +14,8 @@
             <a href="{% url 'basemetagenomics:sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.name }}</td>
+        <td>{{ sample.requested_sequence_coverage }}</td>
+        <td>{{ sample.dna_extraction_protocol }}</td>
     </tr>
     {% endfor %}
     </tbody>
