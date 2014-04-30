@@ -119,7 +119,3 @@ class MetagenomicsRunAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MetagenomicsRun, MetagenomicsRunAdmin)
-admin.site.register(SequenceConstruct)
-admin.site.register(PCRPrimer)
-admin.site.register(TargetGene)
-admin.site.register(TargetTaxon)
