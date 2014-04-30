@@ -1,6 +1,7 @@
 {% if sequencefiles %}
 <div class="panel panel-info">
-    <div class="panel-body"> {{ sequencefiles|length }} Related Sequence files found for BPA Sample ID {{ sample.bpa_id }}
+    <div class="panel-body">
+        {{ sequencefiles|length }} Related Sequence files found for BPA Sample ID {{ sample.bpa_id }}
     </div>
 
     <table id="sequence-list" class="table table-striped">
@@ -28,7 +29,7 @@
             <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
             <td>{{ sfile.md5 }}</td>
             <td>{{ sfile.date_received_from_sequencing_facility }}</td>
-            <td>{{ sfile.run }}</td>
+            <td>{{ sfile.run }} </td>
         </tr>
         {% endfor %}
         </tbody>
