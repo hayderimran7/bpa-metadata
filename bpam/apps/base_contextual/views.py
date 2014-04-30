@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, TemplateView
 
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
-
+from django.conf import settings
 
 class LandingView(TemplateView):
     template_name = 'base_contextual/index.html'
@@ -10,7 +10,7 @@ class LandingView(TemplateView):
 class ChemicalAnalysisListView(ListView):
     model = ChemicalAnalysis
     context_object_name = 'reports'
-
+    paginate_by = settings.DEFAULT_PAGINATION
 
 class CollectionSiteListView(ListView):
     model = CollectionSite
@@ -26,7 +26,7 @@ class SampleContextListView(ListView):
     model = SampleContext
     context_object_name = 'sample_contexts'
     template_name = 'base_contextual/sample_context_list.html'
-    paginate_by = 25
+    paginate_by = settings.DEFAULT_PAGINATION
 
 class SampleContextDetailView(DetailView):
     model = SampleContext
