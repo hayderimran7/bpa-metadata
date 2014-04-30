@@ -26,7 +26,14 @@ del activate_this
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(SITE_ROOT)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bpam.settings")
+# Allow appsettings to be imported
+sys.path.insert(0, "/etc/ccgapps")
+
+# setup the settings module for the WSGI app
+os.environ['DJANGO_SETTINGS_MODULE'] = 'defaultsettings.bpam'
+os.environ['PROJECT_DIRECTORY'] = SITE_ROOT
+os.environ['WEBAPP_ROOT'] = SITE_ROOT
+os.environ['PYTHON_EGG_CACHE'] = '/tmp/.python-eggs'
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
