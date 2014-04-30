@@ -22,7 +22,10 @@ class AbstractSearchableListView(ListView, FormMixin):
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
         if request.POST:
-            self.object_list = self.get_queryset()
+            if not self.form.is_valid():
+                self.object_list = []
+            else:
+                self.object_list = self.get_queryset()
         else:
             self.object_list = []
         allow_empty = self.get_allow_empty()
@@ -33,7 +36,6 @@ class AbstractSearchableListView(ListView, FormMixin):
 
         context = self.get_context_data(object_list=self.object_list, search_form=self.form)
         return self.render_to_response(context)
-
 
     def get_model(self):
         raise NotImplementedError("get_model subclass responsibility")
@@ -90,7 +92,6 @@ class BASESearchView(AbstractSearchableListView):
     def get_model(self):
         from apps.base.models import BASESample
         return BASESample
-
 
     def get_search_items_name(self):
         """
