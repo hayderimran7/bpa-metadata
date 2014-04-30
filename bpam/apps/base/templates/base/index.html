@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block title %}BASE{% endblock %}
 
-
+{% load staticfiles %}
 {% block content %}
-    <div class="jumbotron">
-        <img src="http://www.bioplatforms.com.au/images/stories/soil_img.jpg" alt="BASE">
-        <h2>
-            <a href="http://www.bioplatforms.com.au/special-initiatives/environment/soil-biodiversity"> Biome of Australian Soil Environments</a>
-        </h2>
+<div class="jumbotron">
+    <img src="{% static 'base/base.jpg' %}" alt="BASE">
 
-        <div class="list-group">
-            <a class="list-group-item" href="{% url 'base:otusearch' %}">Search</a>
-            <a class="list-group-item" href="{% url 'basecontextual:index' %}">Contextual Data</a>
-            <a class="list-group-item inactive">Amplicon Data</a>
-            <a class="list-group-item" href="{% url 'basemetagenomics:metagenomicssamples' %}">Metagenomics</a>
-            <a class="list-group-item" href="{% url 'base454:454samples' %}">454</a>
-        </div>
+    <h2>
+        <a href="http://www.bioplatforms.com.au/special-initiatives/environment/soil-biodiversity"> Biome of Australian
+            Soil Environments</a>
+    </h2>
+
+    <div class="list-group">
+        <a class="list-group-item" href="{% url 'base:otusearch' %}">Search</a>
+        <a class="list-group-item" href="{% url 'basecontextual:index' %}">Contextual Data</a>
+        <a class="list-group-item inactive">Amplicon Data</a>
+        <a class="list-group-item" href="{% url 'basemetagenomics:metagenomicssamples' %}">Metagenomics</a>
+        <a class="list-group-item" href="{% url 'base454:454samples' %}">454</a>
     </div>
+</div>
 {% endblock %}

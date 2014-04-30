@@ -19,9 +19,9 @@
             <td> Sex</td>
             <td>
                 {% if sample.is_male %}
-                <img width="20px" src="{% static 'male.svg' %}" alt="BASE">
+                <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="BASE">
                 {% elif sample.is_female %}
-                <img width="20px" src="{% static 'woman.svg' %}" alt="BASE">
+                <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="BASE">
                 {% endif %}
             </td>
         </tr>
@@ -59,7 +59,7 @@
 
 {% if sequencefiles %}
 <div class="panel panel-info">
-    <div class="panel-body"> {{ sequencefiles|length }} Related Sequence files found for {{ sample.bpa_id }} </div>
+    <div class="panel-body"> {{ sequencefiles|length }} Related Sequence files found for BPA Sample ID {{ sample.bpa_id }} </div>
 
     <table id="sequence-list" class="table table-striped">
         <thead>
