@@ -484,7 +484,7 @@ case ${ACTION} in
         ci_fetch_rpm
         ;;
     clean)
-        settings
+        devsettings
         clean
         ;;
     purge)
