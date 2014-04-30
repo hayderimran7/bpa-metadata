@@ -22,7 +22,10 @@ class AbstractSearchableListView(ListView, FormMixin):
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
         if request.POST:
-            self.object_list = self.get_queryset()
+            if not self.form.is_valid():
+                self.object_list = []
+            else:
+                self.object_list = self.get_queryset()
         else:
             self.object_list = []
         allow_empty = self.get_allow_empty()
