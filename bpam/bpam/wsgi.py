@@ -30,7 +30,7 @@ sys.path.append(SITE_ROOT)
 sys.path.insert(0, "/etc/ccgapps")
 
 # setup the settings module for the WSGI app
-os.environ['DJANGO_SETTINGS_MODULE'] = 'defaultsettings.bpam'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'bpam.settings'
 os.environ['PROJECT_DIRECTORY'] = SITE_ROOT
 os.environ['WEBAPP_ROOT'] = SITE_ROOT
 os.environ['PYTHON_EGG_CACHE'] = '/tmp/.python-eggs'
