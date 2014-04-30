@@ -35,7 +35,7 @@ class MetagenomicsRun(Run):
 
 class MetagenomicsSequenceFile(SequenceFile):
     """
-    Meta genomics Sequence File
+    Metagenomics Sequence File
     """
 
     sample = models.ForeignKey(MetagenomicsSample)

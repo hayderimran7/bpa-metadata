@@ -1,26 +1,11 @@
 {% extends "base.html" %}
 
-
 {% block title %}BASE Metagenomics Samples {% endblock %}
 
 {% block content %}
 
-  <!--  {% if search_form %}
-        <h3>
-           Search Form
-        </h3>
-        <form action="" method="post">{% csrf_token %}
-        {{ search_form.as_p }}
-        <input type="submit" value="Search" />
-    </form>
-    {% endif %}-->
+<h3>BASE Metagenomics Samples</h3>
+{% include "base_metagenomics/sample_table.html" %}
 
-    <h3>BASE Metagenomics Samples</h3>
-
-    {% include "base_metagenomics/sample_table.html" %}
-
-   <!-- <form>
-        <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:collectionsites' %}"/>
-    </form>-->
 
 {% endblock %}
