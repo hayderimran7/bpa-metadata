@@ -129,6 +129,8 @@ class BASESearchForm(forms.Form):
             search_value = cleaned_data.get("search_value")
             if search_value == "":
                 raise forms.ValidationError("Enter a value to search for")
+            self._check_type(search_field, search_value)
+
 
         if search_range:
             search_min = cleaned_data.get("search_range_min")
@@ -136,4 +138,33 @@ class BASESearchForm(forms.Form):
             if search_min is None or search_max is None:
                 raise forms.ValidationError("Enter both a min and max for range search")
 
+    def _check_type(self, field, value):
+        non_numeric = [pair[0] for pair in set(self.fields["search_field"].choices) - set(self.fields["search_range"].choices)]
+        non_numeric.remove("moisture")
+        non_numeric.remove("date_sampled")
 
+        if field == 'date_sampled':
+            pass
+        elif field == 'moisture':
+            pass
+        else:
+            if field not in non_numeric:
+                if not self._is_convertible_to_number(value):
+                    raise forms.ValidationError("Enter a number")
+
+    def _is_convertible_to_number(self, value):
+        integer_conversion_ok = float_conversion_ok = False
+
+        try:
+            dummy = int(value)
+            integer_conversion_ok = True
+        except Exception:
+            pass
+
+        try:
+            dummy = float(value)
+            float_conversion_ok = True
+        except Exception:
+            pass
+
+        return integer_conversion_ok or float_conversion_ok
