@@ -282,6 +282,10 @@ class SequenceFile(models.Model):
         bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
         uq = urllib.quote
+
+        if not self.run:
+            return 'NORUN_NOURL'
+
         return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
             self.project_name,
             uq(bpa_id),
