@@ -2,13 +2,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID
+from apps.base.models import BASESample
 
 class AmpliconSequencingMetadata(DebugNote):
     """
     BASE Amplicon Soil Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
+    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
                                             verbose_name=_('Sequencing facility'),
@@ -33,23 +34,31 @@ class AmpliconSequencingMetadata(DebugNote):
 
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return u'{0}:{1}'.format(self.bpa_id, self.sample_extraction_id)
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequencing Metadata")
-
-
 
 
 class AmpliconSequenceFile(SequenceFile):
     """
     Amplicon Sequence File
     """
-
-    sample = models.ForeignKey('base.BASESample')
+    project_name = 'base_amplicon'
+    sample = models.ForeignKey(BASESample)
+    metadata = models.ForeignKey(AmpliconSequencingMetadata)
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")
 
 
+# class MelanomaRun(Run):
+#     """
+#     A Melanoma Run
+#     """
+#
+#     sample = models.ForeignKey(MelanomaSample)
+#
+#     def __unicode__(self):
+#         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
