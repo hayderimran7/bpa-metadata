@@ -1,17 +1,19 @@
-import unipath
+# -*- coding: utf-8 -*-
+
+from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
-from apps.common.models import Facility
-from apps.base_amplicon.models import AmpliconSequenceMetadata
+
+from apps.base_amplicon.models import *
 
 
 logger = logger_utils.get_logger(__name__)
 
 # all the Excel sheets and md5sums should be in here
-DATA_DIR = unipath.Path(unipath.Path('~').expand_user(), 'var/amplicon_metadata/')
+DATA_DIR = Path(Path('~').expand_user(), 'var/amplicon_metadata/')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -60,7 +62,6 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
-
 def add_samples(data):
     """
     Add sequence files
@@ -71,7 +72,7 @@ def add_samples(data):
             logger.warning('Could not add entry on row {0}'.format(entry.row))
             continue
 
-        sample, created = AmpliconSequenceMetadata.objects.get_or_create(bpa_id=bpa_id)
+        sample, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
 
         sample.sample_extraction_id = entry.sample_extraction_id
         sample.name = entry.name
