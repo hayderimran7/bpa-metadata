@@ -96,6 +96,7 @@ nuclear() {
     ${CMD} runscript ingest_landuse --traceback
     ${CMD} runscript ingest_base_contextual --traceback
     ${CMD} runscript ingest_base_otu_fakedata --traceback	
+    ${CMD} runscript ingest_base_amplicon --traceback
 
     # links
     bpam runscript url_checker
