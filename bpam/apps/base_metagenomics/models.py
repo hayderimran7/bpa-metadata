@@ -37,6 +37,7 @@ class MetagenomicsSequenceFile(SequenceFile):
     """
     Metagenomics Sequence File
     """
+    project_name = 'base_metagenomics'
 
     sample = models.ForeignKey(MetagenomicsSample)
     run = models.ForeignKey(MetagenomicsRun, null=True)
