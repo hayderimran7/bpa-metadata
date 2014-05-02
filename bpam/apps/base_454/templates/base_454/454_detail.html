@@ -1,29 +1,109 @@
 {% extends "base.html" %}
 {% load leaflet_tags %}
-{% block title %}BASE Contextual Site Detail {% endblock %}
+{% block title %}BASE 454 Detail {% endblock %}
 
 
 {% block content %}
 
-    <h3>BASE 454 Sample {{ sample.bpa_id }}</h3>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>
+            BASE 454 Detail for
+            <a href="{% url 'basemetagenomics:sample' samplecontext.bpa_id %}">
+                {{ sample.bpa_id }}
+            </a>
+        </h3>
+    </div>
 
-    <h3>All Data</h3>
-    <table id="key-vals" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Key</th>
-            <th>Value</th>
-        </tr>
-        </thead>
+    <table class="table table-striped">
         <tbody>
-        {% for key, value in sample.get_fields %}
-            <tr>
-                <td> {{ key }} </td>
-                <td> {{ value }} </td>
-            </tr>
-        {% endfor %}
+        <tr>
+            <td><b>Sample ID</b></td>
+            <td> {{ sample.sample_id }} </td>
+        </tr>
+        <tr>
+            <td><b>Aurora Purified</b></td>
+            <td>
+                {% if sample.aurora_purified %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Nunc Plate</b></td>
+            <td>{{ sample.dna_storage_nunc_plate }}</td>
+        </tr>
+        <tr>
+            <td><b>Nunc Tube</b></td>
+            <td>{{ sample.dna_storage_nunc_tube }}</td>
+        </tr>
+        <tr>
+            <td><b>Well Location</b></td>
+            <td>{{ context.dna_storage_nunc_well_location }}</td>
+        </tr>
+        <tr>
+            <td><b>AGRF Batch Number</b></td>
+            <td>{{ context.agrf_batch_number }}</td>
+        </tr>
+        <tr>
+            <td><b>Submitter</b></td>
+            <td>{{ context.submitter }}</td>
+        </tr>
+        <tr>
+            <td><b>Date Received</b></td>
+            <td>{{ context.date_received }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide Extraction Sample Weight</b></td>
+            <td>{{ context.adelaide_extraction_sample_weight }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide Fluorimetry ng/uL gDNA</b></td>
+            <td>{{ context.adelaide_fluorimetry }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide PCR Inhibition (neat plus spike) 16S (V3-V8)</b></td>
+            <td>{{ context.adelaide_pcr_inhibition }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide PCR1 (neat) 16S (V3-V8)</b></td>
+            <td>{{ context.adelaide_pcr1 }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide PCR2 (1:100) 16S (V3-V8)</b></td>
+            <td>{{ context.adelaide_pcr2 }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide DNA shipped to AGRF (454)</b></td>
+            <td>{{ context.adelaide_date_shipped_to_agrf_454 }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide DNA shipped to AGRF (MiSeq)</b></td>
+            <td>{{ context.adelaide_date_shipped_to_agrf_miseq }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide DNA shipped to Ramaciotti</b></td>
+            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
+        </tr>
+        <tr>
+            <td><b>Adelaide Date shipped to Ramacciotti</b></td>
+            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
+        </tr>
+
+        
+
+        <tr>
+            <td><b>Adelaide Date shipped to Ramacciotti</b></td>
+            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
+        </tr>
+
         </tbody>
     </table>
+
+</div>
+
 
 {% endblock %}
 

@@ -4,6 +4,15 @@
     <tr>
         <th>BPA ID</th>
         <th>Sample ID</th>
+        <th>Aurora Purified</th>
+        <th>DNA Storage Nunc Plate</th>
+        <th>DNA Storage Nunc Tube</th>
+        <th>DNA Storage Nunc Well Location</th>
+        <th>Submitter</th>
+        <th>Date Received</th>
+        <th>Note</th>
+
+
     </tr>
     </thead>
     <tbody>
@@ -13,6 +22,19 @@
             <a href="{% url 'base454:454sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.sample_id }}</td>
+        <td>
+            {% if sample.aurora_purified %}
+            <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+        </td>
+        <td>{{ sample.dna_storage_nunc_plate }}</td>
+        <td>{{ sample.dna_storage_nunc_tube }}</td>
+        <td>{{ sample.dna_storage_nunc_well_location }}</td>
+        <td>{{ sample.submitter }}</td>
+        <td>{{ sample.date_received }}</td>
+        <td>{{ sample.note }}</td>
     </tr>
     {% endfor %}
     </tbody>

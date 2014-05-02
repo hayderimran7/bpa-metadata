@@ -16,7 +16,7 @@
     {% for sample in samples %}
     <tr>
         <td>
-            <a href="{% url 'gbr:sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
+            <a href="{% url 'gbr:sample' sample.pk %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.name }}</td>
         <td>{{ sample.dna_source.description }}</td>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Great Barrier Reef Collection Events{% endblock %}
+
+{% block content %}
+{% if collections %}
+<h3>Great Barrier Reef Collection events</h3>
+
+{% include "gbr/gbr_collection_event_table.html" %}
+
+<form>
+    <input type="hidden" id="bpa-catalog-base" value="{% url 'gbr:collections' %}"/>
+</form>
+{% if is_paginated %}
+<ul class="pagination pagination-centered">
+    {% if page_obj.has_previous %}
+    <li><a href="?page=1"><<</a></li>
+    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
+    {% endif %}
+
+    {% for i in paginator.page_range %}
+    <li
+    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
+    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+{% else %}
+<h3> No Great Barrier Reef collection events are currently available</h3>
+{% endif %}
+
+{% endblock %}

@@ -9,7 +9,14 @@ urlpatterns = patterns(
         regex=r'^$',
         view=views.GBRView.as_view(),
         name='index'),
-
+    url(
+        regex=r'^collections',
+        view=views.CollectionListView.as_view(),
+        name='collections'),
+    url(
+        regex=r'^collection/?.*/$',
+        view=views.CollectionView.as_view(),
+        name='collection'),
     url(
         regex=r'^samples',
         view=views.SampleListView.as_view(),
