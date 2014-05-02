@@ -2,6 +2,8 @@ from apps.base.models import BASESample
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_otu.models import OperationalTaxonomicUnit
 from django.db.models import Q
+from operator import and_, or_
+
 import logging
 
 logger = logging.getLogger("rainbow")
@@ -60,6 +62,9 @@ class Searcher(object):
     SEARCH_TYPE_RANGE = "RANGE"
     SEARCH_TYPE_FIELD = "FIELD"
     UNSET = "----"
+    SEARCH_TABLE2 = {
+
+    }
     SEARCH_TABLE = {
         SampleContext: {"sample_id": "bpa_id__bpa_id",
                         "date_sampled": "site__date_sampled",
@@ -148,12 +153,71 @@ class Searcher(object):
         logger.debug("could not find search field %s in search table" % self.search_field)
         return []
 
+    def complex_search(self, operator="and"):
+        def get_objects(klass, field_value_pairs):
+            filters = []
+            for field, value in field_value_pairs:
+                if type(value) is type(()):
+                    # range filter
+                    filter_dict_key = "%s__range" % field
+                else:
+                    filter_dict_key = field
+
+                filter_dict = {filter_dict_key: value}
+                filters.append(filter_dict)
+
+            qterms = [Q(f) for f in filters]
+
+            if operator == "and":
+                op = and_
+            else:
+                op = or_
+
+            return klass.objects.filter(reduce(op, qterms))
+
+        search_model_map = {}
+
+        for search_term in self.search_terms:
+            field = search_term.field
+            value = search_term.value   # pair ( (min.max) for range) or single value
+
+            for model_class in self.SEARCH_TABLE:
+                field_map = self.SEARCH_TABLE[model_class]
+                if field in field_map:
+                    s = field_map[field]
+                    if type(s) is type(""):
+                        search_path = s
+                    else:
+                        search_path = s.search_path
+
+                    if not model_class in search_model_map:
+                        search_model_map[model_class] = [(search_path, value)]
+                    else:
+                        search_model_map[model_class].append((search_path, value))
+
+        bpa_id_sets = []
+
+        for model_to_search in search_model_map:
+            objects = get_objects(model_class, search_model_map[model_to_search])
+            bpa_ids = set([obj.bpa_id for obj in objects])
+            bpa_id_sets.append(bpa_ids)
+
+        if operator == "and":
+            bpa_ids = set.intersection(*bpa_id_sets)
+        else:
+            bpa_ids = set.union(*bpa_id_sets)
+
+        base_samples = BASESample.objects.filter(bpa_id__in=bpa_ids)
+
+        return self._filter_on_taxonomy(base_samples)
+
+
     def _filter_on_taxonomy(self, samples):
         """
         :param results: a query set to filter based on taxonomy
         :return:
         """
-        from operator import and_
+
 
         def query_pair(field, s):
             """

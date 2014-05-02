@@ -82,6 +82,14 @@ class SearchTestCase(TestCase):
         assert len(samples) == 0, "Expected zero matching samples - got %s" % len(samples)
 
 
+    def testComplexSearch(self):
+        self.chemical_analysis.dtpa_zinc = 23.7
+        self.chemical_analysis.boron_hot_cacl2 = 10.123
+
+
+
+
+
 
 
 
