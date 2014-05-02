@@ -68,286 +68,284 @@
                     <th>Value</th>
                     </thead>
                    <tbody>
-                    <tr><td>Kingdom</td><td>Bacteria</td></tr>
-                   <tr><td>Phylum</td><td>Bacteria</td></tr>
-                    <tr><td>Class</td><td>Class</td></tr>
-                    <tr><td>Order</td><td>Order</td></tr>
-                   <tr><td>Family</td><td>Family</td></tr>
-                   <tr><td>Genus</td><td>Genus</td></tr>
-                   <tr><td>Species</td><td>Genus</td></tr>
+                    <tr>
+                        <td>Kingdom</td>
+                        <td><input type="text" id="kingdom"></td>
+                    </tr>
+                   <tr>
+                       <td>Phylum</td><td><input type="text" id="phylum"></td></tr>
+                    <tr><td>Class</td><td><input type="text" id="class"></td></tr>
+                    <tr><td>Order</td><td><input type="text" id="order"></td></tr>
+                   <tr><td>Family</td><td><input type="text" id="family"></td></tr>
+                   <tr><td>Genus</td><td><input type="text" id="genus"></td></tr>
+                   <tr><td>Species</td><td><input type="text" id="species"></td></tr>
 
                    </tbody>
                </table>
         </div>
             </div>
-
-
-
-
             <input type="submit" class="btn btn-default" value="Search" />
-
         </form>
-
         <script>
-  $(document).ready(function() {
-    var standardisedVocabularyEndPointURL = "{% url 'base:auto_complete' None %}".replace("None","");
-    const STATUS_OK = "success";
-	const rangeFieldOptions = [
-        {value: "lat",         text: "Latitude"},
-        {value: "lon",         text: "Longitude"},
-        {value: "depth",       text: "Soil Depth"},
-        {value: "elevation",   text: "Elevation (m)"},
-        {value: "texture",     text: "Texture"},
-        {value: "gravel",      text: "Gravel (%) - ( >2.0 mm)"},
-        {value: "course_sand", text: "Course Sand (%) (200-2000 µm)"},
-        {value: "fine_sand",   text: "Fine Sand (%) - (20-200 µm)"},
-        {value:"sand",         text: "Sand (%)"},
-        {value: "silt", text: "Silt (%) (2-20 µm)"},
-        {value: "clay", text: "Clay (%) (<2 µm)"},
-        {value: "ammonium_nitrogen", text:"Ammonium Nitrogen (mg/Kg)"},
-        {value: "nitrate_nitrogen", text:"Nitrate Nitrogen (mg/Kg)"},
-        {value: "phosphorus_colwell", text:"Phosphorus Colwell (mg/Kg)"},
-        {value: "potassium_colwell", text:"Potassium Colwell (mg/Kg)"},
-        {value: "sulphur_colwell", text:"Sulphur (mg/Kg)"},
-        {value: "organic_carbon", text:"Organic Carbon (%)"},
-        {value: "conductivity", text:"Conductivity (dS/m)"},
-        {value: "cacl2_ph", text: "pH Level (CaCl2) (pH)"},
-        {value: "h20_ph", text:"pH Level (H2O) (pH)"},
-        {value: "dtpa_copper", text:"DTPA Copper (mg/Kg)"},
-        {value: "dtpa_iron", text:"DTPA Iron (mg/Kg)"},
-        {value: "dtpa_manganese", text:"DTPA Manganese (mg/Kg)"},
-        {value: "dtpa_zinc", text:"DTPA Zinc (mg/Kg)"},
-        {value: "exc_aluminium", text:"Exc. Aluminium (meq/100g)"},
-        {value: "exc_calcium", text:"Exc. Calcium (meq/100g)"},
-        {value: "exc_magnesium", text:"Exc. Magnesium (meq/100g)"},
-        {value: "exc_potassium", text:"Exc. Potassium (meq/100g)"},
-        {value: "exc_sodium", text:"Exc. Sodium (meq/100g)"},
-        {value: "boron_hot_cacl2", text:"Boron Hot CaCl2 (mg/Kg)"},
-        {value: "total_nitrogen", text:"Total Nitrogen"},
-        {value: "total_carbon", text: "Total Carbon"}];
+        $(document).ready(function() {
+            var standardisedVocabularyEndPointURL = "{% url 'base:auto_complete' None %}".replace("None","");
+            const STATUS_OK = "success";
+            const rangeFieldOptions = [
+                {value: "lat",         text: "Latitude"},
+                {value: "lon",         text: "Longitude"},
+                {value: "depth",       text: "Soil Depth"},
+                {value: "elevation",   text: "Elevation (m)"},
+                {value: "texture",     text: "Texture"},
+                {value: "gravel",      text: "Gravel (%) - ( >2.0 mm)"},
+                {value: "course_sand", text: "Course Sand (%) (200-2000 µm)"},
+                {value: "fine_sand",   text: "Fine Sand (%) - (20-200 µm)"},
+                {value:"sand",         text: "Sand (%)"},
+                {value: "silt", text: "Silt (%) (2-20 µm)"},
+                {value: "clay", text: "Clay (%) (<2 µm)"},
+                {value: "ammonium_nitrogen", text:"Ammonium Nitrogen (mg/Kg)"},
+                {value: "nitrate_nitrogen", text:"Nitrate Nitrogen (mg/Kg)"},
+                {value: "phosphorus_colwell", text:"Phosphorus Colwell (mg/Kg)"},
+                {value: "potassium_colwell", text:"Potassium Colwell (mg/Kg)"},
+                {value: "sulphur_colwell", text:"Sulphur (mg/Kg)"},
+                {value: "organic_carbon", text:"Organic Carbon (%)"},
+                {value: "conductivity", text:"Conductivity (dS/m)"},
+                {value: "cacl2_ph", text: "pH Level (CaCl2) (pH)"},
+                {value: "h20_ph", text:"pH Level (H2O) (pH)"},
+                {value: "dtpa_copper", text:"DTPA Copper (mg/Kg)"},
+                {value: "dtpa_iron", text:"DTPA Iron (mg/Kg)"},
+                {value: "dtpa_manganese", text:"DTPA Manganese (mg/Kg)"},
+                {value: "dtpa_zinc", text:"DTPA Zinc (mg/Kg)"},
+                {value: "exc_aluminium", text:"Exc. Aluminium (meq/100g)"},
+                {value: "exc_calcium", text:"Exc. Calcium (meq/100g)"},
+                {value: "exc_magnesium", text:"Exc. Magnesium (meq/100g)"},
+                {value: "exc_potassium", text:"Exc. Potassium (meq/100g)"},
+                {value: "exc_sodium", text:"Exc. Sodium (meq/100g)"},
+                {value: "boron_hot_cacl2", text:"Boron Hot CaCl2 (mg/Kg)"},
+                {value: "total_nitrogen", text:"Total Nitrogen"},
+                {value: "total_carbon", text: "Total Carbon"}];
 
-	const fieldFieldOptions =  [
-        { value: "sample_id", text:  "Sample Id"},
-        { value: "date_sampled", text:  "Date sampled"},
-        { value: "lat", text:  "Latitude"},
-        { value: "lon", text:  "Longitude"},
-        { value: "depth", text:  "Soil Depth"},
-        { value: "description", text:  "Description"},
-        { value: "current_land_use", text:  "Current land-use"},
-        { value: "general_ecological_zone", text:  "General Ecological Zone"},
-        { value: "vegetation_type", text:  "Vegetation Type"},
-        { value: "vegetation_total_cover", text:  "Vegetation Total cover (%)"},
-        { value: "vegetation_dominant_trees", text:  "Vegetation Dom. Trees"},
-        { value: "Vegetation Dom. Shrubs", text:  "Vegetation Dom. Shrubs"},
-        { value: "Vegetation Dom. Grasses", text:  "Vegetation Dom. Grasses"},
-        { value: "elevation", text:  "Elevation (m)"},
-        { value: "australian_soil_classification", text:  "Australian Soil Classification"},
-        { value: "fao_soil_type", text:  "FAO soil classification"},
-        { value: "immediate_previous_land_use", text:  "Immediate Previous Land Use"},
-        { value: "agrochemical_additions", text:  "Agrochemical Additions"},
-        { value: "tillage", text:  "Tillage"},
-        { value: "fire_history", text:  "Fire History"},
-        { value: "fire_intensity", text: "Fire Intensity"},
-        { value: "environment_events", text:  "Environment Events"},
-        { value: "moisture", text:  "Soil moisture (%)"},
-        { value: "colour", text:  "Soil Colour"},
-        { value: "texture", text:  "Texture"},
-        { value: "gravel", text:  "Gravel (%)"},
-        { value: "course_sand", text:  "Course Sand (%)"},
-        { value: "fine_sand", text:  "Fine Sand (%)"},
-        { value: "sand", text:  "Sand (%)"},
-        { value: "silt", text:  "Silt (%)"},
-        { value: "clay", text:  "Clay (%)"},
-        { value: "ammonium_nitrogen", text:  "Ammonium Nitrogen (mg/Kg)"},
-        { value: "nitrate_nitrogen", text:  "Nitrate Nitrogen (mg/Kg)"},
-        { value: "phosphorus_colwell", text:  "Phosphorus Colwell (mg/Kg)"},
-        { value: "potassium_colwell", text:  "Potassium Colwell (mg/Kg)"},
-        { value: "sulphur_colwell", text:  "Sulphur (mg/Kg)"},
-        { value: "organic_carbon", text:  "Organic Carbon (%)"},
-        { value: "conductivity", text:  "Conductivity (dS/m)"},
-        { value: "cacl2_ph", text:  "pH Level (CaCl2)"},
-        { value: "h20_ph", text:  "pH Level (H2O)"},
-        { value: "dtpa_copper", text:  "DTPA Copper (mg/Kg)"},
-        { value: "dtpa_iron", text:  "DTPA Iron (mg/Kg)"},
-        { value: "dtpa_manganese", text:  "DTPA Manganese (mg/Kg)"},
-        { value: "dtpa_zinc", text:  "DTPA Zinc (mg/Kg)"},
-        { value: "exc_aluminium", text:  "Exc. Aluminium (meq/100g)"},
-        { value: "exc_calcium", text:  "Exc. Calcium (meq/100g)"},
-        { value: "exc_magnesium", text:  "Exc. Magnesium (meq/100g)"},
-        { value: "exc_potassium", text:  "Exc. Potassium (meq/100g)"},
-        { value: "exc_sodium", text:  "Exc. Sodium (meq/100g)"},
-        { value: "boron_hot_cacl2", text:  "Boron Hot CaCl2 (mg/Kg)"},
-        { value: "total_nitrogen", text:  "Total Nitrogen"},
-        { value: "total_carbon", text:  "Total Carbon"}];
+            const fieldFieldOptions =  [
+                { value: "sample_id", text:  "Sample Id"},
+                { value: "date_sampled", text:  "Date sampled"},
+                { value: "lat", text:  "Latitude"},
+                { value: "lon", text:  "Longitude"},
+                { value: "depth", text:  "Soil Depth"},
+                { value: "description", text:  "Description"},
+                { value: "current_land_use", text:  "Current land-use"},
+                { value: "general_ecological_zone", text:  "General Ecological Zone"},
+                { value: "vegetation_type", text:  "Vegetation Type"},
+                { value: "vegetation_total_cover", text:  "Vegetation Total cover (%)"},
+                { value: "vegetation_dominant_trees", text:  "Vegetation Dom. Trees"},
+                { value: "Vegetation Dom. Shrubs", text:  "Vegetation Dom. Shrubs"},
+                { value: "Vegetation Dom. Grasses", text:  "Vegetation Dom. Grasses"},
+                { value: "elevation", text:  "Elevation (m)"},
+                { value: "australian_soil_classification", text:  "Australian Soil Classification"},
+                { value: "fao_soil_type", text:  "FAO soil classification"},
+                { value: "immediate_previous_land_use", text:  "Immediate Previous Land Use"},
+                { value: "agrochemical_additions", text:  "Agrochemical Additions"},
+                { value: "tillage", text:  "Tillage"},
+                { value: "fire_history", text:  "Fire History"},
+                { value: "fire_intensity", text: "Fire Intensity"},
+                { value: "environment_events", text:  "Environment Events"},
+                { value: "moisture", text:  "Soil moisture (%)"},
+                { value: "colour", text:  "Soil Colour"},
+                { value: "texture", text:  "Texture"},
+                { value: "gravel", text:  "Gravel (%)"},
+                { value: "course_sand", text:  "Course Sand (%)"},
+                { value: "fine_sand", text:  "Fine Sand (%)"},
+                { value: "sand", text:  "Sand (%)"},
+                { value: "silt", text:  "Silt (%)"},
+                { value: "clay", text:  "Clay (%)"},
+                { value: "ammonium_nitrogen", text:  "Ammonium Nitrogen (mg/Kg)"},
+                { value: "nitrate_nitrogen", text:  "Nitrate Nitrogen (mg/Kg)"},
+                { value: "phosphorus_colwell", text:  "Phosphorus Colwell (mg/Kg)"},
+                { value: "potassium_colwell", text:  "Potassium Colwell (mg/Kg)"},
+                { value: "sulphur_colwell", text:  "Sulphur (mg/Kg)"},
+                { value: "organic_carbon", text:  "Organic Carbon (%)"},
+                { value: "conductivity", text:  "Conductivity (dS/m)"},
+                { value: "cacl2_ph", text:  "pH Level (CaCl2)"},
+                { value: "h20_ph", text:  "pH Level (H2O)"},
+                { value: "dtpa_copper", text:  "DTPA Copper (mg/Kg)"},
+                { value: "dtpa_iron", text:  "DTPA Iron (mg/Kg)"},
+                { value: "dtpa_manganese", text:  "DTPA Manganese (mg/Kg)"},
+                { value: "dtpa_zinc", text:  "DTPA Zinc (mg/Kg)"},
+                { value: "exc_aluminium", text:  "Exc. Aluminium (meq/100g)"},
+                { value: "exc_calcium", text:  "Exc. Calcium (meq/100g)"},
+                { value: "exc_magnesium", text:  "Exc. Magnesium (meq/100g)"},
+                { value: "exc_potassium", text:  "Exc. Potassium (meq/100g)"},
+                { value: "exc_sodium", text:  "Exc. Sodium (meq/100g)"},
+                { value: "boron_hot_cacl2", text:  "Boron Hot CaCl2 (mg/Kg)"},
+                { value: "total_nitrogen", text:  "Total Nitrogen"},
+                { value: "total_carbon", text:  "Total Carbon"}];
 
-	// helper functions
-	function isRangeSearch(row) {
-		return $(row).find("[id^=range]").is(":checked");
-	}
+            // helper functions
+            function isRangeSearch(row) {
+                return $(row).find("[id^=range]").is(":checked");
+            }
 
-    function getSearchField(row) {
-        return $(row).find("[id^=search_field]");
-    }
+            function getSearchField(row) {
+                return $(row).find("[id^=search_field]");
+            }
 
-    function checkStandardised(row, callback) {
-        var searchFieldSelect = getSearchField(row);
-		var searchField = $(searchFieldSelect).val();
-        var url = standardisedVocabularyEndPointURL  + searchField;
-        $.get(url, callback);
-    }
+            function checkStandardised(row, callback) {
+                var searchFieldSelect = getSearchField(row);
+                var searchField = $(searchFieldSelect).val();
+                var url = standardisedVocabularyEndPointURL  + searchField;
+                $.get(url, callback);
+            }
 
-    // utility extension to easily replace options in select - thanks S.O.
-	(function($, window) {
-	  $.fn.replaceOptions = function(options) {
-	    var self, $option;
+            // utility extension to easily replace options in select - thanks S.O.
+            (function($, window) {
+              $.fn.replaceOptions = function(options) {
+                var self, $option;
 
-	    this.empty();
-	    self = this;
+                this.empty();
+                self = this;
 
-	    $.each(options, function(index, option) {
-	      $option = $("<option></option>")
-		.attr("value", option.value)
-		.text(option.text);
-	      self.append($option);
-	    });
-	  };
-	})(jQuery, window);
-
-    function wireUpAllSamplesSearchCheckBox() {
-        $("#search_all").click(function() {
-            $("#search_panel").toggle();
-        });
-    }
-
-	function updateStandardisedOptions(row, standardisedOptions) {
-		if (standardisedOptions.length > 0) {
-	        $(row).find("[id^=search_value]").hide();
-            $(row).find("[id^=search_standardised_value]").replaceOptions(standardisedOptions);
-		    $(row).find("[id^=search_standardised_value]").show();
-	    }
-
-        else {
-              // not standardised , so just show a text entry field
-
-			  $(row).find("[id^='search_value']").show();
-              $(row).find("[id^='search_standardised_value']").hide();
-		}
-
-    }
-
-	function hideOrShowInputs(newRow) {
-		// show single field or range ( min and max ) inputs
-		var search_field_select = $(newRow).find("[id^=search_field]");
-		if (isRangeSearch(newRow)) {
-			// change options to fields where a range search makes sense
-			$(search_field_select).replaceOptions(rangeFieldOptions);
-			// show the range search inputs and hide the single field input
-			$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").show();
-			$(newRow).find("[id^=search_value]").hide();
-			$(newRow).find("[id^=search_standardised_value]").hide();
-			}
-
-		else {
-				$(search_field_select).replaceOptions(fieldFieldOptions);
-				$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
-
-                checkStandardised(newRow, function(standardisedOptions, status) {
-                    if (status == STATUS_OK) {
-                        updateStandardisedOptions(newRow, standardisedOptions);
-                    }
-                    else {
-                        // this should show the text box
-                        updateStandardisedOptions(newRow,null);
-                    }
+                $.each(options, function(index, option) {
+                  $option = $("<option></option>")
+                .attr("value", option.value)
+                .text(option.text);
+                  self.append($option);
                 });
-		}
-	}
+              };
+            })(jQuery, window);
 
-	function wireUpSearchFieldSelect(newRow) {
-		// if single field search type selected , make the search value field a drop down list for
-                // for terms with a standardised vocabulary, otherwise make it a textbox
-		if (!isRangeSearch(newRow)) {
-			$(newRow).find("[id^=search_field]").change(function () {
-
-                checkStandardised(newRow, function (standardisedOptions, status){
-                    if (status == STATUS_OK){
-                        updateStandardisedOptions(newRow, standardisedOptions);
-                    }
-                    else {
-                        updateStandardisedOptions(newRow, null);
-                    }
-
+            function wireUpAllSamplesSearchCheckBox() {
+                $("#search_all").click(function() {
+                    $("#search_panel").toggle();
                 });
+            }
 
-			});
-		}
-		else {
-			$(newRow).find("[id^=search_field]").unbind("change");
-		}
-	}
+            function updateStandardisedOptions(row, standardisedOptions) {
+                if (standardisedOptions.length > 0) {
+                    $(row).find("[id^=search_value]").hide();
+                    $(row).find("[id^=search_standardised_value]").replaceOptions(standardisedOptions);
+                    $(row).find("[id^=search_standardised_value]").show();
+                }
 
-	function wireUpRadioButtons(newRow) {
-		// Make the search type radio swap field options
-        $(newRow).find("[name^=search_type]").unbind("change");
-		$(newRow).find("[name^=search_type]").change(function () {
-			hideOrShowInputs(newRow);
-			wireUpSearchFieldSelect(newRow);
-		});
-	}
+                else {
+                      // not standardised , so just show a text entry field
 
-	function incrementValue(value) {
-		var pattern = /^(.*)(\d+)$/;
-		var prefix = value.match(pattern)[1];
-		var oldNumber = parseInt(value.match(pattern)[2]);
-	    var newNumber = oldNumber + 1;
-		return prefix + newNumber;
-	}
+                      $(row).find("[id^='search_value']").show();
+                      $(row).find("[id^='search_standardised_value']").hide();
+                }
 
-	function updateIds(newRow) {
-		newRow.find("[id^='search_type']," +
-			     "[id^='field']," +
-                 "[id^='range']," +
-                 "[id^='search_field']," +
-		         "[id^='search_value']," +
-			     "[id^='search_standardised_value']," +
-                 "[id^='search_range_min']," +
-			     "[id^='search_range_max']").each(
-                    function(i, val) {
-                      val.id = incrementValue(val.id);
-                      try {
-                        val.name = incrementValue(val.name);
-                      }
-                      catch(err) {};
+            }
+
+            function hideOrShowInputs(newRow) {
+                // show single field or range ( min and max ) inputs
+                var search_field_select = $(newRow).find("[id^=search_field]");
+                if (isRangeSearch(newRow)) {
+                    // change options to fields where a range search makes sense
+                    $(search_field_select).replaceOptions(rangeFieldOptions);
+                    // show the range search inputs and hide the single field input
+                    $(newRow).find("[id^=search_range_min],[id^=search_range_max] ").show();
+                    $(newRow).find("[id^=search_value]").hide();
+                    $(newRow).find("[id^=search_standardised_value]").hide();
+                    }
+
+                else {
+                        $(search_field_select).replaceOptions(fieldFieldOptions);
+                        $(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
+
+                        checkStandardised(newRow, function(standardisedOptions, status) {
+                            if (status == STATUS_OK) {
+                                updateStandardisedOptions(newRow, standardisedOptions);
+                            }
+                            else {
+                                // this should show the text box
+                                updateStandardisedOptions(newRow,null);
+                            }
+                        });
+                }
+            }
+
+            function wireUpSearchFieldSelect(newRow) {
+                // if single field search type selected , make the search value field a drop down list for
+                        // for terms with a standardised vocabulary, otherwise make it a textbox
+                if (!isRangeSearch(newRow)) {
+                    $(newRow).find("[id^=search_field]").change(function () {
+
+                        checkStandardised(newRow, function (standardisedOptions, status){
+                            if (status == STATUS_OK){
+                                updateStandardisedOptions(newRow, standardisedOptions);
+                            }
+                            else {
+                                updateStandardisedOptions(newRow, null);
+                            }
+
+                        });
+
                     });
-	}
+                }
+                else {
+                    $(newRow).find("[id^=search_field]").unbind("change");
+                }
+            }
 
-	function addSearchTerm() {
-		var lastRow = $("#search_terms > tbody > tr:last");
-		var newRow = $(lastRow).clone();
-		updateIds(newRow);
-		wireUpRadioButtons(newRow);
-		hideOrShowInputs(newRow);
-        wireUpSearchFieldSelect(newRow);
-		$(newRow).insertAfter(lastRow);
-	}
+            function wireUpRadioButtons(newRow) {
+                // Make the search type radio swap field options
+                $(newRow).find("[name^=search_type]").unbind("change");
+                $(newRow).find("[name^=search_type]").change(function () {
+                    hideOrShowInputs(newRow);
+                    wireUpSearchFieldSelect(newRow);
+                });
+            }
 
-	function removeSearchTerm() {
-		var numRows = $("#search_terms tr").size() -1;
-		if (numRows > 1) {
-			$("#search_terms > tbody > tr:last").remove();
-		}
+            function incrementValue(value) {
+                var pattern = /^(.*)(\d+)$/;
+                var prefix = value.match(pattern)[1];
+                var oldNumber = parseInt(value.match(pattern)[2]);
+                var newNumber = oldNumber + 1;
+                return prefix + newNumber;
+            }
 
-	}
+            function updateIds(newRow) {
+                newRow.find("[id^='search_type']," +
+                         "[id^='field']," +
+                         "[id^='range']," +
+                         "[id^='search_field']," +
+                         "[id^='search_value']," +
+                         "[id^='search_standardised_value']," +
+                         "[id^='search_range_min']," +
+                         "[id^='search_range_max']").each(
+                            function(i, val) {
+                              val.id = incrementValue(val.id);
+                              try {
+                                val.name = incrementValue(val.name);
+                              }
+                              catch(err) {};
+                            });
+            }
 
-	$("#add_search_term").click(addSearchTerm);
-	$("#remove_search_term").click(removeSearchTerm);
-	// initialise the handlers on the first row also ( not just dynamically added rows)
-	var firstRow = $("#search_terms > tbody > tr:first");
-	wireUpRadioButtons(firstRow);
-    hideOrShowInputs(firstRow);
-	wireUpSearchFieldSelect(firstRow);
-    wireUpAllSamplesSearchCheckBox();
-  });
+            function addSearchTerm() {
+                var lastRow = $("#search_terms > tbody > tr:last");
+                var newRow = $(lastRow).clone();
+                updateIds(newRow);
+                wireUpRadioButtons(newRow);
+                hideOrShowInputs(newRow);
+                wireUpSearchFieldSelect(newRow);
+                $(newRow).insertAfter(lastRow);
+            }
+
+            function removeSearchTerm() {
+                var numRows = $("#search_terms tr").size() -1;
+                if (numRows > 1) {
+                    $("#search_terms > tbody > tr:last").remove();
+                }
+
+            }
+
+            $("#add_search_term").click(addSearchTerm);
+            $("#remove_search_term").click(removeSearchTerm);
+            // initialise the handlers on the first row also ( not just dynamically added rows)
+            var firstRow = $("#search_terms > tbody > tr:first");
+            wireUpRadioButtons(firstRow);
+            hideOrShowInputs(firstRow);
+            wireUpSearchFieldSelect(firstRow);
+            wireUpAllSamplesSearchCheckBox();
+          });
 </script>
     {% endif %}
 
