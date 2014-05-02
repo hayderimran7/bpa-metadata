@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, ListView, DetailView
 from django.conf import settings
 
-from .models import GBRSample, GBRSequenceFile
+from .models import GBRSample, GBRSequenceFile, CollectionEvent
 
 
 class GBRView(TemplateView):
@@ -32,3 +32,16 @@ class SequenceFileListView(ListView):
     context_object_name = 'sequencefiles'
     template_name = 'gbr/gbr_sequencefile_list.html'
     paginate_by = settings.DEFAULT_PAGINATION
+
+
+class CollectionListView(ListView):
+    model = CollectionEvent
+    context_object_name = 'collections'
+    template_name = 'gbr/gbr_collection_event_list.html'
+    paginate_by = settings.DEFAULT_PAGINATION
+
+
+class CollectionView(DetailView):
+    model = CollectionEvent
+    context_object_name = 'collectionevent'
+    template_name = 'gbr/gbr_collection_event_detail.html'
