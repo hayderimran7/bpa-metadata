@@ -1,4 +1,4 @@
-# Django settings for bpametadata project.
+# Django settings for bpa metadata project.
 
 import os
 import sys
@@ -7,7 +7,7 @@ from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
 
-BPA_VERSION = '1.0.14'
+BPA_VERSION = '1.2.0'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -92,9 +92,8 @@ SUIT_CONFIG = {
                     'metagenomicssequencefile',
                     'metagenomicsrun')},
         {'app': 'base_amplicon', 'label': 'BASE Amplicons',
-         'models': ('ampliconsample',
-                    'ampliconsequencefile',
-                    'ampliconrun')
+         'models': ('ampliconsequencingmetadata',
+                    'ampliconsequencefile',)
         },
         {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
         {'app': 'base_contextual', 'label': 'BASE Contextual', },

@@ -16,7 +16,7 @@
     {% for sample in samples %}
     <tr>
         <td>
-            <a href="{% url 'melanoma:sampledetail' sample.bpa_id %}">{{ sample.bpa_id }}</a>
+            <a href="{% url 'melanoma:sample' sample.bpa_id %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.name }}</td>
         <td>{{ sample.tumor_stage }}</td>

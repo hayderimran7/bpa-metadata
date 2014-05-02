@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
-
 from apps.common.admin import SequenceFileAdmin
-from models import *
+
+from models import AmpliconSequenceFile, AmpliconSequencingMetadata
 
 
 class AmpliconSequenceFileAdmin(SequenceFileAdmin):
@@ -12,11 +12,12 @@ class AmpliconSequenceFileAdmin(SequenceFileAdmin):
         ('Sequence File',
          {'fields': (
              'filename', 'md5', 'sample', 'lane_number', 'index_number', 'analysed',
-             'date_received_from_sequencing_facility','note'),
+             'date_received_from_sequencing_facility', 'note'),
          }),
     ]
 
     list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility',)
+
 
 admin.site.register(AmpliconSequenceFile, AmpliconSequenceFileAdmin)
 
@@ -31,7 +32,7 @@ class SequenceFileInlineForm(forms.ModelForm):
         }
 
 
-class SampleAdmin(admin.ModelAdmin):
+class AmpliconMetadaAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
             model = AmpliconSequencingMetadata
@@ -39,17 +40,13 @@ class SampleAdmin(admin.ModelAdmin):
                 'bpa_id': LinkedSelect(
                     attrs={'class': 'input-medium',
                            'style': 'width:50%'}),
-                'name': forms.TextInput(
+                'sample_extraction_id': forms.TextInput(
                     attrs={'class': 'input-medium',
                            'style': 'width:50%'}),
-                'note': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
                 'sequencing_facility': LinkedSelect,
-                'date_sent_to_sequencing_facility': SuitDateWidget
             }
 
     form = SampleForm
@@ -58,7 +55,7 @@ class SampleAdmin(admin.ModelAdmin):
         model = AmpliconSequenceFile
         form = SequenceFileInlineForm
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility')
+        fields = ('filename', 'md5',)
         suit_classes = 'suit-tab suit-tab-id'
         extra = 1
 
@@ -67,7 +64,7 @@ class SampleAdmin(admin.ModelAdmin):
     suit_form_tabs = (
         ('id', 'Sample ID and Sequence Files'),
         ('management', 'Sample Management',),
-        ('notes', 'Source Data Note')
+        ('notes', 'Source Data Note'),
     )
 
     fieldsets = [
@@ -80,7 +77,6 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-management',),
           'fields': (
               'sequencing_facility',
-              'date_sent_to_sequencing_facility',
               'target',
               'index',
               'reads',
@@ -92,8 +88,7 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': (
-              'note',
-              'debug_note')}),
+              'debug_note',)}),
     ]
 
     list_display = ('bpa_id', 'target', 'sequencing_facility')
@@ -101,7 +96,7 @@ class SampleAdmin(admin.ModelAdmin):
     list_filter = ('bpa_id', 'sequencing_facility', )
 
 
-admin.site.register(AmpliconSequencingMetadata, SampleAdmin)
+admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
 
 
 # class AmpliconRunAdmin(admin.ModelAdmin):

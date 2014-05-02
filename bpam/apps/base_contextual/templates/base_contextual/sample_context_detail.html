@@ -7,7 +7,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3>
-            BASE Contextual Detail for Sample {{ samplecontext.bpa_id }}
+            BASE Contextual Detail for
+            <a href="{% url 'basemetagenomics:sample' samplecontext.bpa_id %}">
+                {{ samplecontext.bpa_id }}
+            </a>
         </h3>
     </div>
 
