@@ -3,132 +3,264 @@
 {% block content %}
     {% if search_form %}
 
-        <form  action="" class="form-inline" role="form" method="post">{% csrf_token %}
-              <div class="panel panel-default">
-                  <div class="panel-heading">Search Form</div>
-                  <div class="panel-body">
-                      <table id="search_form_table" class="table  table-striped table-condensed">
-                          <tbody>
-                          {{ search_form.as_table}}
-                          </tbody>
-                      </table>
+    <form  action="" class="form-inline" role="form" method="post">{% csrf_token %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Search Form  </div>
 
-                  </div>
+            <div class="panel-body">
+                <input id="add_search_term" type=button value="+" />
+    <input id="remove_search_term" value="-" type=button />
+                <table id="search_terms" class="table  table-striped table-condensed">
+                    <thead>
+                        <th>Search Type</th>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input name="search_type0" type="radio" id="field0" value="field" checked="checked">Field</>
+                                <input class="form-control" name="search_type0" type="radio" id="range0" value="range">Range</>
+                            </td>
+
+                            <td>
+                                <select id="search_field0">
+                                    <option value=1>name</option>
+                                    <option value=2>age</option>
+                                    <option value=3>address</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <select id="search_standardised_value0"></select>
+                                <input id="search_range_min0" type=text></input>
+                                <input id="search_range_max0" type=text></input>
+                                <input id="search_value0" type=text></input>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+
+
+
               </div>
-            <input type="submit" class="btn btn-default" value="Search" />
-            <div id="search_selection">
-            <input class="form-control" name="search_type" type="radio" id="field" value="field" checked="checked">Field Search</>
-            <input class="form-control" name="search_type" type="radio" id="range" value="range">Range Search</>
             </div>
+
+            <input type="submit" class="btn btn-default" value="Search" />
+
         </form>
+
         <script>
-             function  row(id, visible) {
-                 var el = $("#" + id);
-                 if (visible) {
-                     el.closest("tr").show();
-                 }
-                 else {
-                     el.closest("tr").hide();
-                 }
-             }
-
-             $(document).ready(function () {
-                $("label").addClass("control-label");
-                $("td").css({"width": "50%"});
-                $(".errorlist").addClass("alert alert-danger");
-                $(".alert-danger").removeClass("errorlist");
-
-                var auto_complete_url = "{% url 'base:auto_complete' None  %}".replace("None","");
-                var rangeSearchFields = "label[for='id_search_range']," +
-                        "#id_search_range," +
-                        "label[for='id_search_range_min']," +
-                        "#id_search_range_min," +
-                        "label[for='id_search_range_max']," +
-                        "#id_search_range_max";
-
-                var singleSearchFields = "label[for='id_search_field']," +
-                        "#id_search_field," +
-                        "label[for='id_search_value'],"+
-                        "#id_search_value";
-
-                   function clearRangeFields() {
-                    $("#id_search_range").val("");
-                    $("#id_search_range_min").val("");
-                    $("#id_search_range_max").val("");
-                }
-
-                function clearSingleFields() {
-                    $("#id_search_field").val("");
-                    $("#id_search_value").val("");
-                }
-
-                function showRangeSearch() {
-                    clearSingleFields();
-                    $(singleSearchFields).hide();
-                    $(rangeSearchFields).show();
-                    row('id_search_range_max', true);
-                    row('id_search_range_min', true);
-                    row('id_search_range', true);
-                    row('id_search_field', false);
-                    row('id_search_value', false);
-                }
-
-                function showFieldSearch() {
-                    clearRangeFields();
-                    $(rangeSearchFields).hide();
-                    row('id_search_range_max', false);
-                    row('id_search_range_min', false);
-                    row('id_search_range', false);
-                    row('id_search_field', true);
-                    row('id_search_value', true);
-                    $(singleSearchFields).show();
-                }
+  $(document).ready(function() {
 
 
-                function showCorrectSearchFields() {
-                    var isSingleSearch = $("#id_search_field").val() != "";
-                    if (isSingleSearch) {
-                        showFieldSearch();
-                        $("#field").prop("checked",true);
-                    }
-                    else {
-                        showRangeSearch();
-                        $("#range").prop("checked",true);
-                    }
-                }
 
-                $("input[name='search_type']").change(function (){
-                     var sel = $("input[name='search_type']:checked").val();
-                     if (sel == 'field'){
-                        showFieldSearch();
-                     }
-                     else {
-                       showRangeSearch();
-                     }
-                 });
+	var rangeFieldOptions = [{value: 1, text: "age"},
+						{value: 2, text: "height"},
+						{value: 3, text: "weight"}
+				                 ];
 
-                showCorrectSearchFields();
+			var fieldFieldOptions =  [{value: 1, text: "some standardised field"},
+						{value: 2, text: "not standardised"},
+						{value: 3, text: "another standardised field"}
+				                 ];
 
-                $("#id_search_field").change(function () {
-                      $(".typeahead").unbind();
-                      var standardisedVocabularyOptions = new Bloodhound({
-                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                      queryTokenizer: Bloodhound.tokenizers.whitespace,
-                      remote: auto_complete_url + $('#id_search_field').val() + "?q=%QUERY"
-                     });
 
-                     standardisedVocabularyOptions.initialize();
+	// helper functions
+	function isRangeSearch(row) {
+		return $(row).find("[id^=range]").is(":checked");
+	}
+	function isFieldSearch(row) {
+		return ! isRangeSearch(row);
+	}
+	function getSearchValueInputField(row) {
+		return $(row).find("[id^=search_value]");
+	}
 
-                     $("#id_search_value").typeahead(null, {
-                          name: 'standardised-vocabulary-options',
-                          displayKey: 'name',
-                          source: standardisedVocabularyOptions.ttAdapter()
-                     });
+    function getSearchField(row) {
+        return $(row).find("[id^=search_field]");
+    }
 
-                })
-             });
+	function isStandardised(row) {
+		// has a standardised search field been selected on this row?
+		// if so , return the options , else return null
+		var searchFieldSelect = $(row).find("[id^=search_field]");
+		var searchField = $(searchFieldSelect).val();
+		return getStandardisedOptions(searchField);
+	}
 
-        </script>
+	(function($, window) {
+	  $.fn.replaceOptions = function(options) {
+	    var self, $option;
+
+	    this.empty();
+	    self = this;
+
+	    $.each(options, function(index, option) {
+	      $option = $("<option></option>")
+		.attr("value", option.value)
+		.text(option.text);
+	      self.append($option);
+	    });
+	  };
+	})(jQuery, window);
+
+
+
+	function updateStandardisedOptions(row, standardisedOptions) {
+		if (standardisedOptions) {
+
+					$(row).find("[id^=search_value]").hide();
+                                        $(row).find("[id^=search_standardised_value]").replaceOptions(standardisedOptions);
+					$(row).find("[id^=search_standardised_value]").show();
+				}
+				else {
+
+					$(row).find("[id^=search_value]").show();
+                                        $(row).find("[id^=search_standardised_value]").hide();
+				}
+
+
+}
+
+
+	function hideOrShowInputs(newRow) {
+		// show single field or range ( min and max ) inputs
+		var search_field_select = $(newRow).find("[id^=search_field]");
+		if (isRangeSearch(newRow)) {
+			// change options to fields where a range search makes sense
+			$(search_field_select).replaceOptions(rangeFieldOptions);
+			// show the range search inputs and hide the single field input
+			$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").show();
+			$(newRow).find("[id^=search_value]").hide();
+			$(newRow).find("[id^=search_standardised_value]").hide();
+			}
+
+		else {
+				$(search_field_select).replaceOptions(fieldFieldOptions);
+				$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
+
+				var standardisedOptions = isStandardised(newRow);
+				updateStandardisedOptions(newRow, standardisedOptions);
+
+			}
+
+	}
+
+
+
+	function getStandardisedOptions(field) {
+
+		// contact server and get options for this field if standardised
+		if (field == 1) {
+			return [{value: 200, text: "awesome"},
+				{value: 300, text: "even more awesome"}];
+
+		}
+        else if (field == 3) {
+            return [{value: 200, text: "standard option"},
+				{value: 300, text: "anotherstandardised option"}];
+        }
+		else {
+			return null;
+		}
+	}
+
+
+
+	function wireUpSearchFieldSelect(newRow) {
+		// if single field search type selected , make the search value field a drop down list for
+                // for terms with a standardised vocabulary, otherwise make it a textbox
+		if (!isRangeSearch(newRow)) {
+			$(newRow).find("[id^=search_field]").change(function () {
+				var searchField = $(this).val();
+				var standardisedOptions = getStandardisedOptions(searchField);
+				updateStandardisedOptions(newRow, standardisedOptions);
+
+			});
+
+
+
+		}
+		else {
+			$(newRow).find("[id^=search_field]").unbind("change");
+		}
+
+	}
+	function wireUpRadioButtons(newRow) {
+		// Make the search type radio swap field options
+
+		$(newRow).find("[name^=search_type]").change(function () {
+
+			hideOrShowInputs(newRow);
+			wireUpSearchFieldSelect(newRow);
+
+
+		});
+
+	}
+
+	function incrementValue(value) {
+		var pattern = /^(.*)(\d+)$/;
+		var prefix = value.match(pattern)[1];
+		var oldNumber = parseInt(value.match(pattern)[2]);
+	        var newNumber = oldNumber + 1;
+		return prefix + newNumber;
+	}
+
+	function updateIds(newRow,lastRow) {
+		newRow.find("[id^='search_type']," +
+			     "[id^='field']," +
+                             "[id^='range']," +
+                             "[id^='search_field']," +
+		             "[id^='search_value']," +
+			     "[id^='search_standardised_value']," +
+                             "[id^='search_range_min']," +
+			     "[id^='search_range_max']").each(
+
+			function(i, val) {
+			  val.id = incrementValue(val.id);
+			  try {
+			    val.name = incrementValue(val.name);
+			  }
+			  catch(err) {};
+			}
+		);
+	}
+	function addSearchTerm() {
+		var lastRow = $("#search_terms > tbody > tr:last");
+		var newRow = $(lastRow).clone();
+		updateIds(newRow,lastRow);
+		wireUpRadioButtons(newRow);
+		hideOrShowInputs(newRow);
+                wireUpSearchFieldSelect(newRow);
+		$(newRow).insertAfter(lastRow);
+	}
+
+	function removeSearchTerm() {
+		var numRows = $("#search_terms tr").size() -1;
+		if (numRows > 1) {
+			$("#search_terms > tbody > tr:last").remove();
+		}
+
+	}
+
+	$("#add_search_term").click(addSearchTerm);
+	$("#remove_search_term").click(removeSearchTerm);
+
+	// initialise the handlers on the first row also ( not just dynamically added rows)
+	var firstRow = $("#search_terms > tbody > tr:first");
+	wireUpRadioButtons(firstRow);
+    hideOrShowInputs(firstRow);
+	wireUpSearchFieldSelect(firstRow);
+
+
+  });
+
+</script>
+
 
     {% endif %}
 
