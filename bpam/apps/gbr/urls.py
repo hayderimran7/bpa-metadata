@@ -17,7 +17,7 @@ urlpatterns = patterns(
     url(
         regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
-        name='sampledetail'),
+        name='sample'),
     url(
         regex=r'^sequencefiles',
         view=views.SequenceFileListView.as_view(),

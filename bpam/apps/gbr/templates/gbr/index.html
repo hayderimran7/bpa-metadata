@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Great Barrier Reef{% endblock %}
 
-
+{% load staticfiles %}
 {% block content %}
     <div class="jumbotron">
+        <img src="{% static 'gbr/coral.jpg' %}" alt="BASE">
         <h2>
             <a> Great Barrier Reef</a>
         </h2>
