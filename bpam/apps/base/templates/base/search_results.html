@@ -6,7 +6,7 @@
     <form  action="" class="form-inline" role="form" method="post">{% csrf_token %}
     <div class="panel panel-default">
         <div class="panel-heading">Search Form - Search All Samples?
-             <input name="search_all" type="checkbox" id="search_all">
+             <input name="search_all" type="checkbox" value="search_all" id="search_all">
 
         </div>
         <div id="search_panel" class="panel-body">
@@ -31,18 +31,16 @@
                             </td>
 
                             <td>
-                                <select id="search_field0">
-                                    <option value=1>name</option>
-                                    <option value=2>age</option>
-                                    <option value=3>address</option>
+                                <select id="search_field0" name="search_field0">
+
                                 </select>
                             </td>
 
                             <td>
-                                <select id="search_standardised_value0"></select>
-                                <input id="search_range_min0" type=text>
-                                <input id="search_range_max0" type=text>
-                                <input id="search_value0" type=text>
+                                <select id="search_standardised_value0" name="search_standardised_value0"></select>
+                                <input id="search_range_min0" name="search_range_min0"  type=text>
+                                <input id="search_range_max0" name="search_range_max0" type=text>
+                                <input id="search_value0" name="search_value0" type=text>
                             </td>
 
                         </tr>
@@ -70,15 +68,15 @@
                    <tbody>
                     <tr>
                         <td>Kingdom</td>
-                        <td><input type="text" id="kingdom"></td>
+                        <td><input type="text" name="kingdom" id="kingdom"></td>
                     </tr>
                    <tr>
-                       <td>Phylum</td><td><input type="text" id="phylum"></td></tr>
-                    <tr><td>Class</td><td><input type="text" id="class"></td></tr>
-                    <tr><td>Order</td><td><input type="text" id="order"></td></tr>
-                   <tr><td>Family</td><td><input type="text" id="family"></td></tr>
-                   <tr><td>Genus</td><td><input type="text" id="genus"></td></tr>
-                   <tr><td>Species</td><td><input type="text" id="species"></td></tr>
+                       <td>Phylum</td><td><input type="text" name="phylum" id="phylum"></td></tr>
+                    <tr><td>Class</td><td><input type="text" name="class" id="class"></td></tr>
+                    <tr><td>Order</td><td><input type="text" name="order" id="order"></td></tr>
+                   <tr><td>Family</td><td><input type="text" name="family" id="family"></td></tr>
+                   <tr><td>Genus</td><td><input type="text" name="genus" id="genus"></td></tr>
+                   <tr><td>Species</td><td><input type="text" name="species" id="species"></td></tr>
 
                    </tbody>
                </table>
