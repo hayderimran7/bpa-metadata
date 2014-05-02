@@ -197,18 +197,17 @@ class AutoCompleteView(View):
     }
 
     def get(self, request, search_field=None):
-        query = request.GET.get("q", None)
         response = HttpResponse(content_type="application/json")
         model, field = self._get_standardised_vocab(search_field)
 
         if model is None:
-            #response.status_code = 404
+            response.status_code = 404
             options = []
         else:
-            q = model.objects.filter(**{"%s__icontains" % field: query})
+            q = model.objects.all()
             q = q.order_by(field).distinct(field)
             q = q.values_list("id", field)
-            options = [{"id": id, "name": name} for (id, name) in q]
+            options = [{"value": id, "text": name} for (id, name) in q]
 
         json.dump(options, response)
         return response
