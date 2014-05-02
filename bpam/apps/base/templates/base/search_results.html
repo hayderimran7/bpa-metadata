@@ -79,6 +79,7 @@
   $(document).ready(function() {
 
     var standardisedVocabularyEndPointURL = "{% url 'base:auto_complete' None %}".replace("None","");
+    const STATUS_OK = "success";
 
 
 	var rangeFieldOptions = [
@@ -174,24 +175,11 @@
 	function isRangeSearch(row) {
 		return $(row).find("[id^=range]").is(":checked");
 	}
-	function isFieldSearch(row) {
-		return ! isRangeSearch(row);
-	}
-	function getSearchValueInputField(row) {
-		return $(row).find("[id^=search_value]");
-	}
+
 
     function getSearchField(row) {
         return $(row).find("[id^=search_field]");
     }
-
-	function isStandardised(row) {
-		// has a standardised search field been selected on this row?
-		// if so , return the options , else return null
-		var searchFieldSelect = getSearchField(row);
-		var searchField = $(searchFieldSelect).val();
-		return getStandardisedOptions(searchField);
-	}
 
     function checkStandardised(row, callback) {
         var searchFieldSelect = getSearchField(row);
@@ -219,7 +207,7 @@
 	})(jQuery, window);
 
 	function updateStandardisedOptions(row, standardisedOptions) {
-		if (standardisedOptions) {
+		if (standardisedOptions.length > 0) {
 	        $(row).find("[id^=search_value]").hide();
             $(row).find("[id^=search_standardised_value]").replaceOptions(standardisedOptions);
 		    $(row).find("[id^=search_standardised_value]").show();
@@ -227,7 +215,7 @@
 
         else {
               // not standardised , so just show a text entry field
-              console.debug();
+
 			  $(row).find("[id^='search_value']").show();
               $(row).find("[id^='search_standardised_value']").hide();
 		}
@@ -251,36 +239,16 @@
 				$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
 
                 checkStandardised(newRow, function(standardisedOptions, status) {
-                    if (status == 200) {
+                    if (status == STATUS_OK) {
                         updateStandardisedOptions(newRow, standardisedOptions);
                     }
                     else {
                         // this should show the text box
-                        updateStandardisedOptions(newRow, null);
+                        updateStandardisedOptions(newRow,null);
                     }
                 });
 			}
 	}
-
-	function getStandardisedOptions(field) {
-
-		// contact server and get options for this field if standardised
-
-		if (field == 1) {
-			return [{value: 200, text: "awesome"},
-				{value: 300, text: "even more awesome"}];
-
-		}
-        else if (field == 3) {
-            return [{value: 200, text: "standard option"},
-				{value: 300, text: "anotherstandardised option"}];
-        }
-		else {
-			return null;
-		}
-	}
-
-
 
 	function wireUpSearchFieldSelect(newRow) {
 		// if single field search type selected , make the search value field a drop down list for
@@ -289,12 +257,14 @@
 			$(newRow).find("[id^=search_field]").change(function () {
 
                 checkStandardised(newRow, function (standardisedOptions, status){
-                    updateStandardisedOptions(newRow, standardisedOptions);
-                });
+                    if (status == STATUS_OK){
+                        updateStandardisedOptions(newRow, standardisedOptions);
+                    }
+                    else {
+                        updateStandardisedOptions(newRow, null);
+                    }
 
-//				var searchField = $(this).val();
-//				var standardisedOptions = getStandardisedOptions(searchField);
-//				updateStandardisedOptions(newRow, standardisedOptions);
+                });
 
 			});
 
