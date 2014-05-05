@@ -6,6 +6,12 @@
 
 <h3>BASE 454 Samples</h3>
 
+{% if samples %}
 {% include "base_454/sample_table.html" %}
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Contextual data is currently available </h3>
+{% endif %}
 
 {% endblock %}
