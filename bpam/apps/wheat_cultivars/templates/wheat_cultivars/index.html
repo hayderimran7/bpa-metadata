@@ -1,15 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Great Barrier Reef{% endblock %}
+{% block title %}Wheat Cultivars{% endblock %}
 
-
+{% load staticfiles %}
 {% block content %}
-    <div class="jumbotron">
-        <h2>
-            <a>Wheat Pathogens</a>
-        </h2>
+<div class="jumbotron">
+    <img src="{% static 'wheat_cultivars/wheat.jpg' %}" alt="BASE">
 
-        <div class="list-group">
-            <a class="list-group-item" href="{% url 'wheat_pathogens:samples' %}">Samples</a>
-        </div>
+    <h2>
+        Wheat Cultivars
+    </h2>
+
+    <div class="list-group">
+        <a class="list-group-item" href="{% url 'wheat_cultivars:samples' %}">Samples</a>
+        <a class="list-group-item" href="{% url 'wheat_cultivars:sequencefiles' %}">Sequence Files</a>
     </div>
+</div>
 {% endblock %}
