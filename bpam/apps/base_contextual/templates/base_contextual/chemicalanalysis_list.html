@@ -4,32 +4,13 @@
 
 {% block content %}
 
-    <h3>Chemical Analysis</h3>
+<h3>Chemical Analysis</h3>
 
-    {% include "base_contextual/chemicalanalysis_table.html" %}
+{% include "base_contextual/chemicalanalysis_table.html" %}
 
-    <form>
-        <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:chemicalanalysis' %}"/>
-    </form>
+<form>
+    <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:chemicalanalysis' %}"/>
+</form>
 
-{% if is_paginated %}
-<ul class="pagination pagination-centered">
-    {% if page_obj.has_previous %}
-    <li><a href="?page=1"><<</a></li>
-    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
-    {% endif %}
-
-    {% for i in paginator.page_range %}
-    <li
-    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
-    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
-    {% endif %}
-</ul>
-{% endif %}
-
-
+{% include "pagination.html" %}
 {% endblock %}
