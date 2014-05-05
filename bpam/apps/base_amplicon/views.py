@@ -17,4 +17,5 @@ class MetadataView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(MetadataView, self).get_context_data(**kwargs)
         context['sequencefiles'] = AmpliconSequenceFile.objects.filter(sample__bpa_id=context['metadata'].bpa_id)
+        context['sample'] = context['metadata']  # same name to make common sequence file template work
         return context
