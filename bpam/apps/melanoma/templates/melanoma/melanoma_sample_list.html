@@ -12,6 +12,8 @@
     <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma:samples' %}"/>
 </form>
 
+{% include "pagination.html" %}
+
 {% else %}
 <h3> No Melanoma Sequence Data is currently available </h3>
 {% endif %}
