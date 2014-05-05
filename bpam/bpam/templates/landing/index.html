@@ -45,6 +45,7 @@
     <div class="jumbotron">
 
         <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+
         <h1>Bioplatforms Australia Metadata</h1>
 
         <p>Welcome to Bioplatforms Australia's project metadata portal</p>
@@ -80,10 +81,12 @@
                     </div>
                 </a>
             </div>
-
+        </div>
+        <div class="row">
             <div class="col-sm-6 col-md-4">
                 <a class="thumbnail" href="{% url 'wheat_cultivars:index' %}">
-                    <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}" alt="Wheat Cultivars">
+                    <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}"
+                         alt="Wheat Cultivars">
 
                     <div class="caption">
                         <h3>Wheat Cultivars</h3>
@@ -93,7 +96,8 @@
 
             <div class="col-sm-6 col-md-4">
                 <a class="thumbnail" href="{% url 'wheat_pathogens:index' %}">
-                    <img class="img-responsive img-rounded" src="{% static 'wheat_pathogens/wheat_pathogens.jpg' %}" alt="Wheat Pathogens">
+                    <img class="img-responsive img-rounded" src="{% static 'wheat_pathogens/wheat_pathogens.jpg' %}"
+                         alt="Wheat Pathogens">
 
                     <div class="caption">
                         <h3>Wheat Pathogens</h3>
