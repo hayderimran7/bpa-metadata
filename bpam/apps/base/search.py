@@ -166,8 +166,6 @@ class Searcher(object):
                 filters.append(filter_dict)
 
             qterms = [Q(**f) for f in filters]
-            if len(qterms) == 1:
-                return klass.objects.filter(qterms[0])
 
             if self.operator == "and":
                 op = and_
@@ -204,6 +202,9 @@ class Searcher(object):
             bpa_ids = set([obj.bpa_id for obj in objects])
             bpa_id_sets.append(bpa_ids)
 
+
+        print "bpa_id_sets = %s" % bpa_id_sets
+
         if self.operator == "and":
             bpa_ids = set.intersection(*bpa_id_sets)
         elif self.operator == "or":
@@ -211,8 +212,14 @@ class Searcher(object):
         else:
             raise Exception("Unknown search operator: %s" % self.operator)
 
-        base_samples = BASESample.objects.filter(bpa_id__in=bpa_ids)
+        print "bpa ids = %s" % bpa_ids
 
+
+        base_samples = BASESample.objects.filter(bpa_id__in=bpa_ids)
+        print "base_samples = %s" % BASESample.objects.all()
+        base_samples = BASESample.objects.all()
+        for bs in base_samples:
+            print bs
         return self._filter_on_taxonomy(base_samples)
 
     def _filter_on_taxonomy(self, samples):
