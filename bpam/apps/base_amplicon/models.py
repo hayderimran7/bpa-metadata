@@ -62,13 +62,4 @@ class AmpliconSequenceFile(SequenceFile):
         verbose_name_plural = _("Amplicon Sequence Files")
 
 
-# class MelanomaRun(Run):
-#     """
-#     A Melanoma Run
-#     """
-#
-#     sample = models.ForeignKey(MelanomaSample)
-#
-#     def __unicode__(self):
-#         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
