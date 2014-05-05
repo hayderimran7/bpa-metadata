@@ -86,7 +86,7 @@
         </form>
         <script>
         $(document).ready(function() {
-            var standardisedVocabularyEndPointURL = "{% url 'base:auto_complete' None %}".replace("None","");
+            var standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None","");
             const STATUS_OK = "success";
             const rangeFieldOptions = [
                 {value: "lat",         text: "Latitude"},

@@ -142,7 +142,7 @@ class OTUAutoCompleteView(View):
         return response
 
 
-class AutoCompleteView(View):
+class StandardisedVocabularyLookUpView(View):
     STANDARD_VOCABULARY_TABLE = {
             "agrochemical_additions": None,
             "ammonium_nitrogen": None,
