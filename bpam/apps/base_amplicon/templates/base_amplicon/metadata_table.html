@@ -20,7 +20,7 @@
     {% for data in metadata_list %}
     <tr>
         <td>
-            <a href="{% url 'basecontextual:sampledetail' data.bpa_id %}">{{ data.bpa_id }}</a>
+            <a href="{% url 'base_amplicon:metadata' data.bpa_id %}">{{ data.bpa_id }}</a>
         </td>
         <td>{{ data.sample_extraction_id }}</td>
         <td>{{ data.name }}</td>
