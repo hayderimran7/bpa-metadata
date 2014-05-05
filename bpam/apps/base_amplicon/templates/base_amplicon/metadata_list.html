@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}BASE Metagenomics Samples {% endblock %}
+{% block title %}BASE Amplicon Metadata {% endblock %}
 
 {% block content %}
 
-<h3>BASE 454 Samples</h3>
+<h3>BASE Amplicon Metadata</h3>
 
-{% if samples %}
-{% include "base_454/sample_table.html" %}
+{% if metadata_list %}
+{% include "base_amplicon/metadata_table.html" %}
 {% include "pagination.html" %}
 
 {% else %}

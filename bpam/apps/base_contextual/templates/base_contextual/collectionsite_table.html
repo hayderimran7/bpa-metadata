@@ -10,15 +10,15 @@
     </thead>
     <tbody>
     {% for site in sites %}
-        <tr>
-            <td class="name">
-                <a href="{% url 'basecontextual:collectionsitedetail' site.pk %}">{{ site.get_location_name }}</a>
-            </td>
-            <td class="lat">{{ site.lat }}</td>
-            <td class="lng">{{ site.lon }}</td>
-            <td class="ele">{% if site.elevation %} {{ site.elevation }} {% endif %}</td>
-            <td class="landuse">{% if site.current_land_use %} {{ site.current_land_use }} {% endif %} </td>
-        </tr>
+    <tr>
+        <td class="name">
+            <a href="{% url 'basecontextual:collectionsitedetail' site.pk %}">{{ site.get_location_name }}</a>
+        </td>
+        <td class="lat">{{ site.lat }}</td>
+        <td class="lng">{{ site.lon }}</td>
+        <td class="ele">{% if site.elevation %} {{ site.elevation }} {% endif %}</td>
+        <td class="landuse">{% if site.current_land_use %} {{ site.current_land_use }} {% endif %}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>

@@ -21,12 +21,13 @@ urlpatterns = patterns(
     url(r'^base/', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/', include('apps.base_metagenomics.urls', namespace='basemetagenomics')),
     url(r'^base/contextual/', include('apps.base_contextual.urls', namespace='basecontextual')),
+    url(r'^base/amplicon/', include('apps.base_amplicon.urls', namespace='base_amplicon')),
     url(r'^base/454/', include('apps.base_454.urls', namespace='base454')),
     # Great Barrier reef
     url(r'^gbr/', include('apps.gbr.urls', namespace='gbr')),
     # Wheat
-    url(r'^wheat_cultivars/?', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
-    url(r'^wheat_pathogens/?', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
+    url(r'^wheat_cultivars/', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
+    url(r'^wheat_pathogens/', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
     # Melanoma
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System

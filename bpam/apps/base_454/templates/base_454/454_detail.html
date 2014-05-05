@@ -9,7 +9,7 @@
     <div class="panel-heading">
         <h3>
             BASE 454 Detail for
-            <a href="{% url 'basemetagenomics:sample' samplecontext.bpa_id %}">
+            <a href="{% url 'basemetagenomics:sample' samplesample.bpa_id %}">
                 {{ sample.bpa_id }}
             </a>
         </h3>
@@ -19,7 +19,7 @@
         <tbody>
         <tr>
             <td><b>Sample ID</b></td>
-            <td> {{ sample.sample_id }} </td>
+            <td> {{ sample.sample_id }}</td>
         </tr>
         <tr>
             <td><b>Aurora Purified</b></td>
@@ -41,64 +41,146 @@
         </tr>
         <tr>
             <td><b>Well Location</b></td>
-            <td>{{ context.dna_storage_nunc_well_location }}</td>
+            <td>{{ sample.dna_storage_nunc_well_location }}</td>
         </tr>
         <tr>
             <td><b>AGRF Batch Number</b></td>
-            <td>{{ context.agrf_batch_number }}</td>
+            <td>{{ sample.agrf_batch_number }}</td>
         </tr>
         <tr>
             <td><b>Submitter</b></td>
-            <td>{{ context.submitter }}</td>
+            <td>{{ sample.submitter }}</td>
         </tr>
         <tr>
             <td><b>Date Received</b></td>
-            <td>{{ context.date_received }}</td>
+            <td>{{ sample.date_received }}</td>
         </tr>
         <tr>
-            <td><b>Adelaide Extraction Sample Weight</b></td>
-            <td>{{ context.adelaide_extraction_sample_weight }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide Fluorimetry ng/uL gDNA</b></td>
-            <td>{{ context.adelaide_fluorimetry }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide PCR Inhibition (neat plus spike) 16S (V3-V8)</b></td>
-            <td>{{ context.adelaide_pcr_inhibition }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide PCR1 (neat) 16S (V3-V8)</b></td>
-            <td>{{ context.adelaide_pcr1 }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide PCR2 (1:100) 16S (V3-V8)</b></td>
-            <td>{{ context.adelaide_pcr2 }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide DNA shipped to AGRF (454)</b></td>
-            <td>{{ context.adelaide_date_shipped_to_agrf_454 }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide DNA shipped to AGRF (MiSeq)</b></td>
-            <td>{{ context.adelaide_date_shipped_to_agrf_miseq }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide DNA shipped to Ramaciotti</b></td>
-            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
-        </tr>
-        <tr>
-            <td><b>Adelaide Date shipped to Ramacciotti</b></td>
-            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
+            <td><b>Note</b></td>
+            <td>{{ sample.note }}</td>
         </tr>
 
-        
+        </tbody>
+    </table>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4> Adelaide </h4>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
 
         <tr>
-            <td><b>Adelaide Date shipped to Ramacciotti</b></td>
-            <td>{{ context.adelaide_date_shipped_to_ramacciotti }}</td>
+            <td><b>Extraction Sample Weight</b></td>
+            <td>{{ sample.adelaide_extraction_sample_weight }}</td>
+        </tr>
+        <tr>
+            <td><b>Fluorimetry ng/uL gDNA</b></td>
+            <td>{{ sample.adelaide_fluorimetry }}</td>
+        </tr>
+        <tr>
+            <td><b>PCR Inhibition (neat plus spike) 16S (V3-V8)</b></td>
+            <td>{{ sample.adelaide_pcr_inhibition }}</td>
+        </tr>
+        <tr>
+            <td><b>PCR1 (neat) 16S (V3-V8)</b></td>
+            <td>{{ sample.adelaide_pcr1 }}</td>
+        </tr>
+        <tr>
+            <td><b>PCR2 (1:100) 16S (V3-V8)</b></td>
+            <td>{{ sample.adelaide_pcr2 }}</td>
+        </tr>
+        <tr>
+            <td><b>DNA shipped to AGRF (454)</b></td>
+            <td>{{ sample.adelaide_date_shipped_to_agrf_454 }}</td>
+        </tr>
+        <tr>
+            <td><b>DNA shipped to AGRF (MiSeq)</b></td>
+            <td>{{ sample.adelaide_date_shipped_to_agrf_miseq }}</td>
+        </tr>
+        <tr>
+            <td><b>DNA shipped to Ramaciotti</b></td>
+            <td>{{ sample.adelaide_date_shipped_to_ramacciotti }}</td>
+        </tr>
+        <tr>
+            <td><b>Date shipped to Ramacciotti</b></td>
+            <td>{{ sample.adelaide_date_shipped_to_ramacciotti }}</td>
         </tr>
 
+        </tbody>
+    </table>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4> Brisbane </h4>
+    </div>
+
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td><b>16S MID</b></td>
+            <td>{{ sample.brisbane_16s_mid }}</td>
+        </tr>
+
+        <tr>
+            <td><b>ITS MID</b></td>
+            <td>{{ sample.brisbane_its_mid }}</td>
+        </tr>
+        <tr>
+            <td><b>16S (V1-V3) PCR1 (neat)</b></td>
+            <td>{{ sample.brisbane_16s_pcr1 }}</td>
+        </tr>
+        <tr>
+            <td><b>16S (V1-V3) PCR2 (1:10)</b></td>
+            <td>{{ sample.brisbane_16s_pcr2 }}</td>
+        </tr>
+        <tr>
+            <td><b>16S (V1-V3) PCR3 (fusion-primer)</b></td>
+            <td>{{ sample.brisbane_16s_pcr3 }}</td>
+        </tr>
+        <tr>
+            <td><b>ITS PCR1 (neat)</b></td>
+            <td>{{ sample.brisbane_its_pcr1_neat }}</td>
+        </tr>
+        <tr>
+            <td><b>ITS PCR1 (1:10)</b></td>
+            <td>{{ sample.brisbane_its_pcr2_1_10 }}</td>
+        </tr>
+        <tr>
+            <td><b>ITS PCR3 (fusion-primer)</b></td>
+            <td>{{ sample.brisbane_its_pcr3_fusion }}</td>
+        </tr>
+        <tr>
+            <td><b>Fluorimetry ng/uL 16S</b></td>
+            <td>{{ sample.brisbane_fluorimetry_16s }}</td>
+        </tr>
+        <tr>
+            <td><b>Fluorimetry ng/uL 16S</b></td>
+            <td>{{ sample.brisbane_fluorimetry_16s }}</td>
+        </tr>
+        <tr>
+            <td><b>Fluorimetry ng/uL ITS</b></td>
+            <td>{{ sample.brisbane_fluorimetry_its }}</td>
+        </tr>
+        <tr>
+            <td><b>16S pooled</b></td>
+            <td>{{ sample.brisbane_i6s_pooled }}</td>
+        </tr>
+        <tr>
+            <td><b>ITS pooled</b></td>
+            <td>{{ sample.brisbane_its_pooled }}</td>
+        </tr>
+        <tr>
+            <td><b>16S >3000 reads - Trim Back 150bp</b></td>
+            <td>{{ sample.brisbane_16s_reads }}</td>
+        </tr>
+        <tr>
+            <td><b>1ITS >3000 reads - Trim Back 150bp Run1</b></td>
+            <td>{{ sample.brisbane_its_reads }}</td>
+        </tr>
         </tbody>
     </table>
 

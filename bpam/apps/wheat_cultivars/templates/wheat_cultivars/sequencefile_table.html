@@ -23,7 +23,7 @@
             {% endif %}
         </td>
         <td>
-            <a href="{% url 'melanoma:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
+            <a href="{% url 'wheat_cultivars:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
         </td>
         <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
         <td>{{ sfile.md5 }}</td>
@@ -34,6 +34,9 @@
     {% endfor %}
     </tbody>
 </table>
+
+
+
 
 <script>
     $(document).ready(function () {

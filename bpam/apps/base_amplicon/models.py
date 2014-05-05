@@ -12,7 +12,7 @@ class AmpliconSequencingMetadata(DebugNote):
     bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
-                                            verbose_name=_('Sequencing facility'),
+                                            verbose_name=_('Sequencing Facility'),
                                             related_name='base_amplicon',
                                             blank=True,
                                             null=True)
@@ -31,6 +31,16 @@ class AmpliconSequencingMetadata(DebugNote):
 
     analysis_software_version = models.CharField(_('Analysis Software Version'), max_length=100, blank=True, null=True)
     reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
+
+
+    def passed_pcr_1_to_10(self):
+        return self.pcr_1_to_10 == 'P'
+
+    def passed_pcr_1_to_100(self):
+        return self.pcr_1_to_100 == 'P'
+
+    def passed_pcr_neat(self):
+        return self.pcr_neat == 'P'
 
 
     def __unicode__(self):
