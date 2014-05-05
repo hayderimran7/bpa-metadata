@@ -21,6 +21,7 @@ urlpatterns = patterns(
     url(r'^base/', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/', include('apps.base_metagenomics.urls', namespace='basemetagenomics')),
     url(r'^base/contextual/', include('apps.base_contextual.urls', namespace='basecontextual')),
+    url(r'^base/amplicon/', include('apps.base_amplicon.urls', namespace='base_amplicon')),
     url(r'^base/454/', include('apps.base_454.urls', namespace='base454')),
     # Great Barrier reef
     url(r'^gbr/', include('apps.gbr.urls', namespace='gbr')),
