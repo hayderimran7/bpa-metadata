@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Amplicon Metadata {% endblock %}
+
+{% block content %}
+
+<h3>BASE Amplicon Metadata</h3>
+
+{% if metadata_list %}
+{% include "base_amplicon/metadata_table.html" %}
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Contextual data is currently available </h3>
+{% endif %}
+
+{% endblock %}
