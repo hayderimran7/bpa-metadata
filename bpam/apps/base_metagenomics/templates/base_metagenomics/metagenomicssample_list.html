@@ -4,8 +4,12 @@
 
 {% block content %}
 
+{% if samples %}
 <h3>BASE Metagenomics Samples</h3>
 {% include "base_metagenomics/sample_table.html" %}
-
+{% include "pagination.html" %}
+{% else %}
+<h3> No Metagenomic Sample Data is currently available </h3>
+{% endif %}
 
 {% endblock %}
