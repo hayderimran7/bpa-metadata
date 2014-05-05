@@ -8,6 +8,11 @@ import logging
 
 logger = logging.getLogger("rainbow")
 
+class SearchTerm(object):
+    def __init__(self):
+        self.field = None
+        self.value = None
+
 
 def search_strategy_horizon_desc(searcher):
     """
@@ -123,37 +128,31 @@ class Searcher(object):
 
     }
 
-    def get_matching_samples(self):
-        if self.search_type == Searcher.SEARCH_TYPE_FIELD:
-            field = self.search_field
+    def __init__(self, parameters):
+        if parameters["search_all"] == "search_all":
+            self.search_all = True
         else:
-            field = self.search_range
+            self.search_all = False
 
-        for model_class in Searcher.SEARCH_TABLE:
-            if field in Searcher.SEARCH_TABLE[model_class]:
-                logger.debug("%s in %s" % (field, model_class))
-                search_strategy = Searcher.SEARCH_TABLE[model_class][field]
-                logger.debug("search strategy = %s" % search_strategy)
-                if callable(search_strategy):
-                    first_level_results = search_strategy(self)
-                else:
-                    if self.search_type == Searcher.SEARCH_TYPE_FIELD:
-                        filter_dict = {search_strategy: self.search_value}
-                    elif self.search_type == Searcher.SEARCH_TYPE_RANGE:
-                        logger.debug("range search")
-                        search_strategy += "__range"
-                        filter_dict = {search_strategy: (self.search_range_min, self.search_range_max)}
+        self.operator = parameters.get("search_operator", "and")
+        self.parameters = parameters
+        self.search_terms = self.parameters["search_terms"]
 
-                    first_level_related_models = model_class.objects.filter(**filter_dict)
-                    first_level_results = BASESample.objects.filter(bpa_id__in=[m.bpa_id for m in first_level_related_models])
+        self.search_kingdom = self.parameters.get("search_kingdom", None)
+        self.search_phylum = self.parameters.get("search_phylum", None)
+        self.search_class = self.parameters.get("search_class", None)
+        self.search_order = self.parameters.get("search_order", None)
+        self.search_family = self.parameters.get("search_family", None)
+        self.search_genus = self.parameters.get("search_genus", None)
+        self.search_species = self.parameters.get("search_species", None)
 
-                logger.debug("filtering on taxonomy if present ..")
-                return self._filter_on_taxonomy(first_level_results)
+    def complex_search(self):
+        if self.search_all:
+            # Immediately return a search filtering on taxonomy only
+            return self._filter_on_taxonomy(BASESample.objects.all())
 
-        logger.debug("could not find search field %s in search table" % self.search_field)
-        return []
+        # otherwise , filter on the search form's content first
 
-    def complex_search(self, operator="and"):
         def get_objects(klass, field_value_pairs):
             filters = []
             for field, value in field_value_pairs:
@@ -167,20 +166,20 @@ class Searcher(object):
                 filters.append(filter_dict)
 
             qterms = [Q(f) for f in filters]
+            if len(qterms) == 1:
+                return klass.objects.filter(qterms[0])
 
-            if operator == "and":
+            if self.operator == "and":
                 op = and_
             else:
                 op = or_
 
             return klass.objects.filter(reduce(op, qterms))
 
-        search_model_map = {}
+        search_model_map = {}  # maps model classes to lists of search paths and values to search for ( single or range)
 
-        for search_term in self.search_terms:
-            field = search_term.field
-            value = search_term.value   # pair ( (min.max) for range) or single value
-
+        for field, value in self.search_terms:
+            print "field %s value = %s" % (field, value)
             for model_class in self.SEARCH_TABLE:
                 field_map = self.SEARCH_TABLE[model_class]
                 if field in field_map:
@@ -197,20 +196,24 @@ class Searcher(object):
 
         bpa_id_sets = []
 
+        print "search_model_map = %s" % search_model_map
+
         for model_to_search in search_model_map:
             objects = get_objects(model_class, search_model_map[model_to_search])
+            print "objects = %s" % objects
             bpa_ids = set([obj.bpa_id for obj in objects])
             bpa_id_sets.append(bpa_ids)
 
-        if operator == "and":
+        if self.operator == "and":
             bpa_ids = set.intersection(*bpa_id_sets)
-        else:
+        elif self.operator == "or":
             bpa_ids = set.union(*bpa_id_sets)
+        else:
+            raise Exception("Unknown search operator: %s" % self.operator)
 
         base_samples = BASESample.objects.filter(bpa_id__in=bpa_ids)
 
         return self._filter_on_taxonomy(base_samples)
-
 
     def _filter_on_taxonomy(self, samples):
         """
@@ -263,27 +266,4 @@ class Searcher(object):
         else:
             return samples
 
-    def __init__(self, parameters):
-        logger.debug("searcher search parameters = %s" % parameters)
-        self.parameters = parameters
-        self.search_field = self.parameters.get("search_field", None)
-        self.search_value = self.parameters.get("search_value", None)
 
-        self.search_range = self.parameters.get("search_range", None)
-        self.search_range_min = self.parameters.get("search_range_min", None)
-        self.search_range_max = self.parameters.get("search_range_max", None)
-
-        self.search_kingdom = self.parameters.get("search_kingdom", None)
-        self.search_phylum = self.parameters.get("search_phylum", None)
-        self.search_class = self.parameters.get("search_class", None)
-        self.search_order = self.parameters.get("search_order", None)
-        self.search_family = self.parameters.get("search_family", None)
-        self.search_genus = self.parameters.get("search_genus", None)
-        self.search_species = self.parameters.get("search_species", None)
-
-        if self.search_field == "":
-            self.search_type = Searcher.SEARCH_TYPE_RANGE
-            logger.debug("searcher search type = range")
-        else:
-            self.search_type = Searcher.SEARCH_TYPE_FIELD
-            logger.debug("search search type = field")

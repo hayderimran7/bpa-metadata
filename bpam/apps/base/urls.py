@@ -12,7 +12,7 @@ urlpatterns = patterns(
     url(
         regex=r'^search/?$',
         view=views.BASESearchView.as_view(),
-        name='otusearch'),
+        name='search'),
     url(
         regex=r'^lookup/(?P<search_field>.*)',
         view=views.StandardisedVocabularyLookUpView.as_view(),
