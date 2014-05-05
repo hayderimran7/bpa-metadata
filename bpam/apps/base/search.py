@@ -165,7 +165,7 @@ class Searcher(object):
                 filter_dict = {filter_dict_key: value}
                 filters.append(filter_dict)
 
-            qterms = [Q(f) for f in filters]
+            qterms = [Q(**f) for f in filters]
             if len(qterms) == 1:
                 return klass.objects.filter(qterms[0])
 
