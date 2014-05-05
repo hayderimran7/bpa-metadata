@@ -7,8 +7,8 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 
-from apps.base_amplicon.models import *
-
+from apps.base_amplicon.models import AmpliconSequencingMetadata
+from apps.common.models import Facility
 
 logger = logger_utils.get_logger(__name__)
 
@@ -39,13 +39,13 @@ def get_data(file_name):
     field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
                   ('sample_extraction_id', 'Sample extraction ID', None),
                   ('sequencing_facility', 'Sequencing facility', None),
-                  ('target', 'Target', lambda s: s.upper()),
+                  ('target', 'Target', lambda s: s.upper().strip()),
                   ('index', 'Index', None),
                   ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', None),
                   ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', None),
                   ('pcr_neat', 'neat PCR, P=pass, F=fail', None),
                   ('dilution', 'Dilution used', None),
-                  ('run_number', 'Sequencing run number', None),
+                  ('sequencing_run_number', 'Sequencing run number', None),
                   ('flow_cell_id', 'Flowcell', None),
                   ('reads', '# of reads', ingest_utils.get_int),
                   ('name', 'Sample name on sample sheet', None),
@@ -72,26 +72,26 @@ def add_samples(data):
             logger.warning('Could not add entry on row {0}'.format(entry.row))
             continue
 
-        sample, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+        metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
 
-        sample.sample_extraction_id = entry.sample_extraction_id
-        sample.name = entry.name
+        metadata.sample_extraction_id = entry.sample_extraction_id
+        metadata.name = entry.name
 
-        sample.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
-        sample.index = entry.index
-        sample.target = entry.target
-        sample.pcr_1_to_10 = entry.pcr_1_to_10
-        sample.pcr_1_to_100 = entry.pcr_1_to_100
-        sample.pcr_neat = entry.pcr_neat
-        sample.dilution = entry.dilution
+        metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
+        metadata.index = entry.index
+        metadata.target = entry.target
+        metadata.pcr_1_to_10 = entry.pcr_1_to_10
+        metadata.pcr_1_to_100 = entry.pcr_1_to_100
+        metadata.pcr_neat = entry.pcr_neat
+        # metadata.dilution = entry.dilution FIXME
+        metadata.sequencing_run_number = entry.sequencing_run_number
+        metadata.flow_cell_id = entry.flow_cell_id
+        metadata.analysis_software_version = entry.analysis_software_version
+        metadata.reads = entry.reads
+        metadata.comments = entry.comments
+        metadata.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
-        sample.analysis_software_version = entry.analysis_software_version
-        sample.reads = entry.reads
-
-        sample.note = entry.comments
-        sample.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-
-        sample.save()
+        metadata.save()
 
 
 def is_metadata(path):

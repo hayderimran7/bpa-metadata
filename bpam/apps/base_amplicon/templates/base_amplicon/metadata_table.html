@@ -3,7 +3,9 @@
     <tr>
         <th>BPA ID</th>
         <th>Sample Extraction ID</th>
-        <th>Sequencing Facility</th>
+        <th>Name</th>
+        <th>Facility</th>
+        <th>Run Number</th>
         <th>Amplicon</th>
         <th>Index</th>
         <th>PCR 1:10</th>
@@ -21,7 +23,9 @@
             <a href="{% url 'basecontextual:sampledetail' data.bpa_id %}">{{ data.bpa_id }}</a>
         </td>
         <td>{{ data.sample_extraction_id }}</td>
+        <td>{{ data.name }}</td>
         <td>{{ data.sequencing_facility }}</td>
+        <td>{{ data.sequencing_run_number }}</td>
         <td>{{ data.target }}</td>
         <td>{{ data.index }}</td>
         <td>

@@ -140,6 +140,7 @@ class ExcelWrapper(object):
                     except ValueError, e:
                         logger.error("Error '{0}' column:{1}".format(e, i))
                         val = val  # keep the original value
+                        print val
                 if ctype == xlrd.XL_CELL_TEXT:
                     val = val.strip()
 
