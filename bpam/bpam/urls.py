@@ -26,8 +26,8 @@ urlpatterns = patterns(
     # Great Barrier reef
     url(r'^gbr/', include('apps.gbr.urls', namespace='gbr')),
     # Wheat
-    url(r'^wheat_cultivars/?', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
-    url(r'^wheat_pathogens/?', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
+    url(r'^wheat_cultivars/', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
+    url(r'^wheat_pathogens/', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
     # Melanoma
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System
