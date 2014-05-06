@@ -146,11 +146,7 @@ class Searcher(object):
     def complex_search(self):
         if self.search_all:
             # Immediately return a search filtering on taxonomy only
-            def all_bpa_ids():
-                for base_sample in BASESample.objects.all():
-                    yield base_sample.bpa_id
-
-            return self._filter_on_taxonomy(all_bpa_ids())
+            return self._get_results(self._filter_on_taxonomy(BASESample.objects.all()))
 
         # otherwise , filter on the search form's content first
 
@@ -212,6 +208,7 @@ class Searcher(object):
         return self._get_results(self._filter_on_taxonomy(bpa_ids))
 
     def _get_results(self, bpa_ids):
+
         # get as much info as we can about these ids ( return list of dictionary with links etc)
         from functools import partial
 
@@ -282,7 +279,7 @@ class Searcher(object):
             logger.debug("otus matching taxonomic filters = %s" % otus)
             from apps.base_otu.models import SampleOTU
             sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus)
-            return bpa_ids.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
+            return [so.sample.bpa_id for so in sample_otus]
         else:
             logger.debug("no taxonomy filtering will be applied")
             return bpa_ids
