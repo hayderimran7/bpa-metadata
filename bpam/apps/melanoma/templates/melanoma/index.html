@@ -3,18 +3,25 @@
 
 {% load staticfiles %}
 {% block content %}
-<div class="jumbotron">
-    <img src="{% static 'melanoma/melanoma.jpg' %}" alt="BASE">
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-5 col-md-5">
+                <img class="img-responsive img-rounded" src="{% static 'melanoma/melanoma.jpg' %}" alt="Melanoma">
+            </div>
 
 
-    <h2>
-        <a>Melanoma</a>
-    </h2>
+            <div class="col-sm-5 col-md-5">
+                <h2>
+                    <a>Melanoma</a>
+                </h2>
 
-    <div class="list-group">
-        <a class="list-group-item" href="{% url 'melanoma:samples' %}"> Samples</a>
-        <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}"> Sequence Files</a>
-        <a class="list-group-item" href="{% url 'melanoma:arrays' %}"> Arrays</a>
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'melanoma:samples' %}"> Samples</a>
+                    <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}"> Sequence Files</a>
+                    <a class="list-group-item" href="{% url 'melanoma:arrays' %}"> Arrays</a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}
