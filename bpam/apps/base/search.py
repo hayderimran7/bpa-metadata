@@ -185,7 +185,10 @@ class Searcher(object):
                     if type(s) is type(""):
                         search_path = s
                     else:
-                        search_path = s.search_path
+                        if s.search_path:
+                            search_path = s.search_path
+                        else:
+                            search_path = field
 
                     if not model_class in search_model_map:
                         search_model_map[model_class] = [(search_path, value)]
@@ -195,7 +198,7 @@ class Searcher(object):
         bpa_id_sets = []
 
         for model_to_search in search_model_map:
-            objects = get_objects(model_class, search_model_map[model_to_search])
+            objects = get_objects(model_to_search, search_model_map[model_to_search])
             bpa_ids = set([obj.bpa_id for obj in objects])
             bpa_id_sets.append(bpa_ids)
 
@@ -274,12 +277,14 @@ class Searcher(object):
         logger.debug("taxonomic filters = %s" % taxonomy_filters)
         filters = [Q(tf) for tf in taxonomy_filters]
         if filters:
+            logger.debug("taxonomy filtering will be performed")
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
             from apps.base_otu.models import SampleOTU
             sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus)
             return bpa_ids.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
         else:
+            logger.debug("no taxonomy filtering will be applied")
             return bpa_ids
 
 
