@@ -269,7 +269,7 @@ class StandardisedVocabularyLookUpView(View):
             q = model.objects.all()
             q = q.order_by(field).distinct(field)
             q = q.values_list("id", field)
-            options = [{"value": id, "text": name} for (id, name) in q]
+            options = [{"value": name, "text": name} for (id, name) in q]
 
         json.dump(options, response)
         return response
