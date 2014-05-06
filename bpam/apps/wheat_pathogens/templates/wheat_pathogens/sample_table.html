@@ -1,0 +1,40 @@
+
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Name</th>
+        <th>Official Variety Name</th>
+        <th>Sample Label</th>
+        <th>DNA/RNA Source</th>
+        <th>Protocol</th>
+        <th>Original Source Host Species</th>
+        <th>Collection Location</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            <a href="{% url 'wheat_pathogens:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+        <td>{{ sample.official_variety_name }}</td>
+        <td>{{ sample.sample_label }}</td>
+        <td>{{ sample.dna_source.description }}</td>
+        <td>{{ sample.dna_extraction_protocol }}</td>
+        <td>{{ sample.original_source_host_species }}</td>
+        <td>{{ sample.collection_location }}</td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sample-list").tablesorter();
+        });
+    });
+</script>

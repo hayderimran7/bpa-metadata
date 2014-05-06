@@ -8,7 +8,7 @@ from django.utils.encoding import smart_text
 import logger_utils
 
 
-INGEST_NOTE = "Ingested from GoogleDocs on {0}\n".format(date.today())
+INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 
 logger = logger_utils.get_logger(__name__)
 
