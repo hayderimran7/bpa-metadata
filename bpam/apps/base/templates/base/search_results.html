@@ -387,7 +387,13 @@
                 $("#results > tbody > tr").remove();
 
                 function link(text,link) {
-                    return "<a href='" + link + "'>" + text + "</a>";
+                    if (link) {
+                        return "<a href='" + link + "'>" + text + "</a>";
+                    }
+                    else
+                    {
+                        return "Missing";
+                    }
                 }
 
                 function td(s){
