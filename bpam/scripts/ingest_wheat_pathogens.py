@@ -231,7 +231,7 @@ def get_pathogen_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'BPA ID', None),
+    field_spec = [('bpa_id', 'BPA ID', lambda s: s.replace('/', '.')),
                   ('official_variety', 'Isolate name', None),
                   ('kingdom', 'Kingdom', None),
                   ('phylum', 'Phylum', None),

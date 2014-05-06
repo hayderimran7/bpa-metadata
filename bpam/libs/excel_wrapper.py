@@ -18,6 +18,7 @@ import xlrd
 
 import logger_utils
 
+
 logger = logger_utils.get_logger(__name__)
 
 
@@ -53,13 +54,13 @@ class ExcelWrapper(object):
     column_name_row_index: row in which column names are found, typically 0
     """
 
-    def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0):
+    def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0, formatting_info=False):
         self.sheet_name = sheet_name
         self.header_length = header_length
         self.column_name_row_index = column_name_row_index
         self.field_spec = field_spec
 
-        self.workbook = xlrd.open_workbook(file_name)
+        self.workbook = xlrd.open_workbook(file_name, formatting_info=False) # not implemented
         self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
         self.field_names = self._set_field_names()
@@ -120,6 +121,26 @@ class ExcelWrapper(object):
         for row_idx in xrange(self.header_length, self.sheet.nrows):
             yield self.sheet.row(row_idx)
 
+    def get_date(self, i, cell):
+        """
+        the cell contains a float and pious hope, get a date, if you dare.
+        """
+        val = cell.value
+        try:
+            val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
+        except ValueError, e:
+            logger.warning("Error '{0}' column:{1}, val: {2} cannot be converted to a date".format(e, i, val))
+            # OK so its not really a date, maybe something can be done with the float
+            # This functionality is not currently implemented in the xlrd library
+            # xf_index = cell.xf_index
+            # if xf_index:
+            #     xf = self.workbook.xf_list[xf_index] # gets an XF object
+            #     format_key = xf.format_key
+            #     format = self.workbook.format_map[format_key] # gets a Format object
+            #     format_str = format.format_str # this is the "number format string"
+            #     print format_str
+        return val
+
     def get_all(self, typname='DataRow'):
         """
         Returns all rows for the sheet as named tuples.
@@ -132,15 +153,11 @@ class ExcelWrapper(object):
             for name in self.field_names:
                 i = self.name_to_column_map[name]
                 func = self.name_to_func_map[name]
-                ctype = row[i].ctype
-                val = row[i].value
+                cell = row[i]
+                ctype = cell.ctype
+                val = cell.value
                 if ctype == xlrd.XL_CELL_DATE:
-                    try:
-                        val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
-                    except ValueError, e:
-                        logger.error("Error '{0}' column:{1}".format(e, i))
-                        val = val  # keep the original value
-                        print val
+                    val = self.get_date(i, cell)
                 if ctype == xlrd.XL_CELL_TEXT:
                     val = val.strip()
 
