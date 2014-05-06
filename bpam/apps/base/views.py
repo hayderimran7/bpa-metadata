@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.http import HttpResponse
 from django.views.generic.base import View
 from ..base_otu.models import OperationalTaxonomicUnit
-from .search import Searcher, SearchTerm
+from .search import Searcher
 from .forms import BASESearchForm
 
 

@@ -1,17 +1,14 @@
 from apps.base.models import BASESample
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
+from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_otu.models import OperationalTaxonomicUnit
 from django.db.models import Q
 from operator import and_, or_
+from django.core.urlresolvers import reverse
 
 import logging
 
 logger = logging.getLogger("rainbow")
-
-class SearchTerm(object):
-    def __init__(self):
-        self.field = None
-        self.value = None
 
 
 def search_strategy_horizon_desc(searcher):
@@ -149,7 +146,11 @@ class Searcher(object):
     def complex_search(self):
         if self.search_all:
             # Immediately return a search filtering on taxonomy only
-            return self._filter_on_taxonomy(BASESample.objects.all())
+            def all_bpa_ids():
+                for base_sample in BASESample.objects.all():
+                    yield base_sample.bpa_id
+
+            return self._filter_on_taxonomy(all_bpa_ids())
 
         # otherwise , filter on the search form's content first
 
@@ -195,15 +196,11 @@ class Searcher(object):
         bpa_id_sets = []
 
         print "search_model_map = %s" % search_model_map
-
         for model_to_search in search_model_map:
             objects = get_objects(model_class, search_model_map[model_to_search])
             print "objects = %s" % objects
             bpa_ids = set([obj.bpa_id for obj in objects])
             bpa_id_sets.append(bpa_ids)
-
-
-        print "bpa_id_sets = %s" % bpa_id_sets
 
         if self.operator == "and":
             bpa_ids = set.intersection(*bpa_id_sets)
@@ -212,23 +209,44 @@ class Searcher(object):
         else:
             raise Exception("Unknown search operator: %s" % self.operator)
 
-        print "bpa ids = %s" % bpa_ids
+        return self._get_results(self._filter_on_taxonomy(bpa_ids))
 
+    def _get_results(self, bpa_ids):
+        # get as much info as we can about these ids ( return list of dictionary with links etc)
+        from functools import partial
 
-        base_samples = BASESample.objects.filter(bpa_id__in=bpa_ids)
-        print "base_samples = %s" % BASESample.objects.all()
-        base_samples = BASESample.objects.all()
-        for bs in base_samples:
-            print bs
-        return self._filter_on_taxonomy(base_samples)
+        detail_view_map = {
+            ChemicalAnalysis: 'base:chemicalanalysisdetail',
+            SampleContext: 'basecontextual:sampledetail',
+            AmpliconSequencingMetadata: 'baseamplicon:metadata'
+        }
 
-    def _filter_on_taxonomy(self, samples):
+        def get_object_detail_view_link(klass,bpa_id):
+            try:
+                obj = klass.objects.get(bpa_id=bpa_id)
+                return reverse(detail_view_map[klass], obj.pk)
+            except klass.DoesNotExist:
+                return ""
+
+        ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
+        sc_link = partial(get_object_detail_view_link, SampleContext)
+        am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+
+        results = []
+        for bpa_id in bpa_ids:
+            results.append({"bpa_id": bpa_id.bpa_id,
+                            "ca": ca_link(bpa_id),
+                            "sc": sc_link(bpa_id),
+                            "am": am_link(bpa_id)})
+
+        print results
+        return results
+
+    def _filter_on_taxonomy(self, bpa_ids):
         """
         :param results: a query set to filter based on taxonomy
         :return:
         """
-
-
         def query_pair(field, s):
             """
             :param field: E.g family or phylum
@@ -258,19 +276,14 @@ class Searcher(object):
             taxonomy_filters.append(query_pair("species", self.search_species))
 
         logger.debug("taxonomic filters = %s" % taxonomy_filters)
-
         filters = [Q(tf) for tf in taxonomy_filters]
         if filters:
-
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
-            our_ids = [s.bpa_id for s in samples]
-            logger.debug("bpa ids of samples from non-taxonommic search = %s" % our_ids)
             from apps.base_otu.models import SampleOTU
-
-            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=our_ids).filter(otu__in=otus)
-            return samples.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
+            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus)
+            return bpa_ids.filter(bpa_id__in=[so.sample.bpa_id for so in sample_otus])
         else:
-            return samples
+            return bpa_ids
 
 
