@@ -178,7 +178,6 @@ class Searcher(object):
         search_model_map = {}  # maps model classes to lists of search paths and values to search for ( single or range)
 
         for field, value in self.search_terms:
-            print "field %s value = %s" % (field, value)
             for model_class in self.SEARCH_TABLE:
                 field_map = self.SEARCH_TABLE[model_class]
                 if field in field_map:
@@ -195,10 +194,8 @@ class Searcher(object):
 
         bpa_id_sets = []
 
-        print "search_model_map = %s" % search_model_map
         for model_to_search in search_model_map:
             objects = get_objects(model_class, search_model_map[model_to_search])
-            print "objects = %s" % objects
             bpa_ids = set([obj.bpa_id for obj in objects])
             bpa_id_sets.append(bpa_ids)
 
@@ -216,15 +213,15 @@ class Searcher(object):
         from functools import partial
 
         detail_view_map = {
-            ChemicalAnalysis: 'base:chemicalanalysisdetail',
+            ChemicalAnalysis: 'basecontextual:chemicalanalysisdetail',
             SampleContext: 'basecontextual:sampledetail',
-            AmpliconSequencingMetadata: 'baseamplicon:metadata'
+            AmpliconSequencingMetadata: 'base_amplicon:metadata'
         }
 
         def get_object_detail_view_link(klass,bpa_id):
             try:
                 obj = klass.objects.get(bpa_id=bpa_id)
-                return reverse(detail_view_map[klass], obj.pk)
+                return reverse(detail_view_map[klass], args=(obj.pk,))
             except klass.DoesNotExist:
                 return ""
 
@@ -235,11 +232,10 @@ class Searcher(object):
         results = []
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
-                            "ca": ca_link(bpa_id),
                             "sc": sc_link(bpa_id),
+                            "ca": ca_link(bpa_id),
                             "am": am_link(bpa_id)})
 
-        print results
         return results
 
     def _filter_on_taxonomy(self, bpa_ids):

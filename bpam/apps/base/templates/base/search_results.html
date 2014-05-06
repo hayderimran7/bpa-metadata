@@ -82,7 +82,7 @@
                </table>
         </div>
             </div>
-            <input id="search_button" type="submit" class="btn btn-default" value="Search" />
+            <input id="search_button"  class="btn btn-default" value="Search" />
         </form>
         <script>
         $(document).ready(function() {
@@ -383,8 +383,27 @@
             }
 
             function displayResults(results) {
-                alert(results);
+                // clear table
+                $("#results > tbody > tr").remove();
 
+                function link(text,link) {
+                    return "<a href='" + link + "'>" + text + "</a>";
+                }
+
+                function td(s){
+                    return "<td>" + s + "</td>"
+                }
+
+                $(results).each(function (index, item) {
+                    var new_row = "<tr>" +
+                                  td(item.bpa_id) +
+                                  td(link("Sample Context",item.sc)) +
+                                  td(link("Chemical Analysis",item.ca)) +
+                                  td(link("Amplicon",item.am)) +
+                                  "</tr>";
+
+                    $("#results > tbody").append(new_row);
+                });
             }
 
             $("#add_search_term").click(addSearchTerm);
@@ -406,19 +425,18 @@
         <div class="panel-body">
 
 
-            <table id="samples" class="table table-striped tablesorter">
+            <table id="results" class="table table-striped tablesorter">
                 <thead>
-                    <tr>
+                <tr>
                         <th>BPA ID</th>
                         <th>Sample Context</th>
                         <th>Chemical Analysis</th>
+                        <th>Amplicon</th>
+                </tr>
 
-    </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>results will appear in this table</td>
-    </tr>
+
 
     </tbody>
 </table>
