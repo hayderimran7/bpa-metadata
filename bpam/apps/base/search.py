@@ -1,4 +1,5 @@
 from apps.base.models import BASESample
+from apps.common.models import BPAUniqueID
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_otu.models import OperationalTaxonomicUnit
@@ -68,7 +69,7 @@ class Searcher(object):
 
     }
     SEARCH_TABLE = {
-        SampleContext: {"sample_id": "bpa_id__bpa_id",
+        SampleContext: {
                         "date_sampled": "site__date_sampled",
                         "lat": "site__lat",
                         "lon": "site__lon",
@@ -172,26 +173,34 @@ class Searcher(object):
             return klass.objects.filter(reduce(op, qterms))
 
         search_model_map = {}  # maps model classes to lists of search paths and values to search for ( single or range)
+        bpa_id_sets = []
 
         for field, value in self.search_terms:
-            for model_class in self.SEARCH_TABLE:
-                field_map = self.SEARCH_TABLE[model_class]
-                if field in field_map:
-                    s = field_map[field]
-                    if type(s) is type(""):
-                        search_path = s
-                    else:
-                        if s.search_path:
-                            search_path = s.search_path
+            if field == "sample_id": # special case
+                try:
+                    bpa_id = BPAUniqueID.objects.get(bpa_id=value)
+                    bpa_id_sets.append(set([bpa_id]))
+                except BPAUniqueID.DoesNotExist:
+                    pass
+            else:
+                for model_class in self.SEARCH_TABLE:
+                    field_map = self.SEARCH_TABLE[model_class]
+                    if field in field_map:
+                        s = field_map[field]
+                        if type(s) is type(""):
+                            search_path = s
                         else:
-                            search_path = field
+                            if s.search_path:
+                                search_path = s.search_path
+                            else:
+                                search_path = field
 
-                    if not model_class in search_model_map:
-                        search_model_map[model_class] = [(search_path, value)]
-                    else:
-                        search_model_map[model_class].append((search_path, value))
+                        if not model_class in search_model_map:
+                            search_model_map[model_class] = [(search_path, value)]
+                        else:
+                            search_model_map[model_class].append((search_path, value))
 
-        bpa_id_sets = []
+
 
         for model_to_search in search_model_map:
             objects = get_objects(model_to_search, search_model_map[model_to_search])
