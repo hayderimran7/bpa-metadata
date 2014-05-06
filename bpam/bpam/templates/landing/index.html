@@ -13,6 +13,18 @@
             padding-left: 1em;
             padding-right: 1em;
         }
+
+        .landing_header img {
+            float: left;
+        }
+
+        .landing_header h1 {
+            position: relative;
+            top: 18px;
+            left: 10px;
+        }
+
+
     </style>
 </head>
 
@@ -44,9 +56,13 @@
     <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
 
-        <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+        <div class="landing_header">
+            <p>
+            <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+            <h1> Bioplatforms Australia Metadata</h1>
+            </p>
+        </div>
 
-        <h1>Bioplatforms Australia Metadata</h1>
 
         <p>Welcome to Bioplatforms Australia's project metadata portal</p>
 
