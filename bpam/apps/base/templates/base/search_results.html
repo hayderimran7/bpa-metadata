@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Search Results {% endblock %}
 {% block content %}
-    {% if search_form %}
+{% if search_form %}
 
-    <form  action="" class="form-inline" role="form" method="post">{% csrf_token %}
+    <form  id="search_form" action="" class="form-inline" role="form" method="post">{% csrf_token %}
     <div class="panel panel-default">
         <div class="panel-heading">Search Form - Search All Samples?
              <input name="search_all" type="checkbox" value="search_all" id="search_all">
@@ -82,11 +82,12 @@
                </table>
         </div>
             </div>
-            <input type="submit" class="btn btn-default" value="Search" />
+            <input id="search_button"  class="btn btn-default" value="Search" />
         </form>
         <script>
         $(document).ready(function() {
-            var standardisedVocabularyEndPointURL = "{% url 'base:auto_complete' None %}".replace("None","");
+            var standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None","");
+            const SEARCH_FORM_URL = "{% url 'base:search' %}";
             const STATUS_OK = "success";
             const rangeFieldOptions = [
                 {value: "lat",         text: "Latitude"},
@@ -177,6 +178,26 @@
                 { value: "total_carbon", text:  "Total Carbon"}];
 
             // helper functions
+
+            function enabled(row, fieldId, bool) {
+                var fieldSelector = "[id^='" + fieldId + "']"
+                if (bool) {
+                    $(row).find(fieldSelector).prop("disabled", false);
+                    $(row).find(fieldSelector).show();
+                }
+                else {
+                    $(row).find(fieldSelector).prop("disabled", true);
+                    $(row).find(fieldSelector).hide();
+                }
+            }
+
+            var activate = function(row, fieldId) {
+                return enabled(row, fieldId, true);
+            }
+            var deactivate = function(row, fieldId) {
+                return enabled(row, fieldId, false);
+            }
+
             function isRangeSearch(row) {
                 return $(row).find("[id^=range]").is(":checked");
             }
@@ -217,16 +238,20 @@
 
             function updateStandardisedOptions(row, standardisedOptions) {
                 if (standardisedOptions.length > 0) {
-                    $(row).find("[id^=search_value]").hide();
+                    //$(row).find("[id^=search_value]").hide();
+                    deactivate(row,"search_value");
+                    activate(row, "search_standardised_value");
                     $(row).find("[id^=search_standardised_value]").replaceOptions(standardisedOptions);
-                    $(row).find("[id^=search_standardised_value]").show();
+                    //$(row).find("[id^=search_standardised_value]").show();
                 }
 
                 else {
                       // not standardised , so just show a text entry field
 
-                      $(row).find("[id^='search_value']").show();
-                      $(row).find("[id^='search_standardised_value']").hide();
+                      //$(row).find("[id^='search_value']").show();
+                      activate(row, "search_value");
+                      deactivate(row,"search_standardised_value");
+                      //$(row).find("[id^='search_standardised_value']").hide();
                 }
 
             }
@@ -238,14 +263,24 @@
                     // change options to fields where a range search makes sense
                     $(search_field_select).replaceOptions(rangeFieldOptions);
                     // show the range search inputs and hide the single field input
-                    $(newRow).find("[id^=search_range_min],[id^=search_range_max] ").show();
-                    $(newRow).find("[id^=search_value]").hide();
-                    $(newRow).find("[id^=search_standardised_value]").hide();
+                    activate(newRow, "search_range_min");
+                    activate(newRow, "search_range_max");
+
+                    //$(newRow).find("[id^=search_range_min]," +
+                    //        "[id^=search_range_max] ").show();
+
+                    deactivate(newRow,"search_value");
+
+                    //$(newRow).find("[id^=search_value]").hide();
+                    deactivate(newRow, "search_standardised_value");
+                    //$(newRow).find("[id^=search_standardised_value]").hide();
                     }
 
                 else {
                         $(search_field_select).replaceOptions(fieldFieldOptions);
-                        $(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
+                        deactivate(newRow, "search_range_min");
+                        deactivate(newRow, "search_range_max");
+                        //$(newRow).find("[id^=search_range_min],[id^=search_range_max] ").hide();
 
                         checkStandardised(newRow, function(standardisedOptions, status) {
                             if (status == STATUS_OK) {
@@ -289,6 +324,12 @@
                     hideOrShowInputs(newRow);
                     wireUpSearchFieldSelect(newRow);
                 });
+            }
+
+            function wireUpSearchButton() {
+                $("#search_button").click(function () {
+                    doSearch();
+                })
             }
 
             function incrementValue(value) {
@@ -335,6 +376,36 @@
 
             }
 
+            function doSearch() {
+                $.post(SEARCH_FORM_URL,
+                       $("#search_form").serialize(),
+                       displayResults);
+            }
+
+            function displayResults(results) {
+                // clear table
+                $("#results > tbody > tr").remove();
+
+                function link(text,link) {
+                    return "<a href='" + link + "'>" + text + "</a>";
+                }
+
+                function td(s){
+                    return "<td>" + s + "</td>"
+                }
+
+                $(results).each(function (index, item) {
+                    var new_row = "<tr>" +
+                                  td(item.bpa_id) +
+                                  td(link("Sample Context",item.sc)) +
+                                  td(link("Chemical Analysis",item.ca)) +
+                                  td(link("Amplicon",item.am)) +
+                                  "</tr>";
+
+                    $("#results > tbody").append(new_row);
+                });
+            }
+
             $("#add_search_term").click(addSearchTerm);
             $("#remove_search_term").click(removeSearchTerm);
             // initialise the handlers on the first row also ( not just dynamically added rows)
@@ -343,60 +414,33 @@
             hideOrShowInputs(firstRow);
             wireUpSearchFieldSelect(firstRow);
             wireUpAllSamplesSearchCheckBox();
-          });
-</script>
-    {% endif %}
+            wireUpSearchButton();
 
-    {% if request.POST %}
+          });
+    </script>
+{% endif %}
+
         <div class="panel panel-default">
         <div class="panel-heading">Results</div>
         <div class="panel-body">
 
-        {% if samples %}
-            <table id="samples" class="table table-striped tablesorter">
+
+            <table id="results" class="table table-striped tablesorter">
                 <thead>
-                    <tr>
+                <tr>
                         <th>BPA ID</th>
                         <th>Sample Context</th>
                         <th>Chemical Analysis</th>
+                        <th>Amplicon</th>
+                </tr>
 
-    </tr>
     </thead>
     <tbody>
-    {% for sample in samples %}
-    <tr>
-        <td>
-            {{ sample.bpa_id }}
-        </td>
-        <td>
-            <a href="{% url 'basecontextual:sampledetail' sample.context.pk %}">Sample Context</a>
-        </td>
-        <td>
-            <a href="{% url 'basecontextual:chemicalanalysisdetail' sample.chemical_analysis.pk %}">Chemical Analysis</a>
-        </td>
-    </tr>
-    {% endfor %}
+
+
     </tbody>
 </table>
 
-{% if is_paginated %}
-<ul class="pagination pagination-centered">
-    {% if page_obj.has_previous %}
-    <li><a href="?page=1"><<</a></li>
-    <li><a href="?page={{ page_obj.previous_page_number }}"><</a></li>
-    {% endif %}
-
-    {% for i in paginator.page_range %}
-    <li
-    {% if page_obj.number == i %} class="active" {% endif %}><a href="?page={{i}}">{{i}}</a></li>
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-    <li><a href="?page={{ page_obj.next_page_number }}">></a></li>
-    <li><a href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
-    {% endif %}
-</ul>
-{% endif %}
 
 
 <script>
@@ -407,11 +451,9 @@
     });
 </script>
 
-{% else %}
-<h3> No Results </h3>
-{% endif %}
+
     </div>
     </div>
-    {% endif %}
+
 
 {% endblock %}

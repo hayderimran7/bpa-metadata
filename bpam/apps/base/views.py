@@ -1,8 +1,11 @@
+import json
 from django.http import Http404
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
-
+from django.http import HttpResponse
+from django.views.generic.base import View
+from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 
@@ -102,14 +105,73 @@ class BASESearchView(AbstractSearchableListView):
     def get_allow_empty(self):
         return True
 
-# This view might be better implemented as part of the rest api.
-# It just provides data for the bootstrap typeahead widget
+    def post(self, request):
+        # respond to an ajax call and return a jsonified list of result objects
+        response = HttpResponse(content_type="application/json")
+        search_parameters = self._get_search_parameters(request.POST)
+        searcher = Searcher(search_parameters)
+        results = searcher.complex_search()
+        json.dump(results, response)
+        return response
 
-from django.http import HttpResponse
-from django.views.generic.base import View
-import json
+    def _get_search_parameters(self, post_data):
+        parameters = {}
+        parameters["search_all"] = post_data.get("search_all", "")
+        parameters["search_operator"] = post_data.get("search_operator", "and")
+        parameters["search_kingdom"] = post_data.get("kingdom", None)
+        parameters["search_phylum"] = post_data.get("phylum", None)
+        parameters["search_class"] = post_data.get("class", None)
+        parameters["search_order"] = post_data.get("order", None)
+        parameters["search_family"] = post_data.get("family", None)
+        parameters["search_genus"] = post_data.get("genus", None)
+        parameters["search_species"] = post_data.get("species", None)
 
-from ..base_otu.models import OperationalTaxonomicUnit
+        def key_name(prefix, i):
+            return "%s%s" % (prefix , i)
+
+        i = 0
+        finished_collecting = False
+        # collect search terms
+        search_terms = []
+        while not finished_collecting:
+            # Every search term must have type field e.g. search_type0 means the search type of the first search term
+            # this will be set to "field" or "range"
+            # if, say, search_type6 is not in the data, there are only 6 ( 0-5) search terms, so we break out of the loop
+            # by setting finished_collecting to True
+            search_type_key = key_name("search_type", i)
+            if search_type_key in post_data:
+                search_type = post_data[search_type_key]
+                field = post_data.get(key_name("search_field", i))
+
+                if search_type == "field":
+                    # field search ( might be standardised ) - value is a string
+                    standardised_value = key_name("search_standardised_value", i)
+                    if standardised_value in post_data:
+                        value = post_data[standardised_value]
+                    else:
+                        value = post_data[key_name("search_value", i)]
+
+                elif search_type == "range":
+                    # range search - value is a min max pair
+                    min_value = post_data[key_name("search_range_min", i)]
+                    max_value = post_data[key_name("search_range_max", i)]
+                    value = (min_value, max_value)
+
+                else:
+                    raise Exception("Unknown search for serach term with index %s: %s" % (i, search_type))
+
+                search_terms.append((field, value))
+                i += 1
+
+            else:
+                finished_collecting = True
+
+
+        # search terms is a list of (field, value) pairs where value is itself a (min, max) pair
+        # for a range search
+        parameters["search_terms"] = search_terms
+        return parameters
+
 
 
 class OTUAutoCompleteView(View):
@@ -142,7 +204,7 @@ class OTUAutoCompleteView(View):
         return response
 
 
-class AutoCompleteView(View):
+class StandardisedVocabularyLookUpView(View):
     STANDARD_VOCABULARY_TABLE = {
             "agrochemical_additions": None,
             "ammonium_nitrogen": None,
@@ -207,7 +269,7 @@ class AutoCompleteView(View):
             q = model.objects.all()
             q = q.order_by(field).distinct(field)
             q = q.values_list("id", field)
-            options = [{"value": id, "text": name} for (id, name) in q]
+            options = [{"value": name, "text": name} for (id, name) in q]
 
         json.dump(options, response)
         return response
