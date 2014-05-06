@@ -30,6 +30,16 @@ def get_bpa_id(e):
         return None
     return bpa_id
 
+def fix_dilution(val):
+    """
+    Some source xcell files ship with the dilution column type as time.
+    xlrd advertises support for format strings but not implemented.
+    So stuff it.
+    """
+    if isinstance(val, float):
+            return u'1:10' #  yea, that's how we roll...
+    return val
+
 
 def get_data(file_name):
     """
@@ -44,7 +54,7 @@ def get_data(file_name):
                   ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', None),
                   ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', None),
                   ('pcr_neat', 'neat PCR, P=pass, F=fail', None),
-                  ('dilution', 'Dilution used', None),
+                  ('dilution', 'Dilution used', fix_dilution),
                   ('sequencing_run_number', 'Sequencing run number', None),
                   ('flow_cell_id', 'Flowcell', None),
                   ('reads', '# of reads', ingest_utils.get_int),
@@ -57,7 +67,8 @@ def get_data(file_name):
                            file_name,
                            sheet_name='Sheet1',
                            header_length=4,
-                           column_name_row_index=1)
+                           column_name_row_index=1,
+                           formatting_info=True)
 
     return wrapper.get_all()
 
@@ -83,7 +94,7 @@ def add_samples(data):
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
         metadata.pcr_1_to_100 = entry.pcr_1_to_100
         metadata.pcr_neat = entry.pcr_neat
-        # metadata.dilution = entry.dilution FIXME
+        metadata.dilution = entry.dilution
         metadata.sequencing_run_number = entry.sequencing_run_number
         metadata.flow_cell_id = entry.flow_cell_id
         metadata.analysis_software_version = entry.analysis_software_version
