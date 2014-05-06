@@ -46,6 +46,9 @@ class AmpliconMetadaAdmin(admin.ModelAdmin):
                 'debug_note': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
+                'comments': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
                 'sequencing_facility': LinkedSelect,
             }
 
@@ -88,7 +91,8 @@ class AmpliconMetadaAdmin(admin.ModelAdmin):
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': (
-              'debug_note',)}),
+              'debug_note',
+              'comments')}),
     ]
 
     list_display = ('bpa_id', 'target', 'sequencing_facility')
