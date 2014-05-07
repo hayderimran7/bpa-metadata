@@ -234,7 +234,7 @@ class StandardisedVocabularyLookUpView(View):
             "fine_sand": None,
             "fire_history": None,
             "fire_intensity": None,
-            "general_ecological_zone": None,
+            "general_ecological_zone": "GeneralEcologicalZone.description",
             "gravel": None,
             "h20_ph": None,
             "immediate_previous_land_use": None,
