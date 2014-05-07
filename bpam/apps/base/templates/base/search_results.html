@@ -26,7 +26,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input name="search_type0" type="radio" id="field0" value="field" checked="checked">Field</>
+                                <input name="search_type0" type="radio" id="field0" value="field" checked="checked">Single</>
                                 <input class="form-control" name="search_type0" type="radio" id="range0" value="range">Range</>
                             </td>
 
@@ -387,7 +387,13 @@
                 $("#results > tbody > tr").remove();
 
                 function link(text,link) {
-                    return "<a href='" + link + "'>" + text + "</a>";
+                    if (link) {
+                        return "<a href='" + link + "'>" + text + "</a>";
+                    }
+                    else
+                    {
+                        return "Missing";
+                    }
                 }
 
                 function td(s){

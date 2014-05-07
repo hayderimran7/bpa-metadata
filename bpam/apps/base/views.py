@@ -268,11 +268,21 @@ class StandardisedVocabularyLookUpView(View):
         else:
             q = model.objects.all()
             q = q.order_by(field).distinct(field)
-            q = q.values_list("id", field)
-            options = [{"value": name, "text": name} for (id, name) in q]
+            code_field = self._get_code_field(model, field)
+            q = q.values_list(code_field, field)
+
+            options = [{"value": code, "text": name} for (code, name) in q]
 
         json.dump(options, response)
         return response
+
+    def _get_code_field(self, model, field):
+        exceptions_table = {
+            "SoilColour": "code",
+
+        }
+        return exceptions_table.get(model.__name__, field)
+
 
     def _get_standardised_vocab(self, search_field):
         vocab = self.STANDARD_VOCABULARY_TABLE.get(search_field, None)
