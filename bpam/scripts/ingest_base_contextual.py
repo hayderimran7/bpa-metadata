@@ -254,47 +254,46 @@ def get_site(entry):
 
     site, created = CollectionSite.objects.get_or_create(lat=get_fixed_lat(), lon=entry.lon)
     # the first set of site data wins
-    # if created:
+    if created:
+        site.elevation = entry.elevation
+        site.date_sampled = entry.date_sampled
+        site.location_name = entry.description
 
-    site.elevation = entry.elevation
-    site.date_sampled = entry.date_sampled
-    site.location_name = entry.description
+        site.vegetation_total_cover = entry.vegetation_total_cover
+        site.vegetation_dominant_trees = entry.vegetation_dominant_trees
 
-    site.vegetation_total_cover = entry.vegetation_total_cover
-    site.vegetation_dominant_trees = entry.vegetation_dominant_trees
+        site.slope = entry.slope
+        site.slope_aspect = entry.slope_aspect
 
-    site.slope = entry.slope
-    site.slope_aspect = entry.slope_aspect
+        # controlled vocabularies
+        site.current_land_use = get_land_use(entry.current_land_use, entry.row)
+        site.general_ecological_zone = get_general_ecological_zone(entry)
+        site.vegetation_type = get_vegetation_type(entry)
+        site.soil_type_australian_classification = get_australian_soil_classification(entry)
+        site.soil_type_fao_classification = get_fao_soil_classification(entry)
 
-    # controlled vocabularies
-    site.current_land_use = get_land_use(entry.current_land_use, entry.row)
-    site.general_ecological_zone = get_general_ecological_zone(entry)
-    site.vegetation_type = get_vegetation_type(entry)
-    site.soil_type_australian_classification = get_australian_soil_classification(entry)
-    site.soil_type_fao_classification = get_fao_soil_classification(entry)
+        site.profile_position = get_profile_position(entry)
 
-    site.profile_position = get_profile_position(entry)
+        # history
+        site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use, entry.row)
+        site.date_since_change_in_land_use = entry.date_since_change_in_land_use
+        site.crop_rotation_1 = get_land_use(entry.crop_rotation_1, entry.row)
+        site.crop_rotation_2 = get_land_use(entry.crop_rotation_2, entry.row)
+        site.crop_rotation_3 = get_land_use(entry.crop_rotation_3, entry.row)
+        site.crop_rotation_4 = get_land_use(entry.crop_rotation_4, entry.row)
+        site.crop_rotation_5 = get_land_use(entry.crop_rotation_5, entry.row)
+        site.agrochemical_additions = entry.agrochemical_additions
+        site.tillage = get_tillage(entry)
+        site.fire_history = entry.fire_history
+        site.fire_intensity = entry.fire_intensity
+        site.flooding = entry.flooding
+        site.extreme_events = entry.extreme_events
 
-    # history
-    site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use, entry.row)
-    site.date_since_change_in_land_use = entry.date_since_change_in_land_use
-    site.crop_rotation_1 = get_land_use(entry.crop_rotation_1, entry.row)
-    site.crop_rotation_2 = get_land_use(entry.crop_rotation_2, entry.row)
-    site.crop_rotation_3 = get_land_use(entry.crop_rotation_3, entry.row)
-    site.crop_rotation_4 = get_land_use(entry.crop_rotation_4, entry.row)
-    site.crop_rotation_5 = get_land_use(entry.crop_rotation_5, entry.row)
-    site.agrochemical_additions = entry.agrochemical_additions
-    site.tillage = get_tillage(entry)
-    site.fire_history = entry.fire_history
-    site.fire_intensity = entry.fire_intensity
-    site.flooding = entry.flooding
-    site.extreme_events = entry.extreme_events
+        # notes
+        site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+        site.other_comments = entry.other_comments
 
-    # notes
-    site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-    site.other_comments = entry.other_comments
-
-    site.save()
+        site.save()
 
     return site
 

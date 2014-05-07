@@ -71,9 +71,7 @@ def get_clean_float(val, default=None):
     if not isinstance(val, basestring):
         return default
 
-    remove_letters_map = dict((ord(char), None) for char in string.letters)
-    return to_float(val.translate(remove_letters_map))
-
+    return to_float(filter(lambda x: x.isdigit(), val))
 
 def strip_all(reader):
     """

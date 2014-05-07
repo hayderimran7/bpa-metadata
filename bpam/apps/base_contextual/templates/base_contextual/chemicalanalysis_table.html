@@ -16,6 +16,7 @@
         <th>NO<sub>3</sub><sup>−</sup></th>
         <th>Colwell P</th>
         <th>Colwell K</th>
+        <th>Sulphur</th>
         <th>Organic Carbon</th>
         <th>Conductivity</th>
         <th>CaCl<sub>2</sub> pH</th>
@@ -54,11 +55,12 @@
             <td>{% if analysis.ammonium_nitrogen %} {{ analysis.ammonium_nitrogen }} {% endif %}</td>
             <td>{% if analysis.nitrate_nitrogen %} {{ analysis.nitrate_nitrogen }} {% endif %}</td>
             <td>{% if analysis.phosphorus_colwell %} {{ analysis.phosphorus_colwell }} {% endif %}</td>
-            <td>{% if analysis.sulphur_colwell %} {{ analysis.sulphur_colwell }} {% endif %}</td>
+            <td>{% if analysis.potassium_colwell %} {{ analysis.potassium_colwell }} {% endif %}</td>
+            <td>{% if analysis.sulphur %} {{ analysis.sulphur }} {% endif %}</td>
             <td>{% if analysis.organic_carbon %} {{ analysis.organic_carbon }} {% endif %}</td>
-            <td>{% if analysis.conducivity %} {{ analysis.conductivity }} {% endif %}</td>
+            <td>{% if analysis.conductivity %} {{ analysis.conductivity }} {% endif %}</td>
             <td>{% if analysis.cacl2_ph %} {{ analysis.cacl2_ph }} {% endif %}</td>
-            <td>{% if analysis.cacl2_ph %} {{ analysis.cacl2_ph }} {% endif %}</td>
+            <td>{% if analysis.h20_ph %} {{ analysis.h20_ph }} {% endif %}</td>
             <td>{% if analysis.dtpa_copper %} {{ analysis.dtpa_copper }} {% endif %}</td>
             <td>{% if analysis.dtpa_iron %} {{ analysis.dtpa_iron }} {% endif %}</td>
             <td>{% if analysis.dtpa_manganese %} {{ analysis.dtpa_manganese }} {% endif %}</td>

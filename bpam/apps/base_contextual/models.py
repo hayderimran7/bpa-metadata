@@ -20,8 +20,6 @@ class CollectionSite(DebugNote):
     location_name = models.CharField(_('Location Name'), max_length=100, blank=True)
     image_url = models.URLField(_('Site Photo'), blank=True, null=True)
     date_sampled = models.DateField(_('Date Sampled'), null=True)
-    # positions = models.ManyToManyField(GPSPosition, null=True, blank=True)
-    # TODO make use of geodjango
     lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'))
     lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'))
     elevation = models.IntegerField(_('Elevation'), null=True)
@@ -139,10 +137,10 @@ class ChemicalAnalysis(models.Model):
 
     # chemical
     ammonium_nitrogen = models.FloatField(_('Ammonium Nitrogen'), blank=True, null=True)
-    nitrate_nitrogen = models.CharField(_('Nitrate Nitrogen'), max_length=10, blank=True, null=True)  # <>
-    phosphorus_colwell = models.CharField(_('Phosphorus Colwell'), max_length=10, blank=True, null=True)  # <>
+    nitrate_nitrogen = models.FloatField(_('Nitrate Nitrogen'), blank=True, null=True)
+    phosphorus_colwell = models.FloatField(_('Phosphorus Colwell'), blank=True, null=True)
     potassium_colwell = models.FloatField(_('Potassium Colwell'), blank=True, null=True)
-    sulphur_colwell = models.FloatField(blank=True, null=True)
+    sulphur = models.FloatField(blank=True, null=True)
     organic_carbon = models.FloatField(blank=True, null=True)
     conductivity = models.FloatField(blank=True, null=True)
     # pH
