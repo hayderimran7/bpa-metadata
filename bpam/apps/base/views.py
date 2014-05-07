@@ -215,7 +215,7 @@ class StandardisedVocabularyLookUpView(View):
             "colour": "SoilColour.colour",
             "conductivity": None,
             "course_sand": None,
-            "current_land_use": None,
+            "current_land_use": "LandUse.description",
             "date_sampled": None,
             "depth": None,
             "description": None,
