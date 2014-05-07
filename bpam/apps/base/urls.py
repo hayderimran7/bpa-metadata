@@ -17,4 +17,9 @@ urlpatterns = patterns(
         regex=r'^lookup/(?P<search_field>.*)',
         view=views.StandardisedVocabularyLookUpView.as_view(),
         name='lookup'),
+    url(
+        regex=r'^taxonomy/(?P<level>.*)/(?P<taxon>.*)',
+        view=views.TaxonomyLookUpView.as_view(),
+        name='taxonomy',
+    )
 )
