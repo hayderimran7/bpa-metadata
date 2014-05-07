@@ -58,7 +58,7 @@
             </div>
 
             <div class="panel-heading">
-               Taxonomic Filter
+               Taxonomic Filters  <input type="button" id="clear_taxonomic_filters" value="clear"/>
                  <div class="panel-body">
              <table id="taxonomic_filter_table"  class="table table-bordered table-striped table-condensed">
                     <thead>
@@ -68,15 +68,44 @@
                    <tbody>
                     <tr>
                         <td>Kingdom</td>
-                        <td><input type="text" name="kingdom" id="kingdom"></td>
+                        <td><select id="kingdom" name="kingdom">
+                             <option value="">---</option>
+                            <option value="Bacteria">Bacteria</option>
+                            <option value="Fungi">Fungi</option>
+                        </select>
+                        </td>
                     </tr>
                    <tr>
-                       <td>Phylum</td><td><input type="text" name="phylum" id="phylum"></td></tr>
-                    <tr><td>Class</td><td><input type="text" name="class" id="class"></td></tr>
-                    <tr><td>Order</td><td><input type="text" name="order" id="order"></td></tr>
-                   <tr><td>Family</td><td><input type="text" name="family" id="family"></td></tr>
-                   <tr><td>Genus</td><td><input type="text" name="genus" id="genus"></td></tr>
-                   <tr><td>Species</td><td><input type="text" name="species" id="species"></td></tr>
+                       <td>Phylum</td><td>
+                       <select id="phylum" name="phylum">
+
+                        </select>
+                       </td></tr>
+                    <tr><td>Class</td><td>
+                       <select id="otu_class" name="otu_class">
+
+                        </select>
+                    </td></tr>
+                    <tr><td>Order</td><td>
+                        <select id="order" name="order">
+
+                        </select></td>
+                    </tr>
+                   <tr><td>Family</td><td>
+                       <select id="family" name="family">
+
+                        </select>
+                   </td></tr>
+                   <tr><td>Genus</td><td>
+                   <select id="genus" name="genus">
+
+                        </select>
+                   </tr>
+                   <tr><td>Species</td><td>
+                       <select id="species" name="species">
+
+                        </select>
+                   </td></tr>
 
                    </tbody>
                </table>
@@ -87,6 +116,7 @@
         <script>
         $(document).ready(function() {
             var standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None","");
+            const TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
             const SEARCH_FORM_URL = "{% url 'base:search' %}";
             const STATUS_OK = "success";
             const rangeFieldOptions = [
@@ -412,6 +442,41 @@
                 });
             }
 
+            function wireUpClearTaxonomicFiltersButton() {
+                $("#clear_taxonomic_filters").click(function (){
+                    $("#kingdom option:first").attr('selected','selected').trigger("change");
+                })
+            }
+
+            function makePopulater(sourceId, targetId) {
+                return function () {
+                    var sourceValue = $("#" + sourceId).val();
+                    var taxonomyURL = TAXONOMY_URL + "/" + sourceId + "/" + sourceValue;  // the 'parent' category
+
+                    $.get(taxonomyURL, function(childOptions, status) {
+                        $("#" + targetId).replaceOptions([{value:"", text: "---"}].concat(childOptions));
+                        $("#" + targetId + " option:first").attr('selected','selected').trigger("change");
+                    });
+
+                }
+            }
+
+            var populatePhylum = makePopulater("kingdom", "phylum");
+            var populateClass = makePopulater("phylum", "otu_class");
+            var populateOrder = makePopulater("otu_class", "order");
+            var populateFamily = makePopulater("order", "family");
+            var populateGenus = makePopulater("family", "genus");
+            var populateSpecies = makePopulater("genus", "species");
+
+            function wireUpTaxonomyDropDowns() {
+                $("#kingdom").change(populatePhylum);
+                $("#phylum").change(populateClass);
+                $("#otu_class").change(populateOrder);
+                $("#order").change(populateFamily);
+                $("#family").change(populateGenus);
+                $("#genus").change(populateSpecies);
+            }
+
             $("#add_search_term").click(addSearchTerm);
             $("#remove_search_term").click(removeSearchTerm);
             // initialise the handlers on the first row also ( not just dynamically added rows)
@@ -421,6 +486,9 @@
             wireUpSearchFieldSelect(firstRow);
             wireUpAllSamplesSearchCheckBox();
             wireUpSearchButton();
+            wireUpTaxonomyDropDowns();
+            wireUpClearTaxonomicFiltersButton();
+
 
           });
     </script>
