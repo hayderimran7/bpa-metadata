@@ -10,7 +10,7 @@ class LandingView(TemplateView):
 class ChemicalAnalysisListView(ListView):
     model = ChemicalAnalysis
     context_object_name = 'reports'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 class CollectionSiteListView(ListView):
     model = CollectionSite
@@ -26,7 +26,7 @@ class SampleContextListView(ListView):
     model = SampleContext
     context_object_name = 'sample_contexts'
     template_name = 'base_contextual/sample_context_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 class SampleContextDetailView(DetailView):
     model = SampleContext
