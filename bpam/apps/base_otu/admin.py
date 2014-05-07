@@ -28,7 +28,7 @@ class SampleOTUAdmin(admin.ModelAdmin):
 
     form = Form
     list_display = ('sample', 'otu', 'count', )
-    search_fields = ('sample__bpa_id__bpa_id', )
+    search_fields = ('sample__bpa_id__bpa_id', 'otu__name', )
 
 admin.site.register(OperationalTaxonomicUnit, OperationalTaxonomicUnitAdmin)
 admin.site.register(SampleOTU, SampleOTUAdmin)
