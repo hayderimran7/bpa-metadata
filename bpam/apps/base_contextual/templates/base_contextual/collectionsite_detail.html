@@ -14,7 +14,8 @@
             {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
         </div>
         <div class="col-md-4" id="sitelist-container">
-            <h3 class="unstacked">BASE Collection Site {{ collectionsite.get_location_name }}</h3>
+            <h3 class="unstacked">BASE Collection Site <a href=""> {{ collectionsite.get_location_name }}</a></h3>
+
 
             <div id="sitelist-container">
                 <table id="collectionsite" class="table">
@@ -49,7 +50,11 @@
                     </tr>
                     <tr>
                         <td><b>Australian Soil Type Classification</b></td>
-                        <td>{{ collectionsite.soil_type_australian_classification }}</td>
+                        <td>
+                            <a href="https://www.google.com.au/search?q={{ collectionsite.soil_type_australian_classification }}">
+                                {{ collectionsite.soil_type_australian_classification }}
+                            </a>
+                        </td>
                     </tr>
                     <tr>
                         <td><b>FAO Soil Type Classification</b></td>
