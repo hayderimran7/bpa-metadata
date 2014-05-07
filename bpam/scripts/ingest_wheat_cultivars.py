@@ -81,7 +81,7 @@ def get_cultivar_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Unique ID', None),
+    field_spec = [('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
                   ('name', 'Variety', None),
                   ('cultivar_code', 'Comment[Sample code]', None),  # C
                   ('dna_extraction_protocol', 'Protocol REF', None),
