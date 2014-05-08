@@ -306,8 +306,8 @@ class Searcher(object):
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
             from apps.base_otu.models import SampleOTU
-            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus)
-            return [so.sample.bpa_id for so in sample_otus]
+            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).order_by('sample__bpa_id')
+            return set([so.sample.bpa_id for so in sample_otus])
         else:
             logger.debug("no taxonomy filtering will be applied")
             return bpa_ids
