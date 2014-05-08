@@ -183,7 +183,7 @@ class Searcher(object):
                     bpa_id = BPAUniqueID.objects.get(bpa_id=value)
                     bpa_id_sets.append(set([bpa_id]))
                 except BPAUniqueID.DoesNotExist:
-                    pass
+                    bpa_id_sets.append(set([]))
             else:
                 for model_class in self.SEARCH_TABLE:
                     field_map = self.SEARCH_TABLE[model_class]
