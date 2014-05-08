@@ -422,13 +422,13 @@
                 function link(text,link, missingWord) {
                     if (link) {
                         if (text != 'Amplicon'){
-                            return "<a href='" + link + "'>" + text + "</a>";
+                            return "<a href='" + link + "' target='_blank'>" + text + "</a>";
                         }
                         else {
                             var links ="";
                             for (var i=0;i<link.length;i++) {
                                 amplicon_data = link[i];
-                                links += "<a href='" + amplicon_data.amplicon_link + "'>" + amplicon_data.amplicon_type + "</a>&nbsp;";
+                                links += "<a href='" + amplicon_data.amplicon_link + "' target='_blank'>" + amplicon_data.amplicon_type + "</a>&nbsp;";
                             }
 
                             if (links == ""){
