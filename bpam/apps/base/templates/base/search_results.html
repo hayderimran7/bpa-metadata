@@ -419,6 +419,13 @@
                 // clear table
                 $("#results > tbody > tr").remove();
 
+                if (typeof(results) == 'string') {
+                   // An error happened on the server
+                   var new_row = '<tr align="center"><td colspan="5"><div class="alert alert-danger">' + results + '</div></td></tr>';
+                   $("#results > tbody").append(new_row);
+                   return;
+                }
+
                 function link(text,link, missingWord) {
                     if (link) {
                         if (text != 'Amplicon'){

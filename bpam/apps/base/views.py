@@ -108,9 +108,12 @@ class BASESearchView(AbstractSearchableListView):
     def post(self, request):
         # respond to an ajax call and return a jsonified list of result objects
         response = HttpResponse(content_type="application/json")
-        search_parameters = self._get_search_parameters(request.POST)
-        searcher = Searcher(search_parameters)
-        results = searcher.complex_search()
+        try:
+            search_parameters = self._get_search_parameters(request.POST)
+            searcher = Searcher(search_parameters)
+            results = searcher.complex_search()
+        except Exception, ex:
+            results = "An error occurred during the search: %s" % ex
         json.dump(results, response)
         return response
 
