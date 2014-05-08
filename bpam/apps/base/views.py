@@ -9,6 +9,11 @@ from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 
+import logging
+
+logger = logging.getLogger("rainbow")
+
+
 
 class BaseView(TemplateView):
     template_name = 'base/index.html'
@@ -113,7 +118,9 @@ class BASESearchView(AbstractSearchableListView):
             searcher = Searcher(search_parameters)
             results = searcher.complex_search()
         except Exception, ex:
-            results = "An error occurred during the search: %s" % ex
+            logger.error("Error occurred during search: request data = %s. Error = %s" % (request.POST, ex))
+            results = "An error occurred on the server"
+
         json.dump(results, response)
         return response
 
