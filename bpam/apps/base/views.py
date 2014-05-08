@@ -320,6 +320,10 @@ class TaxonomyLookUpView(View):
         return response
 
 
+class ContactsView(TemplateView):
+    template_name = 'base/contacts.html'
 
 
+class RequestAccess(TemplateView):
+    template_name = 'base/request_access.html'
 

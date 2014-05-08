@@ -21,5 +21,13 @@ urlpatterns = patterns(
         regex=r'^taxonomy/(?P<level>.*)/(?P<taxon>.*)',
         view=views.TaxonomyLookUpView.as_view(),
         name='taxonomy',
-    )
+    ),
+    url(
+        regex=r'^contacts$',
+        view=views.ContactsView.as_view(),
+        name='contacts'),
+    url(
+        regex=r'^accessrequest',
+        view=views.RequestAccess.as_view(),
+        name='requestaccess'),
 )
