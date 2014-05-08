@@ -3,6 +3,7 @@ from apps.common.models import BPAUniqueID
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_otu.models import OperationalTaxonomicUnit
+from apps.base_metagenomics.models import MetagenomicsSample
 from django.db.models import Q
 from operator import and_, or_
 from django.core.urlresolvers import reverse
@@ -224,10 +225,11 @@ class Searcher(object):
         detail_view_map = {
             ChemicalAnalysis: 'basecontextual:chemicalanalysisdetail',
             SampleContext: 'basecontextual:sampledetail',
-            AmpliconSequencingMetadata: 'base_amplicon:metadata'
+            AmpliconSequencingMetadata: 'base_amplicon:metadata',
+            MetagenomicsSample: 'basemetagenomics:sample',
         }
 
-        def get_object_detail_view_link(klass,bpa_id):
+        def get_object_detail_view_link(klass, bpa_id):
             try:
                 obj = klass.objects.get(bpa_id=bpa_id)
                 return reverse(detail_view_map[klass], args=(obj.pk,))
@@ -237,13 +239,15 @@ class Searcher(object):
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
         am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+        mg_link = partial(get_object_detail_view_link, MetagenomicsSample)
 
         results = []
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
                             "sc": sc_link(bpa_id),
                             "ca": ca_link(bpa_id),
-                            "am": am_link(bpa_id)})
+                            "am": am_link(bpa_id),
+                            "mg": mg_link(bpa_id)})
 
         return results
 

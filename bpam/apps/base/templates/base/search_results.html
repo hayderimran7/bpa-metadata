@@ -408,7 +408,7 @@
 
             function doSearch() {
                 $("#results > tbody > tr").remove();
-                var search_message_row = '<tr align="center"><td colspan="4">Searching ...</td></tr>';
+                var search_message_row = '<tr align="center"><td colspan="5">Searching ...</td></tr>';
                 $("#results > tbody").append(search_message_row);
                 $.post(SEARCH_FORM_URL,
                        $("#search_form").serialize(),
@@ -419,13 +419,13 @@
                 // clear table
                 $("#results > tbody > tr").remove();
 
-                function link(text,link) {
+                function link(text,link, missingWord) {
                     if (link) {
                         return "<a href='" + link + "'>" + text + "</a>";
                     }
                     else
                     {
-                        return "Missing";
+                        return missingWord;
                     }
                 }
 
@@ -436,9 +436,10 @@
                 $(results).each(function (index, item) {
                     var new_row = "<tr>" +
                                   td(item.bpa_id) +
-                                  td(link("Sample Context",item.sc)) +
-                                  td(link("Chemical Analysis",item.ca)) +
-                                  td(link("Amplicon",item.am)) +
+                                  td(link("Sample Context",item.sc,"Missing")) +
+                                  td(link("Chemical Analysis",item.ca, "Missing")) +
+                                  td(link("Amplicon",item.am, "Missing")) +
+                                  td(link("Metagenomics",item.mg, "Not Available"))
                                   "</tr>";
 
                     $("#results > tbody").append(new_row);
@@ -516,6 +517,7 @@
                         <th>Sample Context</th>
                         <th>Chemical Analysis</th>
                         <th>Amplicon</th>
+                        <th>Metagenomics</th>
                 </tr>
 
     </thead>
