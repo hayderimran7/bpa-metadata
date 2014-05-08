@@ -9,6 +9,11 @@ from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 
+import logging
+
+logger = logging.getLogger("rainbow")
+
+
 
 class BaseView(TemplateView):
     template_name = 'base/index.html'
@@ -108,9 +113,14 @@ class BASESearchView(AbstractSearchableListView):
     def post(self, request):
         # respond to an ajax call and return a jsonified list of result objects
         response = HttpResponse(content_type="application/json")
-        search_parameters = self._get_search_parameters(request.POST)
-        searcher = Searcher(search_parameters)
-        results = searcher.complex_search()
+        try:
+            search_parameters = self._get_search_parameters(request.POST)
+            searcher = Searcher(search_parameters)
+            results = searcher.complex_search()
+        except Exception, ex:
+            logger.error("Error occurred during search: request data = %s. Error = %s" % (request.POST, ex))
+            results = "An error occurred on the server"
+
         json.dump(results, response)
         return response
 
@@ -304,7 +314,7 @@ class TaxonomyLookUpView(View):
 
         otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
         next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
-        response = HttpResponse(content_type="appli[cation/json")
+        response = HttpResponse(content_type="application/json")
         options = [{"value": x, "text": x} for x in next_lower_level_values]
         json.dump(options, response)
         return response

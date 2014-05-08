@@ -3,9 +3,11 @@ from apps.common.models import BPAUniqueID
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_otu.models import OperationalTaxonomicUnit
+from apps.base_metagenomics.models import MetagenomicsSample
 from django.db.models import Q
 from operator import and_, or_
 from django.core.urlresolvers import reverse
+import re
 
 import logging
 
@@ -82,7 +84,7 @@ class Searcher(object):
                         "vegetation_dominant_trees": "site__vegetation_dominant_trees",
                         "elevation": "site__elevation",
                         "australian_soil_classification": "site__soil_type_australian_classification__classification",
-                        "fao_soil_type": "site__soil_type_fao_classification",
+                        "fao_soil_type": "site__soil_type_fao_classification__classification",
                         "immediate_previous_land_use": "site__immediate_previous_land_use",
                         "agrochemical_additions": "site__agrochemical_additions",
                         "tillage": "site__tillage__tillage",
@@ -181,7 +183,7 @@ class Searcher(object):
                     bpa_id = BPAUniqueID.objects.get(bpa_id=value)
                     bpa_id_sets.append(set([bpa_id]))
                 except BPAUniqueID.DoesNotExist:
-                    pass
+                    bpa_id_sets.append(set([]))
             else:
                 for model_class in self.SEARCH_TABLE:
                     field_map = self.SEARCH_TABLE[model_class]
@@ -224,26 +226,43 @@ class Searcher(object):
         detail_view_map = {
             ChemicalAnalysis: 'basecontextual:chemicalanalysisdetail',
             SampleContext: 'basecontextual:sampledetail',
-            AmpliconSequencingMetadata: 'base_amplicon:metadata'
+            AmpliconSequencingMetadata: 'base_amplicon:metadata',
+            MetagenomicsSample: 'basemetagenomics:sample',
         }
 
-        def get_object_detail_view_link(klass,bpa_id):
+        def get_object_detail_view_link(klass, bpa_id):
             try:
                 obj = klass.objects.get(bpa_id=bpa_id)
                 return reverse(detail_view_map[klass], args=(obj.pk,))
             except klass.DoesNotExist:
                 return ""
 
+        def get_amplicon_links(bpa_id):
+
+            amplicon_type_pattern = re.compile(r"^.*?_\d+?_(.*?)_.*$")
+            links = []
+            for amplicon in AmpliconSequencingMetadata.objects.filter(bpa_id=bpa_id):
+                amplicon_type = amplicon.target
+                if not amplicon_type:
+                    amplicon_type = "Unknown Target"
+
+                links.append({"amplicon_type": amplicon_type, "amplicon_link": reverse(detail_view_map[AmpliconSequencingMetadata], args=(amplicon.pk,))})
+
+            return links
+
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
-        am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+        #am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+        mg_link = partial(get_object_detail_view_link, MetagenomicsSample)
+
 
         results = []
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
                             "sc": sc_link(bpa_id),
                             "ca": ca_link(bpa_id),
-                            "am": am_link(bpa_id)})
+                            "am": get_amplicon_links(bpa_id),
+                            "mg": mg_link(bpa_id)})
 
         return results
 
@@ -287,8 +306,8 @@ class Searcher(object):
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
             from apps.base_otu.models import SampleOTU
-            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus)
-            return [so.sample.bpa_id for so in sample_otus]
+            sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).order_by('sample__bpa_id')
+            return set([so.sample.bpa_id for so in sample_otus])
         else:
             logger.debug("no taxonomy filtering will be applied")
             return bpa_ids

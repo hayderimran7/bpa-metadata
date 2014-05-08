@@ -6,14 +6,14 @@
     <form  id="search_form" action="" class="form-inline" role="form" method="post">{% csrf_token %}
     <div class="panel panel-default">
         <div class="panel-heading">Search Form - Search All Samples?
-             <input name="search_all" type="checkbox" value="search_all" id="search_all">
+             <input class="form-control" name="search_all" type="checkbox" value="search_all" id="search_all">
 
         </div>
         <div id="search_panel" class="panel-body">
-            <input id="add_search_term" type=button value="+" />
-            <input id="remove_search_term" value="-" type=button />
+            <input class="form-control" id="add_search_term" type=button value="+" />
+            <input class="form-control" id="remove_search_term" value="-" type=button />
             Find samples with
-            <input name="search_operator" type="radio" id="op_and" value="and" checked="checked">All</>
+            <input name="search_operator" class="form-control" type="radio" id="op_and" value="and" checked="checked">All</>
             or
             <input class="form-control" name="search_operator" type="radio" id="op_and" value="or">Any</>
             of the matching fields added below:
@@ -25,22 +25,22 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
-                                <input name="search_type0" type="radio" id="field0" value="field" checked="checked">Single</>
+                            <td width="10%">
+                                <input class="form-control" name="search_type0" type="radio" id="field0" value="field" checked="checked">Single</>
                                 <input class="form-control" name="search_type0" type="radio" id="range0" value="range">Range</>
                             </td>
 
-                            <td>
-                                <select id="search_field0" name="search_field0">
+                            <td with="25%">
+                                <select class="form-control" id="search_field0" name="search_field0">
 
                                 </select>
                             </td>
 
-                            <td>
-                                <select id="search_standardised_value0" name="search_standardised_value0"></select>
-                                <input id="search_range_min0" name="search_range_min0"  type=text>
-                                <input id="search_range_max0" name="search_range_max0" type=text>
-                                <input id="search_value0" name="search_value0" type=text>
+                            <td width="65%">
+                                <select class="form-control" id="search_standardised_value0" name="search_standardised_value0"></select>
+                                <input class="form-control" id="search_range_min0" name="search_range_min0"  type=text>
+                                <input class="form-control" id="search_range_max0" name="search_range_max0" type=text>
+                                <input class="form-control" id="search_value0" name="search_value0" type=text>
                             </td>
 
                         </tr>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="panel-heading">
-               Taxonomic Filters  <input type="button" id="clear_taxonomic_filters" value="clear"/>
+               Taxonomic Filters  <input class="form-control" type="button" id="clear_taxonomic_filters" value="clear"/>
                  <div class="panel-body">
              <table id="taxonomic_filter_table"  class="table table-bordered table-striped table-condensed">
                     <thead>
@@ -67,8 +67,8 @@
                     </thead>
                    <tbody>
                     <tr>
-                        <td>Kingdom</td>
-                        <td><select id="kingdom" name="kingdom">
+                        <td width="10%">Kingdom</td>
+                        <td><select class="form-control" id="kingdom" name="kingdom">
                              <option value="">---</option>
                             <option value="Bacteria">Bacteria</option>
                             <option value="Fungi">Fungi</option>
@@ -77,32 +77,32 @@
                     </tr>
                    <tr>
                        <td>Phylum</td><td>
-                       <select id="phylum" name="phylum">
+                       <select class="form-control" id="phylum" name="phylum">
 
                         </select>
                        </td></tr>
                     <tr><td>Class</td><td>
-                       <select id="otu_class" name="otu_class">
+                       <select class="form-control" id="otu_class" name="otu_class">
 
                         </select>
                     </td></tr>
                     <tr><td>Order</td><td>
-                        <select id="order" name="order">
+                        <select class="form-control" id="order" name="order">
 
                         </select></td>
                     </tr>
                    <tr><td>Family</td><td>
-                       <select id="family" name="family">
+                       <select class="form-control" id="family" name="family">
 
                         </select>
                    </td></tr>
                    <tr><td>Genus</td><td>
-                   <select id="genus" name="genus">
+                   <select class="form-control" id="genus" name="genus">
 
                         </select>
                    </tr>
                    <tr><td>Species</td><td>
-                       <select id="species" name="species">
+                       <select class="form-control" id="species" name="species">
 
                         </select>
                    </td></tr>
@@ -408,7 +408,7 @@
 
             function doSearch() {
                 $("#results > tbody > tr").remove();
-                var search_message_row = '<tr align="center"><td colspan="4">Searching ...</td></tr>';
+                var search_message_row = '<tr align="center"><td colspan="5"><div class="badge badge-info">Searching</div></td></tr>';
                 $("#results > tbody").append(search_message_row);
                 $.post(SEARCH_FORM_URL,
                        $("#search_form").serialize(),
@@ -419,13 +419,38 @@
                 // clear table
                 $("#results > tbody > tr").remove();
 
-                function link(text,link) {
+                if (typeof(results) == 'string') {
+                   // An error happened on the server
+                   var new_row = '<tr align="center"><td colspan="5"><div class="alert alert-danger">' + results + '</div></td></tr>';
+                   $("#results > tbody").append(new_row);
+                   return;
+                }
+
+                function link(text,link, missingWord) {
                     if (link) {
-                        return "<a href='" + link + "'>" + text + "</a>";
+                        if (text != 'Amplicon'){
+                            return "<a href='" + link + "' target='_blank'>" + text + "</a>";
+                        }
+                        else {
+                            var links ="";
+                            for (var i=0;i<link.length;i++) {
+                                amplicon_data = link[i];
+                                links += "<a href='" + amplicon_data.amplicon_link + "' target='_blank'>" + amplicon_data.amplicon_type + "</a>&nbsp;";
+                            }
+
+                            if (links == ""){
+                                return missingWord;
+                            }
+                            else {
+                                return links;
+                            }
+
+                        }
+
                     }
                     else
                     {
-                        return "Missing";
+                        return missingWord;
                     }
                 }
 
@@ -436,9 +461,10 @@
                 $(results).each(function (index, item) {
                     var new_row = "<tr>" +
                                   td(item.bpa_id) +
-                                  td(link("Sample Context",item.sc)) +
-                                  td(link("Chemical Analysis",item.ca)) +
-                                  td(link("Amplicon",item.am)) +
+                                  td(link("Sample Context",item.sc,"Missing")) +
+                                  td(link("Chemical Analysis",item.ca, "Missing")) +
+                                  td(link("Amplicon",item.am, "Missing")) +
+                                  td(link("Metagenomics",item.mg, "Not Available"))
                                   "</tr>";
 
                     $("#results > tbody").append(new_row);
@@ -447,7 +473,7 @@
 
 
                 if (results.length == 0) {
-                     var new_row = '<tr align="center"><td colspan="4">No Results</td></tr>';
+                     var new_row = '<tr align="center"><td colspan="5"><span class="badge badge-important">No Results</span></td></tr>';
                      $("#results > tbody").append(new_row);
                 }
             }
@@ -516,6 +542,7 @@
                         <th>Sample Context</th>
                         <th>Chemical Analysis</th>
                         <th>Amplicon</th>
+                        <th>Metagenomics</th>
                 </tr>
 
     </thead>
