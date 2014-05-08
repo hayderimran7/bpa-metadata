@@ -84,7 +84,7 @@ class Searcher(object):
                         "vegetation_dominant_trees": "site__vegetation_dominant_trees",
                         "elevation": "site__elevation",
                         "australian_soil_classification": "site__soil_type_australian_classification__classification",
-                        "fao_soil_type": "site__soil_type_fao_classification",
+                        "fao_soil_type": "site__soil_type_fao_classification__classification",
                         "immediate_previous_land_use": "site__immediate_previous_land_use",
                         "agrochemical_additions": "site__agrochemical_additions",
                         "tillage": "site__tillage__tillage",
