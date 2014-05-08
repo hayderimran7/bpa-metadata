@@ -7,6 +7,7 @@ from apps.base_metagenomics.models import MetagenomicsSample
 from django.db.models import Q
 from operator import and_, or_
 from django.core.urlresolvers import reverse
+import re
 
 import logging
 
@@ -236,17 +237,31 @@ class Searcher(object):
             except klass.DoesNotExist:
                 return ""
 
+        def get_amplicon_links(bpa_id):
+
+            amplicon_type_pattern = re.compile(r"^.*?_\d+?_(.*?)_.*$")
+            links = []
+            for amplicon in AmpliconSequencingMetadata.objects.filter(bpa_id=bpa_id):
+                amplicon_type = amplicon.target
+                if not amplicon_type:
+                    amplicon_type = "Unknown Target"
+
+                links.append({"amplicon_type": amplicon_type, "amplicon_link": reverse(detail_view_map[AmpliconSequencingMetadata], args=(amplicon.pk,))})
+
+            return links
+
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
-        am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+        #am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
         mg_link = partial(get_object_detail_view_link, MetagenomicsSample)
+
 
         results = []
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
                             "sc": sc_link(bpa_id),
                             "ca": ca_link(bpa_id),
-                            "am": am_link(bpa_id),
+                            "am": get_amplicon_links(bpa_id),
                             "mg": mg_link(bpa_id)})
 
         return results
