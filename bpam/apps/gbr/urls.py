@@ -29,4 +29,8 @@ urlpatterns = patterns(
         regex=r'^sequencefiles',
         view=views.SequenceFileListView.as_view(),
         name='sequencefiles'),
+    url(
+        regex=r'^contacts$',
+        view=views.ContactsView.as_view(),
+        name='contacts'),
 )
