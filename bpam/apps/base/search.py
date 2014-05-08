@@ -149,7 +149,7 @@ class Searcher(object):
     def complex_search(self):
         if self.search_all:
             # Immediately return a search filtering on taxonomy only
-            return self._get_results(self._filter_on_taxonomy(BASESample.objects.all()))
+            return self._get_results(self._filter_on_taxonomy(BPAUniqueID.objects.all()))
 
         # otherwise , filter on the search form's content first
 
