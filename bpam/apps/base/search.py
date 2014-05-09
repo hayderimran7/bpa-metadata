@@ -76,7 +76,7 @@ class Searcher(object):
                         "lat": "site__lat",
                         "lon": "site__lon",
                         "depth": "depth",
-                        "description": search_strategy_horizon_desc,  # check!
+                        "description": "site__description",
                         "current_land_use": "site__current_land_use__description",
                         "general_ecological_zone": "site__general_ecological_zone__description",
                         "vegetation_type": "site__vegetation_type__vegetation",
