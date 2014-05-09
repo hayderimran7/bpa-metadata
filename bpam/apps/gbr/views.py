@@ -45,3 +45,6 @@ class CollectionView(DetailView):
     model = CollectionEvent
     context_object_name = 'collectionevent'
     template_name = 'gbr/gbr_collection_event_detail.html'
+
+class ContactsView(TemplateView):
+    template_name = 'gbr/contacts.html'

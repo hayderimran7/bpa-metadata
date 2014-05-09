@@ -52,7 +52,10 @@
             <td>{% if analysis.sand %} {{ analysis.sand }} {% endif %}</td>
             <td>{% if analysis.silt %} {{ analysis.silt }} {% endif %}</td>
             <td>{% if analysis.clay %} {{ analysis.clay }} {% endif %}</td>
-            <td>{% if analysis.ammonium_nitrogen %} {{ analysis.ammonium_nitrogen }} {% endif %}</td>
+            <td>{% if analysis.ammonium_nitrogen  %}
+                {{ analysis.ammonium_nitrogen }}
+                {% endif %}
+            </td>
             <td>{% if analysis.nitrate_nitrogen %} {{ analysis.nitrate_nitrogen }} {% endif %}</td>
             <td>{% if analysis.phosphorus_colwell %} {{ analysis.phosphorus_colwell }} {% endif %}</td>
             <td>{% if analysis.potassium_colwell %} {{ analysis.potassium_colwell }} {% endif %}</td>
