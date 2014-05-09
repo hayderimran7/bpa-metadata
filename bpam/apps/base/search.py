@@ -107,7 +107,7 @@ class Searcher(object):
             "nitrate_nitrogen": SearchStrategy(ChemicalAnalysis),
             "phosphorus_colwell": SearchStrategy(ChemicalAnalysis),
             "potassium_colwell": SearchStrategy(ChemicalAnalysis),
-            "sulphur_colwell": SearchStrategy(ChemicalAnalysis),
+            "sulphur": SearchStrategy(ChemicalAnalysis),
             "organic_carbon": SearchStrategy(ChemicalAnalysis),
             "conductivity": SearchStrategy(ChemicalAnalysis),
             "cacl2_ph": SearchStrategy(ChemicalAnalysis),
