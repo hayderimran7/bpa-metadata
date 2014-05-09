@@ -40,9 +40,11 @@ def get_int(val, default=None):
         return default
 
 
-def get_clean_float(val, default=None):
+def get_clean_float(val, default=None, stringconvert=True):
     """
-    Try to hammer an arb value into a float
+    Try to hammer an arb value into a float.
+    If stringconvert is true (the default behaviour), try to convert the string to a float,
+    if not, return the given default value
     """
 
     def to_float(var):
@@ -71,7 +73,11 @@ def get_clean_float(val, default=None):
     if not isinstance(val, basestring):
         return default
 
-    return to_float(filter(lambda x: x.isdigit(), val))
+    if stringconvert:
+        return to_float(filter(lambda x: x.isdigit(), val))
+    else:
+        return default
+
 
 def strip_all(reader):
     """

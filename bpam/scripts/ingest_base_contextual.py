@@ -16,7 +16,7 @@ DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'contextual')
 
 BPA_ID_PREFIX = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
-
+CHEM_MIN_SENTINAL_VALUE = 0.0001
 
 def get_horizon_classifications(classification_str):
     """
@@ -46,6 +46,20 @@ def get_horizon_classifications(classification_str):
             return None
 
     return map(get_classifier, parse_classifiers(classification_str))
+
+
+def get_float_or_sentinal(val):
+    # if its a float, its probably ok
+    if isinstance(val, float):
+        return val
+
+    # keep no data no data
+    if val == '':
+        return None
+
+    # substitute the sentinal value for below threshold values
+    if isinstance(val, basestring) and (val.find('<') != -1):
+        return CHEM_MIN_SENTINAL_VALUE
 
 
 def get_data(file_name):
@@ -97,27 +111,27 @@ def get_data(file_name):
                   ('silt', u'Silt  (%) (2-20 µm)', ingest_utils.get_clean_float),
                   ('clay', u'Clay (%) (<2 µm)', ingest_utils.get_clean_float),
                   # soil chemical
-                  ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', ingest_utils.get_clean_float),
-                  ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', ingest_utils.get_clean_float),
-                  ('phosphorus_collwell', 'Phosphorus Colwell (mg/Kg)', ingest_utils.get_clean_float),
-                  ('potassium_collwell', 'Potassium Colwell (mg/Kg)', ingest_utils.get_clean_float),
-                  ('sulphur', 'Sulphur (mg/Kg)', ingest_utils.get_clean_float),
-                  ('organic_carbon', 'Organic Carbon (%)', ingest_utils.get_clean_float),
-                  ('conductivity', 'Conductivity (dS/m)', ingest_utils.get_clean_float),
-                  ('cacl_ph', 'pH Level (CaCl2) (pH)', ingest_utils.get_clean_float),
-                  ('h20_ph', 'pH Level (H2O) (pH)', ingest_utils.get_clean_float),
-                  ('dtpa_copper', 'DTPA Copper (mg/Kg)', ingest_utils.get_clean_float),
-                  ('dtpa_iron', 'DTPA Iron (mg/Kg)', ingest_utils.get_clean_float),
-                  ('dtpa_manganese', 'DTPA Manganese (mg/Kg)', ingest_utils.get_clean_float),
-                  ('dtpa_zinc', 'DTPA Zinc (mg/Kg)', ingest_utils.get_clean_float),
-                  ('exc_aluminium', 'Exc. Aluminium (meq/100g)', ingest_utils.get_clean_float),
-                  ('exc_calcium', 'Exc. Calcium (meq/100g)', ingest_utils.get_clean_float),
-                  ('exc_magnesium', 'Exc. Magnesium (meq/100g)', ingest_utils.get_clean_float),
-                  ('exc_potassium', 'Exc. Potassium (meq/100g)', ingest_utils.get_clean_float),
-                  ('exc_sodium', 'Exc. Sodium (meq/100g)', ingest_utils.get_clean_float),
-                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', ingest_utils.get_clean_float),
-                  ('total_nitrogen', 'Total Nitrogen', ingest_utils.get_clean_float),
-                  ('total_carbon', 'Total Carbon', ingest_utils.get_clean_float),
+                  ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', get_float_or_sentinal),
+                  ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', get_float_or_sentinal),
+                  ('phosphorus_collwell', 'Phosphorus Colwell (mg/Kg)', get_float_or_sentinal),
+                  ('potassium_collwell', 'Potassium Colwell (mg/Kg)', get_float_or_sentinal),
+                  ('sulphur', 'Sulphur (mg/Kg)', get_float_or_sentinal),
+                  ('organic_carbon', 'Organic Carbon (%)', get_float_or_sentinal),
+                  ('conductivity', 'Conductivity (dS/m)', get_float_or_sentinal),
+                  ('cacl2_ph', 'pH Level (CaCl2) (pH)', get_float_or_sentinal),
+                  ('h20_ph', 'pH Level (H2O) (pH)', get_float_or_sentinal),
+                  ('dtpa_copper', 'DTPA Copper (mg/Kg)', get_float_or_sentinal),
+                  ('dtpa_iron', 'DTPA Iron (mg/Kg)', get_float_or_sentinal),
+                  ('dtpa_manganese', 'DTPA Manganese (mg/Kg)', get_float_or_sentinal),
+                  ('dtpa_zinc', 'DTPA Zinc (mg/Kg)', get_float_or_sentinal),
+                  ('exc_aluminium', 'Exc. Aluminium (meq/100g)', get_float_or_sentinal),
+                  ('exc_calcium', 'Exc. Calcium (meq/100g)', get_float_or_sentinal),
+                  ('exc_magnesium', 'Exc. Magnesium (meq/100g)', get_float_or_sentinal),
+                  ('exc_potassium', 'Exc. Potassium (meq/100g)', get_float_or_sentinal),
+                  ('exc_sodium', 'Exc. Sodium (meq/100g)', get_float_or_sentinal),
+                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', get_float_or_sentinal),
+                  ('total_nitrogen', 'Total Nitrogen', get_float_or_sentinal),
+                  ('total_carbon', 'Total Carbon', get_float_or_sentinal),
                   ('methodological_notes', 'Methodological notes', None),
                   ('other_comments', 'Other comments', None),
     ]
@@ -348,12 +362,12 @@ def add_chemical_analysis(data):
         # soil chemical
         analysis.ammonium_nitrogen = e.ammonium_nitrogen
         analysis.nitrate_nitrogen = e.nitrate_nitrogen
-        analysis.phosphorus_collwell = e.phosphorus_collwell
-        analysis.potassium_collwell = e.potassium_collwell
+        analysis.phosphorus_colwell = e.phosphorus_collwell
+        analysis.potassium_colwell = e.potassium_collwell
         analysis.sulphur = e.sulphur
         analysis.organic_carbon = e.organic_carbon
         analysis.conductivity = e.conductivity
-        analysis.cacl_ph = e.cacl_ph
+        analysis.cacl2_ph = e.cacl2_ph
         analysis.h20_ph = e.h20_ph
         analysis.dtpa_copper = e.dtpa_copper
         analysis.dtpa_iron = e.dtpa_iron
