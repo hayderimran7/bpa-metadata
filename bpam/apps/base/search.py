@@ -90,7 +90,7 @@ class Searcher(object):
                         "tillage": "site__tillage__tillage",
                         "fire_history": "site__fire_history",
                         "fire_intensity": "site__fire_intensity",
-                        "environment_events": "site__environment_events",
+                        "environment_event": "site__environment_event",
         },
 
         ChemicalAnalysis: {
