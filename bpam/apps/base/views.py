@@ -247,7 +247,7 @@ class StandardisedVocabularyLookUpView(View):
             "general_ecological_zone": "GeneralEcologicalZone.description",
             "gravel": None,
             "h20_ph": None,
-            "immediate_previous_land_use": None,
+            "immediate_previous_land_use": "LandUse.description",
             "lat": None,
             "lon": None,
             "moisture": None,
