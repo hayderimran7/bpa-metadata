@@ -13,69 +13,65 @@
         <div class="panel-heading">BASE Chemical Analysis Detail for Sample {{ ca.bpa_id }}</div>
 
         <table id="nice" class="table">
-            <thead>
-            <td>Property</td>
-            <td>Value</td>
-            </thead>
             <tbody>
             <tr>
                 <td>BPA ID</td>
                 <td>{{ca.bpa_id}}</td>
             </tr>
             <tr>
-                <td>Depth</td>
+                <td>Soil Depth</td>
                 <td>{{ca.depth}}</td>
             </tr>
             <tr>
-                <td>Moisture</td>
+                <td>Soil Moisture</td>
                 <td>{{ca.moisture}}</td>
             </tr>
             <tr>
-                <td>Colour</td>
+                <td>Soil Colour</td>
                 <td>{{ca.colour}}</td>
             </tr>
-            <tr>
-                <td>Gravel</td>
-                <td>{{ca.gravel}}</td>
-            </tr>
-            <tr>
-                <td>Texture</td>
+              <tr>
+                <td>Soil Texture</td>
                 <td>{{ca.texture}}</td>
             </tr>
             <tr>
-                <td>Course Sand</td>
+                <td>% Gravel</td>
+                <td>{{ca.gravel}}</td>
+            </tr>
+            <tr>
+                <td>% Course Sand</td>
                 <td>{{ca.course_sand}}</td>
             </tr>
             <tr>
-                <td>Fine Sand</td>
+                <td>% Fine Sand</td>
                 <td>{{ca.fine_sand}}</td>
             </tr>
             <tr>
-                <td>Sand</td>
+                <td>% Sand</td>
                 <td>{{ca.sand}}</td>
             </tr>
             <tr>
-                <td>Silt</td>
+                <td>% Silt</td>
                 <td>{{ca.silt}}</td>
             </tr>
             <tr>
-                <td>Clay</td>
+                <td>% Clay</td>
                 <td>{{ca.clay}}</td>
             </tr>
             <tr>
-                <td>NH<sub>3</sub>-N</td>
+                <td>Ammonium Nitrogen (NH<sub>3</sub>-N)</td>
                 <td>{{ca.ammonium_nitrogen}}</td>
             </tr>
             <tr>
-                <td>NO<sub>3</sub><sup>−</sup></td>
+                <td>Nitrate Nitrogen (NO<sub>3</sub><sup>−</sup>)</td>
                 <td>{{ca.nitrate_nitrogen}}</td>
             </tr>
             <tr>
-                <td>Colwell P</td>
+                <td>Colwell Phosphorous</td>
                 <td>{{ca.phosphorus_colwell}}</td>
             </tr>
             <tr>
-                <td>Colwell K</td>
+                <td>Colwell Potassium</td>
                 <td>{{ca.potassium_colwell}}</td>
             </tr>
             <tr>
@@ -99,52 +95,52 @@
                 <td>{{ca.h20_ph}}</td>
             </tr>
             <tr>
-                <td>DTPA Cu</td>
+                <td>DTPA Copper</td>
                 <td>{{ca.dtpa_copper}}</td>
             </tr>
             <tr>
-                <td>DTPA Fe</td>
+                <td>DTPA Iron</td>
                 <td>{{ca.dtpa_iron}}</td>
             </tr>
             <tr>
-                <td>DTPA Mn</td>
+                <td>DTPA Manganese</td>
                 <td>{{ca.dtpa_manganese}}</td>
             </tr>
             <tr>
-                <td>DTPA Zn</td>
+                <td>DTPA Zinc</td>
                 <td>{{ca.dtpa_zinc}}</td>
             </tr>
             <tr>
-                <td>Exc Al</td>
+                <td>Exc Aluminium</td>
                 <td>{{ca.exc_aluminium}}</td>
             </tr>
             <tr>
-                <td>Exc Ca</td>
+                <td>Exc Calcium</td>
                 <td>{{ca.exc_calcium}}</td>
             </tr>
             <tr>
-                <td>Exc Mg</td>
+                <td>Exc Magnesium</td>
                 <td>{{ca.exc_magnesium}}</td>
             </tr>
             <tr>
-                <td>Exc K</td>
+                <td>Exc Potassium</td>
                 <td>{{ca.exc_potassium}}</td>
             </tr>
             <tr>
-                <td>Exc Na</td>
+                <td>Exc Sodium</td>
                 <td>{{exc_sodium}}</td>
             </tr>
             <tr>
-                <td>B Hot CaCl<sub>2</sub></td>
+                <td>Boron Hot CaCl<sub>2</sub></td>
                 <td>{{ca.boron_hot_cacl2}}</td>
             </tr>
             <tr>
-                <td>Total N</td>
-                <td>{{ca.total_nitrogen}}</td>
+                <td>Total Nitrogen</td>
+                <td>{% if ca.total_nitrogen %} {{ca.total_nitrogen}} {% endif %} </td>
             </tr>
             <tr>
-                <td>Total C</td>
-                <td>{{ca.total_carbon}}</td>
+                <td>Total Carbon</td>
+                <td>{% if ca.total_carbon %} {{ca.total_carbon}} {% endif %}</td>
             </tr>
             </tbody>
         </table>
