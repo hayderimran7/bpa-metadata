@@ -4,12 +4,13 @@ from django.db import models
 from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID
 from apps.base.models import BASESample
 
+
 class AmpliconSequencingMetadata(DebugNote):
     """
     BASE Amplicon Soil Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
                                             verbose_name=_('Sequencing Facility'),
@@ -29,15 +30,13 @@ class AmpliconSequencingMetadata(DebugNote):
     dilution = models.CharField(_('Dilution Used'), max_length=5, blank=True, null=True,
                                 choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
 
-    sequencing_run_number = models.CharField(_('Sequencing run number'),  max_length=40, blank=True, null=True)
-    flow_cell_id = models.CharField(_('Flow Cell ID'),  max_length=5, blank=True, null=True)
+    sequencing_run_number = models.CharField(_('Sequencing run number'), max_length=40, blank=True, null=True)
+    flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=5, blank=True, null=True)
     reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
-    name = models.CharField(_('Sample Name'),  max_length=50, blank=True, null=True)
+    name = models.CharField(_('Sample Name'), max_length=50, blank=True, null=True)
     comments = models.TextField(_('Comments'), blank=True, null=True)
 
     analysis_software_version = models.CharField(_('Analysis Software Version'), max_length=100, blank=True, null=True)
-
-
 
     def passed_pcr_1_to_10(self):
         return self.pcr_1_to_10 == 'P'
@@ -48,12 +47,12 @@ class AmpliconSequencingMetadata(DebugNote):
     def passed_pcr_neat(self):
         return self.pcr_neat == 'P'
 
-
     def __unicode__(self):
-        return u'{0}:{1}'.format(self.bpa_id, self.sample_extraction_id)
+        return u'{0}:{1}'.format(self.bpa_id, self.target)
 
     class Meta:
-        verbose_name_plural = _("Amplicon Sequencing Metadata")
+        verbose_name_plural = _('Amplicon Sequencing Metadata')
+        unique_together = (('bpa_id', 'target'),)
 
 
 class AmpliconSequenceFile(SequenceFile):

@@ -83,14 +83,13 @@ def add_samples(data):
             logger.warning('Could not add entry on row {0}'.format(entry.row))
             continue
 
-        metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+        metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=entry.target)
 
         metadata.sample_extraction_id = entry.sample_extraction_id
         metadata.name = entry.name
 
         metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
         metadata.index = entry.index
-        metadata.target = entry.target
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
         metadata.pcr_1_to_100 = entry.pcr_1_to_100
         metadata.pcr_neat = entry.pcr_neat
@@ -105,12 +104,20 @@ def add_samples(data):
         metadata.save()
 
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequencingMetadata._meta.db_table))
+
+
 def is_metadata(path):
     if path.isfile() and path.ext == '.xlsx':
         return True
 
 
 def run():
+    truncate()
     # find all the spreadsheets in the data directory and ingest them
     logger.info('Ingesting BASE Amplicon metadata from {0}'.format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
