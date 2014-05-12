@@ -165,7 +165,7 @@ class ProgressReporter(object):
         self.then = time.time()
 
     def file_len(self, fname):
-        i = -1;
+        i = -1
         with open(fname) as f:
             for i, l in enumerate(f):
                 pass
