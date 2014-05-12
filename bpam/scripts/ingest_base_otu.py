@@ -223,7 +223,7 @@ def ingest_sample_to_otu(file_name):
                         sample_otu_list.append(SampleOTU(sample=sample, otu=otu, count=count))
 
                 SampleOTU.objects.bulk_create(sample_otu_list)
-                reporter.count_row(len(sample_otu_list))
+                reporter.count_row()
 
 
 def truncate():
