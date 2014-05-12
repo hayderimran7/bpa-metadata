@@ -123,8 +123,21 @@ class OTUCache(object):
             return otu
 
 
-def get_bpa_id_from_key(sample_key):
-    if 
+def get_bpa_id_and_well_id_from_key(sample_key):
+    """
+    Split out BPAID
+    """
+    split_index = sample_key.find('_')
+    if split_index != -1:
+        try:
+            bpa_id, well_id = sample_key[0:split_index], sample_key[split_index:]
+            return BPA_PREFIX + bpa_id, well_id
+        except ValueError, e:
+            logger.error('Sample Key [{0}] unexpected, quiting'.format(sample_key))
+            exit(0)
+    else:
+        return BPA_PREFIX + '00000', '00000' #  sentinels
+
 
 def ingest_sample_to_otu(file_name):
     """
@@ -153,40 +166,22 @@ def ingest_sample_to_otu(file_name):
 
             for row in reader:
                 otu = otu_cache.get(row['OTUId'])
+                row.pop('OTUId') # get rid of ID column here so I don't have to filter it out below
                 # step through all the sample keys and update the links
                 for sample_key, count in row.items():
-                    bpa_idx = get_bpa_id_from_key(sample_key)
-                    sample =
 
+                    try:
+                        count = int(count)
+                    except ValueError:
+                        logger.warning('Count must be a integer, not [{0}], ignoring'.format(count))
+                        continue
 
+                    if count == 0:
+                        continue
 
-# deprecated
-def xcell_otu_sample_map_ingest(file_name):
-    workbook = xlrd.open_workbook(file_name)
-    sheet = workbook.sheet_by_index(0)  # the first sheet looks ok...
-
-    otu_total = sheet.nrows - 1
-    sample_total = sheet.ncols - 1
-    curr_otu = 0  # skip header
-
-    base_sample_cache = BASESampleCache()
-    otu_cache = OTUCache()
-
-    while curr_otu < otu_total:
-        curr_otu += 1
-        curr_sample = 0  # first col is otu id
-        while curr_sample < sample_total:
-            curr_sample += 1
-            count = sheet.cell_value(curr_otu, curr_sample)
-            if count > 0:
-                otu_name = 'OTU_' + str(int(sheet.cell_value(curr_otu, 0)))
-                bpa_id_name = BPA_PREFIX + str(ingest_utils.get_int(sheet.cell_value(0, curr_sample)))
-                otu = otu_cache.get(otu_name)
-
-                sample = base_sample_cache.get(bpa_id_name)
-                if sample:
-                    sample_otu, created = SampleOTU.objects.get_or_create(otu=otu, count=count, sample=sample)
-
+                    bpa_idx, well_id = get_bpa_id_and_well_id_from_key(sample_key)
+                    sample = base_sample_cache.get(bpa_idx)
+                    SampleOTU.objects.get_or_create(sample=sample, otu=otu, count=count)
 
 def truncate():
     from django.db import connection
