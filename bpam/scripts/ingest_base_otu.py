@@ -4,6 +4,7 @@ import zipfile
 from unipath import Path
 import requests
 import csv
+import time
 
 from libs import logger_utils
 from libs import bpa_id_utils
@@ -161,6 +162,8 @@ class ProgressReporter(object):
         self.total_len = self.file_len(file_name)
         self.count = 0
 
+        self.then = time.time()
+
     def file_len(self, fname):
         i = -1;
         with open(fname) as f:
@@ -170,7 +173,10 @@ class ProgressReporter(object):
 
     def count_row(self):
         self.count += 1
-        logger.info('Ingested {0}/{1} rows'.format(self.count, self.total_len))
+        if self.count % 100 == 0:
+            now = time.time()
+            logger.info('Ingested {0}/{1} rows, taking {2}s'.format(self.count, self.total_len, now - self.then))
+            self.then = now
 
 
 def ingest_sample_to_otu(file_name):
@@ -216,8 +222,8 @@ def ingest_sample_to_otu(file_name):
                         sample = base_sample_cache.get(bpa_idx)
                         sample_otu_list.append(SampleOTU(sample=sample, otu=otu, count=count))
 
-                reporter.count_row()
                 SampleOTU.objects.bulk_create(sample_otu_list)
+                reporter.count_row(len(sample_otu_list))
 
 
 def truncate():
