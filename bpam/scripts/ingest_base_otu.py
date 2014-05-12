@@ -129,14 +129,27 @@ def get_bpa_id_and_well_id_from_key(sample_key):
     """
     split_index = sample_key.find('_')
     if split_index != -1:
-        try:
-            bpa_id, well_id = sample_key[0:split_index], sample_key[split_index:]
-            return BPA_PREFIX + bpa_id, well_id
-        except ValueError, e:
-            logger.error('Sample Key [{0}] unexpected, quiting'.format(sample_key))
-            exit(0)
+        return BPA_PREFIX + sample_key[0:split_index]  # ignore the rest
     else:
-        return BPA_PREFIX + '00000', '00000' #  sentinels
+        return None
+
+
+class ProgressReporter(object):
+    def __init__(self, file_name):
+        self.file_name = file_name
+        self.total_len = self.file_len(file_name)
+        self.count = 0
+
+    def file_len(self, fname):
+        i = -1;
+        with open(fname) as f:
+            for i, l in enumerate(f):
+                pass
+        return i
+
+    def count_row(self):
+        self.count += 1
+        logger.info('Ingested {0}/{1}'.format(self.count, self.total_len))
 
 
 def ingest_sample_to_otu(file_name):
@@ -155,7 +168,8 @@ def ingest_sample_to_otu(file_name):
 
     for csvf in csv_files:
         csv_file = Path(DATA_DIR, csvf)
-        logger.info('Now ingesting {0}'.format(csv_file))
+        reporter = ProgressReporter(csv_file)
+        logger.info('Now ingesting {0} with {1} lines'.format(csv_file, reporter.total_len))
 
         with open(csv_file, "rb") as mapfile:
             reader = csv.DictReader(mapfile)
@@ -169,19 +183,17 @@ def ingest_sample_to_otu(file_name):
                 row.pop('OTUId') # get rid of ID column here so I don't have to filter it out below
                 # step through all the sample keys and update the links
                 for sample_key, count in row.items():
-
-                    try:
-                        count = int(count)
-                    except ValueError:
-                        logger.warning('Count must be a integer, not [{0}], ignoring'.format(count))
-                        continue
-
+                    count = int(count)
                     if count == 0:
                         continue
 
-                    bpa_idx, well_id = get_bpa_id_and_well_id_from_key(sample_key)
-                    sample = base_sample_cache.get(bpa_idx)
-                    SampleOTU.objects.get_or_create(sample=sample, otu=otu, count=count)
+                    bpa_idx = get_bpa_id_and_well_id_from_key(sample_key)
+                    if bpa_idx:
+                        sample = base_sample_cache.get(bpa_idx)
+                        SampleOTU.objects.get_or_create(sample=sample, otu=otu, count=count)
+                reporter.count_row()
+
+
 
 def truncate():
     from django.db import connection
@@ -192,8 +204,8 @@ def truncate():
 
 def ingest():
     # OTU
-    # ensure_data_file_is_available(TAXONOMY_URL, TAXONOMY_FILE)
-    # ingest_otu(TAXONOMY_FILE)
+    ensure_data_file_is_available(TAXONOMY_URL, TAXONOMY_FILE)
+    ingest_otu(TAXONOMY_FILE)
 
     # OTU->Sample
     ensure_data_file_is_available(MAP_16S_OTU_URL, MAP_TAXONOMY_TO_SAMPLE_FILE)

@@ -254,8 +254,8 @@ ingest_all() {
     ${CMD} runscript ingest_base_metagenomics --traceback
     ${CMD} runscript ingest_landuse --traceback
     ${CMD} runscript ingest_base_contextual --traceback
-    ${CMD} runscript ingest_base_amplicon
-    ${CMD} runscript ingest_base_otu_fakedata --traceback
+    ${CMD} runscript ingest_base_amplicon --traceback
+    ${CMD} runscript ingest_base_otu --traceback
 }
 
 devrun() {
