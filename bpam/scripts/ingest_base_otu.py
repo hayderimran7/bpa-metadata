@@ -3,16 +3,19 @@
 import zipfile
 from unipath import Path
 import requests
-import xlrd
 import csv
+import time
 
 from libs import logger_utils
-from libs import ingest_utils
 from libs import bpa_id_utils
 
 from apps.base_otu.models import *
 from apps.base.models import BASESample
 from libs.excel_wrapper import ExcelWrapper
+
+from django.conf import settings
+
+settings.DEBUG = False
 
 BPA_PREFIX = '102.100.100.'
 
@@ -78,16 +81,21 @@ def ingest_otu(file_name):
                            header_length=1,
                            column_name_row_index=0)
 
+    otu_list = []
     for e in wrapper.get_all():
-        otu, created = OperationalTaxonomicUnit.objects.get_or_create(
-            name=e.otu_id,
-            kingdom='Bacteria',
-            phylum=e.phylum,
-            otu_class=e.otu_class,
-            order=e.order,
-            family=e.family,
-            genus=e.genus)
-        otu.save()
+        otu_list.append(
+            OperationalTaxonomicUnit(
+                name=e.otu_id,
+                kingdom='Bacteria',
+                phylum=e.phylum,
+                otu_class=e.otu_class,
+                order=e.order,
+                family=e.family,
+                genus=e.genus)
+        )
+
+    logger.info('Bulk creating {0} OTUs'.format(len(otu_list)))
+    OperationalTaxonomicUnit.objects.bulk_create(otu_list)
 
 
 class BASESampleCache(object):
@@ -98,13 +106,13 @@ class BASESampleCache(object):
     cache = {}
 
     def get(self, bpa_idx):
-        if self.cache.has_key(bpa_idx):
+        if bpa_idx in self.cache:
             return self.cache[bpa_idx]
-
-        bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'BASE', 'BASE', note='BASE OTU Ingest')
-        sample, created = BASESample.objects.get_or_create(bpa_id=bpa_id)
-        self.cache[bpa_idx] = sample
-        return sample
+        else:
+            bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'BASE', 'BASE', note='BASE OTU Ingest')
+            sample, created = BASESample.objects.get_or_create(bpa_id=bpa_id)
+            self.cache[bpa_idx] = sample
+            return sample
 
 
 class OTUCache(object):
@@ -115,7 +123,7 @@ class OTUCache(object):
     cache = {}
 
     def get(self, otu_name):
-        if self.cache.has_key(otu_name):
+        if otu_name in self.cache:
             return self.cache[otu_name]
         else:
             otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
@@ -123,15 +131,29 @@ class OTUCache(object):
             return otu
 
 
-def get_bpa_id_and_well_id_from_key(sample_key):
+class BPAIDLookup(object):
     """
-    Split out BPAID
+    maybe save some cycles by doing the splitting once
     """
-    split_index = sample_key.find('_')
-    if split_index != -1:
-        return BPA_PREFIX + sample_key[0:split_index]  # ignore the rest
-    else:
-        return None
+    cache = {}
+
+    def get(self, key):
+        if key in self.cache:
+            return self.cache[key]
+        else:
+            val = self.get_bpa_id_from_key(key)
+            self.cache[key] = val
+            return val
+
+    def get_bpa_id_from_key(self, sample_key):
+        """
+        Split out BPAID
+        """
+        split_index = sample_key.find('_')
+        if split_index != -1:
+            return BPA_PREFIX + sample_key[0:split_index]  # ignore the rest
+        else:
+            return None
 
 
 class ProgressReporter(object):
@@ -139,6 +161,8 @@ class ProgressReporter(object):
         self.file_name = file_name
         self.total_len = self.file_len(file_name)
         self.count = 0
+
+        self.then = time.time()
 
     def file_len(self, fname):
         i = -1;
@@ -149,7 +173,10 @@ class ProgressReporter(object):
 
     def count_row(self):
         self.count += 1
-        logger.info('Ingested {0}/{1}'.format(self.count, self.total_len))
+        if self.count % 100 == 0:
+            now = time.time()
+            logger.info('Ingested {0}/{1} rows, taking {2}s'.format(self.count, self.total_len, now - self.then))
+            self.then = now
 
 
 def ingest_sample_to_otu(file_name):
@@ -158,6 +185,7 @@ def ingest_sample_to_otu(file_name):
     """
     base_sample_cache = BASESampleCache()
     otu_cache = OTUCache()
+    bpa_id_lookup = BPAIDLookup()
 
     csv_files = []  # all cv files found in zip
     if zipfile.is_zipfile(file_name):
@@ -175,24 +203,27 @@ def ingest_sample_to_otu(file_name):
             reader = csv.DictReader(mapfile)
 
             # populate the BASE Sample Cache
+            logger.info('Caching {0} BASE Samples'.format(len(reader.fieldnames) - 1))
             for sample_name in reader.fieldnames[1:]:
-                base_sample_cache.get(BPA_PREFIX + sample_name.split('_')[0])
+                base_sample_cache.get(bpa_id_lookup.get(sample_name))
 
             for row in reader:
+                sample_otu_list = []
                 otu = otu_cache.get(row['OTUId'])
-                row.pop('OTUId') # get rid of ID column here so I don't have to filter it out below
-                # step through all the sample keys and update the links
+                row.pop('OTUId')  # get rid of ID column here so I don't have to filter it out below
+                # step through all the sample keys and create the sample to OTU links
                 for sample_key, count in row.items():
                     count = int(count)
                     if count == 0:
                         continue
 
-                    bpa_idx = get_bpa_id_and_well_id_from_key(sample_key)
+                    bpa_idx = bpa_id_lookup.get(sample_key)
                     if bpa_idx:
                         sample = base_sample_cache.get(bpa_idx)
-                        SampleOTU.objects.get_or_create(sample=sample, otu=otu, count=count)
-                reporter.count_row()
+                        sample_otu_list.append(SampleOTU(sample=sample, otu=otu, count=count))
 
+                SampleOTU.objects.bulk_create(sample_otu_list)
+                reporter.count_row()
 
 
 def truncate():
@@ -213,8 +244,9 @@ def ingest():
 
 
 def run():
+    truncate()
     ingest()
-    # truncate()
+
 
 
 
