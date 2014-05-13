@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}BASE{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-sm-5 col-md-5">
+                <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+            </div>
+
+            <div class="col-sm-4 col-md-4">
+                <h2>
+                    All <a href="{% url 'base:index' %}">BASE</a> Amplicons
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons' %}">All Amplicons</a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons_ITS' %}">ITS</a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons_16S' %}">16S</a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons_A16S' %}">A16S</a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons_18S' %}">18S</a>
+                    <a class="list-group-item" href="{% url 'base:index' %}">BASE Index</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
