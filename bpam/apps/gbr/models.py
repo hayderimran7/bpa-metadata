@@ -52,7 +52,6 @@ class GBRSample(Sample, DebugNote):
         return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
 
 
-
 class GBRRun(Run):
     """
     A GBR Run
