@@ -5,6 +5,14 @@ from .models import *
 class IndexView(TemplateView):
     template_name = 'base_amplicon/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['16S_size'] = AmpliconSequencingMetadata.objects.filter(target='16S').count()
+        context['18S_size'] = AmpliconSequencingMetadata.objects.filter(target='18S').count()
+        context['ITS_size'] = AmpliconSequencingMetadata.objects.filter(target='ITS').count()
+        context['A16S_size'] = AmpliconSequencingMetadata.objects.filter(target='A16S').count()
+        context['all_size'] = AmpliconSequencingMetadata.objects.filter().count()
+        return context
 
 class AmpliconListView(ListView):
     model = AmpliconSequencingMetadata
