@@ -9,6 +9,8 @@ from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 
 
 
+
+
 # some defaults to fall back on
 DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
 DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'current')
@@ -23,13 +25,7 @@ def get_dna_source(description):
     Get a DNA source if it exists, if it doesn't make it.
     """
 
-    description = description.capitalize()
-    try:
-        source = DNASource.objects.get(description=description)
-    except DNASource.DoesNotExist:
-        source = DNASource(description=description)
-        source.save()
-
+    source, _ = DNASource.objects.get_or_create(description=description.capitalize())
     return source
 
 
@@ -42,12 +38,7 @@ def get_tumor_stage(description):
     if description == "":
         description = "Not applicable"
 
-    try:
-        stage = TumorStage.objects.get(description=description)
-    except TumorStage.DoesNotExist:
-        stage = TumorStage(description=description)
-        stage.save()
-
+    stage, _ = TumorStage.objects.get_or_create(description=description)
     return stage
 
 
@@ -57,12 +48,8 @@ def get_facility(name):
     """
     if name == '':
         name = "Unknown"
-    try:
-        facility = Facility.objects.get(name=name)
-    except Facility.DoesNotExist:
-        facility = Facility(name=name)
-        facility.save()
 
+    facility, _ = Facility.objects.get(name=name)
     return facility
 
 
@@ -94,12 +81,9 @@ def ingest_samples(samples):
             logger.warning("Ignoring '{0}', not a good BPA ID".format(bpa_id_utils))
             return
 
-        try:
-            # Test if sample already exists, the first sample wins, that's how it is
-            MelanomaSample.objects.get(bpa_id__bpa_id=bpa_idx)
-        except MelanomaSample.DoesNotExist:
-            sample = MelanomaSample()
-
+        # Test if sample already exists, the first sample wins, that's how it is
+        sample, created = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_idx)
+        if created:
             sample.bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma')
             sample.name = e.sample_name
             sample.requested_sequence_coverage = e.sequence_coverage.upper()
@@ -141,20 +125,17 @@ def ingest_arrays(arrays):
         return 'U'
 
     for e in arrays:
-        try:
-            array = Array.objects.get(bpa_id__bpa_id=e.bpa_id)
-        except Array.DoesNotExist:
-            array = Array()
-            array.bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma')
+        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma')
+        array, created = Array.objects.get_or_create(bpa_id=bpa_id)
+        if created:
             array.note = u"Created during array ingestion on {0}".format(date.today())
-
-        array.batch_number = int(e.batch_no)
-        array.mia_id = e.mia_id
-        array.array_id = e.array_id
-        array.call_rate = float(e.call_rate)
-        array.gender = get_gender(e.gender)
-        array.well_id = e.well_id
-        array.save()
+            array.batch_number = int(e.batch_no)
+            array.mia_id = e.mia_id
+            array.array_id = e.array_id
+            array.call_rate = float(e.call_rate)
+            array.gender = get_gender(e.gender)
+            array.well_id = e.well_id
+            array.save()
 
 
 def get_melanoma_sample_data(file_name):
@@ -244,38 +225,23 @@ def ingest_runs(sample_data):
         library_type = get_library_type(entry.library)
         library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
 
-        try:
-            protocol = MelanomaProtocol.objects.get(
-                base_pairs=base_pairs,
-                library_type=library_type,
-                library_construction_protocol=library_construction_protocol)
-        except MelanomaProtocol.DoesNotExist:
-            protocol = MelanomaProtocol(
-                base_pairs=base_pairs,
-                library_type=library_type,
-                library_construction_protocol=library_construction_protocol)
-            protocol.save()
+        protocol, _ = MelanomaProtocol.objects.get_or_create(
+            base_pairs=base_pairs,
+            library_type=library_type,
+            library_construction_protocol=library_construction_protocol)
 
         return protocol
 
     def get_sequencer(name):
         if name == "":
             name = "Unknown"
-        try:
-            sequencer = Sequencer.objects.get(name=name)
-        except Sequencer.DoesNotExist:
-            sequencer = Sequencer(name=name)
-            sequencer.save()
+
+        sequencer, _ = Sequencer.objects.get_or_create(name=name)
         return sequencer
 
     def get_sample(bpa_id):
-        try:
-            sample = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_id)
-            logger.info("Found sample {0}".format(sample))
-            return sample
-        except MelanomaSample.DoesNotExist:
-            logger.error("No sample with ID {0}, quiting now".format(bpa_id))
-            return None
+        sample, _ = MelanomaSample.objects.get_or_create(bpa_id__bpa_id=bpa_id)
+        return sample
 
     def get_run_number(entry):
         """
@@ -309,17 +275,14 @@ def ingest_runs(sample_data):
         run_number = get_run_number(entry)
         flow_cell_id = entry.flow_cell_id.strip()
 
-        try:
-            nrun = MelanomaRun.objects.get(flow_cell_id=flow_cell_id,
-                                           run_number=run_number,
-                                           sample__bpa_id__bpa_id=bpa_id)
-        except MelanomaRun.DoesNotExist:
-            nrun = MelanomaRun()
+        nrun, created = MelanomaRun.objects.get_or_create(flow_cell_id=flow_cell_id,
+                                                          run_number=run_number,
+                                                          sample__bpa_id__bpa_id=bpa_id)
+        if created:
             nrun.flow_cell_id = flow_cell_id
             nrun.run_number = run_number
             nrun.sample = get_sample(bpa_id)
 
-            # Update FIXME
             nrun.passage_number = ingest_utils.get_clean_number(entry.passage_number)
             nrun.index_number = ingest_utils.get_clean_number(entry.index_number)
             nrun.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
@@ -349,10 +312,7 @@ def ingest_runs(sample_data):
             logger.warning('Filename is not set, ignoring')
             return
 
-        try:
-            f = MelanomaSequenceFile.objects.get(filename=file_name, md5=md5)
-        except MelanomaSequenceFile.DoesNotExist:
-            f = MelanomaSequenceFile()
+        f, created = MelanomaSequenceFile.objects.get_or_create(filename=file_name, md5=md5)
 
         f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
         f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
