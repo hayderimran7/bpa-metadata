@@ -16,8 +16,9 @@ get_metadata() {
 get_md5_lists() {
     for c in ${AMPLICON_CONTAINERS}
     do
-        for f in $(swift list $c | grep md5)
+        for f in $(swift list $c | grep -E '(md5sums.txt|.md5)' | grep -v log)
         do
+        echo $f
         swift download $c $f
         done
     done
