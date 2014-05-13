@@ -226,7 +226,7 @@ class Searcher(object):
         detail_view_map = {
             ChemicalAnalysis: 'basecontextual:chemicalanalysisdetail',
             SampleContext: 'basecontextual:sampledetail',
-            AmpliconSequencingMetadata: 'base_amplicon:metadata',
+            AmpliconSequencingMetadata: 'base_amplicon:amplicon',
             MetagenomicsSample: 'basemetagenomics:sample',
         }
 
