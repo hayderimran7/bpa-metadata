@@ -7,16 +7,17 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 
-from apps.base_amplicon.models import AmpliconSequencingMetadata
-from apps.common.models import Facility
-from collections import namedtuple
+from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile
+from apps.base.models import BASESample
+from apps.common.models import Facility, BPAUniqueID
+
 
 logger = logger_utils.get_logger(__name__)
 
 # all the Excel sheets and md5sums should be in here
 DATA_DIR = Path(Path('~').expand_user(), 'var/amplicon_metadata/')
 
-BPA_ID = "102.100.100"
+BPA_ID = "102.100.100."
 BASE_DESCRIPTION = 'BASE'
 
 
@@ -163,8 +164,8 @@ def parse_md5_file(md5_file):
             filename = filename.replace('-', '_')
             filename_parts = filename.split('_')
 
-            bpa_id, rest = get_bpa_id_from_filename(filename_parts)
-            if bpa_id == None:
+            extraction_id, rest = get_bpa_id_from_filename(filename_parts)
+            if extraction_id == None:
                 continue
 
             if len(rest) != 8:
@@ -174,6 +175,7 @@ def parse_md5_file(md5_file):
             target, vendor, index, well, sequence, lane, run_num, run_id = rest
 
             line_data['filename'] = filename
+            line_data['extraction_id'] = extraction_id
             line_data['target'] = target
             line_data['vendor'] = vendor
             line_data['index'] = index
@@ -192,7 +194,42 @@ def add_md5(data):
     """
     Add md5 data
     """
-    print data
+
+    def get_base_sample(bpa_idx):
+        try:
+            idx = BPA_ID + bpa_idx.split('_')[0]
+        except ValueError:
+            return None
+
+        try:
+            bpa_id = BPAUniqueID.objects.get(bpa_id=idx)
+        except BPAUniqueID.DoesNotExist:
+            return None
+
+        return BASESample.objects.get(bpa_id=bpa_id)
+
+
+
+    for file_data in data:
+        extraction_id = file_data['extraction_id']
+        target = file_data['target']
+        try:
+            metadata = AmpliconSequencingMetadata.objects.get(target=target,
+                                                              sample_extraction_id=extraction_id)
+        except AmpliconSequencingMetadata.DoesNotExist:
+            logger.warning('No Amplicon Metadata for {0} {1}'.format(extraction_id, target))
+            continue
+
+        sample = get_base_sample(extraction_id)
+
+        sfile = AmpliconSequenceFile(metadata=metadata, sample=sample)
+        sfile.filename = file_data['filename']
+        sfile.analysed = True
+        sfile.md5 = file_data['md5']
+        sfile.save()
+
+
+
 
 
 def do_md5():

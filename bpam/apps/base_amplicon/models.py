@@ -60,7 +60,7 @@ class AmpliconSequenceFile(SequenceFile):
     Amplicon Sequence File
     """
     project_name = 'base_amplicon'
-    sample = models.ForeignKey(BASESample)
+    sample = models.ForeignKey(BASESample, null=True)
     metadata = models.ForeignKey(AmpliconSequencingMetadata)
 
     class Meta:

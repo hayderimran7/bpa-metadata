@@ -253,6 +253,7 @@ class SequenceFile(models.Model):
     A sequence file resulting from a sequence run
     """
 
+    run = None
     project_name = 'UNSET'  # children sequence files need to set this
 
     index_number = models.IntegerField(_('Index'), blank=True, null=True, )
@@ -283,7 +284,7 @@ class SequenceFile(models.Model):
         uj = urlparse.urljoin
         uq = urllib.quote
 
-        if not self.run:
+        if self.run is None:
             return 'NORUN_NOURL'
 
         return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
