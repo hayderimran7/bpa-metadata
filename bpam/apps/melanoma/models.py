@@ -30,11 +30,11 @@ class Array(models.Model):
     """
     Micro Array ?
     """
-    bpa_id = models.ForeignKey(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))
-    array_id = models.CharField(max_length=17, verbose_name=_('Array ID'))
-    batch_number = models.IntegerField(verbose_name=_('Batch'))
-    well_id = models.CharField(max_length=4, verbose_name=_('Well ID'))
-    mia_id = models.CharField(max_length=200, verbose_name=_('MIA ID'))
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
+    array_id = models.CharField(_('Array ID'), max_length=17)
+    batch_number = models.IntegerField(_('Batch'))
+    well_id = models.CharField(_('Well ID'), max_length=4)
+    mia_id = models.CharField(_('MIA ID'), max_length=200)
     call_rate = models.FloatField()
     gender = models.CharField(max_length=1, choices=GENDERS)
 

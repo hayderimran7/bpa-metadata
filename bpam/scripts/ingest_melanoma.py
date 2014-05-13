@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from datetime import date
 from unipath import Path
 
@@ -6,9 +8,6 @@ from apps.common.models import DNASource, Facility, Sequencer
 from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, \
     MelanomaSequenceFile
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
-
-
-
 
 
 # some defaults to fall back on
@@ -49,7 +48,7 @@ def get_facility(name):
     if name == '':
         name = "Unknown"
 
-    facility, _ = Facility.objects.get(name=name)
+    facility, _ = Facility.objects.get_or_create(name=name)
     return facility
 
 
@@ -78,16 +77,17 @@ def ingest_samples(samples):
     def add_sample(e):
         bpa_idx = e.bpa_id
         if not bpa_id_utils.is_good_bpa_id(bpa_idx):
-            logger.warning("Ignoring '{0}', not a good BPA ID".format(bpa_id_utils))
+            logger.warning("Ignoring '{0}', not a good BPA ID".format(bpa_idx))
             return
 
-        # Test if sample already exists, the first sample wins, that's how it is
-        sample, created = MelanomaSample.objects.get(bpa_id__bpa_id=bpa_idx)
+        bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
+        organism, _ = Organism.objects.get_or_create(genus="Homo", species="Sapiens")
+
+        sample, created = MelanomaSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         if created:
             sample.bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma')
             sample.name = e.sample_name
             sample.requested_sequence_coverage = e.sequence_coverage.upper()
-            sample.organism, _ = Organism.objects.get_or_create(genus="Homo", species="Sapiens")
             sample.dna_source = get_dna_source(e.sample_dna_source)
             sample.dna_extraction_protocol = e.dna_extraction_protocol
             sample.tumor_stage = get_tumor_stage(e.sample_tumor_stage)
@@ -124,18 +124,18 @@ def ingest_arrays(arrays):
             return 'F'
         return 'U'
 
+
     for e in arrays:
-        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma')
-        array, created = Array.objects.get_or_create(bpa_id=bpa_id)
-        if created:
-            array.note = u"Created during array ingestion on {0}".format(date.today())
-            array.batch_number = int(e.batch_no)
-            array.mia_id = e.mia_id
-            array.array_id = e.array_id
-            array.call_rate = float(e.call_rate)
-            array.gender = get_gender(e.gender)
-            array.well_id = e.well_id
-            array.save()
+        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma', )
+        Array.objects.get_or_create(
+            bpa_id=bpa_id,
+            batch_number=int(e.batch_no),
+            mia_id=e.mia_id,
+            array_id=e.array_id,
+            call_rate=float(e.call_rate),
+            gender=get_gender(e.gender),
+            well_id=e.well_id
+        )
 
 
 def get_melanoma_sample_data(file_name):
@@ -240,7 +240,7 @@ def ingest_runs(sample_data):
         return sequencer
 
     def get_sample(bpa_id):
-        sample, _ = MelanomaSample.objects.get_or_create(bpa_id__bpa_id=bpa_id)
+
         return sample
 
     def get_run_number(entry):
@@ -267,22 +267,21 @@ def ingest_runs(sample_data):
         The run produced several files
         """
 
-        bpa_id = entry.bpa_id.strip()
-        if not bpa_id_utils.is_good_bpa_id(bpa_id):
-            logger.warning('Ignoring entry with invalid BPA ID:{0}'.format(bpa_id))
+        bpa_idx = entry.bpa_id.strip()
+        if not bpa_id_utils.is_good_bpa_id(bpa_idx):
+            logger.warning('Ignoring entry with invalid BPA ID:{0}'.format(bpa_idx))
             return None
 
+        bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
         run_number = get_run_number(entry)
         flow_cell_id = entry.flow_cell_id.strip()
-
+        sample, _ = MelanomaSample.objects.get_or_create(bpa_id=bpa_id)
         nrun, created = MelanomaRun.objects.get_or_create(flow_cell_id=flow_cell_id,
                                                           run_number=run_number,
-                                                          sample__bpa_id__bpa_id=bpa_id)
+                                                          sample=sample)
         if created:
             nrun.flow_cell_id = flow_cell_id
             nrun.run_number = run_number
-            nrun.sample = get_sample(bpa_id)
-
             nrun.passage_number = ingest_utils.get_clean_number(entry.passage_number)
             nrun.index_number = ingest_utils.get_clean_number(entry.index_number)
             nrun.sequencer = get_sequencer(MELANOMA_SEQUENCER)  # Ignore the empty column
@@ -305,6 +304,10 @@ def ingest_runs(sample_data):
         Add each sequence file produced by a run
         """
 
+        if not bpa_id_utils.is_good_bpa_id(entry.bpa_id):
+            logger.warning('Did not add file, BPA ID {0} is wrong'.format(entry.bpa_id))
+            return
+
         file_name = entry.sequence_filename.strip()
         md5 = entry.md5_checksum.strip()
 
@@ -312,17 +315,17 @@ def ingest_runs(sample_data):
             logger.warning('Filename is not set, ignoring')
             return
 
-        f, created = MelanomaSequenceFile.objects.get_or_create(filename=file_name, md5=md5)
-
-        f.sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
-        f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
-        f.run = run
-        f.index_number = ingest_utils.get_clean_number(entry.index_number)
-        f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
-        f.filename = file_name
-        f.md5 = md5
-        f.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-        f.save()
+        sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
+        f, created = MelanomaSequenceFile.objects.get_or_create(run=run, sample=sample)
+        if created:
+            f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
+            f.run = run
+            f.index_number = ingest_utils.get_clean_number(entry.index_number)
+            f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
+            f.filename = file_name
+            f.md5 = md5
+            f.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+            f.save()
 
     for e in sample_data:
         sequence_run = add_run(e)

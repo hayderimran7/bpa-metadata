@@ -22,7 +22,7 @@
     {% for array in arrays %}
     <tr>
         <td>
-            <a href="{% url 'melanoma:sample' array.pk %}">{{ array.bpa_id }}</a>
+            <a href="{% url 'melanoma:sample' array.bpa_id %}">{{ array.bpa_id }}</a>
         </td>
         <td>{{ array.array_id }}</td>
         <td>{{ array.batch_number }}</td>

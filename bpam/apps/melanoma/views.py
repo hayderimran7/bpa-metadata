@@ -9,6 +9,14 @@ from django.conf import settings
 class IndexView(TemplateView):
     template_name = 'melanoma/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['sample_size'] = MelanomaSample.objects.count()
+        context['array_size'] = Array.objects.count()
+        context['sequence_file_size'] = MelanomaSequenceFile.objects.count()
+        return context
+
+
 class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
@@ -48,6 +56,7 @@ class SampleDetailView(DetailView):
         context['sequencefiles'] = MelanomaSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
 
         return context
+
 
 def search_view(request, term):
     data = {
