@@ -179,7 +179,7 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID')) # PK
+    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))  # PK
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 

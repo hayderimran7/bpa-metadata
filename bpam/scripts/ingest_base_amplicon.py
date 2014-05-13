@@ -200,21 +200,16 @@ def add_md5(data):
         except ValueError:
             return None
 
-        try:
-            bpa_id = BPAUniqueID.objects.get(bpa_id=idx)
-        except BPAUniqueID.DoesNotExist:
-            return None
-
-        return BASESample.objects.get(bpa_id=bpa_id)
+        bpa_id = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE', 'Created by BASE Amplicon ingestor')
+        sample, _ = BASESample.objects.get_or_create(bpa_id=bpa_id)
+        return sample
 
     def get_run(file_data):
         sample = get_base_sample(extraction_id)
         if sample:
-            run = AmpliconRun.objects.get_or_create(sample=sample)
-
+            run, _ = AmpliconRun.objects.get_or_create(sample=sample)
             return run
         return None
-
 
     for file_data in data:
         extraction_id = file_data['extraction_id']
@@ -227,7 +222,7 @@ def add_md5(data):
             continue
 
         amplicon_run = get_run(file_data)
-        sfile = AmpliconSequenceFile(metadata=metadata, run=amplicon_run)
+        sfile = AmpliconSequenceFile(metadata=metadata, run=amplicon_run, sample=amplicon_run.sample)
         sfile.filename = file_data['filename']
         sfile.analysed = True
         sfile.md5 = file_data['md5']
@@ -246,9 +241,9 @@ def do_md5():
 
 
 def run():
-    # truncate()
+    truncate()
     # find all the spreadsheets in the data directory and ingest them
-    # do_metadata()
+    do_metadata()
     do_md5()
 
 

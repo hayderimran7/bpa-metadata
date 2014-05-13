@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 
 from .models import *
 
+
 class IndexView(TemplateView):
     template_name = 'base_amplicon/index.html'
 
@@ -13,6 +14,7 @@ class IndexView(TemplateView):
         context['A16S_size'] = AmpliconSequencingMetadata.objects.filter(target='A16S').count()
         context['all_size'] = AmpliconSequencingMetadata.objects.filter().count()
         return context
+
 
 class AmpliconListView(ListView):
     model = AmpliconSequencingMetadata
@@ -43,6 +45,7 @@ class AmpliconITSListView(AmpliconListView):
         context['target'] = 'ITS'
         context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='ITS')
         return context
+
 
 class AmpliconA16SListView(AmpliconListView):
     def get_context_data(self, **kwargs):
