@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID
+from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID, Run
 from apps.base.models import BASESample
 
 
@@ -55,13 +55,17 @@ class AmpliconSequencingMetadata(DebugNote):
         unique_together = (('bpa_id', 'target'),)
 
 
+class AmpliconRun(Run):
+    sample = models.ForeignKey(BASESample, null=True)
+
 class AmpliconSequenceFile(SequenceFile):
     """
     Amplicon Sequence File
     """
+
     project_name = 'base_amplicon'
-    sample = models.ForeignKey(BASESample, null=True)
     metadata = models.ForeignKey(AmpliconSequencingMetadata)
+    run = models.ForeignKey(AmpliconRun)
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")

@@ -7,7 +7,7 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 
-from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile
+from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
 from apps.common.models import Facility, BPAUniqueID
 
@@ -189,7 +189,6 @@ def parse_md5_file(md5_file):
     return data
 
 
-
 def add_md5(data):
     """
     Add md5 data
@@ -208,6 +207,13 @@ def add_md5(data):
 
         return BASESample.objects.get(bpa_id=bpa_id)
 
+    def get_run(file_data):
+        sample = get_base_sample(extraction_id)
+        if sample:
+            run = AmpliconRun.objects.get_or_create(sample=sample)
+
+            return run
+        return None
 
 
     for file_data in data:
@@ -220,16 +226,12 @@ def add_md5(data):
             logger.warning('No Amplicon Metadata for {0} {1}'.format(extraction_id, target))
             continue
 
-        sample = get_base_sample(extraction_id)
-
-        sfile = AmpliconSequenceFile(metadata=metadata, sample=sample)
+        amplicon_run = get_run(file_data)
+        sfile = AmpliconSequenceFile(metadata=metadata, run=amplicon_run)
         sfile.filename = file_data['filename']
         sfile.analysed = True
         sfile.md5 = file_data['md5']
         sfile.save()
-
-
-
 
 
 def do_md5():
