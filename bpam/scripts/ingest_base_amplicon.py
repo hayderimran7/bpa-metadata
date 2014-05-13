@@ -9,6 +9,7 @@ from libs import logger_utils
 
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.common.models import Facility
+from collections import namedtuple
 
 logger = logger_utils.get_logger(__name__)
 
@@ -30,6 +31,7 @@ def get_bpa_id(e):
         return None
     return bpa_id
 
+
 def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
@@ -37,7 +39,7 @@ def fix_dilution(val):
     So stuff it.
     """
     if isinstance(val, float):
-            return u'1:10' #  yea, that's how we roll...
+        return u'1:10'  #  yea, that's how we roll...
     return val
 
 
@@ -116,13 +118,98 @@ def is_metadata(path):
         return True
 
 
-def run():
-    truncate()
-    # find all the spreadsheets in the data directory and ingest them
+def is_md5file(path):
+    if path.isfile() and path.ext == '.md5' or path.ext == '.txt':
+        return True
+
+
+def do_metadata():
     logger.info('Ingesting BASE Amplicon metadata from {0}'.format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info('Processing BASE Amplicon Metadata file {0}'.format(metadata_file))
         samples = list(get_data(metadata_file))
         add_samples(samples)
+
+
+def parse_md5_file(md5_file):
+    """
+    Parse md5 file
+    cea407dac3f3e7b9afd21b1c096619b7  9486_1_16S_AGRF_ACGTGTACCCAA_A810W_S43_L001_R2_001.fastq.gz
+    """
+    targets = ('16S', '18S', 'ITS', 'A16S')
+
+    def get_bpa_id_from_filename(parts):
+        for target in targets:
+            index = parts.index(target) if target in parts else -1
+            if index != -1:
+                bpa_id = '_'.join(filename_parts[:index])
+                rest = filename_parts[index:]
+                return bpa_id, rest
+
+        return None, None
+
+    data = []
+
+    with open(md5_file) as f:
+        for line in f.read().splitlines():
+            line = line.strip()
+            if line == '':
+                continue
+
+            line_data = {}
+            md5, filename = line.split()
+            line_data['md5'] = md5
+
+            filename = filename.replace('-', '_')
+            filename_parts = filename.split('_')
+
+            bpa_id, rest = get_bpa_id_from_filename(filename_parts)
+            if bpa_id == None:
+                continue
+
+            if len(rest) != 8:
+                logger.error('Ignoring line {0} from {1} with missing data'.format(filename, md5_file))
+                continue
+
+            target, vendor, index, well, sequence, lane, run_num, run_id = rest
+
+            line_data['filename'] = filename
+            line_data['target'] = target
+            line_data['vendor'] = vendor
+            line_data['index'] = index
+            line_data['well'] = well
+            line_data['sequence'] = sequence
+            line_data['lane'] = lane
+            line_data['run'] = run_num
+            line_data['run_id'] = run_id
+            data.append(line_data)
+
+    return data
+
+
+
+def add_md5(data):
+    """
+    Add md5 data
+    """
+    print data
+
+
+def do_md5():
+    """
+    Ingest the md5 files
+    """
+    logger.info('Ingesting BASE Amplicon md5 file information from {0}'.format(DATA_DIR))
+    for md5_file in DATA_DIR.walk(filter=is_md5file):
+        logger.info('Processing BASE Amplicon md5 file {0}'.format(md5_file))
+        data = parse_md5_file(md5_file)
+        add_md5(data)
+
+
+def run():
+    # truncate()
+    # find all the spreadsheets in the data directory and ingest them
+    # do_metadata()
+    do_md5()
 
 
