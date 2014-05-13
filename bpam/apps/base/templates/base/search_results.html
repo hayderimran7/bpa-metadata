@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% block title %}Search Results {% endblock %}
 {% block content %}
 {% if search_form %}
+<script src="{% static 'base/spin.min.js' %}"></script>
 
     <form  id="search_form" action="" class="form-inline" role="form" method="post">{% csrf_token %}
     <div class="panel panel-default">
@@ -49,6 +51,7 @@
               </div>
             </div>
             <div id="validation" class="alert alert-danger"><span>Validation Errors Go Here</span></div>
+
 
             <div class="panel panel-default">
             <div class="panel-heading">
@@ -105,11 +108,46 @@
                    </tbody>
                </table>
         </div>
+        <div id="spinner" class="spinner"></div>
         </div>
             <input type="button" id="search_button"   class="btn btn-default" value="Search" />
         </form>
         <script>
         $(document).ready(function() {
+            var theSpinner = null;
+            function stopSpinner() {
+                if (theSpinner) {
+                    theSpinner.stop();
+                    theSpinner = null;
+                }
+            }
+
+            function doSpin() {
+                var opts = {
+                      lines: 15, // The number of lines to draw
+                      length: 14, // The length of each line
+                      width: 10, // The line thickness
+                      radius: 20, // The radius of the inner circle
+                      corners: 1, // Corner roundness (0..1)
+                      rotate: 60, // The rotation offset
+                      direction: 1, // 1: clockwise, -1: counterclockwise
+                      color: '#000', // #rgb or #rrggbb or array of colors
+                      speed: 2.2, // Rounds per second
+                      trail: 95, // Afterglow percentage
+                      shadow: true, // Whether to render a shadow
+                      hwaccel: false, // Whether to use hardware acceleration
+                      className: 'spinner', // The CSS class to assign to the spinner
+                      zIndex: 2e9, // The z-index (defaults to 2000000000)
+                      top: '50%', // Top position relative to parent
+                      left: '50%' // Left position relative to parent
+                };
+                var target = document.getElementById('spinner');
+
+                if(!theSpinner) {
+                    theSpinner = new Spinner(opts).spin(target);
+                }
+
+            }
             var standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None","");
             var TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
             var SEARCH_FORM_URL = "{% url 'base:search' %}";
@@ -533,9 +571,9 @@
                     return;
                 }
 
-
-                var search_message_row = '<tr align="center"><td colspan="5"><div class="badge badge-info">Searching</div></td></tr>';
-                $("#results > tbody").append(search_message_row);
+                doSpin();
+                //var search_message_row = '<tr align="center"><td colspan="5"><div class="badge badge-info">Searching</div></td></tr>';
+                //$("#results > tbody").append(search_message_row);
                 $.post(SEARCH_FORM_URL,
                        $("#search_form").serialize(),
                        displayResults);
@@ -549,6 +587,7 @@
                    // An error happened on the server
                    var new_row = '<tr align="center"><td colspan="5"><div class="alert alert-danger">' + results + '</div></td></tr>';
                    $("#results > tbody").append(new_row);
+                   stopSpinner();
                    return;
                 }
 
@@ -602,6 +641,8 @@
                      var new_row = '<tr align="center"><td colspan="5"><span class="badge badge-important">No Results</span></td></tr>';
                      $("#results > tbody").append(new_row);
                 }
+
+                stopSpinner();
             }
 
             function wireUpClearTaxonomicFiltersButton() {
@@ -613,12 +654,14 @@
 
             function makePopulater(sourceId, targetId) {
                 return function () {
+                    doSpin();
                     var sourceValue = $("#" + sourceId).val();
                     var taxonomyURL = TAXONOMY_URL + "/" + sourceId + "/" + sourceValue;  // the 'parent' category
 
                     $.get(taxonomyURL, function(childOptions, status) {
                         $("#" + targetId).replaceOptions([{value:"", text: "---"}].concat(childOptions));
                         $("#" + targetId + " option:first").attr('selected','selected').trigger("change");
+                        stopSpinner();
                     });
 
                 }
