@@ -107,11 +107,6 @@ def add_samples(data):
         metadata.save()
 
 
-def truncate():
-    from django.db import connection
-
-    cursor = connection.cursor()
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequencingMetadata._meta.db_table))
 
 
 def is_metadata(path):
@@ -157,9 +152,9 @@ def parse_md5_file(md5_file):
             if line == '':
                 continue
 
-            line_data = {}
+            file_data = {}
             md5, filename = line.split()
-            line_data['md5'] = md5
+            file_data['md5'] = md5
 
             filename = filename.replace('-', '_')
             filename_parts = filename.split('_')
@@ -174,17 +169,17 @@ def parse_md5_file(md5_file):
 
             target, vendor, index, well, sequence, lane, run_num, run_id = rest
 
-            line_data['filename'] = filename
-            line_data['extraction_id'] = extraction_id
-            line_data['target'] = target
-            line_data['vendor'] = vendor
-            line_data['index'] = index
-            line_data['well'] = well
-            line_data['sequence'] = sequence
-            line_data['lane'] = lane
-            line_data['run'] = run_num
-            line_data['run_id'] = run_id
-            data.append(line_data)
+            file_data['filename'] = filename
+            file_data['extraction_id'] = extraction_id
+            file_data['target'] = target
+            file_data['vendor'] = vendor
+            file_data['index'] = index
+            file_data['well'] = well
+            file_data['sequence'] = sequence
+            file_data['lane'] = lane
+            file_data['run'] = run_num
+            file_data['run_id'] = run_id
+            data.append(file_data)
 
     return data
 
@@ -207,8 +202,11 @@ def add_md5(data):
     def get_run(file_data):
         sample = get_base_sample(extraction_id)
         if sample:
-            run, _ = AmpliconRun.objects.get_or_create(sample=sample)
-            return run
+            arun, _ = AmpliconRun.objects.get_or_create(sample=sample)
+            arun.sequencing_facility = Facility.objects.get(name=file_data['vendor'])
+            arun.flow_cell_id = file_data['well']
+            arun.save()
+            return arun
         return None
 
     for file_data in data:
@@ -238,6 +236,14 @@ def do_md5():
         logger.info('Processing BASE Amplicon md5 file {0}'.format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
+
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequencingMetadata._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconRun._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequenceFile._meta.db_table))
 
 
 def run():
