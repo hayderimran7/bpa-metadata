@@ -58,6 +58,8 @@ class AmpliconSequencingMetadata(DebugNote):
 class AmpliconRun(Run):
     sample = models.ForeignKey(BASESample, null=True)
 
+    def __unicode__(self):
+        return u'{0}'.format(self.sequencing_facility)
 
 class AmpliconSequenceFile(SequenceFile):
     """
