@@ -4,36 +4,49 @@
 {% block title %}BASE Metagenomics Sample Detail {% endblock %}
 
 {% block content %}
-<div class="panel panel-info">
-    <div class="panel-body">
-        <h3> BASE Metagenomics Sample {{ sample.bpa_id }} Information</h3>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-1 col-md-1">
+            <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
+                 alt="BASE Metagenomics">
+        </div>
+
+        <div class="col-sm-11 col-md-11">
+
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <h3><a href="{% url 'basemetagenomics:samples'%}"> BASE Metagenomics </a> Sample {{ sample.bpa_id }}
+                        Information</h3>
+                </div>
+                <table id="info" class="table table-striped">
+                    <tbody>
+                    <tr>
+                        <td> Sample Name</td>
+                        <td> {{ sample.name }}</td>
+                    </tr>
+                    <tr>
+                        <td> DNA Source</td>
+                        <td> {{ sample.dna_source }}</td>
+                    </tr>
+                    <tr>
+                        <td> DNA Extraction Protocol</td>
+                        <td> {{ sample.dna_extraction_protocol }}</td>
+                    </tr>
+                    <tr>
+                        <td> Sequence Coverage</td>
+                        <td> {{ sample.requested_sequence_coverage }}</td>
+                    </tr>
+                    <tr>
+                        <td> Note</td>
+                        <td> {{ sample.note }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <table id="info" class="table table-striped">
-        <tbody>
-        <tr>
-            <td> Sample Name</td>
-            <td> {{ sample.name }}</td>
-        </tr>
-        <tr>
-            <td> DNA Source</td>
-            <td> {{ sample.dna_source }}</td>
-        </tr>
-        <tr>
-            <td> DNA Extraction Protocol</td>
-            <td> {{ sample.dna_extraction_protocol }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Coverage</td>
-            <td> {{ sample.requested_sequence_coverage }}</td>
-        </tr>
-        <tr>
-            <td> Note</td>
-            <td> {{ sample.note }}</td>
-        </tr>
-        </tbody>
-    </table>
+    {% include "sequencefilelist.html" %}
 </div>
-
-{% include "sequencefilelist.html" %}
-
 {% endblock %}
