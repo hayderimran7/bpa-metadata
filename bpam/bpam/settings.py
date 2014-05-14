@@ -272,6 +272,15 @@ LOGGING = {
 }
 
 
+
+# debug_toolbar settings
+if DEBUG:
+    INTERNAL_IPS = ('172.16.2.1',)
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+
+
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
     try:
