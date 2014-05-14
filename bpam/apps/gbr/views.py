@@ -7,12 +7,18 @@ from .models import GBRSample, GBRSequenceFile, CollectionEvent
 class GBRView(TemplateView):
     template_name = 'gbr/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(GBRView, self).get_context_data(**kwargs)
+        context['sample_count'] = GBRSample.objects.count()
+        context['file_count'] = GBRSequenceFile.objects.count()
+        context['collection_events_count'] = CollectionEvent.objects.count()
+        return context
 
 class SampleListView(ListView):
     model = GBRSample
     context_object_name = 'samples'
     template_name = 'gbr/gbr_sample_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class SampleDetailView(DetailView):
@@ -31,14 +37,14 @@ class SequenceFileListView(ListView):
     model = GBRSequenceFile
     context_object_name = 'sequencefiles'
     template_name = 'gbr/gbr_sequencefile_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class CollectionListView(ListView):
     model = CollectionEvent
     context_object_name = 'collections'
     template_name = 'gbr/gbr_collection_event_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class CollectionView(DetailView):

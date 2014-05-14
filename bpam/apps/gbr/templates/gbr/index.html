@@ -14,9 +14,9 @@
                 <h2> Great Barrier Reef </h2>
 
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'gbr:samples' %}">Samples</a>
-                    <a class="list-group-item" href="{% url 'gbr:sequencefiles' %}">Sequence Files</a>
-                    <a class="list-group-item" href="{% url 'gbr:collections' %}">Collection Events</a>
+                    <a class="list-group-item" href="{% url 'gbr:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr:sequencefiles' %}">Sequence Files <span class="badge">{{ file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr:collections' %}">Collection Events <span class="badge">{{ collection_events_count }}</span></a>
                     <a class="list-group-item" href="{% url 'gbr:contacts' %}">Contacts</a>
                 </div>
             </div>
