@@ -12,7 +12,7 @@ class IndexView(TemplateView):
         context['18S_size'] = AmpliconSequencingMetadata.objects.filter(target='18S').count()
         context['ITS_size'] = AmpliconSequencingMetadata.objects.filter(target='ITS').count()
         context['A16S_size'] = AmpliconSequencingMetadata.objects.filter(target='A16S').count()
-        context['all_size'] = AmpliconSequencingMetadata.objects.filter().count()
+        context['all_size'] = AmpliconSequencingMetadata.objects.count()
         return context
 
 
