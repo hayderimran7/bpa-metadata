@@ -20,7 +20,7 @@ class IndexView(TemplateView):
 class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
     # def get_queryset(self):
     #     return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
@@ -35,13 +35,13 @@ class SequenceFileListView(ListView):
 class ArrayListView(ListView):
     model = Array
     context_object_name = 'arrays'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class SampleListView(ListView):
     model = MelanomaSample
     context_object_name = 'samples'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
     template_name = 'melanoma/melanoma_sample_list.html'
 
 
