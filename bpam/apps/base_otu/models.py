@@ -35,7 +35,7 @@ class SampleOTU(models.Model):
     """
 
     sample = models.ForeignKey('base.BASESample')
-    otu = models.ForeignKey(OperationalTaxonomicUnit)
+    otu = models.ForeignKey(OperationalTaxonomicUnit, db_index=True )
     count = models.IntegerField(_('OTU Count'))
 
     class Meta:
