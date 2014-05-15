@@ -4,7 +4,7 @@
 
 {% block content %}
 {% if samples %}
-<h3>Melanoma Sample List</h3>
+<h3>Melanoma Sample List ({{samples|length}})</h3>
 
 {% include "melanoma/melanoma_sample_list_table.html" %}
 
