@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, TemplateView
 
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
-from django.conf import settings
+
 
 class LandingView(TemplateView):
     template_name = 'base_contextual/index.html'
@@ -12,9 +12,11 @@ class ChemicalAnalysisListView(ListView):
     context_object_name = 'reports'
     # paginate_by = settings.DEFAULT_PAGINATION
 
+
 class CollectionSiteListView(ListView):
     model = CollectionSite
     context_object_name = 'sites'
+    queryset = CollectionSite.objects.select_related('site__current_land_use')
 
 
 class CollectionSiteDetailView(DetailView):
@@ -26,7 +28,15 @@ class SampleContextListView(ListView):
     model = SampleContext
     context_object_name = 'sample_contexts'
     template_name = 'base_contextual/sample_context_list.html'
+    queryset = SampleContext.objects.select_related('bpa_id',
+                                                    'horizon_classification1',
+                                                    'horizon_classification2',
+                                                    'site__current_land_use',
+                                                    'site__general_ecological_zone',
+                                                    'site__vegetation_type',
+                                                    'site__soil_type_australian_classification')
     # paginate_by = settings.DEFAULT_PAGINATION
+
 
 class SampleContextDetailView(DetailView):
     model = SampleContext

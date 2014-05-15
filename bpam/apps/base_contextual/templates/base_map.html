@@ -3,9 +3,9 @@
 {% load leaflet_tags %}
 
 {% block extra_head %}
-    {% leaflet_js %}
-    {% leaflet_css %}
+{% leaflet_js %}
+{% leaflet_css %}
 
-    <link href="{% static "map.css" %}" rel="stylesheet" />
-    <script type="text/javascript" src="{% static "map.js" %}"></script>
+<link href="{% static 'map.css' %}" rel="stylesheet"/>
+<script type="text/javascript" src="{% static 'map.js' %}"></script>
 {% endblock %}
