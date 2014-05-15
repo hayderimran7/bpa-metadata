@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h3>BASE {{ target }} Amplicon Metadata</h3>
+<h3>BASE {{ target }} <a href="{% url 'base_amplicon:index'%}">Amplicon Metadata</a></h3>
 
 {% if metadata_list %}
 {% include "base_amplicon/metadata_table.html" %}

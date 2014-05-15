@@ -20,14 +20,14 @@ class AmpliconListView(ListView):
     model = AmpliconSequencingMetadata
     context_object_name = 'metadata_list'
     template_name = 'base_amplicon/metadata_list.html'
-    # paginate_by = 25
+    queryset = AmpliconSequencingMetadata.objects.select_related('bpa_id', 'sequencing_facility')
 
 
 class Amplicon16SListView(AmpliconListView):
     def get_context_data(self, **kwargs):
         context = super(Amplicon16SListView, self).get_context_data(**kwargs)
         context['target'] = '16S'
-        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='16S')
+        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='16S').select_related('bpa_id', 'sequencing_facility')
         return context
 
 
@@ -35,7 +35,7 @@ class Amplicon18SListView(AmpliconListView):
     def get_context_data(self, **kwargs):
         context = super(Amplicon18SListView, self).get_context_data(**kwargs)
         context['target'] = '18S'
-        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='18S')
+        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='18S').select_related('bpa_id', 'sequencing_facility')
         return context
 
 
@@ -43,7 +43,7 @@ class AmpliconITSListView(AmpliconListView):
     def get_context_data(self, **kwargs):
         context = super(AmpliconITSListView, self).get_context_data(**kwargs)
         context['target'] = 'ITS'
-        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='ITS')
+        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='ITS').select_related('bpa_id', 'sequencing_facility')
         return context
 
 
@@ -51,7 +51,7 @@ class AmpliconA16SListView(AmpliconListView):
     def get_context_data(self, **kwargs):
         context = super(AmpliconA16SListView, self).get_context_data(**kwargs)
         context['target'] = 'A16S'
-        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='A16S')
+        context['metadata_list'] = AmpliconSequencingMetadata.objects.filter(target='A16S').select_related('bpa_id', 'sequencing_facility')
         return context
 
 
