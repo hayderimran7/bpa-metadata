@@ -41,8 +41,9 @@ class ArrayListView(ListView):
 class SampleListView(ListView):
     model = MelanomaSample
     context_object_name = 'samples'
-    # paginate_by = settings.DEFAULT_PAGINATION
     template_name = 'melanoma/melanoma_sample_list.html'
+    queryset = MelanomaSample.objects.select_related('bpa_id', 'contact_scientist', 'tumor_stage', 'dna_source')
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class SampleDetailView(DetailView):
