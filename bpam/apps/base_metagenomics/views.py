@@ -6,7 +6,7 @@ from .models import MetagenomicsSample, MetagenomicsSequenceFile
 class SampleListView(ListView):
     model = MetagenomicsSample
     context_object_name = 'samples'
-    paginate_by = 25
+
 
 class SampleDetailView(DetailView):
     model = MetagenomicsSample
