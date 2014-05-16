@@ -327,3 +327,27 @@ class ContactsView(TemplateView):
 class RequestAccess(TemplateView):
     template_name = 'base/request_access.html'
 
+
+class SearchExportView(View):
+    def get(self, bpa_ids):
+        context_link = "todo"
+        otu_link = "todo"
+        response = HttpResponse()
+        response.write('<a href="%s">Contextual Data (CSV)</a><br>' % context_link)
+        response.write('<a href="%s">OTU Data (CSV)</a><br>' % otu_link)
+
+
+class ContextExportView(View):
+    def get(self, bpa_ids):
+        import csv
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="context.csv"'
+
+
+class OTUExportView(View):
+    def get(self, bpa_ids):
+        import csv
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="otus.csv"'
+
+

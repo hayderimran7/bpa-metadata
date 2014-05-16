@@ -30,4 +30,16 @@ urlpatterns = patterns(
         regex=r'^accessrequest',
         view=views.RequestAccess.as_view(),
         name='requestaccess'),
+    url(
+        regex=r'^searchexport',
+        view=views.SearchExportView.as_view(),
+        name='searchexport'),
+    url(
+        regex=r'^contextexport',
+        view=views.ContextExportView.as_view(),
+        name='contextexport'),
+    url(
+        regex=r'^otuexport',
+        view=views.OTUExportView.as_view(),
+        name='otuexport'),
 )
