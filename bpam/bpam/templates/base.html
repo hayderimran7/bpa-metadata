@@ -19,7 +19,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     <script src="http://ivaynberg.github.com/select2/select2-master/select2.js"></script>
-    <link href="http://ivaynberg.github.com/select2/select2-master/select2.css" rel="stylesheet"/>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script type="text/javascript"
+            src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4"></script>
 
     {% bootstrap_css %}
     {% block extra_head %}
@@ -57,7 +59,7 @@
 
         .container {
             width: auto;
-            max-width: 680px;
+            #max-width: 680px;
             padding: 0 15px;
         }
 
@@ -79,7 +81,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'landing-page' %}">Bioplatforms Australia Metadata</a>
+                <p>
+                    <a class="navbar-brand" href="{% url 'landing-page' %}">Bioplatforms Australia Metadata</a>
+                </p>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -95,12 +99,14 @@
                 -->
 
                 <ul class="nav navbar-nav navbar-right">
+
                     <li><a href="{% url 'admin:index' %}">Admin</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{ user.username }}</a></li>
                     {% else %}
                     <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
                     {% endif %}
+                    <li><a  id="start-togetherjs" onclick="TogetherJS(this); return false;">Collaborate</a></li>
                 </ul>
             </div>
         </div>
@@ -113,7 +119,9 @@
 
 <div id="footer">
     <div class="container">
-        <p class="text-muted credit">&copy; Bioplatforms Australia 2013, 2014, bpa-metadata {% bpam_version %}</p>
+        <p class="text-muted credit">
+            &copy; Bioplatforms Australia 2013, 2014, bpa-metadata {% bpam_version %}. <a href="http://ccgapps.com.au"> Centre for Comparative Genomics, Murdoch University, Western Australia</a>
+        </p>
     </div>
 </div>
 
