@@ -72,25 +72,25 @@ class Searcher(object):
     }
     SEARCH_TABLE = {
         SampleContext: {
-                        "date_sampled": "site__date_sampled",
-                        "lat": "site__lat",
-                        "lon": "site__lon",
-                        "depth": "depth",
-                        "description": "site__location_name",
-                        "current_land_use": "site__current_land_use__description",
-                        "general_ecological_zone": "site__general_ecological_zone__description",
-                        "vegetation_type": "site__vegetation_type__vegetation",
-                        "vegetation_total_cover": "site__vegetation_total_cover",
-                        "vegetation_dominant_trees": "site__vegetation_dominant_trees",
-                        "elevation": "site__elevation",
-                        "australian_soil_classification": "site__soil_type_australian_classification__classification",
-                        "fao_soil_type": "site__soil_type_fao_classification__classification",
-                        "immediate_previous_land_use": "site__immediate_previous_land_use__description",
-                        "agrochemical_additions": "site__agrochemical_additions",
-                        "tillage": "site__tillage__tillage",
-                        "fire_history": "site__fire_history",
-                        "fire_intensity": "site__fire_intensity",
-                        "environment_event": "site__environment_event",
+            "date_sampled": "site__date_sampled",
+            "lat": "site__lat",
+            "lon": "site__lon",
+            "depth": "depth",
+            "description": "site__location_name",
+            "current_land_use": "site__current_land_use__description",
+            "general_ecological_zone": "site__general_ecological_zone__description",
+            "vegetation_type": "site__vegetation_type__vegetation",
+            "vegetation_total_cover": "site__vegetation_total_cover",
+            "vegetation_dominant_trees": "site__vegetation_dominant_trees",
+            "elevation": "site__elevation",
+            "australian_soil_classification": "site__soil_type_australian_classification__classification",
+            "fao_soil_type": "site__soil_type_fao_classification__classification",
+            "immediate_previous_land_use": "site__immediate_previous_land_use__description",
+            "agrochemical_additions": "site__agrochemical_additions",
+            "tillage": "site__tillage__tillage",
+            "fire_history": "site__fire_history",
+            "fire_intensity": "site__fire_intensity",
+            "environment_event": "site__environment_event",
         },
 
         ChemicalAnalysis: {
@@ -178,7 +178,7 @@ class Searcher(object):
         bpa_id_sets = []
 
         for field, value in self.search_terms:
-            if field == "sample_id": # special case
+            if field == "sample_id":  # special case
                 try:
                     bpa_id = BPAUniqueID.objects.get(bpa_id=value)
                     bpa_id_sets.append(set([bpa_id]))
@@ -201,8 +201,6 @@ class Searcher(object):
                             search_model_map[model_class] = [(search_path, value)]
                         else:
                             search_model_map[model_class].append((search_path, value))
-
-
 
         for model_to_search in search_model_map:
             objects = get_objects(model_to_search, search_model_map[model_to_search])
@@ -246,20 +244,28 @@ class Searcher(object):
                 if not amplicon_type:
                     amplicon_type = "Unknown Target"
 
-                links.append({"amplicon_type": amplicon_type, "amplicon_link": reverse(detail_view_map[AmpliconSequencingMetadata], args=(amplicon.pk,))})
+                links.append({"amplicon_type": amplicon_type,
+                              "amplicon_link": reverse(detail_view_map[AmpliconSequencingMetadata],
+                                                       args=(amplicon.pk,))})
 
             return links
+
+
+        def sc_display(bpa_id):
+            context = SampleContext.objects.select_related('bpa_id', 'context', 'context__site__vegetation_type').get(bpa_id=bpa_id)
+            return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(), context.site.vegetation_type)
+
 
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
         #am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
         mg_link = partial(get_object_detail_view_link, MetagenomicsSample)
 
-
         results = []
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
                             "sc": sc_link(bpa_id),
+                            "sc_display": sc_display(bpa_id),
                             "ca": ca_link(bpa_id),
                             "am": get_amplicon_links(bpa_id),
                             "mg": mg_link(bpa_id)})
@@ -271,6 +277,7 @@ class Searcher(object):
         :param results: a query set to filter based on taxonomy
         :return:
         """
+
         def query_pair(field, s):
             """
             :param field: E.g family or phylum
@@ -308,7 +315,8 @@ class Searcher(object):
             from apps.base_otu.models import SampleOTU
             #sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).order_by('sample__bpa_id')
             #return set([so.sample.bpa_id for so in sample_otus])
-            data = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).values_list('sample__bpa_id', flat=True).distinct()
+            data = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).values_list(
+                'sample__bpa_id', flat=True).distinct()
             return BPAUniqueID.objects.filter(bpa_id__in=data)
         else:
             logger.debug("no taxonomy filtering will be applied")
