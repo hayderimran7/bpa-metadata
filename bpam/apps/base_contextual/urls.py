@@ -6,7 +6,7 @@ urlpatterns = patterns(
     '',
     url(
         regex=r'^$',
-        view=views.LandingView.as_view(),
+        view=views.IndexView.as_view(),
         name='index'),
     url(
         regex=r'^chemicalanalyses/(?P<pk>\d+)/$',

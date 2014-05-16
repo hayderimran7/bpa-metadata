@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
 
 
-class LandingView(TemplateView):
+class IndexView(TemplateView):
     template_name = 'base_contextual/index.html'
 
 
