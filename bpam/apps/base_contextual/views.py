@@ -17,7 +17,7 @@ class ChemicalAnalysisListView(ListView):
 class CollectionSiteListView(ListView):
     model = CollectionSite
     context_object_name = 'sites'
-    queryset = CollectionSite.objects.select_related('site__current_land_use')
+    queryset = CollectionSite.objects.select_related('current_land_use')
 
 
 class CollectionSiteDetailView(DetailView):
