@@ -250,6 +250,12 @@ class Searcher(object):
 
             return links
 
+
+        def sc_display(bpa_id):
+            context = SampleContext.objects.select_related('bpa_id', 'context', 'context__site__vegetation_type').get(bpa_id=bpa_id)
+            return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(), context.site.vegetation_type)
+
+
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
         #am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
@@ -259,6 +265,7 @@ class Searcher(object):
         for bpa_id in bpa_ids:
             results.append({"bpa_id": bpa_id.bpa_id,
                             "sc": sc_link(bpa_id),
+                            "sc_display": sc_display(bpa_id),
                             "ca": ca_link(bpa_id),
                             "am": get_amplicon_links(bpa_id),
                             "mg": mg_link(bpa_id)})

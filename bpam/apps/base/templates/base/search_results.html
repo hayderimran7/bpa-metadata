@@ -648,10 +648,10 @@ $(document).ready(function () {
         $(results).each(function (index, item) {
             var new_row = "<tr>" +
                     td(item.bpa_id) +
-                    td(link("Sample Context", item.sc, "Not Available")) +
-                    td(link("Chemical Analysis", item.ca, "Not Available")) +
-                    td(link("Amplicon", item.am, "Not Available")) +
-                    td(link("Metagenomics", item.mg, "Not Available"))
+                    td(link(item.sc_display, item.sc, "")) +
+                    td(link("Chemical Analysis", item.ca, "")) +
+                    td(link("Amplicon", item.am, "")) +
+                    td(link("Metagenomics", item.mg, ""))
             "</tr>";
 
             $("#results > tbody").append(new_row);
