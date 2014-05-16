@@ -10,6 +10,7 @@ class LandingView(TemplateView):
 class ChemicalAnalysisListView(ListView):
     model = ChemicalAnalysis
     context_object_name = 'reports'
+    queryset = ChemicalAnalysis.objects.select_related('bpa_id', 'colour')
     # paginate_by = settings.DEFAULT_PAGINATION
 
 
