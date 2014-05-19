@@ -9,9 +9,13 @@ from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 from django.db.models import Model
+from django.db.models.fields.related import ForeignKey
 from apps.base_contextual.models import SampleContext
 from apps.base_otu.models import SampleOTU
 from apps.common.models import BPAUniqueID
+from django.forms.models import model_to_dict
+from django.core import serializers
+
 import logging
 
 logger = logging.getLogger("rainbow")
@@ -340,47 +344,75 @@ class SearchExportView(View):
         response.write('<a href="%s">OTU Data (CSV)</a><br>' % otu_link)
 
 
+
+
+
 class CSVView(View):
     MODEL = None
-    FIELDS = [] # list of (field, display name) pairs , for subobjects use dot - ie. site.soil_colour
+
+    def _get_fields(self, model, prefix=""):
+        fields = []
+        for field in model._meta.fields:
+            if field.name == 'debug_note':
+                continue
+            if model.__name__ == 'LandUse' and field.name == 'parent':
+                # this was casuing infinite loop ...
+                continue
+
+            verbose_name = "%s" % field.name
+            if not verbose_name:
+                verbose_name = field.name
+
+            if prefix:
+                    name = prefix + "." + field.name
+            else:
+                    name = field.name
+
+            if not isinstance(field, ForeignKey):
+
+                fields.append([name, name])
+            else:
+                related_model = field.rel.to
+                fields.extend(self._get_fields(related_model, name))
+        return fields
 
     def get(self, request):
-
         import csv
         ids_string = request.GET.get("ids", "")
         ids = ids_string.split(",")
         response = HttpResponse(content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="%s"' % self._get_csv_filename()
         writer = csv.writer(response)
-        writer.writerow(self._get_header_row())
+        self.field_data = self._get_fields(self.MODEL)
+
+        writer.writerow(self._get_headers())
         for row in self._get_rows(ids):
             writer.writerow(row)
         return response
 
+
     def _get_csv_filename(self):
         return "%s.csv" % self.MODEL.__name__
 
-    def _get_header_row(self):
-        return [pair[1] for pair in self.FIELDS]
-
-    def _get_fields(self, instance):
-        values = instance._meta.fields
+    def _get_headers(self):
+        return [ pair[1] for pair in self.field_data]
 
     def _get_rows(self, ids):
+        print self.field_data
         for id in ids:
             values = []
             model_instance = self._get_instance(id)
-            if model_instance is None:
-                values = len(self.FIELDS) * ["???"]
-            else:
-                for field, display_name in self.FIELDS:
-                    if not "." in field:
-                        value = getattr(model_instance, field)
-                    else:
-                        subfields = field.split(".")
-                        value = reduce(getattr, subfields, model_instance)
-                    values.append(value)
 
+            for field_pair in self.field_data:
+
+                field_path = field_pair[0]
+                parts = field_path.split(".")
+                try:
+                    value = reduce(getattr, parts, model_instance)
+                except AttributeError:
+                    value = "None"
+
+                values.append(value)
             yield values
 
     def _get_instance(self, id):
@@ -397,9 +429,11 @@ class CSVView(View):
 
 class SampleContextCSVView(CSVView):
     MODEL = SampleContext
-    FIELDS = [  ("bpa_id.bpa_id", "BPA ID"),
-                ("site.location_name","Location"),
-            ()]
+
+
+class ChemicalAnalysis(CSVView):
+    MODEL = ChemicalAnalysis
+
 
 
 
