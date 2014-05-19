@@ -77,25 +77,24 @@ def ingest_samples(samples):
             site_name=entry.collection_site,
             collection_date=collection_date)
 
-        if created:
-            collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
-            collection_event.ph = ingest_utils.get_clean_number(entry.ph)
-            collection_event.depth = entry.depth
-            # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
-            if len(entry.gps_location) > 0:
-                print entry.gps_location
-                lat, lon = entry.gps_location.split()
-                collection_event.lat = float(lat)
-                collection_event.lon = float(lon)
-            collection_event.note = entry.collection_comment
+        collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
+        collection_event.ph = ingest_utils.get_clean_number(entry.ph)
+        collection_event.depth = entry.depth
+        # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
+        if len(entry.gps_location) > 0:
+            print entry.gps_location
+            lat, lon = entry.gps_location.split()
+            collection_event.lat = float(lat)
+            collection_event.lon = float(lon)
+        collection_event.note = entry.collection_comment
 
-            # sample collector
-            collection_event.collector = user_helper.get_user(
-                entry.collector_name,
-                entry.contact_email,
-                (GBR_DESCRIPTION, ))
+        # sample collector
+        collection_event.collector = user_helper.get_user(
+            entry.collector_name,
+            entry.contact_email,
+            (GBR_DESCRIPTION, ))
 
-            collection_event.save()
+        collection_event.save()
 
         return collection_event
 
