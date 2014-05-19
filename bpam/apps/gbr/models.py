@@ -11,10 +11,10 @@ class CollectionEvent(models.Model):
     """
 
     site_name = models.CharField(_('Site Name'), max_length=100, null=True, blank=True)
+    lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'), null=True)
+    lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'), null=True)
     collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
-    # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
-    gps_location = models.CharField(_('GPS Location'), max_length=100, null=True, blank=True)
     water_temp = models.FloatField(_('Water Temperature'), null=True, blank=True)
     water_ph = models.FloatField(_('Water pH'), null=True, blank=True)
     depth = models.CharField(_('Water Depth'), max_length=20, null=True, blank=True)
@@ -22,7 +22,7 @@ class CollectionEvent(models.Model):
     note = models.TextField(blank=True)
 
     class Meta:
-        unique_together = (('site_name', 'collection_date'))
+        unique_together = (('site_name', 'collection_date', 'lat', 'lon'))
 
     def __unicode__(self):
         return u'{0} {1}'.format(self.site_name, self.collection_date)
@@ -33,8 +33,8 @@ class GBRSample(Sample, DebugNote):
     GBR specific Sample
     """
 
-    organism = models.ForeignKey(Organism)
-    collection_event = models.ForeignKey(CollectionEvent)
+    organism = models.ForeignKey(Organism, null=True)
+    collection_event = models.ForeignKey(CollectionEvent, null=True)
 
     dataset = models.CharField(_('Data Set'), max_length=100, null=True, blank=True)
     sequencing_notes = models.TextField(_('Sequencing Notes'), null=True, blank=True)
@@ -50,6 +50,7 @@ class GBRSample(Sample, DebugNote):
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
+
 
 
 class GBRRun(Run):

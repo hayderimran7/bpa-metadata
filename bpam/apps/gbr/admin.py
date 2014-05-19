@@ -3,8 +3,8 @@
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
-
 from apps.common.admin import SequenceFileAdmin
+
 from .models import CollectionEvent
 from .models import GBRSample
 from .models import GBRRun
@@ -189,7 +189,8 @@ class CollectionEventAdmin(admin.ModelAdmin):
                 'site_name': AutosizedTextarea(
                     attrs={'class': 'input-large',
                            'style': 'width:95%'}),
-                'gps_location': EnclosedInput(prepend='icon-map-marker'),
+                'lat': EnclosedInput(prepend='icon-map-marker'),
+                'lon': EnclosedInput(prepend='icon-map-marker'),
                 'water_temp': EnclosedInput(append=u'°C'),
                 'water_ph': EnclosedInput(append='pH'),
                 'depth': EnclosedInput(append='m'),
@@ -208,7 +209,10 @@ class CollectionEventAdmin(admin.ModelAdmin):
              'site_name',
              'collection_date',
              'collector',
-             'gps_location')}),
+             'lat',
+             'lon'
+         ),
+         }),
         ('Site Data',
          {'fields': (
              'water_temp',
@@ -219,7 +223,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('site_name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
+    list_display = ('site_name', 'lat', 'lon', 'collection_date', 'collector', 'water_temp', 'water_ph', 'depth')
     search_fields = ('site_name', 'collector', 'note')
     list_filter = ('site_name', )
 
