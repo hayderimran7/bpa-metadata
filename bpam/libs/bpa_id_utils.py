@@ -44,10 +44,11 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
         logger.warning('Given ID string failed good ID test')
         return None
 
-    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, project=get_project(project_key, project_name))
+    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx)
     if created:
-        logger.info("New BPA ID {0}".format(bpa_idx))
+        logger.debug("New BPA ID {0}".format(bpa_idx))
         bpa_id.note = note
+        bpa_id.project = get_project(project_key, project_name)
         bpa_id.save()
 
     return bpa_id
