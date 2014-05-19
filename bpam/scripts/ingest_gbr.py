@@ -82,7 +82,6 @@ def ingest_samples(samples):
         collection_event.depth = entry.depth
         # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
         if len(entry.gps_location) > 0:
-            print entry.gps_location
             lat, lon = entry.gps_location.split()
             collection_event.lat = float(lat)
             collection_event.lon = float(lon)
