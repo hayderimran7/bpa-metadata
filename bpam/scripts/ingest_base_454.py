@@ -1,5 +1,6 @@
 import sys
 from unipath import Path
+from contracts import contract
 
 from libs.excel_wrapper import ExcelWrapper
 from libs.logger_utils import get_logger
@@ -7,6 +8,7 @@ from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
 from apps.base_454.models import Sample454
+# from apps.common.models import BPAUniqueID
 
 
 logger = get_logger(__name__)
@@ -17,23 +19,27 @@ BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 
 
-def get_bpa_id(t):
-    if bpa_id_utils.is_good_bpa_id(t.bpa_id):
-        return bpa_id_utils.get_bpa_id(t.bpa_id, BASE_DESCRIPTION, 'BASE', note='base 454 Sample')
+@contract
+def get_bpa_id(named_tup):
+    """ Get a BPA ID object from id string in named tuple.
+    :param named_tup: Named tuple with a bpa_id member.
+    :type named_tup: tuple
+    """
+    if bpa_id_utils.is_good_bpa_id(named_tup.bpa_id):
+        return bpa_id_utils.get_bpa_id(named_tup.bpa_id, BASE_DESCRIPTION, 'BASE', note='base 454 Sample')
     else:
         return None
 
-
+@contract
 def get_sample_454(bpa_id):
-    """
-    Get the Sample by bpa_id
+    """ Get the Sample given a BPAUniqueID object
+     :param bpa_id: BPA Unique ID object
+     :type bpa_id: *
     """
 
-    try:
-        sample = Sample454.objects.get(bpa_id=bpa_id)
-    except Sample454.DoesNotExist:
-        logger.debug('Adding 454 Sample ' + bpa_id.bpa_id)
-        sample = Sample454(bpa_id=bpa_id)
+    sample, created = Sample454.objects.get_or_create(bpa_id=bpa_id)
+    if created:
+        logger.info('Adding 454 Sample {0}'.format(bpa_id.bpa_id))
     return sample
 
 
@@ -181,12 +187,19 @@ def ingest(file_name):
             sys.exit(1)
 
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(Sample454._meta.db_table))
+
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
     """
 
+    truncate()
     ingest(file_name)
 
 
