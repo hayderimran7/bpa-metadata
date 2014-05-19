@@ -8,7 +8,10 @@ from django.views.generic.base import View
 from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
-
+from django.db.models import Model
+from apps.base_contextual.models import SampleContext
+from apps.base_otu.models import SampleOTU
+from apps.common.models import BPAUniqueID
 import logging
 
 logger = logging.getLogger("rainbow")
@@ -337,17 +340,78 @@ class SearchExportView(View):
         response.write('<a href="%s">OTU Data (CSV)</a><br>' % otu_link)
 
 
-class ContextExportView(View):
-    def get(self, bpa_ids):
+class CSVView(View):
+    MODEL = None
+    FIELDS = [] # list of (field, display name) pairs , for subobjects use dot - ie. site.soil_colour
+
+    def get(self, request):
+
         import csv
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="context.csv"'
+        ids_string = request.GET.get("ids", "")
+        ids = ids_string.split(",")
+        response = HttpResponse(content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename="%s"' % self._get_csv_filename()
+        writer = csv.writer(response)
+        writer.writerow(self._get_header_row())
+        for row in self._get_rows(ids):
+            writer.writerow(row)
+        return response
+
+    def _get_csv_filename(self):
+        return "%s.csv" % self.MODEL.__name__
+
+    def _get_header_row(self):
+        return [pair[1] for pair in self.FIELDS]
+
+    def _get_fields(self, instance):
+        values = instance._meta.fields
+
+    def _get_rows(self, ids):
+        for id in ids:
+            values = []
+            model_instance = self._get_instance(id)
+            if model_instance is None:
+                values = len(self.FIELDS) * ["???"]
+            else:
+                for field, display_name in self.FIELDS:
+                    if not "." in field:
+                        value = getattr(model_instance, field)
+                    else:
+                        subfields = field.split(".")
+                        value = reduce(getattr, subfields, model_instance)
+                    values.append(value)
+
+            yield values
+
+    def _get_instance(self, id):
+        try:
+            bpa_id = BPAUniqueID.objects.get(bpa_id=id)
+        except BPAUniqueID.DoesNotExist:
+            return None
+
+        try:
+            return self.MODEL.objects.get(bpa_id=bpa_id)
+        except self.MODEL.DoesNotExist:
+            return None
 
 
-class OTUExportView(View):
-    def get(self, bpa_ids):
-        import csv
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="otus.csv"'
+class SampleContextCSVView(CSVView):
+    MODEL = SampleContext
+    FIELDS = [  ("bpa_id.bpa_id", "BPA ID"),
+                ("site.location_name","Location"),
+            ()]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

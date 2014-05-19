@@ -35,11 +35,7 @@ urlpatterns = patterns(
         view=views.SearchExportView.as_view(),
         name='searchexport'),
     url(
-        regex=r'^contextexport',
-        view=views.ContextExportView.as_view(),
+        regex=r'^contextexport.*',
+        view=views.SampleContextCSVView.as_view(),
         name='contextexport'),
-    url(
-        regex=r'^otuexport',
-        view=views.OTUExportView.as_view(),
-        name='otuexport'),
 )
