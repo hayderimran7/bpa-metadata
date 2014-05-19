@@ -22,7 +22,7 @@
                     <tbody>
                     <tr>
                         <td><b>Last Sample Date</b></td>
-                        <td>{{ collectionsite.date_sampled }}</td>
+                        <td>{{ collectionsite.date_sampled|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Latitude</b></td>
@@ -58,83 +58,83 @@
                     </tr>
                     <tr>
                         <td><b>FAO Soil Type Classification</b></td>
-                        <td>{{ collectionsite.soil_type_fao_classification }}</td>
+                        <td>{{ collectionsite.soil_type_fao_classification|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Vegetation Total Cover</b></td>
-                        <td>{{ collectionsite.vegetation_total_cover }}</td>
+                        <td>{{ collectionsite.vegetation_total_cover|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Vegetation Dominant Trees</b></td>
-                        <td>{{ collectionsite.vegetation_dominant_trees }}</td>
+                        <td>{{ collectionsite.vegetation_dominant_trees|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Slope</b></td>
-                        <td>{{ collectionsite.slope }}</td>
+                        <td>{{ collectionsite.slope|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Slope Aspect</b></td>
-                        <td>{{ collectionsite.slope_aspect }}</td>
+                        <td>{{ collectionsite.slope_aspect|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Profile Position</b></td>
-                        <td>{{ collectionsite.profile_position }}</td>
+                        <td>{{ collectionsite.profile_position|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Drainage Classification</b></td>
-                        <td>{{ collectionsite.drainage_classification }}</td>
+                        <td>{{ collectionsite.drainage_classification|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Environment Event</b></td>
-                        <td>{{ collectionsite.environment_event }}</td>
+                        <td>{{ collectionsite.environment_event|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Fire History</b></td>
-                        <td>{{ collectionsite.fire_history }}</td>
+                        <td>{{ collectionsite.fire_history|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Fire Intensity</b></td>
-                        <td>{{ collectionsite.fire_intensity }}</td>
+                        <td>{{ collectionsite.fire_intensity|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Date since change in land use</b></td>
-                        <td>{{ collectionsite.date_since_change_in_land_use }}</td>
+                        <td>{{ collectionsite.date_since_change_in_land_use|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Immediate previous land use</b></td>
-                        <td>{{ collectionsite.immediate_previous_land_use }}</td>
+                        <td>{{ collectionsite.immediate_previous_land_use|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Crop rotation 1</b></td>
-                        <td>{{ collectionsite.crop_rotation_1 }}</td>
+                        <td>{{ collectionsite.crop_rotation_1|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Crop rotation 2</b></td>
-                        <td>{{ collectionsite.crop_rotation_2 }}</td>
+                        <td>{{ collectionsite.crop_rotation_2|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Crop rotation 3</b></td>
-                        <td>{{ collectionsite.crop_rotation_3 }}</td>
+                        <td>{{ collectionsite.crop_rotation_3|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Crop rotation 4</b></td>
-                        <td>{{ collectionsite.crop_rotation_4 }}</td>
+                        <td>{{ collectionsite.crop_rotation_4|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Crop rotation 5</b></td>
-                        <td>{{ collectionsite.crop_rotation_5 }}</td>
+                        <td>{{ collectionsite.crop_rotation_5|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Agrochemical Additions</b></td>
-                        <td>{{ collectionsite.agrochemical_additions }}</td>
+                        <td>{{ collectionsite.agrochemical_additions|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Tillage</b></td>
-                        <td>{{ collectionsite.tillage }}</td>
+                        <td>{{ collectionsite.tillage|default:"" }}</td>
                     </tr>
                     <tr>
                         <td><b>Comments</b></td>
-                        <td>{{ collectionsite.comments }}</td>
+                        <td>{{ collectionsite.comments|default:"" }}</td>
                     </tr>
                     </tbody>
                 </table>

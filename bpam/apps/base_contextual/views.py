@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
 
 
-class LandingView(TemplateView):
+class IndexView(TemplateView):
     template_name = 'base_contextual/index.html'
 
 
@@ -17,7 +17,7 @@ class ChemicalAnalysisListView(ListView):
 class CollectionSiteListView(ListView):
     model = CollectionSite
     context_object_name = 'sites'
-    queryset = CollectionSite.objects.select_related('site__current_land_use')
+    queryset = CollectionSite.objects.select_related('current_land_use')
 
 
 class CollectionSiteDetailView(DetailView):
