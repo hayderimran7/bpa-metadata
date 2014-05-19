@@ -58,6 +58,7 @@ install_requires = [
     'django-mptt>=0.5.5',
     'ccg-extras==0.1.9',
     'django-leaflet',
+    'pycontracts',
 ]
 
 dev_requires = [
