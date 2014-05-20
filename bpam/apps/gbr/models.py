@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, DebugNote
+from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, DebugNote, Facility
 
 
 class CollectionSite(models.Model):
@@ -47,6 +47,18 @@ class CollectionEvent(models.Model):
         return u'{0} {1}'.format(self.site.site_name, self.collection_date, self.collector)
 
 
+class GBRProtocol(Protocol):
+    """
+    A GBR Protocol
+    """
+    base_pairs_string = models.TextField(_('Base Pairs'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Protocol')
+        verbose_name_plural = _('Protocol')
+        unique_together = ('library_type', 'base_pairs_string', 'library_construction_protocol')
+
+
 class GBRSample(Sample, DebugNote):
     """
     GBR specific Sample
@@ -59,6 +71,7 @@ class GBRSample(Sample, DebugNote):
     sequencing_notes = models.TextField(_('Sequencing Notes'), null=True, blank=True)
     dna_rna_concentration = models.FloatField(_('DNA/RNA Concentration'), null=True, blank=True)
     total_dna_rna_shipped = models.FloatField(_('Total DNA/RNA Shipped'), null=True, blank=True)
+    sequencing_facility = models.ForeignKey(Facility, null=True)
     comments_by_facility = models.TextField(_('Facility Comments'), null=True, blank=True)
     sequencing_data_eta = models.DateField(_('Sequence ETA'), blank=True, null=True)
     date_sequenced = models.DateField(_('Date Sequenced'), blank=True, null=True)
@@ -66,6 +79,8 @@ class GBRSample(Sample, DebugNote):
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
                                                  related_name='bioinformatician',
                                                  verbose_name=_('Contact Bioinformatician'))
+
+    protocol = models.ForeignKey(GBRProtocol, null=True)
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
@@ -78,11 +93,7 @@ class GBRRun(Run):
     sample = models.ForeignKey(GBRSample)
 
     def __unicode__(self):
-        return u'Run #{0} for Sample:{1}'.format(self.run_number, self.sample.name)
-
-
-class GBRProtocol(Protocol):
-    run = models.ForeignKey(GBRRun, blank=True, null=True)
+        return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
 class GBRSequenceFile(SequenceFile):
@@ -90,9 +101,10 @@ class GBRSequenceFile(SequenceFile):
     Sequence Files resulting from a run
     """
 
+    project_name = 'gbr'
     sample = models.ForeignKey(GBRSample)
     run = models.ForeignKey(GBRRun)
-    project_name = 'gbr'
+
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run, self.filename)

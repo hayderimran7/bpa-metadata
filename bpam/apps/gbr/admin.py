@@ -17,7 +17,6 @@ class ProtocolForm(forms.ModelForm):
     class Meta:
         model = GBRProtocol
         widgets = {
-            'run': LinkedSelect,
             'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
             'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
         }
@@ -27,12 +26,12 @@ class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
     radio_fields = {'library_type': admin.HORIZONTAL}
     fieldsets = [
-        ('Protocol', {'fields': ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')})
+        ('Protocol', {'fields': ('library_type', 'base_pairs_string', 'library_construction_protocol', 'note')})
     ]
 
     search_fields = (
-        'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
-    list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
+        'library_type', 'library_construction_protocol', 'note',)
+    list_display = ('library_type', 'base_pairs_string', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
 
