@@ -2,7 +2,7 @@ import sys
 from unipath import Path
 
 from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
-from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
@@ -51,8 +51,8 @@ def get_dna_source(description):
 def ingest_samples(samples):
 
     def get_organism(name):
-        """
-        Set the organism
+        """ Get or create and get the organism
+        :param name: Name to parse for organism fields.
         """
 
         try:
@@ -68,31 +68,42 @@ def ingest_samples(samples):
             organism.save()
         return organism
 
+
+    def get_collection_site(entry):
+        """ Get or create and get a collection site
+        :param entry: data tuple
+        :type entry: tuple
+        """
+        if entry.gps_location.strip() == '':
+            return None
+
+        lat, lon = entry.gps_location.split()
+        lat = float(lat)
+        lon = float(lon)
+        site, created = CollectionSite.objects.get_or_create(lat=lat, lon=lon, site_name=entry.collection_site)
+
+        return site
+
+
     def get_collection_event(entry):
         """
         The site where the sample has been collected from.
         """
         collection_date = ingest_utils.get_date(entry.collection_date)
-        collection_event, created = CollectionEvent.objects.get_or_create(
-            site_name=entry.collection_site,
-            collection_date=collection_date)
-
-        collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
-        collection_event.ph = ingest_utils.get_clean_number(entry.ph)
-        collection_event.depth = entry.depth
-        # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
-        if len(entry.gps_location) > 0:
-            lat, lon = entry.gps_location.split()
-            collection_event.lat = float(lat)
-            collection_event.lon = float(lon)
-        collection_event.note = entry.collection_comment
-
         # sample collector
-        collection_event.collector = user_helper.get_user(
+        collector = user_helper.get_user(
             entry.collector_name,
             entry.contact_email,
             (GBR_DESCRIPTION, ))
+        collection_event, created = CollectionEvent.objects.get_or_create(
+            collection_date=collection_date,
+            collector=collector)
 
+        collection_event.site = get_collection_site(entry)
+        collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
+        collection_event.ph = ingest_utils.get_clean_number(entry.ph)
+        collection_event.depth = entry.depth
+        collection_event.note = entry.collection_comment
         collection_event.save()
 
         return collection_event
@@ -352,6 +363,8 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRSample._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRRun._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRProtocol._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionEvent._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionSite._meta.db_table))
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
