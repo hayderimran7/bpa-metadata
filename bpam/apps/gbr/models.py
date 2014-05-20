@@ -15,7 +15,8 @@ class CollectionSite(models.Model):
     note = models.TextField(blank=True)
 
     class Meta:
-        unique_together = (('lat', 'lon'))
+        verbose_name_plural = _('Coral Collection Sites')
+        unique_together = ('lat', 'lon',)
 
     def __unicode__(self):
         return u'{0} {1}, {2}'.format(self.site_name, self.lat, self.lon)
@@ -43,7 +44,7 @@ class CollectionEvent(models.Model):
     note = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.site_name, self.collection_date)
+        return u'{0} {1}'.format(self.site.site_name, self.collection_date, self.collector)
 
 
 class GBRSample(Sample, DebugNote):

@@ -26,6 +26,10 @@ urlpatterns = patterns(
         view=views.CollectionSiteListView.as_view(),
         name='sites'),
     url(
+        regex=r'^site/(?P<pk>.*)/$',
+        view=views.CollectionSiteDetailView.as_view(),
+        name='site'),
+    url(
         regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
         name='sample'),

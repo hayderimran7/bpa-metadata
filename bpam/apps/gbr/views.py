@@ -52,6 +52,12 @@ class CollectionSiteListView(ListView):
     template_name = 'gbr/collection_site_list.html'
 
 
+class CollectionSiteDetailView(DetailView):
+    model = CollectionSite
+    context_object_name = 'site'
+    template_name = 'gbr/collectionsite_detail.html'
+
+
 class CollectionView(DetailView):
     model = CollectionEvent
     context_object_name = 'collectionevent'

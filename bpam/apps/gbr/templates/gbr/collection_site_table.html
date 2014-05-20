@@ -1,7 +1,7 @@
 <table id="sitelist" class="table table-striped">
     <thead>
     <tr>
-        <th>Site Name</th>
+        <th class="name" >Site Name</th>
         <th class="lat">Latitude</th>
         <th class="lng">Longitude</th>
         <th>Note</th>
@@ -10,7 +10,9 @@
     <tbody>
     {% for site in sites %}
     <tr>
-        <td>{{ site.get_name }}</td>
+        <td class="name">
+            <a href="{% url 'gbr:site' site.pk %}">{{ site.get_name }}</a>
+        </td>
         <td class="lat">{{ site.lat }}</td>
         <td class="lng">{{ site.lon }}</td>
         <td>{{ site.note }}</td>
