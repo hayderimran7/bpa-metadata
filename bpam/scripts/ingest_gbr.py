@@ -1,7 +1,7 @@
 import sys
 from unipath import Path
 
-from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
+from apps.common.models import DNASource, Facility, Sequencer
 from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
@@ -49,7 +49,6 @@ def get_dna_source(description):
 
 
 def ingest_samples(samples):
-
     def get_organism(name):
         """ Get or create and get the organism
         :param name: Name to parse for organism fields.
@@ -80,7 +79,9 @@ def ingest_samples(samples):
         lat, lon = entry.gps_location.split()
         lat = float(lat)
         lon = float(lon)
-        site, created = CollectionSite.objects.get_or_create(lat=lat, lon=lon, site_name=entry.collection_site)
+        site, created = CollectionSite.objects.get_or_create(lat=lat,
+                                                             lon=lon,
+                                                             defaults = {'site_name' : entry.collection_site})
 
         return site
 
@@ -108,30 +109,60 @@ def ingest_samples(samples):
 
         return collection_event
 
+
+    def get_protocol(entry):
+        """ Get or create and get a GBRProtocol
+        :param entry: Data tuple
+        :type entry: tuple
+        """
+
+        def get_library_type(library):
+            """
+            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            """
+
+            new_str = library.lower()
+            if new_str.find('pair') >= 0:
+                return 'PE'
+            if new_str.find('single') >= 0:
+                return 'SE'
+            if new_str.find('mate') >= 0:
+                return 'MP'
+            return 'UN'
+
+        base_pairs_string = entry.library_construction
+        library_type = get_library_type(entry.library)
+        library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
+
+        protocol, _ = GBRProtocol.objects.get_or_create(
+            base_pairs_string=base_pairs_string,
+            library_type=library_type,
+            library_construction_protocol=library_construction_protocol)
+
+        return protocol
+
+
+
     def add_sample(e):
         """
         Adds new sample or updates existing sample
         """
-        from django.db.utils import IntegrityError
 
         bpa_id = get_bpa_id(e)
         if bpa_id is None:
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
-        try:
-            gbr_sample, created = GBRSample.objects.get_or_create(
-                bpa_id=bpa_id,
-                organism=get_organism(e.species),
-                collection_event = get_collection_event(e)
-                )
-        except IntegrityError, ex:
-            logger.error('Failed to ingest sample with BPA ID {0} : {1}'.format(e.bpa_id, ex))
-            return
+        gbr_sample, created = GBRSample.objects.get_or_create(
+            bpa_id=bpa_id,
+            defaults={
+                'organism': get_organism(e.species),
+                'collection_event': get_collection_event(e)
+            }
+        )
 
-
+        gbr_sample.protocol = get_protocol(e)
         gbr_sample.name = e.sample_description
-
         gbr_sample.dna_source = get_dna_source(e.dna_rna_source)
         gbr_sample.dataset = e.dataset
         gbr_sample.dna_extraction_protocol = e.dna_extraction_protocol
@@ -155,12 +186,9 @@ def ingest_samples(samples):
         gbr_sample.date_sequenced = ingest_utils.get_date(e.date_sequenced)
         gbr_sample.requested_read_length = ingest_utils.get_clean_number(e.requested_read_length)
         gbr_sample.date_data_sent = ingest_utils.get_date(e.date_data_sent)
-
-        # facilities
         gbr_sample.sequencing_facility, _ = Facility.objects.get_or_create(name=e.sequencing_facility)
         gbr_sample.note = e.other
         gbr_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
-
 
         gbr_sample.save()
 
@@ -355,6 +383,7 @@ def ingest(file_name):
     bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
+
 
 def truncate():
     from django.db import connection
