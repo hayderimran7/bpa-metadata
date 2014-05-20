@@ -112,7 +112,6 @@ class CollectionSite(DebugNote):
         return [(field.name, field.value_to_string(self)) for field in CollectionSite._meta.fields]
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Collection Sites")
         unique_together = ('lat', 'lon',)
 
