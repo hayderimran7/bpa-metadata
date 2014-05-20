@@ -34,8 +34,4 @@ urlpatterns = patterns(
         regex=r'^searchexport',
         view=views.SearchExportView.as_view(),
         name='searchexport'),
-    url(
-        regex=r'^contextexport.*',
-        view=views.SampleContextCSVView.as_view(),
-        name='contextexport'),
 )

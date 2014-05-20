@@ -129,6 +129,7 @@
             <div id="spinner" class="spinner"></div>
         </div>
         <input type="button" id="search_button" class="btn btn-default" value="Search"/>
+
     </form>
 </div>
 
@@ -173,6 +174,7 @@ $(document).ready(function () {
     var standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
     var TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
     var SEARCH_FORM_URL = "{% url 'base:search' %}";
+    var EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
     var STATUS_OK = "success";
     var rangeFieldOptions = [
         {value: "lat", text: "Latitude"},
@@ -706,6 +708,29 @@ $(document).ready(function () {
         $("#genus").change(populateSpecies);
     }
 
+    function wireUpExportSearchResultsButton() {
+        function getResultIds() {
+            var ids = [];
+            $("#results > tbody tr").each(function (i, value){
+                var id = $(value).find("td:first").text();
+                ids.push(id);
+            })
+            return ids;
+        }
+
+        function constructExportQueryString(ids) {
+            var s = ids.join(",");
+            return "?ids=" + s;
+        }
+
+        $("#export_button").click(function () {
+            var ids = getResultIds();
+            var querystring = constructExportQueryString(ids);
+             $.get(EXPORT_RESULTS_URL + querystring);
+
+        });
+    }
+
     $("#add_search_term").click(addSearchTerm);
     $("#remove_search_term").click(removeSearchTerm);
     // initialise the handlers on the first row also ( not just dynamically added rows)
@@ -718,6 +743,7 @@ $(document).ready(function () {
     wireUpSearchButton();
     wireUpTaxonomyDropDowns();
     wireUpClearTaxonomicFiltersButton();
+    wireUpExportSearchResultsButton();
 
 });
 </script>
@@ -725,7 +751,7 @@ $(document).ready(function () {
 
 <div class="container-fluid">
     <div class="panel panel-default">
-        <div class="panel-heading">Results</div>
+        <div class="panel-heading">Results <input align=right  type="button" id="export_button" class="btn btn-default" value="Export"></div>
         <div class="panel-body">
             <table id="results" class="table table-striped tablesorter table-bordered">
                 <thead>

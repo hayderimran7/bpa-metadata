@@ -9,12 +9,12 @@ from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 from django.db.models import Model
-from django.db.models.fields.related import ForeignKey
-from apps.base_contextual.models import SampleContext
+
+from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_otu.models import SampleOTU
 from apps.common.models import BPAUniqueID
-from django.forms.models import model_to_dict
-from django.core import serializers
+from search_export import CSVExporter
+from StringIO import StringIO
 
 import logging
 
@@ -336,116 +336,30 @@ class RequestAccess(TemplateView):
 
 
 class SearchExportView(View):
-    def get(self, bpa_ids):
-        context_link = "todo"
-        otu_link = "todo"
-        response = HttpResponse()
-        response.write('<a href="%s">Contextual Data (CSV)</a><br>' % context_link)
-        response.write('<a href="%s">OTU Data (CSV)</a><br>' % otu_link)
-
-
-
-
-
-class CSVView(View):
-    MODEL = None
-
-    def _get_fields(self, model, prefix=""):
-        fields = []
-        for field in model._meta.fields:
-            if field.name == 'debug_note':
-                continue
-            if model.__name__ == 'LandUse' and field.name == 'parent':
-                # this was casuing infinite loop ...
-                continue
-
-            verbose_name = "%s" % field.name
-            if not verbose_name:
-                verbose_name = field.name
-
-            if prefix:
-                    name = prefix + "." + field.name
-            else:
-                    name = field.name
-
-            if not isinstance(field, ForeignKey):
-
-                fields.append([name, name])
-            else:
-                related_model = field.rel.to
-                fields.extend(self._get_fields(related_model, name))
-        return fields
-
     def get(self, request):
-        import csv
-        ids_string = request.GET.get("ids", "")
-        ids = ids_string.split(",")
-        response = HttpResponse(content_type="text/csv")
-        response['Content-Disposition'] = 'attachment; filename="%s"' % self._get_csv_filename()
-        writer = csv.writer(response)
-        self.field_data = self._get_fields(self.MODEL)
+        import zipfile
+        from django.core.servers.basehttp import FileWrapper
+        ids = request.GET.get("ids", "").split(",")
 
-        writer.writerow(self._get_headers())
-        for row in self._get_rows(ids):
-            writer.writerow(row)
+
+        contextual_data_csv = StringIO()
+        contextExporter = CSVExporter(SampleContext)
+        contextual_csv_data = contextExporter.export(ids,contextual_data_csv)
+
+        chemical_analysis_csv = StringIO()
+        chemicalAnalysisExporter = CSVExporter(ChemicalAnalysis)
+        ca_csv_data = chemicalAnalysisExporter.export(ids, chemical_analysis_csv)
+
+        zippedfile = StringIO()
+        zf = zipfile.ZipFile(zippedfile, mode='w', compression=zipfile.ZIP_DEFLATED)
+        zf.writestr('contextual_data.csv', contextual_csv_data.read())
+        zf.writestr('chemical_analysis.csv', ca_csv_data.read())
+
+        zf.close()
+        zippedfile.flush()
+        zippedfile.seek(0)
+
+        response = HttpResponse(FileWrapper(zippedfile), content_type='application/zip')
+        name = "BPASearchResultsExport.zip"
+        response['Content-Disposition'] = 'attachment; filename="%s"' % name
         return response
-
-
-    def _get_csv_filename(self):
-        return "%s.csv" % self.MODEL.__name__
-
-    def _get_headers(self):
-        return [ pair[1] for pair in self.field_data]
-
-    def _get_rows(self, ids):
-        print self.field_data
-        for id in ids:
-            values = []
-            model_instance = self._get_instance(id)
-
-            for field_pair in self.field_data:
-
-                field_path = field_pair[0]
-                parts = field_path.split(".")
-                try:
-                    value = reduce(getattr, parts, model_instance)
-                except AttributeError:
-                    value = "None"
-
-                values.append(value)
-            yield values
-
-    def _get_instance(self, id):
-        try:
-            bpa_id = BPAUniqueID.objects.get(bpa_id=id)
-        except BPAUniqueID.DoesNotExist:
-            return None
-
-        try:
-            return self.MODEL.objects.get(bpa_id=bpa_id)
-        except self.MODEL.DoesNotExist:
-            return None
-
-
-class SampleContextCSVView(CSVView):
-    MODEL = SampleContext
-
-
-class ChemicalAnalysis(CSVView):
-    MODEL = ChemicalAnalysis
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
