@@ -726,8 +726,7 @@ $(document).ready(function () {
         $("#export_button").click(function () {
             var ids = getResultIds();
             var querystring = constructExportQueryString(ids);
-             $.get(EXPORT_RESULTS_URL + querystring);
-
+            window.open(EXPORT_RESULTS_URL + querystring);
         });
     }
 
