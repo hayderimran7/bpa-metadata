@@ -11,7 +11,7 @@ urlpatterns = patterns(
         name='index'),
     url(
         regex=r'^collections',
-        view=views.CollectionListView.as_view(),
+        view=views.CollectionEventListView.as_view(),
         name='collections'),
     url(
         regex=r'^collection/?.*/$',
@@ -21,6 +21,10 @@ urlpatterns = patterns(
         regex=r'^samples',
         view=views.SampleListView.as_view(),
         name='samples'),
+    url(
+        regex=r'^sites',
+        view=views.CollectionSiteListView.as_view(),
+        name='sites'),
     url(
         regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),

@@ -5,6 +5,7 @@ from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 from apps.common.admin import SequenceFileAdmin
 
+from .models import CollectionSite
 from .models import CollectionEvent
 from .models import GBRSample
 from .models import GBRRun
@@ -186,11 +187,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
-                'site_name': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
-                'lat': EnclosedInput(prepend='icon-map-marker'),
-                'lon': EnclosedInput(prepend='icon-map-marker'),
+                'site': LinkedSelect,
                 'water_temp': EnclosedInput(append=u'°C'),
                 'water_ph': EnclosedInput(append='pH'),
                 'depth': EnclosedInput(append='m'),
@@ -206,11 +203,8 @@ class CollectionEventAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Collection',
          {'fields': (
-             'site_name',
              'collection_date',
              'collector',
-             'lat',
-             'lon'
          ),
          }),
         ('Site Data',
@@ -223,11 +217,46 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('site_name', 'lat', 'lon', 'collection_date', 'collector', 'water_temp', 'water_ph', 'depth')
-    search_fields = ('site_name', 'collector', 'note')
-    list_filter = ('site_name', )
+    list_display = ('site', 'collection_date', 'collector', 'water_temp', 'water_ph', 'depth')
+    search_fields = ('site', 'collector', 'note')
+    list_filter = ('site', 'collector', 'note')
 
 
+class SiteAdmin(admin.ModelAdmin):
+    class CollectionForm(forms.ModelForm):
+        class Meta:
+            model = CollectionSite
+            widgets = {
+                'site_name': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+                'lat': EnclosedInput(prepend='icon-map-marker'),
+                'lon': EnclosedInput(prepend='icon-map-marker'),
+                'note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+            }
+
+    form = CollectionForm
+
+    fieldsets = [
+        ('Collection',
+         {'fields': (
+             'site_name',
+             'lat',
+             'lon'),
+         }),
+        ('Note',
+         {'fields': ('note',)}),
+
+    ]
+
+    list_display = ('site_name', 'lat', 'lon', 'note')
+    search_fields = ('site_name', 'lat', 'lon', 'note')
+    list_filter = ('site_name', 'lat', 'lon',)
+
+
+admin.site.register(CollectionSite, SiteAdmin)
 admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)

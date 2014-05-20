@@ -5,14 +5,34 @@ from django.utils.translation import ugettext_lazy as _
 from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, DebugNote
 
 
+class CollectionSite(models.Model):
+    """
+    Coral Collection Site
+    """
+    site_name = models.CharField(_('Site Name'), max_length=100, null=True, blank=True)
+    lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'))
+    lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'))
+    note = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = (('lat', 'lon'))
+
+    def __unicode__(self):
+        return u'{0} {1}, {2}'.format(self.site_name, self.lat, self.lon)
+
+    def get_name(self):
+        """
+        Get site name or lat, lon if no location name is available
+        """
+        if self.site_name.strip() != '' :
+            return self.site_name
+        return u'{0}, {1}'.format(self.lat, self.lon)
+
 class CollectionEvent(models.Model):
     """
     Data surrounding a Coral collection
     """
-
-    site_name = models.CharField(_('Site Name'), max_length=100, null=True, blank=True)
-    lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'), null=True)
-    lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'), null=True)
+    site = models.ForeignKey(CollectionSite, null=True)
     collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
     water_temp = models.FloatField(_('Water Temperature'), null=True, blank=True)
@@ -20,9 +40,6 @@ class CollectionEvent(models.Model):
     depth = models.CharField(_('Water Depth'), max_length=20, null=True, blank=True)
 
     note = models.TextField(blank=True)
-
-    class Meta:
-        unique_together = (('site_name', 'collection_date', 'lat', 'lon'))
 
     def __unicode__(self):
         return u'{0} {1}'.format(self.site_name, self.collection_date)
@@ -50,7 +67,6 @@ class GBRSample(Sample, DebugNote):
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
-
 
 
 class GBRRun(Run):
