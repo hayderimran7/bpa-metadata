@@ -70,6 +70,7 @@ SUIT_CONFIG = {
         {'app': 'gbr', 'label': 'Great Barrier Reef',
          'models': ('gbrsample',
                     'gbrsequencefile',
+                    'collectionsite',
                     'collectionevent',
                     'gbrrun',
                     'gbrprotocol',)},
