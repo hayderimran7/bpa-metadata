@@ -24,9 +24,10 @@ class CollectionSite(models.Model):
         """
         Get site name or lat, lon if no location name is available
         """
-        if self.site_name.strip() != '' :
+        if self.site_name.strip() != '':
             return self.site_name
         return u'{0}, {1}'.format(self.lat, self.lon)
+
 
 class CollectionEvent(models.Model):
     """
