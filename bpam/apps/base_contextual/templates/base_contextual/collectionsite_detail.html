@@ -51,9 +51,11 @@
                     <tr>
                         <td><b>Australian Soil Type Classification</b></td>
                         <td>
+                            {% if collectionsite.soil_type_australian_classification %}
                             <a href="https://www.google.com.au/search?q={{ collectionsite.soil_type_australian_classification }}">
                                 {{ collectionsite.soil_type_australian_classification }}
                             </a>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>

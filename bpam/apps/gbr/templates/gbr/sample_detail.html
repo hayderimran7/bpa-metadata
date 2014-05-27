@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Great Barrier Reef Sample Detail {% endblock %}
+
+{% block content %}
+<div class="panel panel-info">
+    <div class="panel-body">
+        <h3> GBR Sample {{ sample.bpa_id }} Information</h3>
+    </div>
+    <table id="info" class="table table-striped">
+        <tbody>
+        <tr>
+            <td> Sample Name</td>
+            <td> {{ sample.name }}</td>
+        </tr>
+        <tr>
+            <td> Collection Event </td>
+            <td> Collected at {{ sample.collection_event.site }} on {{ sample.collection_event.collection_date }} </td>
+        </tr>
+        <tr>
+            <td> Organism </td>
+            <td> {{ sample.organism }}</td>
+        </tr>
+        <tr>
+            <td> Dataset </td>
+            <td> {{ sample.dataset }}</td>
+        </tr>
+        <tr>
+            <td> DNA Extraction Protocol</td>
+            <td> {{ sample.dna_extraction_protocol|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> DNA/RNA Source</td>
+            <td> {{ sample.dna_source|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> DNA/RNA Concentration</td>
+            <td> {{ sample.dna_rna_concentration|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Total DNA/RNA Shipped</td>
+            <td> {{ sample.total_dna_rna_shipped |default:""}}</td>
+        </tr>
+        <tr>
+            <td> Sequence Coverage</td>
+            <td> {{ sample.requested_sequence_coverage|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Sequence Date</td>
+            <td> {{ sample.date_sequenced|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Requested Read Length</td>
+            <td> {{ sample.requested_read_length|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Sequencing Facility </td>
+            <td> {{ sample.sequencing_facility.name|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Contact Scientist</td>
+            <td> {{ sample.contact_scientist|default:"" }}</td>
+        </tr>
+        <tr>
+            <td> Contact Bioinformatician</td>
+            <td> {{ sample.contact_bioinformatician|default:""}}</td>
+        </tr>
+        <tr>
+            <td> Notes </td>
+            <td> {{ sample.comments_by_facility }} {{ sample.sequencing_notes }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% include "sequencefilelist.html" %}
+
+{% endblock %}

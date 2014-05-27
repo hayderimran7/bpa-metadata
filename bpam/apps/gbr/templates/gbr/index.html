@@ -16,6 +16,7 @@
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'gbr:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'gbr:sequencefiles' %}">Sequence Files <span class="badge">{{ file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr:sites' %}">Collection Sites <span class="badge">{{ collection_sites_count }}</span></a>
                     <a class="list-group-item" href="{% url 'gbr:collections' %}">Collection Events <span class="badge">{{ collection_events_count }}</span></a>
                     <a class="list-group-item" href="{% url 'gbr:contacts' %}">Contacts</a>
                 </div>

@@ -1,8 +1,8 @@
 import sys
 from unipath import Path
 
-from apps.common.models import DNASource, Facility, BPAUniqueID, Sequencer
-from apps.gbr.models import Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from apps.common.models import DNASource, Facility, Sequencer
+from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
@@ -18,6 +18,18 @@ BPA_ID = "102.100.100"
 GBR_DESCRIPTION = 'Great Barrier Reef'
 
 
+def get_bpa_id(named_tup):
+    """ Get a BPA ID object from id string in named tuple.
+    :param named_tup: Named tuple with a bpa_id member.
+    :type named_tup: tuple
+    :rtype BPAUniqueID:
+    """
+    if bpa_id_utils.is_good_bpa_id(named_tup.bpa_id):
+        return bpa_id_utils.get_bpa_id(named_tup.bpa_id, GBR_DESCRIPTION, 'GBR', note='Great Barrier Reef Sample')
+    else:
+        return None
+
+
 def get_dna_source(description):
     """
     Get a DNA source if it exists, if it doesn't make it.
@@ -28,10 +40,8 @@ def get_dna_source(description):
         logger.debug('Set blank description to unknown')
         description = 'Unknown'
 
-    try:
-        source = DNASource.objects.get(description=description)
-    except DNASource.DoesNotExist:
-        source = DNASource(description=description)
+    source, created = DNASource.objects.get_or_create(description=description)
+    if created:
         source.note = 'Added by GBR Project'
         source.save()
 
@@ -39,12 +49,17 @@ def get_dna_source(description):
 
 
 def ingest_samples(samples):
-
     def get_organism(name):
+        """ Get or create and get the organism
+        :param name: Name to parse for organism fields.
         """
-        Set the organism
-        """
-        genus, species = name.strip().split()
+
+        try:
+            genus, species = name.strip().split()
+        except ValueError, e:
+            logger.error('Problem Parsing organism from {0} : {1}'.format(name, e))
+            return None
+
         organism, created = Organism.objects.get_or_create(genus=genus, species=species)
         if created:
             logger.info('Adding Organism {0}'.format(name))
@@ -52,51 +67,102 @@ def ingest_samples(samples):
             organism.save()
         return organism
 
+
+    def get_collection_site(entry):
+        """ Get or create and get a collection site
+        :param entry: data tuple
+        :type entry: tuple
+        """
+        if entry.gps_location.strip() == '':
+            return None
+
+        lat, lon = entry.gps_location.split()
+        lat = float(lat)
+        lon = float(lon)
+        site, created = CollectionSite.objects.get_or_create(lat=lat,
+                                                             lon=lon,
+                                                             defaults = {'site_name' : entry.collection_site})
+
+        return site
+
+
     def get_collection_event(entry):
         """
         The site where the sample has been collected from.
         """
         collection_date = ingest_utils.get_date(entry.collection_date)
+        # sample collector
+        collector = user_helper.get_user(
+            entry.collector_name,
+            entry.contact_email,
+            (GBR_DESCRIPTION, ))
         collection_event, created = CollectionEvent.objects.get_or_create(
-            site_name=entry.collection_site,
-            collection_date=collection_date)
-        if created:
-            collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
-            collection_event.ph = ingest_utils.get_clean_number(entry.ph)
-            collection_event.depth = entry.depth
-            # TODO http://maps.google.com/maps?&z=14&ll=39.211374,-82.978277
-            collection_event.gps_location = entry.gps_location
-            collection_event.note = entry.collection_comment
+            collection_date=collection_date,
+            collector=collector)
 
-            # sample collector
-            collection_event.collector = user_helper.get_user(
-                entry.collector_name,
-                entry.contact_email,
-                (GBR_DESCRIPTION, ))
-
-            collection_event.save()
+        collection_event.site = get_collection_site(entry)
+        collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
+        collection_event.ph = ingest_utils.get_clean_number(entry.ph)
+        collection_event.depth = entry.depth
+        collection_event.note = entry.collection_comment
+        collection_event.save()
 
         return collection_event
+
+
+    def get_protocol(entry):
+        """ Get or create and get a GBRProtocol
+        :param entry: Data tuple
+        :type entry: tuple
+        """
+
+        def get_library_type(library):
+            """
+            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            """
+
+            new_str = library.lower()
+            if new_str.find('pair') >= 0:
+                return 'PE'
+            if new_str.find('single') >= 0:
+                return 'SE'
+            if new_str.find('mate') >= 0:
+                return 'MP'
+            return 'UN'
+
+        base_pairs_string = entry.library_construction
+        library_type = get_library_type(entry.library)
+        library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
+
+        protocol, _ = GBRProtocol.objects.get_or_create(
+            base_pairs_string=base_pairs_string,
+            library_type=library_type,
+            library_construction_protocol=library_construction_protocol)
+
+        return protocol
+
+
 
     def add_sample(e):
         """
         Adds new sample or updates existing sample
         """
 
-        bpa_id = e.bpa_id
-
-        if not bpa_id_utils.is_good_bpa_id(bpa_id):
+        bpa_id = get_bpa_id(e)
+        if bpa_id is None:
             logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
             return
 
-        try:
-            gbr_sample = GBRSample.objects.get(bpa_id__bpa_id=bpa_id)
-        except GBRSample.DoesNotExist:
-            gbr_sample = GBRSample()
-            gbr_sample.bpa_id = BPAUniqueID.objects.get(bpa_id=bpa_id)
+        gbr_sample, created = GBRSample.objects.get_or_create(
+            bpa_id=bpa_id,
+            defaults={
+                'organism': get_organism(e.species),
+                'collection_event': get_collection_event(e)
+            }
+        )
 
+        gbr_sample.protocol = get_protocol(e)
         gbr_sample.name = e.sample_description
-        gbr_sample.organism = get_organism(e.species)
         gbr_sample.dna_source = get_dna_source(e.dna_rna_source)
         gbr_sample.dataset = e.dataset
         gbr_sample.dna_extraction_protocol = e.dna_extraction_protocol
@@ -120,13 +186,10 @@ def ingest_samples(samples):
         gbr_sample.date_sequenced = ingest_utils.get_date(e.date_sequenced)
         gbr_sample.requested_read_length = ingest_utils.get_clean_number(e.requested_read_length)
         gbr_sample.date_data_sent = ingest_utils.get_date(e.date_data_sent)
-
-        # facilities
         gbr_sample.sequencing_facility, _ = Facility.objects.get_or_create(name=e.sequencing_facility)
         gbr_sample.note = e.other
         gbr_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
 
-        gbr_sample.collection_event = get_collection_event(e)
         gbr_sample.save()
 
         logger.info("Ingested GBR sample {0}".format(gbr_sample.name))
@@ -263,23 +326,20 @@ def ingest_runs(sample_data):
         return run_number
 
     def add_run(entry):
-        """
-        The run produced several files
+        """The run produced several files
+        :param entry:
+        :type entry: tuple
         """
         flow_cell_id = entry.flow_cell_id.strip()
-        bpa_id = entry.bpa_id.strip()
+        bpa_id = get_bpa_id(entry)
         run_number = get_run_number(entry)
-
-        try:
-            gbr_run = GBRRun.objects.get(flow_cell_id=flow_cell_id,
-                                         run_number=run_number,
-                                         sample__bpa_id__bpa_id=bpa_id)
-        except GBRRun.DoesNotExist:
-            gbr_run = GBRRun()
+        gbr_run, created = GBRRun.objects.get_or_create(
+            flow_cell_id=flow_cell_id,
+            run_number=run_number,
+            sample=get_sample(bpa_id))
 
         gbr_run.flow_cell_id = flow_cell_id
         gbr_run.run_number = run_number
-        gbr_run.sample = get_sample(bpa_id)
 
         gbr_run.index_number = ingest_utils.get_clean_number(entry.index_number)
         gbr_run.sequencer = get_sequencer(entry.sequencer)
@@ -319,9 +379,21 @@ def ingest_runs(sample_data):
 
 def ingest(file_name):
     sample_data = list(get_gbr_sample_data(file_name))
+    # pre-populate the BPA ID's
     bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
+
+
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRSample._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRRun._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRProtocol._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionEvent._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionSite._meta.db_table))
 
 
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
@@ -330,4 +402,5 @@ def run(file_name=DEFAULT_SPREADSHEET_FILE):
     vpython-bpam manage.py runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
     """
 
+    truncate()
     ingest(file_name)

@@ -7,8 +7,6 @@ class Sample454ListView(ListView):
     model = Sample454
     context_object_name = 'samples'
     template_name = 'base_454/454_list.html'
-    paginate_by = 25
-
 
 class Sample454DetailView(DetailView):
     model = Sample454

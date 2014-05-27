@@ -70,6 +70,7 @@ SUIT_CONFIG = {
         {'app': 'gbr', 'label': 'Great Barrier Reef',
          'models': ('gbrsample',
                     'gbrsequencefile',
+                    'collectionsite',
                     'collectionevent',
                     'gbrrun',
                     'gbrprotocol',)},
@@ -256,9 +257,11 @@ LOGGING = {
             'stream': sys.stderr}
     },
     'loggers': {
-        'scripts.ingest_base_contextual': {
-            'handlers': ['logfile'],
-            'level': 'DEBUG',
+        # noisy backed, set to DEBUG if something seems wrong
+        'django.db.backends': {
+            'handlers': ['rainbow'],
+            'level': 'INFO',
+            'propagate': True,
         },
         'django.request': {
             'handlers': ['mail_admins'],
@@ -275,7 +278,7 @@ LOGGING = {
 
 # debug_toolbar settings
 if DEBUG:
-    INTERNAL_IPS = ('172.16.2.1',)
+    INTERNAL_IPS = ('172.16.2.1',) # explicitly set this for your environment
     INSTALLED_APPS += (
         'debug_toolbar',
     )

@@ -95,11 +95,11 @@ class CollectionSite(DebugNote):
 
     def get_location_name(self):
         """
-        Get location name or lon, lat, no location name is available
+        Get location name or lat, lon if no location name is available
         """
         if self.location_name:
             return self.location_name
-        return u'{0}, {1}'.format(self.lon, self.lat)
+        return u'{0}, {1}'.format(self.lat, self.lon)
 
     @property
     def geom(self):
@@ -112,7 +112,6 @@ class CollectionSite(DebugNote):
         return [(field.name, field.value_to_string(self)) for field in CollectionSite._meta.fields]
 
     class Meta:
-        # app_label = 'base'
         verbose_name_plural = _("Collection Sites")
         unique_together = ('lat', 'lon',)
 

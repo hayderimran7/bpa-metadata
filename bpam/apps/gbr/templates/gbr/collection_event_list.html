@@ -1,0 +1,15 @@
+{% extends "common/geographic_map.html" %}
+{% load leaflet_tags %}
+
+{% block title %}Great Barrier Reef Collection events {% endblock %}
+
+{% block content %}
+{% if collections %}
+<div class="container-fluid">
+    {% include "gbr/collection_event_table.html" %}
+</div>
+{% include "pagination.html" %}
+{% else %}
+<h3> No Great Barrier Reef collection events are currently available</h3>
+{% endif %}
+{% endblock %}

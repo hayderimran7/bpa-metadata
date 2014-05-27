@@ -3,8 +3,9 @@
 from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
-
 from apps.common.admin import SequenceFileAdmin
+
+from .models import CollectionSite
 from .models import CollectionEvent
 from .models import GBRSample
 from .models import GBRRun
@@ -16,7 +17,6 @@ class ProtocolForm(forms.ModelForm):
     class Meta:
         model = GBRProtocol
         widgets = {
-            'run': LinkedSelect,
             'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
             'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
         }
@@ -26,12 +26,12 @@ class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
     radio_fields = {'library_type': admin.HORIZONTAL}
     fieldsets = [
-        ('Protocol', {'fields': ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')})
+        ('Protocol', {'fields': ('library_type', 'base_pairs_string', 'library_construction_protocol', 'note')})
     ]
 
     search_fields = (
-        'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
-    list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
+        'library_type', 'library_construction_protocol', 'note',)
+    list_display = ('library_type', 'base_pairs_string', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
 
@@ -186,10 +186,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
         class Meta:
             model = CollectionEvent
             widgets = {
-                'site_name': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
-                'gps_location': EnclosedInput(prepend='icon-map-marker'),
+                'site': LinkedSelect,
                 'water_temp': EnclosedInput(append=u'°C'),
                 'water_ph': EnclosedInput(append='pH'),
                 'depth': EnclosedInput(append='m'),
@@ -205,10 +202,10 @@ class CollectionEventAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Collection',
          {'fields': (
-             'site_name',
              'collection_date',
              'collector',
-             'gps_location')}),
+         ),
+         }),
         ('Site Data',
          {'fields': (
              'water_temp',
@@ -219,11 +216,46 @@ class CollectionEventAdmin(admin.ModelAdmin):
 
     ]
 
-    list_display = ('site_name', 'collection_date', 'collector', 'gps_location', 'water_temp', 'water_ph', 'depth')
-    search_fields = ('site_name', 'collector', 'note')
-    list_filter = ('site_name', )
+    list_display = ('site', 'collection_date', 'collector', 'water_temp', 'water_ph', 'depth')
+    search_fields = ('site', 'collector', 'note')
+    list_filter = ('site', 'collector', 'note')
 
 
+class SiteAdmin(admin.ModelAdmin):
+    class CollectionForm(forms.ModelForm):
+        class Meta:
+            model = CollectionSite
+            widgets = {
+                'site_name': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+                'lat': EnclosedInput(prepend='icon-map-marker'),
+                'lon': EnclosedInput(prepend='icon-map-marker'),
+                'note': AutosizedTextarea(
+                    attrs={'class': 'input-large',
+                           'style': 'width:95%'}),
+            }
+
+    form = CollectionForm
+
+    fieldsets = [
+        ('Collection',
+         {'fields': (
+             'site_name',
+             'lat',
+             'lon'),
+         }),
+        ('Note',
+         {'fields': ('note',)}),
+
+    ]
+
+    list_display = ('site_name', 'lat', 'lon', 'note')
+    search_fields = ('site_name', 'lat', 'lon', 'note')
+    list_filter = ('site_name', 'lat', 'lon',)
+
+
+admin.site.register(CollectionSite, SiteAdmin)
 admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
