@@ -123,7 +123,7 @@ class SampleAdmin(admin.ModelAdmin):
         form = SequenceFileInlineForm
         suit_classes = 'suit-tab suit-tab-id'
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
+        fields = ('filename', 'md5', 'date_received_from_sequencing_facility', )
         extra = 0
 
     inlines = (SequenceFileInline, )
