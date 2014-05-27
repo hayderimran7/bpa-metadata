@@ -1,4 +1,5 @@
-<div class="panel panel-info">
+<div class="panel panel-default">
+    <div class="table-responsive">
     <table id="chemicallist" class="table table-striped tablesorter">
         <thead>
         <tr>
@@ -34,7 +35,6 @@
             <th>B Hot CaCl<sub>2</sub></th>
             <th>Total N</th>
             <th>Total C</th>
-
         </tr>
         </thead>
         <tbody>
@@ -46,8 +46,8 @@
             <td>{{ analysis.depth }}</td>
             <td>{{ analysis.moisture | default:"" | floatformat:3 }}</td>
             <td>{{ analysis.colour| default:"" }}</td>
-            <td>{{ analysis.gravel| default:""  }}</td>
-            <td>{{ analysis.texture| default:"" | floatformat  }}</td>
+            <td>{{ analysis.gravel| default:"" }}</td>
+            <td>{{ analysis.texture| default:"" | floatformat }}</td>
             <td>{{ analysis.course_sand| default:"" | floatformat }}</td>
             <td>{{ analysis.fine_sand| default:"" | floatformat }}</td>
             <td>{{ analysis.sand| default:"" }}</td>
@@ -78,6 +78,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 
     <script>
         $(document).ready(function () {
