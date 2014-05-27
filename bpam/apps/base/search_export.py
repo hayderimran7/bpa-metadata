@@ -6,6 +6,7 @@ class CSVExporter(object):
 
     def __init__(self, model):
         self.model = model
+        self.one_object_per_id = True
 
     def _get_fields(self, model, prefix=""):
         fields = []
@@ -40,7 +41,8 @@ class CSVExporter(object):
         writer.writerow(self._get_headers())
         for row in self._get_rows(ids):
             writer.writerow(row)
-
+        export_file_obj.flush()
+        export_file_obj.seek(0)
         return export_file_obj
 
 
@@ -54,25 +56,78 @@ class CSVExporter(object):
         print self.field_data
         for id in ids:
             values = []
-            model_instance = self._get_instance(id)
-            for field_pair in self.field_data:
+            if self.one_object_per_id:
+                model_instance = self._get_instance(id)
+                instances = [ model_instance]
+            else:
+                instances = self._get_instance(id)
 
-                field_path = field_pair[0]
-                parts = field_path.split(".")
-                try:
-                    value = reduce(getattr, parts, model_instance)
-                except AttributeError:
-                    value = "None"
+            for instance in instances:
+                for field_pair in self.field_data:
 
-                values.append(value)
-            yield values
+                    field_path = field_pair[0]
+                    parts = field_path.split(".")
+                    try:
+                        value = reduce(getattr, parts, instance)
+                    except AttributeError:
+                        value = "None"
+
+                    values.append(value)
+                yield values
 
     def _get_instance(self, id):
         try:
             bpa_id = BPAUniqueID.objects.get(bpa_id=id)
         except BPAUniqueID.DoesNotExist:
             return None
+
+        return self._get_model_for_id(bpa_id)
+
+    def _get_model_for_id(self, bpa_id):
         try:
             return self.model.objects.get(bpa_id=bpa_id)
         except self.model.DoesNotExist:
             return None
+
+
+class OTUExporter(CSVExporter):
+    def __init__(self, kingdom, phylum, otu_class, order, family, genus, species):
+        from apps.base_otu.models import SampleOTU
+        super(OTUExporter, self).__init__(SampleOTU)
+        self.one_object_per_id = False
+        self.kingdom = kingdom
+        self.phylum = phylum
+        self.otu_class = otu_class
+        self.order = order
+        self.family = family
+        self.genus = genus
+        self.species = species
+
+    def _get_model_for_id(self, bpa_id):
+        try:
+            def add_taxonomic_filter(filter_dict, taxon):
+                if getattr(self, taxon):
+                    filter_dict["otu__" + taxon] = getattr(self, taxon)
+
+            filter_dict = {"sample__bpa_id": bpa_id}
+
+            for taxon in ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']:
+                add_taxonomic_filter(filter_dict, taxon)
+
+            return self.model.objects.filter(**filter_dict)
+
+        except self.model.DoesNotExist:
+            return []
+
+    def _get_fields(self, model, prefix=""):
+        return [["sample.bpa_id.bpa_id", "BPA ID"],
+                ["otu.name","OTU"],
+                ["count", "OTU Count"],
+                ["otu.kingdom","Kingdom"],
+                ["otu.phylum","Phylum"],
+                ["otu.otu_class","Class"],
+                ["otu.order","Order"],
+                ["otu.family","Family"],
+                ["otu.genus","Genus"],
+                ["otu.species","Species"],
+                ]

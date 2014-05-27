@@ -13,7 +13,7 @@ from django.db.models import Model
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_otu.models import SampleOTU
 from apps.common.models import BPAUniqueID
-from search_export import CSVExporter
+from search_export import CSVExporter, OTUExporter
 from StringIO import StringIO
 
 import logging
@@ -341,25 +341,46 @@ class SearchExportView(View):
         from django.core.servers.basehttp import FileWrapper
         ids = request.GET.get("ids", "").split(",")
 
+        kingdom = request.GET.get("kingdom", "")
+        phylum = request.GET.get("phylum", "")
+        otu_class = request.GET.get("otu_class", "")
+        order = request.GET.get("order", "")
+        family = request.GET.get("family", "")
+        genus = request.GET.get("genus", "")
+        species = request.GET.get("species", "")
 
         contextual_data_csv = StringIO()
         contextExporter = CSVExporter(SampleContext)
         contextual_csv_data = contextExporter.export(ids,contextual_data_csv)
 
         chemical_analysis_csv = StringIO()
-        chemicalAnalysisExporter = CSVExporter(ChemicalAnalysis)
-        ca_csv_data = chemicalAnalysisExporter.export(ids, chemical_analysis_csv)
+        chemical_analysis_exporter = CSVExporter(ChemicalAnalysis)
+        ca_csv_data = chemical_analysis_exporter.export(ids, chemical_analysis_csv)
+
 
         zippedfile = StringIO()
         zf = zipfile.ZipFile(zippedfile, mode='w', compression=zipfile.ZIP_DEFLATED)
         zf.writestr('contextual_data.csv', contextual_csv_data.read())
         zf.writestr('chemical_analysis.csv', ca_csv_data.read())
 
+        if kingdom:
+            otu_csv = StringIO()
+            otu_exporter = OTUExporter(kingdom=kingdom,
+                                       phylum=phylum,
+                                       otu_class=otu_class,
+                                       order=order,
+                                       family=family,
+                                       genus=genus,
+                                       species=species)
+
+            otu_csv_data = otu_exporter.export(ids, otu_csv)
+            zf.writestr('samppleotu_data.csv',otu_csv_data.read())
+
         zf.close()
         zippedfile.flush()
         zippedfile.seek(0)
 
-        response = HttpResponse(FileWrapper(zippedfile), content_type='application/zip')
+        response = HttpResponse(zippedfile, content_type='application/zip')
         name = "BPASearchResultsExport.zip"
         response['Content-Disposition'] = 'attachment; filename="%s"' % name
         return response

@@ -718,9 +718,28 @@ $(document).ready(function () {
             return ids;
         }
 
+        function getTaxonomicFilters() {
+            var kingdom = $("#kingdom").val();
+            var phylum = $("#phylum").val();
+            var otu_class = $("otu_class").val();
+            var order = $("order").val();
+            var family = $("family").val();
+            var genus = $("genus").val();
+            var species = $("species").val();
+
+            return "&kingdom=" + kingdom +
+                    "&phylum=" + phylum +
+                    "&otu_class=" + otu_class +
+                    "&order=" + order +
+                    "&family=" + family +
+                    "&genus=" + genus +
+                    "&species=" + species
+        }
+
         function constructExportQueryString(ids) {
             var s = ids.join(",");
-            return "?ids=" + s;
+
+            return "?ids=" + s  + getTaxonomicFilters();
         }
 
         $("#export_button").click(function () {
