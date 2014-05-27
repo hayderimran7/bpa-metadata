@@ -7,7 +7,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3>
-                <a href="{% url 'base:index'%}">BASE</a> Contextual Detail for
+                BASE Contextual Detail for
                 <a href="{% url 'basemetagenomics:sample' samplecontext.bpa_id %}">
                     {{ samplecontext.bpa_id }}
                 </a>
@@ -18,10 +18,13 @@
             <tbody>
             <tr>
                 <td><b>Site</b></td>
-                <td>
+                <td>{% if samplecontext.site %}
                     <a href="{% url 'basecontextual:collectionsitedetail' samplecontext.site.pk %}">
                         {{ samplecontext.site.get_location_name }}
                     </a>
+                    {% else %}
+                    No Site
+                    {% endif %}
                 </td>
             </tr>
             <tr>

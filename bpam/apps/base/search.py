@@ -252,8 +252,15 @@ class Searcher(object):
 
 
         def sc_display(bpa_id):
-            context = SampleContext.objects.select_related('bpa_id', 'context', 'context__site__vegetation_type').get(bpa_id=bpa_id)
-            return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(), context.site.vegetation_type)
+            try:
+                context = SampleContext.objects.select_related('bpa_id', 'context', 'context__site__vegetation_type').get(bpa_id=bpa_id)
+            except SampleContext.DoesNotExist, ex:
+                return "No Contextual Data"
+
+            if context.site:
+                return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(), context.site.vegetation_type).strip()
+            else:
+                return "No Site Info"
 
 
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
