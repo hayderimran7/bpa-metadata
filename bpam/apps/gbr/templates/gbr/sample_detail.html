@@ -15,15 +15,15 @@
             <td> {{ sample.name }}</td>
         </tr>
         <tr>
-            <td> Collection Event </td>
-            <td> Collected at {{ sample.collection_event.site }} on {{ sample.collection_event.collection_date }} </td>
+            <td> Collection Event</td>
+            <td> Collected at {{ sample.collection_event.site }} on {{ sample.collection_event.collection_date }}</td>
         </tr>
         <tr>
-            <td> Organism </td>
+            <td> Species</td>
             <td> {{ sample.organism }}</td>
         </tr>
         <tr>
-            <td> Dataset </td>
+            <td> Dataset</td>
             <td> {{ sample.dataset }}</td>
         </tr>
         <tr>
@@ -55,7 +55,7 @@
             <td> {{ sample.requested_read_length|default:"" }}</td>
         </tr>
         <tr>
-            <td> Sequencing Facility </td>
+            <td> Sequencing Facility</td>
             <td> {{ sample.sequencing_facility.name|default:"" }}</td>
         </tr>
         <tr>
@@ -67,7 +67,7 @@
             <td> {{ sample.contact_bioinformatician|default:""}}</td>
         </tr>
         <tr>
-            <td> Notes </td>
+            <td> Notes</td>
             <td> {{ sample.comments_by_facility }} {{ sample.sequencing_notes }}</td>
         </tr>
         </tbody>
