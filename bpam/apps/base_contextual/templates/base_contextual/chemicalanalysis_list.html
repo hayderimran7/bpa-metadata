@@ -5,16 +5,18 @@
 {% block content %}
 
 <h3>Chemical Analysis ({{reports|length}} Records) </h3>
+<div class="container-fluid">
+    <div class="alert alert-info">
+        Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
+    </div>
 
-<div class="alert alert-info">
-    Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
+    {% include "base_contextual/chemicalanalysis_table.html" %}
+
+    <form>
+        <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:chemicalanalysis' %}"/>
+    </form>
+
+    {% include "pagination.html" %}
 </div>
 
-{% include "base_contextual/chemicalanalysis_table.html" %}
-
-<form>
-    <input type="hidden" id="bpa-catalog-base" value="{% url 'basecontextual:chemicalanalysis' %}"/>
-</form>
-
-{% include "pagination.html" %}
 {% endblock %}
