@@ -1,90 +1,89 @@
-<table id="chemicallist" class="table table-striped tablesorter">
-<thead>
-    <tr>
-        <th>BPA ID</th>
-        <th>Depth</th>
-        <th>Moisture</th>
-        <th>Colour</th>
-        <th>Gravel</th>
-        <th>Texture</th>
-        <th>Course Sand</th>
-        <th>Fine Sand</th>
-        <th>Sand</th>
-        <th>Silt</th>
-        <th>Clay</th>
-        <th>NH<sub>3</sub>-N</th>
-        <th>NO<sub>3</sub><sup>−</sup></th>
-        <th>Colwell P</th>
-        <th>Colwell K</th>
-        <th>Sulphur</th>
-        <th>Organic Carbon</th>
-        <th>Conductivity</th>
-        <th>CaCl<sub>2</sub> pH</th>
-        <th>H<sub>2</sub>O pH</th>
-        <th>DTPA Cu</th>
-        <th>DTPA Fe</th>
-        <th>DTPA Mn</th>
-        <th>DTPA Zn</th>
-        <th>Exc Al</th>
-        <th>Exc Ca</th>
-        <th>Exc Mg</th>
-        <th>Exc K</th>
-        <th>Exc Na</th>
-        <th>B Hot CaCl<sub>2</sub></th>
-        <th>Total N</th>
-        <th>Total C</th>
+<div class="panel panel-info">
+    <table id="chemicallist" class="table table-striped tablesorter">
+        <thead>
+        <tr>
+            <th>BPA ID</th>
+            <th>Depth</th>
+            <th>Moisture</th>
+            <th>Colour</th>
+            <th>Gravel</th>
+            <th>Texture</th>
+            <th>Course Sand</th>
+            <th>Fine Sand</th>
+            <th>Sand</th>
+            <th>Silt</th>
+            <th>Clay</th>
+            <th>NH<sub>3</sub>-N</th>
+            <th>NO<sub>3</sub><sup>−</sup></th>
+            <th>Colwell P</th>
+            <th>Colwell K</th>
+            <th>Sulphur</th>
+            <th>Organic Carbon</th>
+            <th>Conductivity</th>
+            <th>CaCl<sub>2</sub> pH</th>
+            <th>H<sub>2</sub>O pH</th>
+            <th>DTPA Cu</th>
+            <th>DTPA Fe</th>
+            <th>DTPA Mn</th>
+            <th>DTPA Zn</th>
+            <th>Exc Al</th>
+            <th>Exc Ca</th>
+            <th>Exc Mg</th>
+            <th>Exc K</th>
+            <th>Exc Na</th>
+            <th>B Hot CaCl<sub>2</sub></th>
+            <th>Total N</th>
+            <th>Total C</th>
 
-    </tr>
-    </thead>
-    <tbody>
-    {% for analysis in reports %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for analysis in reports %}
         <tr>
             <td>
                 <a href="{% url 'basecontextual:sampledetail' analysis.bpa_id %}">{{ analysis.bpa_id }}</a>
             </td>
             <td>{{ analysis.depth }}</td>
-            <td>{% if analysis.moisture %} {{ analysis.moisture }} {% endif %}</td>
-            <td>{{ analysis.colour }}</td>
-            <td>{{ analysis.gravel }}</td>
-            <td>{{ analysis.texture }}</td>
-            <td>{% if analysis.course_sand %} {{ analysis.course_sand }} {% endif %}</td>
-            <td>{% if analysis.fine_sand %} {{ analysis.fine_sand }} {% endif %}</td>
-            <td>{% if analysis.sand %} {{ analysis.sand }} {% endif %}</td>
-            <td>{% if analysis.silt %} {{ analysis.silt }} {% endif %}</td>
-            <td>{% if analysis.clay %} {{ analysis.clay }} {% endif %}</td>
-            <td>{% if analysis.ammonium_nitrogen  %}
-                {{ analysis.ammonium_nitrogen }}
-                {% endif %}
-            </td>
-            <td>{% if analysis.nitrate_nitrogen %} {{ analysis.nitrate_nitrogen }} {% endif %}</td>
-            <td>{% if analysis.phosphorus_colwell %} {{ analysis.phosphorus_colwell }} {% endif %}</td>
-            <td>{% if analysis.potassium_colwell %} {{ analysis.potassium_colwell }} {% endif %}</td>
-            <td>{% if analysis.sulphur %} {{ analysis.sulphur }} {% endif %}</td>
-            <td>{% if analysis.organic_carbon %} {{ analysis.organic_carbon }} {% endif %}</td>
-            <td>{% if analysis.conductivity %} {{ analysis.conductivity }} {% endif %}</td>
-            <td>{% if analysis.cacl2_ph %} {{ analysis.cacl2_ph }} {% endif %}</td>
-            <td>{% if analysis.h20_ph %} {{ analysis.h20_ph }} {% endif %}</td>
-            <td>{% if analysis.dtpa_copper %} {{ analysis.dtpa_copper }} {% endif %}</td>
-            <td>{% if analysis.dtpa_iron %} {{ analysis.dtpa_iron }} {% endif %}</td>
-            <td>{% if analysis.dtpa_manganese %} {{ analysis.dtpa_manganese }} {% endif %}</td>
-            <td>{% if analysis.dtpa_zinc %} {{ analysis.dtpa_zinc }} {% endif %}</td>
-            <td>{% if analysis.exc_aluminium %} {{ analysis.exc_aluminium }} {% endif %}</td>
-            <td>{% if analysis.exc_calcium %} {{ analysis.exc_calcium }} {% endif %}</td>
-            <td>{% if analysis.exc_magnesium %} {{ analysis.exc_magnesium }} {% endif %}</td>
-            <td>{% if analysis.exc_potassium %} {{ analysis.exc_potassium }} {% endif %}</td>
-            <td>{% if analysis.exc_sodium %} {{ analysis.exc_sodium }} {% endif %}</td>
-            <td>{% if analysis.boron_hot_cacl2 %} {{ analysis.boron_hot_cacl2 }} {% endif %}</td>
-            <td>{% if analysis.total_nitrogen %} {{ analysis.total_nitrogen }} {% endif %}</td>
-            <td>{% if analysis.total_carbon %} {{ analysis.total_carbon }} {% endif %}</td>
+            <td>{{ analysis.moisture | default:"" }}</td>
+            <td>{{ analysis.colour| default:"" }}</td>
+            <td>{{ analysis.gravel| default:"" }}</td>
+            <td>{{ analysis.texture| default:"" }}</td>
+            <td>{{ analysis.course_sand| default:"" }}</td>
+            <td>{{ analysis.fine_sand| default:"" }}</td>
+            <td>{{ analysis.sand| default:"" }}</td>
+            <td>{{ analysis.silt| default:"" }}</td>
+            <td>{{ analysis.clay| default:"" }}</td>
+            <td>{{ analysis.ammonium_nitrogen| default:"" }}</td>
+            <td>{{ analysis.nitrate_nitrogen| default:"" }}</td>
+            <td>{{ analysis.phosphorus_colwell| default:"" }}</td>
+            <td>{{ analysis.potassium_colwell| default:"" }}</td>
+            <td>{{ analysis.sulphur| default:"" }}</td>
+            <td>{{ analysis.organic_carbon| default:"" }}</td>
+            <td>{{ analysis.conductivity| default:"" }}</td>
+            <td>{{ analysis.cacl2_ph| default:"" }}</td>
+            <td>{{ analysis.h20_ph| default:"" }}</td>
+            <td>{{ analysis.dtpa_copper| default:"" }}</td>
+            <td>{{ analysis.dtpa_iron| default:"" }}</td>
+            <td>{{ analysis.dtpa_manganese | default:""}}</td>
+            <td>{{ analysis.dtpa_zinc| default:"" }}</td>
+            <td>{{ analysis.exc_aluminium | default:""}}</td>
+            <td>{{ analysis.exc_calcium| default:"" }}</td>
+            <td>{{ analysis.exc_magnesium| default:"" }}</td>
+            <td>{{ analysis.exc_potassium| default:"" }}</td>
+            <td>{{ analysis.exc_sodium| default:"" }}</td>
+            <td>{{ analysis.boron_hot_cacl2| default:"" }}</td>
+            <td>{{ analysis.total_nitrogen| default:"" }} </td>
+            <td>{{ analysis.total_carbon| default:"" }}</td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        {% endfor %}
+        </tbody>
+    </table>
 
-<script>
-    $(document).ready(function () {
-        $(function () {
-            $("#chemicallist").tablesorter();
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("#chemicallist").tablesorter();
+            });
         });
-    });
-</script>
+    </script>
+</div>
