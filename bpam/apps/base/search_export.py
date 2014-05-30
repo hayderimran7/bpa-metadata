@@ -1,6 +1,10 @@
 from django.db.models.fields.related import ForeignKey
 from apps.common.models import BPAUniqueID
 
+import logging
+
+logger = logging.getLogger("rainbow")
+
 
 class CSVExporter(object):
 
@@ -133,37 +137,68 @@ class OTUExporter(CSVExporter):
                 ["otu.species", "Species"],
                 ]
 
-    def export(self, ids, file_obj_16S, file_obj_18S, file_obj_ITS):
+    def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
 
         import csv
-        writer16S = csv.writer(file_obj_16S)
-        writer18S = csv.writer(file_obj_18S)
-        writerITS = csv.writer(file_obj_ITS)
+        writer_bacteria = csv.writer(file_obj_bacteria)
+        writer_eukaryotes = csv.writer(file_obj_eukaryotes)
+        writer_fungi= csv.writer(file_obj_fungi)
+        writer_archea = csv.writer(file_obj_archea)
 
         self.field_data = self._get_fields(self.model)
 
-        writer16S.writerow(self._get_headers())
-        writer18S.writerow(self._get_headers())
-        writerITS.writerow(self._get_headers())
+        writer_bacteria.writerow(self._get_headers())
+        writer_eukaryotes.writerow(self._get_headers())
+        writer_fungi.writerow(self._get_headers())
+        writer_archea.writerow(self._get_headers())
+
+        bacteria_count = fungi_count = eukaryotes_count = archea_count = 0
+
         for row in self._get_rows(ids):
             kingdom = row[3]
             if kingdom == "Bacteria":
-                writer16S.writerow(row)
+                writer_bacteria.writerow(row)
+                bacteria_count += 1
             elif kingdom == "Fungi":
-                writerITS.writerow(row)
+                writer_fungi.writerow(row)
+                fungi_count += 1
             elif kingdom == "Eukaryote":
-                writer18S.writerow(row)
+                writer_eukaryotes.writerow(row)
+                eukaryotes_count += 1
+            elif kingdom == 'Archaea':
+                writer_archea.writerow(row)
+                archea_count += 1
             else:
-                # Archaea??!
+                logger.info("unknown kingdom?!: %s" % row)
                 pass
 
-        file_obj_16S.flush()
-        file_obj_16S.seek(0)
 
-        file_obj_18S.flush()
-        file_obj_18S.seek(0)
+        file_obj_bacteria.flush()
+        file_obj_bacteria.seek(0)
 
-        file_obj_ITS.flush()
-        file_obj_ITS.seek(0)
+        file_obj_eukaryotes.flush()
+        file_obj_eukaryotes.seek(0)
 
-        return file_obj_16S, file_obj_18S, file_obj_ITS
+        file_obj_fungi.flush()
+        file_obj_fungi.seek(0)
+
+        file_obj_archea.flush()
+        file_obj_archea.seek(0)
+
+        if bacteria_count == 0:
+            file_obj_bacteria.close()
+            file_obj_bacteria = None
+
+        if fungi_count == 0:
+            file_obj_fungi.close()
+            file_obj_fungi = None
+
+        if eukaryotes_count == 0:
+            file_obj_eukaryotes.close()
+            file_obj_eukaryotes = None
+
+        if archea_count == 0:
+            file_obj_archea.close()
+            file_obj_archea = None
+
+        return file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea

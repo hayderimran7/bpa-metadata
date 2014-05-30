@@ -363,9 +363,10 @@ class SearchExportView(View):
         zf.writestr('contextual_data.csv', contextual_csv_data.read())
         zf.writestr('chemical_analysis.csv', ca_csv_data.read())
 
-        otu_16S_csv = StringIO()
-        otu_18S_csv = StringIO()
-        otu_ITS_csv = StringIO()
+        otu_bacteria_csv = StringIO()
+        otu_eukaryotes_csv = StringIO()
+        otu_fungi_csv = StringIO()
+        otu_archea_csv = StringIO()
 
         otu_exporter = OTUExporter(kingdom=kingdom,
                                        phylum=phylum,
@@ -375,10 +376,20 @@ class SearchExportView(View):
                                        genus=genus,
                                        species=species)
 
-        otu_16S_data, otu_18S_data, otu_ITS_data = otu_exporter.export(ids, otu_16S_csv, otu_18S_csv, otu_ITS_csv)
-        zf.writestr('16S.csv', otu_16S_data.read())
-        zf.writestr('18S.csv', otu_18S_data.read())
-        zf.writestr('ITS.csv', otu_ITS_data.read())
+        otu_bacteria_data, otu_eukaryotes_data, otu_fungi_data, otu_archea_data = otu_exporter.export(ids, otu_bacteria_csv, otu_eukaryotes_csv, otu_fungi_csv, otu_archea_csv)
+
+
+        if otu_bacteria_data:
+            zf.writestr('bacteria.csv', otu_bacteria_data.read())
+
+        if otu_eukaryotes_data:
+            zf.writestr('eukaryotes.csv', otu_eukaryotes_data.read())
+
+        if otu_fungi_data:
+            zf.writestr('fungi.csv', otu_fungi_data.read())
+
+        if otu_archea_data:
+            zf.writestr('archea.csv', otu_archea_data.read())
 
         zf.close()
         zippedfile.flush()
