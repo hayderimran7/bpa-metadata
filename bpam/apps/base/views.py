@@ -137,7 +137,7 @@ class BASESearchView(AbstractSearchableListView):
         parameters["search_operator"] = post_data.get("search_operator", "and")
         parameters["search_kingdom"] = post_data.get("kingdom", None)
         parameters["search_phylum"] = post_data.get("phylum", None)
-        parameters["search_class"] = post_data.get("class", None)
+        parameters["search_class"] = post_data.get("otu_class", None)
         parameters["search_order"] = post_data.get("order", None)
         parameters["search_family"] = post_data.get("family", None)
         parameters["search_genus"] = post_data.get("genus", None)
@@ -322,7 +322,7 @@ class TaxonomyLookUpView(View):
         otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
         next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
         response = HttpResponse(content_type="application/json")
-        options = [{"value": x, "text": x} for x in next_lower_level_values]
+        options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
         json.dump(options, response)
         return response
 
@@ -363,9 +363,11 @@ class SearchExportView(View):
         zf.writestr('contextual_data.csv', contextual_csv_data.read())
         zf.writestr('chemical_analysis.csv', ca_csv_data.read())
 
-        if kingdom:
-            otu_csv = StringIO()
-            otu_exporter = OTUExporter(kingdom=kingdom,
+        otu_16S_csv = StringIO()
+        otu_18S_csv = StringIO()
+        otu_ITS_csv = StringIO()
+
+        otu_exporter = OTUExporter(kingdom=kingdom,
                                        phylum=phylum,
                                        otu_class=otu_class,
                                        order=order,
@@ -373,8 +375,10 @@ class SearchExportView(View):
                                        genus=genus,
                                        species=species)
 
-            otu_csv_data = otu_exporter.export(ids, otu_csv)
-            zf.writestr('samppleotu_data.csv',otu_csv_data.read())
+        otu_16S_data, otu_18S_data, otu_ITS_data = otu_exporter.export(ids, otu_16S_csv, otu_18S_csv, otu_ITS_csv)
+        zf.writestr('16S.csv', otu_16S_data.read())
+        zf.writestr('18S.csv', otu_18S_data.read())
+        zf.writestr('ITS.csv', otu_ITS_data.read())
 
         zf.close()
         zippedfile.flush()

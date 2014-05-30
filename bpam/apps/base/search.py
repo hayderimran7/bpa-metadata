@@ -284,6 +284,7 @@ class Searcher(object):
         :param results: a query set to filter based on taxonomy
         :return:
         """
+        UNCHOSEN = "---"
 
         def query_pair(field, s):
             """
@@ -298,19 +299,21 @@ class Searcher(object):
 
         taxonomy_filters = []
 
-        if self.search_kingdom:
+        SKIP = [UNCHOSEN, None, ""]
+
+        if self.search_kingdom not in SKIP:
             taxonomy_filters.append(query_pair("kingdom", self.search_kingdom))
-        if self.search_phylum:
+        if self.search_phylum not in SKIP:
             taxonomy_filters.append(query_pair("phylum", self.search_phylum))
-        if self.search_class:
+        if self.search_class not in SKIP:
             taxonomy_filters.append(query_pair("otu_class", self.search_class))
-        if self.search_family:
+        if self.search_family not in SKIP:
             taxonomy_filters.append(query_pair("family", self.search_family))
-        if self.search_genus:
+        if self.search_genus not in SKIP:
             taxonomy_filters.append(query_pair("genus", self.search_genus))
-        if self.search_order:
+        if self.search_order not in SKIP:
             taxonomy_filters.append(query_pair("order", self.search_order))
-        if self.search_species:
+        if self.search_species not in SKIP:
             taxonomy_filters.append(query_pair("species", self.search_species))
 
         logger.debug("taxonomic filters = %s" % taxonomy_filters)

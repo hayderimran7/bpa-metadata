@@ -324,10 +324,12 @@ $(document).ready(function () {
             self = this;
 
             $.each(options, function (index, option) {
-                $option = $("<option></option>")
-                        .attr("value", option.value)
-                        .text(option.text);
-                self.append($option);
+
+                $('<option/>').val(option.value).text(option.text).appendTo(self);
+//                $option = $("<option></option>")
+//                        .attr("value", option.value)
+//                        .text(option.text);
+//                self.append($option);
             });
         };
     })(jQuery, window);
@@ -683,9 +685,12 @@ $(document).ready(function () {
 
             $.get(taxonomyURL, function (childOptions, status) {
                 $("#" + targetId).replaceOptions([
-                    {value: "", text: "---"}
+                    {value: "---", text: "---"}
                 ].concat(childOptions));
-                $("#" + targetId + " option:first").attr('selected', 'selected').trigger("change");
+                //$("#" + targetId + " option:first").attr('selected', 'selected').trigger("change");
+                //$("#" + targetId).find('option:eq(0)').prop('selected', true).trigger("change");
+                $('#' + targetId).selectedIndex = 0;
+                $('#' + targetId).trigger("change")
                 stopSpinner();
             });
 
