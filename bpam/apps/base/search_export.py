@@ -53,9 +53,7 @@ class CSVExporter(object):
         return [pair[1] for pair in self.field_data]
 
     def _get_rows(self, ids):
-        print self.field_data
         for id in ids:
-            values = []
             if self.one_object_per_id:
                 model_instance = self._get_instance(id)
                 instances = [ model_instance]
@@ -63,6 +61,7 @@ class CSVExporter(object):
                 instances = self._get_instance(id)
 
             for instance in instances:
+                values = []
                 for field_pair in self.field_data:
 
                     field_path = field_pair[0]
@@ -116,12 +115,9 @@ class OTUExporter(CSVExporter):
         for taxon in ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']:
             add_taxonomic_filter(self.taxonomic_filters, taxon)
 
-        print self.taxonomic_filters
-
     def _get_model_for_id(self, bpa_id):
         filter_dict = {"sample__bpa_id__bpa_id": bpa_id.bpa_id}
         filter_dict.update(self.taxonomic_filters)
-        print "filter dict = %s" % filter_dict
         return self.model.objects.filter(**filter_dict)
 
     def _get_fields(self, model, prefix=""):
@@ -131,10 +127,10 @@ class OTUExporter(CSVExporter):
                 ["otu.kingdom", "Kingdom"],
                 ["otu.phylum", "Phylum"],
                 ["otu.otu_class", "Class"],
-                ["otu.order","Order"],
-                ["otu.family","Family"],
-                ["otu.genus","Genus"],
-                ["otu.species","Species"],
+                ["otu.order", "Order"],
+                ["otu.family", "Family"],
+                ["otu.genus", "Genus"],
+                ["otu.species", "Species"],
                 ]
 
     def export(self, ids, file_obj_16S, file_obj_18S, file_obj_ITS):
@@ -149,16 +145,17 @@ class OTUExporter(CSVExporter):
         writer16S.writerow(self._get_headers())
         writer18S.writerow(self._get_headers())
         writerITS.writerow(self._get_headers())
-
         for row in self._get_rows(ids):
             kingdom = row[3]
-            print row
             if kingdom == "Bacteria":
                 writer16S.writerow(row)
             elif kingdom == "Fungi":
                 writerITS.writerow(row)
-            else:
+            elif kingdom == "Eukaryote":
                 writer18S.writerow(row)
+            else:
+                # Archaea??!
+                pass
 
         file_obj_16S.flush()
         file_obj_16S.seek(0)
@@ -169,7 +166,4 @@ class OTUExporter(CSVExporter):
         file_obj_ITS.flush()
         file_obj_ITS.seek(0)
 
-
         return file_obj_16S, file_obj_18S, file_obj_ITS
-
-
