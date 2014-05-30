@@ -84,10 +84,14 @@ class CSVExporter(object):
         return self._get_model_for_id(bpa_id)
 
     def _get_model_for_id(self, bpa_id):
-        try:
-            return self.model.objects.get(bpa_id=bpa_id)
-        except self.model.DoesNotExist:
-            return None
+            if self.one_object_per_id:
+                try:
+                    return self.model.objects.get(bpa_id=bpa_id)
+
+                except self.model.DoesNotExist:
+                    return None
+            else:
+                return self.model.objects.filter(bpa_id=bpa_id)
 
 
 class OTUExporter(CSVExporter):
@@ -102,32 +106,70 @@ class OTUExporter(CSVExporter):
         self.family = family
         self.genus = genus
         self.species = species
+        self.taxonomic_filters = {}
+
+        def add_taxonomic_filter(filter_dict, taxon):
+            value = getattr(self, taxon)
+            if value != '---':
+                filter_dict["otu__" + taxon] = getattr(self, taxon)
+
+        for taxon in ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']:
+            add_taxonomic_filter(self.taxonomic_filters, taxon)
+
+        print self.taxonomic_filters
 
     def _get_model_for_id(self, bpa_id):
-        try:
-            def add_taxonomic_filter(filter_dict, taxon):
-                if getattr(self, taxon):
-                    filter_dict["otu__" + taxon] = getattr(self, taxon)
-
-            filter_dict = {"sample__bpa_id": bpa_id}
-
-            for taxon in ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']:
-                add_taxonomic_filter(filter_dict, taxon)
-
-            return self.model.objects.filter(**filter_dict)
-
-        except self.model.DoesNotExist:
-            return []
+        filter_dict = {"sample__bpa_id__bpa_id": bpa_id.bpa_id}
+        filter_dict.update(self.taxonomic_filters)
+        print "filter dict = %s" % filter_dict
+        return self.model.objects.filter(**filter_dict)
 
     def _get_fields(self, model, prefix=""):
         return [["sample.bpa_id.bpa_id", "BPA ID"],
-                ["otu.name","OTU"],
+                ["otu.name", "OTU"],
                 ["count", "OTU Count"],
-                ["otu.kingdom","Kingdom"],
-                ["otu.phylum","Phylum"],
-                ["otu.otu_class","Class"],
+                ["otu.kingdom", "Kingdom"],
+                ["otu.phylum", "Phylum"],
+                ["otu.otu_class", "Class"],
                 ["otu.order","Order"],
                 ["otu.family","Family"],
                 ["otu.genus","Genus"],
                 ["otu.species","Species"],
                 ]
+
+    def export(self, ids, file_obj_16S, file_obj_18S, file_obj_ITS):
+
+        import csv
+        writer16S = csv.writer(file_obj_16S)
+        writer18S = csv.writer(file_obj_18S)
+        writerITS = csv.writer(file_obj_ITS)
+
+        self.field_data = self._get_fields(self.model)
+
+        writer16S.writerow(self._get_headers())
+        writer18S.writerow(self._get_headers())
+        writerITS.writerow(self._get_headers())
+
+        for row in self._get_rows(ids):
+            kingdom = row[3]
+            print row
+            if kingdom == "Bacteria":
+                writer16S.writerow(row)
+            elif kingdom == "Fungi":
+                writerITS.writerow(row)
+            else:
+                writer18S.writerow(row)
+
+        file_obj_16S.flush()
+        file_obj_16S.seek(0)
+
+        file_obj_18S.flush()
+        file_obj_18S.seek(0)
+
+        file_obj_ITS.flush()
+        file_obj_ITS.seek(0)
+
+
+        return file_obj_16S, file_obj_18S, file_obj_ITS
+
+
