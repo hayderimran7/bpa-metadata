@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+{% load staticfiles %}
+
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -7,7 +10,7 @@
     {% endblock %}
 
     <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
-
+    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
     {% load static from staticfiles %}
     {% load bootstrap3 %}
     {% load commontags %}
