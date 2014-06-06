@@ -1,1 +1,1 @@
-model_class = "BASE.horizonclassification"
+model_class = "base.horizonclassification"

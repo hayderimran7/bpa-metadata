@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}BASE Contextual Site Detail {% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>
+                BASE Contextual Detail for
+                <a href="{% url 'basemetagenomics:sample' samplecontext.bpa_id %}">
+                    {{ samplecontext.bpa_id }}
+                </a>
+            </h3>
+        </div>
+
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <td><b>Site</b></td>
+                <td>{% if samplecontext.site %}
+                    <a href="{% url 'basecontextual:collectionsitedetail' samplecontext.site.pk %}">
+                        {{ samplecontext.site.get_location_name }}
+                    </a>
+                    {% else %}
+                    No Site
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><b>Horizon Classification 1</b></td>
+                <td>{{ samplecontext.horizon_classification1 }}</td>
+            </tr>
+            <tr>
+                <td><b>Horizon Classification 2</b></td>
+                <td>{{ samplecontext.horizon_classification2 }}</td>
+            </tr>
+            <tr>
+                <td><b>Depth</b></td>
+                <td>{{ samplecontext.depth }}</td>
+            </tr>
+            <tr>
+                <td><b>Methodological Notes</b></td>
+                <td>{{ samplecontext.methodological_notes }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}
+

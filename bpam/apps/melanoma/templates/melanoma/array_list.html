@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Melanoma Arrays{% endblock %}
+
+{% block content %}
+{% if arrays %}
+<h2>Melanoma Arrays</h2>
+
+<table id="array-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Array ID</th>
+        <th>Batch Number</th>
+        <th>Well ID</th>
+        <th>MIA ID</th>
+        <th>Call Rate</th>
+        <th>Gender</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for array in arrays %}
+    <tr>
+        <td>
+            <a href="{% url 'melanoma:sample' array.bpa_id %}">{{ array.bpa_id }}</a>
+        </td>
+        <td>{{ array.array_id }}</td>
+        <td>{{ array.batch_number }}</td>
+        <td>{{ array.well_id }}</td>
+        <td>{{ array.mia_id }}</td>
+        <td>{{ array.call_rate }}</td>
+        <td>
+            {% if array.is_male %}
+            <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="BASE">
+            {% elif array.is_female %}
+            <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="BASE">
+            {% endif %}
+        </td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% include "pagination.html" %}
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#array-list").tablesorter();
+        });
+    });
+</script>
+
+
+{% else %}
+<h3> No Melanoma Array Data is currently available </h3>
+{% endif %}
+
+{% endblock %}

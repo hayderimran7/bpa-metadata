@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Sample Name</th>
+        <th>Tumour Stage</th>
+        <th>Sequence Coverage</th>
+        <th>Melanoma Contact Scientist</th>
+        <th>Contact affiliation</th>
+        <th>Sex</th>
+        <th>DNA Source</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            <a href="{% url 'melanoma:sample' sample.bpa_id %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+        <td>{{ sample.tumor_stage }}</td>
+        <td>{{ sample.requested_sequence_coverage }}</td>
+        <td>{{ sample.contact_scientist }}</td>
+        <td>{{ sample.contact_scientist.organisation }}</td>
+        <td>
+            {% if sample.is_male %}
+            <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="BASE">
+            {% elif sample.is_female %}
+            <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="BASE">
+            {% endif %}
+        </td>
+        </td>
+        <td>{{ sample.dna_source }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sample-list").tablesorter();
+        });
+    });
+</script>
+

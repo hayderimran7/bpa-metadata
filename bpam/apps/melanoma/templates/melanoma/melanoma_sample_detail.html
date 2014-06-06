@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Melanoma Sample Detail {% endblock %}
+
+{% block content %}
+<div class="panel panel-info">
+    <div class="panel-body">
+        <h3> Melanoma Sample {{ sample.bpa_id }} Information</h3>
+    </div>
+    <table id="info" class="table table-striped">
+        <tbody>
+        <tr>
+            <td> Sample Name</td>
+            <td> {{ sample.name }}</td>
+        </tr>
+        <tr>
+            <td> Sex</td>
+            <td>
+                {% if sample.is_male %}
+                <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="BASE">
+                {% elif sample.is_female %}
+                <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="BASE">
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td> Tumour Stage</td>
+            <td> {{ sample.tumor_stage}}</td>
+        </tr>
+        <tr>
+            <td> Histological Subtype</td>
+            <td> {{ sample.histological_subtype}}</td>
+        </tr>
+        <tr>
+            <td> DNA Source</td>
+            <td> {{ sample.dna_source }}</td>
+        </tr>
+        <tr>
+            <td> DNA Extraction Protocol</td>
+            <td> {{ sample.dna_extraction_protocol }}</td>
+        </tr>
+        <tr>
+            <td> Sequence Coverage</td>
+            <td> {{ sample.requested_sequence_coverage }}</td>
+        </tr>
+        <tr>
+            <td> Contact Scientist</td>
+            <td> {{ sample.contact_scientist }}</td>
+        </tr>
+        <tr>
+            <td> Note</td>
+            <td> {{ sample.note }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% include "sequencefilelist.html" %}
+
+{% endblock %}
+

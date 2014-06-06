@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Melanoma Listing{% endblock %}
+
+{% block content %}
+{% if samples %}
+<h3>Melanoma Sample List ({{samples|length}})</h3>
+
+{% include "melanoma/melanoma_sample_list_table.html" %}
+
+<form>
+    <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma:samples' %}"/>
+</form>
+
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Melanoma Sequence Data is currently available </h3>
+{% endif %}
+
+{% endblock %}

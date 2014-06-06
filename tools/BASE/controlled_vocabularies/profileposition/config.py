@@ -1,1 +1,1 @@
-model_class = "BASE.profileposition"
+model_class = "base.profileposition"

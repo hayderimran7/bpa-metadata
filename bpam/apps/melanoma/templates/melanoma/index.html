@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Melanoma{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-4 col-md-3 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'melanoma/melanoma.jpg' %}" alt="Melanoma">
+            </div>
+
+            <div class="col-sm-8 col-md-3 col-lg-3">
+                <h2>
+                    Melanoma
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'melanoma:samples' %}"> Samples <span class="badge">{{ sample_size }}</span></a>
+                    <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}"> Sequence Files <span class="badge">{{ sequence_file_size }}</span></a>
+                    <a class="list-group-item" href="{% url 'melanoma:arrays' %}"> Arrays <span class="badge">{{ array_size }}</span> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

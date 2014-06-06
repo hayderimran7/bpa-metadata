@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 {% load bootstrap3 %}
 {% load commontags %}
+{% load staticfiles %}
 <html>
 <head>
+    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
     <title>Bioplatforms Australia Metadata</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8"/>
@@ -12,6 +14,18 @@
             padding-left: 1em;
             padding-right: 1em;
         }
+
+        .landing_header img {
+            float: left;
+        }
+
+        .landing_header h1 {
+            position: relative;
+            top: 18px;
+            left: 10px;
+        }
+
+
     </style>
 </head>
 
@@ -31,10 +45,10 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a  href="http://www.bioplatforms.com.au">Bioplatforms Australia</a></li>
-                <li class="active"><a  href="{% url 'admin:index' %}">Admin</a></li>
-                <li class="active"><a  href="http://ccg.murdoch.edu.au">CCG</a></li>
-                <li class="active"><a  href="http://ccg.murdoch.edu.au/index.php/contact">Contact</a></li>
+                <li class="active"><a href="http://www.bioplatforms.com.au">Bioplatforms Australia</a></li>
+                <li class="active"><a href="{% url 'admin:index' %}">Admin</a></li>
+                <li class="active"><a href="http://ccg.murdoch.edu.au">CCG</a></li>
+                <li class="active"><a href="http://ccg.murdoch.edu.au/index.php/contact">Contact</a></li>
             </ul>
         </div>
         <!--/.nav-collapse -->
@@ -42,22 +56,78 @@
 
     <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
-        <h1>Bioplatforms Australia Metadata</h1>
+
+        <div class="landing_header">
+            <p>
+                <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+
+            <h1> Bioplatforms Australia Metadata</h1>
+            </p>
+        </div>
+
+
         <p>Welcome to Bioplatforms Australia's project metadata portal</p>
-        {% load staticfiles %}
-        <p>
-            <img src="{% static "bpa-logos/BPA-logo-clear.png" %}" alt="BPA Logo"/>
-        </p>
-        <p>
-            <a class="btn btn-lg btn-primary" href="{% url 'admin:index' %}">Bioplatforms Australia Metadata &raquo;</a>
-        </p>
-        <p>
-            <a class="btn btn-lg btn-primary" href="https://downloads.bioplatforms.com">Sequence Downloads &raquo;</a>
-        </p>
+
+
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <a class="thumbnail" href="{% url 'base:index' %}">
+                    <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+
+                    <div class="caption">
+                        <h3>Biome of Australian Soil Environments</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <a class="thumbnail" href="{% url 'gbr:index' %}">
+                    <img class="img-responsive img-rounded" src="{% static 'gbr/coral.jpg' %}" alt="GBR">
+
+                    <div class="caption">
+                        <h3>Great Barrier Reef</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <a class="thumbnail" href="{% url 'melanoma:index' %}">
+                    <img class="img-responsive img-rounded" src="{% static 'melanoma/melanoma.jpg' %}" alt="Melanoma">
+
+                    <div class="caption">
+                        <h3>Melanoma</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <a class="thumbnail" href="{% url 'wheat_cultivars:index' %}">
+                    <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}"
+                         alt="Wheat Cultivars">
+
+                    <div class="caption">
+                        <h3>Wheat Cultivars</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <a class="thumbnail" href="{% url 'wheat_pathogens:index' %}">
+                    <img class="img-responsive img-rounded" src="{% static 'wheat_pathogens/wheat_pathogens.jpg' %}"
+                         alt="Wheat Pathogens">
+
+                    <div class="caption">
+                        <h3>Wheat Pathogens</h3>
+                    </div>
+                </a>
+            </div>
+
+        </div>
     </div>
 
     <footer>
-        <p>&copy; Bioplatforms Australia 2013, bpa-metadata {% bpam_version %}</p>
+        <p>&copy; Bioplatforms Australia 2013, 2014, bpa-metadata {% bpam_version %}</p>
     </footer>
 
 </div>

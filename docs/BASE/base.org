@@ -1,0 +1,18 @@
+* Sub-projects
+
+** 454
+
+** Metagenomics
+*** https://docs.google.com/spreadsheet/ccc?key=0AvChXk8QAupBdENpekdlWGQxcnM1dHhMOGVRVVBGdXc&usp=sharing#gid=0
+
+
+
+
+** Miseq
+*** https://docs.google.com/spreadsheet/ccc?key=0AvChXk8QAupBdGVxYmNXZjM4TG9yS2FmRXhQWkUtNFE&usp=sharing#gid=0
+
+** Contextual (Site Data)
+
+** OTU
+*** Searching
+*** Reporting

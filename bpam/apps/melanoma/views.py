@@ -1,20 +1,53 @@
-from django.views.generic.list import ListView
+from django.views.generic import ListView, TemplateView, DetailView
 from django.shortcuts import render
 
-from apps.melanoma.models import MelanomaSequenceFile
-from apps.common.models import BPAUniqueID
+from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
+
+from django.conf import settings
 
 
-class MelanomaSequenceFileListView(ListView):
-    model = MelanomaSequenceFile
-
-    def get_queryset(self):
-        return MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
-                                                           'url_verification', 'md5')
+class IndexView(TemplateView):
+    template_name = 'melanoma/index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MelanomaSequenceFileListView, self).get_context_data(**kwargs)
-        context['catalog'] = 'melanoma'
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['sample_size'] = MelanomaSample.objects.count()
+        context['array_size'] = Array.objects.count()
+        context['sequence_file_size'] = MelanomaSequenceFile.objects.count()
+        return context
+
+
+class SequenceFileListView(ListView):
+    model = MelanomaSequenceFile
+    context_object_name = 'sequencefiles'
+    queryset = MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification', 'md5')
+    # paginate_by = settings.DEFAULT_PAGINATION
+
+
+class ArrayListView(ListView):
+    model = Array
+    context_object_name = 'arrays'
+    # paginate_by = settings.DEFAULT_PAGINATION
+
+
+class SampleListView(ListView):
+    model = MelanomaSample
+    context_object_name = 'samples'
+    template_name = 'melanoma/melanoma_sample_list.html'
+    queryset = MelanomaSample.objects.select_related('bpa_id', 'contact_scientist', 'tumor_stage', 'dna_source')
+    # paginate_by = settings.DEFAULT_PAGINATION
+
+
+class SampleDetailView(DetailView):
+    model = MelanomaSample
+    context_object_name = 'sample'
+    template_name = 'melanoma/melanoma_sample_detail.html'
+
+
+    def get_context_data(self, **kwargs):
+        context = super(SampleDetailView, self).get_context_data(**kwargs)
+        context['sequencefiles'] = MelanomaSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+
         return context
 
 
@@ -42,4 +75,7 @@ def search_view(request, term):
         )
 
     data['nresults'] += len(data['melanoma_object_list'])
-    return render(request, 'common/search_results.html', data)
+    return render(request, 'melanoma/search_results.html', data)
+
+
+

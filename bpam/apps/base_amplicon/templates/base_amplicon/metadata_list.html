@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Amplicon Metadata {% endblock %}
+
+{% block content %}
+
+<h3><a href="{% url 'base:index'%}">BASE</a> {{ target }} <a href="{% url 'base_amplicon:index'%}">Amplicon Metadata</a>
+</h3>
+
+{% if metadata_list %}
+{% include "base_amplicon/metadata_table.html" %}
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Amplicon data is currently available </h3>
+{% endif %}
+
+{% endblock %}

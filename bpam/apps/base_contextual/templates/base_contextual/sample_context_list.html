@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Samples Contextual Information{% endblock %}
+
+{% block content %}
+{% if sample_contexts %}
+<h3>BASE Samples Contextual Information</h3>
+
+{% include "base_contextual/sample_context_table.html" %}
+
+{% include "pagination.html" %}
+{% else %}
+<h3> No Contextual data is currently available </h3>
+{% endif %}
+
+{% endblock %}
+
+

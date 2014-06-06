@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}All Chemical Analysis {% endblock %}
+
+{% block content %}
+
+{% if reports %}
+<div class="container-fluid">
+    <h3><a href="{% url 'base:index'%}">BASE</a> Chemical Analysis ({{reports|length}} Records) </h3>
+
+    <div class="alert alert-info">
+        Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
+    </div>
+
+    {% include "base_contextual/chemicalanalysis_table.html" %}
+    {% include "pagination.html" %}
+</div>
+
+{% else %}
+<h3> No Chemical analysis data is currently available </h3>
+{% endif %}
+
+{% endblock %}

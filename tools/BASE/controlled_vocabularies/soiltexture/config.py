@@ -1,1 +1,1 @@
-model_class = "BASE.soiltexture"
+model_class = "base.soiltexture"

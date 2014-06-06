@@ -1,10 +1,34 @@
+from django.conf.urls import patterns, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from django.conf.urls import patterns, include, url
-from django.contrib.auth.decorators import login_required, permission_required
+from . import views
 
-from apps.melanoma.views import MelanomaSequenceFileListView, search_view
-
-urlpatterns = patterns('',
-    url(r'^melanoma/?$', login_required(MelanomaSequenceFileListView.as_view()), name="melanoma-list"),
-    url(r'^melanoma/search/(.*)$', search_view, name="melanoma-search"),
+urlpatterns = patterns(
+    '',
+    url(
+        regex=r'^samples',
+        view=views.SampleListView.as_view(),
+        name='samples'),
+    url(
+        regex=r'^sample/(?P<pk>.*)/$',
+        view=views.SampleDetailView.as_view(),
+        name='sample'),
+    url(
+        regex=r'^sequencefiles',
+        view=views.SequenceFileListView.as_view(),
+        name='sequencefiles'),
+    url(
+        regex=r'^arrays',
+        view=views.ArrayListView.as_view(),
+        name='arrays'),
+    url(
+        regex=r'search/(.*)$',
+        view=views.search_view,
+        name="search"),
+    url(
+        regex=r'^$',
+        view=views.IndexView.as_view(),
+        name='index'),
 )
+
+urlpatterns += staticfiles_urlpatterns()

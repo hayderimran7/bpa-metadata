@@ -1,1 +1,1 @@
-model_class = "BASE.broadvegetationtype"
+model_class = "base.broadvegetationtype"

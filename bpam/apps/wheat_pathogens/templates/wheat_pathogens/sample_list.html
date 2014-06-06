@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block title %}Wheat Pathogen Samples {% endblock %}
+
+{% block content %}
+
+<h3>Wheat Pathogen Samples</h3>
+
+{% if samples %}
+{% include "wheat_pathogens/sample_table.html" %}
+
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Wheat Pathogen Data is currently available </h3>
+{% endif %}
+
+
+{% endblock %}

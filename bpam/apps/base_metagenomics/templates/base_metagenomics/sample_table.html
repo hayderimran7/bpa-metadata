@@ -1,0 +1,25 @@
+<div class="panel panel-info">
+
+    <table id="sample-list" class="table table-striped">
+        <thead>
+        <tr>
+            <th>BPA ID</th>
+            <th>Name</th>
+            <th>Sequence Coverage</th>
+            <th>DNA Extraction Protocol</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sample in samples %}
+        <tr>
+            <td>
+                <a href="{% url 'basemetagenomics:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+            </td>
+            <td>{{ sample.name }}</td>
+            <td>{{ sample.requested_sequence_coverage }}</td>
+            <td>{{ sample.dna_extraction_protocol }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

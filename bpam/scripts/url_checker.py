@@ -1,8 +1,7 @@
 import time
 import sys
-import logging
+import django
 from pprint import pprint
-
 import requests
 
 from apps.common.models import URLVerification
@@ -15,8 +14,10 @@ from apps.wheat_pathogens.models import PathogenSequenceFile
 SLEEP_TIME = 0.0  # time to rest between checks
 MELANOMA_PASS = 'm3lan0ma'  # Melanoma http access password
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('URLChecker')
+from libs.logger_utils import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
@@ -52,26 +53,38 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
 def check_gbr(sleep_time):
     logger.info('Checking GBR')
     session = requests.Session()
-    process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    try:
+        process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
 
 
 def check_wheat_cultivars(sleep_time):
     logger.info('Checking Wheat Cultivars')
     session = requests.Session()
-    process_object(sleep_time, session, CultivarSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    try:
+        process_object(sleep_time, session, CultivarSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
 
 
 def check_wheat_pathogens(sleep_time):
     logger.info('Checking Wheat Pathogens')
     session = requests.Session()
-    process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    try:
+        process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
 
 
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
     session.auth = ('bpa', MELANOMA_PASS)
-    process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    try:
+        process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
 
 
 def run(sleep_time=SLEEP_TIME):

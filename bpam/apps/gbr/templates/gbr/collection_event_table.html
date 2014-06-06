@@ -1,0 +1,39 @@
+<table id="sitelist" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Site Name</th>
+        <th>Collection Date</th>
+        <th>Collector</th>
+        <th class="lat">Latitude</th>
+        <th class="lng">Longitude</th>
+        <th>Water Temperature</th>
+        <th>Water pH</th>
+        <th>Water Depth</th>
+        <th>Note</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for collectionevent in collections %}
+    <tr>
+        <td>{{ collectionevent.site.get_name }}</td>
+        <td>{{ collectionevent.collection_date }}</td>
+        <td>{{ collectionevent.collector }}</td>
+        <td class="lat">{{ collectionevent.lat }}</td>
+        <td class="lng">{{ collectionevent.lon }}</td>
+        <td>{{ collectionevent.water_temp|default:""}}</td>
+        <td>{{ collectionevent.water_ph|default:""}}</td>
+        <td>{{ collectionevent.depth|default:"" }}</td>
+        <td>{{ collectionevent.note }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sequence-list").tablesorter();
+        });
+    });
+</script>
+

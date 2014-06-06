@@ -1,0 +1,53 @@
+{% if sequencefiles %}
+<div class="panel panel-info">
+    <div class="panel-body">
+        <div class="alert alert-info">
+            {{ sequencefiles|length }} Related Sequence files available for BPA Sample ID {{ sample.bpa_id }}
+        </div>
+    </div>
+
+    <table id="sequence-list" class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Filename</th>
+            <th>MD5</th>
+            <th>Run Date</th>
+            <th>Run Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sfile in sequencefiles %}
+        <tr>
+            <td>
+                {% if sfile.url_verification.status_ok %}
+                    <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-download"></span>
+                {% else %}
+                    <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-flag"></span>
+                {% endif %}
+            </td>
+            <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
+            <td style="font-family: monospace">{{ sfile.md5 }}</td>
+            <td>{% if sfile.date_received_from_sequencing_facility %} {{ sfile.date_received_from_sequencing_facility }} {% endif %}</td>
+            <td>{% if sfile.run %} {{ sfile.run }} {% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sequence-list").tablesorter();
+        });
+    });
+</script>
+
+{% else %}
+<div class="alert alert-warning">
+    No Sequence Files currently available for {{ sample.bpa_id}}
+</div>
+{% endif %}

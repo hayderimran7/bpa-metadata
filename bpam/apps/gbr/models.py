@@ -1,34 +1,62 @@
-import urlparse
-import urllib
-
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, URLVerification, DebugNote
+from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, DebugNote, Facility
+
+
+class CollectionSite(models.Model):
+    """
+    Coral Collection Site
+    """
+    site_name = models.CharField(_('Site Name'), max_length=100, null=True, blank=True)
+    lat = models.FloatField(_('Latitude'), help_text=_('Degree decimal'))
+    lon = models.FloatField(_('Longitude'), help_text=_('Degree decimal'))
+    note = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = _('Coral Collection Sites')
+        unique_together = ('lat', 'lon',)
+
+    def __unicode__(self):
+        return u'{0} {1}, {2}'.format(self.site_name, self.lat, self.lon)
+
+    def get_name(self):
+        """
+        Get site name or lat, lon if no location name is available
+        """
+        if self.site_name.strip() != '':
+            return self.site_name
+        return u'{0}, {1}'.format(self.lat, self.lon)
 
 
 class CollectionEvent(models.Model):
     """
     Data surrounding a Coral collection
     """
-
-    name = models.CharField(max_length=100, null=True, blank=True)
-    collection_date = models.DateField(blank=True, null=True)
+    site = models.ForeignKey(CollectionSite, null=True)
+    collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     collector = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='collector')
-    # this could be normalised to float (lat, lng) but then input in the admin might be tricky?
-    gps_location = models.CharField(max_length=100, null=True, blank=True)
-    water_temp = models.FloatField(null=True, blank=True)
-    water_ph = models.FloatField(null=True, blank=True, verbose_name=_('pH'))
-    depth = models.CharField(max_length=20, null=True, blank=True)
+    water_temp = models.FloatField(_('Water Temperature'), null=True, blank=True)
+    water_ph = models.FloatField(_('Water pH'), null=True, blank=True)
+    depth = models.CharField(_('Water Depth'), max_length=20, null=True, blank=True)
 
     note = models.TextField(blank=True)
 
-    class Meta:
-        unique_together = (('name', 'collection_date'))
-
     def __unicode__(self):
-        return u'{0} {1}'.format(self.name, self.collection_date)
+        return u'{0} {1}'.format(self.site.site_name, self.collection_date, self.collector)
+
+
+class GBRProtocol(Protocol):
+    """
+    A GBR Protocol
+    """
+    base_pairs_string = models.TextField(_('Base Pairs'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Protocol')
+        verbose_name_plural = _('Protocol')
+        unique_together = ('library_type', 'base_pairs_string', 'library_construction_protocol')
 
 
 class GBRSample(Sample, DebugNote):
@@ -36,22 +64,26 @@ class GBRSample(Sample, DebugNote):
     GBR specific Sample
     """
 
-    organism = models.ForeignKey(Organism)
-    dataset = models.CharField(max_length=100, null=True, blank=True)
-    dna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA Concentration'))
-    total_dna = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA'))
+    organism = models.ForeignKey(Organism, null=True)
+    collection_event = models.ForeignKey(CollectionEvent, null=True)
 
-    collection_event = models.ForeignKey(CollectionEvent)
-
-    sequencing_notes = models.TextField(null=True, blank=True, verbose_name=_('Sequencing Notes'))
-    dna_rna_concentration = models.FloatField(null=True, blank=True, verbose_name=_('DNA/RNA Concentration'))
-    total_dna_rna_shipped = models.FloatField(null=True, blank=True, verbose_name=_('Total DNA/RNA Shipped'))
-    comments_by_facility = models.TextField(null=True, blank=True, verbose_name=_('Facility Comments'))
-    sequencing_data_eta = models.DateField(blank=True, null=True, verbose_name=_('Sequence ETA'))
-    date_sequenced = models.DateField(blank=True, null=True)
-    requested_read_length = models.IntegerField(blank=True, null=True)
+    dataset = models.CharField(_('Data Set'), max_length=100, null=True, blank=True)
+    sequencing_notes = models.TextField(_('Sequencing Notes'), null=True, blank=True)
+    dna_rna_concentration = models.FloatField(_('DNA/RNA Concentration'), null=True, blank=True)
+    total_dna_rna_shipped = models.FloatField(_('Total DNA/RNA Shipped'), null=True, blank=True)
+    sequencing_facility = models.ForeignKey(Facility, null=True)
+    comments_by_facility = models.TextField(_('Facility Comments'), null=True, blank=True)
+    sequencing_data_eta = models.DateField(_('Sequence ETA'), blank=True, null=True)
+    date_sequenced = models.DateField(_('Date Sequenced'), blank=True, null=True)
+    requested_read_length = models.IntegerField(_('Requested Read Length'), blank=True, null=True)
     contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
-                                                 related_name='bioinformatician')
+                                                 related_name='bioinformatician',
+                                                 verbose_name=_('Contact Bioinformatician'))
+
+    protocol = models.ForeignKey(GBRProtocol, null=True)
+
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in GBRSample._meta.fields]
 
 
 class GBRRun(Run):
@@ -64,37 +96,15 @@ class GBRRun(Run):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
 
 
-class GBRProtocol(Protocol):
-    run = models.OneToOneField(GBRRun, blank=True, null=True)
-
-
 class GBRSequenceFile(SequenceFile):
     """
     Sequence Files resulting from a run
     """
 
+    project_name = 'gbr'
     sample = models.ForeignKey(GBRSample)
     run = models.ForeignKey(GBRRun)
-    url_verification = models.OneToOneField(URLVerification, null=True)
+
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run, self.filename)
-
-    def link_ok(self):
-        if self.url_verification is not None:
-            return self.url_verification.status_ok
-        else:
-            return False
-
-    # FIXME move this into sequencefile, code duplicated with MelanomaSequenceFile
-    def get_url(self):
-        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
-        uj = urlparse.urljoin
-        uq = urllib.quote
-        return uj(settings.BPA_BASE_URL, "GBR/%s/%s/%s" % (
-            uq(bpa_id),
-            uq(self.run.flow_cell_id),
-            uq(self.filename)))
-
-    url = property(get_url)
-

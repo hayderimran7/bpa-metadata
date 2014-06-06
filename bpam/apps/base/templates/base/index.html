@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}BASE{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-sm-4 col-md-6 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+            </div>
+            <div class="col-sm-4 col-md-3 col-lg-3">
+                <h2>
+                    Biome of Australian Soil Environments
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'base:search' %}">Search</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:index' %}">Contextual Data</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:samples' %}">Samples in Context</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:collectionsites' %}">Sites</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:chemicalanalysis' %}">Chemical Analysis</a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:index' %}">Amplicons</a>
+                    <a class="list-group-item" href="{% url 'basemetagenomics:samples' %}">Metagenomics</a>
+                    <a class="list-group-item" href="{% url 'base454:454samples' %}">454</a>
+                    <a class="list-group-item" href="{% url 'base:contacts' %}">Contacts</a>
+                    <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request Access</a>
+                </div>
+                <a href="http://www.bioplatforms.com.au/special-initiatives/environment/soil-biodiversity">
+                    Bioplatforms Australia Soil Biodiversity Site</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

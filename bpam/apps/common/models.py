@@ -1,3 +1,6 @@
+import urlparse
+import urllib
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
@@ -11,12 +14,12 @@ class BPAProject(models.Model):
 
     key = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, blank=True)
+    description = models.CharField(_('Description'), max_length=2000, blank=True, help_text='BPA Project description')
     note = models.TextField(blank=True)
 
     class Meta:
         verbose_name = _('BPA Project')
-        verbose_name_plural = _("BPA Projects")
+        verbose_name_plural = _('BPA Projects')
 
     def __unicode__(self):
         return self.name
@@ -28,7 +31,8 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField(verbose_name=_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True)
+    bpa_id = models.CharField(_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True,
+                              help_text='Unique BPA ID')
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
@@ -40,22 +44,41 @@ class BPAUniqueID(models.Model):
         return self.bpa_id
 
 
+class FacilityManager(models.Manager):
+    """
+    Facility model manager
+    """
+
+    def add(self, name):
+        """
+        I the name is empty return the Unknown Facility
+        """
+        name = name.strip().upper()
+        if name == '':
+            name = 'Unknown'
+        facility, _ = self.get_or_create(name=name)
+        return facility
+
+
 class Facility(models.Model):
     """
     The Sequencing Facility
     """
 
     facilities = {'RAM': 'Ramaciotti',
+                  'UNSW': 'UNSW',
                   'AGRF': 'AGRF',
                   'ANU': 'ANU',
                   '': 'Unknown',
                   'Unknown': 'Unknown'}
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(_('Facility Name'), max_length=100, help_text='Facility short name', unique=True)
     note = models.TextField(blank=True)
+    objects = FacilityManager()
 
     class Meta:
         verbose_name_plural = _('Facilities')
+
 
     def get_name(self, key):
         """
@@ -75,16 +98,16 @@ class Organism(models.Model):
     An Organism
     """
 
-    domain = models.CharField(max_length=100, blank=True)
+    domain = models.CharField(_('Domain'), max_length=100, blank=True)
     kingdom = models.CharField(max_length=100, blank=True)
     phylum = models.CharField(max_length=100, blank=True)
-    organism_class = models.CharField('Class', max_length=100, blank=True)
+    organism_class = models.CharField(_('Class'), max_length=100, blank=True)
     order = models.CharField(max_length=100, blank=True)
     family = models.CharField(max_length=100, blank=True)
     genus = models.CharField(max_length=100, blank=True)
     species = models.CharField(max_length=100, blank=True)
 
-    ncbi_classification = models.URLField('NCBI organismal classification', blank=True)
+    ncbi_classification = models.URLField('NCBI Organismal Classification', blank=True)
     note = models.TextField(blank=True)
 
     class Meta:
@@ -118,7 +141,7 @@ class Sequencer(models.Model):
     The Sequencer
     """
 
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True, help_text='The sequencer name')
     description = models.TextField(blank=True)
 
     class Meta:
@@ -134,9 +157,10 @@ class Protocol(models.Model):
     """
 
     LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
-    library_type = models.CharField(max_length=2, choices=LIB_TYPES)
-    base_pairs = models.IntegerField(blank=True, null=True)
-    library_construction_protocol = models.CharField(max_length=200)
+    library_type = models.CharField(_('Type'), max_length=2, choices=LIB_TYPES)
+    library_construction = models.CharField(_('Construction'), max_length=200, blank=True, null=True)
+    base_pairs = models.IntegerField(_('Base Pairs'), blank=True, null=True)
+    library_construction_protocol = models.CharField(_('Construction Protocol'), max_length=200)
     note = models.TextField(blank=True)
 
     class Meta:
@@ -146,8 +170,8 @@ class Protocol(models.Model):
         unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
 
     def __unicode__(self):
-        return u'Size: {0} Type: {1} Protocol: {2}'.format(self.base_pairs, self.library_type,
-                                                           self.library_construction_protocol)
+        return u'Size:{0}, Type:{1}, Protocol:{2}'.format(self.base_pairs, self.library_type,
+                                                          self.library_construction_protocol)
 
 
 class Sample(models.Model):
@@ -155,25 +179,24 @@ class Sample(models.Model):
     The common base Sample
     """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, unique=True, verbose_name=_('BPA ID'))
+    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))  # PK
     contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
-    name = models.CharField(max_length=200, verbose_name=_('Sample name'))
-    dna_extraction_protocol = models.CharField(max_length=200, blank=True, null=True,
-                                               verbose_name=_('DNA Extraction Protocol'))
-    requested_sequence_coverage = models.CharField(max_length=6, blank=True)
-    collection_date = models.DateField(blank=True, null=True)
-    date_sent_to_sequencing_facility = models.DateField(blank=True, null=True)
+    name = models.CharField(_('Sample Name'), max_length=200)
+    dna_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True, null=True)
+    requested_sequence_coverage = models.CharField(max_length=50, blank=True)
+    collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
+    date_sent_to_sequencing_facility = models.DateField(_('Date sent to sequencing facility'), blank=True, null=True)
 
-    note = models.TextField(blank=True, null=True)
+    note = models.TextField(_('Note'), blank=True, null=True)
 
     class Meta:
         abstract = True
         verbose_name = _('Sample')
 
     def __unicode__(self):
-        return u'{0} : {1}'.format(self.bpa_id, self.name)
+        return u'{0}:{1}'.format(self.bpa_id, self.name)
 
 
 class Run(models.Model):
@@ -182,8 +205,8 @@ class Run(models.Model):
     This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
-    DNA_extraction_protocol = models.CharField(max_length=200, blank=True)
-    passage_number = models.IntegerField(blank=True, null=True)
+    DNA_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True)
+    passage_number = models.IntegerField(_('Passage Number'), blank=True, null=True)
 
     # facilities
     sequencing_facility = models.ForeignKey(Facility,
@@ -202,34 +225,13 @@ class Run(models.Model):
                                                 blank=True,
                                                 null=True)
 
-    sequencer = models.ForeignKey(Sequencer)
+    sequencer = models.ForeignKey(Sequencer, blank=True, null=True)
     run_number = models.IntegerField(blank=True, null=True)
-    flow_cell_id = models.CharField(max_length=10, blank=True, verbose_name=_('Flow Cell ID'))
+    flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=10, blank=True)
 
     class Meta:
         abstract = True
         verbose_name = _('Run')
-
-
-class SequenceFile(models.Model):
-    """
-    A sequence file resulting from a sequence run
-    """
-
-    index_number = models.IntegerField(blank=True, null=True, verbose_name=_('Index'))
-    lane_number = models.IntegerField(blank=True, null=True, verbose_name=_('Lane'))
-    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
-    filename = models.CharField(max_length=300, blank=True, null=True)
-    md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
-    analysed = models.NullBooleanField(default=False)
-    note = models.TextField(blank=True)
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Sequence File')
-
-    def __unicode__(self):
-        return u'{0}'.format(self.filename)
 
 
 class URLVerification(models.Model):
@@ -246,12 +248,60 @@ class URLVerification(models.Model):
     status_note = models.TextField()
 
 
+class SequenceFile(models.Model):
+    """
+    A sequence file resulting from a sequence run
+    """
+
+    run = None
+    project_name = 'UNSET'  # children sequence files need to set this
+
+    index_number = models.IntegerField(_('Index'), blank=True, null=True, )
+    lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
+    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
+    filename = models.CharField(_('File Name'), max_length=300, blank=True, null=True)
+    md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)
+    analysed = models.NullBooleanField(default=False)
+    note = models.TextField(blank=True)
+
+    url_verification = models.OneToOneField(URLVerification, null=True)
+
+    class Meta:
+        abstract = True
+        verbose_name = _('Sequence File')
+
+    def __unicode__(self):
+        return u'{0}'.format(self.filename)
+
+    def link_ok(self):
+        if self.url_verification is not None:
+            return self.url_verification.status_ok
+        else:
+            return False
+
+    def get_url(self):
+        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
+        uj = urlparse.urljoin
+        uq = urllib.quote
+
+        if self.run is None:
+            return 'NORUN_NOURL'
+
+        return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
+            self.project_name,
+            uq(bpa_id),
+            uq(self.run.flow_cell_id),
+            uq(self.filename)))
+
+    url = property(get_url)
+
+
 class DebugNote(models.Model):
     """
     A text field to use for debugging. Stores the original parsed data.
     """
 
-    debug_note = models.TextField(blank=True, null=True)
+    debug_note = models.TextField(_('Original Data'), blank=True, null=True)
 
     class Meta:
         abstract = True

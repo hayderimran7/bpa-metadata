@@ -1,1 +1,1 @@
-model_class = "BASE.drainageclassification"
+model_class = "base.drainageclassification"

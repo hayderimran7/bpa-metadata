@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}BASE Contextual Data {% endblock %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+            </div>
+            <div class="col-sm-8 col-md-8">
+                <h2><a href="{% url 'base:index' %}">BASE</a> Contextual Data</h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'basecontextual:samples' %}">Samples in Context</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:collectionsites' %}">Sites</a>
+                    <a class="list-group-item" href="{% url 'basecontextual:chemicalanalysis' %}">Chemical Analysis</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

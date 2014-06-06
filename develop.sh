@@ -1,9 +1,9 @@
 #!/bin/bash
 # Script to control bpa-metadata in dev and test
 
-
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
+SECOND_ARGUMENT=$2
 shift
 
 DEV_SETTINGS="bpam.nsettings.dev"
@@ -17,17 +17,24 @@ AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
-PIP_OPTS="-M --download-cache ~/.pip/cache --index-url=https://restricted.crate.io"
-
+PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"
+PIP5_OPTS="${PIP_OPTS} --process-dependency-links --allow-all-external"
+PYVENV="virtualenv-2.7"
 VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
 PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
 DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
 
+# tests need extra python modules
+TESTING_MODULES="PyVirtualDisplay selenium nose sure>=1.2.1 Werkzeug"
+CI_MODULES="coverage==3.6"
+
+export PATH=/usr/pgsql-9.3/bin:${PATH}
+
+
 activate_virtualenv() {
     source ${VIRTUALENV}/bin/activate
 }
-
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
@@ -144,7 +151,6 @@ ci_remote_destroy() {
 ci_staging() {
     ccg ${AWS_STAGING_INSTANCE} boot
     ccg ${AWS_STAGING_INSTANCE} puppet
-    ccg ${AWS_STAGING_INSTANCE} shutdown:50
 }
 
 ci_staging_lettuce() {
@@ -174,14 +180,20 @@ is_running_in_instance() {
     fi
 }
 
-installapp() {
-    log_info "Install ${PROJECT_NICKNAME}'s dependencies"
+
+
+install_bpa_dev() {
+    log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
-        virtualenv --system-site-packages ${TOPDIR}/virt_${PROJECT_NICKNAME}
+        ${PYVENV} ${VIRTUALENV}
         (
-           cd ${TOPDIR}/${PROJECT_NICKNAME}
-           ../virt_${PROJECT_NICKNAME}/bin/pip install ${PIP_OPTS} -e .[dev,tests,downloads,postgres]
+           source ${VIRTUALENV}/bin/activate
+           cd ${CONFIG_DIR}
+           pip install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
+           pip install ${PIP5_OPTS} -e .[dev,tests,downloads]
+           pip install ${PIP5_OPTS} ${CI_MODULES} ${TESTING_MODULES}
+           deactivate
         )
 
         mkdir -p ${HOME}/bin
@@ -219,18 +231,55 @@ local_puppet() {
 }
 
 
+runingest() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    ${CMD} runscript --traceback ${SECOND_ARGUMENT}
+}
+
+ingest_all() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    log_info "Ingest BPA Projects"
+    ${CMD} runscript ingest_bpa_projects --traceback
+    log_info "Ingest BPA Users"
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_melanoma --traceback
+    ${CMD} runscript ingest_gbr --traceback
+    ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_cultivars --traceback
+
+    # BASE
+    ${CMD} runscript ingest_base_454
+    ${CMD} runscript ingest_base_metagenomics --traceback
+    ${CMD} runscript ingest_landuse --traceback
+    ${CMD} runscript ingest_base_contextual --traceback
+    ${CMD} runscript ingest_base_amplicon --traceback
+    ${CMD} runscript ingest_base_otu --traceback
+}
+
+devrun() {
+    ${DJANGO_ADMIN} syncdb --traceback --noinput
+    ${DJANGO_ADMIN} migrate --traceback
+    ingest_all
+    startserver
+}
+
 # django syncdb, migrate and collect static
 syncmigrate() {
-    log_info "syncdb"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
-    log_info "migrate"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
-    log_info "collectstatic"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
+    activate_virtualenv
+    log_info "Running syncdb"
+    ${DJANGO_ADMIN} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
+    log_info "Running migrate"
+    ${DJANGO_ADMIN} migrate --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> migrate-develop.log
+    log_info "Running collectstatic"
+    ${DJANGO_ADMIN} collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> collectstatic-develop.log
+
+    ingest_all
 }
 
 startserver() {
-    log_info "Starting server on http://$(hostname -I):${PORT}"
+    log_info "Starting server on http://$(echo $(hostname -I)):${PORT}"
     ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
 
@@ -255,60 +304,11 @@ purge() {
 }
 
 
-load_base() {
-    CMD='python ./bpam/manage.py'
-    # BASE Controlled Vocabularies
-    ${CMD} loaddata ./apps/BASE/fixtures/LandUseCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TargetGeneCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TargetCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/PCRPrimerCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/GeneralEcologicalZoneCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/BroadVegetationTypeCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/TillageCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/HorizonCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilClassificationCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/ProfilePositionCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/DrainageClassificationCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilColourCV.json  --traceback
-    ${CMD} loaddata ./apps/BASE/fixtures/SoilTextureCV.json  --traceback
-
-    ${CMD} runscript ingest_BASE --traceback
-}
-
-devrun() {
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
-
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_melanoma --traceback
-    ${CMD} runscript ingest_gbr --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-    ${CMD} runscript ingest_wheat_cultivars --traceback
-
-    # load_base
-
-    startserver
-}
-
 dev() { 
     activate_virtualenv
     devsettings
     devrun
 }
-
-wheat_pathogens_dev() {
-    devsettings
-    CMD='python ./bpam/manage.py'
-    ${CMD} syncdb --traceback --noinput
-    ${CMD} migrate --traceback
-
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-}
-
 
 install_ccg() {
     TGT=/usr/local/bin/ccg
@@ -325,6 +325,7 @@ flushdb() {
 }
 
 coverage() {
+    activate_virtualenv
     log_info "Running coverage with reports"
     coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
@@ -339,41 +340,83 @@ unittest() {
     )
 }
 
-
 url_checker() {
-   activate_virtualenv	
-   CMD='python ./bpam/manage.py'
-   ${CMD} runscript url_checker --traceback
+   activate_virtualenv
+   ${DJANGO_ADMIN} runscript url_checker --traceback
 }
 
 
-nuclear() {
+deepclean() {
    activate_virtualenv	
    CMD='python ./bpam/manage.py'
-   ${CMD} reset_db --router=default --traceback
+   ${CMD} reset_db --user=postgres --router=default --traceback
+   log_info "Deepclean syncing"
    ${CMD} syncdb --noinput --traceback
+   log_info "Deepclean Migrating"
    ${CMD} migrate --traceback
-   ${CMD} runscript set_initial_bpa_projects --traceback
-   ${CMD} runscript ingest_users --script-args ./data/users/current
-   ${CMD} runscript ingest_gbr --script-args ./data/gbr/current
-   ${CMD} runscript ingest_melanoma --script-args ./data/melanoma/current
-   ${CMD} runscript ingest_wheat_pathogens --script-args ./data/wheat_pathogens/current
-   ${CMD} runscript ingest_wheat_cultivars --script-args ./data/wheat_cultivars/current
+}
+
+nuclear() {
+   deepclean
+   ingest_all
 }
 
 usage() {
-    log_warning "Usage ./develop.sh (make_local_instance)"
+    log_warning "Usage ./develop.sh make_local_instance"
+    log_warning "Usage ./develop.sh local_shell"
+    log_warning "Usage ./develop.sh local_puppet"
+    log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (flushdb)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
     log_warning "Usage ./develop.sh url_checker"
+    log_warning "Usage ./develop.sh deepclean"
+    log_warning "Usage ./develop.sh migrationupdate APP"
+    log_warning "Usage ./develop.sh runingest ingest_script"
+}
+
+
+# "temporary" dev utilities
+
+wheat_pathogens_dev() {
+    devsettings
+    ${DJANGO_ADMIN} syncdb --traceback --noinput
+    ${DJANGO_ADMIN} migrate --traceback
+
+    ${DJANGO_ADMIN} runscript set_initial_bpa_projects --traceback
+    ${DJANGO_ADMIN} runscript ingest_users --traceback
+    ${DJANGO_ADMIN} runscript ingest_wheat_pathogens --traceback
+}
+
+load_base() {
+    activate_virtualenv
+    CMD='python ./bpam/manage.py'
+    deepclean
+    ${CMD} runscript set_initial_bpa_projects --traceback
+    ${CMD} runscript ingest_users --traceback
+    ${CMD} runscript ingest_base_454 --traceback
+    ${CMD} runscript ingest_base_metagenomics --traceback
+}
+
+migrationupdate() {
+    activate_virtualenv
+    APP=${SECOND_ARGUMENT}
+    devsettings
+    ${DJANGO_ADMIN} schemamigration ${APP} --auto --update
+    ${DJANGO_ADMIN} migrate ${APP}
 }
 
 case ${ACTION} in
+    migrationupdate)
+        migrationupdate
+        ;;
+    deepclean)
+        deepclean
+        ;;
     coverage)
         coverage
         ;;
@@ -411,7 +454,7 @@ case ${ACTION} in
         ;;
     install)
         devsettings
-        installapp
+        install_bpa_dev
         ;;
     ci_remote_build)
         ci_ssh_agent
@@ -442,7 +485,7 @@ case ${ACTION} in
         ci_fetch_rpm
         ;;
     clean)
-        settings
+        devsettings
         clean
         ;;
     purge)
@@ -463,6 +506,12 @@ case ${ACTION} in
         ;;
     url_checker)
         url_checker
+        ;;
+    load_base)
+        load_base
+        ;;
+    runingest)
+        runingest
         ;;
     *)
         usage

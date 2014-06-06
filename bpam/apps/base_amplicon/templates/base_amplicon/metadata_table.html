@@ -1,0 +1,67 @@
+
+<table id="mdata" class="table table-striped tablesorter">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Sample Extraction ID</th>
+        <th>Name</th>
+        <th>Facility</th>
+        <th>Run Number</th>
+        <th>Amplicon</th>
+        <th>Index</th>
+        <th>PCR 1:10</th>
+        <th>PCR 1:100</th>
+        <th>Neat PCR</th>
+        <th>Dilution</th>
+        <th>Analysis Software Version</th>
+        <th>Reads</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for data in metadata_list %}
+    <tr>
+        <td>
+            <a href="{% url 'base_amplicon:amplicon' data.pk %}">{{ data.bpa_id }}</a>
+        </td>
+        <td>{{ data.sample_extraction_id }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.sequencing_facility }}</td>
+        <td>{{ data.sequencing_run_number }}</td>
+        <td>{{ data.target }}</td>
+        <td>{{ data.index }}</td>
+        <td>
+            {% if data.passed_pcr_1_to_10 %}
+            <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+        </td>
+        <td>
+            {%if data.passed_pcr_1_to_100 %}
+            <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+        </td>
+        <td>
+            {% if data.passed_pcr_neat %}
+            <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove"></span>
+            {% endif %}
+        </td>
+        <td>{{ data.dilution }}</td>
+        <td>{{ data.analysis_software_version }}</td>
+        <td>{{ data.reads }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#mdata").tablesorter();
+        });
+    });
+</script>

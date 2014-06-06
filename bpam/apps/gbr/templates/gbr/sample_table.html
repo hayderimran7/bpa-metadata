@@ -1,0 +1,45 @@
+{% if samples %}
+<table id="sample-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Name</th>
+        <th>Organism</th>
+        <th>DNA/RNA Source</th>
+        <th>Library</th>
+        <th>Library Construction</th>
+        <th>Protocol</th>
+        <th>Index</th>
+        <th>Sequencer</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sample in samples %}
+    <tr>
+        <td>
+            <a href="{% url 'gbr:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+        </td>
+        <td>{{ sample.name }}</td>
+        <td>{{ sample.organism }}</td>
+        <td>{{ sample.dna_source.description }}</td>
+        <td>{{ sample.protocol.base_pairs_string }}</td>
+        <td>{{ sample.protocol.library_construction_protocol }}</td>
+        <td>{{ sample.dna_extraction_protocol }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sample-list").tablesorter();
+        });
+    });
+</script>
+
+{% else %}
+<h3> No Great Barrier Reef Sample Data is currently available </h3>
+{% endif %}

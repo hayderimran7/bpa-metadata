@@ -1,1 +1,1 @@
-model_class = "BASE.soilcolour"
+model_class = "base.soilcolour"

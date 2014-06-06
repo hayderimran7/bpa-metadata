@@ -1,0 +1,48 @@
+<table id="sequence-list" class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>BPA ID</th>
+        <th>Filename</th>
+        <th>MD5</th>
+        <th>Sample Name</th>
+        <th>Run Date</th>
+        <th>Run Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sfile in sequencefiles %}
+    <tr>
+        <td>
+            {% if sfile.url_verification.status_ok %}
+                    <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-download"></span>
+            {% else %}
+                    <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-flag"></span>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'wheat_cultivars:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
+        </td>
+        <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
+        <td>{{ sfile.md5 }}</td>
+        <td>{{ sfile.sample.name }}</td>
+        <td>{{ sfile.date_received_from_sequencing_facility }}</td>
+        <td>{{ sfile.run }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#sequence-list").tablesorter();
+        });
+    });
+</script>
+

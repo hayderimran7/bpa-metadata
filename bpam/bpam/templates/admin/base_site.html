@@ -1,5 +1,6 @@
 {% extends "admin/base.html" %}
 {% load admin_static %}
+{% load commontags %}
 
 {# Additional <head> content here, some extra meta tags or favicon #}
 {#{% block extrahead %}#}
@@ -7,18 +8,26 @@
 
 
 {# Additional CSS includes #}
-{#{% block extrastyle %}#}
-{#  <link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">#}
-{#{% endblock %}#}
+{% block extrastyle %}
+    {#  <link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">#}
+{% endblock %}
 
 
 {# Additional JS files in footer, right before </body> #}
-{#{% block extrajs %}#}
-{#  <script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
-{#{% endblock %}#}
+{% block extrajs %}
+    {#<script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script type="text/javascript"
+            src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4"></script>
+    </body>
+{% endblock %}
 
 
 {% block footer_links %}
+    <button type="button" class="btn btn-default btn-lg" onclick="TogetherJS(this); return false;">
+        <span class="glyphicon glyphicon-globe"></span> Collaborate
+    </button>
+
     <a href="https://downloads.bioplatforms.com" class="icon">Downloads</a>
 {% endblock %}
 
@@ -46,11 +55,12 @@
 {#{% endblock %}#}
 
 {# Footer branding name (center) #}
-{#{% block footer_branding %}#}
-{#{% endblock %}#}
+{% block footer_branding %}
+    Bioplatforms Australia Metadata Version: {% bpam_version %}
+{% endblock %}
 
 
 {% block copyright %}
-    Copyright &copy; 2013 Bioplatforms Australia<br>Developed by
+    Copyright &copy; 2013, 2014 Bioplatforms Australia<br>Developed by
     <a href="http://ccg.murdoch.edu.au" target="_blank">Center for Comparative Genomics, Murdoch University</a>
 {% endblock %}

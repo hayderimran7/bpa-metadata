@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Great Barrier Reef{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'gbr/coral.jpg' %}" alt="BASE">
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <h2> Great Barrier Reef </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'gbr:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr:sequencefiles' %}">Sequence Files <span class="badge">{{ file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr:sites' %}">Collection Sites <span class="badge">{{ collection_sites_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'gbr:collections' %}">Collection Events <span class="badge">{{ collection_events_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'gbr:contacts' %}">Contacts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,5 @@
-import urlparse
-import urllib
-
 from django.db import models
-from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol
 from apps.common.models import Sample
@@ -10,10 +7,7 @@ from apps.common.models import Run
 from apps.common.models import BPAUniqueID
 from apps.common.models import SequenceFile
 from apps.common.models import Organism
-from apps.common.models import URLVerification
 from apps.common.models import DebugNote
-
-from django.utils.translation import ugettext_lazy as _
 
 GENDERS = (('M', 'Male'),
            ('F', 'Female'),
@@ -36,14 +30,19 @@ class Array(models.Model):
     """
     Micro Array ?
     """
-
     bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
-    array_id = models.CharField(max_length=17, verbose_name=_('Array ID'))
-    batch_number = models.IntegerField(verbose_name=_('Batch'))
-    well_id = models.CharField(max_length=4, verbose_name=_('Well ID'))
-    mia_id = models.CharField(max_length=200, verbose_name=_('MIA ID'))
+    array_id = models.CharField(_('Array ID'), max_length=17)
+    batch_number = models.IntegerField(_('Batch'))
+    well_id = models.CharField(_('Well ID'), max_length=4)
+    mia_id = models.CharField(_('MIA ID'), max_length=200)
     call_rate = models.FloatField()
     gender = models.CharField(max_length=1, choices=GENDERS)
+
+    def is_male(self):
+        return self.gender == 'M'
+
+    def is_female(self):
+        return self.gender == 'F'
 
     def __unicode__(self):
         return u'{0} {1} {2}'.format(self.bpa_id, self.array_id, self.mia_id)
@@ -61,6 +60,17 @@ class MelanomaSample(Sample, DebugNote):
     gender = models.CharField(choices=GENDERS, max_length=1, null=True)
     tumor_stage = models.ForeignKey(TumorStage, null=True)
     histological_subtype = models.CharField(max_length=50, null=True)
+
+
+    def is_male(self):
+        return self.gender == 'M'
+
+    def is_female(self):
+        return self.gender == 'F'
+
+
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in MelanomaSample._meta.fields]
 
 
 class MelanomaRun(Run):
@@ -83,9 +93,9 @@ class MelanomaSequenceFile(SequenceFile):
     Sequence Files resulting from a run
     """
 
+    project_name = 'Melanoma'
     sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
-    url_verification = models.OneToOneField(URLVerification, null=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run, self.filename)
@@ -96,6 +106,7 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return False
 
+    @property
     def ingest_issue(self):
         """
         Any issue raised by the ingest process for this file
@@ -105,15 +116,4 @@ class MelanomaSequenceFile(SequenceFile):
         else:
             return ''
 
-    def get_url(self):
-        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
-        uj = urlparse.urljoin
-        uq = urllib.quote
-        return uj(settings.BPA_BASE_URL, "Melanoma/%s/%s/%s" % (
-                uq(bpa_id),
-                uq(self.run.flow_cell_id),
-                uq(self.filename)))
-
-    url = property(get_url)
-    ingest_issue = property(ingest_issue)
 

@@ -1,10 +1,13 @@
-# Django settings for bpametadata project.
+# Django settings for bpa metadata project.
 
 import os
+import sys
+
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
-BPA_VERSION = '1.0.4'
+
+BPA_VERSION = '1.2.4'
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,15 +30,15 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-# ('Your Name', 'your_email@example.com'),
+    # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.mysql',
-        'NAME': 'bpam',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dev_bpam',
         'USER': 'bpam',
         'PASSWORD': 'bpam',
         'HOST': '',
@@ -43,19 +46,63 @@ DATABASES = {
     }
 }
 
-
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-25.27, 133.775),
+    'DEFAULT_ZOOM': 4,
+    'ATTRIBUTION_PREFIX': '',
+    'TILES': 'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
+}
+
 SUIT_CONFIG = {
+    'SHOW_REQUIRED_ASTERISK': True,
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
     'MENU': (
         {'app': 'common', 'label': 'Common', },
-        {'app': 'melanoma', 'label': 'Melanoma', },
-        {'app': 'gbr', 'label': 'Great Barrier Reef', },
-        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens', },
-        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars', },
+        {'app': 'melanoma', 'label': 'Melanoma',
+         'models': ('melanomasample',
+                    'melanomasequencefile',
+                    'array',
+                    'melanomaprotocol',
+                    'melanomarun',
+                    'tumorstage')},
+        {'app': 'gbr', 'label': 'Great Barrier Reef',
+         'models': ('gbrsample',
+                    'gbrsequencefile',
+                    'collectionsite',
+                    'collectionevent',
+                    'gbrrun',
+                    'gbrprotocol',)},
         '-',
-        {'app': 'bpaauth', 'label': 'Authorization', 'icon': 'icon-lock', 'models': ('bpaauth.BPAUser', 'auth.group')},
+        # Wheat
+        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens',
+         'models': ('pathogensample',
+                    'pathogensequencefile',
+                    'pathogenrun',
+                    'pathogenprotocol')},
+        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
+         'models': ('cultivarsample',
+                    'cultivarsequencefile',
+                    'cultivarrun',
+                    'cultivarprotocol')},
+        '-',
+        # Base
+        {'app': 'base_metagenomics', 'label': 'BASE Metagenomics',
+         'models': ('metagenomicssample',
+                    'metagenomicssequencefile',
+                    'metagenomicsrun')},
+        {'app': 'base_amplicon', 'label': 'BASE Amplicons',
+         'models': ('ampliconsequencingmetadata',
+                    'ampliconsequencefile',)
+        },
+        {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
+        {'app': 'base_contextual', 'label': 'BASE Contextual', },
+        {'app': 'base_otu', 'label': 'BASE OTU', },
+        {'app': 'base_454', 'label': 'BASE 454', },
+        '-',
+        {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
+        # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
     )
 }
 
@@ -103,7 +150,7 @@ STATIC_URL = '/bpa-metadata/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -140,6 +187,7 @@ WSGI_APPLICATION = 'bpam.wsgi.application'
 INSTALLED_APPS = (
     'bpam',
     'suit',
+    'crispy_forms',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -151,9 +199,18 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.gis',
     'localflavor',
-    'apps.geo',
+    'mptt',
     'apps.bpaauth',
     'apps.common',
+    # base suit
+    'apps.base',
+    'apps.base_metagenomics',
+    'apps.base_vocabulary',
+    'apps.base_contextual',
+    'apps.base_amplicon',
+    'apps.base_otu',
+    'apps.base_454',
+    # wheat suit
     'apps.wheat_pathogens',
     'apps.wheat_cultivars',
     'apps.melanoma',
@@ -162,8 +219,11 @@ INSTALLED_APPS = (
     'tinymce',
     'bootstrap3',
     'tastypie',
-    # 'lettuce.django',
+    'explorer',
+    'leaflet',
 )
+
+CCG_LOG_DIRECTORY = os.path.join(WEBAPP_ROOT, "log")
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -179,20 +239,49 @@ LOGGING = {
         }
     },
     'handlers': {
+        'logfile': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(CCG_LOG_DIRECTORY, "ingest-logfile"),
+            'maxBytes': 50000,
+            'backupCount': 2,
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'rainbow': {
+            'level': 'DEBUG',
+            'class': 'rainbow_logging_handler.RainbowLoggingHandler',
+            'stream': sys.stderr}
     },
     'loggers': {
+        # noisy backed, set to DEBUG if something seems wrong
+        'django.db.backends': {
+            'handlers': ['rainbow'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
+        '': {
+            'handlers': ['rainbow']
+        }
     }
 }
+
+
+
+# debug_toolbar settings
+if DEBUG:
+    INTERNAL_IPS = ('172.16.2.1',) # explicitly set this for your environment
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
 
 
 def get_env_variable(var_name):
@@ -203,11 +292,14 @@ def get_env_variable(var_name):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
+
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
+DEFAULT_PAGINATION = 50
 
 try:
     print "Attempting to import default settings as appsettings.bpam"
     from appsettings.bpam import *
+
     print "Successfully imported appsettings.bpam"
 except ImportError, e:
     print "Failed to import appsettings.bpam"

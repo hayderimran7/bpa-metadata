@@ -1,0 +1,52 @@
+<table id="contextsamples" class="table table-striped tablesorter">
+    <thead>
+    <tr>
+        <th>BPA ID</th>
+        <th>Collection Site</th>
+        <th>Horizon</th>
+        <th>Depth</th>
+        <th>Ecological Zone</th>
+        <th>Current Land Use</th>
+        <th>Vegetation</th>
+        <th>Australian Soil Type</th>
+        <th>Methodology</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for context in sample_contexts %}
+    <tr>
+        <td>
+            <a href="{% url 'basecontextual:sampledetail' context.pk %}">{{ context.bpa_id }}</a>
+        </td>
+        <td>
+            {% if context.site %}
+            <a href="{% url 'basecontextual:collectionsitedetail' context.site.pk %}">
+                {{ context.site.get_location_name }}</a>
+            {% endif %}
+        </td>
+        <td>{{ context.get_horizon_description }}</td>
+        <td>{{ context.depth }}</td>
+        <td>{{ context.site.general_ecological_zone }}</td>
+        <td>{{ context.site.current_land_use }}</td>
+        <td>{{ context.site.vegetation_type.vegetation }}</td>
+        <td>
+            {% if context.site.soil_type_australian_classification %}
+            <a href="https://www.google.com.au/search?q={{ context.site.soil_type_australian_classification }}+soil+australia">
+                {{ context.site.soil_type_australian_classification }}
+            </a>
+            {% endif %}
+        </td>
+        <td>{{ context.methodological_notes }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $("#contextsamples").tablesorter();
+        });
+    });
+</script>
+
