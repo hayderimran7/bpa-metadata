@@ -772,6 +772,11 @@ class GBRAllArchive(NoMetadataArchive):
     template_name = 'gbrall.html'
     index_name = 'all.html'
 
+class MelanomaAllArchive(NoMetadataArchive):
+    container_name = 'melanoma'
+    template_name = 'melanomaall.html'
+    index_name = 'all.html'
+
 
 if __name__ == '__main__':
     def sanity_check():
@@ -789,6 +794,7 @@ if __name__ == '__main__':
     def run():
         if args['melanoma']:
             run_archive(MelanomaArchive)
+            run_archive(MelanomaAllArchive)
         elif args['gbr']:
             run_archive(GBRArchive)
             run_archive(GBRAllArchive)  # flat view for wget
