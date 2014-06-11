@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 # coding: utf-8
 
 """
@@ -652,7 +652,8 @@ class WheatPathogensArchive(Archive):
             ('isolate_name', 'Isolate name', to_string),
             ('species', 'Species', None),
             ('original_source_host_species', 'Original source host species', None),
-            ('isolate_collection_date', 'Isolate collection date', lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
+            ('isolate_collection_date', 'Isolate collection date',
+             lambda s: excel_date_to_string(wrapper.get_date_mode(), s)),
             ('isolate_collection_location', 'Isolate collection location', None),
             ('pathogenicity', 'Pathogenicity towards wheat', None),
             ('scientist', 'Contact scientist', None),
@@ -771,6 +772,7 @@ class GBRAllArchive(NoMetadataArchive):
     container_name = 'gbr'
     template_name = 'gbrall.html'
     index_name = 'all.html'
+
 
 class MelanomaAllArchive(NoMetadataArchive):
     container_name = 'melanoma'
