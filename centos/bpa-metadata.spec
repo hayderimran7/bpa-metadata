@@ -84,7 +84,6 @@ sed -i "s|`readlink -f ${RPM_BUILD_ROOT}`||g" %{buildinstalldir}/bin/*
 # Strip out mention of rpm buildroot from the pip install record
 find %{buildinstalldir} -name RECORD -exec sed -i -e "s|${RPM_BUILD_ROOT}||" {} \;
 
-cp -r ./data* %{buildinstalldir}/
 cp -r ./tools* %{buildinstalldir}/
 
 # don't need a copy of python interpreter in the virtualenv
