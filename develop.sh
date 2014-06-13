@@ -32,9 +32,6 @@ CI_MODULES="coverage==3.6"
 export PATH=/usr/pgsql-9.3/bin:${PATH}
 
 
-activate_virtualenv() {
-    source ${VIRTUALENV}/bin/activate
-}
 
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
@@ -72,6 +69,16 @@ log() {
         log_success ${MESSAGE}
     fi
 }
+
+activate_virtualenv() {
+    if [ ! -d ${VIRTUALENV} ]
+    then
+        log_error "There is no ${VIRTUALENV} here, activate virtualenv failed."
+        exit 1
+    fi
+    source ${VIRTUALENV}/bin/activate
+}
+
 
 is_root() {
    if [[ ${EUID} -ne 0 ]]
@@ -171,6 +178,7 @@ lint() {
     flake8 ${PROJECT_NICKNAME} --ignore=E501 --count
 }
 
+# 
 is_running_in_instance() {
     if [ ${USER} == 'ccg-user' ]
     then
@@ -180,9 +188,7 @@ is_running_in_instance() {
     fi
 }
 
-
-
-install_bpa_dev() {
+makevirtualenv() {
     log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
@@ -200,8 +206,8 @@ install_bpa_dev() {
         ln -sf ${VIRTUALENV}/bin/python ${HOME}/bin/vpython-${PROJECT_NICKNAME}
         ln -sf ${VIRTUALENV}/bin/django-admin.py ${HOME}/bin/${PROJECT_NICKNAME}
     else
-        log_warning "Not running in a env where creating a virtualenv here would make sense"
-        log_warning "shell into your instance and try again, or use the ccg remote command"
+        log_warning "Not running in a env where creating a virtualenv here would make sense, the virtualenv python needs to link to the lxc python."
+        log_warning "shell into your instance and try again, or use the ccg remote command."
     fi
 }
 
@@ -317,13 +323,6 @@ install_ccg() {
     chmod 755 ${TGT}
 }
 
-flushdb() {
-    DB="bpam"
-    log_info "Flushing ${DB}"
-    mysql -u ${DB} -p${DB} -e "DROP DATABASE ${DB}"
-    mysql -u ${DB} -p${DB} -e "CREATE DATABASE ${DB}"
-}
-
 coverage() {
     activate_virtualenv
     log_info "Running coverage with reports"
@@ -367,9 +366,8 @@ usage() {
     log_warning "Usage ./develop.sh local_puppet"
     log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
-    log_warning "Usage ./develop.sh (flushdb)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
-    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (start|makevirtualenv|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
@@ -426,9 +424,6 @@ case ${ACTION} in
     unittest)
         unittest
         ;;
-    flushdb)
-	    flushdb
-        ;;
     nuclear)
 	    nuclear
         ;;
@@ -452,9 +447,9 @@ case ${ACTION} in
         devsettings
         startserver
         ;;
-    install)
+    makevirtualenv)
         devsettings
-        install_bpa_dev
+        makevirtualenv
         ;;
     ci_remote_build)
         ci_ssh_agent
