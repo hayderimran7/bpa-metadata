@@ -1,0 +1,45 @@
+project:
+  name: bpa_metadata
+
+ccgpuppet:
+  version: "1.10"
+
+instances:
+  # dev
+  dev:
+    extends: centos_65_lxc
+    pre_puppet:
+      - which git || sudo yum install -y -q git
+      - which librarian-puppet || sudo gem install librarian-puppet
+    puppet_manifest: dev.pp
+    post_puppet:
+      - ./develop.sh install
+      - ./develop.sh syncmigrate
+
+  # staging
+  aws_syd_bpa_metadata_staging:
+    extends: centos_65_aws_syd
+    pre_puppet:
+      - which git || sudo yum install -y -q git
+      - which librarian-puppet || sudo gem install librarian-puppet
+    puppet_manifest: staging.pp
+
+  # demo
+  aws_syd_bpa_metadata_demo:
+    extends: centos_65_aws_syd
+    pre_puppet:
+      - which git || sudo yum install -y -q git
+      - which librarian-puppet || sudo gem install librarian-puppet
+    puppet_manifest: demo.pp
+
+  # production
+  aws_syd_bpa_metadata_production:
+    extends: centos_65_aws_syd
+    pre_puppet:
+      - which git || sudo yum install -y -q git
+      - which librarian-puppet || sudo gem install librarian-puppet
+    puppet_manifest: production.pp
+
+  # RPM build
+  aws_rpmbuild_centos6:
+    extends: centos_6_rpmbuild

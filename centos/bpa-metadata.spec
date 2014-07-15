@@ -29,7 +29,7 @@ Prefix: %{_prefix}
 BuildArch: x86_64
 Vendor: Centre for Comparative Genomics <web@ccg.murdoch.edu.au>
 BuildRequires: python%{pyver}-virtualenv python%{pyver}-devel
-Requires: httpd python%{pyver}-psycopg2 python%{pyver}-mod_wsgi
+Requires: python%{pyver}-psycopg2 python%{pyver}-mod_wsgi httpd
 
 %description
 BPA Metadata Management
