@@ -41,6 +41,7 @@ node default {
         hour  => [ 7 ],
     }
 
+    # the rpm also has these dependencies
     case $::osfamily {
         'RedHat', 'Linux': {
             $packages = [
