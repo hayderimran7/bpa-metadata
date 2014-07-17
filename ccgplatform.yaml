@@ -4,40 +4,44 @@ project:
 ccgpuppet:
   version: "1.10"
 
+ccgplatform:
+  version: "1.10"
+
 instances:
-  # dev
-  dev:
-    extends: centos_65_lxc
+  # default instance 
+  default: &DEFAULT
+    extends: centos_64_lxc
     pre_puppet:
       - which git || sudo yum install -y -q git
-      - which librarian-puppet || sudo gem install librarian-puppet
+      - which librarian-puppet || sudo gem install librarian-puppet -v 1.0.4
     puppet_manifest: dev.pp
     post_puppet:
       - ./develop.sh install
       - ./develop.sh syncmigrate
 
+  aws_common: &AWS_COMMON
+    <<: *DEFAULT
+    extends: centos_65_aws_syd
+
+  dev: 
+    <<: *DEFAULT
+
+  play: 
+    <<: *DEFAULT
+
   # staging
   aws_syd_bpa_metadata_staging:
-    extends: centos_65_aws_syd
-    pre_puppet:
-      - which git || sudo yum install -y -q git
-      - which librarian-puppet || sudo gem install librarian-puppet
+    <<: *AWS_COMMON
     puppet_manifest: staging.pp
 
   # demo
   aws_syd_bpa_metadata_demo:
-    extends: centos_65_aws_syd
-    pre_puppet:
-      - which git || sudo yum install -y -q git
-      - which librarian-puppet || sudo gem install librarian-puppet
+    <<: *AWS_COMMON
     puppet_manifest: demo.pp
 
   # production
   aws_syd_bpa_metadata_production:
-    extends: centos_65_aws_syd
-    pre_puppet:
-      - which git || sudo yum install -y -q git
-      - which librarian-puppet || sudo gem install librarian-puppet
+    <<: *AWS_COMMON
     puppet_manifest: production.pp
 
   # RPM build
