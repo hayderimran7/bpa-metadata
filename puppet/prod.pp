@@ -12,16 +12,18 @@ node default {
     include globals
 
     $django_config = {
+      release     => '1.3.0',
       deployment  => 'production',
       dbdriver    => 'django.db.backends.postgresql_psycopg2',
-      dbhost      => '',
+      dbserver    => $globals::dbhost_rds_syd_postgresql_prod,
+      dbhost      => $globals::dbhost_rds_syd_postgresql_prod,
       dbname      => 'bpam_prod',
-      dbuser      => 'bpam',
-      dbpass      => 'bpam',
+      dbuser      => $globals::dbuser_syd_prod,
+      dbpass      => $globals::dbpass_syd_prod,
       memcache    => $globals::memcache_syd,
-      secretkey   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
+      secretkey   => $globals::secretkey_aws_bpam,
       admin_email => $globals::system_email,
-      allowed_hosts => 'localhost',
+      allowed_hosts => 'localhost www.ccgapps.com.au ccgapps.com.au',
     }
 
     ccgdatabase::postgresql::db { $django_config['dbname']:
@@ -32,11 +34,13 @@ node default {
   package {'bpa_metadata':
     ensure => $ensure,
     provider => 'yum_nogpgcheck'
-  } ->
+  } 
+   ->
   django::config { 'bpa_metadata':
     config_hash => $django_config,
-  } ->
-  django::syncdbmigrate{'bpa_metadta':
+  } 
+   ->
+  django::syncdbmigrate{'bpa_metadata':
     dbsync  => true,
     notify  => Service[$ccgapache::params::service_name],
     require => [

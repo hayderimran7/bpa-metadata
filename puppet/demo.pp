@@ -19,7 +19,7 @@ node default {
       dbuser      => 'bpam',
       dbpass      => 'bpam',
       memcache    => $globals::memcache_syd,
-      secretkey   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
+      secretkey   => 'm0th3rl0ad0ffailf0ry0urighth3r3m0f0',
       admin_email => $globals::system_email,
       allowed_hosts => 'localhost',
     }
