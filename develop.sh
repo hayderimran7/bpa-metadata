@@ -182,7 +182,7 @@ is_running_in_instance() {
     fi
 }
 
-makevirtualenv() {
+install() {
     log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
@@ -342,7 +342,7 @@ usage() {
     log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
-    log_warning "Usage ./develop.sh (start|makevirtualenv|clean|purge|pipfreeze|pythonversion)"
+    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
@@ -419,9 +419,9 @@ case ${ACTION} in
         devsettings
         startserver
         ;;
-    makevirtualenv)
+    install)
         devsettings
-        makevirtualenv
+        install
         ;;
     ci_remote_build)
         ci_ssh_agent
