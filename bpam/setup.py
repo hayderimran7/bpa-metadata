@@ -59,6 +59,7 @@ install_requires = [
     'ccg-extras==0.1.9',
     'django-leaflet',
     'pycontracts',
+    'ccg-django-utils',
 ]
 
 dev_requires = [
@@ -90,6 +91,8 @@ downloads_requires = [
 
 
 dependency_links = [
+    'https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.1.tar.gz',
+    'https://bitbucket.org/ccgmurdoch/ccg-django-utils/downloads/ccg-django-utils-0.2.1.tar.gz',
     'https://bitbucket.org/ccgmurdoch/ccg-django-extras/downloads/ccg-extras-0.1.9.tar.gz',
     'https://bitbucket.org/izi/django-admin-tools/downloads/django-admin-tools-0.5.1.tar.gz#md5=132e62fa1d5a0d933c4c13324249381c'
     'https://argparse.googlecode.com/files/argparse-1.2.1.tar.gz',

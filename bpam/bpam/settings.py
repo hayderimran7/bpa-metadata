@@ -6,48 +6,140 @@ import sys
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 
+from ccg_django_utils.conf import EnvConfig
+env = EnvConfig()
+
+
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
 
 BPA_VERSION = '1.2.4'
+# see ccg_django_utils.webhelpers
+BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 
 WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 PROJECT_DIR = Path(__file__).ancestor(1)
-
 MEDIA_ROOT = PROJECT_DIR.child("media")
-
 STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
-
-#STATICFILES_DIRS = (
-#    PROJECT_DIR.child("static"),
-#)
+CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
+CCG_WRITEABLE_DIRECTORY = os.path.join(CCG_INSTALL_ROOT, "scratch")
+PROJECT_NAME = os.path.basename(CCG_INSTALL_ROOT)
 
 TEMPLATE_DIRS = (
     PROJECT_DIR.child('bpam.templates'),
 )
 
-DEBUG = True
+# Make this unique, and don't share it with anybody.
+# see: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
+SECRET_KEY = env.get("secret_key", "" if env.get("production", False) else "change-it")
+
+# Default SSL on and forced, turn off if necessary
+SSL_ENABLED = env.get("production", False)
+SSL_FORCE = env.get("production", False)
+
+# Debug off by default
+DEBUG = not env.get("production", False)
 
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
+# Default all email to ADMINS and MANAGERS to root@localhost.
+# Puppet redirects this to something appropriate depend on the environment.
+# see: https://docs.djangoproject.com/en/1.6/ref/settings/#admins
+# see: https://docs.djangoproject.com/en/1.6/ref/settings/#managers
+ADMINS = [
+    ( 'alert', env.get("alert_email", "root@localhost") )
+]
 MANAGERS = ADMINS
+
+# email settings for sending email error alerts etc
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host
+EMAIL_HOST = env.get("email_host", "")
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-port
+EMAIL_PORT = env.get("email_port", 25)
+
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-user
+EMAIL_HOST_USER = env.get("email_host_user", "")
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-password
+EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
+
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-use-tls
+EMAIL_USE_TLS = env.get("email_use_tls", False)
+
+# see: https://docs.djangoproject.com/en/1.6/ref/settings/#email-subject-prefix
+EMAIL_APP_NAME = "BPA Metadata "
+EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD: " if env.get("production", False) else "DEV ")
+
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-backend
+if EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+elif DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
+    if not os.path.exists(EMAIL_FILE_PATH):
+        os.mkdir(EMAIL_FILE_PATH)
+
+
+
+# See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
+ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dev_bpam',
-        'USER': 'bpam',
-        'PASSWORD': 'bpam',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        'NAME': env.get("dbname", "bpam"),
+        'USER': env.get("dbuser", "bpam"),
+        'PASSWORD': env.get("dbpass", "bpam"),
+        'HOST': env.get("dbserver", ""),
+        'PORT': env.get("dbport", ""),
     }
 }
 
+
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
+SERVER_EMAIL = env.get("server_email", "noreply@bpam@ccgapps.com.au")
+
+RETURN_EMAIL = env.get("return_email", "bpa <noreply@ccgapps.com.au>")
+
+# email address to receive datasync client log notifications
+LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
+# email address to receive datasync key upload notifications
+KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
+# email address to receive registration requests
+REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
+
+# Default cookie settings
+# see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
+SESSION_COOKIE_AGE = 60*60
+SESSION_COOKIE_PATH = '{0}/'.format(BASE_URL_PATH)
+SESSION_COOKIE_NAME = 'bpametadata_sessionid'
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_HTTPONLY = False # CHange from True
+SESSION_COOKIE_SECURE = False # Changed from True
+
+# see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
+CSRF_COOKIE_NAME = "csrftoken_bpametadata"
+CSRF_COOKIE_SECURE = False # Changed from True
+
+# Default date input formats, may be overridden
+# see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
+TIME_ZONE = 'Australia/Perth'
+LANGUAGE_CODE = 'en-us'
+USE_I18N = False
+USE_L10N = False
+DATE_INPUT_FORMATS = ('%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y','%d %m %Y','%d %m %y', '%d %b %Y')
+DATE_FORMAT = "d-m-Y"
+SHORT_DATE_FORMAT = "d/m/Y"
+
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
+# used by maps when plotting sample location
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-25.27, 133.775),
     'DEFAULT_ZOOM': 4,
@@ -108,10 +200,6 @@ SUIT_CONFIG = {
 
 
 
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -153,8 +241,6 @@ STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '2(3)7aip&90=vw@(qwfzvi@zyw8ll+ekq0_mp4rfd-7hn14mmk'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -283,23 +369,31 @@ if DEBUG:
         'debug_toolbar',
     )
 
-
-def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-
-
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 DEFAULT_PAGINATION = 50
 
-try:
-    print "Attempting to import default settings as appsettings.bpam"
-    from appsettings.bpam import *
+if env.get("memcache", False):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': env.getlist("memcache", []),
+            'KEYSPACE': "%s-prod" % PROJECT_NAME,
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
 
-    print "Successfully imported appsettings.bpam"
-except ImportError, e:
-    print "Failed to import appsettings.bpam"
+TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
+NOSE_PLUGINS = ["mastrms.testutils.noseplugins.SilenceSouthPlugin"]
+
+CHMOD_USER = env.get("repo_user", "apache")
+CHMOD_GROUP = env.get("repo_group", "apache")
+
+REPO_FILES_ROOT = env.get("repo_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'files'))
+QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'quotes'))
+
+

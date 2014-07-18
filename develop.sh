@@ -31,8 +31,6 @@ CI_MODULES="coverage==3.6"
 
 export PATH=/usr/pgsql-9.3/bin:${PATH}
 
-
-
 ######### Logging ########## 
 COLOR_NORMAL=$(tput sgr0)
 COLOR_RED=$(tput setaf 1)
@@ -163,11 +161,8 @@ ci_staging() {
 ci_staging_lettuce() {
     ccg ${AWS_STAGING_INSTANCE} dsudo:'dbus-uuidgen --ensure'
     ccg ${AWS_STAGING_INSTANCE} dsudo:'chown apache:apache /var/www'
-    
     ccg ${AWS_STAGING_INSTANCE} dsudo:'service httpd restart'
-
     ccg ${AWS_STAGING_INSTANCE} dsudo:'bpam run_lettuce --with-xunit --xunit-file\=/tmp/tests.xml || true'
-    
     ccg ${AWS_STAGING_INSTANCE} getfile:/tmp/tests.xml,./
 }
 
@@ -178,7 +173,6 @@ lint() {
     flake8 ${PROJECT_NICKNAME} --ignore=E501 --count
 }
 
-# 
 is_running_in_instance() {
     if [ ${USER} == 'ccg-user' ]
     then
@@ -226,16 +220,6 @@ make_local_instance() {
        log_warning "Seems like I'm running in a build instance of some sorts already. Aborting."
     fi
 }
-
-local_shell() {
-    ccg ${PROJECT_NICKNAME} shell
-}
-
-local_puppet() {
-    log_info "Puppeting ${PROJECT_NICKNAME}"
-    ccg ${PROJECT_NICKNAME} puppet
-}
-
 
 runingest() {
     activate_virtualenv
@@ -316,13 +300,6 @@ dev() {
     devrun
 }
 
-install_ccg() {
-    TGT=/usr/local/bin/ccg
-    log_info "Installing CCG to ${TGT}"
-    wget https://bitbucket.org/ccgmurdoch/ccg/raw/default/ccg -O ${TGT}
-    chmod 755 ${TGT}
-}
-
 coverage() {
     activate_virtualenv
     log_info "Running coverage with reports"
@@ -340,30 +317,28 @@ unittest() {
 }
 
 url_checker() {
-   activate_virtualenv
-   ${DJANGO_ADMIN} runscript url_checker --traceback
+    activate_virtualenv
+    ${DJANGO_ADMIN} runscript url_checker --traceback
 }
 
 
 deepclean() {
-   activate_virtualenv	
-   CMD='python ./bpam/manage.py'
-   ${CMD} reset_db --user=postgres --router=default --traceback
-   log_info "Deepclean syncing"
-   ${CMD} syncdb --noinput --traceback
-   log_info "Deepclean Migrating"
-   ${CMD} migrate --traceback
+    activate_virtualenv	
+    CMD='python ./bpam/manage.py'
+    ${CMD} reset_db --user=postgres --router=default --traceback
+    log_info "Deepclean syncing"
+    ${CMD} syncdb --noinput --traceback
+    log_info "Deepclean Migrating"
+    ${CMD} migrate --traceback
 }
 
 nuclear() {
-   deepclean
-   ingest_all
+    deepclean
+    ingest_all
 }
 
 usage() {
     log_warning "Usage ./develop.sh make_local_instance"
-    log_warning "Usage ./develop.sh local_shell"
-    log_warning "Usage ./develop.sh local_puppet"
     log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
     log_warning "Usage ./develop.sh (unittest|coverage)"
@@ -425,13 +400,10 @@ case ${ACTION} in
         unittest
         ;;
     nuclear)
-	    nuclear
+        nuclear
         ;;
     pythonversion)
         pythonversion
-        ;;
-    install_ccg)
-        install_ccg
         ;;
     pipfreeze)
         pipfreeze
@@ -492,12 +464,6 @@ case ${ACTION} in
         ;;
     make_local_instance)
         make_local_instance
-        ;;
-    local_shell)
-        local_shell
-        ;;
-    local_puppet)
-        local_puppet
         ;;
     url_checker)
         url_checker

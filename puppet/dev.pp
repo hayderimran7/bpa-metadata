@@ -11,9 +11,9 @@ node default {
     include ccgdatabase::postgresql::devel
     include monit
 
-    $dbname = 'dev_bpa_metadata'
-    $dbuser = 'bpa_metadata'
-    $dbpass = 'bpa_metadata'
+    $dbname = 'bpam'
+    $dbuser = 'bpam'
+    $dbpass = 'bpam'
 
     ccgdatabase::postgresql::db { $dbname :
       user     => $dbuser, 
