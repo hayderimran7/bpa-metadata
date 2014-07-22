@@ -60,6 +60,8 @@ install_requires = [
     'django-leaflet',
     'pycontracts',
     'ccg-django-utils',
+    'python-keystoneclient',
+    'python-swiftclient'
 ]
 
 dev_requires = [
