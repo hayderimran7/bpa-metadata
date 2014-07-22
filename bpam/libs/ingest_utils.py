@@ -3,12 +3,10 @@ import pprint
 from datetime import date
 import unittest
 import dateutil
+
 from django.utils.encoding import smart_text
 
 import logger_utils
-
-
-INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 
 logger = logger_utils.get_logger(__name__)
 
