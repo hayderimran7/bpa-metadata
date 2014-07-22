@@ -5,9 +5,11 @@ import csv
 import os
 import time 
 import sys
+import pprint 
+
 
 #TARGET="/media/bigdisk/melanoma_target"
-TARGET="./melanoma_target"
+TARGET="./melanoma_target3"
 
 def strip(st):
     st = st.decode('utf8', 'ignore')
@@ -69,20 +71,17 @@ def process_csv(disk_files, csv_data):
             if name in disk_files:
                 # there may be duplicates
                 for i, _f in enumerate(disk_files[name]):
+                    # the first entry in the list gets the original name
                     if i == 0:
                         tgt = os.path.join(xid_path, name)
+                    # the rest each gets a new name with DUPn prepended
                     else:
                         tgt = os.path.join(xid_path, "DUP{0}_{1}".format(str(i), name))
-
                     try:
                         os.symlink(_f, tgt)
                     except OSError, e:
-                        print("When trying to {0} -> {1}, the followng happened:".format(_f, tgt))
+                        print("When trying to link {0} -> {1}, the followng happened:".format(_f, tgt))
                         print e
-                        print("Ain't that a bitch.")
-
-
-
             else:
                 print("[{0}] mentioned in csv file not on disk".format(name))
 
@@ -98,6 +97,7 @@ def main():
     print("Pilot Data") 
     process_csv(disk_files, csv_pilot_data)    
 
+    # pprint.pprint(disk_files)
 
 if __name__ == "__main__":
     main()
