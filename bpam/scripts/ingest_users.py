@@ -1,5 +1,6 @@
 import csv
 import unipath
+import os
 
 from libs import ingest_utils, user_helper, logger_utils
 from apps.bpaauth.models import BPAUser
@@ -7,7 +8,7 @@ from apps.bpaauth.models import BPAUser
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = unipath.Path(unipath.Path(__file__).ancestor(3), "data/users/")
+DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, 'users')
 USERS_FILE = unipath.Path(DATA_DIR, 'current')
 
 
@@ -57,5 +58,6 @@ def run(users_file=USERS_FILE):
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_users --script-args bpa-users.csv
     """
+    ingest_utils.ensure_metadata_is_current()
     ingest_contacts(users_file)
 

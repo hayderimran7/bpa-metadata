@@ -10,6 +10,7 @@ node default {
     include repo::ccgtesting
     include ccgdatabase::postgresql::devel
     include monit
+    include globals
 
     $dbname = 'bpam'
     $dbuser = 'bpam'
@@ -40,6 +41,16 @@ node default {
         minute  => [ 0 ],
         hour  => [ 7 ],
     }
+
+    $django_config = {
+      bpa_swift_user  => $globals::bpa_swift_user,
+      bpa_swift_password  => $globals::bpa_swift_password,
+    }
+
+    django::config {"bpa_metadata":
+      config_hash => $django_config,
+    }
+
 
     # the rpm also has these dependencies
     case $::osfamily {
