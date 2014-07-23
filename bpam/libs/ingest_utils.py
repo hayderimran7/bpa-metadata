@@ -37,7 +37,9 @@ def fetch_metadata_from_swift():
     if not os.path.exists(METADATA_ROOT):
         os.makedirs(METADATA_ROOT)
 
-    out = subprocess.Popen(cmd, shell=True, cwd=METADATA_ROOT)
+    # messy... shell=True is needed because swift lives in a virtualenv
+    swift_process = subprocess.call(cmd, shell=True, cwd=METADATA_ROOT)
+    swift_process.wait()
 
 
 def ensure_metadata_is_current():
