@@ -6,8 +6,6 @@
         <th>Filename</th>
         <th>MD5</th>
         <th>Sample Name</th>
-        <th>Run Date</th>
-        <th>Run Description</th>
     </tr>
     </thead>
     <tbody>
@@ -28,8 +26,6 @@
         <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
         <td>{{ sfile.md5 }}</td>
         <td>{{ sfile.sample.name }}</td>
-        <td>{{ sfile.date_received_from_sequencing_facility }}</td>
-        <td>{{ sfile.run }}</td>
     </tr>
     {% endfor %}
     </tbody>

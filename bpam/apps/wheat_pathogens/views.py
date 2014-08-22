@@ -13,11 +13,12 @@ class IndexView(TemplateView):
         context['sequence_file_size'] = PathogenSequenceFile.objects.count()
         return context
 
+
 class SampleListView(ListView):
     model = PathogenSample
     context_object_name = 'samples'
     template_name = 'wheat_pathogens/sample_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class SampleDetailView(DetailView):
@@ -36,4 +37,4 @@ class SequenceFileListView(ListView):
     model = PathogenSequenceFile
     context_object_name = 'sequencefiles'
     template_name = 'wheat_pathogens/sequencefile_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
