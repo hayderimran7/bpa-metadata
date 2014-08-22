@@ -215,7 +215,7 @@ make_local_instance() {
        log_info "Making a local build instance"
        rm -rf virt_${PROJECT_NICKNAME}
        ccg --nuke-bootstrap
-       ccg ${PROJECT_NICKNAME} puppet
+       ccg dev puppet
     else
        log_warning "Seems like I'm running in a build instance of some sorts already. Aborting."
     fi
