@@ -24,4 +24,4 @@ bpam/static/
 syntax:regexp
 \.idea
 syntax:glob
-
+data/

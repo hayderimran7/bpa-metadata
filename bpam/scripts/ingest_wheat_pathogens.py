@@ -18,7 +18,7 @@ DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
 
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens'
-
+METADATA_URL = "https://downloads.bioplatforms.com/wheat_pathogens/bpa_metadata/current.xlsx"
 
 def get_dna_source(description):
     """
@@ -282,5 +282,5 @@ def run(file_name=DEFAULT_SPREADSHEET_FILE):
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx
     """
-
+    ingest_utils.fetch_metadata(METADATA_URL, file_name)
     ingest(file_name)

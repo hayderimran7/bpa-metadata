@@ -8,6 +8,7 @@ import logger_utils
 import subprocess
 import time
 import sys
+import requests
 
 from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
@@ -18,6 +19,28 @@ INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 
 logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
+
+
+def fetch_metadata(source_path, target_path):
+    """
+    Fetch the metadata from a webserver
+    :return:
+    """
+
+    logger.info('Downloading {0} to {1}'.format(source_path, target_path))
+    # ensure target directory exists
+    target_path_parent = os.path.dirname(target_path)
+    if not os.path.exists(target_path_parent):
+        os.makedirs(target_path_parent)
+
+    r = requests.get(source_path, stream=True)
+    if r.status_code == 200:
+        with open(target_path, 'wb') as f:
+            for chunk in r.iter_content(1024):
+                f.write(chunk)
+    else:
+        logger.error('URL {0} does not exist'.format(source_path))
+        sys.exit()
 
 
 def fetch_metadata_from_swift():
