@@ -7,7 +7,7 @@ urlpatterns = patterns(
     '',
     url(
         regex=r'^$',
-        view=views.PathogensView.as_view(),
+        view=views.IndexView.as_view(),
         name='index'),
     url(
         regex=r'^samples',

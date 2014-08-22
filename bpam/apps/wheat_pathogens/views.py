@@ -4,9 +4,14 @@ from django.conf import settings
 from .models import *
 
 
-class PathogensView(TemplateView):
+class IndexView(TemplateView):
     template_name = 'wheat_pathogens/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['sample_size'] = PathogenSample.objects.count()
+        context['sequence_file_size'] = PathogenSequenceFile.objects.count()
+        return context
 
 class SampleListView(ListView):
     model = PathogenSample
