@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Great Barrier Reef Sample Detail {% endblock %}
+{% block title %}Wheat Pathogens Genome Sample Detail {% endblock %}
 
 {% block content %}
 <div class="panel panel-info">
     <div class="panel-body">
-        <h3> Wheat pathogens Sample {{ sample.bpa_id }} Information</h3>
+        <h3> Wheat Pathogens Genome Sample {{ sample.bpa_id }} Information</h3>
     </div>
     <table id="info" class="table table-striped">
         <tbody>
@@ -23,11 +23,11 @@
             <td> {{ sample.sample_label}}</td>
         </tr>
         <tr>
-            <td> Official Variety Name</td>
+            <td> Isolate Name</td>
             <td> {{ sample.official_variety_name}}</td>
         </tr>
         <tr>
-            <td> DNA/RNA Source</td>
+            <td> DNA Source</td>
             <td> {{ sample.dna_source }}</td>
         </tr>
         <tr>

@@ -89,6 +89,7 @@ def ingest_samples(samples):
         pathogen_sample.dna_source = get_dna_source(e.sample_dna_source)
         pathogen_sample.official_variety_name = e.official_variety
         pathogen_sample.original_source_host_species = e.original_source_host_species
+        pathogen_sample.wheat_pathogenicity = e.wheat_pathogenicity
 
         # scientist
         pathogen_sample.contact_scientist = user_helper.get_user(
