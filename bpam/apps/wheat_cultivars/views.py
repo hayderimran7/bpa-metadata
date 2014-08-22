@@ -3,6 +3,7 @@ from django.conf import settings
 
 from .models import *
 
+
 class CultivarsView(TemplateView):
     template_name = 'wheat_cultivars/index.html'
 
