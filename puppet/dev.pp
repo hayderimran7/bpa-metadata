@@ -10,6 +10,7 @@ node default {
     include repo::ccgtesting
     include ccgdatabase::postgresql::devel
     include monit
+    include globals
 
     $dbname = 'bpam'
     $dbuser = 'bpam'
@@ -39,6 +40,16 @@ node default {
         user    => 'ccg-user',
         minute  => [ 0 ],
         hour  => [ 7 ],
+    }
+
+    # set the swift secrets so the metadata can be downloaded.
+    augeas { "swift_creds":
+      incl => "/etc/environment",
+      lens    => "shellvars.lns",
+      changes => [
+        "set SWIFT_USER $globals::bpa_swift_user",
+        "set SWIFT_PASSWORD $globals::bpa_swift_password",
+      ],
     }
 
     # the rpm also has these dependencies

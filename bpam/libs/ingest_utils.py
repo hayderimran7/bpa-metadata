@@ -2,13 +2,63 @@ import string
 import pprint
 from datetime import date
 import unittest
+import os
 import dateutil
+import logger_utils
+import subprocess
+import time
+import sys
 
+from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 
-import logger_utils
+METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpa_metadata')
+
+INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 
 logger = logger_utils.get_logger(__name__)
+env = EnvConfig()
+
+
+def fetch_metadata_from_swift():
+    logger.info("Fetching metadata from swift")
+
+    swift_user = env.get('SWIFT_USER')
+    swift_password = env.get('SWIFT_PASSWORD')
+
+    cmd = 'swift -V 2 --os-auth-url={0} --os-username={1} --os-password={2} --os-tenant-name=bpa download {3}'.format(
+        'https://keystone.bioplatforms.com/v2.0/',
+        swift_user,
+        swift_password,
+        'bpa-metadata-source',
+    )
+
+    logger.info(cmd)
+    if not os.path.exists(METADATA_ROOT):
+        os.makedirs(METADATA_ROOT)
+
+    # messy... shell=True is needed because swift lives in a virtualenv
+    swift_process = subprocess.call(cmd, shell=True, cwd=METADATA_ROOT)
+    swift_process.wait()
+
+
+def ensure_metadata_is_current():
+    """
+    Ensure that the metadata folder exists and is relatively up to data
+    """
+    ONE_DAY = 86400  # seconds
+
+    # if there is no metadata, get it
+    if not os.path.exists(METADATA_ROOT):
+        logger.warning("No metada locally available, fetching it from swift")
+        fetch_metadata_from_swift()
+        return
+
+    # if the metadata is old, fetch it
+    now = time.time()
+    last_time = os.path.getmtime(METADATA_ROOT)
+    if now - last_time > ONE_DAY:
+        fetch_metadata_from_swift()
 
 
 def get_clean_number(val, default=None):
