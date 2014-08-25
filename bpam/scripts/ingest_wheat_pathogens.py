@@ -54,13 +54,7 @@ def ingest_samples(samples):
         """
         Set the organism
         """
-        genus_species = species.strip().split()
-        if len(genus_species) == 2:
-            (genus, species) = genus_species
-        else:
-            species = species
-            genus = ''
-
+        genus = ''
         organism, created = Organism.objects.get_or_create(kingdom=kingdom, phylum=phylum, genus=genus, species=species)
         if created:
             logger.debug('Adding Organism {0} {1} {2} {3}'.format(kingdom, phylum, genus, species))
@@ -158,6 +152,10 @@ def ingest_runs(sample_data):
         run_number = ingest_utils.get_clean_number(entry.run_number.replace('RUN #', ''))
         return run_number
 
+    def get_lane_number(entry):
+         lane_number = ingest_utils.get_clean_number(entry.lane_number.replace('LANE', ''))
+         return lane_number
+
     def add_run(entry):
         """
         The run produced several files
@@ -209,9 +207,10 @@ def ingest_runs(sample_data):
             f.sample = PathogenSample.objects.get(bpa_id=bpa_id)
             f.run = pathogen_run
             f.index_number = ingest_utils.get_clean_number(entry.index_number)
-            f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
+            f.lane_number = get_lane_number(entry)
             f.filename = file_name
             f.md5 = entry.md5_checksum
+            f.file_size = entry.file_size
             f.note = ingest_utils.pretty_print_namedtuple(entry)
             f.save()
 
@@ -261,7 +260,7 @@ def get_pathogen_sample_data(file_name):
                   ('sequence_filename', 'FILE NAMES - supplied by AGRF', None),
                   ('sequence_filetype', 'file type', None),
                   ('md5_checksum', 'MD5 checksum', None),
-                  ('reported_file_size', 'Size', None),
+                  ('file_size', 'Size', None),
                   ('analysis_performed', 'analysis performed (to date)', None),
                   ('genbank_project', 'GenBank Project', None),
                   ('locus_tag', 'Locus tag', None),
