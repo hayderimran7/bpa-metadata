@@ -16,6 +16,11 @@ class PathogenSample(Sample, DebugNote):
 
     date_sequenced = models.DateField(blank=True, null=True)
     index = models.CharField(max_length=6, null=True, blank=True)
+    library_id = models.CharField(max_length=20, null=True, blank=True)
+
+
+class PathogenProtocol(Protocol):
+    run = models.OneToOneField('PathogenRun', blank=True, null=True)
 
 
 class PathogenRun(Run):
@@ -23,13 +28,10 @@ class PathogenRun(Run):
     A Wheat Pathogen Run
     """
     sample = models.ForeignKey(PathogenSample)
+    protocol = models.ForeignKey(PathogenProtocol, blank=True, null=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
-
-
-class PathogenProtocol(Protocol):
-    run = models.OneToOneField(PathogenRun, blank=True, null=True)
 
 
 class PathogenSequenceFile(SequenceFile):

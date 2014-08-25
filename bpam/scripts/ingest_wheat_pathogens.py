@@ -87,6 +87,8 @@ def ingest_samples(samples):
         pathogen_sample.wheat_pathogenicity = e.wheat_pathogenicity
 
         pathogen_sample.index = e.index_sequence
+        pathogen_sample.library_id = e.library_id
+
 
         # scientist
         pathogen_sample.contact_scientist = user_helper.get_user(
@@ -280,10 +282,20 @@ def get_pathogen_sample_data(file_name):
     return wrapper.get_all()
 
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenSample._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenRun._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenProtocol._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenSequenceFile._meta.db_table))
+
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx
     """
+    truncate()
     ingest_utils.fetch_metadata(METADATA_URL, file_name)
     ingest(file_name)
