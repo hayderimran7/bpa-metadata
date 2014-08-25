@@ -20,6 +20,7 @@ BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens'
 METADATA_URL = "https://downloads.bioplatforms.com/wheat_pathogens/bpa_metadata/current.xlsx"
 
+
 def get_dna_source(description):
     """
     Get a DNA source if it exists, if it doesn't make it.
@@ -84,6 +85,8 @@ def ingest_samples(samples):
         pathogen_sample.official_variety_name = e.official_variety
         pathogen_sample.original_source_host_species = e.original_source_host_species
         pathogen_sample.wheat_pathogenicity = e.wheat_pathogenicity
+
+        pathogen_sample.index = e.index_sequence
 
         # scientist
         pathogen_sample.contact_scientist = user_helper.get_user(
@@ -153,8 +156,8 @@ def ingest_runs(sample_data):
         return run_number
 
     def get_lane_number(entry):
-         lane_number = ingest_utils.get_clean_number(entry.lane_number.replace('LANE', ''))
-         return lane_number
+        lane_number = ingest_utils.get_clean_number(entry.lane_number.replace('LANE', ''))
+        return lane_number
 
     def add_run(entry):
         """

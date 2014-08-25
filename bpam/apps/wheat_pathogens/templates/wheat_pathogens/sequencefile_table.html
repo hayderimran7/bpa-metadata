@@ -3,9 +3,22 @@
     <tr>
         <th></th>
         <th>BPA ID</th>
-        <th>Filename</th>
-        <th>MD5</th>
+        <th>Isolate Name</th>
         <th>Sample Name</th>
+        <th>Species</th>
+        <th>Library</th>
+        <th>Library Construction</th>
+        <th>Library Construction Protocol</th>
+        <th>Sequencer</th>
+        <th>Library ID</th>
+        <th>Index</th>
+        <th>Run Number</th>
+        <th>Run #:Flow Cell ID</th>
+        <th>Lane Number</th>
+        <th>Filename</th>
+        <th>File Type</th>
+        <th>MD5</th>
+        <th>Size</th>
     </tr>
     </thead>
     <tbody>
@@ -23,9 +36,23 @@
         <td>
             <a href="{% url 'wheat_pathogens:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
         </td>
-        <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-        <td>{{ sfile.md5 }}</td>
+        <td>{{ sfile.sample.official_variety_name }}</td>
         <td>{{ sfile.sample.name }}</td>
+        <td>{{ sfile.sample.organism.species }}</td>
+        <td>{{ sfile.sample.libary }}</td>
+        <td>{{ sfile.sample.libary_construction }}</td>
+        <td>{{ sfile.sample.libary_construction_protocol }}</td>
+        <td>{{ sfile.sample.sequencer }}</td>
+        <td>{{ sfile.sample.library_id }}</td>
+        <td>{{ sfile.sample.index }}</td>
+        <td>{{ sfile.run.run_number }}</td>
+        <td>{{ sfile.sample.run_number_flow_cell_id }}</td>
+        <td>{{ sfile.lane_number }}</td>
+        <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
+        <td>{{ sfile.file_type }}</td>
+        <td>{{ sfile.md5 }}</td>
+        <td>{{ sfile.file_size }}</td>
+        <td>{{ sfile.sample.genbank_project}}</td>
     </tr>
     {% endfor %}
     </tbody>

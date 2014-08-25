@@ -15,6 +15,7 @@ class PathogenSample(Sample, DebugNote):
     wheat_pathogenicity = models.CharField(max_length=200, null=True, blank=True)
 
     date_sequenced = models.DateField(blank=True, null=True)
+    index = models.CharField(max_length=6, null=True, blank=True)
 
 
 class PathogenRun(Run):
@@ -38,6 +39,7 @@ class PathogenSequenceFile(SequenceFile):
     project_name = 'Wheat_Pathogens'
     sample = models.ForeignKey(PathogenSample)
     run = models.ForeignKey(PathogenRun)
+    file_size = models.CharField(max_length=10, null=True, blank=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run, self.filename)
