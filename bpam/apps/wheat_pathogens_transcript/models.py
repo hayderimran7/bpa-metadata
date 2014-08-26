@@ -7,18 +7,12 @@ class WheatPathogenTranscriptSample(Sample, DebugNote):
     """
     Wheat pathogen Transcript specific Sample
     """
-    organism = models.ForeignKey(Organism)
     official_variety_name = models.CharField(max_length=200, null=True, blank=True)
-    original_source_host_species = models.CharField(max_length=200, null=True, blank=True)
-    collection_location = models.CharField(max_length=200, null=True, blank=True)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
-
-    date_sequenced = models.DateField(blank=True, null=True)
     index = models.CharField(max_length=6, null=True, blank=True)
-    library_id = models.CharField(max_length=20, null=True, blank=True)
 
 
-class PathogenProtocol(Protocol):
+class WheatPathogenTranscriptProtocol(Protocol):
     run = models.OneToOneField('WheatPathogenTranscriptRun', blank=True, null=True)
 
 
@@ -27,7 +21,7 @@ class WheatPathogenTranscriptRun(Run):
     A Wheat Pathogen Run
     """
     sample = models.ForeignKey(WheatPathogenTranscriptSample)
-    protocol = models.ForeignKey(PathogenProtocol, blank=True, null=True)
+    protocol = models.ForeignKey(WheatPathogenTranscriptProtocol, blank=True, null=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)

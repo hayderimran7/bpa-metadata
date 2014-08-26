@@ -5,13 +5,13 @@ from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 from apps.common.admin import SequenceFileAdmin
 from .models import WheatPathogenTranscriptSample
 from .models import WheatPathogenTranscriptRun
-from .models import PathogenProtocol
+from .models import WheatPathogenTranscriptProtocol
 from .models import WheatPathogenTranscriptSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
-        model = PathogenProtocol
+        model = WheatPathogenTranscriptProtocol
         widgets = {
             'run': LinkedSelect,
             'library_construction_protocol': LinkedSelect,
@@ -46,7 +46,7 @@ class RunAdmin(admin.ModelAdmin):
 
     class ProtocolInline(admin.StackedInline):
         form = ProtocolForm
-        model = PathogenProtocol
+        model = WheatPathogenTranscriptProtocol
         radio_fields = {'library_type': admin.HORIZONTAL}
         extra = 0
 
@@ -146,10 +146,10 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
-    'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol', 'original_source_host_species')
+    'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',)
     search_fields = (
     'bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name',)
-    list_filter = ('dna_source', 'original_source_host_species')
+    list_filter = ('dna_source',)
 
 
 class WheatPathogenTranscriptSequenceFileAdmin(SequenceFileAdmin):
@@ -160,11 +160,11 @@ class WheatPathogenTranscriptSequenceFileAdmin(SequenceFileAdmin):
     get_organism.admin_order_field = 'sample__organism'
 
     list_display = ('get_sample_id', 'get_organism', 'download_field', 'get_sample_name', 'run')
-    list_filter = ('sample__organism', 'analysed')
+    list_filter = ('analysed',)
 
 
 admin.site.register(WheatPathogenTranscriptSample, SampleAdmin)
-admin.site.register(PathogenProtocol, ProtocolAdmin)
+admin.site.register(WheatPathogenTranscriptProtocol, ProtocolAdmin)
 admin.site.register(WheatPathogenTranscriptSequenceFile, WheatPathogenTranscriptSequenceFileAdmin)
 admin.site.register(WheatPathogenTranscriptRun, RunAdmin)
 
