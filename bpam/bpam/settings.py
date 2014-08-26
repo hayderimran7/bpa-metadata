@@ -167,12 +167,19 @@ SUIT_CONFIG = {
                     'gbrrun',
                     'gbrprotocol',)},
         '-',
-        # Wheat
-        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens',
+        # Wheat Pathogens Genome
+        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens Genome',
          'models': ('pathogensample',
                     'pathogensequencefile',
                     'pathogenrun',
                     'pathogenprotocol')},
+        # Wheat Pathogens Transcript
+        {'app': 'wheat_pathogens_transcript', 'label': 'Wheat Pathogens Transcript',
+         'models': ('pathogensample',
+                    'pathogensequencefile',
+                    'pathogenrun',
+                    'pathogenprotocol')},
+        # Wheat Cultivars
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
          'models': ('cultivarsample',
                     'cultivarsequencefile',
@@ -298,6 +305,7 @@ INSTALLED_APPS = (
     'apps.base_454',
     # wheat suit
     'apps.wheat_pathogens',
+    'apps.wheat_pathogens_transcript',
     'apps.wheat_cultivars',
     'apps.melanoma',
     'apps.gbr',
