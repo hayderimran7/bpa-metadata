@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Wheat Pathogens Transcript Listing{% endblock %}
+
+{% block content %}
+{% if sequencefiles %}
+<h3>Wheat Pathogen Transcript Sequence Files</h3>
+
+{% include "wheat_pathogens_transcript/sequencefile_table.html" %}
+{% include "pagination.html" %}
+{% else %}
+<h3> No Wheat Pathogens Transcript Sequence Data is currently available </h3>
+{% endif %}
+
+{% endblock %}
