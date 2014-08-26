@@ -25,3 +25,4 @@ syntax:regexp
 \.idea
 syntax:glob
 data/
+users/

@@ -60,7 +60,7 @@ class ExcelWrapper(object):
         self.column_name_row_index = column_name_row_index
         self.field_spec = field_spec
 
-        self.workbook = xlrd.open_workbook(file_name, formatting_info=False) # not implemented
+        self.workbook = xlrd.open_workbook(file_name, formatting_info=False)  # not implemented
         self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
         self.field_names = self._set_field_names()

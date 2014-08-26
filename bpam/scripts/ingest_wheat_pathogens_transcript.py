@@ -106,20 +106,11 @@ def ingest_runs(sample_data):
             logger.debug("Created sample ID {0}".format(bpa_id))
         return sample
 
-    def get_run_number(entry):
-        run_number = ingest_utils.get_clean_number(entry.run_number.replace('RUN #', ''))
-        return run_number
-
-    def get_lane_number(entry):
-        lane_number = ingest_utils.get_clean_number(entry.lane_number.replace('LANE', ''))
-        return lane_number
-
     def add_run(entry):
         """
         The run produced several files
         """
         flow_cell_id = entry.flow_cell_id.strip()
-        run_number = get_run_number(entry)
 
         bpa_id = bpa_id_utils.get_bpa_id(entry.bpa_id, '%s' % PROJECT_ID, PROJECT_DESCRIPTION)
         if bpa_id is None:
@@ -132,15 +123,14 @@ def ingest_runs(sample_data):
 
         pathogen_run, created = WheatPathogenTranscriptRun.objects.get_or_create(
             flow_cell_id=flow_cell_id,
-            run_number=run_number,
+            run_number=entry.run_number,
             sample=pathogen_sample,
             sequencer=get_sequencer(entry.sequencer))
 
         # always update
         pathogen_run.flow_cell_id = flow_cell_id
-        pathogen_run.run_number = run_number
+        pathogen_run.run_number = entry.run_number
         pathogen_run.sample = get_sample(bpa_id)
-        pathogen_run.index_number = ingest_utils.get_clean_number(entry.index_number)
         pathogen_run.lane_number = ingest_utils.get_clean_number(entry.lane_number)
         pathogen_run.protocol = get_protocol(e)
         pathogen_run.save()
@@ -164,8 +154,7 @@ def ingest_runs(sample_data):
             f = WheatPathogenTranscriptSequenceFile()
             f.sample = WheatPathogenTranscriptSample.objects.get(bpa_id=bpa_id)
             f.run = pathogen_run
-            f.index_number = ingest_utils.get_clean_number(entry.index_number)
-            f.lane_number = get_lane_number(entry)
+            f.lane_number = entry.lane_number
             f.filename = file_name
             f.md5 = entry.md5_checksum
             f.note = ingest_utils.pretty_print_namedtuple(entry)
@@ -183,6 +172,16 @@ def ingest(file_name):
     ingest_runs(sample_data)
 
 
+def get_first_researcher(name_str):
+    """
+    One researcher only
+    :param name_str:
+    :return:
+    """
+    names = name_str.split('/')
+    return names[0]
+
+
 def get_pathogen_sample_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -192,15 +191,15 @@ def get_pathogen_sample_data(file_name):
                   ('submission_document', 'Submission document', None),
                   ('sample_number', 'Sample Number', None),
                   ('sample_name', 'Sample name (supplied by researcher)', None),
-                  ('contact_scientist', 'Contact researcher', None),
+                  ('contact_scientist', 'Contact researcher', get_first_researcher),
                   ('index_sequence', 'Index', None),
                   ('library', 'Library', None),
                   ('library_construction', 'Library Construction (insert size bp)', None),
                   ('library_construction_protocol', 'Library construction protocol', None),
                   ('sequencer', 'Sequencer', None),
-                  ('run_number', 'Run number', None),
+                  ('run_number', 'Run number', ingest_utils.get_clean_number),
                   ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                  ('lane_number', 'Lane number', None),
+                  ('lane_number', 'Lane number', ingest_utils.get_clean_number),
                   ('sequence_filename', 'File name', None),
                   ('md5_checksum', 'MD5 checksum', None),
     ]
