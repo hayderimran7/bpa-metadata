@@ -13,6 +13,7 @@ import requests
 from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 
+# where to cache downloaded metadata
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpa_metadata')
 
 INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
@@ -21,13 +22,18 @@ logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
 
 
-def fetch_metadata(source_path, target_path):
+def fetch_metadata(source_path, target_path, use_cached=True):
     """
     Fetch the metadata from a webserver
     :return:
     """
 
+    if use_cached and os.path.exists(target_path):
+        logger.info('Using cached {0}'.format(target_path))
+        return
+
     logger.info('Downloading {0} to {1}'.format(source_path, target_path))
+
     # ensure target directory exists
     target_path_parent = os.path.dirname(target_path)
     if not os.path.exists(target_path_parent):
