@@ -10,10 +10,14 @@ class WheatPathogenTranscriptSample(Sample, DebugNote):
     official_variety_name = models.CharField(max_length=200, null=True, blank=True)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
     index = models.CharField(max_length=6, null=True, blank=True)
-
+    institution = models.CharField(max_length=200, null=True, blank=True)
+    species = models.CharField(max_length=100, null=True, blank=True)
+    sample_type = models.CharField(max_length=20, null=True, blank=True)
+    extraction_method = models.TextField(null=True, blank=True)
+    growth_protocol = models.TextField(null=True, blank=True)
 
 class WheatPathogenTranscriptProtocol(Protocol):
-    run = models.OneToOneField('WheatPathogenTranscriptRun', blank=True, null=True)
+    run = models.ForeignKey('WheatPathogenTranscriptRun', blank=True, null=True)
 
 
 class WheatPathogenTranscriptRun(Run):

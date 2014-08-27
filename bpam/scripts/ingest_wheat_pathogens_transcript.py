@@ -1,5 +1,4 @@
-from unipath import Path
-
+import os
 from apps.common.models import DNASource, Sequencer, Facility
 
 from apps.wheat_pathogens_transcript.models import (
@@ -19,12 +18,10 @@ PROJECT_ID = 'WHEAT_PATHOGENS_TRANCRIPT'
 
 logger = get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_pathogens/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
-
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens Transcript'
 METADATA_URL = "https://downloads.bioplatforms.com/wheat_pathogens_transcript/metadata/Wheat_Pathogen_Transcript_data.xlsx"
+SOURCE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcript.xlsx')
 
 
 def ingest_samples(samples):
@@ -39,6 +36,13 @@ def ingest_samples(samples):
 
         return facility
 
+    def get_dna_source(description):
+        """
+        Get a DNA source if it exists, if it doesn't make it.
+        """
+        source, _ = DNASource.objects.get_or_create(description=description.capitalize())
+        return source
+
     def add_sample(e):
         """
         Adds new sample or updates existing sample
@@ -51,14 +55,21 @@ def ingest_samples(samples):
         pathogen_sample, created = WheatPathogenTranscriptSample.objects.get_or_create(bpa_id=bpa_id)
         pathogen_sample.name = e.sample_name
         pathogen_sample.index = e.index_sequence
-        # scientist
-        logger.debug(e)
         pathogen_sample.contact_scientist = user_helper.get_user(
-            e.contact_scientist,
-            '',
-            (DESCRIPTION, ''))
+            e.contact_name,
+            e.email,
+            (DESCRIPTION, e.institution))
 
-        logger.info("Ingested Pathogens sample {0}".format(pathogen_sample.name))
+        pathogen_sample.dna_source = get_dna_source(e.rna_source)
+        pathogen_sample.institution = e.institution
+        pathogen_sample.species = e.species
+        pathogen_sample.sample_type = e.sample_type
+        pathogen_sample.extraction_method = e.extraction_method
+        pathogen_sample.growth_protocol = e.growth_protocol
+        pathogen_sample.note = e.additional_information
+        pathogen_sample.save()
+
+        logger.info("Ingested Wheat Pathogens Transcript sample {0}".format(pathogen_sample.name))
 
     for sample in samples:
         add_sample(sample)
@@ -172,16 +183,6 @@ def ingest(file_name):
     ingest_runs(sample_data)
 
 
-def get_first_researcher(name_str):
-    """
-    One researcher only
-    :param name_str:
-    :return:
-    """
-    names = name_str.split('/')
-    return names[0]
-
-
 def get_pathogen_sample_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -191,7 +192,6 @@ def get_pathogen_sample_data(file_name):
                   ('submission_document', 'Submission document', None),
                   ('sample_number', 'Sample Number', None),
                   ('sample_name', 'Sample name (supplied by researcher)', None),
-                  ('contact_scientist', 'Contact researcher', get_first_researcher),
                   ('index_sequence', 'Index', None),
                   ('library', 'Library', None),
                   ('library_construction', 'Library Construction (insert size bp)', None),
@@ -202,12 +202,21 @@ def get_pathogen_sample_data(file_name):
                   ('lane_number', 'Lane number', ingest_utils.get_clean_number),
                   ('sequence_filename', 'File name', None),
                   ('md5_checksum', 'MD5 checksum', None),
+                  ('contact_name', 'Name', None),
+                  ('email', 'Email', None),
+                  ('institution', 'Institution / Organisation', None),
+                  ('species', 'Organism / Species', None),
+                  ('sample_type', 'Sample type', None),
+                  ('rna_source', 'Part of organism RNA/RNA extracted from', None),
+                  ('extraction_method', 'Extraction method', None),
+                  ('growth_protocol', 'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)', None),
+                  ('additional_information', 'Additional Information.', None),
     ]
 
     wrapper = ExcelWrapper(
         field_spec,
         file_name,
-        sheet_name='Sheet1',
+        sheet_name='Sheet2',
         header_length=2,
         column_name_row_index=0)
     return wrapper.get_all()
@@ -222,7 +231,8 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(WheatPathogenTranscriptProtocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(WheatPathogenTranscriptSequenceFile._meta.db_table))
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
+
+def run(file_name=SOURCE_FILE):
     """
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx

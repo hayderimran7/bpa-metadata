@@ -3,19 +3,16 @@
     <thead>
     <tr>
         <th>BPA ID</th>
-        <th>Name</th>
-        <th>Isolate Name</th>
-        <th>Kingdom</th>
-        <th>Phylum</th>
-        <th>Species</th>
-        <th>Other ID's</th>
-        <th>Original Source Host Species</th>
-        <th>Isolate Collection Date</th>
-        <th>Isolate Collection Location</th>
-        <th>Pathogenicity Towards Wheat</th>
+        <th>Sample Name</th>
         <th>Contact Scientist</th>
-        <th>DNA Source</th>
-        <th>DNA Extraction Protocol</th>
+        <th>Contact Scientist email</th>
+        <th>Institution</th>
+        <th>Species</th>
+        <th>Sample Type</th>
+        <th>RNA Source</th>
+        <th>Extraction Method</th>
+        <th>Growth Protocol</th>
+        <th>Notes</th>
     </tr>
     </thead>
     <tbody>
@@ -25,17 +22,15 @@
             <a href="{% url 'wheat_pathogens_transcript:sample' sample.pk %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.name }}</td>
-        <td>{{ sample.official_variety_name }}</td>
-        <td>{{ sample.organism.kingdom }}</td>
-        <td>{{ sample.organism.phylum }}</td>
-        <td>{{ sample.organism.species }}</td>
-        <td>{{ sample.other_id }}</td>
-        <td>{{ sample.original_source_host_species }}</td>
-        <td>{{ sample.isolate_collection_date }}</td>
-        <td>{{ sample.collection_location }}</td>
-        <td>{{ sample.contact_scientist }}</td>
+        <td>{{ sample.contact_scientist.name }}</td>
+        <td>{{ sample.contact_scientist.email }}</td>
+        <td>{{ sample.institution }}</td>
+        <td>{{ sample.species }}</td>
+        <td>{{ sample.type }}</td>
         <td>{{ sample.dna_source.description }}</td>
-        <td>{{ sample.dna_extraction_protocol }}</td>
+        <td>{{ sample.extraction_method }}</td>
+        <td>{{ sample.growth_protocol }}</td>
+        <td>{{ sample.note }}</td>
     </tr>
     {% endfor %}
     </tbody>
