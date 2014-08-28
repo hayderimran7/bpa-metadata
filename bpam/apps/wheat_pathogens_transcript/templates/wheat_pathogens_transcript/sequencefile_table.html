@@ -4,6 +4,7 @@
         <th></th>
         <th>BPA ID</th>
         <th>Sample Name</th>
+        <th>Project</th>
         <th>Index</th>
         <th>Library</th>
         <th>Library Construction</th>
@@ -32,6 +33,7 @@
             <a href="{% url 'wheat_pathogens_transcript:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
         </td>
         <td>{{ sfile.sample.name }}</td>
+        <td>{{ sfile.sample.project }}</td>
         <td>{{ sfile.sample.index }}</td>
         <td>{{ sfile.run.protocol.library_type }}</td>
         <td>{{ sfile.run.protocol.base_pairs }}</td>

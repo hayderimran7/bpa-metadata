@@ -126,7 +126,6 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-dna',),
           'fields': (
               'organism',
-              'official_variety_name',
               'dna_source',
               'dna_extraction_protocol',)}),
         (None,  # 'Collection',
@@ -146,9 +145,9 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
-    'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',)
+    'bpa_id', 'name', 'dna_source', 'dna_extraction_protocol',)
     search_fields = (
-    'bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name',)
+    'bpa_id__bpa_id', 'name', 'tumor_stage__description', )
     list_filter = ('dna_source',)
 
 

@@ -45,6 +45,7 @@ def ingest_samples(samples):
 
         pathogen_sample, created = WheatPathogenTranscriptSample.objects.get_or_create(bpa_id=bpa_id)
         pathogen_sample.name = e.sample_name
+        pathogen_sample.project = e.project
         pathogen_sample.index = e.index_sequence
         pathogen_sample.contact_scientist = user_helper.get_user(
             e.contact_name,
@@ -57,6 +58,8 @@ def ingest_samples(samples):
         pathogen_sample.sample_type = e.sample_type
         pathogen_sample.extraction_method = e.extraction_method
         pathogen_sample.growth_protocol = e.growth_protocol
+        pathogen_sample.treatment_protocol = e.treatment_protocol
+        pathogen_sample.experimental_design = e.experimental_design
         pathogen_sample.note = e.additional_information
         pathogen_sample.save()
 
@@ -183,6 +186,7 @@ def get_pathogen_sample_data(file_name):
                   ('submission_document', 'Submission document', None),
                   ('sample_number', 'Sample Number', None),
                   ('sample_name', 'Sample name (supplied by researcher)', None),
+                  ('project', 'Project', None),
                   ('index_sequence', 'Index', None),
                   ('library', 'Library', None),
                   ('library_construction', 'Library Construction (insert size bp)', None),
@@ -201,6 +205,8 @@ def get_pathogen_sample_data(file_name):
                   ('rna_source', 'Part of organism RNA/RNA extracted from', None),
                   ('extraction_method', 'Extraction method', None),
                   ('growth_protocol', 'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)', None),
+                  ('treatment_protocol', 'Treatment protocol (i.e. route of administration of pathogen)', None),
+                  ('experimental_design', 'Further Information on experimental design (i.e. time points and biological replicates)', None),
                   ('additional_information', 'Additional Information.', None),
     ]
 

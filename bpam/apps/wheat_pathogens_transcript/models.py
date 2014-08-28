@@ -7,7 +7,7 @@ class WheatPathogenTranscriptSample(Sample, DebugNote):
     """
     Wheat pathogen Transcript specific Sample
     """
-    official_variety_name = models.CharField(max_length=200, null=True, blank=True)
+    project = models.CharField(max_length=200, null=True, blank=True)
     sample_label = models.CharField(max_length=200, null=True, blank=True)
     index = models.CharField(max_length=6, null=True, blank=True)
     institution = models.CharField(max_length=200, null=True, blank=True)
@@ -15,6 +15,8 @@ class WheatPathogenTranscriptSample(Sample, DebugNote):
     sample_type = models.CharField(max_length=20, null=True, blank=True)
     extraction_method = models.TextField(null=True, blank=True)
     growth_protocol = models.TextField(null=True, blank=True)
+    treatment_protocol = models.TextField(null=True, blank=True)
+    experimental_design = models.TextField(null=True, blank=True)
 
 class WheatPathogenTranscriptProtocol(Protocol):
     run = models.ForeignKey('WheatPathogenTranscriptRun', blank=True, null=True)
