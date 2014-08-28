@@ -5,7 +5,7 @@ node default {
     include ccgapache
     include python
     include repo::epel
-    include include::ius
+    #include include::ius
     include repo::pgrpms
     include repo::ccgtesting
     include monit
@@ -61,6 +61,8 @@ node default {
       $packages = [
         'graphviz',
         'gdal-devel.x86_64',
+        'libxml2-devel',
+        'libxslt-devel',
         'proj-devel',
         'tree',
         'tmux',

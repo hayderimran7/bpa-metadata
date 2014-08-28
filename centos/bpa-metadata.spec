@@ -6,8 +6,8 @@
 
 %define webappname bpa-metadata
 %define nickname bpam
-%define version 1.2.4
-%define unmangled_version 1.2.4
+%define version 1.3.0
+%define unmangled_version 1.3.0
 %define release 1
 %define webapps /usr/local/webapps
 
