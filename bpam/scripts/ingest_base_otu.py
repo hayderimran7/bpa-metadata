@@ -5,9 +5,11 @@ from unipath import Path
 import requests
 import csv
 import time
+import os
 
 from libs import logger_utils
 from libs import bpa_id_utils
+from libs import ingest_utils
 
 from apps.base_otu.models import *
 from apps.base.models import BASESample
@@ -21,17 +23,23 @@ BPA_PREFIX = '102.100.100.'
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
-TAXONOMY_FILE = Path(DATA_DIR, '16s_otu.xlst')
-MAP_TAXONOMY_TO_SAMPLE_FILE = Path(DATA_DIR, '16s_otu_sample_map.zip')
+# DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
+# TAXONOMY_FILE = Path(DATA_DIR, '16s_otu.xlst')
+# MAP_TAXONOMY_TO_SAMPLE_FILE = Path(DATA_DIR, '16s_otu_sample_map.zip')
+
+DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, "data/base/")
+TAXONOMY_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/16s_otu.xlst')
+MAP_TAXONOMY_TO_SAMPLE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/16s_otu_sample_map')
 
 # for testing
-DEV_MAP_FILE = Path(DATA_DIR, 'small_otu.xlst')
+# DEV_MAP_FILE = Path(DATA_DIR, 'small_otu.xlst')
+DEV_MAP_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/small_otu.xlst')
 
 TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_16S_97OTUS_MAY5.xlsx'
 MAP_16S_OTU_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_16S_97OTUS_OTUXSAMPLE_MAY5.zip'
 
 
+# TODO use ingest utils
 def download_url(url, local_name=None):
     """
     Fetches data file from webserver
@@ -54,9 +62,10 @@ def ensure_data_file_is_available(url, file_name):
     """
     get the data file of the webserver if not locally available
     """
+    _file = Path(file_name)
     logger.info('Is {0} in {1} ?'.format(file_name, DATA_DIR))
-    if not Path.isfile(file_name):
-        download_url(url, file_name)
+    if not Path.isfile(_file):
+        download_url(url, _file)
     logger.info('Yes, it is now')
 
 

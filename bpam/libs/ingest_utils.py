@@ -14,7 +14,7 @@ from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 
 # where to cache downloaded metadata
-METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpa_metadata')
+METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'var/metadata')
 
 INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 

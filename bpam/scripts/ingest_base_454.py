@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import sys
-from unipath import Path
+import os
 from contracts import contract
 
 from libs.excel_wrapper import ExcelWrapper
@@ -12,8 +14,7 @@ from apps.base_454.models import Sample454
 
 
 logger = get_logger(__name__)
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, '454')
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/454')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'

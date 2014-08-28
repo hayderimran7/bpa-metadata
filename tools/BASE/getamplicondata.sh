@@ -1,7 +1,7 @@
 #! /bin/bash
 
 AMPLICON_CONTAINERS="BASE_Amplicon_16S BASE_Amplicon_18S BASE_Amplicon_ITS"
-TARGET=${HOME}/var/amplicon_metadata/
+TARGET=${HOME}/var/metadata/amplicon_metadata/
 
 get_metadata() {
     for c in ${AMPLICON_CONTAINERS}

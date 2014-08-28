@@ -237,6 +237,7 @@ ingest_all() {
     ${CMD} runscript ingest_melanoma --traceback
     ${CMD} runscript ingest_gbr --traceback
     ${CMD} runscript ingest_wheat_pathogens --traceback
+    ${CMD} runscript ingest_wheat_pathogens_transcript --traceback
     ${CMD} runscript ingest_wheat_cultivars --traceback
 
     # BASE

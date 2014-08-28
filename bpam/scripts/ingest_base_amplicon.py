@@ -9,13 +9,14 @@ from libs import logger_utils
 
 from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
-from apps.common.models import Facility, BPAUniqueID
 
 
 logger = logger_utils.get_logger(__name__)
 
 # all the Excel sheets and md5sums should be in here
-DATA_DIR = Path(Path('~').expand_user(), 'var/amplicon_metadata/')
+# DATA_DIR = Path(Path('~').expand_user(), 'var/amplicon_metadata/')
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/amplicon_metadata/')
+# DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, 'base/amplicon_metadata/')
 
 BPA_ID = "102.100.100."
 BASE_DESCRIPTION = 'BASE'
@@ -40,7 +41,7 @@ def fix_dilution(val):
     So stuff it.
     """
     if isinstance(val, float):
-        return u'1:10'  #  yea, that's how we roll...
+        return u'1:10'  # yea, that's how we roll...
     return val
 
 
@@ -105,8 +106,6 @@ def add_samples(data):
         metadata.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
         metadata.save()
-
-
 
 
 def is_metadata(path):
@@ -236,6 +235,7 @@ def do_md5():
         logger.info('Processing BASE Amplicon md5 file {0}'.format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
+
 
 def truncate():
     from django.db import connection

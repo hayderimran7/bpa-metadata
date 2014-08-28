@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from libs.logger_utils import get_logger
 from apps.base_vocabulary.contextual_controlled_vocabularies import LandUseVocabulary
 from apps.base_vocabulary.models import LandUse

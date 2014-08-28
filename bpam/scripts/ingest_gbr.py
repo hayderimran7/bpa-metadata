@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import sys
-from unipath import Path
+import os
 
 from apps.common.models import DNASource, Facility, Sequencer
 from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
@@ -11,8 +13,7 @@ from libs.excel_wrapper import ExcelWrapper
 
 logger = get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/gbr/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'gbr/current')
 
 BPA_ID = "102.100.100"
 GBR_DESCRIPTION = 'Great Barrier Reef'

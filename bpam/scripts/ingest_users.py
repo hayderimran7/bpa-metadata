@@ -1,5 +1,4 @@
 import csv
-import unipath
 import os
 
 from libs import ingest_utils, user_helper, logger_utils
@@ -8,8 +7,7 @@ from apps.bpaauth.models import BPAUser
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, 'users')
-USERS_FILE = unipath.Path(DATA_DIR, 'current')
+USERS_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'users/current')
 
 
 def get_data(users_file):

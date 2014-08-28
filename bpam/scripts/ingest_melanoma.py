@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-from unipath import Path
-
 from libs.excel_wrapper import ExcelWrapper
 from apps.common.models import DNASource, Facility, Sequencer
 from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, \
     MelanomaSequenceFile
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
-
 
 
 DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'melanoma/current')

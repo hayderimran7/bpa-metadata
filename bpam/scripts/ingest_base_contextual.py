@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from unipath import Path
-
+import os
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
@@ -11,12 +10,12 @@ from apps.base_contextual.models import *
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'contextual')
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/contextual')
 
 BPA_ID_PREFIX = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 CHEM_MIN_SENTINAL_VALUE = 0.0001
+
 
 def get_horizon_classifications(classification_str):
     """
@@ -92,7 +91,7 @@ def get_data(file_name):
                   ('crop_rotation_1', 'Crop rotation 1yr since present', None),
                   ('crop_rotation_2', 'Crop rotation 2yrs since present', None),
                   ('crop_rotation_3', 'Crop rotation 3yrs since present', None),
-                  ('crop_rotation_4', ' Crop rotation 4yrs since present', None),  # notice the silly space
+                  ('crop_rotation_4', 'Crop rotation 4yrs since present', None),
                   ('crop_rotation_5', 'Crop rotation 5yrs since present', None),
                   ('agrochemical_additions', 'Agrochemical Additions', None),
                   ('tillage', 'Tillage controlled vocab (9)', None),

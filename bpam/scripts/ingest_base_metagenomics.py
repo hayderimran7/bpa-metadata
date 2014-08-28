@@ -1,4 +1,6 @@
-from unipath import Path
+# -*- coding: utf-8 -*-
+
+import os
 
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
@@ -11,8 +13,7 @@ from apps.base_metagenomics.models import MetagenomicsSample, MetagenomicsSequen
 
 logger = logger_utils.get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), 'data/base/')
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'metagenomics')
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/metagenomics')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'

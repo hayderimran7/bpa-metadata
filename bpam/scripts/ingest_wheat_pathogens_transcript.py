@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from apps.common.models import DNASource, Sequencer, Facility
 
@@ -25,17 +27,6 @@ SOURCE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcri
 
 
 def ingest_samples(samples):
-    def get_facility(name):
-        """
-        Return the sequencing facility with this name, or a new facility.
-        """
-        if name.strip() == '':
-            name = 'Unknown'
-
-        facility, created = Facility.objects.get_or_create(name=name)
-
-        return facility
-
     def get_dna_source(description):
         """
         Get a DNA source if it exists, if it doesn't make it.

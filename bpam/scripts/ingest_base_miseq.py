@@ -2,6 +2,7 @@
 import pprint
 import csv
 import re
+import os
 import os.path
 from datetime import date
 
@@ -10,9 +11,12 @@ from apps.base.models.metagenomics import ChemicalAnalysis, BPAUniqueID
 from libs import ingest_utils
 
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
-CHEM_FILE = os.path.join(DATA_DIR, 'base_soil_agric_chem.csv')
+# DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+# SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
+# CHEM_FILE = os.path.join(DATA_DIR, 'base_soil_agric_chem.csv')
+
+SAMPLE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/base_soil_agric_sample.csv')
+CHEM_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/base_soil_agric_chem.csv')
 
 
 def get_sample_data():

@@ -1,5 +1,6 @@
-from unipath import Path
+# -*- coding: utf-8 -*-
 
+import os
 from apps.common.models import DNASource, Sequencer
 from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
 from libs import ingest_utils
@@ -10,8 +11,7 @@ from libs.excel_wrapper import ExcelWrapper
 
 logger = get_logger(__name__)
 
-DATA_DIR = Path(Path(__file__).ancestor(3), "data/wheat_cultivars/")
-DEFAULT_SPREADSHEET_FILE = Path(DATA_DIR, 'current')
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_cultivars/current')
 
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Cultivars'
