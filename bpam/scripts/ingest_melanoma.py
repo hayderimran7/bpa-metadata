@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date
+import os
 from unipath import Path
 
 from libs.excel_wrapper import ExcelWrapper
@@ -10,10 +10,8 @@ from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaP
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 
 
-# some defaults to fall back on
-DEFAULT_DATA_DIR = Path(Path(__file__).ancestor(3), "data/melanoma/")
-DEFAULT_SPREADSHEET_FILE = Path(DEFAULT_DATA_DIR, 'current')
 
+DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'melanoma/current')
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
 logger = logger_utils.get_logger(__name__)
@@ -239,9 +237,6 @@ def ingest_runs(sample_data):
         sequencer, _ = Sequencer.objects.get_or_create(name=name)
         return sequencer
 
-    def get_sample(bpa_id):
-
-        return sample
 
     def get_run_number(entry):
         """
