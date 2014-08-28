@@ -15,44 +15,40 @@
             <td> {{ sample.name }}</td>
         </tr>
         <tr>
-            <td> Organism </td>
-            <td> {{ sample.organism }}</td>
+            <td> Contact Scientist </td>
+            <td> {{ sample.contact_scientist }}</td>
         </tr>
         <tr>
-            <td> Sample Label </td>
-            <td> {{ sample.sample_label}}</td>
+            <td> Contact Scientist email </td>
+            <td> {{ sample.contact_scientist.email }}</td>
         </tr>
         <tr>
-            <td> Isolate Name</td>
-            <td> {{ sample.official_variety_name}}</td>
+            <td> Institution</td>
+            <td> {{ sample.institution}}</td>
         </tr>
         <tr>
-            <td> DNA Source</td>
-            <td> {{ sample.dna_source }}</td>
+            <td> Species</td>
+            <td> {{ sample.species }}</td>
         </tr>
         <tr>
-            <td> Original Source Host Species</td>
-            <td> {{ sample.original_source_host_species }}</td>
+            <td> Sample Type</td>
+            <td> {{ sample.sample_type }}</td>
         </tr>
         <tr>
-            <td> Sequence Coverage</td>
-            <td> {{ sample.requested_sequence_coverage }}</td>
+            <td> RNA Source</td>
+            <td> {{ sample.dna_source.description }}</td>
         </tr>
         <tr>
-            <td> Collection Location</td>
-            <td> {{ sample.collection_location }}</td>
+            <td> Extraction Method</td>
+            <td> {{ sample.extraction_method }}</td>
         </tr>
         <tr>
-            <td> Protocol Reference</td>
-            <td> {{ sample.protocol_reference }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Date</td>
-            <td> {{ sample.date_sequenced }}</td>
+            <td> Growth Protocol</td>
+            <td> {{ sample.growth_protocol }}</td>
         </tr>
         <tr>
             <td> Note</td>
-            <td> {{ sample.comments_by_facility }}</td>
+            <td> {{ sample.note }}</td>
         </tr>
         </tbody>
     </table>

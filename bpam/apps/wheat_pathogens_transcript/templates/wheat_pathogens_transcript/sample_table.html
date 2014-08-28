@@ -22,11 +22,11 @@
             <a href="{% url 'wheat_pathogens_transcript:sample' sample.pk %}">{{ sample.bpa_id }}</a>
         </td>
         <td>{{ sample.name }}</td>
-        <td>{{ sample.contact_scientist.name }}</td>
+        <td>{{ sample.contact_scientist }}</td>
         <td>{{ sample.contact_scientist.email }}</td>
         <td>{{ sample.institution }}</td>
         <td>{{ sample.species }}</td>
-        <td>{{ sample.type }}</td>
+        <td>{{ sample.sample_type }}</td>
         <td>{{ sample.dna_source.description }}</td>
         <td>{{ sample.extraction_method }}</td>
         <td>{{ sample.growth_protocol }}</td>
@@ -38,7 +38,8 @@
 
 <script>
     $(document).ready(function () {
-        $(function () {
+        $(function ()
+        <td>{{ sample.pk }}</td>{
             $("#sample-list").tablesorter();
         });
     });
