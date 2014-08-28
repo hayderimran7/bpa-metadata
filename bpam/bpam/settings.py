@@ -5,8 +5,9 @@ import sys
 
 from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
-
 from ccg_django_utils.conf import EnvConfig
+
+
 env = EnvConfig()
 
 
@@ -17,6 +18,7 @@ def get_env_variable(var_name):
     except KeyError:
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
+
 
 BPA_VERSION = '1.2.4'
 # see ccg_django_utils.webhelpers
@@ -116,16 +118,16 @@ REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.
 
 # Default cookie settings
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
-SESSION_COOKIE_AGE = 60*60
+SESSION_COOKIE_AGE = 60 * 60
 SESSION_COOKIE_PATH = '{0}/'.format(BASE_URL_PATH)
 SESSION_COOKIE_NAME = 'bpametadata_sessionid'
 SESSION_SAVE_EVERY_REQUEST = True
-SESSION_COOKIE_HTTPONLY = False # CHange from True
-SESSION_COOKIE_SECURE = False # Changed from True
+SESSION_COOKIE_HTTPONLY = False  # CHange from True
+SESSION_COOKIE_SECURE = False  # Changed from True
 
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
 CSRF_COOKIE_NAME = "csrftoken_bpametadata"
-CSRF_COOKIE_SECURE = False # Changed from True
+CSRF_COOKIE_SECURE = False  # Changed from True
 
 # Default date input formats, may be overridden
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
@@ -133,7 +135,7 @@ TIME_ZONE = 'Australia/Perth'
 LANGUAGE_CODE = 'en-us'
 USE_I18N = False
 USE_L10N = False
-DATE_INPUT_FORMATS = ('%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y','%d %m %Y','%d %m %y', '%d %b %Y')
+DATE_INPUT_FORMATS = ('%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y', '%d %m %Y', '%d %m %y', '%d %b %Y')
 DATE_FORMAT = "d-m-Y"
 SHORT_DATE_FORMAT = "d/m/Y"
 
@@ -238,14 +240,14 @@ MEDIA_URL = ''
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 # STATIC_URL = '{0}/static/'.format(os.environ.get("SCRIPT_NAME", ""))
-STATIC_URL = '/bpa-metadata/static/'
+STATIC_URL = '/bpam/static/'
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 
@@ -253,7 +255,7 @@ STATICFILES_FINDERS = (
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -372,7 +374,7 @@ LOGGING = {
 
 # debug_toolbar settings
 if DEBUG:
-    INTERNAL_IPS = ('172.16.2.1',) # explicitly set this for your environment
+    INTERNAL_IPS = ('172.16.2.1',)  # explicitly set this for your environment
     INSTALLED_APPS += (
         'debug_toolbar',
     )

@@ -59,7 +59,7 @@ def fetch_metadata_from_swift():
         'https://keystone.bioplatforms.com/v2.0/',
         swift_user,
         swift_password,
-        'bpa-metadata-source',
+        'bpam-source',
     )
 
     logger.info(cmd)

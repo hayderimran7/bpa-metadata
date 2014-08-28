@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to control bpa-metadata in dev and test
+# Script to control bpam in dev and test
 
 TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
@@ -11,10 +11,10 @@ TEST_SETTINGS="bpam.nsettings.test"
 
 PORT='8000'
 
-PROJECT_NAME='bpa-metadata'
+PROJECT_NAME='bpam'
 PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
-AWS_STAGING_INSTANCE='aws-syd-bpa-metadata-staging'
+AWS_STAGING_INSTANCE='aws-syd-bpam-staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
 PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"

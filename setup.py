@@ -1,17 +1,9 @@
 import os.path
-
 from setuptools import setup, find_packages
 
+import bpam
+
 packages = [p.replace(".", "/") for p in sorted(find_packages())]
-
-
-def get_version():
-    """
-    The VERSION file in package root sets the version
-    """
-    version_file = os.path.join(os.path.dirname(__file__), "VERSION")
-    return open(version_file).readline().strip()
-
 
 def get_data_files():
     """
@@ -104,7 +96,7 @@ dependency_links = [
 
 setup(
     name='bpam',
-    version=get_version(),
+    version=bpam.__version__,
     description="BPA Metadata Management",
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',

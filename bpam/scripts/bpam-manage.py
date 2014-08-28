@@ -14,7 +14,7 @@ except OSError as e:
     sys.stderr.write("warning: Couldn't switch to the %s user: %s\n" % (USER, e))
 
 if __name__ == "__main__":
-    webapp_name = "bpa-metadata"
+    webapp_name = "bpam"
     os.environ.setdefault('CCG_WEBAPPS_PREFIX', '/usr/local/webapps')
     webapp_root = os.path.join(os.environ['CCG_WEBAPPS_PREFIX'], webapp_name)
 

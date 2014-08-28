@@ -56,7 +56,7 @@ html = """<!DOCTYPE html>
       ga('send', 'pageview');
     </script>
 
-    <form><input type="hidden" id="bpa-metadata-catalog" value="melanoma" /></form>
+    <form><input type="hidden" id="bpam-catalog" value="melanoma" /></form>
   </body>
 </html>
 
