@@ -7,7 +7,6 @@ from unipath import Path
 from django.core.exceptions import ImproperlyConfigured
 from ccg_django_utils.conf import EnvConfig
 
-
 env = EnvConfig()
 
 
@@ -20,7 +19,7 @@ def get_env_variable(var_name):
         raise ImproperlyConfigured(error_msg)
 
 
-BPA_VERSION = '1.2.4'
+BPA_VERSION = '1.3.0'
 # see ccg_django_utils.webhelpers
 BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 
@@ -280,7 +279,7 @@ ROOT_URLCONF = 'bpam.urls'
 WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
-    'bpam',
+    #'bpam',
     'suit',
     'crispy_forms',
     'django.contrib.auth',

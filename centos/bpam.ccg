@@ -20,9 +20,9 @@ WSGIDaemonProcess bpa-metadata processes=2 threads=15 display-name=%{GROUP}
     WSGIProcessGroup bpa-metadata
   </Location>
 
-  Alias /bpa-metadata/static /usr/local/webapps/bpa-metadata/static
-  Alias /bpa-metadata/images /usr/local/webapps/bpa-metadata/static/images
-  WSGIScriptAlias /bpa-metadata /usr/local/webapps/bpa-metadata/django.wsgi
+  Alias /bpa-metadata/static /usr/local/webapps/bpam/static
+  Alias /bpa-metadata/images /usr/local/webapps/bpam/static/images
+  WSGIScriptAlias /bpa-metadata /usr/local/webapps/bpam/django.wsgi
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -30,7 +30,7 @@ WSGIDaemonProcess bpa-metadata processes=2 threads=15 display-name=%{GROUP}
   ServerName localhost.localdomain:443
   ErrorLog logs/bpa-metadata.ssl_error_log
   TransferLog logs/bpa-metadata.ssl_access_log
-  
+
   SSLEngine on
 
   # From other config
@@ -52,7 +52,7 @@ WSGIDaemonProcess bpa-metadata processes=2 threads=15 display-name=%{GROUP}
     WSGIProcessGroup bpa-metadata
   </Location>
 
-  Alias /bpa-metadata/static /usr/local/webapps/bpa-metadata/static
-  Alias /bpa-metadata/images /usr/local/webapps/bpa-metadata/static/images
-  WSGIScriptAlias /bpa-metadata /usr/local/webapps/bpa-metadata/django.wsgi
+  Alias /bpa-metadata/static /usr/local/webapps/bpam/static
+  Alias /bpa-metadata/images /usr/local/webapps/bpam/static/images
+  WSGIScriptAlias /bpa-metadata /usr/local/webapps/bpam/django.wsgi
 </VirtualHost>

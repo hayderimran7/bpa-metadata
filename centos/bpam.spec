@@ -11,7 +11,7 @@
 %define unmangled_version %{version}
 %define release 1
 %define webapps /usr/local/webapps
-%define installdir %{webapps}/%{name}
+%define installdir %{webapps}/%{nickname}
 %define buildinstalldir %{buildroot}/%{installdir}
 %define settingsdir %{buildinstalldir}/defaultsettings
 %define logdir %{buildroot}/var/log/%{nickname}
@@ -48,7 +48,7 @@ fi
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 %install
-NAME=%{name}
+NAME=%{nickname}
 
 # Build from source dir
 cd $CCGSOURCEDIR
@@ -66,23 +66,19 @@ mkdir -p %{sharedir}
 # Create a python prefix with app requirements
 mkdir -p %{buildinstalldir}
 
+# Virtualenv
 # Make a virtualenv and install the app's dependencies
 virtualenv-%{pybasever} %{buildinstalldir}
 . %{buildinstalldir}/bin/activate
-
-# Use specific version of pip -- avoids surprises with deprecated
-# options, etc.
+# Use specific version of pip -- avoids surprises with deprecated options, etc.
 pip install --force-reinstall --upgrade 'pip>=1.5,<1.6'
-
 # Install package into the prefix
 pip install --allow-unverified --allow-all-external --process-dependency-links .
-
-
 # Fix up paths in virtualenv, enable use of global site-packages
 virtualenv-%{pybasever} --relocatable %{buildinstalldir}
 find %{buildinstalldir} -name \*py[co] -exec rm {} \;
 find %{buildinstalldir} -name no-global-site-packages.txt -exec rm {} \;
-sed -i "s|$(readlink -f ${RPM_BUILD_ROOT})||g" %{buildinstalldir}/bin/*
+sed -i "s|`readlink -f ${RPM_BUILD_ROOT}`||g" %{buildinstalldir}/bin/*
 
 # Strip out mention of rpm buildroot from the pip install record
 find %{buildinstalldir} -name RECORD -exec sed -i -e "s|${RPM_BUILD_ROOT}||" {} \;
@@ -102,18 +98,17 @@ cp -r ./tools* %{buildinstalldir}/
 # ln -sf .. $(find %{buildinstalldir} -path "*/%{name}/settings.py" | sed s:^%{buildinstalldir}::) %{settingsdir}/%{name}.py
 
 # Create symlinks under install directory to real persistent data directories
-APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/%{nickname}/settings.py" | sed s:^%{buildinstalldir}/::`
+APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/$NAME/settings.py" | sed s:^%{buildinstalldir}/::`
 APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
 VENV_LIB_DIR=`dirname ${APP_PACKAGE_DIR}`
 
 # Create static files symlink within module directory
 ln -fsT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
-ln -fsT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
 
-# Install prodsettings conf file to /etc, and replace with symlink
+# Install settings conf file to /etc, and replace with symlink
 install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf
 install --mode=0640 -D %{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
-ln -sfT /etc/${nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
+ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
 
 # Create symlinks under install directory to real persistent data directories
 ln -fsT /var/log/%{nickname} %{buildinstalldir}/${VENV_LIB_DIR}/log
@@ -159,14 +154,12 @@ rm -rf %{buildroot}
 %defattr(-,apache,apache,-)
 /etc/httpd/conf.d/*
 %{_bindir}/%{nickname}
-%attr(-,apache,,apache) %{webapps}/%{name}
+%attr(-,apache,,apache) %{webapps}/%{nickname}
 %attr(-,apache,,apache) /var/log/%{nickname}
 %attr(-,apache,,apache) /var/lib/%{nickname}
-%attr(-,apache,,apache) /usr/share/%{nickname}
-%attr(710,root,apache) /etc/%{nickname}
-%attr(640,root,apache) /etc/%{nickname}/settings.py
-%attr(640,root,apache) /etc/%{nickname}/%{nickname}.conf
+
+%config /etc/httpd/conf.d/%{nickname}.ccg
 %config(noreplace) /etc/%{nickname}/settings.py
 %config(noreplace) /etc/%{nickname}/%{nickname}.conf
 
-%config /etc/httpd/conf.d/%{nickname}.ccg
+

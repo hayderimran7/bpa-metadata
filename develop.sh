@@ -108,6 +108,11 @@ build_number_head() {
     log_info "build.tip=${TIP}"
 }
 
+
+make_local_rpm() {
+    CCGSOURCEDIR=/usr/local/src rpmbuild -bb centos/bpam.spec
+}
+
 # build RPMs on a remote host from ci environment
 ci_remote_build() {
     log_info "Building rpm on ${AWS_BUILD_INSTANCE}"

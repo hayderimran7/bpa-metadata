@@ -19,7 +19,7 @@ if production_user:
 
 if __name__ == "__main__":
     if production_user:
-        # prepare the settings module for the django app
+        # setup the settings module for the django app
         from ccg_django_utils.conf import setup_prod_env
         setup_prod_env("bpam")
     else:
