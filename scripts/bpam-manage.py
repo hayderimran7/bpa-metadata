@@ -21,9 +21,9 @@ if __name__ == "__main__":
     if production_user:
         # prepare the settings module for the django app
         from ccg_django_utils.conf import setup_prod_env
-        setup_prod_env("gsdb")
+        setup_prod_env("bpam")
     else:
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gsdb.settings")
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bpam.settings")
 
     from django.core.management import execute_from_command_line
 

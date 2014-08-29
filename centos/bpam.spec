@@ -14,10 +14,10 @@
 %define installdir %{webapps}/%{name}
 %define buildinstalldir %{buildroot}/%{installdir}
 %define settingsdir %{buildinstalldir}/defaultsettings
-%define logdir %{buildroot}/var/log/%{name}
-%define mediadir %{buildroot}/var/lib/%{name}/media
-%define scratchdir %{buildroot}/var/lib/%{name}/scratch
-%define sharedir %{buildroot}/usr/share/%{name}/
+%define logdir %{buildroot}/var/log/%{nickname}
+%define mediadir %{buildroot}/var/lib/%{nickname}/media
+%define scratchdir %{buildroot}/var/lib/%{nickname}/scratch
+%define sharedir %{buildroot}/usr/share/%{nickname}/
 %define staticdir %{buildinstalldir}/static
 
 Summary: bpa-metadata
@@ -94,7 +94,7 @@ find %{buildinstalldir} -name \*.so -exec strip -g {} \;
 # don't need a copy of python interpreter in the virtualenv
 # rm %{buildinstalldir}/bin/python*
 
-# tools are needed to popalte the database from the excell spreadsheets
+# tools are ne`eded to popalte the database from the excell spreadsheets
 cp -r ./tools* %{buildinstalldir}/
 
 # Create settings symlink so we can run collectstatic with the default settings
@@ -102,40 +102,41 @@ cp -r ./tools* %{buildinstalldir}/
 # ln -sf .. $(find %{buildinstalldir} -path "*/%{name}/settings.py" | sed s:^%{buildinstalldir}::) %{settingsdir}/%{name}.py
 
 # Create symlinks under install directory to real persistent data directories
-APP_SETTINGS_FILE=$(find %{buildinstalldir} -path "*/%{nickname}/settings.py" | sed s:^%{buildinstalldir}/::)
-APP_PACKAGE_DIR=$(dirname ${APP_SETTINGS_FILE})
-VENV_LIB_DIR=$(dirname ${APP_PACKAGE_DIR})
+APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/%{nickname}/settings.py" | sed s:^%{buildinstalldir}/::`
+APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
+VENV_LIB_DIR=`dirname ${APP_PACKAGE_DIR}`
 
 # Create static files symlink within module directory
 ln -fsT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
+ln -fsT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
 
 # Install prodsettings conf file to /etc, and replace with symlink
-install --mode=0640 -D centos/gsdb.conf.example %{buildroot}/etc/gsdb/gsdb.conf
-install --mode=0640 -D gsdb/prodsettings.py %{buildroot}/etc/gsdb/settings.py
-ln -sfT /etc/${app}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
+install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf
+install --mode=0640 -D %{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
+ln -sfT /etc/${nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
 
 # Create symlinks under install directory to real persistent data directories
-ln -fsT /var/log/%{name} %{buildinstalldir}/${VENV_LIB_DIR}/log
-ln -fsT /var/lib/%{name}/scratch %{buildinstalldir}/${VENV_LIB_DIR}/scratch
-ln -fsT /var/lib/%{name}/media %{buildinstalldir}/${VENV_LIB_DIR}/media
+ln -fsT /var/log/%{nickname} %{buildinstalldir}/${VENV_LIB_DIR}/log
+ln -fsT /var/lib/%{nickname}/scratch %{buildinstalldir}/${VENV_LIB_DIR}/scratch
+ln -fsT /var/lib/%{nickname}/media %{buildinstalldir}/${VENV_LIB_DIR}/media
 
 # temp fix to make defaultsettings importable
 ln -sfT %{installdir}/defaultsettings %{buildinstalldir}/${APP_PACKAGE_DIR}/../defaultsettings
 
 # Install WSGI configuration into httpd/conf.d
-install -D centos/%{name}.ccg %{buildroot}/etc/httpd/conf.d/%{name}.ccg
+install -D centos/%{nickname}.ccg %{buildroot}/etc/httpd/conf.d/%{nickname}.ccg
 ln -sfT ${APP_PACKAGE_DIR}/wsgi.py %{buildinstalldir}/django.wsgi
 
 # Create symlinks to scripts in the virtualenv
 mkdir -p %{buildroot}/%{_bindir}
-ln -sfT %{installdir}/bin/%{app}-manage.py %{buildroot}/%{_bindir}/%{app}
+ln -sfT %{installdir}/bin/%{nickname}-manage.py %{buildroot}/%{_bindir}/%{nickname}
 
 %post
 # Clear out staticfiles data and regenerate
 rm -rf %{installdir}/static/*
 %{app} collectstatic --noinput  > /dev/null
 # Remove root-owned logged files just created by collectstatic
-rm -rf /var/log/%{name}/*
+rm -rf /var/log/%{nickname}/*
 # Touch the wsgi file to get the app reloaded by mod_wsgi
 touch %{installdir}/django.wsgi
 
@@ -157,16 +158,15 @@ rm -rf %{buildroot}
 %files
 %defattr(-,apache,apache,-)
 /etc/httpd/conf.d/*
-%{_bindir}/%{name}
-%{_bindir}/run-migration
+%{_bindir}/%{nickname}
 %attr(-,apache,,apache) %{webapps}/%{name}
-%attr(-,apache,,apache) /var/log/%{name}
-%attr(-,apache,,apache) /var/lib/%{name}
-%attr(-,apache,,apache) /usr/share/%{name}
-%attr(710,root,apache) /etc/%{name}
-%attr(640,root,apache) /etc/%{name}/settings.py
-%attr(640,root,apache) /etc/%{name}/{%name}.conf
-%config(noreplace) /etc/%{name}/settings.py
-%config(noreplace) /etc/%{name}/%{name}.conf
+%attr(-,apache,,apache) /var/log/%{nickname}
+%attr(-,apache,,apache) /var/lib/%{nickname}
+%attr(-,apache,,apache) /usr/share/%{nickname}
+%attr(710,root,apache) /etc/%{nickname}
+%attr(640,root,apache) /etc/%{nickname}/settings.py
+%attr(640,root,apache) /etc/%{nickname}/%{nickname}.conf
+%config(noreplace) /etc/%{nickname}/settings.py
+%config(noreplace) /etc/%{nickname}/%{nickname}.conf
 
-%config /etc/httpd/conf.d/%{name}.ccg
+%config /etc/httpd/conf.d/%{nickname}.ccg
