@@ -53,7 +53,8 @@ install_requires = [
     'pycontracts',
     'ccg-django-utils',
     'python-keystoneclient',
-    'python-swiftclient'
+    'python-swiftclient',
+    'ccg-django-utils==0.2.1'
 ]
 
 dev_requires = [
@@ -111,5 +112,5 @@ setup(
         'downloads': downloads_requires
     },
     zip_safe=False,
-    scripts=["scripts/bpam-manage.py"],
+    scripts=["manage.py"],
 )

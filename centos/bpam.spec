@@ -56,7 +56,7 @@ cd $CCGSOURCEDIR
 # Make sure the standard target directories exist
 # These two contain files owned by the RPM
 mkdir -p %{settingsdir}
-mkdir -p %{staticdir}
+#mkdir -p %{staticdir}
 # The rest are for persistent data files created by the app
 mkdir -p %{logdir}
 mkdir -p %{mediadir}
@@ -73,7 +73,7 @@ virtualenv-%{pybasever} %{buildinstalldir}
 # Use specific version of pip -- avoids surprises with deprecated options, etc.
 pip install --force-reinstall --upgrade 'pip>=1.5,<1.6'
 # Install package into the prefix
-pip install --allow-unverified --allow-all-external --process-dependency-links .
+pip install --allow-unverified --allow-all-external --process-dependency-links ./%{nickname}
 # Fix up paths in virtualenv, enable use of global site-packages
 virtualenv-%{pybasever} --relocatable %{buildinstalldir}
 find %{buildinstalldir} -name \*py[co] -exec rm {} \;
@@ -90,30 +90,29 @@ find %{buildinstalldir} -name \*.so -exec strip -g {} \;
 # don't need a copy of python interpreter in the virtualenv
 # rm %{buildinstalldir}/bin/python*
 
-# tools are ne`eded to popalte the database from the excell spreadsheets
+# tools are needed to populate the database from the excell spreadsheets
 cp -r ./tools* %{buildinstalldir}/
+
 
 # Create settings symlink so we can run collectstatic with the default settings
 # touch %{settingsdir}/__init__.py
 # ln -sf .. $(find %{buildinstalldir} -path "*/%{name}/settings.py" | sed s:^%{buildinstalldir}::) %{settingsdir}/%{name}.py
 
-# Create symlinks under install directory to real persistent data directories
-APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/$NAME/settings.py" | sed s:^%{buildinstalldir}/::`
-APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
-VENV_LIB_DIR=`dirname ${APP_PACKAGE_DIR}`
-
-# Create static files symlink within module directory
-ln -fsT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
 
 # Install settings conf file to /etc, and replace with symlink
 install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf
-install --mode=0640 -D %{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
+install --mode=0640 -D %{nickname}/%{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
 ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
 
 # Create symlinks under install directory to real persistent data directories
-ln -fsT /var/log/%{nickname} %{buildinstalldir}/${VENV_LIB_DIR}/log
-ln -fsT /var/lib/%{nickname}/scratch %{buildinstalldir}/${VENV_LIB_DIR}/scratch
-ln -fsT /var/lib/%{nickname}/media %{buildinstalldir}/${VENV_LIB_DIR}/media
+APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/$NAME/settings.py" | sed s:^%{buildinstalldir}/::`
+APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
+ln -sfT /var/log/%{nickname} %{buildinstalldir}/${APP_PACKAGE_DIR}/log
+ln -sfT /var/lib/%{nickname}/scratch %{buildinstalldir}/${APP_PACKAGE_DIR}/scratch
+ln -sfT /var/lib/%{nickname}/media %{buildinstalldir}/${APP_PACKAGE_DIR}/media
+
+mkdir -p %{staticdir}
+ln -sfT %{installdir}/static %{buildinstalldir}/${APP_PACKAGE_DIR}/static
 
 # temp fix to make defaultsettings importable
 ln -sfT %{installdir}/defaultsettings %{buildinstalldir}/${APP_PACKAGE_DIR}/../defaultsettings
@@ -124,12 +123,13 @@ ln -sfT ${APP_PACKAGE_DIR}/wsgi.py %{buildinstalldir}/django.wsgi
 
 # Create symlinks to scripts in the virtualenv
 mkdir -p %{buildroot}/%{_bindir}
-ln -sfT %{installdir}/bin/%{nickname}-manage.py %{buildroot}/%{_bindir}/%{nickname}
+# ln -sfT %{installdir}/bin/%{nickname}-manage.py %{buildroot}/%{_bindir}/%{nickname}
+ln -sfT %{installdir}/bin/manage.py %{buildroot}/%{_bindir}/%{nickname}
 
 %post
 # Clear out staticfiles data and regenerate
 rm -rf %{installdir}/static/*
-%{app} collectstatic --noinput  > /dev/null
+%{nickname} collectstatic --noinput  > /dev/null
 # Remove root-owned logged files just created by collectstatic
 rm -rf /var/log/%{nickname}/*
 # Touch the wsgi file to get the app reloaded by mod_wsgi

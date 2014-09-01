@@ -4,30 +4,18 @@ import os
 import sys
 
 from unipath import Path
-from django.core.exceptions import ImproperlyConfigured
 from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
 
-
-def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-
-
 BPA_VERSION = '1.3.0'
 # see ccg_django_utils.webhelpers
 BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
+CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = Path(__file__).ancestor(1)
 MEDIA_ROOT = PROJECT_DIR.child("media")
-STATIC_ROOT = os.path.join(WEBAPP_ROOT, 'static')
-CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 CCG_WRITEABLE_DIRECTORY = os.path.join(CCG_INSTALL_ROOT, "scratch")
 PROJECT_NAME = os.path.basename(CCG_INSTALL_ROOT)
 
@@ -105,9 +93,7 @@ DATABASES = {
 
 # See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
 SERVER_EMAIL = env.get("server_email", "noreply@bpam@ccgapps.com.au")
-
 RETURN_EMAIL = env.get("return_email", "bpa <noreply@ccgapps.com.au>")
-
 # email address to receive datasync client log notifications
 LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
 # email address to receive datasync key upload notifications
@@ -236,10 +222,12 @@ USE_TZ = True
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = ''
 
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
-# STATIC_URL = '{0}/static/'.format(os.environ.get("SCRIPT_NAME", ""))
-STATIC_URL = '/bpam/static/'
+STATIC_ROOT = os.path.join(CCG_INSTALL_ROOT, 'static')
+
+# These may be overridden, but it would be nice to stick to this convention
+# see: https://docs.djangoproject.com/en/1.4/ref/settings/#static-url
+STATIC_URL = '{0}/static/'.format(BASE_URL_PATH)
+
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -279,7 +267,7 @@ ROOT_URLCONF = 'bpam.urls'
 WSGI_APPLICATION = 'bpam.wsgi.application'
 
 INSTALLED_APPS = (
-    #'bpam',
+    'bpam',
     'suit',
     'crispy_forms',
     'django.contrib.auth',
@@ -318,7 +306,8 @@ INSTALLED_APPS = (
     'leaflet',
 )
 
-CCG_LOG_DIRECTORY = os.path.join(WEBAPP_ROOT, "log")
+# Log directory created and enforced by puppet
+CCG_LOG_DIRECTORY = os.path.join(CCG_INSTALL_ROOT, "log")
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -370,13 +359,35 @@ LOGGING = {
 }
 
 
-
-# debug_toolbar settings
-if DEBUG:
-    INTERNAL_IPS = ('172.16.2.1',)  # explicitly set this for your environment
+if env.get("DEBUG_TOOLBAR", False):
+    INSTALLED_APPS += ('debug_toolbar', )
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    INTERNAL_IPS = ('127.0.0.1', '172.16.2.189',)  # explicitly set this for your environment
     INSTALLED_APPS += (
         'debug_toolbar',
     )
+
+
+if env.get("BPA_TEST", False):
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+
+    INSTALLED_APPS += ('debug_toolbar',)
+    INTERNAL_IPS = ('127.0.0.1',)
+
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+            "USER": "",
+            "PASSWORD": "",
+            "HOST": "",
+            "PORT": "",
+        },
+    }
+
 
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
 DEFAULT_PAGINATION = 50

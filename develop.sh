@@ -6,21 +6,17 @@ ACTION=$1
 SECOND_ARGUMENT=$2
 shift
 
-DEV_SETTINGS="bpam.nsettings.dev"
-TEST_SETTINGS="bpam.nsettings.test"
-
 PORT='8000'
 
 PROJECT_NAME='bpam'
-PROJECT_NICKNAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
 AWS_STAGING_INSTANCE='aws-syd-bpam-staging'
-TARGET_DIR="/usr/local/src/${PROJECT_NICKNAME}"
-CONFIG_DIR="${TOPDIR}/${PROJECT_NICKNAME}"
+TARGET_DIR="/usr/local/src/${PROJECT_NAME}"
+CONFIG_DIR="${TOPDIR}/${PROJECT_NAME}"
 PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"
 PIP5_OPTS="${PIP_OPTS} --process-dependency-links --allow-all-external"
 PYVENV="virtualenv-2.7"
-VIRTUALENV="${TOPDIR}/virt_${PROJECT_NICKNAME}"
+VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
 PYTHON="${VIRTUALENV}/bin/python"
 PIP="${VIRTUALENV}/bin/pip"
 DJANGO_ADMIN="${VIRTUALENV}/bin/django-admin.py"
@@ -86,11 +82,10 @@ is_root() {
    fi
 }
 
-devsettings() {
-    log_info "Setting dev settings to ${DEV_SETTINGS}"
-    export DJANGO_SETTINGS_MODULE="${DEV_SETTINGS}"
+settings() {
+    export DEBUG_TOOLBAR=True
+    export DJANGO_SETTINGS_MODULE="${PROJECT_NAME}.settings"
 }
-
 
 # ssh setup, make sure our ccg commands can run in an automated environment
 ci_ssh_agent() {
@@ -175,7 +170,7 @@ ci_staging_lettuce() {
 lint() {
     activate_virtualenv
     cd ${TOPDIR}
-    flake8 ${PROJECT_NICKNAME} --ignore=E501 --count
+    flake8 ${PROJECT_NAME} --ignore=E501 --count
 }
 
 is_running_in_instance() {
@@ -188,10 +183,10 @@ is_running_in_instance() {
 }
 
 install() {
-    log_info "Installing ${PROJECT_NICKNAME}'s dependencies in virtualenv ${VIRTUALENV}"
+    log_info "Installing ${PROJECT_NAME}'s dependencies in virtualenv ${VIRTUALENV}"
     if is_running_in_instance
     then
-        ${PYVENV} ${VIRTUALENV}
+        ${PYVENV} --system-site-packages ${VIRTUALENV}
         (
            source ${VIRTUALENV}/bin/activate
            cd ${CONFIG_DIR}
@@ -202,14 +197,13 @@ install() {
         )
 
         mkdir -p ${HOME}/bin
-        ln -sf ${VIRTUALENV}/bin/python ${HOME}/bin/vpython-${PROJECT_NICKNAME}
-        ln -sf ${VIRTUALENV}/bin/django-admin.py ${HOME}/bin/${PROJECT_NICKNAME}
+        ln -sf ${VIRTUALENV}/bin/python ${HOME}/bin/vpython-${PROJECT_NAME}
+        ln -sf ${VIRTUALENV}/bin/django-admin.py ${HOME}/bin/${PROJECT_NAME}
     else
         log_warning "Not running in a env where creating a virtualenv here would make sense, the virtualenv python needs to link to the lxc python."
         log_warning "shell into your instance and try again, or use the ccg remote command."
     fi
 }
-
 
 ########################################
 # local lxc related
@@ -218,7 +212,7 @@ make_local_instance() {
     if ! is_running_in_instance
     then
        log_info "Making a local build instance"
-       rm -rf virt_${PROJECT_NICKNAME}
+       rm -rf virt_${PROJECT_NAME}
        ccg --nuke-bootstrap
        ccg dev puppet
     else
@@ -274,35 +268,48 @@ syncmigrate() {
     ingest_all
 }
 
+
+ipaddress() {
+    if [ -n "$1" ]; then
+        DEV="dev $1"
+    else
+        DEV=""
+    fi
+    ip -4 addr show ${DEV} 2> /dev/null | awk '/inet / { gsub(/\/.*/, ""); print $2; }'
+}
+
+# start runserver
 startserver() {
-    log_info "Starting server on http://$(echo $(hostname -I)):${PORT}"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
+    echo "Visit http://$(ipaddress eth0):${PORT}/"
+    settings
+
+    # ${VIRTUALENV}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
+    ${VIRTUALENV}/bin/python bpam/manage.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
 
 pythonversion() {
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/python -V
+    ${TOPDIR}/virt_${PROJECT_NAME}/bin/python -V
 }
 
 pipfreeze() {
-    log_info "${PROJECT_NICKNAME} pip freeze"
-    ${TOPDIR}/virt_${PROJECT_NICKNAME}/bin/pip freeze
+    log_info "${PROJECT_NAME} pip freeze"
+    ${TOPDIR}/virt_${PROJECT_NAME}/bin/pip freeze
 }
 
 clean() {
     log_info "Cleaning"
-    find ${TOPDIR}/${PROJECT_NICKNAME} -name "*.pyc" -exec rm -rf {} \;
+    find ${TOPDIR}/${PROJECT_NAME} -name "*.pyc" -exec rm -rf {} \;
 }
 
 purge() {
     log_info "Purging"
-    rm -rf ${TOPDIR}/virt_${PROJECT_NICKNAME}
+    rm -rf ${TOPDIR}/virt_${PROJECT_NAME}
     rm *.log
 }
 
 
 dev() { 
     activate_virtualenv
-    devsettings
     devrun
 }
 
@@ -362,7 +369,6 @@ usage() {
 # "temporary" dev utilities
 
 wheat_pathogens_dev() {
-    devsettings
     ${DJANGO_ADMIN} syncdb --traceback --noinput
     ${DJANGO_ADMIN} migrate --traceback
 
@@ -384,7 +390,6 @@ load_base() {
 migrationupdate() {
     activate_virtualenv
     APP=${SECOND_ARGUMENT}
-    devsettings
     ${DJANGO_ADMIN} schemamigration ${APP} --auto --update
     ${DJANGO_ADMIN} migrate ${APP}
 }
@@ -418,15 +423,12 @@ case ${ACTION} in
         lint
         ;;
     syncmigrate)
-        devsettings
         syncmigrate
         ;;
     start)
-        devsettings
         startserver
         ;;
     install)
-        devsettings
         install
         ;;
     ci_remote_build)
@@ -458,7 +460,6 @@ case ${ACTION} in
         ci_fetch_rpm
         ;;
     clean)
-        devsettings
         clean
         ;;
     purge)
