@@ -19,6 +19,7 @@
 %define scratchdir %{buildroot}/var/lib/%{nickname}/scratch
 %define sharedir %{buildroot}/usr/share/%{nickname}/
 %define staticdir %{buildinstalldir}/static
+%define metadatadir %{buildroot}/var/www/metadata
 
 Summary: bpa-metadata
 Name: %{app}
@@ -63,6 +64,10 @@ mkdir -p %{mediadir}
 mkdir -p %{scratchdir}
 mkdir -p %{sharedir}
 
+# yea
+mkdir -p %{metadatadir}
+cp -r ${HOME}/metadata/* %{metadatadir}
+
 # Create a python prefix with app requirements
 mkdir -p %{buildinstalldir}
 
@@ -100,7 +105,7 @@ cp -r ./tools* %{buildinstalldir}/
 
 
 # Install settings conf file to /etc, and replace with symlink
-install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf
+install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf.example
 install --mode=0640 -D %{nickname}/%{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
 ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
 
@@ -157,6 +162,8 @@ rm -rf %{buildroot}
 %attr(-,apache,,apache) %{webapps}/%{nickname}
 %attr(-,apache,,apache) /var/log/%{nickname}
 %attr(-,apache,,apache) /var/lib/%{nickname}
+# directory for metadata
+%attr(-,apache,,apache) /var/www/metadata
 
 %config /etc/httpd/conf.d/%{nickname}.ccg
 %config(noreplace) /etc/%{nickname}/settings.py
