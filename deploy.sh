@@ -6,9 +6,8 @@ shift
 
 PROJECT_NAME='bpa-metadata'
 PROJECT_NICKNAME='bpam'
-AWS_PROD_INSTANCE='aws-syd-bpa-metadata-prod'
 
-PROD_KEY_FILE="${HOME}/.ssh/ccg-syd-ops.pem"
+CMD="bpam"
 
 ######### Logging ##########
 COLOR_NORMAL=$(tput sgr0)
@@ -48,36 +47,17 @@ log() {
 }
 
 
-set_key_permissions() {
-   if [ -f ${PROD_KEY_FILE} ]
-   then
-      chmod 600 ${PROD_KEY_FILE}
-   else
-      log_error "Production key missing. Install that and try again"
-   fi
-}
-
-shell() {
-   set_key_permissions
-   ccg ${AWS_PROD_INSTANCE} shell
-}
-
-
-puppet() {
-   set_key_permissions
-   ccg ${AWS_PROD_INSTANCE} puppet
-}
-
 usage() {
-    log_warning "Usage ./deploy.sh shell"
-    log_warning "Usage ./deploy.sh puppet"
-    log_warning "Usage ./deploy.sh nuclear"
+    log_warning "Usage deploy.sh ingest"
+    log_warning "Usage deploy.sh nuclear"
 }
 
 
 nuclear() {
-    CMD="bpam"
     ${CMD} reset_db --router=default --traceback
+}
+
+ingest() {
     ${CMD} syncdb --traceback --noinput
     ${CMD} migrate --traceback
 
@@ -103,11 +83,8 @@ nuclear() {
 }
 
 case ${ACTION} in
-    shell)
-        shell
-        ;;
-    puppet)
-        puppet
+    ingest)
+        ingest
         ;;
     nuclear)
         nuclear

@@ -92,16 +92,9 @@ find %{buildinstalldir} -name RECORD -exec sed -i -e "s|${RPM_BUILD_ROOT}||" {} 
 # build root.
 find %{buildinstalldir} -name \*.so -exec strip -g {} \;
 
-# don't need a copy of python interpreter in the virtualenv
-# rm %{buildinstalldir}/bin/python*
-
 # tools are needed to populate the database from the excell spreadsheets
 cp -r ./tools* %{buildinstalldir}/
-
-
-# Create settings symlink so we can run collectstatic with the default settings
-# touch %{settingsdir}/__init__.py
-# ln -sf .. $(find %{buildinstalldir} -path "*/%{name}/settings.py" | sed s:^%{buildinstalldir}::) %{settingsdir}/%{name}.py
+cp deploy.sh %{buildinstalldir}/
 
 
 # Install settings conf file to /etc, and replace with symlink
@@ -128,8 +121,8 @@ ln -sfT ${APP_PACKAGE_DIR}/wsgi.py %{buildinstalldir}/django.wsgi
 
 # Create symlinks to scripts in the virtualenv
 mkdir -p %{buildroot}/%{_bindir}
-# ln -sfT %{installdir}/bin/%{nickname}-manage.py %{buildroot}/%{_bindir}/%{nickname}
 ln -sfT %{installdir}/bin/manage.py %{buildroot}/%{_bindir}/%{nickname}
+ln -sfT %{installdir}/deploy.sh %{buildroot}/%{_bindir}/%{nickname}-deploy.sh
 
 %post
 # Clear out staticfiles data and regenerate
@@ -137,6 +130,10 @@ rm -rf %{installdir}/static/*
 %{nickname} collectstatic --noinput  > /dev/null
 # Remove root-owned logged files just created by collectstatic
 rm -rf /var/log/%{nickname}/*
+
+# populate the db
+%{nickname}-deploy.sh ingest
+
 # Touch the wsgi file to get the app reloaded by mod_wsgi
 touch %{installdir}/django.wsgi
 
@@ -159,6 +156,7 @@ rm -rf %{buildroot}
 %defattr(-,apache,apache,-)
 /etc/httpd/conf.d/*
 %{_bindir}/%{nickname}
+%{_bindir}/%{nickname}-deploy.sh
 %attr(-,apache,,apache) %{webapps}/%{nickname}
 %attr(-,apache,,apache) /var/log/%{nickname}
 %attr(-,apache,,apache) /var/lib/%{nickname}
@@ -167,6 +165,7 @@ rm -rf %{buildroot}
 
 %config /etc/httpd/conf.d/%{nickname}.ccg
 %config(noreplace) /etc/%{nickname}/settings.py
-%config(noreplace) /etc/%{nickname}/%{nickname}.conf
+/etc/%{nickname}/%{nickname}.conf.example
+
 
 
