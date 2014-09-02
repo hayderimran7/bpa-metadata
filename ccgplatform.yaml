@@ -14,20 +14,21 @@ instances:
     pre_puppet:
       - which git || sudo yum install -y -q git
       - which librarian-puppet || sudo gem install librarian-puppet -v 1.0.4
-    puppet_manifest: dev.pp
-    post_puppet:
-      - ./develop.sh install
-      - ./develop.sh syncmigrate
+
 
   aws_common: &AWS_COMMON
     <<: *DEFAULT
     extends: centos_65_aws_syd
 
-  dev: 
+  dev: &DEV
     <<: *DEFAULT
+    puppet_manifest: dev.pp
+    post_puppet:
+      - ./develop.sh install
+      - ./develop.sh syncmigrate
 
   play: 
-    <<: *DEFAULT
+    <<: *DEV
 
   # staging
   aws_syd_bpa_metadata_staging:

@@ -19,7 +19,7 @@ node default {
       dbuser      => 'bpam',
       dbpass      => 'bpam',
       memcache    => $globals::memcache_syd,
-      secretkey   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
+      secret_key   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
       admin_email => $globals::system_email,
       allowed_hosts => 'localhost',
     }
@@ -29,50 +29,50 @@ node default {
       password => $django_config['dbpass'],
     }
 
-  package {'bpa_metadata':
-    ensure => $ensure,
-    provider => 'yum_nogpgcheck'
-  } 
-   ->
-  django::config { 'bpa_metadata':
-    config_hash => $django_config,
-  }
-   ->
-  django::syncdbmigrate{'bpa_metadata':
-    dbsync  => true,
-    notify  => Service[$ccgapache::params::service_name],
-    require => [
-      Ccgdatabase::Postgresql::Db[$django_config['dbname']],
-      Package['bpa_metadata'],
-      Django::Config['bpa_metadata'] ]
-  }
-
-  # cronjob to run link checker
-  cron { "link-checker":
-     ensure  => present,
-     command => "cd /usr/local/src/bpam && vpython-bpam manage.py runscript url_checker",
-     user    => 'ec2-user',
-     minute  => [ 0 ],
-     hour  => [ 7 ],
-  }
-
- case $::osfamily {
-    'RedHat', 'Linux': {
-      $packages = [
-        'graphviz',
-        'gdal-devel.x86_64',
-        'libxml2-devel',
-        'libxslt-devel',
-        'proj-devel',
-        'tree',
-        'tmux',
-        'cowsay']
+    django::config { 'bpam':
+      config_hash => $django_config,
+    } ->
+    package {'bpa-metadata':
+      ensure => $ensure,
+      provider => 'yum_nogpgcheck'
+    } ->
+    django::syncdbmigrate{'bpam':
+      dbsync  => true,
+      notify  => Service[$ccgapache::params::service_name],
+      require => [
+        Ccgdatabase::Postgresql::Db[$django_config['dbname']],
+        Package['bpa-metadata'],
+        Django::Config['bpam'] ]
     }
-    'Debian': {
-      $packages = [
-        'tree', 
-	'tmux']
+
+    # cronjob to run link checker
+    cron { "link-checker":
+       ensure  => present,
+       command => "cd /usr/local/src/bpam && vpython-bpam manage.py runscript url_checker",
+       user    => 'ec2-user',
+       minute  => [ 0 ],
+       hour  => [ 7 ],
     }
-  }
-  package {$packages: ensure => installed}
+
+   case $::osfamily {
+      'RedHat', 'Linux': {
+        $packages = [
+          'graphviz',
+          'gdal-devel.x86_64',
+          'libxml2-devel',
+          'libxslt-devel',
+          'proj-devel',
+          'tree',
+          'tmux',
+          'cowsay']
+      }
+      'Debian': {
+        $packages = [
+          'tree',
+          'tmux']
+      }
+   }
+
+   package {$packages: ensure => installed}
+
 }

@@ -31,22 +31,23 @@ node default {
       password => $django_config['dbpass'],
     }
 
-  package {'bpa_metadata':
+  package {'bpa-metadata':
     ensure => $ensure,
     provider => 'yum_nogpgcheck'
   } 
    ->
-  django::config { 'bpa_metadata':
+  django::config { 'bpam':
     config_hash => $django_config,
   } 
    ->
-  django::syncdbmigrate{'bpa_metadata':
+  django::syncdbmigrate{'bpam':
     dbsync  => true,
     notify  => Service[$ccgapache::params::service_name],
     require => [
       Ccgdatabase::Postgresql::Db[$django_config['dbname']],
-      Package['bpa_metadata'],
-      Django::Config['bpa_metadata'] ]
+      Package['bpa-metadata'],
+      Django::Config['bpa_metadata']
+    ]
   }
 
   $dbdriver = 'django.db.backends.postgresql_psycopg2'
