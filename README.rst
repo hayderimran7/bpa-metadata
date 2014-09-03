@@ -3,8 +3,6 @@ Bioplatforms Australia  Metadata Management
 ===========================================
 
 
-.. image:: bpam/apps/common/static/bpa-logos/BPA-logo-clear.png 
-
 BPA Metadata is a web portal into Bioplatforms Australia's genomics sequencing data 
 archive. It aims to aggregate all relevant meta and sequence data into a coherent data 
 navigation system.
