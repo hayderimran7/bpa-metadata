@@ -98,7 +98,7 @@ class SampleAdmin(admin.ModelAdmin):
                 'collection_date': SuitDateWidget,
                 'contact_bioinformatician': LinkedSelect,
                 'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'collection_location': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
+                #'collection_location': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})
             }
 
@@ -119,7 +119,7 @@ class SampleAdmin(admin.ModelAdmin):
               'bpa_id',
               'name',
               'sample_label',
-              'original_source_host_species',
+              #'original_source_host_species',
               )}),
         (None,  # 'DNA/RNA Source',
          {'classes': ('suit-tab suit-tab-dna',),
@@ -129,7 +129,7 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'Collection',
          {'classes': ('suit-tab suit-tab-collection',),
           'fields': (
-              'collection_location',
+              #'collection_location',
               'collection_date',)}),
         (None,  # 'Contacts',
          {'classes': ('suit-tab suit-tab-contacts',),
@@ -145,7 +145,7 @@ class SampleAdmin(admin.ModelAdmin):
     list_display = (
     'bpa_id', 'name', 'dna_source', 'dna_extraction_protocol',)
     search_fields = (
-    'bpa_id__bpa_id', 'name', 'tumor_stage__description', )
+    'bpa_id__bpa_id', 'name', )
     list_filter = ('dna_source',)
 
 
