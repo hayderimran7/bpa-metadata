@@ -213,7 +213,19 @@ def pretty_print_namedtuple(named_tuple):
     pretty prints the namedtuple
     """
     # return pprint.pformat(named_tuple._asdict())
-    return json.dumps(named_tuple._asdict(), indent=4)
+
+    from datetime import datetime
+
+    def json_serial(obj):
+        """
+        JSON serializer for objects not serializable by default json code
+        """
+
+        if isinstance(obj, datetime):
+            serial = obj.isoformat()
+            return serial
+
+    return json.dumps(named_tuple._asdict(), indent=4, default=json_serial)
 
 
 class TestGetCleanFloat(unittest.TestCase):
