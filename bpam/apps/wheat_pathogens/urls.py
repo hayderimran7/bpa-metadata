@@ -21,7 +21,7 @@ urlpatterns = patterns(
         regex=r'^sequencefiles',
         view=views.SequenceFileListView.as_view(),
         name='sequencefiles'),
-     url(
+    url(
         regex=r'^contacts$',
         view=views.ContactsView.as_view(),
         name='contacts'),
