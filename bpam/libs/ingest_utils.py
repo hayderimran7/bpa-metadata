@@ -23,10 +23,7 @@ logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
 
 # list of chars to delete
-delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum())
-alldell = delchars + string.punctuation
-print(alldell)
-remove_punctuation_map = dict((ord(char), None) for char in alldell)
+remove_letters_map = dict((ord(char), None) for char in string.punctuation + string.ascii_letters)
 
 
 def fetch_metadata(source_path, target_path, use_cached=True):
@@ -116,7 +113,7 @@ def get_clean_number(val, default=None, debug=False):
 
     # remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
-        return int(val.translate(remove_punctuation_map))
+        return int(val.translate(remove_letters_map))
     except ValueError:
         return default
 
