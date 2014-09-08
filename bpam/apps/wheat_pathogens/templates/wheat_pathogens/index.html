@@ -10,7 +10,8 @@
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <img class="img-responsive img-rounded" src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}"
                      alt="Wheat Pathogens Genomes">
-                Image of Stagonospora Nodorum infected wheat: Kasia Rybak Australian Centre for Necrotrophic Fungal Pathogens
+                Image of Stagonospora Nodorum infected wheat: Kasia Rybak Australian Centre for Necrotrophic Fungal
+                Pathogens
             </div>
 
             <div class="col-sm-5 col-md-5 col-lg-3">
@@ -23,6 +24,7 @@
                     <a class="list-group-item" href="{% url 'wheat_pathogens:sequencefiles' %}">
                         Sequence Files <span class="badge">{{ sequence_file_size }}</span>
                     </a>
+                    <a class="list-group-item" href="{% url 'gbr:contacts' %}">Contacts</a>
                 </div>
             </div>
         </div>
