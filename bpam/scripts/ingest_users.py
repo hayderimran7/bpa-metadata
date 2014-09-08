@@ -56,6 +56,6 @@ def run(users_file=USERS_FILE):
     Pass parameters like below:
     vpython-bpam manage.py runscript ingest_users --script-args bpa-users.csv
     """
-    ingest_utils.ensure_metadata_is_current()
+    # ingest_utils.ensure_metadata_is_current()
     ingest_contacts(users_file)
 
