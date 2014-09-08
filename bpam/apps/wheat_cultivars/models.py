@@ -16,18 +16,19 @@ class CultivarSample(Sample, DebugNote):
     casava_version = models.CharField(max_length=10, null=True, blank=True)
 
 
+class CultivarProtocol(Protocol):
+    run = models.ForeignKey('CultivarRun', blank=True, null=True)
+
+
 class CultivarRun(Run):
     """
     A Wheat Cultivar Run
     """
     sample = models.ForeignKey(CultivarSample)
+    protocol = models.ForeignKey(CultivarProtocol, blank=True, null=True)
 
     def __unicode__(self):
         return u'Run {0} for {1}'.format(self.run_number, self.sample.name)
-
-
-class CultivarProtocol(Protocol):
-    run = models.OneToOneField(CultivarRun, blank=True, null=True)
 
 
 class CultivarSequenceFile(SequenceFile):

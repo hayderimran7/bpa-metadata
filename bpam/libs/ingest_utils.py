@@ -22,6 +22,12 @@ INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
 logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
 
+# list of chars to delete
+delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum())
+alldell = delchars + string.punctuation
+print(alldell)
+remove_punctuation_map = dict((ord(char), None) for char in alldell)
+
 
 def fetch_metadata(source_path, target_path, use_cached=True):
     """
@@ -91,19 +97,26 @@ def ensure_metadata_is_current():
         fetch_metadata_from_swift()
 
 
-def get_clean_number(val, default=None):
+def get_clean_number(val, default=None, debug=False):
     """
     Try to clean up numbers
     """
+
+    if debug:
+        print val
+
     if val in (None, ""):
         return default
+
+    if isinstance(val, int):
+        return val
 
     if isinstance(val, float):
         return val
 
-    remove_letters_map = dict((ord(char), None) for char in string.letters)
+    # remove_letters_map = dict((ord(char), None) for char in string.letters)
     try:
-        return int(val.translate(remove_letters_map))
+        return int(val.translate(remove_punctuation_map))
     except ValueError:
         return default
 
@@ -112,6 +125,10 @@ def get_int(val, default=None):
     """
     get a int from a string containing other alpha characters
     """
+
+    if isinstance(val, int):
+        return val
+
     try:
         return int(get_clean_number(val, default))
     except TypeError:

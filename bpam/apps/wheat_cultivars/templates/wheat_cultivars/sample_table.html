@@ -6,14 +6,7 @@
         <th>Cultivar</th>
         <th>Cultivar Code</th>
         <th>Extract Name</th>
-        <th>Sample Label</th>
-        <th>DNA/RNA Source</th>
         <th>CASAVA Version</th>
-        <th>Library</th>
-        <th>Library Construction</th>
-        <th>Protocol</th>
-        <th>Index</th>
-        <th>Sequencer</th>
     </tr>
     </thead>
     <tbody>
@@ -25,14 +18,7 @@
         <td>{{ sample.name }}</td>
         <td>{{ sample.cultivar_code }}</td>
         <td>{{ sample.extract_name }}</td>
-        <td>{{ sample.sample_label | default:""}}</td>
-        <td>{{ sample.dna_source.description }}</td>
         <td>{{ sample.casava_version }}</td>
-        <td></td>
-        <td></td>
-        <td>{{ sample.dna_extraction_protocol }}</td>
-        <td></td>
-        <td></td>
     </tr>
     {% endfor %}
     </tbody>

@@ -43,20 +43,8 @@
         <td>{{ sfile.run.flow_cell_id }}</td>
         <td>{{ sfile.lane_number }}</td>
         <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-        <td>{{ sfile.md5 }}</td>w
+        <td>{{ sfile.md5 }}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
-
-
-
-
-<script>
-    $(document).ready(function () {
-        $(function () {
-            $("#sequence-list").tablesorter();
-        });
-    });
-</script>
-

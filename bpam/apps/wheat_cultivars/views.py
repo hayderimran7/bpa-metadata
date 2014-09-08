@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, ListView, DetailView
-from django.conf import settings
+#from django.conf import settings
 
 from .models import CultivarSample, CultivarSequenceFile
 
@@ -18,7 +18,7 @@ class SampleListView(ListView):
     model = CultivarSample
     context_object_name = 'samples'
     template_name = 'wheat_cultivars/sample_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
 
 
 class SampleDetailView(DetailView):
@@ -36,4 +36,4 @@ class SequenceFileListView(ListView):
     model = CultivarSequenceFile
     context_object_name = 'sequencefiles'
     template_name = 'wheat_cultivars/sequencefile_list.html'
-    paginate_by = settings.DEFAULT_PAGINATION
+    # paginate_by = settings.DEFAULT_PAGINATION
