@@ -9,6 +9,7 @@ import subprocess
 import time
 import sys
 import requests
+import json
 
 from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
@@ -197,7 +198,8 @@ def pretty_print_namedtuple(named_tuple):
     """
     pretty prints the namedtuple
     """
-    return pprint.pformat(named_tuple._asdict())
+    # return pprint.pformat(named_tuple._asdict())
+    return json.dumps(named_tuple._asdict(), indent=4)
 
 
 class TestGetCleanFloat(unittest.TestCase):
