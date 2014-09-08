@@ -97,17 +97,17 @@ cp -r ./tools* %{buildinstalldir}/
 cp deploy.sh %{buildinstalldir}/
 
 
-# Install settings conf file to /etc, and replace with symlink
-install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf.example
-install --mode=0640 -D %{nickname}/%{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
-ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
-
 # Create symlinks under install directory to real persistent data directories
 APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/$NAME/settings.py" | sed s:^%{buildinstalldir}/::`
 APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
 ln -sfT /var/log/%{nickname} %{buildinstalldir}/${APP_PACKAGE_DIR}/log
 ln -sfT /var/lib/%{nickname}/scratch %{buildinstalldir}/${APP_PACKAGE_DIR}/scratch
 ln -sfT /var/lib/%{nickname}/media %{buildinstalldir}/${APP_PACKAGE_DIR}/media
+
+# Install settings conf file to /etc, and replace with symlink
+install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf.example
+install --mode=0640 -D %{nickname}/%{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
+ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
 
 mkdir -p %{staticdir}
 ln -sfT %{installdir}/static %{buildinstalldir}/${APP_PACKAGE_DIR}/static
@@ -132,7 +132,7 @@ rm -rf %{installdir}/static/*
 rm -rf /var/log/%{nickname}/*
 
 # populate the db
-%{nickname}-deploy.sh ingest
+# %{nickname}-deploy.sh ingest
 
 # Touch the wsgi file to get the app reloaded by mod_wsgi
 touch %{installdir}/django.wsgi
