@@ -14,14 +14,15 @@ node default {
     $django_config = {
       deployment  => 'staging',
       dbdriver    => 'django.db.backends.postgresql_psycopg2',
-      dbhost      => '',
+      dbhost      => $globals::dbhost_rds_syd_postgresql_prod,
+      dbserver    => $globals::dbhost_rds_syd_postgresql_prod,
       dbname      => 'bpam_staging',
-      dbuser      => 'bpam',
-      dbpass      => 'bpam',
+      dbuser      => $globals::dbuser_syd_staging,
+      dbpass      => $globals::dbpass_syd_staging,
       memcache    => $globals::memcache_syd,
       secret_key   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
       admin_email => $globals::system_email,
-      allowed_hosts => 'localhost',
+      allowed_hosts => 'localhost www.ccgapps.com.au ccgapps.com.au',
     }
 
     ccgdatabase::postgresql::db { $django_config['dbname']:
