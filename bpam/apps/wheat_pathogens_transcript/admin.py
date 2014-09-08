@@ -92,7 +92,6 @@ class SampleAdmin(admin.ModelAdmin):
             model = WheatPathogenTranscriptSample
             widgets = {
                 'bpa_id': LinkedSelect(attrs={'style': 'width:50%'}),
-                'organism': LinkedSelect,
                 'dna_source': LinkedSelect,
                 'sequencing_facility': LinkedSelect,
                 'contact_scientist': LinkedSelect,
@@ -125,7 +124,6 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'DNA/RNA Source',
          {'classes': ('suit-tab suit-tab-dna',),
           'fields': (
-              'organism',
               'dna_source',
               'dna_extraction_protocol',)}),
         (None,  # 'Collection',
@@ -152,13 +150,7 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 class WheatPathogenTranscriptSequenceFileAdmin(SequenceFileAdmin):
-    def get_organism(self, obj):
-        return obj.sample.organism
-
-    get_organism.short_description = 'Organism'
-    get_organism.admin_order_field = 'sample__organism'
-
-    list_display = ('get_sample_id', 'get_organism', 'download_field', 'get_sample_name', 'run')
+    list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'run')
     list_filter = ('analysed',)
 
 
