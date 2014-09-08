@@ -58,7 +58,7 @@ class RunAdmin(admin.ModelAdmin):
         ('Sequencing Facilities',
          {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
         ('Sequencing',
-         {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
+         {'fields': ('sequencer', 'run_number', 'flow_cell_id',)}),
     ]
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
@@ -124,8 +124,7 @@ class SampleAdmin(admin.ModelAdmin):
         (None,  # 'DNA/RNA Source',
          {'classes': ('suit-tab suit-tab-dna',),
           'fields': (
-              'dna_source',
-              'dna_extraction_protocol',)}),
+              'dna_source',)}),
         (None,  # 'Collection',
          {'classes': ('suit-tab suit-tab-collection',),
           'fields': (
@@ -143,7 +142,7 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
-    'bpa_id', 'name', 'dna_source', 'dna_extraction_protocol',)
+    'bpa_id', 'name', 'dna_source',)
     search_fields = (
     'bpa_id__bpa_id', 'name', )
     list_filter = ('dna_source',)
