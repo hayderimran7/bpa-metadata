@@ -280,9 +280,8 @@ ipaddress() {
 
 # start runserver
 startserver() {
-    echo "Visit http://$(ipaddress eth0):${PORT}/"
     settings
-
+    echo "Visit http://$(ipaddress eth0):${PORT}/"
     # ${VIRTUALENV}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
     ${VIRTUALENV}/bin/python bpam/manage.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
@@ -365,18 +364,6 @@ usage() {
     log_warning "Usage ./develop.sh runingest ingest_script"
 }
 
-
-# "temporary" dev utilities
-
-wheat_pathogens_dev() {
-    ${DJANGO_ADMIN} syncdb --traceback --noinput
-    ${DJANGO_ADMIN} migrate --traceback
-
-    ${DJANGO_ADMIN} runscript set_initial_bpa_projects --traceback
-    ${DJANGO_ADMIN} runscript ingest_users --traceback
-    ${DJANGO_ADMIN} runscript ingest_wheat_pathogens --traceback
-}
-
 load_base() {
     activate_virtualenv
     CMD='python ./bpam/manage.py'
@@ -388,7 +375,7 @@ load_base() {
 }
 
 migrationupdate() {
-    activate_virtualenv
+    settings
     APP=${SECOND_ARGUMENT}
     ${DJANGO_ADMIN} schemamigration ${APP} --auto --update
     ${DJANGO_ADMIN} migrate ${APP}
@@ -403,9 +390,6 @@ case ${ACTION} in
         ;;
     coverage)
         coverage
-        ;;
-    wheat_pathogens_dev)
-        wheat_pathogens_dev
         ;;
     unittest)
         unittest
