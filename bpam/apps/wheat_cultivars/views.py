@@ -1,11 +1,17 @@
 from django.views.generic import TemplateView, ListView, DetailView
 from django.conf import settings
 
-from .models import *
+from .models import CultivarSample, CultivarSequenceFile
 
 
-class CultivarsView(TemplateView):
+class IndexView(TemplateView):
     template_name = 'wheat_cultivars/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['sample_size'] = CultivarSample.objects.count()
+        context['sequence_file_size'] = CultivarSequenceFile.objects.count()
+        return context
 
 
 class SampleListView(ListView):
@@ -23,7 +29,6 @@ class SampleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         context['sequencefiles'] = CultivarSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
-
         return context
 
 

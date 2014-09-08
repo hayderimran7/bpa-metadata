@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="jumbotron">
         <div class="row">
-            <div class="col-sm-5 col-md-5 col-lg-3">
+            <div class="4 col-md-5 col-lg-3">
                 <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}"
                      alt="Wheat Cultivars">
             </div>
@@ -19,7 +19,7 @@
                         Samples  <span class="badge">{{ sample_size }}</span>
                     </a>
                     <a class="list-group-item" href="{% url 'wheat_cultivars:sequencefiles' %}">
-                        Sequence Files <span class="badge">{{ sequence_file_size }}</span>
+                        Sequence Files  <span class="badge">{{ sequence_file_size }}</span>
                     </a>
                 </div>
             </div>
