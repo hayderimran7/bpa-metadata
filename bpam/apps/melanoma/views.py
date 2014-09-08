@@ -78,4 +78,6 @@ def search_view(request, term):
     return render(request, 'melanoma/search_results.html', data)
 
 
+class ContactsView(TemplateView):
+    template_name = 'contacts.html'
 

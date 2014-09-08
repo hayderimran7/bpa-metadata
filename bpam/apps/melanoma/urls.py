@@ -29,6 +29,10 @@ urlpatterns = patterns(
         regex=r'^$',
         view=views.IndexView.as_view(),
         name='index'),
+    url(
+        regex=r'^contacts$',
+        view=views.ContactsView.as_view(),
+        name='contacts'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
