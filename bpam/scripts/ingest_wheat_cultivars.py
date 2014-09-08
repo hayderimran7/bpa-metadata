@@ -122,7 +122,6 @@ def ingest_runs(sample_data):
             return 'UN'
 
         base_pairs = entry.library_construction
-        print("XXXXXXXXXXXX" + str(base_pairs))
         library_type = get_library_type(entry.library)
         protocol, created = CultivarProtocol.objects.get_or_create(base_pairs=base_pairs,
                                                                    library_type=library_type,
