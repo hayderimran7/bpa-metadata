@@ -162,10 +162,10 @@ SUIT_CONFIG = {
                     'pathogenprotocol')},
         # Wheat Pathogens Transcript
         {'app': 'wheat_pathogens_transcript', 'label': 'Wheat Pathogens Transcript',
-         'models': ('pathogensample',
-                    'pathogensequencefile',
-                    'pathogenrun',
-                    'pathogenprotocol')},
+         'models': ('wheatpathogentranscriptsample',
+                    'wheatpathogentranscriptsequencefile',
+                    'wheatpathogentranscriptrun',
+                    'wheatpathogentranscriptprotocol')},
         # Wheat Cultivars
         {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
          'models': ('cultivarsample',
