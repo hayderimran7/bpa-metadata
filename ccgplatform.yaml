@@ -43,7 +43,7 @@ instances:
   # production
   aws_syd_bpa_metadata_production:
     <<: *AWS_COMMON
-    puppet_manifest: production.pp
+    puppet_manifest: prod.pp
 
   # RPM build
   aws_rpmbuild_centos6:
