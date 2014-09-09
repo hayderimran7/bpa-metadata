@@ -20,7 +20,7 @@ node default {
       dbuser      => $globals::dbuser_syd_prod,
       dbpass      => $globals::dbpass_syd_prod,
       memcache    => $globals::memcache_syd,
-      secretkey   => $globals::secretkey_aws_bpam,
+      secret_key   => $globals::secretkey_aws_bpa_metadata,
       admin_email => $globals::system_email,
       allowed_hosts => 'localhost www.ccgapps.com.au ccgapps.com.au',
     }
