@@ -5,7 +5,6 @@ node default {
     include ccgapache
     include python
     include repo::epel
-    include include::ius
     include repo::pgrpms
     include repo::ccgtesting
     include monit
