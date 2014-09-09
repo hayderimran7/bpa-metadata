@@ -7,6 +7,7 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
 
+from apps.common.models import Facility
 from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
 
