@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,10 +8,7 @@
     <meta name="author" content="CCG">
 
     <title>Bioplatforms Australia Downloads</title>
-    <!-- Bootstrap core CSS -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -35,12 +31,10 @@
                 <li><a href="http://portal.bioplatforms.com/">ISA Tools</a></li>
                 <li><a href="http://www.bioplatforms.com.au/">Bioplatforms Australia</a></li>
                 <li><a href="http://ccg.murdoch.edu.au">CCG</a></li>
-                <li><a href="{{ site_url }}/bpaswift/">Usage</a></li>
+                <li><a href="https://monitor.bioplatforms.com/">Monitor</a></li>
+                <li><a href="https://archive.bioplatforms.com/">BPA Cloud</a></li>
             </ul>
         </div>
-        <!--/.nav-collapse -->
-
-
     </div>
 </div>
 
@@ -48,9 +42,14 @@
     <div class="container">
         <h1><img src="./logos/BPA-logo-clear.png"> </img> Bioplatforms Australia Downloads</h1>
 
-        <p>
+         <h2>
             Welcome to Bioplatforms Australia's Downloads Portal
-        </p>
+        </h2>
+        
+        <h3> 
+            <a href="https://ccgapps.com.au/bpa-metadata/">Bioplatforms Australia Metadata Portal</a>
+        </h3>
+
     </div>
 </div>
 
@@ -60,25 +59,36 @@
         <th class="col-sm-1 glyphicon glyphicon-cog"></th>
         <th class="col-sm-1 glyphicon glyphicon-cloud-download"></th>
         <th>Sequence File Downloads</th>
-        <th>Links</th>
+        <th>Raw</th>
+        <th>All</th>
+        <th>Latest</th>
+        <th></th>
         </thead>
         <tbody>
         <tr>
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-lock"></span></td>
-            <td><a href="./melanoma">Melanoma</a></td>
-            <td></td>
+            <td><a href="./melanoma" >Melanoma</a></td>
+            <td><a href="./melanoma/raw/">Raw</a></td>
+            <td><a href="./melanoma/all.html">All</a></td>
+            <td><a href="./melanoma/latest/">Latest</a></td>
         </tr>
         <tr>
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-cloud-download"></span></td>
             <td><a href="./gbr">Great Barrier Reef</a></td>
+            <td><a href="./gbr/raw/">Raw</a></td>
+            <td><a href="./gbr/all/">All</a></td>
+            <td><a href="./gbr/latest/">Latest</a></td>
             <td></td>
         </tr>
         <tr>
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-cloud-download"></span></td>
-            <td><a href="./base">BASE</a></td>
+            <td><a href="./base">Biomes of Australian Soil Environments, Metagenomics</a></td>
+            <td><a href="./base/raw/metagenomics/">Raw</a></td>
+            <td></td>
+            <td><a href="./base/latest/">Latest</a></td>
             <td>
                 <a href="./base/metadata/"> OTU Taxonomy, </a>
                 <a href="./base/all.html">Flat View</a>
@@ -87,13 +97,48 @@
         <tr>
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-cloud-download"></span></td>
+            <td><a href="./base">Biomes of Australian Soil Environments, Amplicon 16S</a></td>
+            <td><a href="./base/raw/amplicon_16s/">Raw</a></td>
+            <td><a href="./base/amplicons/16s/">All 16S</a></td>
+            <td><a href="./base/amplicons/latest/16s/">Latest</a></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
+            <td><span class="glyphicon glyphicon-cloud-download"></span></td>
+            <td><a href="./base">Biomes of Australian Soil Environments, Amplicon 18S</a></td>
+            <td><a href="./base/raw/amplicon_18s/">Raw</a></td>
+            <td><a href="./base/amplicons/18s/">All 18S</a></td>
+            <td><a href="./base/amplicons/latest/18s/">Latest</a></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
+            <td><span class="glyphicon glyphicon-cloud-download"></span></td>
+            <td><a href="./base">Biomes of Australian Soil Environments, Amplicon ITS</a></td>
+            <td><a href="./base/raw/amplicon_its/">Raw</a></td>
+            <td><a href="./base/amplicons/its/">All ITS</a></td>
+            <td><a href="./base/amplicons/latest/its/">Latest</a></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
+            <td><span class="glyphicon glyphicon-cloud-download"></span></td>
             <td><a href="./wheat_cultivars">Wheat Cultivars</a></td>
+            <td><a href="./wheat_cultivars/raw/">Raw</a></td>
+            <td><a href="./wheat_cultivars/all/">All</a></td>
+            <td><a href="./wheat_cultivars/latest/">Latest</a></td>
             <td></td>
         </tr>
         <tr>
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-cloud-download"></span></td>
             <td><a href="./wheat_pathogens">Wheat Pathogens</a></td>
+            <td><a href="./wheat_pathogens/raw/">Raw</a></td>
+            <td><a href="./wheat_pathogens/all/">All</a></td>
+            <td><a href="./wheat_pathogens/latest/">Latest</a></td>
             <td>
                 <a href="./wheat_pathogens/isolate_index.html">Isolates, </a>
                 <a href="./wheat_pathogens/processed/">Processed</a>
@@ -103,27 +148,21 @@
             <td><a href="https://ccgapps.com.au/bpa-metadata/admin" class="glyphicon glyphicon-cog"></a></td>
             <td><span class="glyphicon glyphicon-cloud-download"></span></td>
             <td><a href="./wheat7a">Wheat Chromosome 7a</a></td>
+            <td><a href="./wheat7a/raw/">Raw</a></td>
+            <td><a href="./wheat7a/all/">All</a></td>
+            <td><a href="./wheat7a/latest/">Latest</a></td>
             <td></td>
         </tr>
         </tbody>
     </table>
-    <p>
-        <button type="button" class="btn btn-default btn-lg" onclick="TogetherJS(this); return false;">
-            <span class="glyphicon glyphicon-globe"></span> Collaborate
-        </button>
-    </p>
+
     <footer>
-        <p>&copy; Center for Comparative Genomics, Murdoch University 2014, Updated {{ now }} </p>
+        <p>&copy; <a href="http://ccg.murdoch.edu.au"> Center for Comparative Genomics, Murdoch University </a>2013, 2014</p>
     </footer>
 </div>
-<!-- /container -->
 
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://togetherjs.com/togetherjs-min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript"
         src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4"></script>
