@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 # coding: utf-8
 
 """
@@ -35,6 +35,7 @@ from six import string_types
 
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 __version__ = "1.1.0"
 
@@ -127,7 +128,7 @@ class MD5Load(object):
         # basis
         plain = folder.listdir(pattern="*.exf", filter=unipath.FILES)
         plain += folder.listdir(pattern="checksums.*", filter=unipath.FILES)
-        plain += folder.listdir(pattern="*md5*", filter=unipath.FILES)
+        plain += folder.listdir(pattern="*md5", filter=unipath.FILES)
 
         for path in plain:
             if not path.endswith('.xls'):
