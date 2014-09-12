@@ -33,11 +33,10 @@ from django.core.wsgi import get_wsgi_application
 
 _application = get_wsgi_application()
 
+from ccg_django_utils.conf import setup_prod_env
+setup_prod_env(os.path.basename(os.path.dirname(__file__)))
 
 def application(wenv, start_response):
-    from ccg_django_utils.conf import setup_prod_env
-    setup_prod_env(os.path.basename(os.path.dirname(__file__)))
-
     # Before entering the django app, transfer the SCRIPT_NAME http
     # header into an environment variable so settings can pick it up.
     mount_point = wenv.get("HTTP_SCRIPT_NAME", wenv.get("SCRIPT_NAME", None))
