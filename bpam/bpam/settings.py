@@ -263,9 +263,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ROOT_URLCONF = 'bpam.urls'
 
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'bpam.wsgi.application'
-
 INSTALLED_APPS = (
     'bpam',
     'suit',
