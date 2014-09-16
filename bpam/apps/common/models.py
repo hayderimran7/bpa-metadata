@@ -280,17 +280,11 @@ class SequenceFile(models.Model):
             return False
 
     def get_url(self):
-        bpa_id = self.sample.bpa_id.bpa_id.replace('/', '.')
         uj = urlparse.urljoin
         uq = urllib.quote
 
-        if self.run is None:
-            return 'NORUN_NOURL'
-
-        return uj(settings.BPA_BASE_URL, "%s/%s/%s/%s" % (
+        return uj(settings.BPA_BASE_URL, "%s/all/%s" % (
             self.project_name,
-            uq(bpa_id),
-            uq(self.run.flow_cell_id),
             uq(self.filename)))
 
     url = property(get_url)

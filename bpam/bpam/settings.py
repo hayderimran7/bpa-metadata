@@ -386,7 +386,8 @@ if env.get("BPA_TEST", False):
     }
 
 
-BPA_BASE_URL = 'https://downloads.bioplatforms.com/data/'
+# downloads URL
+BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
 DEFAULT_PAGINATION = 50
 
 if env.get("memcache", False):

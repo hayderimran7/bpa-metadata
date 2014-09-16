@@ -3,6 +3,7 @@ import sys
 import django
 from pprint import pprint
 import requests
+from ccg_django_utils.conf import EnvConfig, setup_config_env
 
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
@@ -10,9 +11,13 @@ from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
 from apps.wheat_pathogens.models import PathogenSequenceFile
 
+setup_config_env('/etc/bpam/bpam.conf')
+env = EnvConfig()
+downloads_checker_user = env.get('downloads_checker_user')
+downloads_checker_pass = env.get('downloads_checker_pass')
 
 SLEEP_TIME = 0.0  # time to rest between checks
-MELANOMA_PASS = 'm3lan0ma'  # Melanoma http access password
+
 
 from libs.logger_utils import get_logger
 
@@ -53,6 +58,7 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
 def check_gbr(sleep_time):
     logger.info('Checking GBR')
     session = requests.Session()
+    session.auth = (downloads_checker_user, downloads_checker_pass)
     try:
         process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError, e:
@@ -80,7 +86,7 @@ def check_wheat_pathogens(sleep_time):
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
-    session.auth = ('bpa', MELANOMA_PASS)
+    session.auth = (downloads_checker_user, downloads_checker_pass)
     try:
         process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError, e:
