@@ -256,6 +256,31 @@ def get_gbr_sample_data(file_name):
     return wrapper.get_all()
 
 
+# The new standarised way of packing metadata
+def get_gbr_sample_data_for_set(file_name):
+    field_spec = [
+        ('bpa_id', 'Sample unique ID', lambda s: s.replace('/', '.')),
+        ('sequencing_facility', 'Sequencing facility', None),
+        ('index_number', 'Index', None),
+        ('library', 'Library', None),
+        ('library_code', 'Library code', None),  # no need to figure out like with the older format
+        ('library_construction', 'Library Construction - average insert size', None),
+        ('library_construction_range', 'Insert size range', None),
+        ('library_construction_protocol', 'Library construction protocol', None),
+        ('sequencer', 'Sequencer', None),
+        ('run_number', 'Run number', None),
+        ('flow_cell_id', 'Run #:Flow Cell ID', None),
+        ('lane_number', 'Lane number', None)]
+
+    wrapper = ExcelWrapper(
+        field_spec,
+        file_name,
+        sheet_name='Sheet1',
+        header_length=3,
+        column_name_row_index=1)
+    return wrapper.get_all()
+
+
 def ingest_runs(sample_data):
     def get_protocol(entry):
         def get_library_type(libtype):
@@ -400,7 +425,7 @@ def truncate():
 def run(file_name=DEFAULT_SPREADSHEET_FILE):
     """
     Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
+    bpam runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
     """
 
     truncate()
