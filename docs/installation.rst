@@ -1,33 +1,20 @@
-Installation with CentOS and MySQL
-==================================
+Installation
+============
 
-Install the desired database and driver::
+**The standard CCG rpm installation process applies:**
 
-    yum install mysql-server mysql MySQL-python
-
-Add the CCG yum repo::
-
-    fixme
-
-Install the package::
-
-    yum install bpa-metadata
-
-
-Set up the database, as in the django docs::
-
-    sudo mysql
-    CREATE DATABASE bpam CHARACTER SET utf8;
-    GRANT ALL ON bpam.* TO bpam@localhost IDENTIFIED BY 'bpam';
-    \q
-
-    sudo bpam syncdb
-    sudo bpam migrate
-    sudo bpam collectstatic
+ * Build a rpm, using develop.sh ccg directly or in the lxc container.
+ * Staging
+    * Push rpm to staging repository.
+    * Deploy on staging
+    * Run ingest script on staging.
+ * Production
+    * Publish vetted rpm to production repository.
+    * Install on production VM.
+    * Run ingest script on production.
 
 
-Visit your installation at http://my-web-host/bpa-metadata/admin/
+Deployment
+----------
 
-Logs will be in ``/var/log/httpd/bpa-metadata.error_log`` and
-``/var/log/bpa-metadata``.
-
+The standard ccg assisted deployment to AWS EC2 applies.
