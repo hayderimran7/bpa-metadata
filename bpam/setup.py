@@ -42,7 +42,7 @@ install_requires = [
     'django-tastypie>=0.10.0',
     'xlrd>=0.9.2',
     'xlwt>=0.7.5',
-    'requests>=1.2.3',
+    'requests>=2.4.0',
     'django_compressor>=1.3',
     'mimeparse>=0.1.3,<1.0',
     'rainbow_logging_handler',
