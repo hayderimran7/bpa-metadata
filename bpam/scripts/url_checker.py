@@ -18,10 +18,7 @@ downloads_checker_pass = env.get('downloads_checker_pass')
 
 SLEEP_TIME = 0.0  # time to rest between checks
 
-
 from libs.logger_utils import get_logger
-
-
 logger = get_logger(__name__)
 
 
@@ -59,6 +56,7 @@ def check_gbr(sleep_time):
     logger.info('Checking GBR')
     session = requests.Session()
     session.auth = (downloads_checker_user, downloads_checker_pass)
+
     try:
         process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError, e:
@@ -105,9 +103,9 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
 
-    check_melanoma(sleep_time)
+    #check_melanoma(sleep_time)
     check_gbr(sleep_time)
-    check_wheat_cultivars(sleep_time)
-    check_wheat_pathogens(sleep_time)
+    #check_wheat_cultivars(sleep_time)
+    #check_wheat_pathogens(sleep_time)
 
 
