@@ -65,4 +65,4 @@ class CollectionView(DetailView):
 
 
 class ContactsView(TemplateView):
-    template_name = 'contacts.html'
+    template_name = 'gbr/contacts.html'
