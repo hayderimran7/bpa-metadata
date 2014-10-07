@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-ake-landing.py creates the bpa downloads
+make-landing.py creates the bpa downloads website
 
 Usage:
   bpalink.py [options]
