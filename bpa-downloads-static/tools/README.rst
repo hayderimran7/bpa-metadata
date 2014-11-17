@@ -31,4 +31,4 @@ The data process problem is modeled using the following:
 - A process tree, just a file tree with directories and data file symlinks back to the original data, see sample above.
 - A Linker for each of the source data types, a linker
 - A Linktree Node object, each datafile is presented by a Node
-- The node keeps enough state to link iteself into the linktree
+- The node keeps enough state to link itself into the linktree
