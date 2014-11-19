@@ -82,7 +82,7 @@ def ingest_samples(samples):
         lon = float(lon)
         site, created = CollectionSite.objects.get_or_create(lat=lat,
                                                              lon=lon,
-                                                             defaults = {'site_name' : entry.collection_site})
+                                                             defaults={'site_name': entry.collection_site})
 
         return site
 
@@ -109,7 +109,6 @@ def ingest_samples(samples):
         collection_event.save()
 
         return collection_event
-
 
     def get_protocol(entry):
         """ Get or create and get a GBRProtocol
@@ -141,8 +140,6 @@ def ingest_samples(samples):
             library_construction_protocol=library_construction_protocol)
 
         return protocol
-
-
 
     def add_sample(e):
         """
