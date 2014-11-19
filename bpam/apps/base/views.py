@@ -314,15 +314,18 @@ class StandardisedVocabularyLookUpView(View):
 
 class TaxonomyLookUpView(View):
     def get(self, request, level, taxon):
-        levels = ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']
-        filter_expression = {level: taxon}
-        next_lower_level_index = levels.index(level) + 1
-        next_lower_level = levels[next_lower_level_index]
-
-        otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
-        next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
         response = HttpResponse(content_type="application/json")
-        options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
+        if level is None:
+            options = []
+        else:
+            levels = ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']
+            filter_expression = {level: taxon}
+            next_lower_level_index = levels.index(level) + 1
+            next_lower_level = levels[next_lower_level_index]
+
+            otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
+            next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
+            options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
         json.dump(options, response)
         return response
 
