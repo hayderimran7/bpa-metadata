@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from unipath import Path
-
+import requests
+from bs4 import BeautifulSoup, SoupStrainer
 from libs.excel_wrapper import ExcelWrapper
 from libs import ingest_utils
 from libs import bpa_id_utils
@@ -14,10 +15,9 @@ from apps.base.models import BASESample
 
 logger = logger_utils.get_logger(__name__)
 
-# all the Excel sheets and md5sums should be in here
-# DATA_DIR = Path(Path('~').expand_user(), 'var/amplicon_metadata/')
+
+METADATA_URL = 'https://downloads.bioplatforms.com/base/tracking/amplicons/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/amplicon_metadata/')
-# DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, 'base/amplicon_metadata/')
 
 BPA_ID = "102.100.100."
 BASE_DESCRIPTION = 'BASE'
@@ -62,7 +62,7 @@ def get_data(file_name):
                   ('dilution', 'Dilution used', fix_dilution),
                   ('sequencing_run_number', 'Sequencing run number', None),
                   ('flow_cell_id', 'Flowcell', None),
-                  ('reads', '# of reads', ingest_utils.get_int),
+                  ('reads', '# of RAW reads', ingest_utils.get_int),
                   ('name', 'Sample name on sample sheet', None),
                   ('analysis_software_version', 'AnalysisSoftwareVersion', None),
                   ('comments', 'Comments', None),
@@ -73,7 +73,8 @@ def get_data(file_name):
                            sheet_name='Sheet1',
                            header_length=4,
                            column_name_row_index=1,
-                           formatting_info=True)
+                           formatting_info=True,
+                           pick_first_sheet=True)
 
     return wrapper.get_all()
 
@@ -247,7 +248,27 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequenceFile._meta.db_table))
 
 
+def get_all_metadata_from_server():
+    """ downloads metadata from archive """
+
+    def download(name):
+        logger.info('Fetching {0} from {1}'.format(name, METADATA_URL))
+        r = requests.get(METADATA_URL + '/' + name, stream=True, auth=('base', 'b4s3'))
+        with open(DATA_DIR + '/' + name, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+                    f.flush()
+
+    response = requests.get(METADATA_URL, stream=True, auth=('base', 'b4s3'))
+    for link in BeautifulSoup(response.content).find_all('a'):
+        fname = link.get('href')
+        if fname.endswith('.xlsx') or fname.endswith('.txt'):
+            download(fname)
+
+
 def run():
+    get_all_metadata_from_server()
     truncate()
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()

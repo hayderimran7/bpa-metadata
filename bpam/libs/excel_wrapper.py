@@ -54,14 +54,17 @@ class ExcelWrapper(object):
     column_name_row_index: row in which column names are found, typically 0
     """
 
-    def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0, formatting_info=False):
+    def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0, formatting_info=False, pick_first_sheet=False):
         self.sheet_name = sheet_name
         self.header_length = header_length
         self.column_name_row_index = column_name_row_index
         self.field_spec = field_spec
 
         self.workbook = xlrd.open_workbook(file_name, formatting_info=False)  # not implemented
-        self.sheet = self.workbook.sheet_by_name(self.sheet_name)
+        if pick_first_sheet:
+            self.sheet = self.workbook.sheet_by_index(0)
+        else:
+            self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
         self.field_names = self._set_field_names()
         self.name_to_column_map = self.set_name_to_column_map()
