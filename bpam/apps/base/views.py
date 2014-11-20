@@ -338,7 +338,7 @@ class TaxonomyLookUpView(View):
 
 
 class ContactsView(TemplateView):
-    template_name = 'contacts.html'
+    template_name = 'base/contacts.html'
 
 
 class RequestAccess(TemplateView):
