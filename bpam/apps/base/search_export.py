@@ -60,9 +60,15 @@ class CSVExporter(object):
         for id in ids:
             if self.one_object_per_id:
                 model_instance = self._get_instance(id)
-                instances = [ model_instance]
+                if model_instance is None:
+                    instances = []
+                else:
+                    instances = [ model_instance]
             else:
                 instances = self._get_instance(id)
+
+            if instances is None:
+                instances = []
 
             for instance in instances:
                 values = []
@@ -82,6 +88,7 @@ class CSVExporter(object):
         try:
             bpa_id = BPAUniqueID.objects.get(bpa_id=id)
         except BPAUniqueID.DoesNotExist:
+            logger.info("bpa_id %s does not exist!" % id)
             return None
 
         return self._get_model_for_id(bpa_id)
