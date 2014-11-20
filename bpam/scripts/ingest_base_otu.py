@@ -35,9 +35,8 @@ MAP_TAXONOMY_TO_SAMPLE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/16s
 # DEV_MAP_FILE = Path(DATA_DIR, 'small_otu.xlst')
 DEV_MAP_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/small_otu.xlst')
 
-TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_16S_97OTUS_MAY5.xlsx'
-MAP_16S_OTU_URL = 'https://downloads.bioplatforms.com/base/metadata/BASE_16S_97OTUS_OTUXSAMPLE_MAY5.zip'
-
+TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/16s/BASE_16S_OTU.xlst'
+MAP_16S_OTU_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/16s/BASE_16S_97OTUS_OTUXSAMPLE.zip'
 
 # TODO use ingest utils
 def download_url(url, local_name=None):
@@ -48,7 +47,7 @@ def download_url(url, local_name=None):
     if local_name is None:
         local_name = url.split('/')[-1]
 
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, auth=('base', 'b4s3'))
     with open(local_name, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
@@ -64,8 +63,8 @@ def ensure_data_file_is_available(url, file_name):
     """
     _file = Path(file_name)
     logger.info('Is {0} in {1} ?'.format(file_name, DATA_DIR))
-    if not Path.isfile(_file):
-        download_url(url, _file)
+    #if not Path.isfile(_file):
+    download_url(url, _file) # always download
     logger.info('Yes, it is now')
 
 
