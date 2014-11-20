@@ -5,7 +5,7 @@ Ingests BASE Amplicon metadata from server into database.
 """
 
 import os
-
+from django.db.utils import DataError
 from unipath import Path
 import requests
 from bs4 import BeautifulSoup
@@ -50,6 +50,17 @@ def fix_dilution(val):
     return val
 
 
+def fix_pcr(pcr):
+    """
+    'todo' is neither P, nor F, it will be F
+    """
+    val = pcr.strip()
+    if val not in ['P', 'F', '']:
+        logger.error('PCR value [{0}] is neither F nor P'.format(pcr))
+        val = 'X'
+    return val
+
+
 def get_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -60,13 +71,13 @@ def get_data(file_name):
                   ('sequencing_facility', 'Sequencing facility', None),
                   ('target', 'Target', lambda s: s.upper().strip()),
                   ('index', 'Index', None),
-                  ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', None),
-                  ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', None),
-                  ('pcr_neat', 'neat PCR, P=pass, F=fail', None),
+                  ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
+                  ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
+                  ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
                   ('dilution', 'Dilution used', fix_dilution),
                   ('sequencing_run_number', 'Sequencing run number', None),
                   ('flow_cell_id', 'Flowcell', None),
-                  ('reads', '# of RAW reads', ingest_utils.get_int),
+                  ('reads', ('# of RAW reads', '# of reads'), ingest_utils.get_int),
                   ('name', 'Sample name on sample sheet', None),
                   ('analysis_software_version', 'AnalysisSoftwareVersion', None),
                   ('comments', 'Comments', None),
@@ -111,7 +122,13 @@ def add_samples(data):
         metadata.comments = entry.comments
         metadata.debug_note = ingest_utils.pretty_print_namedtuple(entry)
 
-        metadata.save()
+        try:
+            metadata.save()
+        except DataError, e:
+            logger.error(e)
+            logger.error(entry)
+            exit()
+
 
 
 def is_metadata(path):

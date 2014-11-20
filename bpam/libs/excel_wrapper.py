@@ -68,7 +68,7 @@ class ExcelWrapper(object):
 
         self.field_names = self._set_field_names()
         self.name_to_column_map = self.set_name_to_column_map()
-        self.name_to_func_map = self.set_name_fo_func_map()
+        self.name_to_func_map = self.set_name_to_func_map()
 
     def _set_field_names(self):
         """
@@ -85,18 +85,33 @@ class ExcelWrapper(object):
         """
         maps the named field to the actual column in the spreadsheet
         """
-        cmap = {}
-        for attribute, column_name, _ in self.field_spec:
+
+        def find_column(column_name):
+            col_index = -1
             try:
                 col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             except ValueError:
                 logger.error('column name {0} not found'.format(column_name))
-                raise ColumnNotFoundException(column_name)
+            return col_index
 
-            cmap[attribute] = col_index
+        cmap = {}
+        for attribute, column_name, _ in self.field_spec:
+            col_index = -1
+            if type(column_name) == tuple:
+                for cname in column_name:
+                    col_index = find_column(cname)
+                    if col_index != -1:
+                        break
+            else:
+                col_index = find_column(column_name)
+
+            if col_index != -1:
+                cmap[attribute] = col_index
+            else:
+                raise ColumnNotFoundException(column_name)
         return cmap
 
-    def set_name_fo_func_map(self):
+    def set_name_to_func_map(self):
         """
         Map the spec fields to their corresponding functions
         """
@@ -159,8 +174,8 @@ class ExcelWrapper(object):
                 cell = row[i]
                 ctype = cell.ctype
                 val = cell.value
-                if ctype == xlrd.XL_CELL_DATE:
-                    val = self.get_date(i, cell)
+                #if ctype == xlrd.XL_CELL_DATE:
+                #    val = self.get_date(i, cell)
                 if ctype == xlrd.XL_CELL_TEXT:
                     val = val.strip()
 
