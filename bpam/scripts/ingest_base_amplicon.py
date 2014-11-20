@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
 
+"""
+Ingests BASE Amplicon metadata from server into database.
+"""
+
+import os
+
 from unipath import Path
 import requests
-from bs4 import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 from libs.excel_wrapper import ExcelWrapper
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
-
 from apps.common.models import Facility
 from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
 
 
 logger = logger_utils.get_logger(__name__)
-
 
 METADATA_URL = 'https://downloads.bioplatforms.com/base/tracking/amplicons/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/amplicon_metadata/')
@@ -252,6 +256,7 @@ def get_all_metadata_from_server():
     """ downloads metadata from archive """
 
     def download(name):
+        """ fetch file from server """
         logger.info('Fetching {0} from {1}'.format(name, METADATA_URL))
         r = requests.get(METADATA_URL + '/' + name, stream=True, auth=('base', 'b4s3'))
         with open(DATA_DIR + '/' + name, 'wb') as f:
@@ -259,6 +264,9 @@ def get_all_metadata_from_server():
                 if chunk:
                     f.write(chunk)
                     f.flush()
+
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
 
     response = requests.get(METADATA_URL, stream=True, auth=('base', 'b4s3'))
     for link in BeautifulSoup(response.content).find_all('a'):
@@ -273,5 +281,3 @@ def run():
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()
     do_md5()
-
-
