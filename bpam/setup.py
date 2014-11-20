@@ -54,7 +54,8 @@ install_requires = [
     'ccg-django-utils',
     'python-keystoneclient',
     'python-swiftclient',
-    'ccg-django-utils==0.2.1'
+    'ccg-django-utils==0.2.1',
+    'beautifulsoup4',
 ]
 
 dev_requires = [
