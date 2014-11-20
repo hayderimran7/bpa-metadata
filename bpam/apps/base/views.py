@@ -316,16 +316,23 @@ class TaxonomyLookUpView(View):
     def get(self, request, level, taxon):
         response = HttpResponse(content_type="application/json")
         if level is None:
+            logger.info("taxonomic level is None")
+            logger.info("request = %s" % request)
             options = []
         else:
             levels = ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']
-            filter_expression = {level: taxon}
-            next_lower_level_index = levels.index(level) + 1
-            next_lower_level = levels[next_lower_level_index]
+            if level not in levels:
+                logger.info("Level %s is not in %s" % (level, levels))
+                logger.info("request = %s" % request)
+                options = []
+            else:
+                filter_expression = {level: taxon}
+                next_lower_level_index = levels.index(level) + 1
+                next_lower_level = levels[next_lower_level_index]
 
-            otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
-            next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
-            options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
+                otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
+                next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
+                options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
         json.dump(options, response)
         return response
 
