@@ -283,7 +283,9 @@ def get_all_metadata_from_server():
                     f.flush()
 
     if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
+        from distutils.dir_util import mkpath
+        # os.makedirs(DATA_DIR)
+        mkpath(DATA_DIR)
 
     response = requests.get(METADATA_URL, stream=True, auth=('base', 'b4s3'))
     for link in BeautifulSoup(response.content).find_all('a'):
