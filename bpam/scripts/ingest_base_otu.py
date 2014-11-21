@@ -10,6 +10,7 @@ import os
 from libs import logger_utils
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs.fetch_data import Fetcher
 
 from apps.base_otu.models import *
 from apps.base.models import BASESample
@@ -23,83 +24,47 @@ BPA_PREFIX = '102.100.100.'
 
 logger = logger_utils.get_logger(__name__)
 
-# DATA_DIR = Path(Path(__file__).ancestor(3), "data/base/")
-# TAXONOMY_FILE = Path(DATA_DIR, '16s_otu.xlst')
-# MAP_TAXONOMY_TO_SAMPLE_FILE = Path(DATA_DIR, '16s_otu_sample_map.zip')
-
-DATA_DIR = os.path.join(ingest_utils.METADATA_ROOT, "data/base/")
-TAXONOMY_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/16s_otu.xlst')
-MAP_TAXONOMY_TO_SAMPLE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/16s_otu_sample_map')
-
-# for testing
-# DEV_MAP_FILE = Path(DATA_DIR, 'small_otu.xlst')
-DEV_MAP_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/small_otu.xlst')
-
-TAXONOMY_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/16s/BASE_16S_OTU.xlst'
-MAP_16S_OTU_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/16s/BASE_16S_97OTUS_OTUXSAMPLE.zip'
-
-# TODO use ingest utils
-def download_url(url, local_name=None):
-    """
-    Fetches data file from webserver
-    """
-    logger.info('Downloading {0}'.format(url))
-    if local_name is None:
-        local_name = url.split('/')[-1]
-
-    r = requests.get(url, stream=True, auth=('base', 'b4s3'))
-    with open(local_name, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024):
-            if chunk:
-                f.write(chunk)
-                f.flush()
-
-    return local_name
-
-
-def ensure_data_file_is_available(url, file_name):
-    """
-    get the data file of the webserver if not locally available
-    """
-    _file = Path(file_name)
-    logger.info('Is {0} in {1} ?'.format(file_name, DATA_DIR))
-    #if not Path.isfile(_file):
-    download_url(url, _file) # always download
-    logger.info('Yes, it is now')
+METADATA_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/all'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/otu/')
 
 
 def strip_count(val):
     return val.split('__')[-1].split('(')[0]
 
 
-def ingest_otu(file_name):
+def ingest_taxonomy(file_name):
     logger.info('Ingesting OTUs')
     logger.info('Now ingesting {0}'.format(file_name))
 
     field_spec = [('otu_id', 'OTUID', None),
+                  ('kingdom', 'kingdom', strip_count),
                   ('phylum', 'phylum', strip_count),
                   ('otu_class', 'class', strip_count),
-                  ('order', 'ordetr', strip_count),
+                  ('order', 'order', strip_count),
                   ('family', 'family', strip_count),
-                  ('genus', 'genus', strip_count), ]
+                  ('genus', 'genus', strip_count),
+                  ('species', 'species', strip_count),
+                  ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name='BASE_16S_97OTUS_NOSINGLES_label',
+                           sheet_name='',
                            header_length=1,
-                           column_name_row_index=0)
+                           column_name_row_index=0,
+                           pick_first_sheet=True)
 
     otu_list = []
     for e in wrapper.get_all():
         otu_list.append(
             OperationalTaxonomicUnit(
                 name=e.otu_id,
-                kingdom='Bacteria',
+                kingdom=e.kingdom,
                 phylum=e.phylum,
                 otu_class=e.otu_class,
                 order=e.order,
                 family=e.family,
-                genus=e.genus)
+                genus=e.genus,
+                species=e.species)
         )
 
     logger.info('Bulk creating {0} OTUs'.format(len(otu_list)))
@@ -187,7 +152,7 @@ class ProgressReporter(object):
             self.then = now
 
 
-def ingest_sample_to_otu(file_name):
+def ingest_otu_matrix(file_name):
     """
     populate the link table
     """
@@ -241,19 +206,35 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(OperationalTaxonomicUnit._meta.db_table))
 
 
-def ingest():
-    # OTU
-    ensure_data_file_is_available(TAXONOMY_URL, TAXONOMY_FILE)
-    ingest_otu(TAXONOMY_FILE)
+def do_taxonomies():
+    def is_taxonomy(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
 
-    # OTU->Sample
-    ensure_data_file_is_available(MAP_16S_OTU_URL, MAP_TAXONOMY_TO_SAMPLE_FILE)
-    ingest_sample_to_otu(MAP_TAXONOMY_TO_SAMPLE_FILE)
+    logger.info('Ingesting BASE OTUs from {0}'.format(DATA_DIR))
+    for taxonomy_file in DATA_DIR.walk(filter=is_taxonomy):
+        logger.info('Processing BASE OTU Metadata file {0}'.format(taxonomy_file))
+        ingest_taxonomy(taxonomy_file)
+
+
+def do_otu_matrix():
+    def is_otu_matrix(path):
+        if path.isfile() and path.ext == '.gz':
+            return True
+
+    logger.info('Ingesting BASE OTU Matrixs from {0}'.format(DATA_DIR))
+    for matrix_file in DATA_DIR.walk(filter=is_otu_matrix()):
+        logger.info('Processing BASE OTU Matrix file {0}'.format(matrix_file))
+        ingest_otu_matrix(matrix_file)
 
 
 def run():
+    #fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    #fetcher.fetch_metadata_from_folder()
     truncate()
-    ingest()
+
+    do_taxonomies()
+    do_otu_matrix()
 
 
 

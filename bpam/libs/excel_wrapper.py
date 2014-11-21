@@ -54,7 +54,15 @@ class ExcelWrapper(object):
     column_name_row_index: row in which column names are found, typically 0
     """
 
-    def __init__(self, field_spec, file_name, sheet_name, header_length, column_name_row_index=0, formatting_info=False, pick_first_sheet=False):
+    def __init__(self,
+                 field_spec,
+                 file_name,
+                 sheet_name,
+                 header_length,
+                 column_name_row_index=0,
+                 formatting_info=False,
+                 pick_first_sheet=False):
+
         self.sheet_name = sheet_name
         self.header_length = header_length
         self.column_name_row_index = column_name_row_index
