@@ -4,15 +4,13 @@
 Ingests BASE Amplicon metadata from server into database.
 """
 
-import os
 from django.db.utils import DataError
 from unipath import Path
-import requests
-from bs4 import BeautifulSoup
 from libs.excel_wrapper import ExcelWrapper
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
+from libs.fetch_data import Fetcher
 from apps.common.models import Facility
 from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
@@ -269,33 +267,10 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequenceFile._meta.db_table))
 
 
-def get_all_metadata_from_server():
-    """ downloads metadata from archive """
-
-    def download(name):
-        """ fetch file from server """
-        logger.info('Fetching {0} from {1}'.format(name, METADATA_URL))
-        r = requests.get(METADATA_URL + '/' + name, stream=True, auth=('base', 'b4s3'))
-        with open(DATA_DIR + '/' + name, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
-
-    if not os.path.exists(DATA_DIR):
-        from distutils.dir_util import mkpath
-        # os.makedirs(DATA_DIR)
-        mkpath(DATA_DIR)
-
-    response = requests.get(METADATA_URL, stream=True, auth=('base', 'b4s3'))
-    for link in BeautifulSoup(response.content).find_all('a'):
-        fname = link.get('href')
-        if fname.endswith('.xlsx') or fname.endswith('.txt'):
-            download(fname)
-
-
 def run():
-    get_all_metadata_from_server()
+    # get_all_metadata_from_server()
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch_metadata_from_folder()
     truncate()
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()
