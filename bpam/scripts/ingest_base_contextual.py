@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+from unipath import Path
+from libs.fetch_data import Fetcher
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
@@ -10,7 +12,9 @@ from apps.base_contextual.models import *
 
 logger = logger_utils.get_logger(__name__)
 
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/contextual')
+METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
+CONTEXTUAL_DATA = 'BASE_Contextual_Data.xlsx'                       # the file
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/contextual_metadata/')
 
 BPA_ID_PREFIX = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -384,15 +388,25 @@ def add_chemical_analysis(data):
         analysis.save()
 
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
-    """
+def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
 
-    data = list(get_data(file_name))
-    add_samples(data)
-    add_chemical_analysis(data)
+    logger.info('Ingesting BASE Contextual Data from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
+        samples = list(get_data(metadata_file))
+        add_samples(samples)
+        add_chemical_analysis(samples)
+
+
+def run():
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch(CONTEXTUAL_DATA)
+
+    do_metadata()
+
 
 
 
