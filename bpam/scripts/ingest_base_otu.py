@@ -2,10 +2,8 @@
 
 import zipfile
 from unipath import Path
-import requests
 import csv
 import time
-import os
 
 from libs import logger_utils
 from libs import bpa_id_utils
@@ -223,7 +221,7 @@ def do_otu_matrix():
             return True
 
     logger.info('Ingesting BASE OTU Matrixs from {0}'.format(DATA_DIR))
-    for matrix_file in DATA_DIR.walk(filter=is_otu_matrix()):
+    for matrix_file in DATA_DIR.walk(filter=is_otu_matrix):
         logger.info('Processing BASE OTU Matrix file {0}'.format(matrix_file))
         ingest_otu_matrix(matrix_file)
 
