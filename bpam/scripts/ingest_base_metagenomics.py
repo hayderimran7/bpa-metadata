@@ -2,6 +2,8 @@
 
 import os
 
+from unipath import Path
+from libs.fetch_data import Fetcher
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
@@ -13,7 +15,8 @@ from apps.base_metagenomics.models import MetagenomicsSample, MetagenomicsSequen
 
 logger = logger_utils.get_logger(__name__)
 
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/metagenomics')
+METADATA_URL = 'https://downloads.bioplatforms.com/base/tracking/metagenomics/'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/metagenomics_metadata/')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -45,7 +48,7 @@ def get_data(file_name):
             return ''
 
     field_spec = [('bpa_id', 'BPA ID', set_id),
-                  ('sample_id', 'Sample ID', None),
+                  ('sample_id', 'Sample extraction ID', None),
                   ('genome_sequencing_facility', 'Genome Sequencing Facility', None),
                   ('date_received', 'Date Received by sequencing facility', ingest_utils.get_date),
                   ('comments', 'Comments by sequencing facility', None),
@@ -150,13 +153,24 @@ def add_sequence_files(data):
         sequence_file.save()
 
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
-    """
+def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
 
-    data = list(get_data(file_name))
-    add_sequence_files(data)
+    logger.info('Ingesting BASE Metagenomics metadata from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing BASE Metagenomics Metadata file {0}'.format(metadata_file))
+        samples = list(get_data(metadata_file))
+        add_sequence_files(samples)
+
+
+def run():
+    # get_all_metadata_from_server()
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch_metadata_from_folder()
+
+    do_metadata()
+
 
 
