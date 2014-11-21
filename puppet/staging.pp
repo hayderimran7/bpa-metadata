@@ -21,7 +21,7 @@ node default {
       memcache    => $globals::memcache_syd,
       secret_key   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
       admin_email => $globals::system_email,
-      allowed_hosts => 'localhost www.ccgapps.com.au ccgapps.com.au',
+      allowed_hosts => 'localhost .ccgapps.com.au',
     }
 
     ccgdatabase::postgresql::db { $django_config['dbname']:
