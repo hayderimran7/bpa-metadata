@@ -399,7 +399,6 @@ def do_metadata():
         add_samples(samples)
         add_chemical_analysis(samples)
 
-
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.fetch(CONTEXTUAL_DATA)
