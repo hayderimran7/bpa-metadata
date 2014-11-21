@@ -128,18 +128,11 @@ def add_samples(data):
             exit()
 
 
-
-def is_metadata(path):
-    if path.isfile() and path.ext == '.xlsx':
-        return True
-
-
-def is_md5file(path):
-    if path.isfile() and path.ext == '.md5' or path.ext == '.txt':
-        return True
-
-
 def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
+
     logger.info('Ingesting BASE Amplicon metadata from {0}'.format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info('Processing BASE Amplicon Metadata file {0}'.format(metadata_file))
@@ -251,6 +244,11 @@ def do_md5():
     """
     Ingest the md5 files
     """
+
+    def is_md5file(path):
+        if path.isfile() and path.ext == '.md5' or path.ext == '.txt':
+            return True
+
     logger.info('Ingesting BASE Amplicon md5 file information from {0}'.format(DATA_DIR))
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info('Processing BASE Amplicon md5 file {0}'.format(md5_file))
