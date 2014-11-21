@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 from unipath import Path
 from libs.fetch_data import Fetcher
 from libs.excel_wrapper import ExcelWrapper
