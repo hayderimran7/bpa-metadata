@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 from contracts import contract
-
+from unipath import Path
+from libs.fetch_data import Fetcher
 from libs.excel_wrapper import ExcelWrapper
 from libs.logger_utils import get_logger
 from libs import bpa_id_utils
@@ -12,9 +12,11 @@ from libs import ingest_utils
 from apps.base_454.models import Sample454
 # from apps.common.models import BPAUniqueID
 
-
 logger = get_logger(__name__)
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'base/454')
+
+METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
+BASE_454 = 'BASE_454.xlsx'                                          # the file
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/454_metadata/')
 
 BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -194,13 +196,23 @@ def truncate():
     cursor = connection.cursor()
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(Sample454._meta.db_table))
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_base_454 --script-args Melanoma_study_metadata.xlsx
-    """
 
+def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
+
+    logger.info('Ingesting BASE Contextual Data from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
+        ingest(metadata_file)
+
+
+def run():
     truncate()
-    ingest(file_name)
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch(BASE_454)
+    do_metadata()
+
 
 
