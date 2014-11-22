@@ -65,8 +65,9 @@ mkdir -p %{scratchdir}
 mkdir -p %{sharedir}
 
 # yea
-mkdir -p %{metadatadir}
-cp -r ${HOME}/metadata/* %{metadatadir}
+# nah
+#mkdir -p %{metadatadir}
+#cp -r ${HOME}/metadata/* %{metadatadir}
 
 # Create a python prefix with app requirements
 mkdir -p %{buildinstalldir}
