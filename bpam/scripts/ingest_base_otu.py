@@ -98,9 +98,13 @@ class OTUCache(object):
         if otu_name in self.cache:
             return self.cache[otu_name]
         else:
-            otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
-            self.cache[otu_name] = otu
-            return otu
+            try:
+                otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
+                self.cache[otu_name] = otu
+                return otu
+            except OperationalTaxonomicUnit.DoesNotExist, e:
+                logger.error('OTU {0} Does not exist'.format(otu_name))
+                return None
 
 
 class BPAIDLookup(object):
@@ -209,7 +213,9 @@ def _ingest_csv_file(csv_file, reporter):
 
         for row in reader:
             sample_otu_list = []
-            otu_get_otu_id(row)
+            otu, row = _get_otu_id(row)
+            if otu is None:
+                logger.error('No valid OTU found, ignoring')
 
             # step through all the sample keys and create the sample to OTU links
             for sample_key, count in row.items():
@@ -256,11 +262,11 @@ def do_otu_matrix():
 
 
 def run():
-    #fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
-    #fetcher.fetch_metadata_from_folder()
-    #truncate()
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch_metadata_from_folder()
+    truncate()
 
-    #do_taxonomies()
+    do_taxonomies()
     do_otu_matrix()
 
 
