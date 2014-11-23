@@ -80,6 +80,7 @@ class BASESampleCache(object):
         if bpa_idx in self.cache:
             return self.cache[bpa_idx]
         else:
+            logger.info('Caching BPA ID {0}'.format(bpa_idx))
             bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'BASE', 'BASE', note='BASE OTU Ingest')
             sample, created = BASESample.objects.get_or_create(bpa_id=bpa_id)
             self.cache[bpa_idx] = sample
@@ -118,13 +119,13 @@ class BPAIDLookup(object):
 
     def get_bpa_id_from_key(self, sample_key):
         """
-        Split out BPAID
+        Split out BPAID, some of the OTU matrixes have BPID_BLA, get rid of _BLA
         """
         split_index = sample_key.find('_')
         if split_index != -1:
             return BPA_PREFIX + sample_key[0:split_index]  # ignore the rest
         else:
-            return None
+            return BPA_PREFIX + sample_key
 
 
 class ProgressReporter(object):
@@ -154,9 +155,6 @@ def ingest_otu_matrix(file_name):
     """
     populate the link table
     """
-    base_sample_cache = BASESampleCache()
-    otu_cache = OTUCache()
-    bpa_id_lookup = BPAIDLookup()
 
     csv_files = []  # all cv files found in zip
     if zipfile.is_zipfile(file_name):
@@ -164,37 +162,68 @@ def ingest_otu_matrix(file_name):
         with zipfile.ZipFile(file_name, 'r') as z:
             csv_files = z.namelist()
             z.extractall(DATA_DIR)
+    else:
+        logger.warning('{0} is not a zip file'.format(file_name))
 
     for csvf in csv_files:
         csv_file = Path(DATA_DIR, csvf)
         reporter = ProgressReporter(csv_file)
         logger.info('Now ingesting {0} with {1} lines'.format(csv_file, reporter.total_len))
+        _ingest_csv_file(csv_file, reporter)
 
-        with open(csv_file, "rb") as mapfile:
-            reader = csv.DictReader(mapfile)
 
-            # populate the BASE Sample Cache
-            logger.info('Caching {0} BASE Samples'.format(len(reader.fieldnames) - 1))
-            for sample_name in reader.fieldnames[1:]:
-                base_sample_cache.get(bpa_id_lookup.get(sample_name))
+def _ingest_csv_file(csv_file, reporter):
+    """
+    Ingest the given csv file
+    """
+    base_sample_cache = BASESampleCache()
+    otu_cache = OTUCache()
+    bpa_id_lookup = BPAIDLookup()
 
-            for row in reader:
-                sample_otu_list = []
-                otu = otu_cache.get(row['OTUId'])
-                row.pop('OTUId')  # get rid of ID column here so I don't have to filter it out below
-                # step through all the sample keys and create the sample to OTU links
-                for sample_key, count in row.items():
-                    count = int(count)
-                    if count == 0:
-                        continue
+    def _get_otu_id(row):
+        """
+        inconsistent UTUID, OTUId
+        """
+        for _ID in ('OTUID', 'OTUId'):
+            if _ID in row:
+                otu = otu_cache.get(row[_ID])
+                row.pop(_ID)  # get rid of ID column here so I don't have to filter it out below
+                return otu, row
 
-                    bpa_idx = bpa_id_lookup.get(sample_key)
-                    if bpa_idx:
-                        sample = base_sample_cache.get(bpa_idx)
-                        sample_otu_list.append(SampleOTU(sample=sample, otu=otu, count=count))
+        # should never get here
+        logger.error('Could not get OTUID')
+        exit(0)
 
-                SampleOTU.objects.bulk_create(sample_otu_list)
-                reporter.count_row()
+    def populate_sample_cache():
+        """
+        populate the BASE Sample Cache
+        """
+        logger.info('Caching {0} BASE Samples'.format(len(reader.fieldnames) - 1))
+        for sample_name in reader.fieldnames[1:]:
+            base_sample_cache.get(bpa_id_lookup.get(sample_name))
+
+    with open(csv_file, "rb") as mapfile:
+        reader = csv.DictReader(mapfile)
+
+        populate_sample_cache()
+
+        for row in reader:
+            sample_otu_list = []
+            otu_get_otu_id(row)
+
+            # step through all the sample keys and create the sample to OTU links
+            for sample_key, count in row.items():
+                count = int(count)
+                if count == 0:
+                    continue
+
+                bpa_idx = bpa_id_lookup.get(sample_key)
+                if bpa_idx:
+                    sample = base_sample_cache.get(bpa_idx)
+                    sample_otu_list.append(SampleOTU(sample=sample, otu=otu, count=count))
+
+            SampleOTU.objects.bulk_create(sample_otu_list)
+            reporter.count_row()
 
 
 def truncate():
@@ -217,7 +246,7 @@ def do_taxonomies():
 
 def do_otu_matrix():
     def is_otu_matrix(path):
-        if path.isfile() and path.ext == '.gz':
+        if path.isfile() and path.ext == '.zip':
             return True
 
     logger.info('Ingesting BASE OTU Matrixs from {0}'.format(DATA_DIR))
@@ -229,9 +258,9 @@ def do_otu_matrix():
 def run():
     #fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     #fetcher.fetch_metadata_from_folder()
-    truncate()
+    #truncate()
 
-    do_taxonomies()
+    #do_taxonomies()
     do_otu_matrix()
 
 

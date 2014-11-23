@@ -67,6 +67,10 @@ def is_good_bpa_id(bpa_id):
     """
     Determines if id is a good BPA ID
     """
+
+    if bpa_id is None:
+        return False
+
     bpa_id = bpa_id.strip()
     # empties
     if bpa_id == '':

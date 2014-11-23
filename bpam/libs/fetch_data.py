@@ -46,5 +46,5 @@ class Fetcher():
         response = requests.get(self.metadata_source_url, stream=True, auth=self.auth)
         for link in BeautifulSoup(response.content).find_all('a'):
             metadata_filename = link.get('href')
-            if metadata_filename.endswith('.xlsx') or metadata_filename.endswith('.txt'):
+            if metadata_filename.endswith('.xlsx') or metadata_filename.endswith('.txt') or metadata_filename.endswith('.zip'):
                 self.fetch(metadata_filename)
