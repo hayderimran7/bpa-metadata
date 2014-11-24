@@ -113,7 +113,7 @@ ci_remote_build() {
     log_info "Building rpm on ${AWS_BUILD_INSTANCE}"
     time ccg ${AWS_BUILD_INSTANCE} boot
     time ccg ${AWS_BUILD_INSTANCE} puppet
-    time ccg ${AWS_BUILD_INSTANCE} shutdown:50
+    time ccg ${AWS_BUILD_INSTANCE} shutdown:240
 
     cd ${TOPDIR}
 
