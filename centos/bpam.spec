@@ -19,7 +19,6 @@
 %define scratchdir %{buildroot}/var/lib/%{nickname}/scratch
 %define sharedir %{buildroot}/usr/share/%{nickname}/
 %define staticdir %{buildinstalldir}/static
-%define metadatadir %{buildroot}/var/www/metadata
 
 Summary: bpa-metadata
 Name: %{app}
@@ -63,11 +62,6 @@ mkdir -p %{logdir}
 mkdir -p %{mediadir}
 mkdir -p %{scratchdir}
 mkdir -p %{sharedir}
-
-# yea
-# nah
-#mkdir -p %{metadatadir}
-#cp -r ${HOME}/metadata/* %{metadatadir}
 
 # Create a python prefix with app requirements
 mkdir -p %{buildinstalldir}
