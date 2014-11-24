@@ -1,13 +1,12 @@
 # BPA Metadata production
 node default {
-  include ccgcommon
+include ccgcommon
   include ccgcommon::source
   include ccgapache
   include python
-  include repo::epel
-  include include::ius
-  include repo::pgrpms
-  include repo::ccgtesting
+  include repo::repo::ius
+  include repo::repo::pgrpms
+  include repo::repo::ccgtesting
   include monit
   include globals
 

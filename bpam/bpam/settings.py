@@ -8,7 +8,7 @@ from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
 
-BPA_VERSION = '1.3.0'
+BPA_VERSION = '1.4.0'
 # see ccg_django_utils.webhelpers
 BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
