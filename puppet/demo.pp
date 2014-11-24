@@ -5,8 +5,8 @@ include ccgcommon
   include ccgapache
   include python
   include repo::repo::ius
-  include repo::repo::pgrpms
   include repo::repo::ccgtesting
+  include yum::repo::pgdg93
   include monit
   include globals
 
