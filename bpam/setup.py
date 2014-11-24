@@ -55,6 +55,7 @@ install_requires = [
     'python-keystoneclient',
     'python-swiftclient',
     'ccg-django-utils==0.2.1',
+    'django-debug-toolbar',
     'beautifulsoup4',
 ]
 
@@ -62,7 +63,6 @@ dev_requires = [
     'psycopg2>=2.5.0,<2.6.0',
     'flake8',
     'Werkzeug',
-    'django-debug-toolbar',
     'coverage',
     'django-discover-runner',
     'model-mommy',

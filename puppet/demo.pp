@@ -1,6 +1,6 @@
 # BPA Metadata production
 node default {
-include ccgcommon
+  include ccgcommon
   include ccgcommon::source
   include ccgapache
   include python
