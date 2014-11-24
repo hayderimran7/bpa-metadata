@@ -4,6 +4,7 @@ node default {
     include ccgcommon::source
     include ccgapache
     include python
+    include repo
     include repo::repo::ius
     include repo::repo::ccgtesting
     include yum::repo::pgdg93
