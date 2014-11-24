@@ -145,7 +145,9 @@ ci_fetch_rpm() {
 # publish rpms
 ci_rpm_publish() {
     log_info "Publishing rpm to testing"
-    time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    # AH again bpam vs bpa-metadata
+    #time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    time ccg publish_testing_rpm:build/bpa-metadata*.rpm,release=6
 }
 
 
