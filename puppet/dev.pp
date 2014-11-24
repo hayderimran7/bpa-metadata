@@ -5,8 +5,8 @@ node default {
     include ccgapache
     include python
     include repo::repo::ius
-    include repo::repo::pgrpms
     include repo::repo::ccgtesting
+    include yum::repo::pgdg93
     include ccgdatabase::postgresql::devel
     include monit
     include globals

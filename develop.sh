@@ -135,14 +135,19 @@ ci_remote_build() {
 ci_fetch_rpm() {
     mkdir -p build
     log_info "Fetching rpm from ${AWS_BUILD_INSTANCE}"
-    ccg ${AWS_BUILD_INSTANCE} getfile:rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,build/
+    # AH This does not work as the RPM is not named according to PROJECT_NAME.
+    # For consistency you should either stick with bpam or bpa-metadata
+    #ccg ${AWS_BUILD_INSTANCE} getfile:rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,build/
+    ccg ${AWS_BUILD_INSTANCE} getfile:rpmbuild/RPMS/x86_64/bpa-metadata*.rpm,build/
 }
 
 
 # publish rpms
 ci_rpm_publish() {
     log_info "Publishing rpm to testing"
-    time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    # AH again bpam vs bpa-metadata
+    #time ccg publish_testing_rpm:build/${PROJECT_NAME}*.rpm,release=6
+    time ccg publish_testing_rpm:build/bpa-metadata*.rpm,release=6
 }
 
 
