@@ -155,8 +155,6 @@ rm -rf %{buildroot}
 %attr(-,apache,,apache) %{webapps}/%{nickname}
 %attr(-,apache,,apache) /var/log/%{nickname}
 %attr(-,apache,,apache) /var/lib/%{nickname}
-# directory for metadata
-%attr(-,apache,,apache) /var/www/metadata
 
 %config /etc/httpd/conf.d/%{nickname}.ccg
 %config(noreplace) /etc/%{nickname}/settings.py
