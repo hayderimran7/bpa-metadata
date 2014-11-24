@@ -61,7 +61,6 @@ node default {
                 'graphviz-devel',
                 'gdal',
                 'proj-devel',
-                'postgis2_93',
                 'tree']
         }
         'Debian': {
