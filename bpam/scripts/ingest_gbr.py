@@ -8,7 +8,7 @@ from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
-from libs.excel_wrapper import ExcelWrapper
+from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
 from libs.fetch_data import Fetcher
 from unipath import Path
 
@@ -23,7 +23,8 @@ OLD_METADATA_FILE = 'refuge2020_metadata.xlsx'
 OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/old_format')
 
 # the newer format
-# TODO
+METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/'  # this is where the new metadata is kept
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata')
 
 
 def get_bpa_id(named_tup):
@@ -203,7 +204,7 @@ def ingest_samples(samples):
         add_sample(sample)
 
 
-def get_gbr_sample_data(file_name):
+def get_gbr_sample_data_old_format(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -260,8 +261,13 @@ def get_gbr_sample_data(file_name):
     return wrapper.get_all()
 
 
-# The new standardised way of packing metadata
-def get_gbr_sample_data_for_set(file_name):
+def get_gbr_sample_data(file_name):
+    """
+    Parses dample data from GBR metadata file
+    :param file_name:
+    :return:
+    """
+
     field_spec = [
         ('bpa_id', 'Sample unique ID', lambda s: s.replace('/', '.')),
         ('sequencing_facility', 'Sequencing facility', None),
@@ -407,12 +413,42 @@ def ingest_runs(sample_data):
         add_file(e, sequence_run)
 
 
-def ingest(file_name):
-    sample_data = list(get_gbr_sample_data(file_name))
-    # pre-populate the BPA ID's
+def _ingest(sample_data):
+    """
+    Ingest the sample data
+    :param sample_data:
+    :return:
+    """
+     # pre-populate the BPA ID's
     bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
+
+
+def ingest_old_format(file_name):
+    sample_data = list(get_gbr_sample_data_old_format(file_name))
+    _ingest(sample_data)
+
+
+def ingest():
+    """
+    Ingest new format data
+    :return:
+    """
+
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
+
+    logger.info('Ingesting GBR metadata from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing GBR Metadata file {0}'.format(metadata_file))
+        try:
+            sample_data = get_gbr_sample_data(metadata_file)
+            _ingest(sample_data)
+        except ColumnNotFoundException, e:
+            logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
+
 
 
 def truncate():
@@ -432,7 +468,10 @@ def run():
     fetcher.fetch(OLD_METADATA_FILE)
 
     # fetch the new data formats
-
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher.fetch_metadata_from_folder()
 
     truncate()
-    ingest(Path(OLD_DATA_DIR, OLD_METADATA_FILE))
+
+    ingest_old_format(Path(OLD_DATA_DIR, OLD_METADATA_FILE))
+    ingest()
