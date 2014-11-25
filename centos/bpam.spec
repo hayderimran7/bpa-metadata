@@ -7,7 +7,7 @@
 %define app bpa-metadata
 %define name %{app}
 %define nickname bpam 
-%define version 1.4.0
+%define version 1.4.1
 %define unmangled_version %{version}
 %define release 1
 %define webapps /usr/local/webapps
