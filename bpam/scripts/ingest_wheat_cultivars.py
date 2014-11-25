@@ -225,7 +225,6 @@ def ingest(file_name):
 def run():
     truncate()
 
-    # fetch the old data file
     fetcher = Fetcher(DATA_DIR, METADATA_URL)
     fetcher.fetch(METADATA_FILE)
 
