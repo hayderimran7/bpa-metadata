@@ -4,7 +4,14 @@ import os
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, MelanomaSequenceFile
+from apps.melanoma.models import (
+    TumorStage,
+    MelanomaSample,
+    Organism,
+    MelanomaProtocol,
+    Array,
+    MelanomaRun,
+    MelanomaSequenceFile)
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 from unipath import Path
 

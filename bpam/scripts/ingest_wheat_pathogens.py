@@ -11,14 +11,18 @@ from apps.wheat_pathogens.models import (
 from libs import ingest_utils, user_helper, bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
+from libs.fetch_data import Fetcher
+from unipath import Path
+
 
 logger = get_logger(__name__)
 
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_pathogens/current')
-
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens'
-METADATA_URL = "https://downloads.bioplatforms.com/wheat_pathogens/bpa_metadata/current.xlsx"
+
+METADATA_URL = 'https://downloads.bioplatforms.com/wheat_pathogens/metadata/'
+METADATA_FILE = 'current.xlsx'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens')
 
 
 def get_dna_source(description):
@@ -291,11 +295,11 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenProtocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenSequenceFile._meta.db_table))
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx
-    """
+def run():
     truncate()
-    ingest_utils.fetch_metadata(METADATA_URL, file_name)
-    ingest(file_name)
+
+    # fetch the old data file
+    fetcher = Fetcher(DATA_DIR, METADATA_URL)
+    fetcher.fetch(METADATA_FILE)
+
+    ingest(Path(DATA_DIR, METADATA_FILE))
