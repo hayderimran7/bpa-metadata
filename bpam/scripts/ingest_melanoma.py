@@ -2,14 +2,18 @@
 
 import os
 from libs.excel_wrapper import ExcelWrapper
+from libs.fetch_data import Fetcher
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, \
-    MelanomaSequenceFile
+from apps.melanoma.models import TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun, MelanomaSequenceFile
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
+from unipath import Path
 
 
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'melanoma/current')
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
+
+METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'         # the folder
+METADATA_FILE = 'metadata.xlsx'                                              # the file
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'melanoma/')
 
 logger = logger_utils.get_logger(__name__)
 
@@ -334,12 +338,10 @@ def ingest(spreadsheet_file):
     ingest_runs(sample_data)
 
 
-def run(spreadsheet_file=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_melanoma --script-args Melanoma_study_metadata.xlsx
-    """
-
-    logger.info('Ingesting spreadsheet: ' + spreadsheet_file)
+def run():
+    logger.info('Ingesting spreadsheet: from {0}'.format(METADATA_URL))
     # Organism.objects.get_or_create(genus="Homo", species="Sapiens")
-    ingest(spreadsheet_file)
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('melanoma', 'm3lan0ma'))
+
+    fetcher.fetch(METADATA_FILE)
+    ingest(DATA_DIR + METADATA_FILE)
