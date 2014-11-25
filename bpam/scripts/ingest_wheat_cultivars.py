@@ -8,13 +8,17 @@ from libs import bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
 
+from libs.fetch_data import Fetcher
+from unipath import Path
 
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Cultivars'
-METADATA_URL = "https://downloads.bioplatforms.com/wheat_cultivars/metadata/current.xlsx"
-SOURCE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_cultivars/current.xlsx')
+
+METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/metadata/'  # the folder
+METADATA_FILE = 'current.xlsx'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
 
 def get_dna_source(description):
@@ -218,11 +222,11 @@ def ingest(file_name):
     logger.info('Wheat Cultivar metadata import complete')
 
 
-def run(file_name=SOURCE_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_wheat_pathogens_transcript --script-args current.xlsx
-    """
+def run():
     truncate()
-    ingest_utils.fetch_metadata(METADATA_URL, file_name)
-    ingest(file_name)
+
+    # fetch the old data file
+    fetcher = Fetcher(DATA_DIR, METADATA_URL)
+    fetcher.fetch(METADATA_FILE)
+
+    ingest(Path(DATA_DIR, METADATA_FILE))
