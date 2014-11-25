@@ -1,14 +1,11 @@
 import string
-import pprint
+
 from datetime import date
 import unittest
 import os
 import dateutil
 import logger_utils
-import subprocess
-import time
-import sys
-import requests
+
 import json
 
 from ccg_django_utils.conf import EnvConfig
@@ -24,74 +21,6 @@ env = EnvConfig()
 
 # list of chars to delete
 remove_letters_map = dict((ord(char), None) for char in string.punctuation + string.ascii_letters)
-
-
-def fetch_metadata(source_path, target_path, use_cached=True):
-    """
-    Fetch the metadata from a webserver
-    :return:
-    """
-
-    if use_cached and os.path.exists(target_path):
-        logger.info('Using cached {0}'.format(target_path))
-        return
-
-    logger.info('Downloading {0} to {1}'.format(source_path, target_path))
-
-    # ensure target directory exists
-    target_path_parent = os.path.dirname(target_path)
-    if not os.path.exists(target_path_parent):
-        os.makedirs(target_path_parent)
-
-    r = requests.get(source_path, stream=True)
-    if r.status_code == 200:
-        with open(target_path, 'wb') as f:
-            for chunk in r.iter_content(1024):
-                f.write(chunk)
-    else:
-        logger.error('URL {0} does not exist'.format(source_path))
-        sys.exit()
-
-
-def fetch_metadata_from_swift():
-    logger.info("Fetching metadata from swift")
-
-    swift_user = env.get('SWIFT_USER')
-    swift_password = env.get('SWIFT_PASSWORD')
-
-    cmd = 'swift -V 2 --os-auth-url={0} --os-username={1} --os-password={2} --os-tenant-name=bpa download {3}'.format(
-        'https://keystone.bioplatforms.com/v2.0/',
-        swift_user,
-        swift_password,
-        'bpam-source',
-    )
-
-    logger.info(cmd)
-    if not os.path.exists(METADATA_ROOT):
-        os.makedirs(METADATA_ROOT)
-
-    # messy... shell=True is needed because swift lives in a virtualenv
-    swift_process = subprocess.call(cmd, shell=True, cwd=METADATA_ROOT)
-    swift_process.wait()
-
-
-def ensure_metadata_is_current():
-    """
-    Ensure that the metadata folder exists and is relatively up to data
-    """
-    ONE_DAY = 86400  # seconds
-
-    # if there is no metadata, get it
-    if not os.path.exists(METADATA_ROOT):
-        logger.warning("No metada locally available, fetching it from swift")
-        fetch_metadata_from_swift()
-        return
-
-    # if the metadata is old, fetch it
-    now = time.time()
-    last_time = os.path.getmtime(METADATA_ROOT)
-    if now - last_time > ONE_DAY:
-        fetch_metadata_from_swift()
 
 
 def get_clean_number(val, default=None, debug=False):
