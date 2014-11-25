@@ -9,14 +9,21 @@ from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
-
+from libs.fetch_data import Fetcher
+from unipath import Path
 
 logger = get_logger(__name__)
 
-DEFAULT_SPREADSHEET_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'gbr/current')
-
 BPA_ID = "102.100.100"
 GBR_DESCRIPTION = 'Great Barrier Reef'
+
+# the old google doc format
+OLD_METADATA_URL = 'https://downloads.bioplatforms.com/gbr/old_format_metadata/'  # the folder
+OLD_METADATA_FILE = 'refuge2020_metadata.xlsx'
+OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/old_format')
+
+# the newer format
+# TODO
 
 
 def get_bpa_id(named_tup):
@@ -253,7 +260,7 @@ def get_gbr_sample_data(file_name):
     return wrapper.get_all()
 
 
-# The new standarised way of packing metadata
+# The new standardised way of packing metadata
 def get_gbr_sample_data_for_set(file_name):
     field_spec = [
         ('bpa_id', 'Sample unique ID', lambda s: s.replace('/', '.')),
@@ -419,11 +426,13 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionSite._meta.db_table))
 
 
-def run(file_name=DEFAULT_SPREADSHEET_FILE):
-    """
-    Pass parameters like below:
-    bpam runscript ingest_gbr --script-args Melanoma_study_metadata.xlsx
-    """
+def run():
+    # fetch the old data file
+    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher.fetch(OLD_METADATA_FILE)
+
+    # fetch the new data formats
+
 
     truncate()
-    ingest(file_name)
+    ingest(Path(OLD_DATA_DIR, OLD_METADATA_FILE))
