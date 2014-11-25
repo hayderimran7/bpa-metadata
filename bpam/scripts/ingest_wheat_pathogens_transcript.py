@@ -14,6 +14,8 @@ from apps.wheat_pathogens_transcript.models import (
 from libs import ingest_utils, user_helper, bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
+from libs.fetch_data import Fetcher
+from unipath import Path
 
 PROJECT_DESCRIPTION = 'Wheat Pathogens Transcript'
 PROJECT_ID = 'WHEAT_PATHOGENS_TRANCRIPT'
@@ -22,8 +24,10 @@ logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens Transcript'
-METADATA_URL = "https://downloads.bioplatforms.com/wheat_pathogens_transcript/metadata/Wheat_Pathogen_Transcript_data.xlsx"
-SOURCE_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcript/wheat_pathogens_transcript.xlsx')
+
+METADATA_URL = 'https://downloads.bioplatforms.com/wheat_pathogens_transcript/metadata/'
+METADATA_FILE = 'Wheat_Pathogen_Transcript_data.xlsx'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcript')
 
 
 def ingest_samples(samples):
@@ -229,11 +233,12 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(WheatPathogenTranscriptSequenceFile._meta.db_table))
 
 
-def run(file_name=SOURCE_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_gbr --script-args Wheat_pathogens_genomic_metadata.xlsx
-    """
+def run():
     truncate()
-    ingest_utils.fetch_metadata(METADATA_URL, file_name)
-    ingest(file_name)
+
+    # fetch the old data file
+    fetcher = Fetcher(DATA_DIR, METADATA_URL)
+    fetcher.fetch(METADATA_FILE)
+
+    ingest(Path(DATA_DIR, METADATA_FILE))
+
