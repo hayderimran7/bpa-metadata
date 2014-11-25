@@ -1,13 +1,15 @@
 import csv
-import os
 
 from libs import ingest_utils, user_helper, logger_utils
+from libs.fetch_data import Fetcher
 from apps.bpaauth.models import BPAUser
-
+from unipath import Path
 
 logger = logger_utils.get_logger(__name__)
 
-USERS_FILE = os.path.join(ingest_utils.METADATA_ROOT, 'users/current')
+METADATA_URL = 'https://downloads.bioplatforms.com/bpa_support/users/'         # the folder
+BPA_USERS_FILE = 'bpa_users.csv'                                              # the file
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'users/')
 
 
 def get_data(users_file):
@@ -33,7 +35,7 @@ def filter_contacts(contact):
 
 def ingest_contacts(users_file):
     """
-    Contacts associated with BPA pojects
+    Contacts associated with BPA projects
     """
 
     for contact in get_data(users_file):
@@ -51,11 +53,8 @@ def ingest_contacts(users_file):
             user_helper.make_new_user(username, contact)
 
 
-def run(users_file=USERS_FILE):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript ingest_users --script-args bpa-users.csv
-    """
-    # ingest_utils.ensure_metadata_is_current()
-    ingest_contacts(users_file)
+def run():
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch(BPA_USERS_FILE)
+    ingest_contacts(DATA_DIR + BPA_USERS_FILE)
 
