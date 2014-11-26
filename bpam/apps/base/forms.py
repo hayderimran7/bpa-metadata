@@ -1,11 +1,9 @@
 # coding=utf-8
 from django import forms
+from apps.base_otu.models import OperationalTaxonomicUnit
 
-KINGDOMS = (("", "----"),
-            ('Bacteria', 'Bacteria'),
-            ('Archea', 'Archea'),
-            ('Eukaryote', 'Eukaryote'),
-            ('Fungi', 'Fungi'))
+KINGDOMS = list(OperationalTaxonomicUnit.KINGDOMS)
+KINGDOMS.insert(0, ("", "----"))
 
 
 class BASESearchForm(forms.Form):
