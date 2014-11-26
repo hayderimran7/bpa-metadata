@@ -5,10 +5,12 @@ import sys
 
 from unipath import Path
 from ccg_django_utils.conf import EnvConfig
+from bpam import VERSION
 
 env = EnvConfig()
 
-BPA_VERSION = '1.4.1'
+
+BPA_VERSION = VERSION
 # see ccg_django_utils.webhelpers
 BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -252,7 +254,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.,clickjacking.XFrameOptionsMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
