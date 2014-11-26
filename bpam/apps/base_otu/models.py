@@ -10,7 +10,7 @@ class OperationalTaxonomicUnit(models.Model):
     name = models.CharField(max_length=30)
     KINGDOMS = (('Bacteria', 'Bacteria'),
                 ('Archea', 'Archea'),
-                ('Eukaryote', 'Eukaryote'),
+                ('Eukaryota', 'Eukaryota'),
                 ('Fungi', 'Fungi'))
 
     kingdom = models.CharField(_('Kingdom'), max_length=100, db_index=True, choices=KINGDOMS)
@@ -35,7 +35,7 @@ class SampleOTU(models.Model):
     """
 
     sample = models.ForeignKey('base.BASESample')
-    otu = models.ForeignKey(OperationalTaxonomicUnit, db_index=True )
+    otu = models.ForeignKey(OperationalTaxonomicUnit, db_index=True)
     count = models.IntegerField(_('OTU Count'))
 
     class Meta:
