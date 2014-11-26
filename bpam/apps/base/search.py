@@ -1,3 +1,7 @@
+from operator import and_, or_
+import re
+import logging
+
 from apps.base.models import BASESample
 from apps.common.models import BPAUniqueID
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
@@ -5,11 +9,8 @@ from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_otu.models import OperationalTaxonomicUnit
 from apps.base_metagenomics.models import MetagenomicsSample
 from django.db.models import Q
-from operator import and_, or_
 from django.core.urlresolvers import reverse
-import re
 
-import logging
 
 logger = logging.getLogger("rainbow")
 
@@ -48,7 +49,7 @@ class SearchStrategy(object):
         if self.search_path is None:
             search_field = searcher.search_field if searcher.search_type == Searcher.SEARCH_TYPE_FIELD else searcher.search_range
         else:
-            search_field = self.search_path  # set when navigating through subobjects of model related via foreign key
+            search_field = self.search_path  # set when navigating through sub-objects of model related via foreign key
 
         if searcher.search_type == searcher.SEARCH_TYPE_FIELD:
             # field = value
@@ -217,8 +218,10 @@ class Searcher(object):
         return self._get_results(self._filter_on_taxonomy(bpa_ids))
 
     def _get_results(self, bpa_ids):
+        """
+        Get as much info as we can about these ids ( return list of dictionary with links etc)
 
-        # get as much info as we can about these ids ( return list of dictionary with links etc)
+        """
         from functools import partial
 
         detail_view_map = {
@@ -236,7 +239,6 @@ class Searcher(object):
                 return ""
 
         def get_amplicon_links(bpa_id):
-
             amplicon_type_pattern = re.compile(r"^.*?_\d+?_(.*?)_.*$")
             links = []
             for amplicon in AmpliconSequencingMetadata.objects.filter(bpa_id=bpa_id):
@@ -253,19 +255,21 @@ class Searcher(object):
 
         def sc_display(bpa_id):
             try:
-                context = SampleContext.objects.select_related('bpa_id', 'context', 'context__site__vegetation_type').get(bpa_id=bpa_id)
+                context = SampleContext.objects.select_related('bpa_id', 'context',
+                                                               'context__site__vegetation_type').get(bpa_id=bpa_id)
             except SampleContext.DoesNotExist, ex:
                 return "No Contextual Data"
 
             if context.site:
-                return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(), context.site.vegetation_type).strip()
+                return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(),
+                                            context.site.vegetation_type).strip()
             else:
                 return "No Site Info"
 
 
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
-        #am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
+        # am_link = partial(get_object_detail_view_link, AmpliconSequencingMetadata)
         mg_link = partial(get_object_detail_view_link, MetagenomicsSample)
 
         results = []
@@ -323,8 +327,8 @@ class Searcher(object):
             otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
             logger.debug("otus matching taxonomic filters = %s" % otus)
             from apps.base_otu.models import SampleOTU
-            #sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).order_by('sample__bpa_id')
-            #return set([so.sample.bpa_id for so in sample_otus])
+            # sample_otus = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).order_by('sample__bpa_id')
+            # return set([so.sample.bpa_id for so in sample_otus])
             data = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).values_list(
                 'sample__bpa_id', flat=True).distinct()
             return BPAUniqueID.objects.filter(bpa_id__in=data)
