@@ -8,7 +8,7 @@ from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
 
-BPA_VERSION = '1.4.0'
+BPA_VERSION = '1.4.1'
 # see ccg_django_utils.webhelpers
 BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -248,7 +248,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:

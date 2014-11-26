@@ -27,7 +27,7 @@ CI_MODULES="coverage==3.6"
 
 export PATH=/usr/pgsql-9.3/bin:${PATH}
 
-######### Logging ########## 
+######### Logging ##########
 COLOR_NORMAL=$(tput sgr0)
 COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
@@ -312,7 +312,7 @@ purge() {
 }
 
 
-dev() { 
+dev() {
     activate_virtualenv
     devrun
 }
@@ -340,7 +340,7 @@ url_checker() {
 
 
 deepclean() {
-    activate_virtualenv	
+    activate_virtualenv
     CMD='python ./bpam/manage.py'
     ${CMD} reset_db --user=postgres --router=default --traceback
     log_info "Deepclean syncing"
