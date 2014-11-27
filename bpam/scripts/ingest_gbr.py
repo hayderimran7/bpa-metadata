@@ -426,6 +426,7 @@ def _ingest(sample_data):
 
 
 def ingest_old_format(file_name):
+    logger.info('Ingesting GBR metadata from {0} (Old google doc)'.format(DATA_DIR))
     sample_data = list(get_gbr_sample_data_old_format(file_name))
     _ingest(sample_data)
 
