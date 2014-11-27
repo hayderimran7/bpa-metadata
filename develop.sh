@@ -196,8 +196,8 @@ install() {
            source ${VIRTUALENV}/bin/activate
            cd ${CONFIG_DIR}
            pip install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
-           pip install ${PIP5_OPTS} -e .[dev,tests,downloads]
-           pip install ${PIP5_OPTS} ${CI_MODULES} ${TESTING_MODULES}
+           pip install ${PIP5_OPTS} --upgrade -e .[dev,tests,downloads]
+           pip install ${PIP5_OPTS} --upgrade ${CI_MODULES} ${TESTING_MODULES}
            deactivate
         )
 
