@@ -1,4 +1,7 @@
 import json
+from StringIO import StringIO
+import logging
+
 from django.http import Http404
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormMixin
@@ -9,17 +12,13 @@ from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
 from django.db.models import Model
-
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
 from apps.base_otu.models import SampleOTU
 from apps.common.models import BPAUniqueID
 from search_export import CSVExporter, OTUExporter
-from StringIO import StringIO
 
-import logging
 
 logger = logging.getLogger("rainbow")
-
 
 
 class BaseView(TemplateView):
@@ -106,6 +105,7 @@ class BASESearchView(AbstractSearchableListView):
 
     def get_model(self):
         from apps.base.models import BASESample
+
         return BASESample
 
     def get_search_items_name(self):
@@ -144,7 +144,7 @@ class BASESearchView(AbstractSearchableListView):
         parameters["search_species"] = post_data.get("species", None)
 
         def key_name(prefix, i):
-            return "%s%s" % (prefix , i)
+            return "%s%s" % (prefix, i)
 
         i = 0
         finished_collecting = False
@@ -190,7 +190,6 @@ class BASESearchView(AbstractSearchableListView):
         return parameters
 
 
-
 class OTUAutoCompleteView(View):
     def get(self, request, thing=None):
         query = request.GET.get("q", None)
@@ -223,56 +222,56 @@ class OTUAutoCompleteView(View):
 
 class StandardisedVocabularyLookUpView(View):
     STANDARD_VOCABULARY_TABLE = {
-            "agrochemical_additions": None,
-            "ammonium_nitrogen": None,
-            "australian_soil_classification": "AustralianSoilClassification.classification",
-            "boron_hot_cacl2": None,
-            "cacl2_ph": None,
-            "clay": None,
-            "colour": "SoilColour.colour",
-            "conductivity": None,
-            "course_sand": None,
-            "current_land_use": "LandUse.description",
-            "date_sampled": None,
-            "depth": None,
-            "description": None,
-            "dtpa_copper": None,
-            "dtpa_iron": None,
-            "dtpa_manganese": None,
-            "dtpa_zinc": None,
-            "elevation": None,
-            "environment_events": None,
-            "exc_aluminium": None,
-            "exc_calcium": None,
-            "exc_magnesium": None,
-            "exc_potassium": None,
-            "exc_sodium": None,
-            "fao_soil_type": "FAOSoilClassification.classification",
-            "fine_sand": None,
-            "fire_history": None,
-            "fire_intensity": None,
-            "general_ecological_zone": "GeneralEcologicalZone.description",
-            "gravel": None,
-            "h20_ph": None,
-            "immediate_previous_land_use": "LandUse.description",
-            "lat": None,
-            "lon": None,
-            "moisture": None,
-            "nitrate_nitrogen": None,
-            "organic_carbon": None,
-            "phosphorus_colwell": None,
-            "potassium_colwell": None,
-            "sample_id": None,
-            "sand": None,
-            "silt": None,
-            "sulphur_colwell": None,
-            "texture": "SoilTexture.texture",
-            "tillage": "TillageType.tillage",
-            "total_carbon": None,
-            "total_nitrogen": None,
-            "vegetation_dominant_trees": None,
-            "vegetation_total_cover": None,
-            "vegetation_type": "BroadVegetationType.vegetation",
+        "agrochemical_additions": None,
+        "ammonium_nitrogen": None,
+        "australian_soil_classification": "AustralianSoilClassification.classification",
+        "boron_hot_cacl2": None,
+        "cacl2_ph": None,
+        "clay": None,
+        "colour": "SoilColour.colour",
+        "conductivity": None,
+        "course_sand": None,
+        "current_land_use": "LandUse.description",
+        "date_sampled": None,
+        "depth": None,
+        "description": None,
+        "dtpa_copper": None,
+        "dtpa_iron": None,
+        "dtpa_manganese": None,
+        "dtpa_zinc": None,
+        "elevation": None,
+        "environment_events": None,
+        "exc_aluminium": None,
+        "exc_calcium": None,
+        "exc_magnesium": None,
+        "exc_potassium": None,
+        "exc_sodium": None,
+        "fao_soil_type": "FAOSoilClassification.classification",
+        "fine_sand": None,
+        "fire_history": None,
+        "fire_intensity": None,
+        "general_ecological_zone": "GeneralEcologicalZone.description",
+        "gravel": None,
+        "h20_ph": None,
+        "immediate_previous_land_use": "LandUse.description",
+        "lat": None,
+        "lon": None,
+        "moisture": None,
+        "nitrate_nitrogen": None,
+        "organic_carbon": None,
+        "phosphorus_colwell": None,
+        "potassium_colwell": None,
+        "sample_id": None,
+        "sand": None,
+        "silt": None,
+        "sulphur_colwell": None,
+        "texture": "SoilTexture.texture",
+        "tillage": "TillageType.tillage",
+        "total_carbon": None,
+        "total_nitrogen": None,
+        "vegetation_dominant_trees": None,
+        "vegetation_total_cover": None,
+        "vegetation_type": "BroadVegetationType.vegetation",
     }
 
     def get(self, request, search_field=None):
@@ -280,7 +279,7 @@ class StandardisedVocabularyLookUpView(View):
         model, field = self._get_standardised_vocab(search_field)
 
         if model is None:
-            #response.status_code = 404
+            # response.status_code = 404
             options = []
         else:
             q = model.objects.all()
@@ -308,6 +307,7 @@ class StandardisedVocabularyLookUpView(View):
         else:
             model_name, field_name = vocab.split(".")
             from apps.base_vocabulary import models as m
+
             model = getattr(m, model_name)
             return model, field_name
 
@@ -330,8 +330,9 @@ class TaxonomyLookUpView(View):
                 next_lower_level_index = levels.index(level) + 1
                 next_lower_level = levels[next_lower_level_index]
 
-                otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(next_lower_level).distinct()
-                next_lower_level_values = set([ getattr(otu, next_lower_level) for otu in otus])
+                otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(
+                    next_lower_level).distinct()
+                next_lower_level_values = set([getattr(otu, next_lower_level) for otu in otus])
                 options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
         json.dump(options, response)
         return response
@@ -349,6 +350,7 @@ class SearchExportView(View):
     def get(self, request):
         import zipfile
         from django.core.servers.basehttp import FileWrapper
+
         ids = request.GET.get("ids", "").split(",")
 
         kingdom = request.GET.get("kingdom", "")
@@ -361,12 +363,11 @@ class SearchExportView(View):
 
         contextual_data_csv = StringIO()
         contextExporter = CSVExporter(SampleContext)
-        contextual_csv_data = contextExporter.export(ids,contextual_data_csv)
+        contextual_csv_data = contextExporter.export(ids, contextual_data_csv)
 
         chemical_analysis_csv = StringIO()
         chemical_analysis_exporter = CSVExporter(ChemicalAnalysis)
         ca_csv_data = chemical_analysis_exporter.export(ids, chemical_analysis_csv)
-
 
         zippedfile = StringIO()
         zf = zipfile.ZipFile(zippedfile, mode='w', compression=zipfile.ZIP_DEFLATED)
@@ -379,15 +380,18 @@ class SearchExportView(View):
         otu_archea_csv = StringIO()
 
         otu_exporter = OTUExporter(kingdom=kingdom,
-                                       phylum=phylum,
-                                       otu_class=otu_class,
-                                       order=order,
-                                       family=family,
-                                       genus=genus,
-                                       species=species)
+                                   phylum=phylum,
+                                   otu_class=otu_class,
+                                   order=order,
+                                   family=family,
+                                   genus=genus,
+                                   species=species)
 
-        otu_bacteria_data, otu_eukaryotes_data, otu_fungi_data, otu_archea_data = otu_exporter.export(ids, otu_bacteria_csv, otu_eukaryotes_csv, otu_fungi_csv, otu_archea_csv)
-
+        otu_bacteria_data, otu_eukaryotes_data, otu_fungi_data, otu_archea_data = otu_exporter.export(ids,
+                                                                                                      otu_bacteria_csv,
+                                                                                                      otu_eukaryotes_csv,
+                                                                                                      otu_fungi_csv,
+                                                                                                      otu_archea_csv)
 
         if otu_bacteria_data:
             zf.writestr('bacteria.csv', otu_bacteria_data.read())

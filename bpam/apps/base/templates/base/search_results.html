@@ -73,6 +73,8 @@
                             <option value="">---</option>
                             <option value="Bacteria">Bacteria</option>
                             <option value="Fungi">Fungi</option>
+                            <option value="Archea">Archea</option>
+                            <option value="Fungi">Eukaryota</option>
                         </select>
                         </td>
                     </tr>
@@ -446,13 +448,13 @@ $(document).ready(function () {
 
     function updateIds(newRow) {
         newRow.find("[id^='search_type']," +
-                        "[id^='field']," +
-                        "[id^='range']," +
-                        "[id^='search_field']," +
-                        "[id^='search_value']," +
-                        "[id^='search_standardised_value']," +
-                        "[id^='search_range_min']," +
-                        "[id^='search_range_max']").each(
+                "[id^='field']," +
+                "[id^='range']," +
+                "[id^='search_field']," +
+                "[id^='search_value']," +
+                "[id^='search_standardised_value']," +
+                "[id^='search_range_min']," +
+                "[id^='search_range_max']").each(
                 function (i, val) {
                     val.id = incrementValue(val.id);
                     try {
@@ -716,7 +718,7 @@ $(document).ready(function () {
     function wireUpExportSearchResultsButton() {
         function getResultIds() {
             var ids = [];
-            $("#results > tbody tr").each(function (i, value){
+            $("#results > tbody tr").each(function (i, value) {
                 var id = $(value).find("td:first").text();
                 ids.push(id);
             })
@@ -744,7 +746,7 @@ $(document).ready(function () {
         function constructExportQueryString(ids) {
             var s = ids.join(",");
 
-            return "?ids=" + s  + getTaxonomicFilters();
+            return "?ids=" + s + getTaxonomicFilters();
         }
 
         $("#export_button").click(function () {
@@ -774,7 +776,8 @@ $(document).ready(function () {
 
 <div class="container-fluid">
     <div class="panel panel-default">
-        <div class="panel-heading">Results <input align=right  type="button" id="export_button" class="btn btn-default" value="Export"></div>
+        <div class="panel-heading">Results <input align=right type="button" id="export_button" class="btn btn-default"
+                                                  value="Export"></div>
         <div class="panel-body">
             <table id="results" class="table table-striped tablesorter table-bordered">
                 <thead>

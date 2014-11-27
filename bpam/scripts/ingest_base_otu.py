@@ -31,6 +31,16 @@ def strip_count(val):
 
 
 def ingest_taxonomy(file_name):
+
+    kingdoms = map(lambda e: e[0], OperationalTaxonomicUnit.KINGDOMS)
+
+    def is_valid_kingdom(kingdom):
+        """ Only valid kingdom entries are allowed"""
+        if kingdom in kingdoms:
+            return True
+        else:
+            return False
+
     logger.info('Ingesting OTUs')
     logger.info('Now ingesting {0}'.format(file_name))
 
@@ -53,6 +63,10 @@ def ingest_taxonomy(file_name):
 
     otu_list = []
     for e in wrapper.get_all():
+        if not is_valid_kingdom(e.kingdom):
+            logger.error('{0} is not a valid kingdom, ignoring'.format(e.kingdom))
+            continue
+
         otu_list.append(
             OperationalTaxonomicUnit(
                 name=e.otu_id,
