@@ -31,8 +31,8 @@ BuildRoot: %{_tmppath}/%{app}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 BuildArch: x86_64
 Vendor: Centre for Comparative Genomics <web@ccg.murdoch.edu.au>
-BuildRequires: python%{pyver}-virtualenv python%{pyver}-devel libffi-devel graphviz-devel libxml2-devel libxslt-devel git
-Requires: python%{pyver}-psycopg2 python%{pyver}-mod_wsgi httpd libffi-devel graphviz-devel python%{pyver}-lxml python%{pyver}-mod_wsgi httpd
+BuildRequires: python%{pyver}-virtualenv python%{pyver}-devel libffi-devel graphviz-devel proj-devel libxml2-devel libxslt-devel git
+Requires: python%{pyver}-psycopg2 python%{pyver}-mod_wsgi httpd libffi-devel graphviz-devel  proj-devel python%{pyver}-lxml python%{pyver}-mod_wsgi httpd
 
 %description
 BPA Metadata Management
