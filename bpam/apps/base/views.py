@@ -232,6 +232,7 @@ class StandardisedVocabularyLookUpView(View):
         "conductivity": None,
         "course_sand": None,
         "current_land_use": "LandUse.description",
+        #"current_land_use": "LandUse.tree_name",
         "date_sampled": None,
         "depth": None,
         "description": None,
@@ -277,6 +278,7 @@ class StandardisedVocabularyLookUpView(View):
     def get(self, request, search_field=None):
         response = HttpResponse(content_type="application/json")
         model, field = self._get_standardised_vocab(search_field)
+        logger.debug('Get search field from model: {0} field: {1}'.format(model, field))
 
         if model is None:
             # response.status_code = 404
@@ -295,10 +297,8 @@ class StandardisedVocabularyLookUpView(View):
     def _get_code_field(self, model, field):
         exceptions_table = {
             "SoilColour": "code",
-
         }
         return exceptions_table.get(model.__name__, field)
-
 
     def _get_standardised_vocab(self, search_field):
         vocab = self.STANDARD_VOCABULARY_TABLE.get(search_field, None)
@@ -307,6 +307,7 @@ class StandardisedVocabularyLookUpView(View):
         else:
             model_name, field_name = vocab.split(".")
             from apps.base_vocabulary import models as m
+
 
             model = getattr(m, model_name)
             return model, field_name

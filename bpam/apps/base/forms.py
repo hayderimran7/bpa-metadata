@@ -122,13 +122,11 @@ class BASESearchForm(forms.Form):
         if search_field and search_range:
             raise forms.ValidationError("Choose either a field value search or a range search")
 
-
         if search_field:
             search_value = cleaned_data.get("search_value")
             if search_value == "":
                 raise forms.ValidationError("Enter a value to search for")
             self._check_type(search_field, search_value)
-
 
         if search_range:
             search_min = cleaned_data.get("search_range_min")

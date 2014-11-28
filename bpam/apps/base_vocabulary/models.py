@@ -18,15 +18,20 @@ class LandUse(MPTTModel):
     def __unicode__(self):
         return u"{0}".format(self.description)
 
+    def save(self, *args, **kwargs):
+        super(LandUse, self).save(*args, **kwargs)
+        # LandUse.objects.rebuild()
+
+    @property
+    def tree_name(self):
+        return '{0}-{1} ddsdsd'.format(self.parent, self.description)
+
     class Meta:
         verbose_name_plural = _("Land Uses")
 
     class MPTTMeta:
         order_insertion_by = ['order']
 
-    def save(self, *args, **kwargs):
-        super(LandUse, self).save(*args, **kwargs)
-        # LandUse.objects.rebuild()
 
 
 class SoilTexture(models.Model):
