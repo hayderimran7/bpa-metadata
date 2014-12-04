@@ -29,9 +29,9 @@ install_requires = [
     'South>=0.8.4,<1.0',
     'Unipath>=1.0,<2.0',
     'boto>=2.15.0',
-    'dateutils>=0.6.6',
+    'dateutils<=1.5',  # 2.0 for Python >= 3
     'django-admin-tools>=0.5.1',
-    'django-extensions>=1.2.5',
+    'django-extensions==1.4.8',  # 1.3.11 doesn't hide errors
     'django-localflavor>=1.0',
     'django-tinymce>=1.5.2',
     'django-localflavor',
@@ -48,13 +48,10 @@ install_requires = [
     'rainbow_logging_handler',
     'django-sql-explorer==0.5',
     'django-mptt>=0.5.5',
-    'ccg-extras==0.1.9',
+    'ccg-extras',
     'django-leaflet',
     'pycontracts',
     'ccg-django-utils',
-    'python-keystoneclient',
-    'python-swiftclient',
-    'ccg-django-utils==0.2.1',
     'django-debug-toolbar',
     'beautifulsoup4',
     'djangorestframework',
@@ -84,8 +81,6 @@ tests_require = [
 
 downloads_requires = [
     'Jinja2>=2.7.1',
-    'swift',  # centos: libffi-devel
-    'python-keystoneclient>=0.4.1',
 ]
 
 
