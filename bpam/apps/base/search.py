@@ -153,7 +153,6 @@ class Searcher(object):
             return self._get_results(self._filter_on_taxonomy(BPAUniqueID.objects.all()))
 
         # otherwise , filter on the search form's content first
-
         def get_objects(klass, field_value_pairs):
             filters = []
             for field, value in field_value_pairs:
@@ -252,7 +251,6 @@ class Searcher(object):
 
             return links
 
-
         def sc_display(bpa_id):
             try:
                 context = SampleContext.objects.select_related('bpa_id',
@@ -266,7 +264,6 @@ class Searcher(object):
                                             context.site.vegetation_type).strip()
             else:
                 return "No Site Info"
-
 
         ca_link = partial(get_object_detail_view_link, ChemicalAnalysis)
         sc_link = partial(get_object_detail_view_link, SampleContext)
@@ -304,35 +301,36 @@ class Searcher(object):
 
         taxonomy_filters = []
 
-        SKIP = [UNCHOSEN, None, ""]
+        skip = [UNCHOSEN, None, ""]
 
-        if self.search_kingdom not in SKIP:
+        if self.search_kingdom not in skip:
             taxonomy_filters.append(query_pair("kingdom", self.search_kingdom))
-        if self.search_phylum not in SKIP:
+        if self.search_phylum not in skip:
             taxonomy_filters.append(query_pair("phylum", self.search_phylum))
-        if self.search_class not in SKIP:
+        if self.search_class not in skip:
             taxonomy_filters.append(query_pair("otu_class", self.search_class))
-        if self.search_family not in SKIP:
+        if self.search_family not in skip:
             taxonomy_filters.append(query_pair("family", self.search_family))
-        if self.search_genus not in SKIP:
+        if self.search_genus not in skip:
             taxonomy_filters.append(query_pair("genus", self.search_genus))
-        if self.search_order not in SKIP:
+        if self.search_order not in skip:
             taxonomy_filters.append(query_pair("order", self.search_order))
-        if self.search_species not in SKIP:
+        if self.search_species not in skip:
             taxonomy_filters.append(query_pair("species", self.search_species))
 
         logger.debug("taxonomic filters = %s" % taxonomy_filters)
         filters = [Q(tf) for tf in taxonomy_filters]
         if filters:
-            logger.debug("taxonomy filtering will be performed")
-            otus = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
-            logger.debug("otus matching taxonomic filters = %s" % otus)
+            logger.debug('taxonomy filtering will be performed')
+            otu_list = OperationalTaxonomicUnit.objects.filter(reduce(and_, [Q(tf) for tf in taxonomy_filters]))
+            logger.debug('List of OTUs matching taxonomic filters = %s' % otu_list)
             from apps.base_otu.models import SampleOTU
-            data = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otus).values_list(
+
+            data = SampleOTU.objects.filter(sample__bpa_id__in=bpa_ids).filter(otu__in=otu_list).values_list(
                 'sample__bpa_id', flat=True).distinct()
             return BPAUniqueID.objects.filter(bpa_id__in=data)
         else:
-            logger.debug("no taxonomy filtering will be applied")
+            logger.debug('No taxonomy filtering will be applied')
             return bpa_ids
 
 
