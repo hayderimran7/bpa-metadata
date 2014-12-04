@@ -231,6 +231,16 @@ runingest() {
     ${CMD} runscript --traceback ${SECOND_ARGUMENT}
 }
 
+
+ingest_base() {
+    ${CMD} runscript ingest_base_454
+    ${CMD} runscript ingest_base_metagenomics --traceback
+    ${CMD} runscript ingest_base_landuse --traceback
+    ${CMD} runscript ingest_base_contextual --traceback
+    ${CMD} runscript ingest_base_amplicon --traceback
+    ${CMD} runscript ingest_base_otu --traceback
+}
+
 ingest_all() {
     activate_virtualenv
     CMD='python ./bpam/manage.py'
@@ -243,15 +253,10 @@ ingest_all() {
     ${CMD} runscript ingest_wheat_pathogens --traceback
     ${CMD} runscript ingest_wheat_pathogens_transcript --traceback
     ${CMD} runscript ingest_wheat_cultivars --traceback
-
-    # BASE
-    ${CMD} runscript ingest_base_454
-    ${CMD} runscript ingest_base_metagenomics --traceback
-    ${CMD} runscript ingest_base_landuse --traceback
-    ${CMD} runscript ingest_base_contextual --traceback
-    ${CMD} runscript ingest_base_amplicon --traceback
-    ${CMD} runscript ingest_base_otu --traceback
+    ingest_base
 }
+
+
 
 devrun() {
     ${DJANGO_ADMIN} syncdb --traceback --noinput
@@ -369,15 +374,6 @@ usage() {
     log_warning "Usage ./develop.sh runingest ingest_script"
 }
 
-load_base() {
-    activate_virtualenv
-    CMD='python ./bpam/manage.py'
-    deepclean
-    ${CMD} runscript set_initial_bpa_projects --traceback
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_base_454 --traceback
-    ${CMD} runscript ingest_base_metagenomics --traceback
-}
 
 migrationupdate() {
     settings
@@ -463,9 +459,6 @@ case ${ACTION} in
         ;;
     url_checker)
         url_checker
-        ;;
-    load_base)
-        load_base
         ;;
     runingest)
         runingest
