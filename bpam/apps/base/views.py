@@ -232,7 +232,6 @@ class StandardisedVocabularyLookUpView(View):
         "conductivity": None,
         "course_sand": None,
         "current_land_use": "LandUse.description",
-        #"current_land_use": "LandUse.tree_name",
         "date_sampled": None,
         "depth": None,
         "description": None,
