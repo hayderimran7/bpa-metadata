@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 from contracts import contract
 from unipath import Path
 from libs.fetch_data import Fetcher
@@ -10,12 +11,13 @@ from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
 from apps.base_454.models import Sample454
+
 # from apps.common.models import BPAUniqueID
 
 logger = get_logger(__name__)
 
 METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
-BASE_454 = 'BASE_454.xlsx'                                          # the file
+BASE_454 = 'BASE_454.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/454_metadata/')
 
 BPA_ID = "102.100.100"
@@ -32,6 +34,7 @@ def get_bpa_id(named_tup):
         return bpa_id_utils.get_bpa_id(named_tup.bpa_id, BASE_DESCRIPTION, 'BASE', note='base 454 Sample')
     else:
         return None
+
 
 @contract
 def get_sample_454(bpa_id):
