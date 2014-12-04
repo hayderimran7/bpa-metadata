@@ -92,6 +92,14 @@ DATABASES = {
     }
 }
 
+# http://www.django-rest-framework.org/
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
 SERVER_EMAIL = env.get("server_email", "noreply@bpam@ccgapps.com.au")
@@ -300,7 +308,8 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'bootstrap3',
-    'tastypie',
+    'tastypie',        # will retire soon
+    'rest_framework',  # replacing tastypie
     'explorer',
     'leaflet',
 )

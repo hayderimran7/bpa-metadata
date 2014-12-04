@@ -57,6 +57,9 @@ install_requires = [
     'ccg-django-utils==0.2.1',
     'django-debug-toolbar',
     'beautifulsoup4',
+    'djangorestframework',
+    'markdown',
+    'django-filter'
 ]
 
 dev_requires = [
