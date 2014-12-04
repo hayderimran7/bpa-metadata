@@ -346,7 +346,6 @@ def ingest_runs(sample_data):
         """
         ANU does not have their run numbers entered.
         """
-
         run_number = ingest_utils.get_clean_number(entry.run_number)
         if run_number is None:
             # see if its ANU and parse the run_number from the filename
