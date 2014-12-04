@@ -35,7 +35,7 @@ urlpatterns = patterns(
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
-    (r'^api/', include(v1_api.urls)),
+    # (r'^api/', include(v1_api.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
