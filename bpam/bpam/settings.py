@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Django settings for bpa metadata project.
 
 import os
@@ -7,8 +8,8 @@ from unipath import Path
 from ccg_django_utils.conf import EnvConfig
 from bpam import VERSION
 
-env = EnvConfig()
 
+env = EnvConfig()
 
 BPA_VERSION = VERSION
 # see ccg_django_utils.webhelpers
@@ -33,7 +34,7 @@ SECRET_KEY = env.get("secret_key", "" if env.get("production", False) else "chan
 SSL_ENABLED = env.get("production", False)
 SSL_FORCE = env.get("production", False)
 
-# Debug off by default
+# Debug on by default
 DEBUG = not env.get("production", False)
 
 TEMPLATE_DEBUG = DEBUG
@@ -43,7 +44,7 @@ TEMPLATE_DEBUG = DEBUG
 # see: https://docs.djangoproject.com/en/1.6/ref/settings/#admins
 # see: https://docs.djangoproject.com/en/1.6/ref/settings/#managers
 ADMINS = [
-    ( 'alert', env.get("alert_email", "root@localhost") )
+    ("alert", env.get("alert_email", "root@localhost"))
 ]
 MANAGERS = ADMINS
 
@@ -63,7 +64,7 @@ EMAIL_USE_TLS = env.get("email_use_tls", False)
 
 # see: https://docs.djangoproject.com/en/1.6/ref/settings/#email-subject-prefix
 EMAIL_APP_NAME = "BPA Metadata "
-EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD: " if env.get("production", False) else "DEV ")
+EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
 
 # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-backend
 if EMAIL_HOST:
@@ -74,8 +75,18 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
     if not os.path.exists(EMAIL_FILE_PATH):
-        os.mkdir(EMAIL_FILE_PATH)
+        from distutils.dir_util import mkpath
+        mkpath(EMAIL_FILE_PATH)
 
+# See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
+SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
+RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
+# email address to receive datasync client log notifications
+LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
+# email address to receive datasync key upload notifications
+KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
+# email address to receive registration requests
+REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
 
 
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
@@ -101,15 +112,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
-SERVER_EMAIL = env.get("server_email", "noreply@bpam@ccgapps.com.au")
-RETURN_EMAIL = env.get("return_email", "bpa <noreply@ccgapps.com.au>")
-# email address to receive datasync client log notifications
-LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
-# email address to receive datasync key upload notifications
-KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
-# email address to receive registration requests
-REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
 
 # Default cookie settings
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
@@ -202,27 +204,7 @@ SUIT_CONFIG = {
     )
 }
 
-
-
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'Australia/Perth'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
-
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
-USE_I18N = True
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
-USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
@@ -258,7 +240,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -308,7 +290,7 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'bootstrap3',
-    'tastypie',        # will retire soon
+    'tastypie',  # will retire soon
     'rest_framework',  # replacing tastypie
     'explorer',
     'leaflet',
@@ -366,7 +348,6 @@ LOGGING = {
     }
 }
 
-
 if env.get("DEBUG_TOOLBAR", False):
     INSTALLED_APPS += ('debug_toolbar', )
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
@@ -374,7 +355,6 @@ if env.get("DEBUG_TOOLBAR", False):
     INSTALLED_APPS += (
         'debug_toolbar',
     )
-
 
 if env.get("BPA_TEST", False):
     DEBUG = True
