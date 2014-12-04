@@ -134,6 +134,9 @@ def get_date(dt):
         except TypeError, e:
             logger.error("Date parsing error " + str(e))
             return None
+        except ValueError, e:
+            logger.error("Date parsing error " + str(e))
+            return None
     return None
 
 
