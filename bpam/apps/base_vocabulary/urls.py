@@ -1,6 +1,6 @@
-from django.conf.urls.default import patterns, url
+from django.conf.urls import patterns, url
 
-from base_vocabulary import views
+from . import views
 
 urlpatterns = patterns(
     "",

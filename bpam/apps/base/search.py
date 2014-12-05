@@ -224,10 +224,10 @@ class Searcher(object):
         from functools import partial
 
         detail_view_map = {
-            ChemicalAnalysis: 'basecontextual:chemicalanalysisdetail',
-            SampleContext: 'basecontextual:sampledetail',
+            ChemicalAnalysis: 'base_contextual:chemicalanalysisdetail',
+            SampleContext: 'base_contextual:sampledetail',
             AmpliconSequencingMetadata: 'base_amplicon:amplicon',
-            MetagenomicsSample: 'basemetagenomics:sample',
+            MetagenomicsSample: 'base_metagenomics:sample',
         }
 
         def get_object_detail_view_link(klass, bpa_id):

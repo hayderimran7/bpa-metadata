@@ -16,11 +16,11 @@
     {% for context in sample_contexts %}
     <tr>
         <td>
-            <a href="{% url 'basecontextual:sampledetail' context.pk %}">{{ context.bpa_id }}</a>
+            <a href="{% url 'base_contextual:sampledetail' context.pk %}">{{ context.bpa_id }}</a>
         </td>
         <td>
             {% if context.site %}
-            <a href="{% url 'basecontextual:collectionsitedetail' context.site.pk %}">
+            <a href="{% url 'base_contextual:collectionsitedetail' context.site.pk %}">
                 {{ context.site.get_location_name }}</a>
             {% endif %}
         </td>

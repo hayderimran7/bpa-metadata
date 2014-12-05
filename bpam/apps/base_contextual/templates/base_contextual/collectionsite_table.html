@@ -12,7 +12,7 @@
     {% for site in sites %}
     <tr>
         <td class="name">
-            <a href="{% url 'basecontextual:collectionsitedetail' site.pk %}">{{ site.get_location_name }}</a>
+            <a href="{% url 'base_contextual:collectionsitedetail' site.pk %}">{{ site.get_location_name }}</a>
         </td>
         <td class="lat">{{ site.lat }}</td>
         <td class="lng">{{ site.lon }}</td>

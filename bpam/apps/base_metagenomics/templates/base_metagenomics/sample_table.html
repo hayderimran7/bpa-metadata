@@ -13,7 +13,7 @@
         {% for sample in samples %}
         <tr>
             <td>
-                <a href="{% url 'basemetagenomics:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                <a href="{% url 'base_metagenomics:sample' sample.pk %}">{{ sample.bpa_id }}</a>
             </td>
             <td>{{ sample.name }}</td>
             <td>{{ sample.requested_sequence_coverage }}</td>
