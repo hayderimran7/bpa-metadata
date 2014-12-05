@@ -24,7 +24,7 @@ class LandUse(MPTTModel):
 
     @property
     def tree_name(self):
-        return '{0}-{1} ddsdsd'.format(self.parent, self.description)
+        return '{0}-{1}'.format(self.parent, self.description)
 
     class Meta:
         verbose_name_plural = _("Land Uses")
