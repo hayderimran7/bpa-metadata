@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from apps.melanoma.api.resources import MelanomaSequenceFileResource
 from django.views.generic import TemplateView
 
 from tastypie.api import Api
@@ -9,9 +8,6 @@ from django.db.models.loading import cache as model_cache
 
 if not model_cache.loaded:
     model_cache.get_models()
-
-v1_api = Api(api_name='v1')
-v1_api.register(MelanomaSequenceFileResource())
 
 admin.autodiscover()
 
@@ -36,11 +32,10 @@ urlpatterns = patterns(
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
-    # (r'^api/', include(v1_api.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
-    url(r"^$", TemplateView.as_view(template_name="landing/index.html"), name='landing_page'),
+    url(r'^$', TemplateView.as_view(template_name='landing/index.html'), name='landing_page'),
     url(r'^explorer/', include('explorer.urls')),
 )
 
