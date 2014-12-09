@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 from apps.common.models import DNASource, Sequencer, Facility
 from apps.wheat_pathogens.models import (
     Organism,
@@ -294,6 +293,7 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenRun._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenProtocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(PathogenSequenceFile._meta.db_table))
+
 
 def run():
     truncate()
