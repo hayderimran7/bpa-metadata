@@ -6,17 +6,17 @@ urlpatterns = patterns(
     "",
     url(
         regex=r'^landuse/$',
-        view=views.LandUseCreateReadView.as_view(),
+        view=views.LandUseReadView.as_view(),
         name='landuse_rest_api'
     ),
     url(
         regex=r'^soiltexture/$',
-        view=views.SoilTextureCreateReadView.as_view(),
+        view=views.SoilTextureReadView.as_view(),
         name='soiltexture_rest_api'
     ),
     url(
         regex=r'^soilcolour/$',
-        view=views.SoilColourCreateReadView.as_view(),
+        view=views.SoilColourReadView.as_view(),
         name='soilcolour_rest_api'
     )
 )

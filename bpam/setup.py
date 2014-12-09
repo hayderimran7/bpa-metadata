@@ -54,7 +54,7 @@ install_requires = [
     'ccg-django-utils',
     'django-debug-toolbar',
     'beautifulsoup4',
-    'djangorestframework',
+    'djangorestframework==3.0.0',
     'markdown',
     'django-filter'
 ]
