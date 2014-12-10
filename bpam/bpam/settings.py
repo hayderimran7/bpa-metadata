@@ -76,6 +76,7 @@ else:
     EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
     if not os.path.exists(EMAIL_FILE_PATH):
         from distutils.dir_util import mkpath
+
         mkpath(EMAIL_FILE_PATH)
 
 # See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
@@ -268,7 +269,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'django.contrib.gis',
+    # 'django.contrib.gis',
     'localflavor',
     'mptt',
     'apps.bpaauth',
@@ -290,7 +291,7 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'bootstrap3',
-    'tastypie',  # will retire soon
+    #'tastypie',  # will retire soon
     'rest_framework',  # replacing tastypie
     'explorer',
     'leaflet',
