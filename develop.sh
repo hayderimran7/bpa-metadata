@@ -228,7 +228,7 @@ make_local_instance() {
 runingest() {
     activate_virtualenv
     CMD='python ./bpam/manage.py'
-    ${CMD} runscript --traceback ${SECOND_ARGUMENT}
+    ${CMD} runscript -v2 --traceback ${SECOND_ARGUMENT}
 }
 
 
