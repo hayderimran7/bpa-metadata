@@ -94,20 +94,31 @@ class ExcelWrapper(object):
         maps the named field to the actual column in the spreadsheet
         """
 
-        def find_column(column_name):
+        def should_complain(c, option_count):
+            """
+            If the last option in a tuple of column name options is tried, complain if nothing was found,
+            but not before.
+            """
+            return c + 1 == option_count
+
+        def find_column(column_name, complain=True):
             col_index = -1
             try:
                 col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             except ValueError:
-                logger.error('column name {0} not found'.format(column_name))
+                if complain:
+                    logger.error('column name {0} not found'.format(column_name))
             return col_index
 
         cmap = {}
         for attribute, column_name, _ in self.field_spec:
             col_index = -1
+            # because data vendors cannot get column names right, I have to give a range of alternatives
+
             if type(column_name) == tuple:
-                for cname in column_name:
-                    col_index = find_column(cname)
+                option_count = len(column_name)
+                for c, _name in enumerate(column_name):
+                    col_index = find_column(_name, should_complain(c, option_count))
                     if col_index != -1:
                         break
             else:
