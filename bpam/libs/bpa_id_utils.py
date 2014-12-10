@@ -69,17 +69,18 @@ def is_good_bpa_id(bpa_id):
     """
 
     if bpa_id is None:
+        logger.warning('BPA ID is None')
         return False
 
     bpa_id = bpa_id.strip()
     # empties
     if bpa_id == '':
-        logger.warning('Empty string for ID')
+        logger.warning('BPA ID is empty string')
         return False
 
     # no BPA prefix
     if bpa_id.find(BPA_ID) == -1:
-        logger.warning('No {0} identifying the string as a BPA ID'.format(BPA_ID))
+        logger.warning('No "{0}" identifying the string as a BPA ID'.format(BPA_ID))
         return False
 
     # this function has failed to find a reason why this can't be a BPA ID....
