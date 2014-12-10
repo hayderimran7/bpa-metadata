@@ -10,7 +10,7 @@ ccgplatform:
 instances:
   # default instance 
   default: &DEFAULT
-    extends: centos_64_lxc
+    extends: centos_66_lxc
     pre_puppet:
       - which git || sudo yum install -y -q git
       - which librarian-puppet || sudo gem install librarian-puppet -v 1.0.4
@@ -18,7 +18,7 @@ instances:
 
   aws_common: &AWS_COMMON
     <<: *DEFAULT
-    extends: centos_65_aws_syd
+    extends: centos_66_aws_syd
 
   dev: &DEV
     <<: *DEFAULT
