@@ -225,34 +225,38 @@ make_local_instance() {
     fi
 }
 
+
+_runscript() {
+    python ./bpam/manage.py runscript --traceback $1
+}
+
 runingest() {
     activate_virtualenv
-    CMD='python ./bpam/manage.py'
-    ${CMD} runscript -v2 --traceback ${SECOND_ARGUMENT}
+    _runscript ${SECOND_ARGUMENT}
 }
 
 
 ingest_base() {
-    ${CMD} runscript ingest_base_454
-    ${CMD} runscript ingest_base_metagenomics --traceback
-    ${CMD} runscript ingest_base_landuse --traceback
-    ${CMD} runscript ingest_base_contextual --traceback
-    ${CMD} runscript ingest_base_amplicon --traceback
-    ${CMD} runscript ingest_base_otu --traceback
+    _runscript ingest_base_454
+    _runscript ingest_base_metagenomics
+    _runscript ingest_base_landuse
+    _runscript ingest_base_contextual
+    _runscript ingest_base_amplicon
+    _runscript ingest_base_otu
 }
 
 ingest_all() {
     activate_virtualenv
     CMD='python ./bpam/manage.py'
     log_info "Ingest BPA Projects"
-    ${CMD} runscript ingest_bpa_projects --traceback
+    _runscript ingest_bpa_projects
     log_info "Ingest BPA Users"
-    ${CMD} runscript ingest_users --traceback
-    ${CMD} runscript ingest_melanoma --traceback
-    ${CMD} runscript ingest_gbr --traceback
-    ${CMD} runscript ingest_wheat_pathogens --traceback
-    ${CMD} runscript ingest_wheat_pathogens_transcript --traceback
-    ${CMD} runscript ingest_wheat_cultivars --traceback
+    _runscript ingest_users
+    _runscript ingest_melanoma
+    _runscript ingest_gbr
+    _runscript ingest_wheat_pathogens
+    _runscript ingest_wheat_pathogens_transcript
+    _runscript ingest_wheat_cultivars
     ingest_base
 }
 
