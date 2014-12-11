@@ -18,7 +18,7 @@ from unipath import Path
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'         # the folder
+METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'       # the folder
 METADATA_FILE = 'metadata.xlsx'                                              # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'melanoma/')
 
@@ -259,7 +259,6 @@ def ingest_runs(sample_data):
                 if filename != "":
                     try:
                         run_number = ingest_utils.get_clean_number(filename.split('_')[7])
-                        logger.info("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
                         logger.error("Filename {0} wrong format".format(filename))
 
