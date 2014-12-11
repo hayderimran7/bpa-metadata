@@ -29,7 +29,7 @@ install_requires = [
     'South>=0.8.4,<1.0',
     'Unipath>=1.0,<2.0',
     'boto>=2.15.0',
-    'dateutils<=1.5',  # 2.0 for Python >= 3
+    'python-dateutil==1.5',  # 2.0 for Python >= 3
     'django-admin-tools>=0.5.1',
     'django-extensions==1.4.8',  # 1.3.11 doesn't hide errors
     'django-localflavor>=1.0',
