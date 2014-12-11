@@ -1,13 +1,13 @@
+import logging
+
 from django.db.models.fields.related import ForeignKey
 from apps.common.models import BPAUniqueID
 
-import logging
 
 logger = logging.getLogger("rainbow")
 
 
 class CSVExporter(object):
-
     def __init__(self, model):
         self.model = model
         self.one_object_per_id = True
@@ -26,9 +26,9 @@ class CSVExporter(object):
                 verbose_name = field.name
 
             if prefix:
-                    name = prefix + "." + field.name
+                name = prefix + "." + field.name
             else:
-                    name = field.name
+                name = field.name
 
             if not isinstance(field, ForeignKey):
 
@@ -40,6 +40,7 @@ class CSVExporter(object):
 
     def export(self, ids, export_file_obj):
         import csv
+
         writer = csv.writer(export_file_obj)
         self.field_data = self._get_fields(self.model)
         writer.writerow(self._get_headers())
@@ -63,7 +64,7 @@ class CSVExporter(object):
                 if model_instance is None:
                     instances = []
                 else:
-                    instances = [ model_instance]
+                    instances = [model_instance]
             else:
                 instances = self._get_instance(id)
 
@@ -94,19 +95,20 @@ class CSVExporter(object):
         return self._get_model_for_id(bpa_id)
 
     def _get_model_for_id(self, bpa_id):
-            if self.one_object_per_id:
-                try:
-                    return self.model.objects.get(bpa_id=bpa_id)
+        if self.one_object_per_id:
+            try:
+                return self.model.objects.get(bpa_id=bpa_id)
 
-                except self.model.DoesNotExist:
-                    return None
-            else:
-                return self.model.objects.filter(bpa_id=bpa_id)
+            except self.model.DoesNotExist:
+                return None
+        else:
+            return self.model.objects.filter(bpa_id=bpa_id)
 
 
 class OTUExporter(CSVExporter):
     def __init__(self, kingdom, phylum, otu_class, order, family, genus, species):
         from apps.base_otu.models import SampleOTU
+
         super(OTUExporter, self).__init__(SampleOTU)
         self.one_object_per_id = False
         self.kingdom = kingdom
@@ -142,14 +144,15 @@ class OTUExporter(CSVExporter):
                 ["otu.family", "Family"],
                 ["otu.genus", "Genus"],
                 ["otu.species", "Species"],
-                ]
+        ]
 
     def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
 
         import csv
+
         writer_bacteria = csv.writer(file_obj_bacteria)
         writer_eukaryotes = csv.writer(file_obj_eukaryotes)
-        writer_fungi= csv.writer(file_obj_fungi)
+        writer_fungi = csv.writer(file_obj_fungi)
         writer_archea = csv.writer(file_obj_archea)
 
         self.field_data = self._get_fields(self.model)
@@ -178,7 +181,6 @@ class OTUExporter(CSVExporter):
             else:
                 logger.info("unknown kingdom?!: %s" % row)
                 pass
-
 
         file_obj_bacteria.flush()
         file_obj_bacteria.seek(0)

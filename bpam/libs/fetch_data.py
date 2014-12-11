@@ -5,9 +5,11 @@ Utility functions to fetch data from web server
 """
 
 import os
+
 import requests
 from bs4 import BeautifulSoup
 import logger_utils
+
 
 logger = logger_utils.get_logger(__name__)
 
@@ -27,6 +29,7 @@ class Fetcher():
     def _ensure_target_folder_exists(self):
         if not os.path.exists(self.target_folder):
             from distutils.dir_util import mkpath
+
             mkpath(self.target_folder)
 
     def fetch(self, name):
@@ -46,5 +49,6 @@ class Fetcher():
         response = requests.get(self.metadata_source_url, stream=True, auth=self.auth)
         for link in BeautifulSoup(response.content).find_all('a'):
             metadata_filename = link.get('href')
-            if metadata_filename.endswith('.xlsx') or metadata_filename.endswith('.txt') or metadata_filename.endswith('.zip'):
+            if metadata_filename.endswith('.xlsx') or metadata_filename.endswith('.txt') or metadata_filename.endswith(
+                    '.zip'):
                 self.fetch(metadata_filename)

@@ -34,7 +34,9 @@ from django.core.wsgi import get_wsgi_application
 _application = get_wsgi_application()
 
 from ccg_django_utils.conf import setup_prod_env
+
 setup_prod_env(os.path.basename(os.path.dirname(__file__)))
+
 
 def application(wenv, start_response):
     # Before entering the django app, transfer the SCRIPT_NAME http

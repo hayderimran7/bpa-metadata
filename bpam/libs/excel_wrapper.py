@@ -14,8 +14,8 @@ as mangled by the provided method.
 
 import datetime
 from collections import namedtuple
-import xlrd
 
+import xlrd
 import logger_utils
 
 
@@ -171,7 +171,7 @@ class ExcelWrapper(object):
             # This functionality is not currently implemented in the xlrd library
             # xf_index = cell.xf_index
             # if xf_index:
-            #     xf = self.workbook.xf_list[xf_index] # gets an XF object
+            # xf = self.workbook.xf_list[xf_index] # gets an XF object
             #     format_key = xf.format_key
             #     format = self.workbook.format_map[format_key] # gets a Format object
             #     format_str = format.format_str # this is the "number format string"
@@ -193,7 +193,7 @@ class ExcelWrapper(object):
                 cell = row[i]
                 ctype = cell.ctype
                 val = cell.value
-                #if ctype == xlrd.XL_CELL_DATE:
+                # if ctype == xlrd.XL_CELL_DATE:
                 #    val = self.get_date(i, cell)
                 if ctype == xlrd.XL_CELL_TEXT:
                     val = val.strip()

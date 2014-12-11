@@ -3,8 +3,6 @@ from django.shortcuts import render
 
 from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 
-from django.conf import settings
-
 
 class IndexView(TemplateView):
     template_name = 'melanoma/index.html'
@@ -20,7 +18,8 @@ class IndexView(TemplateView):
 class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
-    queryset = MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification', 'md5')
+    queryset = MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
+                                                           'url_verification', 'md5')
     # paginate_by = settings.DEFAULT_PAGINATION
 
 

@@ -3,7 +3,6 @@ import string
 
 from django.test import TestCase
 from model_mommy import mommy
-
 from ..models import TumorStage
 from ..models import Array
 from ..models import MelanomaSample

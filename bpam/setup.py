@@ -1,9 +1,11 @@
 import os.path
-from setuptools import setup, find_packages
 
+from setuptools import setup, find_packages
 import bpam
 
+
 packages = [p.replace(".", "/") for p in sorted(find_packages())]
+
 
 def get_data_files():
     """
@@ -83,7 +85,6 @@ downloads_requires = [
     'Jinja2>=2.7.1',
 ]
 
-
 dependency_links = [
     'https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.1.tar.gz',
     'https://bitbucket.org/ccgmurdoch/ccg-django-utils/downloads/ccg-django-utils-0.2.1.tar.gz',
@@ -92,7 +93,6 @@ dependency_links = [
     'https://argparse.googlecode.com/files/argparse-1.2.1.tar.gz',
     'https://alastairs-place.net/projects/netifaces/netifaces-0.8.tar.gz',
 ]
-
 
 setup(
     name='bpam',

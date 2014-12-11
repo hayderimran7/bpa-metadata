@@ -12,7 +12,6 @@ from libs import user_helper
 from libs import ingest_utils
 from apps.base_454.models import Sample454
 
-# from apps.common.models import BPAUniqueID
 
 logger = get_logger(__name__)
 

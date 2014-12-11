@@ -1,7 +1,8 @@
 from datetime import date
-from apps.common.models import BPAUniqueID, BPAProject
 
+from apps.common.models import BPAUniqueID, BPAProject
 import logger_utils
+
 
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())

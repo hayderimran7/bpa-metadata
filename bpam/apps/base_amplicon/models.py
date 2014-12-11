@@ -61,6 +61,7 @@ class AmpliconRun(Run):
     def __unicode__(self):
         return u'{0}'.format(self.sequencing_facility)
 
+
 class AmpliconSequenceFile(SequenceFile):
     """
     Amplicon Sequence File

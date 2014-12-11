@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import os
-from apps.common.models import DNASource, Sequencer, Facility
+from apps.common.models import DNASource, Sequencer
 
 from apps.wheat_pathogens_transcript.models import (
     WheatPathogenTranscriptSample,
     WheatPathogenTranscriptProtocol,
     WheatPathogenTranscriptRun,
     WheatPathogenTranscriptSequenceFile,
-    Organism,
 )
 
 from libs import ingest_utils, user_helper, bpa_id_utils
@@ -208,9 +206,12 @@ def get_pathogen_sample_data(file_name):
                   ('sample_type', 'Sample type', None),
                   ('rna_source', 'Part of organism RNA/RNA extracted from', None),
                   ('extraction_method', 'Extraction method', None),
-                  ('growth_protocol', 'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)', None),
+                  ('growth_protocol',
+                   'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)',
+                   None),
                   ('treatment_protocol', 'Treatment protocol (i.e. route of administration of pathogen)', None),
-                  ('experimental_design', 'Further Information on experimental design (i.e. time points and biological replicates)', None),
+                  ('experimental_design',
+                   'Further Information on experimental design (i.e. time points and biological replicates)', None),
                   ('additional_information', 'Additional Information.', None),
     ]
 

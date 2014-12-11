@@ -2,8 +2,6 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from apps.base.search import Searcher
-from apps.common.models import *
-from apps.base.models import *
 from apps.base_otu.models import *
 from apps.base_contextual.models import *
 from apps.base_metagenomics.models import *
@@ -50,13 +48,14 @@ class SearchBuilder(object):
 
 
 class SearchTestCase(TestCase):
-    def _setUpSample(self, name, elevation, boron_hot_cacl2,otu=None):
+    def _setUpSample(self, name, elevation, boron_hot_cacl2, otu=None):
         bpa_id_name = "bpa_id" + str(name)
         setattr(self, bpa_id_name, mommy.make(BPAUniqueID, bpa_id=str(name)))
         bpa_id = getattr(self, bpa_id_name)
         setattr(self, "collection_site" + str(name), mommy.make(CollectionSite, elevation=elevation))
         site = getattr(self, "collection_site" + str(name))
-        setattr(self, "chemical_analysis" + str(name), mommy.make(ChemicalAnalysis, bpa_id=bpa_id, boron_hot_cacl2=boron_hot_cacl2))
+        setattr(self, "chemical_analysis" + str(name),
+                mommy.make(ChemicalAnalysis, bpa_id=bpa_id, boron_hot_cacl2=boron_hot_cacl2))
         setattr(self, "sample_context" + str(name), mommy.make(SampleContext, bpa_id=bpa_id, site=site))
         setattr(self, "metagenomics_sample" + str(name), mommy.make(MetagenomicsSample, bpa_id=bpa_id))
         if otu:
@@ -77,7 +76,7 @@ class SearchTestCase(TestCase):
         otu1.genus = "f"
         otu1.species = "g"
         otu1.save()
-        
+
         otu2 = OperationalTaxonomicUnit()
         otu2.name = "otu2"
         otu2.kingdom = "a"
@@ -88,7 +87,7 @@ class SearchTestCase(TestCase):
         otu2.genus = "r"
         otu2.species = "s"
         otu2.save()
-        
+
         otu3 = OperationalTaxonomicUnit()
         otu3.name = "otu3"
         otu3.kingdom = "a"

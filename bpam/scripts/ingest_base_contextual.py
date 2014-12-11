@@ -12,7 +12,7 @@ from apps.base_contextual.models import *
 logger = logger_utils.get_logger(__name__)
 
 METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
-CONTEXTUAL_DATA = 'BASE_Contextual_Data.xlsx'                       # the file
+CONTEXTUAL_DATA = 'BASE_Contextual_Data.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/contextual_metadata/')
 
 BPA_ID_PREFIX = "102.100.100"
@@ -398,6 +398,7 @@ def do_metadata():
         samples = list(get_data(metadata_file))
         add_samples(samples)
         add_chemical_analysis(samples)
+
 
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))

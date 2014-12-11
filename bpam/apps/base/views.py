@@ -11,10 +11,7 @@ from django.views.generic.base import View
 from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
-from django.db.models import Model
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis
-from apps.base_otu.models import SampleOTU
-from apps.common.models import BPAUniqueID
 from search_export import CSVExporter, OTUExporter
 
 
@@ -349,7 +346,6 @@ class RequestAccess(TemplateView):
 class SearchExportView(View):
     def get(self, request):
         import zipfile
-        from django.core.servers.basehttp import FileWrapper
 
         ids = request.GET.get("ids", "").split(",")
 

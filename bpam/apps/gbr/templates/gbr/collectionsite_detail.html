@@ -5,7 +5,16 @@
 
 {% block content %}
 <script type="text/javascript">
-    var collectionsite = [{{site.lat}}, {{site.lon}}];
+    var collectionsite = [{{site.lat
+    }
+    },
+    {
+        {
+            site.lon
+        }
+    }
+    ]
+    ;
 </script>
 
 <div class="container-fluid">
@@ -14,7 +23,9 @@
             {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
         </div>
         <div class="col-md-4">
-            <h3 class="unstacked">GBR Coral Collection Site <a class="name" href="{% url 'gbr:site' site.pk %}"> {{ site.get_name }}</a></h3>
+            <h3 class="unstacked">GBR Coral Collection Site <a class="name" href="{% url 'gbr:site' site.pk %}"> {{
+                site.get_name }}</a></h3>
+
             <div>
                 <table id="collectionsite" class="table">
                     <tbody>

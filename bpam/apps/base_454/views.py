@@ -8,6 +8,7 @@ class Sample454ListView(ListView):
     context_object_name = 'samples'
     template_name = 'base_454/454_list.html'
 
+
 class Sample454DetailView(DetailView):
     model = Sample454
     context_object_name = 'sample'

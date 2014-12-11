@@ -1,15 +1,16 @@
 import time
 import sys
-import django
 from pprint import pprint
+
+import django
 import requests
 from ccg_django_utils.conf import EnvConfig, setup_config_env
-
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
 from apps.wheat_pathogens.models import PathogenSequenceFile
+
 
 setup_config_env('/etc/bpam/bpam.conf')
 env = EnvConfig()
@@ -19,6 +20,7 @@ downloads_checker_pass = env.get('downloads_checker_pass')
 SLEEP_TIME = 0.0  # time to rest between checks
 
 from libs.logger_utils import get_logger
+
 logger = get_logger(__name__)
 
 
@@ -103,7 +105,7 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
 
-    #check_melanoma(sleep_time)
+    # check_melanoma(sleep_time)
     check_gbr(sleep_time)
     #check_wheat_cultivars(sleep_time)
     #check_wheat_pathogens(sleep_time)

@@ -3,7 +3,6 @@ from django.contrib import admin
 
 from django.views.generic import TemplateView
 
-from tastypie.api import Api
 from django.db.models.loading import cache as model_cache
 
 if not model_cache.loaded:
@@ -27,7 +26,8 @@ urlpatterns = patterns(
     # Wheat
     url(r'^wheat_cultivars/', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
     url(r'^wheat_pathogens/', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
-    url(r'^wheat_pathogens_transcript/', include('apps.wheat_pathogens_transcript.urls', namespace='wheat_pathogens_transcript')),
+    url(r'^wheat_pathogens_transcript/',
+        include('apps.wheat_pathogens_transcript.urls', namespace='wheat_pathogens_transcript')),
     # Melanoma
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System

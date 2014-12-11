@@ -13,16 +13,16 @@
 {% block title %}Melanoma Search{% endblock %}
 
 {% block content %}
-    {# Display a form #}
+{# Display a form #}
 
-    <form action="/url/to/submit/" method="post" class="form">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        {% buttons %}
-            <button type="submit" class="btn btn-primary">
-                {% bootstrap_icon "star" %} Submit
-            </button>
-        {% endbuttons %}
-    </form>
+<form action="/url/to/submit/" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary">
+        {% bootstrap_icon "star" %} Submit
+    </button>
+    {% endbuttons %}
+</form>
 
 {% endblock %}

@@ -7,7 +7,6 @@ KINGDOMS.insert(0, ("", "----"))
 
 
 class BASESearchForm(forms.Form):
-
     search_field = forms.ChoiceField(choices=[
         ("", "----"),
         ("sample_id", "Sample Id"),
@@ -21,7 +20,7 @@ class BASESearchForm(forms.Form):
         ("vegetation_type", "Vegetation Type"),
         ("vegetation_total_cover", "Vegetation Total cover (%)"),
         ("vegetation_dominant_trees", "Vegetation Dom. Trees"),
-        #("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
+        # ("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
         #("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
         ("elevation", "Elevation (m)"),
         ("australian_soil_classification", "Australian Soil Classification"),
@@ -30,7 +29,7 @@ class BASESearchForm(forms.Form):
         ("agrochemical_additions", "Agrochemical Additions"),
         ("tillage", "Tillage"),
         ("fire_history", "Fire History"),
-        ("fire_intensity","Fire Intensity"),
+        ("fire_intensity", "Fire Intensity"),
         #("flooding", "")
         ("environment_events", "Environment Events"),
         ("moisture", "Soil moisture (%)"),
@@ -135,7 +134,8 @@ class BASESearchForm(forms.Form):
                 raise forms.ValidationError("Enter both a min and max for range search")
 
     def _check_type(self, field, value):
-        non_numeric = [pair[0] for pair in set(self.fields["search_field"].choices) - set(self.fields["search_range"].choices)]
+        non_numeric = [pair[0] for pair in
+                       set(self.fields["search_field"].choices) - set(self.fields["search_range"].choices)]
         non_numeric.remove("moisture")
         non_numeric.remove("date_sampled")
 

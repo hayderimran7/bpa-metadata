@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 from apps.common.models import DNASource, Facility, Sequencer
@@ -18,8 +17,8 @@ from unipath import Path
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'       # the folder
-METADATA_FILE = 'metadata.xlsx'                                              # the file
+METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'  # the folder
+METADATA_FILE = 'metadata.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'melanoma/')
 
 logger = logger_utils.get_logger(__name__)

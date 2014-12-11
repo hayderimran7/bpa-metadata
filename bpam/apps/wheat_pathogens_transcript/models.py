@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.common.models import Protocol, Sample, Run, SequenceFile, Organism, DebugNote
+from apps.common.models import Protocol, Sample, Run, SequenceFile, DebugNote
 
 
 class WheatPathogenTranscriptSample(Sample, DebugNote):
@@ -17,6 +17,7 @@ class WheatPathogenTranscriptSample(Sample, DebugNote):
     growth_protocol = models.TextField(null=True, blank=True)
     treatment_protocol = models.TextField(null=True, blank=True)
     experimental_design = models.TextField(null=True, blank=True)
+
 
 class WheatPathogenTranscriptProtocol(Protocol):
     run = models.ForeignKey('WheatPathogenTranscriptRun', blank=True, null=True)

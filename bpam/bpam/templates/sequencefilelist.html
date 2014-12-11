@@ -30,7 +30,9 @@
             </td>
             <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
             <td style="font-family: monospace">{{ sfile.md5 }}</td>
-            <td>{% if sfile.date_received_from_sequencing_facility %} {{ sfile.date_received_from_sequencing_facility }} {% endif %}</td>
+            <td>{% if sfile.date_received_from_sequencing_facility %} {{ sfile.date_received_from_sequencing_facility }}
+                {% endif %}
+            </td>
             <td>{% if sfile.run %} {{ sfile.run }} {% endif %}</td>
         </tr>
         {% endfor %}

@@ -1,5 +1,3 @@
-from settings import *  # noqa
-
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 # Default debug mode is off, turn on for trouble-shooting

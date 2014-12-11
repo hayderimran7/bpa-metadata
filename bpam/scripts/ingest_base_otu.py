@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import zipfile
-from unipath import Path
 import csv
 import time
 
+from unipath import Path
 from libs import logger_utils
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs.fetch_data import Fetcher
-
 from apps.base_otu.models import *
 from apps.base.models import BASESample
 from libs.excel_wrapper import ExcelWrapper
-
 from django.conf import settings
+
 
 settings.DEBUG = False
 
@@ -31,7 +30,6 @@ def strip_count(val):
 
 
 def ingest_taxonomy(file_name):
-
     kingdoms = map(lambda e: e[0], OperationalTaxonomicUnit.KINGDOMS)
 
     def is_valid_kingdom(kingdom):
@@ -52,7 +50,7 @@ def ingest_taxonomy(file_name):
                   ('family', 'family', strip_count),
                   ('genus', 'genus', strip_count),
                   ('species', 'species', strip_count),
-                  ]
+    ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,

@@ -1,13 +1,11 @@
 import string
-
 from datetime import date
 import unittest
 import os
-from dateutil.parser import parse as date_parser
-import logger_utils
-
 import json
 
+from dateutil.parser import parse as date_parser
+import logger_utils
 from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 

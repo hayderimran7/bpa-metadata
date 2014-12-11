@@ -1,10 +1,9 @@
 import os
-
 from optparse import make_option
 
 from lettuce import Runner
-
 from django.core.management.base import BaseCommand, CommandError
+
 
 class Command(BaseCommand):
     help = 'Runs lettuce features'
@@ -15,15 +14,15 @@ class Command(BaseCommand):
                     dest='app_name',
                     default='bpam',
                     help='Application name'),
-        
+
         make_option('-v', '--verbosity',
                     action='store',
                     dest='verbosity',
                     default='4',
                     type='choice',
                     choices=map(str, range(5)),
-                     help='Verbosity level; 0=no output, 1=only dots, 2=only scenario names, 3=colorless output, 4=normal output (colorful)'),
-        
+                    help='Verbosity level; 0=no output, 1=only dots, 2=only scenario names, 3=colorless output, 4=normal output (colorful)'),
+
         make_option('--with-xunit',
                     action='store_true',
                     dest='enable_xunit',
@@ -45,7 +44,7 @@ class Command(BaseCommand):
             print path
             runner = Runner(path, verbosity=options.get('verbosity'),
                             enable_xunit=options.get('enable_xunit'),
-                            xunit_filename=options.get('xunit_file'),)
+                            xunit_filename=options.get('xunit_file'), )
 
             runner.run()
         else:

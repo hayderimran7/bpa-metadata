@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 from apps.common.models import DNASource, Sequencer
 from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
 from libs import ingest_utils
@@ -55,6 +54,7 @@ def ingest_samples(samples):
     """
     Add all the cultivar samples
     """
+
     def add_sample(e):
         """
         Adds new sample or updates existing sample
@@ -86,7 +86,8 @@ def get_cultivar_sample_data(file_name):
                   ('variety', 'Variety', None),
                   ('cultivar_code', 'Comment[Sample code]', None),  # C
                   ('library', 'Parameter Value[library layout]', None),
-                  ('library_construction', 'Parameter Value[library nominal fragment size]', ingest_utils.get_clean_number),
+                  ('library_construction', 'Parameter Value[library nominal fragment size]',
+                   ingest_utils.get_clean_number),
                   ('index', 'Parameter Value[index]', None),
                   ('extract_name', 'Extract Name', None),
                   ('cycle_count', 'Parameter Value[Cycle count]', ingest_utils.get_clean_number),

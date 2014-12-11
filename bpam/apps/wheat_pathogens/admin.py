@@ -146,9 +146,10 @@ class SampleAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
-    'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol', 'original_source_host_species')
+        'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',
+        'original_source_host_species')
     search_fields = (
-    'bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name', 'wheat_pathogenicity')
+        'bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name', 'wheat_pathogenicity')
     list_filter = ('dna_source', 'original_source_host_species')
 
 

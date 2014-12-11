@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 
 from apps.common.models import DNASource, Facility, Sequencer
 from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
@@ -418,7 +417,7 @@ def _ingest(sample_data):
     :param sample_data:
     :return:
     """
-     # pre-populate the BPA ID's
+    # pre-populate the BPA ID's
     bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
@@ -448,7 +447,6 @@ def ingest():
             _ingest(sample_data)
         except ColumnNotFoundException, e:
             logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
-
 
 
 def truncate():

@@ -33,7 +33,6 @@ class LandUse(MPTTModel):
         order_insertion_by = ['order']
 
 
-
 class SoilTexture(models.Model):
     """
     Soil Texture

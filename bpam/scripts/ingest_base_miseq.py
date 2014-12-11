@@ -11,6 +11,7 @@ from apps.base.models.metagenomics import ChemicalAnalysis, BPAUniqueID
 from libs import ingest_utils
 
 
+
 # DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 # SAMPLE_FILE = os.path.join(DATA_DIR, 'base_soil_agric_sample.csv')
 # CHEM_FILE = os.path.join(DATA_DIR, 'base_soil_agric_chem.csv')
@@ -53,7 +54,7 @@ def get_sample_data():
                       'profile_position',
                       'drainage_classification',
                       'notes',
-                      ]
+        ]
 
         reader = csv.DictReader(samples, fieldnames=fieldnames, restkey='the_rest')
         return ingest_utils.strip_all(reader)

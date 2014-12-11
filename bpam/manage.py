@@ -26,6 +26,7 @@ if __name__ == "__main__":
         print("{0} Django manage in production".format(PROG))
         # setup the settings module for the django app
         from ccg_django_utils.conf import setup_prod_env
+
         setup_prod_env(PROG)
     else:
         print("{0} Django manage develop".format(PROG))

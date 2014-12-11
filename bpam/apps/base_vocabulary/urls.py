@@ -19,7 +19,7 @@ urlpatterns = patterns(
         view=views.SoilColourReadView.as_view(),
         name='soilcolour_rest_api'
     ),
-      url(
+    url(
         regex=r'^generalecologicalzone/$',
         view=views.GeneralEcologicalZoneReadView.as_view(),
         name='generalecologicalzone_rest_api'

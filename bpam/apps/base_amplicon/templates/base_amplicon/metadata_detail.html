@@ -5,80 +5,80 @@
 
 {% block content %}
 <div class="panel panel-info">
-   <div class="panel-body">
-      <h3> Amplicon {{ metadata.target }} Metadata for BPA ID {{ metadata.bpa_id }}</h3>
-   </div>
-   <table id="info" class="table table-striped">
-      <tbody>
-      <tr>
-         <td> Sample Extraction ID</td>
-         <td> {{ metadata.sample_extraction_id }}</td>
-      </tr>
-      <tr>
-         <td> Name</td>
-         <td> {{ metadata.name }}</td>
-      </tr>
-      <tr>
-         <td> Facility</td>
-         <td> {{ metadata.sequencing_facility }}</td>
-      </tr>
+    <div class="panel-body">
+        <h3> Amplicon {{ metadata.target }} Metadata for BPA ID {{ metadata.bpa_id }}</h3>
+    </div>
+    <table id="info" class="table table-striped">
+        <tbody>
+        <tr>
+            <td> Sample Extraction ID</td>
+            <td> {{ metadata.sample_extraction_id }}</td>
+        </tr>
+        <tr>
+            <td> Name</td>
+            <td> {{ metadata.name }}</td>
+        </tr>
+        <tr>
+            <td> Facility</td>
+            <td> {{ metadata.sequencing_facility }}</td>
+        </tr>
 
-      <tr>
-         <td> Run Number</td>
-         <td> {{ metadata.sequencing_run_number }}</td>
-      </tr>
-      <tr>
-         <td> Amplicon</td>
-         <td> {{ metadata.target }}</td>
-      </tr>
-      <tr>
-         <td> Index</td>
-         <td> {{ metadata.index }}</td>
-      </tr>
-      <tr>
-         <td> PCR 1:10</td>
-         <td>
-            {% if data.passed_pcr_1_to_10 %}
-            <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-            <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-         </td>
-      </tr>
-      <tr>
-         <td> PCR 1:100</td>
-         <td>
-            {% if data.passed_pcr_1_to_100 %}
-            <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-            <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-         </td>
-      </tr>
-      <tr>
-         <td> PCR Neat</td>
-         <td>
-            {% if data.passed_pcr_neat %}
-            <span class="glyphicon glyphicon-ok"></span>
-            {% else %}
-            <span class="glyphicon glyphicon-remove"></span>
-            {% endif %}
-         </td>
-      </tr>
-      <tr>
-         <td> Dilution</td>
-         <td> {{ metadata.dilution }}</td>
-      </tr>
-      <tr>
-         <td> Reads</td>
-         <td> {{ metadata.reads }}</td>
-      </tr>
-      <tr>
-         <td> Analysis Software Version</td>
-         <td> {{ metadata.analysis_software_version }}</td>
-      </tr>
-      </tbody>
-   </table>
+        <tr>
+            <td> Run Number</td>
+            <td> {{ metadata.sequencing_run_number }}</td>
+        </tr>
+        <tr>
+            <td> Amplicon</td>
+            <td> {{ metadata.target }}</td>
+        </tr>
+        <tr>
+            <td> Index</td>
+            <td> {{ metadata.index }}</td>
+        </tr>
+        <tr>
+            <td> PCR 1:10</td>
+            <td>
+                {% if data.passed_pcr_1_to_10 %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td> PCR 1:100</td>
+            <td>
+                {% if data.passed_pcr_1_to_100 %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td> PCR Neat</td>
+            <td>
+                {% if data.passed_pcr_neat %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td> Dilution</td>
+            <td> {{ metadata.dilution }}</td>
+        </tr>
+        <tr>
+            <td> Reads</td>
+            <td> {{ metadata.reads }}</td>
+        </tr>
+        <tr>
+            <td> Analysis Software Version</td>
+            <td> {{ metadata.analysis_software_version }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 {% include "sequencefilelist.html" %}

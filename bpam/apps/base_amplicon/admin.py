@@ -71,7 +71,7 @@ class AmpliconMetadaAdmin(admin.ModelAdmin):
     )
 
     fieldsets = [
-        (None,  #  'Sample Identification',
+        (None,  # 'Sample Identification',
          {'classes': ('suit-tab suit-tab-id',),
           'fields': (
               'bpa_id',
@@ -104,7 +104,7 @@ admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
 
 
 # class AmpliconRunAdmin(admin.ModelAdmin):
-#     class RunForm(forms.ModelForm):
+# class RunForm(forms.ModelForm):
 #         class Meta:
 #             model = AmpliconRun
 #             widgets = {
