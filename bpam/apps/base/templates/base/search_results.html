@@ -597,8 +597,6 @@
             }
 
             doSpin();
-            //var search_message_row = '<tr align="center"><td colspan="5"><div class="badge badge-info">Searching</div></td></tr>';
-            //$("#results > tbody").append(search_message_row);
             $.post(SEARCH_FORM_URL,
                     $("#search_form").serialize(),
                     displayResults);
