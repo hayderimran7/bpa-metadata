@@ -48,46 +48,48 @@ ADMINS = [
 ]
 MANAGERS = ADMINS
 
-# email settings for sending email error alerts etc
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host
-EMAIL_HOST = env.get("email_host", "")
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-port
-EMAIL_PORT = env.get("email_port", 25)
+if env.get("ENABLE_EMAIL", False):
+    print('Enabling Email')
+    # email settings for sending email error alerts etc
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host
+    EMAIL_HOST = env.get("email_host", "")
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-port
+    EMAIL_PORT = env.get("email_port", 25)
 
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-user
-EMAIL_HOST_USER = env.get("email_host_user", "")
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-password
-EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-user
+    EMAIL_HOST_USER = env.get("email_host_user", "")
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-password
+    EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
 
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-use-tls
-EMAIL_USE_TLS = env.get("email_use_tls", False)
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-use-tls
+    EMAIL_USE_TLS = env.get("email_use_tls", False)
 
-# see: https://docs.djangoproject.com/en/1.6/ref/settings/#email-subject-prefix
-EMAIL_APP_NAME = "BPA Metadata "
-EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
+    # see: https://docs.djangoproject.com/en/1.6/ref/settings/#email-subject-prefix
+    EMAIL_APP_NAME = "BPA Metadata "
+    EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
 
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-backend
-if EMAIL_HOST:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-elif DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-    EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
-    if not os.path.exists(EMAIL_FILE_PATH):
-        from distutils.dir_util import mkpath
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-backend
+    if EMAIL_HOST:
+        EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    elif DEBUG:
+        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    else:
+        EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+        EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
+        if not os.path.exists(EMAIL_FILE_PATH):
+            from distutils.dir_util import mkpath
 
-        mkpath(EMAIL_FILE_PATH)
+            mkpath(EMAIL_FILE_PATH)
 
-# See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
-SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
-RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
-# email address to receive datasync client log notifications
-LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
-# email address to receive datasync key upload notifications
-KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
-# email address to receive registration requests
-REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
+    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
+    SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
+    RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
+    # email address to receive datasync client log notifications
+    LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
+    # email address to receive datasync key upload notifications
+    KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
+    # email address to receive registration requests
+    REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
 
 
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
@@ -291,7 +293,7 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'bootstrap3',
-    #'tastypie',  # will retire soon
+    # 'tastypie',  # will retire soon
     'rest_framework',  # replacing tastypie
     'explorer',
     'leaflet',
