@@ -3,7 +3,7 @@ import string
 from datetime import date
 import unittest
 import os
-import dateutil
+from dateutil.parser import parse as date_parser
 import logger_utils
 
 import json
@@ -130,7 +130,8 @@ def get_date(dt):
         if dt.strip() == '':
             return None
         try:
-            return dateutil.parser.parse(dt)
+            return date_parser(dt)
+
         except TypeError, e:
             logger.error("Date parsing error " + str(e))
             return None
