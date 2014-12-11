@@ -227,7 +227,8 @@ def _ingest_csv_file(csv_file, reporter):
             sample_otu_list = []
             otu, row = _get_otu_id(row)
             if otu is None:
-                logger.error('No valid OTU found, ignoring')
+                logger.error('No valid OTU in database, skipping')
+                continue
 
             # step through all the sample keys and create the sample to OTU links
             for sample_key, count in row.items():
@@ -267,7 +268,7 @@ def do_otu_matrix():
         if path.isfile() and path.ext == '.zip':
             return True
 
-    logger.info('Ingesting BASE OTU Matrixs from {0}'.format(DATA_DIR))
+    logger.info('Ingesting BASE OTU Matrii from {0}'.format(DATA_DIR))
     for matrix_file in DATA_DIR.walk(filter=is_otu_matrix):
         logger.info('Processing BASE OTU Matrix file {0}'.format(matrix_file))
         ingest_otu_matrix(matrix_file)
