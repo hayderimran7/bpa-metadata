@@ -24,11 +24,11 @@ def get_data_files():
 
 
 install_requires = [
-    'Django>=1.6.2,<1.7',
+    'Django==1.7.1',
     'Django-suit>=0.2.6,<0.3',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
-    'South>=0.8.4,<1.0',
+    # 'South>=0.8.4,<1.0',
     'Unipath>=1.0,<2.0',
     'boto>=2.15.0',
     'python-dateutil==1.5',  # 2.0 for Python >= 3
@@ -48,7 +48,7 @@ install_requires = [
     'django_compressor>=1.3',
     'mimeparse>=0.1.3,<1.0',
     'rainbow_logging_handler',
-    'django-sql-explorer==0.5',
+    'django-sql-explorer==0.6',
     'django-mptt>=0.5.5',
     'ccg-extras',
     'django-leaflet',
