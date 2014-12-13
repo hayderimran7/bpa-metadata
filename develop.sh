@@ -10,7 +10,7 @@ PORT='8000'
 
 PROJECT_NAME='bpam'
 AWS_BUILD_INSTANCE='aws_rpmbuild_centos6'
-AWS_STAGING_INSTANCE='aws-syd-bpam-staging'
+AWS_STAGING_INSTANCE='aws_syd_bpa_metadata_staging'
 TARGET_DIR="/usr/local/src/${PROJECT_NAME}"
 CONFIG_DIR="${TOPDIR}/${PROJECT_NAME}"
 PIP_OPTS="-v --download-cache ~/.pip/cache --index-url=https://pypi.python.org/simple"
@@ -161,6 +161,10 @@ ci_remote_destroy() {
 ci_staging() {
     ccg ${AWS_STAGING_INSTANCE} boot
     ccg ${AWS_STAGING_INSTANCE} puppet
+    #bpam runscript ingest_base_metagenomics --traceback
+    #bpam runscript ingest_base_amplicon --traceback
+    #bpam runscript ingest_base_otu --traceback
+    #bpam runscript ingest_gbr --traceback
 }
 
 ci_staging_lettuce() {

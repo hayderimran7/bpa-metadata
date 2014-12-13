@@ -40,7 +40,7 @@ node default {
       config_hash => $django_config,
     } ->
     package {'bpa-metadata':
-      ensure => $ensure,
+      ensure => latest,
       provider => 'yum_nogpgcheck'
     } ->
     django::syncdbmigrate{'bpam':
