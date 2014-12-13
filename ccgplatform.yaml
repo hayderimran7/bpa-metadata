@@ -13,7 +13,7 @@ instances:
     extends: centos_66_lxc
     pre_puppet:
       - which git || sudo yum install -y -q git
-      - which librarian-puppet || sudo gem install librarian-puppet -v 1.0.4
+      - which librarian-puppet || sudo gem install librarian-puppet -v 1.4.0
 
 
   aws_common: &AWS_COMMON
