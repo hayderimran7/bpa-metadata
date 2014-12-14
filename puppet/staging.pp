@@ -18,17 +18,18 @@ node default {
     include globals
 
     $django_config = {
-      deployment  => 'staging',
-      dbdriver    => 'django.db.backends.postgresql_psycopg2',
-      dbhost      => $globals::dbhost_rds_syd_postgresql_prod,
-      dbserver    => $globals::dbhost_rds_syd_postgresql_prod,
-      dbname      => 'bpam_staging',
-      dbuser      => $globals::dbuser_syd_staging,
-      dbpass      => $globals::dbpass_syd_staging,
-      memcache    => $globals::memcache_syd,
-      secret_key   => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
-      admin_email => $globals::system_email,
-      allowed_hosts => 'localhost .ccgapps.com.au',
+      deployment         => 'staging',
+      dbdriver           => 'django.db.backends.postgresql_psycopg2',
+      dbhost             => $globals::dbhost_rds_syd_postgresql_prod,
+      dbserver           => $globals::dbhost_rds_syd_postgresql_prod,
+      dbname             => 'bpam_staging',
+      dbuser             => $globals::dbuser_syd_staging,
+      dbpass             => $globals::dbpass_syd_staging,
+      memcache           => $globals::memcache_syd,
+      secret_key         => 'asdfj*&^*&^hhqwertyLAHLAHLAH424242',
+      admin_email        => $globals::system_email,
+      allowed_hosts      => 'localhost .ccgapps.com.au',
+      csrf_cookie_domain => '.ccgapps.com.au',
     }
 
     ccgdatabase::postgresql::db { $django_config['dbname']:

@@ -129,6 +129,7 @@ SESSION_COOKIE_SECURE = False  # Changed from True
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
 CSRF_COOKIE_NAME = "csrftoken_bpametadata"
 CSRF_COOKIE_SECURE = False  # Changed from True
+CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or None
 
 # Default date input formats, may be overridden
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
