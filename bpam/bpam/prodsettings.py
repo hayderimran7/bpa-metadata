@@ -1,3 +1,5 @@
+from settings import *
+
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 # Default debug mode is off, turn on for trouble-shooting
