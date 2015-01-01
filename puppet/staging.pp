@@ -9,6 +9,7 @@ node default {
 
     include repo::sydney
     include repo::upgrade
+    include repo::clean
     include repo::repo::ius
     include repo::repo::ccgtesting
     include repo::repo::ccgdeps
