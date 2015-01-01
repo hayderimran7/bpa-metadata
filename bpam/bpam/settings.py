@@ -292,7 +292,6 @@ INSTALLED_APPS = (
     'apps.wheat_cultivars',
     'apps.melanoma',
     'apps.gbr',
-    'south',
     'tinymce',
     'bootstrap3',
     # 'tastypie',  # will retire soon

@@ -28,7 +28,6 @@ install_requires = [
     'Django-suit>=0.2.6,<0.3',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
-    # 'South>=0.8.4,<1.0',
     'Unipath>=1.0,<2.0',
     'boto>=2.15.0',
     'python-dateutil==1.5',  # 2.0 for Python >= 3
