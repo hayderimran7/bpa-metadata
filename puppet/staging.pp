@@ -1,5 +1,7 @@
 # BPA Metadata production
 node default {
+    $custom_hostname = 'aws-syd-bpa-metadata-staging.ec2.ccgapps.com.au'
+
     include ccgcommon
     include ccgcommon::source
     include ccgapache
