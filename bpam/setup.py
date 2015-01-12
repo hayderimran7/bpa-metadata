@@ -1,11 +1,6 @@
 import os.path
 
 from setuptools import setup, find_packages
-import bpam
-
-
-packages = [p.replace(".", "/") for p in sorted(find_packages())]
-
 
 def get_data_files():
     """
@@ -22,6 +17,16 @@ def get_data_files():
         os.chdir(current_dir)
     return data_files
 
+INSTALL_ONLY_DEPENDENCIES = 'INSTALL_ONLY_DEPENDENCIES' in os.environ
+
+if 'INSTALL_ONLY_DEPENDENCIES' in os.environ:
+    packages = []
+    package_data = {}
+    package_scripts = []
+else:
+    packages = [p.replace(".", "/") for p in sorted(find_packages())]
+    package_scripts = ["manage.py"]
+    package_data = get_data_files()
 
 install_requires = [
     'Django==1.7.1',
@@ -57,7 +62,12 @@ install_requires = [
     'beautifulsoup4',
     'djangorestframework==3.0.0',
     'markdown',
-    'django-filter'
+    'django-filter',
+    'uwsgi==2.0.8',
+    'uwsgitop',
+    'pyinotify==0.9.4',
+    'Werkzeug',
+    'psycopg2==2.5.4',
 ]
 
 dev_requires = [
@@ -95,12 +105,12 @@ dependency_links = [
 
 setup(
     name='bpam',
-    version=bpam.__version__,
+    version='1.4.2',
     description="BPA Metadata Management",
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
     packages=packages,
-    package_data=get_data_files(),
+    package_data=package_data,
     include_package_data=True,
     install_requires=install_requires,
     dependency_links=dependency_links,
@@ -110,5 +120,5 @@ setup(
         'downloads': downloads_requires
     },
     zip_safe=False,
-    scripts=["manage.py"],
+    scripts=package_scripts,
 )
