@@ -276,6 +276,8 @@ devrun() {
 # django syncdb, migrate and collect static
 syncmigrate() {
     activate_virtualenv
+    settings
+
     log_info "Running syncdb"
     ${DJANGO_ADMIN} syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} --traceback 1> syncdb-develop.log
     log_info "Running migrate"
