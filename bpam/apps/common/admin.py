@@ -9,13 +9,13 @@ from .models import (BPAProject,
                      SequenceFile,
                      DNASource,
                      Sequencer,
-                     Sample
-)
+                     Sample)
 
 
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = Sample
             widgets = {
                 'bpa_id': LinkedSelect(
@@ -47,6 +47,7 @@ class SampleAdmin(admin.ModelAdmin):
 class SequenceFileAdmin(admin.ModelAdmin):
     class SequenceFileForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = SequenceFile
             widgets = {
                 'date_received_from_sequencing_facility': SuitDateWidget,
@@ -109,6 +110,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
 class BPAProjectAdmin(admin.ModelAdmin):
     class BPAProjectForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = BPAProject
             widgets = {
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
@@ -126,6 +128,7 @@ admin.site.register(BPAProject, BPAProjectAdmin)
 class BPAUniqueIDAdmin(admin.ModelAdmin):
     class BPAIDForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = BPAUniqueID
             widgets = {
                 'project': LinkedSelect,
@@ -145,6 +148,7 @@ admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
 class FacilityAdmin(admin.ModelAdmin):
     class Form(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = Facility
             widgets = {
                 'project': LinkedSelect,
@@ -163,6 +167,7 @@ admin.site.register(Facility, FacilityAdmin)
 class OrganismAdmin(admin.ModelAdmin):
     class Form(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = Organism
             widgets = {
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
@@ -185,6 +190,7 @@ admin.site.register(Organism, OrganismAdmin)
 class DNASourceFormAdmin(admin.ModelAdmin):
     class DNASourceForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = DNASource
             widgets = {
                 'description': forms.TextInput(attrs={'class': 'input-large',

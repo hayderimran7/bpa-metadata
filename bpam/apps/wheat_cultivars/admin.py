@@ -11,6 +11,7 @@ from .models import CultivarSequenceFile
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = CultivarProtocol
         widgets = {
             'run': LinkedSelect,
@@ -32,6 +33,7 @@ class ProtocolAdmin(admin.ModelAdmin):
 
 class RunForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = CultivarRun
         widgets = {
             'sample': LinkedSelect,
@@ -64,6 +66,7 @@ class RunAdmin(admin.ModelAdmin):
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = CultivarSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -75,6 +78,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = CultivarSample
             widgets = {
                 'bpa_id': LinkedSelect,
