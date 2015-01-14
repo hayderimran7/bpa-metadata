@@ -108,7 +108,7 @@ class SearchTestCase(TestCase):
         # sample 4
         self._setUpSample("D", 1000, -56.90, otu3)
 
-    def testSimpleSingleSearch(self):
+    def test_SimpleSingleSearch(self):
         b = SearchBuilder()
         b.and_search()
         b.add_search_term("elevation", 100)

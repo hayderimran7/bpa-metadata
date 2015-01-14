@@ -9,12 +9,13 @@ from models import (TumorStage,
                     MelanomaRun,
                     MelanomaSequenceFile,
                     MelanomaProtocol,
-)
+                    )
 
 
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = MelanomaSample
             widgets = {
                 'bpa_id': LinkedSelect(attrs={'class': 'input-medium'}),
@@ -78,6 +79,7 @@ admin.site.register(MelanomaSample, SampleAdmin)
 class ArrayAdmin(admin.ModelAdmin):
     class ArrayForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = Array
             widgets = {
                 'bpa_id': LinkedSelect
@@ -95,6 +97,7 @@ admin.site.register(Array, ArrayAdmin)
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = MelanomaProtocol
         widgets = {
             'library_construction_protocol': LinkedSelect,
@@ -127,6 +130,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 
     class RunForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = MelanomaRun
             widgets = {
                 'sample': LinkedSelect(attrs={'class': 'input-xxlarge'}),
@@ -137,7 +141,6 @@ class MelanomaRunAdmin(admin.ModelAdmin):
             }
 
     form = RunForm
-
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),
@@ -158,6 +161,7 @@ admin.site.register(MelanomaRun, MelanomaRunAdmin)
 class TumorStageAdmin(admin.ModelAdmin):
     class Form(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = TumorStage
             widgets = {
                 'note': AutosizedTextarea(attrs={'class': 'input-large',

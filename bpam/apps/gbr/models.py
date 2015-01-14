@@ -52,6 +52,7 @@ class GBRProtocol(Protocol):
     A GBR Protocol
     """
     base_pairs_string = models.TextField(_('Base Pairs'), null=True, blank=True)
+    run = models.ForeignKey('GBRRun', null=True)
 
     class Meta:
         verbose_name = _('Protocol')

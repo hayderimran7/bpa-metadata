@@ -11,6 +11,7 @@ from models import CollectionSite, SampleContext, ChemicalAnalysis, LandUse
 class SampleContextAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = SampleContext
             widgets = {
                 'bpa_id': LinkedSelect,
@@ -59,6 +60,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
     class SampleContextInline(admin.TabularInline):
         class SampleContextInlineForm(forms.ModelForm):
             class Meta:
+                fields = "__all__"
                 model = SampleContext
 
         suit_classes = 'suit-tab suit-tab-samples'
@@ -69,6 +71,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
 
     class CollectionForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = CollectionSite
             widgets = {
                 'location_name': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
@@ -121,8 +124,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'elevation',
               'country',
               'state',
-              'image_url',
-          )}),
+              'image_url',)}),
         (None,  # 'Vegetation',
          {'classes': ('suit-tab suit-tab-vegetation',),
           'description': 'Vegetation found on site',
@@ -130,8 +132,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'vegetation_type',
               'general_ecological_zone',
               'vegetation_total_cover',
-              'vegetation_dominant_trees',
-          )}),
+              'vegetation_dominant_trees',)}),
         (None,  # Land use,
          {'classes': ('suit-tab suit-tab-landuse',),
           'description': 'Current and previous Land Use',
@@ -146,8 +147,7 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'crop_rotation_5',
               'tillage',
               'agrochemical_additions',
-              'other_comments',
-          )}),
+              'other_comments',)}),
         (None,  # 'Context',
          {'classes': ('suit-tab suit-tab-context',),
           'description': 'Sample site contextual information',
@@ -157,20 +157,17 @@ class CollectionSiteAdmin(admin.ModelAdmin):
               'profile_position',
               'drainage_classification',
               'soil_type_australian_classification',
-              'soil_type_fao_classification',
-          )}),
+              'soil_type_fao_classification',)}),
         (None,  # 'Fire',
          {'classes': ('suit-tab suit-tab-fire',),
           'description': 'Site Fire History',
           'fields': (
               'fire_history',
-              'fire_intensity'
-          )}),
+              'fire_intensity')}),
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': (
-              'debug_note',
-          )})
+              'debug_note',)})
     ]
 
     list_select_related = True
@@ -186,6 +183,7 @@ admin.site.register(CollectionSite, CollectionSiteAdmin)
 class ChemicalAnalysisAdmin(admin.ModelAdmin):
     class ChemicalAnalysisForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = ChemicalAnalysis
             widgets = {
                 'bpa_id': LinkedSelect,
@@ -239,8 +237,7 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
               'course_sand',
               'fine_sand',
               'sand',
-              'clay',
-          )}),
+              'clay',)}),
         (None,  # chemical
          {'classes': ('suit-tab suit-tab-chemical',),
           'description': 'Chemical Analysis',
@@ -265,8 +262,7 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
               'exc_sodium',
               'boron_hot_cacl2',
               'total_nitrogen',
-              'total_carbon'
-          )})
+              'total_carbon')})
     ]
 
     list_display = ('bpa_id', 'depth', 'colour', 'texture', 'gravel', 'sand', 'course_sand', 'fine_sand', 'clay',)

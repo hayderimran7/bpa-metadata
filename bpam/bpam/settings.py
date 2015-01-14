@@ -48,6 +48,7 @@ ADMINS = [
 ]
 MANAGERS = ADMINS
 
+
 if env.get("ENABLE_EMAIL", False):
     print('Enabling Email')
     # email settings for sending email error alerts etc
@@ -294,8 +295,7 @@ INSTALLED_APPS = (
     'apps.gbr',
     'tinymce',
     'bootstrap3',
-    # 'tastypie',  # will retire soon
-    'rest_framework',  # replacing tastypie
+    'rest_framework',
     'explorer',
     'leaflet',
 )
@@ -356,30 +356,6 @@ if env.get("DEBUG_TOOLBAR", False):
     INSTALLED_APPS += ('debug_toolbar', )
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
     INTERNAL_IPS = ('127.0.0.1', '172.16.2.189',)  # explicitly set this for your environment
-    INSTALLED_APPS += (
-        'debug_toolbar',
-    )
-
-if env.get("BPA_TEST", False):
-    DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
-
-    INSTALLED_APPS += ('debug_toolbar',)
-    INTERNAL_IPS = ('127.0.0.1',)
-
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:",
-            "USER": "",
-            "PASSWORD": "",
-            "HOST": "",
-            "PORT": "",
-        },
-    }
-
 
 # downloads URL
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
@@ -399,9 +375,6 @@ else:
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
-
-TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
-NOSE_PLUGINS = ["mastrms.testutils.noseplugins.SilenceSouthPlugin"]
 
 CHMOD_USER = env.get("repo_user", "apache")
 CHMOD_GROUP = env.get("repo_group", "apache")

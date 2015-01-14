@@ -8,6 +8,7 @@ from models import *
 class Sample454Admin(admin.ModelAdmin):
     class Sample454AdminForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = Sample454
             widgets = {
                 'bpa_id': LinkedSelect,

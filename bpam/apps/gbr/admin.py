@@ -15,6 +15,7 @@ from .models import GBRSequenceFile
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = GBRProtocol
         widgets = {
             'library_construction_protocol': forms.TextInput(attrs={'class': 'input-large', 'style': 'width:95%'}),
@@ -29,8 +30,7 @@ class ProtocolAdmin(admin.ModelAdmin):
         ('Protocol', {'fields': ('library_type', 'base_pairs_string', 'library_construction_protocol', 'note')})
     ]
 
-    search_fields = (
-        'library_type', 'library_construction_protocol', 'note',)
+    search_fields = ('library_type', 'library_construction_protocol', 'note',)
     list_display = ('library_type', 'base_pairs_string', 'library_construction_protocol',)
     list_filter = ('library_type',)
 
@@ -38,6 +38,7 @@ class ProtocolAdmin(admin.ModelAdmin):
 class RunAdmin(admin.ModelAdmin):
     class RunForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = GBRRun
             widgets = {
                 'sample': LinkedSelect(attrs={'style': 'width:50%'}),
@@ -48,7 +49,6 @@ class RunAdmin(admin.ModelAdmin):
             }
 
     form = RunForm
-
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),
@@ -73,6 +73,7 @@ class RunAdmin(admin.ModelAdmin):
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = GBRSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -84,6 +85,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = GBRSample
             widgets = {
                 'bpa_id': LinkedSelect(
@@ -184,6 +186,7 @@ admin.site.register(GBRSample, SampleAdmin)
 class CollectionEventAdmin(admin.ModelAdmin):
     class CollectionForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = CollectionEvent
             widgets = {
                 'site': LinkedSelect,
@@ -198,7 +201,6 @@ class CollectionEventAdmin(admin.ModelAdmin):
             }
 
     form = CollectionForm
-
     fieldsets = [
         ('Collection',
          {'fields': (
@@ -224,6 +226,7 @@ class CollectionEventAdmin(admin.ModelAdmin):
 class SiteAdmin(admin.ModelAdmin):
     class CollectionForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = CollectionSite
             widgets = {
                 'site_name': AutosizedTextarea(
@@ -237,7 +240,6 @@ class SiteAdmin(admin.ModelAdmin):
             }
 
     form = CollectionForm
-
     fieldsets = [
         ('Collection',
          {'fields': (

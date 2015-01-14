@@ -11,6 +11,7 @@ from .models import PathogenSequenceFile
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = PathogenProtocol
         widgets = {
             'run': LinkedSelect,
@@ -33,6 +34,7 @@ class ProtocolAdmin(admin.ModelAdmin):
 class RunAdmin(admin.ModelAdmin):
     class RunForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = PathogenRun
             widgets = {
                 'sample': LinkedSelect,
@@ -68,6 +70,7 @@ class RunAdmin(admin.ModelAdmin):
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = PathogenSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -89,6 +92,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = PathogenSample
             widgets = {
                 'bpa_id': LinkedSelect(attrs={'style': 'width:50%'}),
@@ -104,7 +108,6 @@ class SampleAdmin(admin.ModelAdmin):
             }
 
     form = SampleForm
-
     suit_form_tabs = (
         ('id', 'Sample ID and Sequence Files'),
         ('dna', 'DNA/RNA'),

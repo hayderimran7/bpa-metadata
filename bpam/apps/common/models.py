@@ -244,7 +244,7 @@ class URLVerification(models.Model):
 
     checked_url = models.URLField()
     checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
-    status_ok = models.BooleanField()
+    status_ok = models.NullBooleanField(null=True, default=False)
     status_note = models.TextField()
 
 
@@ -264,7 +264,7 @@ class SequenceFile(models.Model):
     analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
 
-    url_verification = models.OneToOneField(URLVerification, null=True)
+    url_verification = models.ForeignKey(URLVerification, null=True)
 
     class Meta:
         abstract = True

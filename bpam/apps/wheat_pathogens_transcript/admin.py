@@ -11,6 +11,7 @@ from .models import WheatPathogenTranscriptSequenceFile
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = WheatPathogenTranscriptProtocol
         widgets = {
             'run': LinkedSelect,
@@ -33,6 +34,7 @@ class ProtocolAdmin(admin.ModelAdmin):
 class RunAdmin(admin.ModelAdmin):
     class RunForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = WheatPathogenTranscriptRun
             widgets = {
                 'sample': LinkedSelect,
@@ -68,6 +70,7 @@ class RunAdmin(admin.ModelAdmin):
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = WheatPathogenTranscriptSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -89,6 +92,7 @@ class SampleAdmin(admin.ModelAdmin):
 
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = WheatPathogenTranscriptSample
             widgets = {
                 'bpa_id': LinkedSelect(attrs={'style': 'width:50%'}),
@@ -98,7 +102,6 @@ class SampleAdmin(admin.ModelAdmin):
                 'collection_date': SuitDateWidget,
                 'contact_bioinformatician': LinkedSelect,
                 'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                # 'collection_location': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
                 'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})
             }
 

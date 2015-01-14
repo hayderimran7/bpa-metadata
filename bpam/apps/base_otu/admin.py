@@ -7,6 +7,7 @@ from .models import OperationalTaxonomicUnit, SampleOTU
 class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
     class Form(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = OperationalTaxonomicUnit
             widgets = {
                 'name': forms.TextInput(),
@@ -20,6 +21,7 @@ class OperationalTaxonomicUnitAdmin(admin.ModelAdmin):
 class SampleOTUAdmin(admin.ModelAdmin):
     class Form(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = SampleOTU
             widgets = {
                 'name': forms.TextInput(),

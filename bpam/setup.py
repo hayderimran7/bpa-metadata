@@ -29,7 +29,7 @@ else:
     package_data = get_data_files()
 
 install_requires = [
-    'Django==1.7.1',
+    'Django==1.7.2',
     'Django-suit>=0.2.6,<0.3',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
@@ -37,7 +37,7 @@ install_requires = [
     'boto>=2.15.0',
     'python-dateutil==1.5',  # 2.0 for Python >= 3
     'django-admin-tools>=0.5.1',
-    'django-extensions==1.4.8',  # 1.3.11 doesn't hide errors
+    'django-extensions==1.3.11',  # 1.3.11 doesn't hide errors
     'django-localflavor>=1.0',
     'django-tinymce>=1.5.2',
     'django-localflavor',
@@ -60,7 +60,7 @@ install_requires = [
     'ccg-django-utils',
     'django-debug-toolbar',
     'beautifulsoup4',
-    'djangorestframework==3.0.0',
+    'djangorestframework==3.0.3',
     'markdown',
     'django-filter',
     'uwsgi==2.0.8',

@@ -11,6 +11,7 @@ admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = MetagenomicsSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -22,6 +23,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class SampleAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = MetagenomicsSample
             widgets = {
                 'bpa_id': LinkedSelect(
@@ -93,6 +95,7 @@ admin.site.register(MetagenomicsSample, SampleAdmin)
 class MetagenomicsRunAdmin(admin.ModelAdmin):
     class RunForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = MetagenomicsRun
             widgets = {
                 'sample': LinkedSelect(attrs={'style': 'width:50%'}),
@@ -103,7 +106,6 @@ class MetagenomicsRunAdmin(admin.ModelAdmin):
             }
 
     form = RunForm
-
     fieldsets = [
         ('Sample',
          {'fields': ('sample',)}),

@@ -31,7 +31,6 @@ class BPAUserAdmin(UserAdmin):
     list_display = ('username', 'project', 'first_name', 'last_name', 'email', 'is_staff')
     list_filter = ('groups', 'last_name')
 
-    # fieldsets = UserAdmin.fieldsets + (('Note', {'fields': ('note',)}),)
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal Info', {'fields': ('first_name', 'last_name', 'project', 'email', 'telephone')}),

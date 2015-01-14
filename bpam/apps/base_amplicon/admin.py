@@ -24,6 +24,7 @@ admin.site.register(AmpliconSequenceFile, AmpliconSequenceFileAdmin)
 
 class SequenceFileInlineForm(forms.ModelForm):
     class Meta:
+        fields = "__all__"
         model = AmpliconSequenceFile
         widgets = {
             'filename': forms.TextInput(attrs={'class': 'input-xxlarge'}),
@@ -35,6 +36,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 class AmpliconMetadaAdmin(admin.ModelAdmin):
     class SampleForm(forms.ModelForm):
         class Meta:
+            fields = "__all__"
             model = AmpliconSequencingMetadata
             widgets = {
                 'bpa_id': LinkedSelect(
@@ -115,6 +117,7 @@ admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
 #
 #     form = RunForm
 #
+#     fields = "__all__"
 #     fieldsets = [
 #         ('Sample',
 #          {'fields': ('sample',)}),
