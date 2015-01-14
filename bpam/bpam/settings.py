@@ -17,9 +17,8 @@ BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 PROJECT_DIR = Path(__file__).ancestor(1)
-MEDIA_ROOT = PROJECT_DIR.child("media")
 
-CCG_WRITEABLE_DIRECTORY = os.path.join(CCG_INSTALL_ROOT, "scratch")
+CCG_WRITABLE_DIRECTORY = env.get("writable_directory", os.path.join(CCG_INSTALL_ROOT, "scratch"))
 PROJECT_NAME = os.path.basename(CCG_INSTALL_ROOT)
 
 TEMPLATE_DIRS = (
@@ -28,14 +27,14 @@ TEMPLATE_DIRS = (
 
 # Make this unique, and don't share it with anybody.
 # see: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = env.get("secret_key", "" if env.get("production", False) else "change-it")
+SECRET_KEY = env.get("secret_key", "change-it")
 
 # Default SSL on and forced, turn off if necessary
 SSL_ENABLED = env.get("production", False)
 SSL_FORCE = env.get("production", False)
 
 # Debug on by default
-DEBUG = not env.get("production", False)
+DEBUG = env.get("debug", True)
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -76,7 +75,7 @@ if env.get("ENABLE_EMAIL", False):
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     else:
         EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-        EMAIL_FILE_PATH = os.path.join(CCG_WRITEABLE_DIRECTORY, "mail")
+        EMAIL_FILE_PATH = os.path.join(CCG_WRITABLE_DIRECTORY, "mail")
         if not os.path.exists(EMAIL_FILE_PATH):
             from distutils.dir_util import mkpath
 
@@ -120,23 +119,24 @@ REST_FRAMEWORK = {
 
 # Default cookie settings
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
-SESSION_COOKIE_AGE = 60 * 60
-SESSION_COOKIE_PATH = '{0}/'.format(BASE_URL_PATH)
-SESSION_COOKIE_NAME = 'bpametadata_sessionid'
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_COOKIE_HTTPONLY = False  # CHange from True
-SESSION_COOKIE_SECURE = False  # Changed from True
-
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
-CSRF_COOKIE_NAME = "csrftoken_bpametadata"
-CSRF_COOKIE_SECURE = False  # Changed from True
-CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or None
+SESSION_COOKIE_AGE = env.get("session_cookie_age", 60 * 60)
+SESSION_COOKIE_PATH = '{0}/'.format(BASE_URL_PATH)
+SESSION_SAVE_EVERY_REQUEST = env.get("session_save_every_request", True)
+SESSION_COOKIE_HTTPONLY = env.get("session_cookie_httponly", True)
+SESSION_COOKIE_SECURE = env.get("session_cookie_secure", False)
+SESSION_COOKIE_NAME = env.get("session_cookie_name", "bpam_{0}".format(BASE_URL_PATH.replace("/", "")))
+SESSION_COOKIE_DOMAIN = env.get("session_cookie_domain", "") or None
+CSRF_COOKIE_NAME = env.get("csrf_cookie_name", "csrf_{0}".format(SESSION_COOKIE_NAME))
+CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or SESSION_COOKIE_DOMAIN
+CSRF_COOKIE_PATH = env.get("csrf_cookie_path", SESSION_COOKIE_PATH)
+CSRF_COOKIE_SECURE = env.get("csrf_cookie_secure", False)
 
 # Default date input formats, may be overridden
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
-TIME_ZONE = 'Australia/Perth'
-LANGUAGE_CODE = 'en-us'
-USE_I18N = False
+TIME_ZONE = env.get("time_zone", 'Australia/Perth')
+LANGUAGE_CODE = env.get("language_code", 'en-us')
+USE_I18N = env.get("use_i18n", True)
 USE_L10N = False
 DATE_INPUT_FORMATS = ('%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y', '%d %m %Y', '%d %m %y', '%d %b %Y')
 DATE_FORMAT = "d-m-Y"
@@ -218,12 +218,12 @@ USE_TZ = True
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
+MEDIA_ROOT = env.get('media_root', PROJECT_DIR.child("media"))
 MEDIA_URL = ''
-
-STATIC_ROOT = os.path.join(CCG_INSTALL_ROOT, 'static')
 
 # These may be overridden, but it would be nice to stick to this convention
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#static-url
+STATIC_ROOT = env.get('static_root', os.path.join(CCG_INSTALL_ROOT, 'static'))
 STATIC_URL = '{0}/static/'.format(BASE_URL_PATH)
 
 
@@ -301,7 +301,13 @@ INSTALLED_APPS = (
 )
 
 # Log directory created and enforced by puppet
-CCG_LOG_DIRECTORY = os.path.join(CCG_INSTALL_ROOT, "log")
+CCG_LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_INSTALL_ROOT, "log"))
+try:
+    if not os.path.exists(CCG_LOG_DIRECTORY):
+        os.mkdir(CCG_LOG_DIRECTORY)
+except:
+    pass
+os.path.exists(CCG_LOG_DIRECTORY), "No log directory, please create one: %s" % CCG_LOG_DIRECTORY
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -361,25 +367,39 @@ if env.get("DEBUG_TOOLBAR", False):
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
 DEFAULT_PAGINATION = 50
 
-if env.get("memcache", False):
+# This honours the X-Forwarded-Host header set by our nginx frontend when
+# constructing redirect URLS.
+# see: https://docs.djangoproject.com/en/1.4/ref/settings/#use-x-forwarded-host
+USE_X_FORWARDED_HOST = env.get("use_x_forwarded_host", True)
+
+if env.get("memcache", ""):
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
             'LOCATION': env.getlist("memcache", []),
-            'KEYSPACE': "%s-prod" % PROJECT_NAME,
+            'KEY_PREFIX': env.get("key_prefix", "bpam"),
+            #'KEYSPACE': "%s-prod" % PROJECT_NAME,
         }
     }
+
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'bpam_cache',
+            'TIMEOUT': 3600,
+            'MAX_ENTRIES': 600
         }
     }
+
+    SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+    SESSION_FILE_PATH = CCG_WRITABLE_DIRECTORY
 
 CHMOD_USER = env.get("repo_user", "apache")
 CHMOD_GROUP = env.get("repo_group", "apache")
 
-REPO_FILES_ROOT = env.get("repo_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'files'))
-QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'quotes'))
+REPO_FILES_ROOT = env.get("repo_files_root", os.path.join(CCG_WRITABLE_DIRECTORY, 'files'))
+QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITABLE_DIRECTORY, 'quotes'))
 
 
