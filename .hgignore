@@ -27,3 +27,4 @@ syntax:glob
 data/
 metadata/
 users/
+bpam/bpam/static/

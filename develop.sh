@@ -344,9 +344,16 @@ unittest() {
     activate_virtualenv
     (
        cd ${CONFIG_DIR}
-       python manage.py test --settings=bpam.nsettings.test --traceback
+       python manage.py test --settings=bpam.testsettings --traceback
     )
 }
+
+# run all unit tests and then coverage
+test() {
+   unittest
+   run_coverage
+}
+
 
 url_checker() {
     activate_virtualenv
@@ -375,11 +382,9 @@ system_check() {
 }
 
 usage() {
-    log_warning "Usage ./develop.sh check"
+    log_warning "Usage ./develop.sh (check|test|lint|jslint|unittest|coverage)"
     log_warning "Usage ./develop.sh make_local_instance"
     log_warning "Usage ./develop.sh load_base"
-    log_warning "Usage ./develop.sh (lint|jslint)"
-    log_warning "Usage ./develop.sh (unittest|coverage)"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
@@ -404,6 +409,9 @@ case ${ACTION} in
         ;;
     check)
         system_check
+        ;;
+    test)
+        test
         ;;
     deepclean)
         deepclean
