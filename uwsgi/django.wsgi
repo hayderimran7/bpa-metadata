@@ -14,4 +14,7 @@ def application(environ, start):
         environ['SCRIPT_NAME']=environ['HTTP_SCRIPT_NAME']
         os.environ['SCRIPT_NAME']=environ['HTTP_SCRIPT_NAME']
 
+    import django
+    django.setup()
+
     return django.core.handlers.wsgi.WSGIHandler()(environ,start)
