@@ -332,10 +332,10 @@ dev() {
     devrun
 }
 
-coverage() {
+run_coverage() {
     activate_virtualenv
     log_info "Running coverage with reports"
-    coverage `run ../manage.py test --settings=bpam.nsettings.test --traceback`
+    coverage run ./bpam/manage.py test --settings=bpam.testsettings --traceback
     coverage html --include=" $ SITE_URL*" --omit="admin.py"
 }
 
@@ -369,7 +369,13 @@ nuclear() {
     ingest_all
 }
 
+system_check() {
+    activate_virtualenv
+    python ./bpam/manage.py check
+}
+
 usage() {
+    log_warning "Usage ./develop.sh check"
     log_warning "Usage ./develop.sh make_local_instance"
     log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (lint|jslint)"
@@ -396,11 +402,14 @@ case ${ACTION} in
     migrationupdate)
         migrationupdate
         ;;
+    check)
+        system_check
+        ;;
     deepclean)
         deepclean
         ;;
     coverage)
-        coverage
+        run_coverage
         ;;
     unittest)
         unittest
