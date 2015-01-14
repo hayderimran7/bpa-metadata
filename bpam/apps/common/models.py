@@ -264,7 +264,7 @@ class SequenceFile(models.Model):
     analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
 
-    url_verification = models.ForeignKey(URLVerification, null=True, default=False)
+    url_verification = models.ForeignKey(URLVerification, null=True)
 
     class Meta:
         abstract = True
