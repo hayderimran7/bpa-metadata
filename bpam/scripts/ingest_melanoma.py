@@ -129,7 +129,6 @@ def ingest_arrays(arrays):
             return 'F'
         return 'U'
 
-
     for e in arrays:
         bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma', )
         Array.objects.get_or_create(
@@ -243,7 +242,6 @@ def ingest_runs(sample_data):
 
         sequencer, _ = Sequencer.objects.get_or_create(name=name)
         return sequencer
-
 
     def get_run_number(entry):
         """

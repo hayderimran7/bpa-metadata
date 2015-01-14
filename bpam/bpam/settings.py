@@ -48,6 +48,7 @@ ADMINS = [
 ]
 MANAGERS = ADMINS
 
+
 if env.get("ENABLE_EMAIL", False):
     print('Enabling Email')
     # email settings for sending email error alerts etc
