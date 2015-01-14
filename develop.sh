@@ -335,8 +335,10 @@ dev() {
 run_coverage() {
     activate_virtualenv
     log_info "Running coverage with reports"
-    coverage run ./bpam/manage.py test --settings=bpam.testsettings --traceback
-    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+    (  cd ${CONFIG_DIR}
+       coverage run manage.py test --settings=bpam.testsettings --traceback
+       coverage html --include=" $ SITE_URL*" --omit="admin.py"
+     )
 }
 
 unittest() {
