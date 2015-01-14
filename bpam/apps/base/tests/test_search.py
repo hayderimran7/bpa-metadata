@@ -117,7 +117,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 2, "simple single search failed"
 
-    def testSimpleRangeSearch(self):
+    def test_SimpleRangeSearch(self):
         b = SearchBuilder()
         b.and_search()
         b.no_taxonomy()
@@ -126,7 +126,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 2, "simple range search failed"
 
-    def testComplexAndSearch(self):
+    def test_ComplexAndSearch(self):
         b = SearchBuilder()
         b.and_search()
         b.no_taxonomy()
@@ -136,7 +136,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 1, "complex search and failed"
 
-    def testComplexOrSearch(self):
+    def test_ComplexOrSearch(self):
         b = SearchBuilder()
         b.or_search()
         b.no_taxonomy()
@@ -146,7 +146,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 3, "complex or search failed"
 
-    def testTaxonomySearchOnAllSamples1(self):
+    def test_TaxonomySearchOnAllSamples1(self):
         b = SearchBuilder()
         b.search_all()
         b.and_search()
@@ -155,7 +155,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 3, "taxomic on all failed kingdom"
 
-    def testTaxonomyAndComplexSearch(self):
+    def test_TaxonomyAndComplexSearch(self):
         b = SearchBuilder()
         b.and_search()
         b.taxonomy_filter(kingdom="a", phylum="b", klass="c")
@@ -165,7 +165,7 @@ class SearchTestCase(TestCase):
         print results
         assert len(results) == 2, "complex taxomic search failed"
 
-    def testTaxonomyAndComplexSearch2(self):
+    def test_TaxonomyAndComplexSearch2(self):
         b = SearchBuilder()
         b.and_search()
         b.taxonomy_filter(kingdom="a", phylum="b", klass="dfkdjsfdsfj")
@@ -174,7 +174,7 @@ class SearchTestCase(TestCase):
         results = searcher.complex_search()
         assert len(results) == 0, "complex taxomic search failed"
 
-    def testTaxonomyAndComplexSearch3(self):
+    def test_TaxonomyAndComplexSearch3(self):
         b = SearchBuilder()
         b.and_search()
         b.taxonomy_filter(kingdom="a", phylum="b", klass="c")
