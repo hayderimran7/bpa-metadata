@@ -335,8 +335,10 @@ dev() {
 run_coverage() {
     activate_virtualenv
     log_info "Running coverage with reports"
-    coverage run ./bpam/manage.py test --settings=bpam.testsettings --traceback
-    coverage html --include=" $ SITE_URL*" --omit="admin.py"
+    (  cd ${CONFIG_DIR}
+       coverage run manage.py test --settings=bpam.testsettings --traceback
+       coverage html --include=" $ SITE_URL*" --omit="admin.py"
+     )
 }
 
 unittest() {
@@ -347,6 +349,23 @@ unittest() {
        python manage.py test --settings=bpam.testsettings --traceback
     )
 }
+
+unittest_real_engine() {
+    log_info "Running Unit Tests against the real db engine"
+    activate_virtualenv
+    (
+       cd ${CONFIG_DIR}
+       CMD='python manage.py'
+       SETTINGS='--settings=bpam.testsettings_actual_engine'
+       log_info "Resetting test DB"
+       ${CMD} reset_db --user=postgres --router=default --traceback ${SETTINGS}
+       log_info "Syncing test DB"
+       ${CMD} syncdb --noinput --traceback ${SETTINGS}
+       ${CMD} migrate --traceback ${SETTINGS}
+       ${CMD} test --traceback ${SETTINGS}
+    )
+}
+
 
 # run all unit tests and then coverage
 test() {
@@ -382,7 +401,7 @@ system_check() {
 }
 
 usage() {
-    log_warning "Usage ./develop.sh (check|test|lint|jslint|unittest|coverage)"
+    log_warning "Usage ./develop.sh (check|test|test_real_engine|lint|jslint|unittest|coverage)"
     log_warning "Usage ./develop.sh make_local_instance"
     log_warning "Usage ./develop.sh load_base"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
@@ -412,6 +431,9 @@ case ${ACTION} in
         ;;
     test)
         test
+        ;;
+    test_real_engine)
+        unittest_real_engine
         ;;
     deepclean)
         deepclean
