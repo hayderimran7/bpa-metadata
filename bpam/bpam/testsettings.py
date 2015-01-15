@@ -14,8 +14,6 @@ from settings import *
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
-# TEST_RUNNER = "django.test.simple.DjangoTestSuiteRunner"
-# NOSE_PLUGINS = []
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

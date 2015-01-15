@@ -382,4 +382,7 @@ CHMOD_GROUP = env.get("repo_group", "apache")
 REPO_FILES_ROOT = env.get("repo_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'files'))
 QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITEABLE_DIRECTORY, 'quotes'))
 
+# this is here to placate the new system check framework, its also set in testsettings,
+# where it belongs
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
