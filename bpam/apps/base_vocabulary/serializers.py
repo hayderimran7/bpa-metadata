@@ -1,6 +1,18 @@
 from rest_framework import serializers
 
-from .models import *
+from .models import (
+    LandUse,
+    SoilTexture,
+    SoilColour,
+    GeneralEcologicalZone,
+    BroadVegetationType,
+    TillageType,
+    HorizonClassification,
+    AustralianSoilClassification,
+    FAOSoilClassification,
+    DrainageClassification,
+    ProfilePosition
+)
 
 
 class LandUseSerializer(serializers.ModelSerializer):

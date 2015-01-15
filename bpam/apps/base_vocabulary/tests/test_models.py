@@ -1,6 +1,5 @@
 from django.test import TestCase
 from model_mommy import mommy
-# from model_mommy.recipe import Recipe, seq
 from ..models import LandUse
 from ..models import SoilTexture
 
@@ -23,5 +22,3 @@ class SoilTextureTests(TestCase):
 
     def test_list(self):
         self.assertEquals(len(SoilTexture.objects.all()), self._COUNT)
-
-

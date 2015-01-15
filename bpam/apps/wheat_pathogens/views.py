@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
-from .models import *
+from .models import PathogenSample, PathogenSequenceFile
 
 
 class IndexView(TemplateView):

@@ -124,14 +124,12 @@ class SampleAdmin(admin.ModelAdmin):
          {'classes': ('suit-tab suit-tab-dna',),
           'fields': (
               'dna_extraction_protocol',
-              'protocol_reference',
-          )}),
+              'protocol_reference',)}),
         (None,  # 'Notes',
          {'classes': ('suit-tab suit-tab-notes',),
           'fields': (
               'note',
-              'debug_note')}
-        ),
+              'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
@@ -149,8 +147,3 @@ admin.site.register(CultivarSample, SampleAdmin)
 admin.site.register(CultivarProtocol, ProtocolAdmin)
 admin.site.register(CultivarSequenceFile, CultivarsSequenceFileAdmin)
 admin.site.register(CultivarRun, RunAdmin)
-
-    
-    
-    
-

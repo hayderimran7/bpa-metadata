@@ -21,11 +21,3 @@ def run():
             for u3 in u2[1]:
                 logger.info('Adding %s', u3)
                 LandUse.objects.get_or_create(order=0, description=u3, parent=parent_u2)
-
-
-
-
-
-
-
-

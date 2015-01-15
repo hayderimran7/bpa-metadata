@@ -171,8 +171,3 @@ admin.site.register(PathogenSample, SampleAdmin)
 admin.site.register(PathogenProtocol, ProtocolAdmin)
 admin.site.register(PathogenSequenceFile, PathogenSequenceFileAdmin)
 admin.site.register(PathogenRun, RunAdmin)
-
-    
-    
-    
-

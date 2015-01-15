@@ -1,5 +1,4 @@
 from django.views.generic import TemplateView, ListView, DetailView
-# from django.conf import settings
 
 from .models import CultivarSample, CultivarSequenceFile
 

@@ -84,6 +84,7 @@ downloads_requires = [
     'Jinja2>=2.7.1',
 ]
 
+# TODO clean up this mess
 dependency_links = [
     'https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.1.tar.gz',
     'https://bitbucket.org/ccgmurdoch/ccg-django-utils/downloads/ccg-django-utils-0.2.1.tar.gz',

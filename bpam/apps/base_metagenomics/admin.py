@@ -3,7 +3,11 @@ from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
-from models import *
+from models import (
+    MetagenomicsSequenceFile,
+    MetagenomicsSample,
+    MetagenomicsRun,
+)
 
 
 admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)

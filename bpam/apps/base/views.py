@@ -29,6 +29,9 @@ class AbstractSearchableListView(ListView, FormMixin):
         super(AbstractSearchableListView, self).__init__(*args, **kwargs)
         self.form_data = {}
 
+        self.form = None
+        self.object_list = None
+
     def get(self, request):
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
@@ -42,7 +45,7 @@ class AbstractSearchableListView(ListView, FormMixin):
         allow_empty = self.get_allow_empty()
         self.context_object_name = self.get_search_items_name()
         if not allow_empty and len(self.object_list) == 0:
-            raise Http404(_(u"Empty list and '%(class_name)s.allow_empty' is False.")
+            raise Http404(u"Empty list and '%(class_name)s.allow_empty' is False."
                           % {'class_name': self.__class__.__name__})
 
         context = self.get_context_data(object_list=self.object_list, search_form=self.form)
@@ -140,8 +143,8 @@ class BASESearchView(AbstractSearchableListView):
         parameters["search_genus"] = post_data.get("genus", None)
         parameters["search_species"] = post_data.get("species", None)
 
-        def key_name(prefix, i):
-            return "%s%s" % (prefix, i)
+        def key_name(prefix, _i):
+            return "{}{}".format(prefix, _i)
 
         i = 0
         finished_collecting = False
@@ -172,14 +175,13 @@ class BASESearchView(AbstractSearchableListView):
                     value = (min_value, max_value)
 
                 else:
-                    raise Exception("Unknown search for serach term with index %s: %s" % (i, search_type))
+                    raise Exception("Unknown search for search term with index {}: {}".format(i, search_type))
 
                 search_terms.append((field, value))
                 i += 1
 
             else:
                 finished_collecting = True
-
 
         # search terms is a list of (field, value) pairs where value is itself a (min, max) pair
         # for a range search
@@ -303,8 +305,6 @@ class StandardisedVocabularyLookUpView(View):
         else:
             model_name, field_name = vocab.split(".")
             from apps.base_vocabulary import models as m
-
-
             model = getattr(m, model_name)
             return model, field_name
 
