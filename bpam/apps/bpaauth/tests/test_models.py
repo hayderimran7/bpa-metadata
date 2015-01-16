@@ -23,7 +23,7 @@ class BPAUserTests(TestCase):
         mommy.make(BPAUser, _quantity=self.USER_COUNT)
 
     def test_list(self):
-        self.assertEquals(len(BPAUser.objects.all()), self.USER_COUNT)
+        self.assertEquals(len(BPAUser.objects.all()), self.USER_COUNT + 2)  # the data migration adds the su
 
     def test_no_user(self):
         self.assertRaises(BPAUser.DoesNotExist, lambda: BPAUser.objects.get(username='testuser666'))
