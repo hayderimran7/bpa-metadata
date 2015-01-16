@@ -156,7 +156,7 @@ class Searcher(object):
         def get_objects(klass, field_value_pairs):
             filters = []
             for _field, _value in field_value_pairs:
-                if isinstance(type(_value), ()):
+                if isinstance(value, type(())):
                     # range filter
                     filter_dict_key = "%s__range" % _field
                 else:
