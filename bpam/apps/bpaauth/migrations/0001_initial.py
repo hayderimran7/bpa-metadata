@@ -17,8 +17,6 @@ class Migration(migrations.Migration):
         BPAUser.objects.create_superuser('admin', '', 'admin_')
         BPAUser.objects.create_superuser('ccg-user', '', '3.14159265359')
 
-
-
     dependencies = [
         ('auth', '0001_initial'),
     ]

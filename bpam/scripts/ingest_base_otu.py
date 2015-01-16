@@ -9,7 +9,7 @@ from libs import logger_utils
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs.fetch_data import Fetcher
-from apps.base_otu.models import *
+from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
 from apps.base.models import BASESample
 from libs.excel_wrapper import ExcelWrapper
 from django.conf import settings
@@ -30,7 +30,7 @@ def strip_count(val):
 
 
 def ingest_taxonomy(file_name):
-    kingdoms = map(lambda e: e[0], OperationalTaxonomicUnit.KINGDOMS)
+    kingdoms = map(lambda _e: _e[0], OperationalTaxonomicUnit.KINGDOMS)
 
     def is_valid_kingdom(kingdom):
         """ Only valid kingdom entries are allowed"""
@@ -50,7 +50,7 @@ def ingest_taxonomy(file_name):
                   ('family', 'family', strip_count),
                   ('genus', 'genus', strip_count),
                   ('species', 'species', strip_count),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
@@ -115,7 +115,7 @@ class OTUCache(object):
                 self.cache[otu_name] = otu
                 return otu
             except OperationalTaxonomicUnit.DoesNotExist, e:
-                logger.error('OTU {0} Does not exist'.format(otu_name))
+                logger.error('OTU {} Does not exist {}'.format(otu_name, str(e)))
                 return None
 
 
@@ -133,7 +133,8 @@ class BPAIDLookup(object):
             self.cache[key] = val
             return val
 
-    def get_bpa_id_from_key(self, sample_key):
+    @staticmethod
+    def get_bpa_id_from_key(sample_key):
         """
         Split out BPAID, some of the OTU matrixes have BPID_BLA, get rid of _BLA
         """
@@ -152,9 +153,10 @@ class ProgressReporter(object):
 
         self.then = time.time()
 
-    def file_len(self, fname):
+    @staticmethod
+    def file_len(file_name):
         i = -1
-        with open(fname) as f:
+        with open(file_name) as f:
             for i, l in enumerate(f):
                 pass
         return i
@@ -196,15 +198,15 @@ def _ingest_csv_file(csv_file, reporter):
     otu_cache = OTUCache()
     bpa_id_lookup = BPAIDLookup()
 
-    def _get_otu_id(row):
+    def _get_otu_id(_row):
         """
         inconsistent UTUID, OTUId
         """
         for _ID in ('OTUID', 'OTUId'):
-            if _ID in row:
-                otu = otu_cache.get(row[_ID])
-                row.pop(_ID)  # get rid of ID column here so I don't have to filter it out below
-                return otu, row
+            if _ID in _row:
+                _otu = otu_cache.get(_row[_ID])
+                _row.pop(_ID)  # get rid of ID column here so I don't have to filter it out below
+                return _otu, _row
 
         # should never get here
         logger.error('Could not get OTUID')
@@ -281,9 +283,3 @@ def run():
 
     do_taxonomies()
     do_otu_matrix()
-
-
-
-
-
-

@@ -100,7 +100,7 @@ def get_cultivar_sample_data(file_name):
                   ('corrected_sequence_filename', 'Comment[Corrected file name]', None),
                   ('sequence_filetype', 'Comment[file format]', None),
                   ('md5_checksum', 'Comment[MD5 checksum]', None),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(
         field_spec,
@@ -128,9 +128,10 @@ def ingest_runs(sample_data):
 
         base_pairs = entry.library_construction
         library_type = get_library_type(entry.library)
-        protocol, created = CultivarProtocol.objects.get_or_create(base_pairs=base_pairs,
-                                                                   library_type=library_type,
-                                                                   library_construction_protocol='Illumina Sequencing Protocol')
+        protocol, created = CultivarProtocol.objects.get_or_create(
+            base_pairs=base_pairs,
+            library_type=library_type,
+            library_construction_protocol='Illumina Sequencing Protocol')
         return protocol
 
     def get_sequencer(name):
@@ -179,7 +180,7 @@ def ingest_runs(sample_data):
 
         return cultivar_run
 
-    def add_file(entry, run):
+    def add_file(entry, wc_run):
         """
         Add each sequence file produced by a run
         """
@@ -190,7 +191,7 @@ def ingest_runs(sample_data):
         if file_name != "":
             f = CultivarSequenceFile()
             f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
-            f.run = run
+            f.run = wc_run
             f.index_number = ingest_utils.get_clean_number(entry.index)
             f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
             f.filename = file_name
@@ -200,8 +201,8 @@ def ingest_runs(sample_data):
             f.save()
 
     for e in sample_data:
-        run = add_run(e)
-        add_file(e, run)
+        _run = add_run(e)
+        add_file(e, _run)
 
 
 def truncate():

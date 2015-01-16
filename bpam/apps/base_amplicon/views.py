@@ -1,6 +1,9 @@
 from django.views.generic import ListView, DetailView, TemplateView
 
-from .models import *
+from .models import (
+    AmpliconSequencingMetadata,
+    AmpliconSequenceFile
+)
 
 
 class IndexView(TemplateView):
@@ -69,5 +72,3 @@ class AmpliconDetailView(DetailView):
         context['sequencefiles'] = AmpliconSequenceFile.objects.filter(sample__bpa_id=context['metadata'].bpa_id)
         context['sample'] = context['metadata']  # same name to make common sequence file template work
         return context
-
-

@@ -74,6 +74,3 @@ class AmpliconSequenceFile(SequenceFile):
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")
-
-
-

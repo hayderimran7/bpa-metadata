@@ -11,6 +11,7 @@ class CSVExporter(object):
     def __init__(self, model):
         self.model = model
         self.one_object_per_id = True
+        self.field_data = None
 
     def _get_fields(self, model, prefix=""):
         fields = []
@@ -18,12 +19,7 @@ class CSVExporter(object):
             if field.name == 'debug_note':
                 continue
             if model.__name__ == 'LandUse' and field.name == 'parent':
-                # this was casuing infinite loop ...
                 continue
-
-            verbose_name = "%s" % field.name
-            if not verbose_name:
-                verbose_name = field.name
 
             if prefix:
                 name = prefix + "." + field.name
@@ -50,7 +46,6 @@ class CSVExporter(object):
         export_file_obj.seek(0)
         return export_file_obj
 
-
     def _get_csv_filename(self):
         return "%s.csv" % self.model.__name__
 
@@ -58,15 +53,15 @@ class CSVExporter(object):
         return [pair[1] for pair in self.field_data]
 
     def _get_rows(self, ids):
-        for id in ids:
+        for _id in ids:
             if self.one_object_per_id:
-                model_instance = self._get_instance(id)
+                model_instance = self._get_instance(_id)
                 if model_instance is None:
                     instances = []
                 else:
                     instances = [model_instance]
             else:
-                instances = self._get_instance(id)
+                instances = self._get_instance(_id)
 
             if instances is None:
                 instances = []
@@ -85,11 +80,11 @@ class CSVExporter(object):
                     values.append(value)
                 yield values
 
-    def _get_instance(self, id):
+    def _get_instance(self, _id):
         try:
-            bpa_id = BPAUniqueID.objects.get(bpa_id=id)
+            bpa_id = BPAUniqueID.objects.get(bpa_id=_id)
         except BPAUniqueID.DoesNotExist:
-            logger.info("bpa_id %s does not exist!" % id)
+            logger.info("bpa_id %s does not exist!" % _id)
             return None
 
         return self._get_model_for_id(bpa_id)
@@ -119,11 +114,12 @@ class OTUExporter(CSVExporter):
         self.genus = genus
         self.species = species
         self.taxonomic_filters = {}
+        self.field_data = None
 
-        def add_taxonomic_filter(filter_dict, taxon):
-            value = getattr(self, taxon)
+        def add_taxonomic_filter(filter_dict, _taxon):
+            value = getattr(self, _taxon)
             if value != '---':
-                filter_dict["otu__" + taxon] = getattr(self, taxon)
+                filter_dict["otu__" + _taxon] = getattr(self, _taxon)
 
         for taxon in ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']:
             add_taxonomic_filter(self.taxonomic_filters, taxon)
@@ -144,7 +140,7 @@ class OTUExporter(CSVExporter):
                 ["otu.family", "Family"],
                 ["otu.genus", "Genus"],
                 ["otu.species", "Species"],
-        ]
+                ]
 
     def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
 

@@ -1,6 +1,5 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from django.shortcuts import render
-
 from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 
 
@@ -42,7 +41,6 @@ class SampleDetailView(DetailView):
     context_object_name = 'sample'
     template_name = 'melanoma/melanoma_sample_detail.html'
 
-
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         context['sequencefiles'] = MelanomaSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
@@ -79,4 +77,3 @@ def search_view(request, term):
 
 class ContactsView(TemplateView):
     template_name = 'contacts.html'
-

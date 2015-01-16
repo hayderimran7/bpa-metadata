@@ -35,6 +35,7 @@ from django.core.wsgi import get_wsgi_application
 from ccg_django_utils.conf import setup_prod_env
 setup_prod_env("bpam")
 
+
 def application(wenv, start_response):
     # Before entering the django app, transfer the SCRIPT_NAME http
     # header into an environment variable so settings can pick it up.

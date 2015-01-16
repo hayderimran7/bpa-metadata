@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
-from models import *
+from models import Sample454
 
 
 class Sample454Admin(admin.ModelAdmin):
@@ -38,13 +38,9 @@ class Sample454Admin(admin.ModelAdmin):
 
     fieldsets = [
         (None,
-         {'fields':
-              ('bpa_id', 'sample_id', 'aurora_purified', 'agrf_batch_number', 'submitter', 'date_received')
-         }),
+         {'fields': ('bpa_id', 'sample_id', 'aurora_purified', 'agrf_batch_number', 'submitter', 'date_received', )}),
         ('DNA Storage',
-         {'fields':
-              ('dna_storage_nunc_plate', 'dna_storage_nunc_tube', 'dna_storage_nunc_well_location', )
-         }),
+         {'fields': ('dna_storage_nunc_plate', 'dna_storage_nunc_tube', 'dna_storage_nunc_well_location', )}),
         ('AGRF Adelaide Extraction',
          {'description': 'Extracted at Adelaide Node',
           'fields':
@@ -55,8 +51,7 @@ class Sample454Admin(admin.ModelAdmin):
                'adelaide_pcr2',
                'adelaide_date_shipped_to_agrf_454',
                'adelaide_date_shipped_to_agrf_miseq',
-               'adelaide_date_shipped_to_ramacciotti')
-         }),
+               'adelaide_date_shipped_to_ramacciotti')}),
         ('Brisbane 454',
          {'description': 'Extracted at Brisbane Node',
           'fields':
@@ -75,8 +70,7 @@ class Sample454Admin(admin.ModelAdmin):
                'brisbane_i6s_pooled',
                'brisbane_its_pooled',
                'brisbane_16s_reads',
-               'brisbane_its_reads',)
-         }),
+               'brisbane_its_reads',)}),
         ('Comments and Notes',
          {'description': 'Any notes or comments on this Extraction',
           'fields': ('note', 'debug_note')})

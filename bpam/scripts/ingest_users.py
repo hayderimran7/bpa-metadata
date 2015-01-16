@@ -57,4 +57,3 @@ def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.fetch(BPA_USERS_FILE)
     ingest_contacts(DATA_DIR + BPA_USERS_FILE)
-

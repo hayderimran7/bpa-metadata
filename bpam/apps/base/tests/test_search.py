@@ -2,17 +2,24 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from apps.base.search import Searcher
-from apps.base_otu.models import *
-from apps.base_contextual.models import *
-from apps.base_metagenomics.models import *
+
+from apps.base_otu.models import (
+    SampleOTU,
+    OperationalTaxonomicUnit)
+
+from apps.base_contextual.models import (
+    BPAUniqueID,
+    CollectionSite,
+    ChemicalAnalysis,
+    SampleContext)
+
+from apps.base_metagenomics.models import MetagenomicsSample
 
 
 class SearchBuilder(object):
     # mocks parameters from the view
     def __init__(self):
-        self.parameters = {}
-        self.parameters["search_all"] = "No"
-        self.parameters["search_terms"] = []
+        self.parameters = {"search_all": "No", "search_terms": []}
         self.search_all(False)
 
     def and_search(self):

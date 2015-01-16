@@ -79,7 +79,6 @@ class Facility(models.Model):
     class Meta:
         verbose_name_plural = _('Facilities')
 
-
     def get_name(self, key):
         """
         Facilities are commonly known by theses names, return standard name.

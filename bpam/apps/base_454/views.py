@@ -13,4 +13,3 @@ class Sample454DetailView(DetailView):
     model = Sample454
     context_object_name = 'sample'
     template_name = 'base_454/454_detail.html'
-

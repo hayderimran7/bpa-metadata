@@ -79,7 +79,7 @@ def get_data(file_name):
                   ('name', 'Sample name on sample sheet', None),
                   ('analysis_software_version', 'AnalysisSoftwareVersion', None),
                   ('comments', 'Comments', None),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
@@ -148,12 +148,12 @@ def parse_md5_file(md5_file):
     targets = ('16S', '18S', 'ITS', 'A16S')
 
     def get_bpa_id_from_filename(parts):
-        for target in targets:
-            index = parts.index(target) if target in parts else -1
-            if index != -1:
-                bpa_id = '_'.join(filename_parts[:index])
-                rest = filename_parts[index:]
-                return bpa_id, rest
+        for _target in targets:
+            _index = parts.index(_target) if _target in parts else -1
+            if _index != -1:
+                bpa_id = '_'.join(filename_parts[:_index])
+                _rest = filename_parts[_index:]
+                return bpa_id, _rest
 
         return None, None
 
@@ -173,7 +173,7 @@ def parse_md5_file(md5_file):
             filename_parts = filename.split('_')
 
             extraction_id, rest = get_bpa_id_from_filename(filename_parts)
-            if extraction_id == None:
+            if extraction_id is None:
                 continue
 
             if len(rest) != 8:
@@ -212,14 +212,14 @@ def add_md5(data):
         sample, _ = BASESample.objects.get_or_create(bpa_id=bpa_id)
         return sample
 
-    def get_run(file_data):
+    def get_run(_file_data):
         sample = get_base_sample(extraction_id)
         if sample:
-            arun, _ = AmpliconRun.objects.get_or_create(sample=sample)
-            arun.sequencing_facility = Facility.objects.get(name=file_data['vendor'])
-            arun.flow_cell_id = file_data['well']
-            arun.save()
-            return arun
+            _amplicon_run, _ = AmpliconRun.objects.get_or_create(sample=sample)
+            _amplicon_run.sequencing_facility = Facility.objects.get(name=_file_data['vendor'])
+            _amplicon_run.flow_cell_id = _file_data['well']
+            _amplicon_run.save()
+            return _amplicon_run
         return None
 
     for file_data in data:

@@ -170,10 +170,5 @@ class TumorStageAdmin(admin.ModelAdmin):
 
     form = Form
 
-
 admin.site.register(TumorStage, TumorStageAdmin)
-
 admin.site.register(MelanomaSequenceFile, SequenceFileAdmin)
-    
-    
-

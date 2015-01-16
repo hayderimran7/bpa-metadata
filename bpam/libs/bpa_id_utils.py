@@ -39,6 +39,7 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     It also creates the necessary project.
+    :rtype : bpa_id
     """
 
     if not is_good_bpa_id(bpa_idx):

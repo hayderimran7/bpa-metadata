@@ -44,4 +44,3 @@ class MetagenomicsSequenceFile(SequenceFile):
 
     class Meta:
         verbose_name_plural = _("Metagenomics Sequence Files")
-

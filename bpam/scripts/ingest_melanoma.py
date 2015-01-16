@@ -175,7 +175,7 @@ def get_melanoma_sample_data(file_name):
                   ('lane_number', 'Lane number', None),
                   ('sequence_filename', 'Sequence file names - supplied by sequencing facility', None),
                   ('md5_checksum', 'MD5 checksum', None),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(
         field_spec,
@@ -298,7 +298,7 @@ def ingest_runs(sample_data):
 
         return nrun
 
-    def add_file(entry, run):
+    def add_file(entry, _run):
         """
         Add each sequence file produced by a run
         """
@@ -315,10 +315,10 @@ def ingest_runs(sample_data):
             return
 
         sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
-        f, created = MelanomaSequenceFile.objects.get_or_create(run=run, sample=sample)
+        f, created = MelanomaSequenceFile.objects.get_or_create(run=_run, sample=sample)
         if created:
             f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
-            f.run = run
+            f.run = _run
             f.index_number = ingest_utils.get_clean_number(entry.index_number)
             f.lane_number = ingest_utils.get_clean_number(entry.lane_number)
             f.filename = file_name

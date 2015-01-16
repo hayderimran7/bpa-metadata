@@ -203,24 +203,4 @@ class DNASourceFormAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DNASource, DNASourceFormAdmin)
-
 admin.site.register(Sequencer)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-

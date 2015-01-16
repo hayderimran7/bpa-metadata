@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import time
 import sys
 from pprint import pprint
@@ -34,10 +36,10 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
             setattr(obj, attr_name, uv)
         verifier = getattr(obj, attr_name)
         verifier.checked_url = url_fn(obj)
-        sys.stderr.write("HEAD %s: " % (verifier.checked_url))
+        sys.stderr.write("HEAD {}: ".format(verifier.checked_url))
         sys.stderr.flush()
         r = session.head(verifier.checked_url)
-        # direct access, or a redirect to the backend. redirects are precise, so 
+        # direct access, or a redirect to the backend. redirects are precise, so
         # we can be sure we'll find the backing file if they exist
         if r.status_code == 200 or r.status_code == 302:
             verifier.status_ok = True
@@ -107,7 +109,5 @@ def run(sleep_time=SLEEP_TIME):
 
     # check_melanoma(sleep_time)
     check_gbr(sleep_time)
-    #check_wheat_cultivars(sleep_time)
-    #check_wheat_pathogens(sleep_time)
-
-
+    # check_wheat_cultivars(sleep_time)
+    # check_wheat_pathogens(sleep_time)

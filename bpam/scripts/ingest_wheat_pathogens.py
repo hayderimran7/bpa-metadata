@@ -92,7 +92,6 @@ def ingest_samples(samples):
         pathogen_sample.index = e.index_sequence
         pathogen_sample.library_id = e.library_id
 
-
         # scientist
         pathogen_sample.contact_scientist = user_helper.get_user(
             e.contact_scientist,
@@ -274,7 +273,7 @@ def get_pathogen_sample_data(file_name):
                   ('locus_tag', 'Locus tag', None),
                   ('genome_analysis', 'Genome-Analysis', None),
                   ('metdata_file', 'Metadata file', None)
-    ]
+                  ]
 
     wrapper = ExcelWrapper(
         field_spec,

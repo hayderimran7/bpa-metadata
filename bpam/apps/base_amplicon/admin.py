@@ -12,8 +12,7 @@ class AmpliconSequenceFileAdmin(SequenceFileAdmin):
         ('Sequence File',
          {'fields': (
              'filename', 'md5', 'sample', 'lane_number', 'index_number', 'analysed',
-             'date_received_from_sequencing_facility', 'note'),
-         }),
+             'date_received_from_sequencing_facility', 'note'), }),
     ]
 
     list_display = ('get_sample_id', 'download_field', 'get_sample_name', 'date_received_from_sequencing_facility',)
@@ -104,11 +103,10 @@ class AmpliconMetadaAdmin(admin.ModelAdmin):
 
 admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
 
-
 # class AmpliconRunAdmin(admin.ModelAdmin):
 # class RunForm(forms.ModelForm):
-#         class Meta:
-#             model = AmpliconRun
+# class Meta:
+# model = AmpliconRun
 #             widgets = {
 #                 'sample': LinkedSelect(attrs={'style': 'width:50%'}),
 #                 'sequencing_facility': LinkedSelect,
@@ -136,4 +134,3 @@ admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
 #
 #
 # admin.site.register(AmpliconRun, AmpliconRunAdmin)
-

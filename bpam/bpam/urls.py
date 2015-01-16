@@ -33,4 +33,3 @@ urlpatterns = patterns(
     url(r'^$', TemplateView.as_view(template_name='landing/index.html'), name='landing_page'),
     url(r'^explorer/', include('explorer.urls')),
 )
-

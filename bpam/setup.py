@@ -57,7 +57,8 @@ install_requires = [
     'beautifulsoup4',
     'djangorestframework==3.0.3',
     'markdown',
-    'django-filter'
+    'django-filter',
+    'lettuce_webdriver',
 ]
 
 dev_requires = [

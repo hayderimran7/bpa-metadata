@@ -100,7 +100,6 @@ def ingest(file_name):
     def set_purified(p):
         return p.lower().find('purified') != -1
 
-
     field_spec = [('bpa_id', 'Unique ID', set_id),
                   ('sample_id', 'Sample ID', None),
                   ('aurora_purified', 'Aurora purified', set_purified),
@@ -137,8 +136,7 @@ def ingest(file_name):
                   ('brisbane_its_pooled', 'ITS pooled y=yes, n=no', set_flag),
                   ('brisbane_16s_reads', '16S >3000 reads - Trim Back 150bp', ingest_utils.get_clean_number),
                   ('brisbane_its_reads', 'ITS >3000 reads - Trim Back 150bp Run1', ingest_utils.get_clean_number),
-                  ('note', 'Sample comments', None),
-    ]
+                  ('note', 'Sample comments', None), ]
 
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.get_all():
@@ -215,6 +213,3 @@ def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.fetch(BASE_454)
     do_metadata()
-
-
-

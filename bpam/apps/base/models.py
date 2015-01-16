@@ -37,4 +37,3 @@ class BASESample(Sample, DebugNote):
             return ChemicalAnalysis.objects.get(bpa_id=self.bpa_id)
         except ChemicalAnalysis.DoesNotExist:
             return None
-

@@ -1,11 +1,11 @@
 import string
-from datetime import date
 import unittest
 import os
 import json
 
-from dateutil.parser import parse as date_parser
 import logger_utils
+from datetime import date
+from dateutil.parser import parse as date_parser
 from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 
@@ -100,7 +100,7 @@ def get_clean_float(val, default=None, stringconvert=True):
 
 def strip_all(reader):
     """
-    Scrub extra whitespace from values in the reader dicts as read from the csv files 
+    Scrub extra whitespace from values in the reader dicts as read from the csv files
     """
 
     entries = []
@@ -143,16 +143,13 @@ def pretty_print_namedtuple(named_tuple):
     """
     pretty prints the namedtuple
     """
-    # return pprint.pformat(named_tuple._asdict())
-
-    from datetime import datetime
 
     def json_serial(obj):
         """
         JSON serializer for objects not serializable by default json code
         """
 
-        if isinstance(obj, datetime):
+        if isinstance(obj, date):
             serial = obj.isoformat()
             return serial
 

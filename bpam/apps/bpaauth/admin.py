@@ -41,9 +41,3 @@ class BPAUserAdmin(UserAdmin):
 
 
 admin.site.register(BPAUser, BPAUserAdmin)
-
-
-    
-    
-    
-

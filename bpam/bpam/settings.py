@@ -198,8 +198,7 @@ SUIT_CONFIG = {
                     'metagenomicsrun')},
         {'app': 'base_amplicon', 'label': 'BASE Amplicons',
          'models': ('ampliconsequencingmetadata',
-                    'ampliconsequencefile',)
-        },
+                    'ampliconsequencefile', )},
         {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
         {'app': 'base_contextual', 'label': 'BASE Contextual', },
         {'app': 'base_otu', 'label': 'BASE OTU', },
@@ -385,4 +384,3 @@ QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITEABLE_DIRECT
 # this is here to placate the new system check framework, its also set in testsettings,
 # where it belongs
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-

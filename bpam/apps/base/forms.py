@@ -21,7 +21,7 @@ class BASESearchForm(forms.Form):
         ("vegetation_total_cover", "Vegetation Total cover (%)"),
         ("vegetation_dominant_trees", "Vegetation Dom. Trees"),
         # ("Vegetation Dom. Shrubs", "Vegetation Dom. Shrubs"),
-        #("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
+        # ("Vegetation Dom. Grasses", "Vegetation Dom. Grasses"),
         ("elevation", "Elevation (m)"),
         ("australian_soil_classification", "Australian Soil Classification"),
         ("fao_soil_type", "FAO soil classification"),
@@ -30,7 +30,7 @@ class BASESearchForm(forms.Form):
         ("tillage", "Tillage"),
         ("fire_history", "Fire History"),
         ("fire_intensity", "Fire Intensity"),
-        #("flooding", "")
+        # ("flooding", "")
         ("environment_events", "Environment Events"),
         ("moisture", "Soil moisture (%)"),
         ("colour", "Soil Colour"),
@@ -148,19 +148,20 @@ class BASESearchForm(forms.Form):
                 if not self._is_convertible_to_number(value):
                     raise forms.ValidationError("Enter a number")
 
-    def _is_convertible_to_number(self, value):
+    @staticmethod
+    def _is_convertible_to_number(value):
         integer_conversion_ok = float_conversion_ok = False
 
         try:
-            dummy = int(value)
+            int(value)
             integer_conversion_ok = True
-        except Exception:
+        except ValueError:
             pass
 
         try:
-            dummy = float(value)
+            float(value)
             float_conversion_ok = True
-        except Exception:
+        except ValueError:
             pass
 
         return integer_conversion_ok or float_conversion_ok

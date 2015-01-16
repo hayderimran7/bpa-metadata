@@ -62,7 +62,7 @@ def get_data(file_name):
                   ('file_name', 'FILE NAMES - supplied by sequencing facility', None),
                   ('md5sum', 'MD5 Checksum', None),
                   ('date_data_sent', 'Date data sent/transferred', ingest_utils.get_date),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
@@ -169,6 +169,3 @@ def run():
     fetcher.fetch_metadata_from_folder()
 
     do_metadata()
-
-
-

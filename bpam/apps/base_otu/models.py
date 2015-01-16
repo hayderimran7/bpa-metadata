@@ -43,4 +43,3 @@ class SampleOTU(models.Model):
 
     def __unicode__(self):
         return u"{0}:{1}:{2}".format(self.sample, self.otu, self.count)
-

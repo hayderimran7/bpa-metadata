@@ -1,6 +1,9 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
-from .models import *
+from .models import (
+    WheatPathogenTranscriptSample,
+    WheatPathogenTranscriptSequenceFile
+)
 
 
 class IndexView(TemplateView):

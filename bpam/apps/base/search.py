@@ -1,5 +1,4 @@
 from operator import and_, or_
-import re
 import logging
 
 from apps.base.models import BASESample
@@ -47,7 +46,8 @@ class SearchStrategy(object):
         of those picked out by the search query on the nominated model
         """
         if self.search_path is None:
-            search_field = searcher.search_field if searcher.search_type == Searcher.SEARCH_TYPE_FIELD else searcher.search_range
+            search_field = searcher.search_field if searcher.search_type == Searcher.SEARCH_TYPE_FIELD \
+                else searcher.search_range
         else:
             search_field = self.search_path  # set when navigating through sub-objects of model related via foreign key
 
@@ -58,7 +58,7 @@ class SearchStrategy(object):
             # range ( value between max and min )
             filter_dict = {search_field + "__range": (searcher.search_range_min, searcher.search_range_max)}
 
-        logger.debug("SearchStrategy filters = %s" % filter_dict)
+        logger.debug("SearchStrategy filters = {}".format(filter_dict))
 
         matches = self.model.objects.filter(**filter_dict)
         return self.return_model.objects.filter(bpa_id__in=[match.bpa_id for match in matches])
@@ -155,14 +155,14 @@ class Searcher(object):
         # otherwise , filter on the search form's content first
         def get_objects(klass, field_value_pairs):
             filters = []
-            for field, value in field_value_pairs:
-                if type(value) is type(()):
+            for _field, _value in field_value_pairs:
+                if type(_value).instanceoff(()):
                     # range filter
-                    filter_dict_key = "%s__range" % field
+                    filter_dict_key = "%s__range" % _field
                 else:
-                    filter_dict_key = field
+                    filter_dict_key = _field
 
-                filter_dict = {filter_dict_key: value}
+                filter_dict = {filter_dict_key: _value}
                 filters.append(filter_dict)
 
             qterms = [Q(**f) for f in filters]
@@ -181,7 +181,7 @@ class Searcher(object):
             if field == "sample_id":  # special case
                 try:
                     bpa_id = BPAUniqueID.objects.get(bpa_id=value)
-                    bpa_id_sets.append(set([bpa_id]))
+                    bpa_id_sets.append({bpa_id})
                 except BPAUniqueID.DoesNotExist:
                     bpa_id_sets.append(set([]))
             else:
@@ -189,7 +189,7 @@ class Searcher(object):
                     field_map = self.SEARCH_TABLE[model_class]
                     if field in field_map:
                         s = field_map[field]
-                        if type(s) is type(""):
+                        if s.instanceoff(""):
                             search_path = s
                         else:
                             if s.search_path:
@@ -197,7 +197,7 @@ class Searcher(object):
                             else:
                                 search_path = field
 
-                        if not model_class in search_model_map:
+                        if model_class not in search_model_map:
                             search_model_map[model_class] = [(search_path, value)]
                         else:
                             search_model_map[model_class].append((search_path, value))
@@ -216,7 +216,8 @@ class Searcher(object):
 
         return self._get_results(self._filter_on_taxonomy(bpa_ids))
 
-    def _get_results(self, bpa_ids):
+    @staticmethod
+    def _get_results(bpa_ids):
         """
         Get as much info as we can about these ids ( return list of dictionary with links etc)
 
@@ -230,17 +231,16 @@ class Searcher(object):
             MetagenomicsSample: 'base_metagenomics:sample',
         }
 
-        def get_object_detail_view_link(klass, bpa_id):
+        def get_object_detail_view_link(klass, _bpa_id):
             try:
-                obj = klass.objects.get(bpa_id=bpa_id)
+                obj = klass.objects.get(bpa_id=_bpa_id)
                 return reverse(detail_view_map[klass], args=(obj.pk,))
             except klass.DoesNotExist:
                 return ""
 
-        def get_amplicon_links(bpa_id):
-            amplicon_type_pattern = re.compile(r"^.*?_\d+?_(.*?)_.*$")
+        def get_amplicon_links(_bpa_id):
             links = []
-            for amplicon in AmpliconSequencingMetadata.objects.filter(bpa_id=bpa_id):
+            for amplicon in AmpliconSequencingMetadata.objects.filter(bpa_id=_bpa_id):
                 amplicon_type = amplicon.target
                 if not amplicon_type:
                     amplicon_type = "Unknown Target"
@@ -251,13 +251,13 @@ class Searcher(object):
 
             return links
 
-        def sc_display(bpa_id):
+        def sc_display(_bpa_id):
             try:
                 context = SampleContext.objects.select_related('bpa_id',
                                                                'context',
-                                                               'context__site__vegetation_type').get(bpa_id=bpa_id)
-            except SampleContext.DoesNotExist, ex:
-                return "No Contextual Data"
+                                                               'context__site__vegetation_type').get(bpa_id=_bpa_id)
+            except SampleContext.DoesNotExist, e:
+                return "No Contextual Data" + str(e)
 
             if context.site:
                 return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(),
@@ -283,10 +283,10 @@ class Searcher(object):
 
     def _filter_on_taxonomy(self, bpa_ids):
         """
-        :param results: a query set to filter based on taxonomy
+        :param bpa_ids: a query set to filter based on taxonomy
         :return:
         """
-        UNCHOSEN = "---"
+        _unchosen = "---"
 
         def query_pair(field, s):
             """
@@ -301,7 +301,7 @@ class Searcher(object):
 
         taxonomy_filters = []
 
-        skip = [UNCHOSEN, None, ""]
+        skip = [_unchosen, None, ""]
 
         if self.search_kingdom not in skip:
             taxonomy_filters.append(query_pair("kingdom", self.search_kingdom))
@@ -332,5 +332,3 @@ class Searcher(object):
         else:
             logger.debug('No taxonomy filtering will be applied')
             return bpa_ids
-
-

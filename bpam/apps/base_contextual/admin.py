@@ -271,12 +271,3 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ChemicalAnalysis, ChemicalAnalysisAdmin)
-
-
-
-
-
-
-    
-    
-

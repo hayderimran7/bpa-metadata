@@ -245,8 +245,7 @@ class SiteAdmin(admin.ModelAdmin):
          {'fields': (
              'site_name',
              'lat',
-             'lon'),
-         }),
+             'lon'), }),
         ('Note',
          {'fields': ('note',)}),
 
@@ -256,14 +255,8 @@ class SiteAdmin(admin.ModelAdmin):
     search_fields = ('site_name', 'lat', 'lon', 'note')
     list_filter = ('site_name', 'lat', 'lon',)
 
-
 admin.site.register(CollectionSite, SiteAdmin)
 admin.site.register(CollectionEvent, CollectionEventAdmin)
 admin.site.register(GBRProtocol, ProtocolAdmin)
 admin.site.register(GBRSequenceFile, SequenceFileAdmin)
 admin.site.register(GBRRun, RunAdmin)
-
-    
-    
-    
-

@@ -35,4 +35,3 @@ def set_bpa_projects():
 def run():
     logger.info('BPA Projects')
     set_bpa_projects()
-

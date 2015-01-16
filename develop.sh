@@ -302,7 +302,6 @@ ipaddress() {
 startserver() {
     settings
     echo "Visit http://$(ipaddress eth0):${PORT}/"
-    # ${VIRTUALENV}/bin/django-admin.py runserver_plus 0.0.0.0:${PORT} --traceback
     ${VIRTUALENV}/bin/python bpam/manage.py runserver_plus 0.0.0.0:${PORT} --traceback
 }
 

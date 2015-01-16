@@ -6,7 +6,20 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
-from apps.base_contextual.models import *
+from apps.base_contextual.models import (
+    HorizonClassification,
+    LandUse,
+    GeneralEcologicalZone,
+    BroadVegetationType,
+    AustralianSoilClassification,
+    FAOSoilClassification,
+    ProfilePosition,
+    SoilColour,
+    TillageType,
+    CollectionSite,
+    SampleContext,
+    ChemicalAnalysis
+)
 
 
 logger = logger_utils.get_logger(__name__)
@@ -136,7 +149,7 @@ def get_data(file_name):
                   ('total_carbon', 'Total Carbon', get_float_or_sentinal),
                   ('methodological_notes', 'Methodological notes', None),
                   ('other_comments', 'Other comments', None),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
@@ -405,7 +418,3 @@ def run():
     fetcher.fetch(CONTEXTUAL_DATA)
 
     do_metadata()
-
-
-
-

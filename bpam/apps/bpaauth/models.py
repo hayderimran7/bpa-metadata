@@ -6,6 +6,7 @@ class BPAUser(AbstractUser):
     """
     Custom BPA User with extra fields
     """
+
     project = models.CharField(max_length=100, blank=True)
     organisation = models.CharField(max_length=100, blank=True)
     title = models.CharField(max_length=100, blank=True)
@@ -17,4 +18,3 @@ class BPAUser(AbstractUser):
 
     def __unicode__(self):
         return self.get_full_name()
-

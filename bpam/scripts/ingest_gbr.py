@@ -75,7 +75,6 @@ def ingest_samples(samples):
             organism.save()
         return organism
 
-
     def get_collection_site(entry):
         """ Get or create and get a collection site
         :param entry: data tuple
@@ -92,7 +91,6 @@ def ingest_samples(samples):
                                                              defaults={'site_name': entry.collection_site})
 
         return site
-
 
     def get_collection_event(entry):
         """
@@ -304,7 +302,6 @@ def ingest_runs(sample_data):
             if new_str.find('mate') >= 0:
                 return 'MP'
             return 'UN'
-
 
         base_pairs = ingest_utils.get_clean_number(entry.requested_read_length)
         library_type = get_library_type(entry.library)

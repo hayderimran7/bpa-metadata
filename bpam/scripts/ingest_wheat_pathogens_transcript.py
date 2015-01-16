@@ -213,7 +213,7 @@ def get_pathogen_sample_data(file_name):
                   ('experimental_design',
                    'Further Information on experimental design (i.e. time points and biological replicates)', None),
                   ('additional_information', 'Additional Information.', None),
-    ]
+                  ]
 
     wrapper = ExcelWrapper(
         field_spec,
@@ -242,4 +242,3 @@ def run():
     fetcher.fetch(METADATA_FILE)
 
     ingest(Path(DATA_DIR, METADATA_FILE))
-

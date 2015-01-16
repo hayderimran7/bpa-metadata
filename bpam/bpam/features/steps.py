@@ -1,7 +1,7 @@
 import random
 import string
 
-from lettuce import *
+from lettuce import world, step
 from lettuce_webdriver.webdriver import contains_content
 
 
@@ -36,8 +36,7 @@ def generate_random_str(length):
 
 
 def find_field_only(field):
-    return find_field_no_value_by_id(field) or \
-           find_field_no_value_by_name(field)
+    return find_field_no_value_by_id(field) or find_field_no_value_by_name(field)
 
 
 def find_field_no_value_by_id(field):

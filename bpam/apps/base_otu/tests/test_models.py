@@ -1,6 +1,5 @@
 from django.test import TestCase
 from model_mommy import mommy
-# from model_mommy.recipe import Recipe, seq
 from ..models import OperationalTaxonomicUnit
 from ..models import SampleOTU
 
@@ -23,5 +22,3 @@ class SampleOTUTests(TestCase):
 
     def test_list(self):
         self.assertEquals(len(SampleOTU.objects.all()), self._COUNT)
-
-

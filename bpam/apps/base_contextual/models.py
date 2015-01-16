@@ -208,7 +208,5 @@ class SampleContext(DebugNote):
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in SampleContext._meta.fields]
 
-
     class Meta:
         verbose_name_plural = _('Sample Context')
-

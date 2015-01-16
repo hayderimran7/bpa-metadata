@@ -48,5 +48,3 @@ class ChemicalAnalysisDetailView(DetailView):
     model = ChemicalAnalysis
     context_object_name = 'ca'
     template_name = 'base_contextual/chemicalanalysis_detail.html'
-
-

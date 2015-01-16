@@ -3,12 +3,14 @@ import string
 
 from django.test import TestCase
 from model_mommy import mommy
-from ..models import TumorStage
-from ..models import Array
-from ..models import MelanomaSample
-from ..models import MelanomaRun
-from ..models import MelanomaProtocol
-from ..models import MelanomaSequenceFile
+from ..models import (
+    TumorStage,
+    Array,
+    MelanomaSample,
+    MelanomaRun,
+    MelanomaProtocol,
+    MelanomaSequenceFile
+)
 
 
 def random_string(length=10):
@@ -73,7 +75,3 @@ class MelanomaSequenceFileTest(TestCase):
 
     def test_list(self):
         self.assertEquals(len(MelanomaSequenceFile.objects.all()), self.ID_COUNT)
-
-
-
-

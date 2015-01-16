@@ -35,9 +35,5 @@ class BPAUserTests(TestCase):
         self.assertIsInstance(BPAUser.objects.get(lab='NEW Test lab'), BPAUser)
 
     def test_search_user(self):
-        user = user_recipe.make(lab='TESTLAB Impropable')
+        user_recipe.make(lab='TESTLAB Impropable')
         self.assertGreater(BPAUser.objects.filter(lab__icontains='testlab impropable'), 0)
-
-
-
-

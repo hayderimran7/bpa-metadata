@@ -65,4 +65,3 @@ class OrganismTests(TestCase):
     def test_organism_name(self):
         organism = mommy.make(Organism, genus='GGGG', species='SSSS')
         self.assertEqual(organism.name, 'GGGG SSSS')
-

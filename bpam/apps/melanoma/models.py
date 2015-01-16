@@ -1,13 +1,15 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol
-from apps.common.models import Sample
-from apps.common.models import Run
-from apps.common.models import BPAUniqueID
-from apps.common.models import SequenceFile
-from apps.common.models import Organism
-from apps.common.models import DebugNote
+from apps.common.models import (
+    Protocol,
+    Sample,
+    Run,
+    BPAUniqueID,
+    SequenceFile,
+    Organism,
+    DebugNote
+)
 
 GENDERS = (('M', 'Male'),
            ('F', 'Female'),
@@ -28,8 +30,9 @@ class TumorStage(models.Model):
 
 class Array(models.Model):
     """
-    Micro Array ?
+    Micro Array
     """
+
     bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
     array_id = models.CharField(_('Array ID'), max_length=17)
     batch_number = models.IntegerField(_('Batch'))
@@ -113,5 +116,3 @@ class MelanomaSequenceFile(SequenceFile):
             return self.url_verification.status_note
         else:
             return ''
-
-
