@@ -1,0 +1,43 @@
+dbtest:
+  image: postgres:9.3
+  environment:
+    - POSTGRES_USER=bpamapp
+    - POSTGRES_PASSWORD=bpamapp
+  ports:
+    - ":5432"
+
+#cachetest:
+#  image: memcached:1.4
+
+#webtest:
+#  image: bpametadata_web
+#  command: runserver
+#  environment:
+#    - DJANGO_SETTINGS_MODULE=bpam.testsettings
+#    - DBUSER=bpamapp
+#    - DBSERVER=dbtest
+#    - CACHESERVER=cachetest
+#    - WAIT_FOR_DB=1
+#    - WAIT_FOR_CACHE=1
+#  volumes:
+#    - .:/app
+#  ports:
+#    - "8000:8000"
+#  links:
+#    - db
+#    - cache
+
+# runs the tests against the stack above
+testhost:
+  image: bpametadata_web
+  command: runtests
+  environment:
+    - DJANGO_SETTINGS_MODULE=bpam.testsettings
+    - DBUSER=bpamapp
+    - DBSERVER=dbtest
+    - CACHESERVER=cachetest
+    - WAIT_FOR_DB=1
+  volumes:
+    - .:/app
+  links:
+    - dbtest

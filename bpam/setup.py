@@ -63,11 +63,13 @@ install_requires = [
     'djangorestframework==3.0.3',
     'markdown',
     'django-filter',
+    # docker
     'uwsgi==2.0.8',
     'uwsgitop',
     'pyinotify==0.9.4',
     'Werkzeug',
     'psycopg2==2.5.4',
+    'model-mommy',
 ]
 
 dev_requires = [

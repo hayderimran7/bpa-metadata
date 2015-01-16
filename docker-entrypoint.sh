@@ -116,7 +116,12 @@ fi
 if [ "$1" = 'runtests' ]; then
     echo "[Run] Starting tests"
 
-    # TODO
+    django_defaults
+    # TODO could this be python path
+    # export PYTHONPATH=/app/bpam
+    cd /app/bpam
+    django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE}
+
     exit $?
 fi
 
