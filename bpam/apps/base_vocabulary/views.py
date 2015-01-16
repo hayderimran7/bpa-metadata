@@ -1,6 +1,18 @@
 from rest_framework import generics
 
-from .models import *
+from .models import (
+    LandUse,
+    SoilTexture,
+    SoilColour,
+    GeneralEcologicalZone,
+    TillageType,
+    HorizonClassification,
+    AustralianSoilClassification,
+    FAOSoilClassification,
+    DrainageClassification,
+    ProfilePosition
+)
+
 import serializers
 
 

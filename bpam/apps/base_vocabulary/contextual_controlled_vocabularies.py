@@ -258,8 +258,6 @@ LandUseVocabulary = (
        'Estuary/coastal waters - intensive use'),),),
 )
 
-
-
 # 3) Ecological Zone
 EcologicalZoneVocabulary = (
     ('Arid', ''),

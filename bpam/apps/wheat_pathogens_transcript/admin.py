@@ -121,9 +121,7 @@ class SampleAdmin(admin.ModelAdmin):
           'fields': (
               'bpa_id',
               'name',
-              'sample_label',
-              # 'original_source_host_species',
-          )}),
+              'sample_label',)}),
         (None,  # 'DNA/RNA Source',
          {'classes': ('suit-tab suit-tab-dna',),
           'fields': (
@@ -160,8 +158,3 @@ admin.site.register(WheatPathogenTranscriptSample, SampleAdmin)
 admin.site.register(WheatPathogenTranscriptProtocol, ProtocolAdmin)
 admin.site.register(WheatPathogenTranscriptSequenceFile, WheatPathogenTranscriptSequenceFileAdmin)
 admin.site.register(WheatPathogenTranscriptRun, RunAdmin)
-
-    
-    
-    
-

@@ -30,7 +30,7 @@ else:
 
 install_requires = [
     'Django==1.7.3',
-    'Django-suit>=0.2.6,<0.3',
+    'Django-suit',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
     'Unipath>=1.0,<2.0',
@@ -94,6 +94,7 @@ downloads_requires = [
     'Jinja2>=2.7.1',
 ]
 
+# TODO clean up this mess
 dependency_links = [
     'https://bitbucket.org/ccgmurdoch/django-userlog/downloads/django_userlog-0.1.tar.gz',
     'https://bitbucket.org/ccgmurdoch/ccg-django-utils/downloads/ccg-django-utils-0.2.1.tar.gz',

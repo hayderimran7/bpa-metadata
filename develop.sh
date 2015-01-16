@@ -403,7 +403,7 @@ system_check() {
 usage() {
     log_warning "Usage ./develop.sh (check|test|test_real_engine|lint|jslint|unittest|coverage)"
     log_warning "Usage ./develop.sh make_local_instance"
-    log_warning "Usage ./develop.sh load_base"
+    log_warning "Usage ./develop.sh ingest_base"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
     log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
     log_warning "Usage ./develop.sh (nuclear)"
@@ -511,6 +511,9 @@ case ${ACTION} in
         ;;
     runingest)
         runingest
+        ;;
+    load_base)
+        ingest_base
         ;;
     *)
         usage
