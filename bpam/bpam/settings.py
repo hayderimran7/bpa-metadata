@@ -13,7 +13,8 @@ env = EnvConfig()
 
 BPA_VERSION = VERSION
 # see ccg_django_utils.webhelpers
-BASE_URL_PATH = os.environ.get("SCRIPT_NAME", "")
+SCRIPT_NAME = env.get("script_name", os.environ.get("SCRIPT_NAME", ""))
+BASE_URL_PATH = SCRIPT_NAME
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 PROJECT_DIR = Path(__file__).ancestor(1)
