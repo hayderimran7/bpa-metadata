@@ -1,3 +1,9 @@
+# data only container pattern
+datatest:
+  image: muccg/base:debian8
+  volumes:
+    - .:/app
+
 dbtest:
   image: postgres:9.3
   environment:
@@ -16,7 +22,7 @@ testhost:
     - DBSERVER=dbtest
     - CACHESERVER=cachetest
     - WAIT_FOR_DB=1
-  volumes:
-    - .:/app
+  volumes_from:
+    - datatest
   links:
     - dbtest
