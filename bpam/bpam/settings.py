@@ -12,8 +12,10 @@ from bpam import VERSION
 env = EnvConfig()
 
 BPA_VERSION = VERSION
-# see ccg_django_utils.webhelpers
+
 SCRIPT_NAME = env.get("script_name", os.environ.get("SCRIPT_NAME", ""))
+FORCE_SCRIPT_NAME = env.get("force_script_name", "") or SCRIPT_NAME or None
+
 BASE_URL_PATH = SCRIPT_NAME
 CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
 
