@@ -1,0 +1,22 @@
+dbtest:
+  image: postgres:9.3
+  environment:
+    - POSTGRES_USER=bpamapp
+    - POSTGRES_PASSWORD=bpamapp
+  ports:
+    - ":5432"
+
+# runs the tests against the stack above
+testhost:
+  image: bpametadata_web
+  command: runtests
+  environment:
+    - DJANGO_SETTINGS_MODULE=bpam.testsettings
+    - DBUSER=bpamapp
+    - DBSERVER=dbtest
+    - CACHESERVER=cachetest
+    - WAIT_FOR_DB=1
+  volumes:
+    - .:/app
+  links:
+    - dbtest

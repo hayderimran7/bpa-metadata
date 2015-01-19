@@ -1,0 +1,52 @@
+db:
+  image: postgres:9.3
+  environment:
+    - POSTGRES_USER=bpamapp
+    - POSTGRES_PASSWORD=bpamapp
+  ports:
+    - ":5432"
+
+cache:
+  image: memcached:1.4
+
+nginx:
+  image: muccg/nginx-uwsgi:1.7
+  links:
+    - uwsgi
+  ports:
+    - "8443:443"
+
+web:
+  build: .
+  command: runserver
+  environment:
+    - DJANGO_SETTINGS_MODULE=bpam.settings
+    - DBUSER=bpamapp
+    - WAIT_FOR_DB=1
+    - WAIT_FOR_CACHE=1
+  volumes:
+    - .:/app
+  ports:
+    - "8000:8000"
+  links:
+    - db
+    - cache
+
+uwsgi:
+  image: bpametadata_web
+  command: uwsgi
+  environment:
+    - DJANGO_SETTINGS_MODULE=bpam.settings
+    - WAIT_FOR_DB=1
+    - WAIT_FOR_CACHE=1
+      # note: uwsgi ini file sets environment
+  volumes:
+    - .:/app
+  ports:
+    - "9000:9000"
+    - "9001:9001"
+    - "9100:9100"
+    - "9101:9101"
+  links:
+    - db
+    - cache
