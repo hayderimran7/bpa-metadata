@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   libxml2-dev \
   libxslt1-dev \
+  python-tk \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
 
