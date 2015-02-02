@@ -1,6 +1,6 @@
 # this settings runs the tests against the real db engine
 
-from testsettings import *
+from testsettings import *  # nopep8
 
 DATABASES = {
     'default': {

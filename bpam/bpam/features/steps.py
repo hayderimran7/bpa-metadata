@@ -13,7 +13,7 @@ def fill_in_year_type(step, field, value):
 
 
 @step('I fill in "(.*)" with random text')
-def fill_in_year_type(step, field):
+def fill_in_year_type_random(step, field):
     field = find_field_only(field)
     value = generate_random_str(8)
     field.clear()

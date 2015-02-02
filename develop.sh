@@ -182,6 +182,17 @@ lint() {
     flake8 ${PROJECT_NAME} --ignore=E501 --count
 }
 
+# lint using flake8
+ci_lint() {
+    if [ ! -d ${VIRTUALENV} ]; then
+        ${PYVENV} --system-site-packages ${VIRTUALENV}
+    fi	
+    source ${VIRTUALENV}/bin/activate
+    pip install ${PIP_OPTS} --force-reinstall --upgrade 'pip>=1.5,<1.6'
+    pip install ${PIP5_OPTS} --upgrade flake8
+    flake8 ${PROJECT_NAME} --ignore=E501 --count
+}
+
 is_running_in_instance() {
     if [ ${USER} == 'ccg-user' ]
     then
@@ -404,7 +415,7 @@ usage() {
     log_warning "Usage ./develop.sh make_local_instance"
     log_warning "Usage ./develop.sh ingest_base"
     log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy)"
+    log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy|ci_lint)"
     log_warning "Usage ./develop.sh (nuclear)"
     log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
     log_warning "Usage ./develop.sh url_checker"
@@ -491,6 +502,9 @@ case ${ACTION} in
         ci_ssh_agent
         ci_remote_build
         ci_fetch_rpm
+        ;;
+    ci_lint)
+        ci_lint
         ;;
     clean)
         clean

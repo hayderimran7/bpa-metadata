@@ -2,6 +2,7 @@ import os.path
 
 from setuptools import setup, find_packages
 
+
 def get_data_files():
     """
     Dictionary of data files

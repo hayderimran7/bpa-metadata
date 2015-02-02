@@ -377,7 +377,6 @@ if env.get("memcache", ""):
             'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
             'LOCATION': env.getlist("memcache", []),
             'KEY_PREFIX': env.get("key_prefix", "bpam"),
-            #'KEYSPACE': "%s-prod" % PROJECT_NAME,
         }
     }
 
