@@ -8,19 +8,17 @@ from unipath import Path
 from ccg_django_utils.conf import EnvConfig
 from bpam import VERSION
 
-
 env = EnvConfig()
 
+SCRIPT_NAME = env.get("script_name", os.environ.get("HTTP_SCRIPT_NAME", ""))
+FORCE_SCRIPT_NAME = env.get("force_script_name", "") or SCRIPT_NAME or None
+
+CCG_WEBAPP_ROOT = os.path.dirname(os.path.realpath(__file__))
+CCG_WRITABLE_DIRECTORY = env.get("writable_directory", os.path.join(CCG_WEBAPP_ROOT, "scratch"))
+
 BPA_VERSION = VERSION
-# see ccg_django_utils.webhelpers
-SCRIPT_NAME = env.get("script_name", os.environ.get("SCRIPT_NAME", ""))
-BASE_URL_PATH = SCRIPT_NAME
-CCG_INSTALL_ROOT = os.path.dirname(os.path.realpath(__file__))
-
 PROJECT_DIR = Path(__file__).ancestor(1)
-
-CCG_WRITABLE_DIRECTORY = env.get("writable_directory", os.path.join(CCG_INSTALL_ROOT, "scratch"))
-PROJECT_NAME = os.path.basename(CCG_INSTALL_ROOT)
+PROJECT_NAME = os.path.basename(CCG_WEBAPP_ROOT)
 
 TEMPLATE_DIRS = (
     PROJECT_DIR.child('bpam.templates'),
@@ -31,11 +29,12 @@ TEMPLATE_DIRS = (
 SECRET_KEY = env.get("secret_key", "change-it")
 
 # Default SSL on and forced, turn off if necessary
-SSL_ENABLED = env.get("production", False)
-SSL_FORCE = env.get("production", False)
+PRODUCTION = env.get("production", False)
+SSL_ENABLED = PRODUCTION
+SSL_FORCE = PRODUCTION
 
 # Debug on by default
-DEBUG = env.get("debug", True)
+DEBUG = env.get("debug", not PRODUCTION)
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -122,16 +121,16 @@ REST_FRAMEWORK = {
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
 SESSION_COOKIE_AGE = env.get("session_cookie_age", 60 * 60)
-SESSION_COOKIE_PATH = '{0}/'.format(BASE_URL_PATH)
+SESSION_COOKIE_PATH = '{0}/'.format(SCRIPT_NAME)
 SESSION_SAVE_EVERY_REQUEST = env.get("session_save_every_request", True)
 SESSION_COOKIE_HTTPONLY = env.get("session_cookie_httponly", True)
-SESSION_COOKIE_SECURE = env.get("session_cookie_secure", False)
-SESSION_COOKIE_NAME = env.get("session_cookie_name", "bpam_{0}".format(BASE_URL_PATH.replace("/", "")))
+SESSION_COOKIE_SECURE = env.get("session_cookie_secure", PRODUCTION)
+SESSION_COOKIE_NAME = env.get("session_cookie_name", "bpam_{0}".format(SCRIPT_NAME.replace("/", "")))
 SESSION_COOKIE_DOMAIN = env.get("session_cookie_domain", "") or None
 CSRF_COOKIE_NAME = env.get("csrf_cookie_name", "csrf_{0}".format(SESSION_COOKIE_NAME))
 CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or SESSION_COOKIE_DOMAIN
 CSRF_COOKIE_PATH = env.get("csrf_cookie_path", SESSION_COOKIE_PATH)
-CSRF_COOKIE_SECURE = env.get("csrf_cookie_secure", False)
+CSRF_COOKIE_SECURE = env.get("csrf_cookie_secure", PRODUCTION)
 
 # Default date input formats, may be overridden
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
@@ -223,8 +222,8 @@ MEDIA_URL = ''
 
 # These may be overridden, but it would be nice to stick to this convention
 # see: https://docs.djangoproject.com/en/1.4/ref/settings/#static-url
-STATIC_ROOT = env.get('static_root', os.path.join(CCG_INSTALL_ROOT, 'static'))
-STATIC_URL = '{0}/static/'.format(BASE_URL_PATH)
+STATIC_ROOT = env.get('static_root', os.path.join(CCG_WEBAPP_ROOT, 'static'))
+STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 
 
 # List of finder classes that know how to find static files in
@@ -301,7 +300,7 @@ INSTALLED_APPS = (
 )
 
 # Log directory created and enforced by puppet
-CCG_LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_INSTALL_ROOT, "log"))
+CCG_LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_WEBAPP_ROOT, "log"))
 try:
     if not os.path.exists(CCG_LOG_DIRECTORY):
         os.mkdir(CCG_LOG_DIRECTORY)
