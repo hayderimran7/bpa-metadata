@@ -8,7 +8,7 @@
 function dockerwait {
     while ! exec 6<>/dev/tcp/$1/$2; do
         echo "$(date) - waiting to connect $1 $2"
-        sleep 1
+        sleep 5
     done
     echo "$(date) - connected to $1 $2"
 
@@ -91,8 +91,11 @@ if [ "$1" = 'uwsgi' ]; then
     : ${UWSGI_OPTS="/app/uwsgi/docker.ini"}
     echo "UWSGI_OPTS is ${UWSGI_OPTS}"
 
-    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE}
-    uwsgi ${UWSGI_OPTS}
+    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
+    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
+    django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
+
+    uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
     exit $?
 fi
 
@@ -105,10 +108,11 @@ if [ "$1" = 'runserver' ]; then
     : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${WEBPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
     echo "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
 
-    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py ${RUNSERVER_OPTS}
+    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-collectstatic.log
+    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-syncdb.log
+    django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-migrate.log
+
+    django-admin.py ${RUNSERVER_OPTS} 2>&1 | tee /data/runserver.log
     exit $?
 fi
 
@@ -120,7 +124,7 @@ if [ "$1" = 'runtests' ]; then
     # TODO could this be python path
     # export PYTHONPATH=/app/bpam
     cd /app/bpam
-    django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runtests.log
 
     exit $?
 fi
