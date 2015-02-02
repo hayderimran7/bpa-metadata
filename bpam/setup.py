@@ -64,6 +64,8 @@ install_requires = [
     'markdown',
     'django-filter',
     'lettuce_webdriver',
+    # https://bitbucket.org/gutworth/six/issue/51/
+    'six>=1.9.0',
     # docker
     'uwsgi==2.0.8',
     'uwsgitop',
