@@ -3,6 +3,7 @@ data:
   image: muccg/base:debian8
   volumes:
     - .:/app
+    - data:/data
 
 db:
   image: postgres:9.3
@@ -43,9 +44,10 @@ uwsgi:
   command: uwsgi
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.settings
+    - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
-      # note: uwsgi ini file sets environment
+    - WAIT_FOR_WEB=1
   volumes_from:
     - data
   ports:
@@ -56,3 +58,4 @@ uwsgi:
   links:
     - db
     - cache
+    - web
