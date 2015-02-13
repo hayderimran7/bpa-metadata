@@ -24,7 +24,6 @@ bpam/static/
 syntax:regexp
 \.idea
 syntax:glob
-data/
 metadata/
 users/
 bpam/bpam/static/
