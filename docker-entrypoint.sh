@@ -5,7 +5,7 @@
 #
 # $1 host
 # $2 port
-function dockerwait {
+dockerwait() {
     while ! exec 6<>/dev/tcp/$1/$2; do
         echo "$(date) - waiting to connect $1 $2"
         sleep 5
@@ -19,7 +19,7 @@ function dockerwait {
 
 # wait for services to become available
 # this prevents race conditions using fig
-function wait_for_services {
+wait_for_services() {
     if [[ "$WAIT_FOR_QUEUE" ]] ; then
         dockerwait $QUEUESERVER $QUEUEPORT
     fi
@@ -35,7 +35,7 @@ function wait_for_services {
 }
 
 
-function defaults {
+defaults() {
     : ${QUEUESERVER:="mq"}
     : ${QUEUEPORT:="5672"}
     : ${DBSERVER:="db"}
@@ -52,7 +52,7 @@ function defaults {
 }
 
 
-function django_defaults {
+django_defaults() {
     : ${DEPLOYMENT="dev"}
     : ${PRODUCTION=0}
     : ${DEBUG=1}
