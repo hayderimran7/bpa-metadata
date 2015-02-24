@@ -67,6 +67,7 @@ install_requires = [
     'lettuce_webdriver',
     # https://bitbucket.org/gutworth/six/issue/51/
     'six>=1.9.0',
+    'psycopg2==2.5.5',
     # docker
     'uwsgi==2.0.8',
     'uwsgitop',

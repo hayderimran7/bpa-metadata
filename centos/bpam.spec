@@ -31,8 +31,8 @@ BuildRoot: %{_tmppath}/%{app}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 BuildArch: x86_64
 Vendor: Centre for Comparative Genomics <web@ccg.murdoch.edu.au>
-BuildRequires: python%{pyver}-virtualenv python%{pyver}-devel libffi-devel graphviz-devel proj-devel libxml2-devel libxslt-devel git
-Requires: python%{pyver}-psycopg2 python%{pyver}-mod_wsgi httpd libffi-devel graphviz-devel  proj-devel python%{pyver}-lxml python%{pyver}-mod_wsgi httpd
+BuildRequires: python%{pyver}-virtualenv python%{pyver}-devel libffi-devel graphviz-devel proj-devel libxml2-devel libxslt-devel git postgresql94-devel
+Requires: libffi-devel graphviz-devel proj-devel python%{pyver}-lxml python%{pyver}-mod_wsgi httpd
 
 %description
 BPA Metadata Management
@@ -56,7 +56,7 @@ cd $CCGSOURCEDIR
 # Make sure the standard target directories exist
 # These two contain files owned by the RPM
 mkdir -p %{settingsdir}
-#mkdir -p %{staticdir}
+mkdir -p %{staticdir}
 # The rest are for persistent data files created by the app
 mkdir -p %{logdir}
 mkdir -p %{mediadir}
@@ -95,17 +95,18 @@ cp deploy.sh %{buildinstalldir}/
 # Create symlinks under install directory to real persistent data directories
 APP_SETTINGS_FILE=`find %{buildinstalldir} -path "*/$NAME/settings.py" | sed s:^%{buildinstalldir}/::`
 APP_PACKAGE_DIR=`dirname ${APP_SETTINGS_FILE}`
-ln -sfT /var/log/%{nickname} %{buildinstalldir}/${APP_PACKAGE_DIR}/log
-ln -sfT /var/lib/%{nickname}/scratch %{buildinstalldir}/${APP_PACKAGE_DIR}/scratch
-ln -sfT /var/lib/%{nickname}/media %{buildinstalldir}/${APP_PACKAGE_DIR}/media
+VENV_LIB_DIR=`dirname ${APP_PACKAGE_DIR}`
+
+ln -sfT %{installdir}/static %{buildinstalldir}/${VENV_LIB_DIR}/static
+
+ln -sfT /var/log/%{nickname} %{buildinstalldir}/${VENV_LIB_DIR}/log
+ln -sfT /var/lib/%{nickname}/scratch %{buildinstalldir}/${VENV_LIB_DIR}/scratch
+ln -sfT /var/lib/%{nickname}/media %{buildinstalldir}/${VENV_LIB_DIR}/media
 
 # Install settings conf file to /etc, and replace with symlink
 install --mode=0640 -D centos/%{nickname}.conf.example %{buildroot}/etc/%{nickname}/%{nickname}.conf.example
 install --mode=0640 -D %{nickname}/%{nickname}/prodsettings.py %{buildroot}/etc/%{nickname}/settings.py
 ln -sfT /etc/%{nickname}/settings.py %{buildinstalldir}/${APP_PACKAGE_DIR}/prodsettings.py
-
-mkdir -p %{staticdir}
-ln -sfT %{installdir}/static %{buildinstalldir}/${APP_PACKAGE_DIR}/static
 
 # temp fix to make defaultsettings importable
 ln -sfT %{installdir}/defaultsettings %{buildinstalldir}/${APP_PACKAGE_DIR}/../defaultsettings
