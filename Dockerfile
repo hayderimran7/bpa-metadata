@@ -17,6 +17,13 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
 
+# Deps for tests
+RUN pip install \
+  lettuce \
+  lettuce_webdriver \
+  nose \
+  selenium
+
 # Install dependencies only (not the app itself) to use the build cache more efficiently
 # This will be redone only if setup.py changes
 # INSTALL_ONLY_DEPENDENCIES stops the app installing inside setup.py (pip --deps-only ??)
