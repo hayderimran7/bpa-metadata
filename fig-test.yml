@@ -3,6 +3,7 @@ datatest:
   image: muccg/base:debian8
   volumes:
     - .:/app
+    - data/test:/data
 
 dbtest:
   image: postgres:9.3
@@ -14,15 +15,13 @@ dbtest:
 
 # runs the tests against the stack above
 testhost:
-  image: bpametadata_web
+  build: .
   command: runtests
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.testsettings
     - DBUSER=bpamapp
-    - DBSERVER=dbtest
-    - CACHESERVER=cachetest
     - WAIT_FOR_DB=1
   volumes_from:
     - datatest
   links:
-    - dbtest
+    - dbtest:db
