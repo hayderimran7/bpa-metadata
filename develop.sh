@@ -6,7 +6,7 @@ TOPDIR=$(cd $(dirname $0); pwd)
 ACTION=$1
 
 PROJECT_NAME='bpam'
-VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
+VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
 AWS_STAGING_INSTANCE='ccg_syd_nginx_staging'
 
 
@@ -52,14 +52,17 @@ log() {
     fi
 }
 
-
 activate_virtualenv() {
-    if [ ! -d ${VIRTUALENV} ]
-    then
-        log_error "There is no ${VIRTUALENV} here, activate virtualenv failed."
-        exit 1
-    fi
-    source ${VIRTUALENV}/bin/activate
+   if [ ! -d ${VIRTUALENV} ]
+   then
+        log_warning "There is no ${VIRTUALENV} here, making it."
+        virtualenv ${VIRTUALENV}
+        . ${VIRTUALENV}/bin/activate
+        pip install fig
+        pip install 'flake8>=2.0,<2.1'
+   else
+      source ${VIRTUALENV}/bin/activate
+   fi
 }
 
 
@@ -81,51 +84,32 @@ ci_ssh_agent() {
 
 
 pythonlint() {
-    make_virtualenv
-    ${VIRTUALENV}/bin/pip install 'flake8>=2.0,<2.1'
+    activate_virtualenv
     ${VIRTUALENV}/bin/flake8 ${PROJECT_NAME} --exclude=migrations --ignore=E501 --count
 }
 
 
 unit_tests() {
+    activate_virtualenv
+
     mkdir -p data/tests
     chmod o+rwx data/tests
-
-    make_virtualenv
-    . ${VIRTUALENV}/bin/activate
-    pip install fig
-
     fig --project-name bpam -f fig-test.yml up
 }
 
-
-make_virtualenv() {
-    which virtualenv > /dev/null
-    if [ ! -e ${VIRTUALENV} ]; then
-        virtualenv ${VIRTUALENV}
-    fi
-}
-
-
-start() {
+up() {
+    activate_virtualenv
     mkdir -p data/dev
     chmod o+rwx data/dev
-
-    make_virtualenv
-    . ${VIRTUALENV}/bin/activate
-    pip install fig
 
     fig --project-name bpa-metadata up
 }
 
 
 selenium() {
+    activate_virtualenv
     mkdir -p data/selenium
     chmod o+rwx data/selenium
-
-    make_virtualenv
-    . ${VIRTUALENV}/bin/activate
-    pip install fig
 
     fig --project-name bpa-metadata -f fig-selenium.yml up
 }
@@ -147,12 +131,9 @@ ci_staging() {
 }
 
 rpmbuild() {
+    activate_virtualenv
     mkdir -p data/rpmbuild
     chmod o+rwx data/rpmbuild
-
-    make_virtualenv
-    . ${VIRTUALENV}/bin/activate
-    pip install fig
 
     fig --project-name bpam -f fig-rpmbuild.yml up
 }
@@ -161,18 +142,6 @@ rpmbuild() {
 rpm_publish() {
     time ccg publish_testing_rpm:data/rpmbuild/RPMS/x86_64/bpam*.rpm,release=6
 }
-
-
-
-unittest() {
-    log_info "Running Unit Test"
-    activate_virtualenv
-    (
-       cd ${CONFIG_DIR}
-       python manage.py test --settings=bpam.testsettings --traceback
-    )
-}
-
 
 usage() {
     log_warning "Usage ./develop.sh (check|test|test_real_engine|lint|jslint|unittest|coverage)"
@@ -208,7 +177,10 @@ ci_staging)
     ci_staging
     ;;
 start)
-    start
+    up
+    ;;
+up)
+    up
     ;;
 unit_tests)
     unit_tests
