@@ -1,16 +1,17 @@
 #!/bin/bash
 
+COMMAND=$1
 
 # wait for a given host:port to become available
-#
-# $1 host
-# $2 port
 dockerwait() {
-    while ! exec 6<>/dev/tcp/$1/$2; do
-        echo "$(date) - waiting to connect $1 $2"
+    host=$1
+    port=$2
+    while ! exec 6<>/dev/tcp/${host}/${port}
+    do
+        echo "$(date) - waiting to connect ${host} ${port}"
         sleep 5
     done
-    echo "$(date) - connected to $1 $2"
+    echo "$(date) - connected to $host $port"
 
     exec 6>&-
     exec 6<&-
@@ -84,7 +85,7 @@ django_defaults
 wait_for_services
 
 # uwsgi entrypoint
-if [ "$1" = 'uwsgi' ]; then
+if [ "$COMMAND" = 'uwsgi' ]; then
     echo "[Run] Starting uwsgi"
 
     : ${UWSGI_OPTS="/app/uwsgi/docker.ini"}
@@ -99,7 +100,7 @@ if [ "$1" = 'uwsgi' ]; then
 fi
 
 # runserver entrypoint
-if [ "$1" = 'runserver' ]; then
+if [ "$COMMAND" = 'runserver' ]; then
     echo "[Run] Starting runserver"
 
     : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${WEBPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
@@ -114,7 +115,7 @@ if [ "$1" = 'runserver' ]; then
 fi
 
 # runtests entrypoint
-if [ "$1" = 'runtests' ]; then
+if [ "$COMMAND" = 'runtests' ]; then
     echo "[Run] Starting tests"
 
     # TODO could this be python path
@@ -127,7 +128,7 @@ fi
 
 
 # lettuce entrypoint
-if [ "$1" = 'lettuce' ]; then
+if [ "$COMMAND" = 'lettuce' ]; then
     echo "[Run] Starting lettuce"
 
     django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml 2>&1 | tee /data/lettuce.log
