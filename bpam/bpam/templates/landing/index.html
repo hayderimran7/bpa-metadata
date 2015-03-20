@@ -4,29 +4,29 @@
 {% load staticfiles %}
 <html>
 <head>
-    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
-    <title>Bioplatforms Australia Metadata</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8"/>
-    {% bootstrap_css %}
-    <style>
-        .content-div {
-            padding-left: 1em;
-            padding-right: 1em;
-        }
+<link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
+<title>Bioplatforms Australia Metadata</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+{% bootstrap_css %}
+<style>
+.content-div {
+    padding-left: 1em;
+    padding-right: 1em;
+}
 
-        .landing_header img {
-            float: left;
-        }
+.landing_header img {
+    float: left;
+}
 
-        .landing_header h1 {
-            position: relative;
-            top: 18px;
-            left: 10px;
-        }
+.landing_header h1 {
+    position: relative;
+    top: 18px;
+    left: 10px;
+}
 
 
-    </style>
+</style>
 </head>
 
 <body>
@@ -46,6 +46,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="http://www.bioplatforms.com.au">Bioplatforms Australia</a></li>
+                <li class="active"><a href="https://downloads.bioplatforms.com">Bioplatforms Australia Downloads</a></li>
                 <li class="active"><a href="{% url 'admin:index' %}">Admin</a></li>
                 <li class="active"><a href="http://ccg.murdoch.edu.au">CCG</a></li>
                 <li class="active"><a href="http://ccg.murdoch.edu.au/index.php/contact">Contact</a></li>
@@ -59,7 +60,7 @@
 
         <div class="landing_header">
             <p>
-                <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+            <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
 
             <h1> Bioplatforms Australia Metadata</h1>
             </p>
@@ -68,6 +69,9 @@
 
         <p>Welcome to Bioplatforms Australia's project metadata portal</p>
 
+        <p>
+        <a href="https://downloads.bioplatforms.com/">Bioplatforms Australia Downloads</a>
+        </p>
 
         <div class="row">
             <div class="col-sm-6 col-md-4">
@@ -105,7 +109,7 @@
             <div class="col-sm-6 col-md-4">
                 <a class="thumbnail" href="{% url 'wheat_cultivars:index' %}">
                     <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}"
-                         alt="Wheat Cultivars">
+                    alt="Wheat Cultivars">
 
                     <div class="caption">
                         <h3>Wheat Cultivars</h3>
@@ -116,8 +120,8 @@
             <div class="col-sm-6 col-md-4">
                 <a class="thumbnail" href="{% url 'wheat_pathogens:index' %}">
                     <img class="img-responsive img-rounded"
-                         src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}"
-                         alt="Wheat Pathogens">
+                    src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}"
+                    alt="Wheat Pathogens">
 
                     <div class="caption">
                         <h3>Wheat Pathogens Genomes</h3>
@@ -130,8 +134,8 @@
             <div class="col-sm-6 col-md-4">
                 <a class="thumbnail" href="{% url 'wheat_pathogens_transcript:index' %}">
                     <img class="img-responsive img-rounded"
-                         src="{% static 'wheat_pathogens_transcript/fusarium_head_blight_infected_ear.jpg' %}"
-                         alt="Wheat Pathogens Transcript">
+                    src="{% static 'wheat_pathogens_transcript/fusarium_head_blight_infected_ear.jpg' %}"
+                    alt="Wheat Pathogens Transcript">
 
                     <div class="caption">
                         <h3>Wheat Pathogens Transcript</h3>
@@ -147,10 +151,10 @@
     <div id="footer">
         <div class="container">
             <p class="text-muted credit">
-                &copy; Bioplatforms Australia 2014, bpa-metadata {% bpam_version %}.
-                <a href="http://ccgapps.com.au"> Centre for Comparative Genomics, Murdoch University, Western
-                    Australia.</a>
-                GPL v3.0<a href="https://bitbucket.org/ccgmurdoch/bpa-metadata"> Source</a>
+            &copy; Bioplatforms Australia 2014, bpa-metadata {% bpam_version %}.
+            <a href="http://ccgapps.com.au"> Centre for Comparative Genomics, Murdoch University, Western
+                Australia.</a>
+            GPL v3.0<a href="https://bitbucket.org/ccgmurdoch/bpa-metadata"> Source</a>
             </p>
         </div>
     </div>
@@ -159,7 +163,7 @@
 <!-- /container -->
 
 <script type="text/javascript"
-        src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4">
+src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4">
 </script>
 
 </body>
