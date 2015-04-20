@@ -144,17 +144,12 @@ rpm_publish() {
 }
 
 usage() {
-    log_warning "Usage ./develop.sh (check|test|test_real_engine|lint|jslint|unittest|coverage)"
-    log_warning "Usage ./develop.sh make_local_instance"
-    log_warning "Usage ./develop.sh ingest_base"
-    log_warning "Usage ./develop.sh (start|install|clean|purge|pipfreeze|pythonversion)"
-    log_warning "Usage ./develop.sh (ci_remote_build|ci_remote_build_and_fetch|ci_staging|ci_rpm_publish|ci_remote_destroy|ci_lint)"
-    log_warning "Usage ./develop.sh (nuclear)"
-    log_warning "Usage ./develop.sh (wheat_pathogens_dev)"
-    log_warning "Usage ./develop.sh url_checker"
-    log_warning "Usage ./develop.sh deepclean"
-    log_warning "Usage ./develop.sh migrationupdate APP"
-    log_warning "Usage ./develop.sh runingest ingest_script"
+    log_warning "Usage ./develop.sh (pythonlint|jslint)"
+    log_warning "Usage ./develop.sh (unit_tests)"
+    log_warning "Usage ./develop.sh (selenium)"
+    log_warning "Usage ./develop.sh (rpmbuild|rpm_publish|ci_staging)"
+    log_warning "Usage ./develop.sh (start|up)"
+    log_warning "Usage ./develop.sh (usage)"
 }
 
 
