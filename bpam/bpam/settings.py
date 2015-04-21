@@ -98,9 +98,9 @@ ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 DATABASES = {
     'default': {
         'ENGINE': env.get_db_engine("dbtype", "pgsql"),
-        'NAME': env.get("dbname", "bpam"),
-        'USER': env.get("dbuser", "bpam"),
-        'PASSWORD': env.get("dbpass", "bpam"),
+        'NAME': env.get("dbname", "webapp"),
+        'USER': env.get("dbuser", "webapp"),
+        'PASSWORD': env.get("dbpass", "webapp"),
         'HOST': env.get("dbserver", ""),
         'PORT': env.get("dbport", ""),
     }

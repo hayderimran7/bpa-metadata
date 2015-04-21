@@ -8,8 +8,8 @@ datatest:
 dbtest:
   image: postgres:9.3
   environment:
-    - POSTGRES_USER=bpamapp
-    - POSTGRES_PASSWORD=bpamapp
+    - POSTGRES_USER=webapp
+    - POSTGRES_PASSWORD=webapp
   ports:
     - ":5432"
 
@@ -19,7 +19,7 @@ testhost:
   command: runtests
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.testsettings
-    - DBUSER=bpamapp
+    - DBUSER=webapp
     - WAIT_FOR_DB=1
   volumes_from:
     - datatest
