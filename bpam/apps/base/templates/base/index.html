@@ -4,16 +4,53 @@
 {% load staticfiles %}
 {% block content %}
 <div class="container-fluid">
-    <div class="jumbotron">
+    <div class="well">
 
         <div class="row">
             <div class="col-sm-4 col-md-6 col-lg-3">
                 <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
             </div>
+
             <div class="col-sm-4 col-md-3 col-lg-3">
                 <h2>
                     Biome of Australian Soil Environments
                 </h2>
+
+                <p>
+                The Biome of Australia Soil Environments (BASE) is a
+                collaborative project to create a public resource containing
+                microbial genome information from a range of Australian soil
+                environments.
+                </p>
+
+                <p>
+                Soil along with historical, physical and chemical contextual information
+                (including photos) has been collected from 600+ diverse sites around Australia
+                including Christmas Island and the Australian Antarctic Territory.
+                </p>
+
+                <p>
+                DNA is extracted from all samples using a standardised protocol (PowerSoil, MO
+                BIO) and amplicon analysis undertaken using the Illumina MiSeq platform for
+                bacterial 16S, fungal ITS and eukaryotic 18S targets. 
+                </p>
+
+                <p>
+                OTU data has been generated through standardised pipelines for each target and
+                is available through this repository.
+                </p>
+
+                <p>
+                For more information please visit:
+                <a href="http://www.bioplatforms.com/soil-biodiversity/">
+                http://www.bioplatforms.com/soil-biodiversity
+                </a>
+                </p>
+
+            </div>
+
+
+            <div class="col-sm-4 col-md-3 col-lg-3">
 
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'base:search' %}">Search</a>
@@ -27,8 +64,7 @@
                     <a class="list-group-item" href="{% url 'base:contacts' %}">Contacts</a>
                     <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request Access</a>
                 </div>
-                <a href="http://www.bioplatforms.com.au/special-initiatives/environment/soil-biodiversity">
-                    Bioplatforms Australia Soil Biodiversity Site</a>
+
             </div>
         </div>
     </div>
