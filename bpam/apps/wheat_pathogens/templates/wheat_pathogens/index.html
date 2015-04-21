@@ -4,7 +4,7 @@
 {% load staticfiles %}
 {% block content %}
 <div class="container-fluid">
-    <div class="jumbotron">
+    <div class="well">
         <div class="row">
 
             <div class="col-sm-5 col-md-5 col-lg-3">
@@ -15,6 +15,43 @@
 
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <h2> Wheat Pathogens Genomes </h2>
+                <p>
+                This dataset contains the genomic sequence from 10 fungal and 2 bacterial pathogen species. Among the pathogens sequenced are the causal agents of stripe rust, stem rust, tan spot, glume blotch, septoria leaf blotch, bare patch and crown rot/head blight. A total of 27 genomes will be made available.
+                </p>
+
+                <p>
+                The genomes were selected for analysis by a consortium of Australian wheat pathogen researchers from the following organisations:
+
+                <ul>
+                    <li>
+                    Australian National University
+                    </li>
+                    <li>
+                    CSIRO
+                    </li>
+                    <li>
+                    Curtin University
+                    </li>
+                    <li>
+                    Charles Sturt University
+                    </li>
+                    <li>
+                    NSW Department of Primary industry
+                    </li>
+                    <li>
+                    Grains Research and Development Corporation
+                    </li>
+                </ul>
+                </p>
+                <p>
+                For more information please visit:
+                <a href="http://www.bioplatforms.com/wheat-defense/">
+                http://www.bioplatforms.com/wheat-defense/
+                </a>
+                </p>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
 
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'wheat_pathogens:samples' %}">
