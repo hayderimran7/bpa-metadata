@@ -62,7 +62,7 @@ django_defaults() {
     : ${STATIC_ROOT="/data/static"}
     : ${MEDIA_ROOT="/data/static/media"}
     : ${LOG_DIRECTORY="/data/log"}
-    : ${DJANGO_SETTINGS_MODULE="django.settings"}
+    : ${DJANGO_SETTINGS_MODULE="bpam.settings"}
 
     echo "DEPLOYMENT is ${DEPLOYMENT}"
     echo "PRODUCTION is ${PRODUCTION}"

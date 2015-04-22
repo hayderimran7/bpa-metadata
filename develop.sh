@@ -1,14 +1,13 @@
 #!/bin/bash
-# Script to control bpam in dev and test
+# Script to control ${PROJECT_NAME} in dev and test
 
 TOPDIR=$(cd $(dirname $0); pwd)
 
 ACTION=$1
 
-PROJECT_NAME='bpam'
+PROJECT_NAME='bpametadata'
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
 AWS_STAGING_INSTANCE='ccg_syd_nginx_staging'
-
 
 ######### Logging ##########
 COLOR_NORMAL=$(tput sgr0)
@@ -18,26 +17,21 @@ COLOR_GREEN=$(tput setaf 2)
 
 set -e
 
-
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
 }
-
 
 log_warning() {
     echo ${COLOR_YELLOW}WARNING: $* ${COLOR_NORMAL}
 }
 
-
 log_success() {
     echo ${COLOR_GREEN}SUCCESS: $* ${COLOR_NORMAL}
 }
 
-
 log_info() {
     echo INFO: $*
 }
-
 
 # no news is good news
 log() {
@@ -50,7 +44,7 @@ log() {
     else
         log_success ${MESSAGE}
     fi
-}
+ }
 
 activate_virtualenv() {
    if [ ! -d ${VIRTUALENV} ]
@@ -64,16 +58,6 @@ activate_virtualenv() {
       source ${VIRTUALENV}/bin/activate
    fi
 }
-
-
-is_root() {
-   if [[ ${EUID} -ne 0 ]]
-   then
-       log_error "$0 needs to be run as root for this action."
-       exit 1
-   fi
-}
-
 
 # ssh setup, make sure our ccg commands can run in an automated environment
 ci_ssh_agent() {
@@ -94,7 +78,7 @@ unit_tests() {
 
     mkdir -p data/tests
     chmod o+rwx data/tests
-    fig --project-name bpam -f fig-test.yml up
+    fig --project-name ${PROJECT_NAME} -f fig-test.yml up
 }
 
 up() {
@@ -102,7 +86,7 @@ up() {
     mkdir -p data/dev
     chmod o+rwx data/dev
 
-    fig --project-name bpa-metadata up
+    fig --project-name ${PROJECT_NAME} up
 }
 
 
@@ -111,47 +95,70 @@ selenium() {
     mkdir -p data/selenium
     chmod o+rwx data/selenium
 
-    fig --project-name bpa-metadata -f fig-selenium.yml up
+    fig --project-name ${PROJECT_NAME} -f fig-selenium.yml up
 }
 
 
 ci_staging() {
-    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p bpam/docker/unstable'
-    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p bpam/data'
-    ccg ${AWS_STAGING_INSTANCE} drun:'chmod o+w bpam/data'
-    ccg ${AWS_STAGING_INSTANCE} putfile:fig-staging.yml,bpam/fig-staging.yml
-    ccg ${AWS_STAGING_INSTANCE} putfile:docker/unstable/Dockerfile,bpam/docker/unstable/Dockerfile
+    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/docker/unstable'
+    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/data'
+    ccg ${AWS_STAGING_INSTANCE} drun:'chmod o+w ${PROJECT_NAME}/data'
+    ccg ${AWS_STAGING_INSTANCE} putfile:fig-staging.yml,${PROJECT_NAME}/fig-staging.yml
+    ccg ${AWS_STAGING_INSTANCE} putfile:docker/unstable/Dockerfile,${PROJECT_NAME}/docker/unstable/Dockerfile
 
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd bpam && fig -f fig-staging.yml stop'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd bpam && fig -f fig-staging.yml kill'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd bpam && fig -f fig-staging.yml rm --force -v'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd bpam && fig -f fig-staging.yml build --no-cache webstaging'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd bpam && fig -f fig-staging.yml up -d'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml stop'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml kill'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml rm --force -v'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml build --no-cache webstaging'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml up -d'
     ccg ${AWS_STAGING_INSTANCE} drun:'docker-untagged || true'
 }
 
-rpmbuild() {
+rpm_build() {
     activate_virtualenv
     mkdir -p data/rpmbuild
     chmod o+rwx data/rpmbuild
 
-    fig --project-name bpam -f fig-rpmbuild.yml up
+    fig --project-name ${PROJECT_NAME} -f fig-rpmbuild.yml up
 }
 
-
 rpm_publish() {
-    time ccg publish_testing_rpm:data/rpmbuild/RPMS/x86_64/bpam*.rpm,release=6
+    time ccg publish_testing_rpm:data/rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,release=6
+}
+
+build() {
+   activate_virtualenv
+   fig --project-name ${PROJECT_NAME} build
+}
+
+clean() {
+   fig --project-name ${PROJECT_NAME} rm
+}
+
+entrypoint() {
+   ENTRYPOINT=${1:-bash}
+   log_info "Entrypoint ${ENTRYPOINT}"
+   docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT}
 }
 
 usage() {
-    log_warning "Usage ./develop.sh (pythonlint|jslint)"
-    log_warning "Usage ./develop.sh (unit_tests)"
-    log_warning "Usage ./develop.sh (selenium)"
-    log_warning "Usage ./develop.sh (rpmbuild|rpm_publish|ci_staging)"
-    log_warning "Usage ./develop.sh (start|up)"
-    log_warning "Usage ./develop.sh (usage)"
+   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rmp_publish|ingest)'
+   echo '                   build        Build all images'
+   echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
+   echo '                   superuser    Create Django superuser'
+   echo '                   ingest       Ingest metadata'
+   echo '                   up           Spins up docker image stack'
+   echo '                   rm           Remove all images'
+   echo '                   rpm_build    Build rpm'
+   echo '                   rpm_publish  Publish rpm'
+   echo '                   ci_staging   Continuous Integration staging'
+   echo '                   rpm_publish  Publish rpm'
+   echo '                   pythonlint   Run python lint'
+   echo '                   jslint       Run javascript lint'
+   echo '                   unit_tests   Run unit tests'
+   echo '                   selenium     Run selenium tests'
+   echo '                   usage'
 }
-
 
 case ${ACTION} in
 pythonlint)
@@ -160,8 +167,8 @@ pythonlint)
 jslint)
     jslint
     ;;
-rpmbuild)
-    rpmbuild
+rpm_build)
+    rpm_build
     ;;
 rpm_publish)
     ci_ssh_agent
@@ -174,8 +181,26 @@ ci_staging)
 start)
     up
     ;;
+build)
+    build
+    ;;
+clean)
+    clean
+    ;;
 up)
     up
+    ;;
+shell)
+    entrypoint
+    ;;
+superuser)
+    entrypoint superuser
+    ;;
+ingest)
+    entrypoint ingest
+    ;;
+nuclear)
+    entrypoint nuclear
     ;;
 unit_tests)
     unit_tests

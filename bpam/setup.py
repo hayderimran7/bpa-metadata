@@ -30,7 +30,7 @@ else:
     package_data = get_data_files()
 
 install_requires = [
-    'Django==1.7.3',
+    'Django==1.7.6',
     'Django-suit',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
