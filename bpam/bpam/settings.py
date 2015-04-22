@@ -122,16 +122,16 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10
 }
 
-
-# Default cookie settings
-# see: https://docs.djangoproject.com/en/1.4/ref/settings/#session-cookie-age and following
-# see: https://docs.djangoproject.com/en/1.4/ref/settings/#csrf-cookie-name and following
+# cookies
+# see: https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-age
+# see: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-name
+# you SHOULD change the cookie to use HTTPONLY and SECURE when in production
 SESSION_COOKIE_AGE = env.get("session_cookie_age", 60 * 60)
 SESSION_COOKIE_PATH = '{0}/'.format(SCRIPT_NAME)
 SESSION_SAVE_EVERY_REQUEST = env.get("session_save_every_request", True)
-SESSION_COOKIE_HTTPONLY = env.get("session_cookie_httponly", True)
+SESSION_COOKIE_HTTPONLY = SESSION_COOKIE_HTTPONLY = env.get("session_cookie_httponly", True)
 SESSION_COOKIE_SECURE = env.get("session_cookie_secure", PRODUCTION)
-SESSION_COOKIE_NAME = env.get("session_cookie_name", "bpam_{0}".format(SCRIPT_NAME.replace("/", "")))
+SESSION_COOKIE_NAME = env.get("session_cookie_name", "ccg_{0}".format(SCRIPT_NAME.replace("/", "")))
 SESSION_COOKIE_DOMAIN = env.get("session_cookie_domain", "") or None
 CSRF_COOKIE_NAME = env.get("csrf_cookie_name", "csrf_{0}".format(SESSION_COOKIE_NAME))
 CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or SESSION_COOKIE_DOMAIN
@@ -302,6 +302,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'explorer',
     'leaflet',
+    'djangosecure',
 )
 
 # Log directory created and enforced by puppet

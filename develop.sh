@@ -147,6 +147,7 @@ usage() {
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
    echo '                   ingest       Ingest metadata'
+   echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker image stack'
    echo '                   rm           Remove all images'
    echo '                   rpm_build    Build rpm'
@@ -207,6 +208,9 @@ unit_tests)
     ;;
 selenium)
     selenium
+    ;;
+checksecure)
+    entrypoint checksecure
     ;;
 *)
     usage
