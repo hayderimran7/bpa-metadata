@@ -27,3 +27,4 @@ syntax:glob
 metadata/
 users/
 bpam/bpam/static/
+bpam/.ropeproject/
