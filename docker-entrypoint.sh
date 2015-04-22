@@ -78,14 +78,63 @@ django_defaults() {
 }
 
 echo "HOME is ${HOME}"
-echo "WHOAMI is `whoami`"
+echo "WHOAMI is $(whoami)"
 
 defaults
 django_defaults
 wait_for_services
 
+
+if [ "${COMMAND}" = 'nuclear' ]
+then
+    django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
+fi
+
+if [ "${COMMAND}" = 'ingest' ]
+then
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+
+    django-admin.py runscript ingest_bpa_projects --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_users --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_melanoma --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_gbr --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_wheat_pathogens --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+
+    # BASE
+    django-admin.py runscript ingest_base_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_base_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_base_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_base_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_base_otu --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+
+    # links
+    django-admin.py runscript url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+fi
+
+
+# set superuser 
+if [ "${COMMAND}" = 'superuser' ]
+then
+    echo "Setting superuser (admin)"
+    django-admin.py  createsuperuser --email="admin@ccg.com" --settings=${DJANGO_SETTINGS_MODULE}
+    exit $?
+fi
+
+# security by django checksecure
+if [ "$COMMAND" = 'checksecure' ]
+then
+    echo "[Run] Running Django checksecure"
+    django-admin.py checksecure --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/checksecure.log
+
+    exit $?
+fi
+
 # uwsgi entrypoint
-if [ "$COMMAND" = 'uwsgi' ]; then
+if [ "$COMMAND" = 'uwsgi' ]
+then
     echo "[Run] Starting uwsgi"
 
     : ${UWSGI_OPTS="/app/uwsgi/docker.ini"}
@@ -94,20 +143,19 @@ if [ "$COMMAND" = 'uwsgi' ]; then
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
     django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
-
-    uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
+uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
     exit $?
 fi
 
 # runserver entrypoint
-if [ "$COMMAND" = 'runserver' ]; then
+if [ "$COMMAND" = 'runserver' ]
+then
     echo "[Run] Starting runserver"
 
     : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${WEBPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
     echo "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
 
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-collectstatic.log
-    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-syncdb.log
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-migrate.log
 
     django-admin.py ${RUNSERVER_OPTS} 2>&1 | tee /data/runserver.log
@@ -115,27 +163,25 @@ if [ "$COMMAND" = 'runserver' ]; then
 fi
 
 # runtests entrypoint
-if [ "$COMMAND" = 'runtests' ]; then
+if [ "$COMMAND" = 'runtests' ] 
+then
     echo "[Run] Starting tests"
-
-    # TODO could this be python path
-    # export PYTHONPATH=/app/bpam
     cd /app/bpam
     django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runtests.log
 
     exit $?
 fi
 
-
 # lettuce entrypoint
-if [ "$COMMAND" = 'lettuce' ]; then
+if [ "$COMMAND" = 'lettuce' ]
+then
     echo "[Run] Starting lettuce"
 
     django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml 2>&1 | tee /data/lettuce.log
     exit $?
 fi
 
-echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi]"
+echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest]"
 echo "[RUN]: $@"
 
 exec "$@"
