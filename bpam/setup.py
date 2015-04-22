@@ -75,6 +75,7 @@ install_requires = [
     'Werkzeug',
     'psycopg2==2.5.4',
     'model-mommy',
+    'django-secure',
 ]
 
 dev_requires = [

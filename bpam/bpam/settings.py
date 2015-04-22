@@ -33,15 +33,21 @@ PRODUCTION = env.get("production", False)
 SSL_ENABLED = PRODUCTION
 SSL_FORCE = PRODUCTION
 
-# Debug on by default
 DEBUG = env.get("debug", not PRODUCTION)
-
 TEMPLATE_DEBUG = DEBUG
+
+# django-secure
+SECURE_SSL_REDIRECT = env.get("secure_ssl_redirect", PRODUCTION)
+SECURE_FRAME_DENY = env.get("secure_frame_deny", PRODUCTION)
+SECURE_CONTENT_TYPE_NOSNIFF = env.get("secure_content_type_nosniff", PRODUCTION)
+SECURE_BROWSER_XSS_FILTER = env.get("secure_browser_xss_filter", PRODUCTION)
+SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
 
 # Default all email to ADMINS and MANAGERS to root@localhost.
 # Puppet redirects this to something appropriate depend on the environment.
-# see: https://docs.djangoproject.com/en/1.6/ref/settings/#admins
-# see: https://docs.djangoproject.com/en/1.6/ref/settings/#managers
+# see: https://docs.djangoproject.com/en/1.7/ref/settings/#admins
+# see: https://docs.djangoproject.com/en/1.7/ref/settings/#managers
 ADMINS = [
     ("alert", env.get("alert_email", "root@localhost"))
 ]
@@ -51,24 +57,24 @@ MANAGERS = ADMINS
 if env.get("ENABLE_EMAIL", False):
     print('Enabling Email')
     # email settings for sending email error alerts etc
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host
     EMAIL_HOST = env.get("email_host", "")
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-port
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-port
     EMAIL_PORT = env.get("email_port", 25)
 
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-user
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host-user
     EMAIL_HOST_USER = env.get("email_host_user", "")
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-host-password
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host-password
     EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
 
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-use-tls
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-use-tls
     EMAIL_USE_TLS = env.get("email_use_tls", False)
 
-    # see: https://docs.djangoproject.com/en/1.6/ref/settings/#email-subject-prefix
+    # see: https://docs.djangoproject.com/en/1.7/ref/settings/#email-subject-prefix
     EMAIL_APP_NAME = "BPA Metadata "
     EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
 
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#email-backend
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-backend
     if EMAIL_HOST:
         EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     elif DEBUG:
@@ -81,7 +87,7 @@ if env.get("ENABLE_EMAIL", False):
 
             mkpath(EMAIL_FILE_PATH)
 
-    # See: https://docs.djangoproject.com/en/1.6/ref/settings/#server-email
+    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#server-email
     SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
     RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
     # email address to receive datasync client log notifications
@@ -231,7 +237,6 @@ STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 
@@ -239,17 +244,17 @@ STATICFILES_FINDERS = (
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
+    'djangosecure.middleware.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.,clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.doc.XViewMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
