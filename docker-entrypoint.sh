@@ -90,7 +90,13 @@ then
     django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
 fi
 
-if [ "${COMMAND}" = 'ingest' ]
+if [ "${COMMAND}" = 'runscript' ]
+then
+    echo "Runscript $2" 
+    django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+fi
+
+if [ "${COMMAND}" = 'ingest_all' ]
 then
     django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 
@@ -181,7 +187,7 @@ then
     exit $?
 fi
 
-echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest]"
+echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest|runscript]"
 echo "[RUN]: $@"
 
 exec "$@"

@@ -131,25 +131,26 @@ build() {
    fig --project-name ${PROJECT_NAME} build
 }
 
-clean() {
+rm_containers() {
    fig --project-name ${PROJECT_NAME} rm
 }
 
 entrypoint() {
    ENTRYPOINT=${1:-bash}
    log_info "Entrypoint ${ENTRYPOINT}"
-   docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT}
+   docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT} $2
 }
 
 usage() {
-   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rmp_publish|ingest)'
+   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rmp_publish|ingest|ingest_all)'
    echo '                   build        Build all images'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
    echo '                   ingest       Ingest metadata'
+   echo '                   ingest_all       Ingest metadata'
    echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker image stack'
-   echo '                   rm           Remove all images'
+   echo '                   rm           Remove all containers'
    echo '                   rpm_build    Build rpm'
    echo '                   rpm_publish  Publish rpm'
    echo '                   ci_staging   Continuous Integration staging'
@@ -185,6 +186,9 @@ start)
 build)
     build
     ;;
+rm)
+    rm_containers
+    ;;
 clean)
     clean
     ;;
@@ -197,8 +201,11 @@ shell)
 superuser)
     entrypoint superuser
     ;;
-ingest)
-    entrypoint ingest
+ingest_all)
+    entrypoint ingest_all
+    ;;
+runscript)
+    entrypoint runscript $2
     ;;
 nuclear)
     entrypoint nuclear
