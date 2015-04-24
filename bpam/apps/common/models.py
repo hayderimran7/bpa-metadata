@@ -253,7 +253,7 @@ class SequenceFile(models.Model):
     """
 
     run = None
-    project_name = 'UNSET'  # children sequence files need to set this
+    project_name = 'UNSET'  # derivative sequence files need to set this
 
     index_number = models.IntegerField(_('Index'), blank=True, null=True, )
     lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
@@ -278,12 +278,13 @@ class SequenceFile(models.Model):
         else:
             return False
 
-    def get_url(self):
+    def get_url(self, source_path="all"):
         uj = urlparse.urljoin
         uq = urllib.quote
 
-        return uj(settings.BPA_BASE_URL, "%s/raw/all/%s" % (
+        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
             self.project_name,
+            source_path,
             uq(self.filename)))
 
     url = property(get_url)
