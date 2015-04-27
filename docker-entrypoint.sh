@@ -94,6 +94,7 @@ if [ "${COMMAND}" = 'runscript' ]
 then
     echo "Runscript $2" 
     django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    exit $?
 fi
 
 if [ "${COMMAND}" = 'ingest_all' ]
@@ -118,6 +119,8 @@ then
 
     # links
     django-admin.py runscript url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+
+    exit $?
 fi
 
 

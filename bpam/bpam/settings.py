@@ -409,3 +409,7 @@ QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITABLE_DIRECTO
 # this is here to placate the new system check framework, its also set in testsettings,
 # where it belongs
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+# ingest all
+DOWNLOADS_CHECKER_USER = env.get('downloads_checker_user', 'CHECKER')
+DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'CHECKER')

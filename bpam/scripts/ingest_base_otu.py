@@ -15,7 +15,7 @@ from libs.excel_wrapper import ExcelWrapper
 from django.conf import settings
 
 
-settings.DEBUG = False
+# settings.DEBUG = False
 
 BPA_PREFIX = '102.100.100.'
 

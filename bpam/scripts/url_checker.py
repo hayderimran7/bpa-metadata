@@ -12,19 +12,12 @@ from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
 from apps.wheat_pathogens.models import PathogenSequenceFile
-
-
-setup_config_env('/etc/bpam/bpam.conf')
-env = EnvConfig()
-downloads_checker_user = env.get('downloads_checker_user')
-downloads_checker_pass = env.get('downloads_checker_pass')
-
-SLEEP_TIME = 0.0  # time to rest between checks
-
 from libs.logger_utils import get_logger
+from django.conf import settings
 
 logger = get_logger(__name__)
 
+SLEEP_TIME = 0.0  # time to rest between checks
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
     problems = []
@@ -59,7 +52,7 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
 def check_gbr(sleep_time):
     logger.info('Checking GBR')
     session = requests.Session()
-    session.auth = (downloads_checker_user, downloads_checker_pass)
+    session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
 
     try:
         process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
