@@ -320,13 +320,13 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': 'Registry [%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
+            'format': 'bpam [%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
         },
         'db': {
-            'format': 'Registry [%(duration)s:%(sql)s:%(params)s] %(message)s'
+            'format': 'bpam [%(duration)s:%(sql)s:%(params)s] %(message)s'
         },
         'simple': {
-            'format': 'Registry %(levelname)s %(message)s'
+            'format': 'bpam %(levelname)s %(message)s'
         },
     },
     'filters': {
