@@ -370,7 +370,7 @@ LOGGING = {
         }
     },
     'root': {
-        'handlers': ['console', 'errorfile', 'mail_admins'],
+        'handlers': ['console', 'errorfile', ,
         'level': 'ERROR',
     },
     'loggers': {
