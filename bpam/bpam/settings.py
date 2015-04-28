@@ -411,6 +411,6 @@ QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITABLE_DIRECTO
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # ingest all
-DOWNLOADS_CHECKER_USER = env.get('downloads_checker_user', 'CHECKER')
-DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'CHECKER')
+DOWNLOADS_CHECKER_USER = env.get('downloads_checker_user', 'downloads_checker')
+DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'ch3ck3r')
 DOWNLOADS_CHECKER_SLEEP = env.get('downloads_checker_sleep', 0.0)
