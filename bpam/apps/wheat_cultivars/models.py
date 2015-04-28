@@ -35,7 +35,7 @@ class CultivarSequenceFile(SequenceFile):
     """
     Sequence Files resulting from a run
     """
-    project_name = 'Wheat_Cultivars'
+    project_name = 'wheat_cultivars'
     sample = models.ForeignKey(CultivarSample)
     run = models.ForeignKey(CultivarRun)
     original_sequence_filename = models.CharField(max_length=200, null=True, blank=True)

@@ -6,7 +6,6 @@ from pprint import pprint
 
 import django
 import requests
-from ccg_django_utils.conf import EnvConfig, setup_config_env
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
@@ -17,7 +16,8 @@ from django.conf import settings
 
 logger = get_logger(__name__)
 
-SLEEP_TIME = 0.0  # time to rest between checks
+SLEEP_TIME = settings.DOWNLOADS_CHECKER_SLEEP  # time to rest between checks
+
 
 def process_object(sleep_time, session, model, attr_name, url_fn):
     problems = []
@@ -46,7 +46,10 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         verifier.save()
         time.sleep(sleep_time)
 
-    pprint(problems)
+    if problems:
+        pprint(problems)
+    else:
+        print("There were no problems")
 
 
 def check_gbr(sleep_time):
@@ -81,7 +84,7 @@ def check_wheat_pathogens(sleep_time):
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
-    session.auth = (downloads_checker_user, downloads_checker_pass)
+    session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
     try:
         process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError, e:
@@ -100,7 +103,7 @@ def run(sleep_time=SLEEP_TIME):
         sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
         sleep_time = SLEEP_TIME
 
-    # check_melanoma(sleep_time)
+    check_melanoma(sleep_time)
     check_gbr(sleep_time)
-    # check_wheat_cultivars(sleep_time)
-    # check_wheat_pathogens(sleep_time)
+    check_wheat_cultivars(sleep_time)
+    check_wheat_pathogens(sleep_time)

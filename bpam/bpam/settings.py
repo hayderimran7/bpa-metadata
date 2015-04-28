@@ -413,3 +413,4 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # ingest all
 DOWNLOADS_CHECKER_USER = env.get('downloads_checker_user', 'CHECKER')
 DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'CHECKER')
+DOWNLOADS_CHECKER_SLEEP = env.get('downloads_checker_sleep', 0.0)
