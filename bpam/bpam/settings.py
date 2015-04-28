@@ -2,7 +2,6 @@
 # Django settings for bpa metadata project.
 
 import os
-import sys
 
 from unipath import Path
 from ccg_django_utils.conf import EnvConfig
@@ -305,63 +304,89 @@ INSTALLED_APPS = (
     'djangosecure',
 )
 
-# Log directory created and enforced by puppet
-CCG_LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_WEBAPP_ROOT, "log"))
+# #
+# # LOGGING
+# #
+LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_WEBAPP_ROOT, "log"))
 try:
-    if not os.path.exists(CCG_LOG_DIRECTORY):
-        os.mkdir(CCG_LOG_DIRECTORY)
+    if not os.path.exists(LOG_DIRECTORY):
+        os.mkdir(LOG_DIRECTORY)
 except:
     pass
-os.path.exists(CCG_LOG_DIRECTORY), "No log directory, please create one: %s" % CCG_LOG_DIRECTORY
+os.path.exists(LOG_DIRECTORY), "No log directory, please create one: %s" % LOG_DIRECTORY
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': 'Registry [%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
+        },
+        'db': {
+            'format': 'Registry [%(duration)s:%(sql)s:%(params)s] %(message)s'
+        },
+        'simple': {
+            'format': 'Registry %(levelname)s %(message)s'
+        },
+    },
     'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
     },
     'handlers': {
-        'logfile': {
-            'level': 'WARNING',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(CCG_LOG_DIRECTORY, "ingest-logfile"),
-            'maxBytes': 50000,
-            'backupCount': 2,
+        'null': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'errorfile': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIRECTORY, 'error.log'),
+            'when': 'midnight',
+            'formatter': 'verbose'
+        },
+        'registryfile': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIRECTORY, 'registry.log'),
+            'when': 'midnight',
+            'formatter': 'verbose'
+        },
+        'db_logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIRECTORY, 'registry_db.log'),
+            'when': 'midnight',
+            'formatter': 'db'
         },
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        },
-        'rainbow': {
-            'level': 'DEBUG',
-            'class': 'rainbow_logging_handler.RainbowLoggingHandler',
-            'stream': sys.stderr}
+            'filters': [],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
+            'include_html': True
+        }
+    },
+    'root': {
+        'handlers': ['console', 'errorfile', 'mail_admins'],
+        'level': 'ERROR',
     },
     'loggers': {
-        # noisy backed, set to DEBUG if something seems wrong
-        'django.db.backends': {
-            'handlers': ['rainbow'],
+        'django': {
+            'handlers': ['null'],
+            'propagate': False,
             'level': 'INFO',
-            'propagate': True,
         },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
+        'registry_log': {
+            'handlers': ['registryfile', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
-        '': {
-            'handlers': ['rainbow']
-        }
     }
 }
+
 
 if env.get("DEBUG_TOOLBAR", False):
     INSTALLED_APPS += ('debug_toolbar', )
