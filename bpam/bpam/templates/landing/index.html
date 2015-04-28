@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8"/>
 {% bootstrap_css %}
+
 <style>
 .content-div {
     padding-left: 1em;
@@ -24,15 +25,11 @@
     top: 18px;
     left: 10px;
 }
-
-
 </style>
 </head>
 
 <body>
-
 <div class="container">
-
     <!-- Static navbar -->
     <div class="navbar navbar-default">
         <div class="navbar-header">
@@ -59,19 +56,23 @@
     <div class="jumbotron">
 
         <div class="landing_header">
-            <p>
-            <img src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
 
-            <h1> Bioplatforms Australia Metadata</h1>
-            </p>
+            <div class="media">
+                <div class="media-left media-middle">
+                    <a href="#">
+                        <img class="media-object" src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h1 class="media-heading">Bioplatforms Australia Metadata</h1>
+                    <h2>
+                        Welcome to Bioplatforms Australia's project metadata portal.
+                        <a href="https://downloads.bioplatforms.com/">Bioplatforms Australia Downloads</a>
+                    </h2>
+                </div>
+            </div>
+
         </div>
-
-
-        <p>Welcome to Bioplatforms Australia's project metadata portal</p>
-
-        <p>
-        <a href="https://downloads.bioplatforms.com/">Bioplatforms Australia Downloads</a>
-        </p>
 
         <div class="row">
             <div class="col-sm-6 col-md-4">
