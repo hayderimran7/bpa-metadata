@@ -94,7 +94,7 @@ class MelanomaSequenceFile(SequenceFile):
     Sequence Files resulting from a run
     """
 
-    project_name = 'Melanoma'
+    project_name = 'melanoma'
     sample = models.ForeignKey(MelanomaSample)
     run = models.ForeignKey(MelanomaRun)
 
