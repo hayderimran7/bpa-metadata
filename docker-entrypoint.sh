@@ -88,6 +88,8 @@ wait_for_services
 if [ "${COMMAND}" = 'nuclear' ]
 then
     django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    exit $?
 fi
 
 if [ "${COMMAND}" = 'runscript' ]
