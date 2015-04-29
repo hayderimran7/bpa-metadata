@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Project specific deps
 RUN apt-get update && apt-get install -y \
+  git \
   libpcre3 \
   libpcre3-dev \
   libgeos-c1 \

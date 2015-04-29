@@ -5,9 +5,12 @@ import os
 
 from unipath import Path
 from ccg_django_utils.conf import EnvConfig
-from bpam import VERSION
 
 env = EnvConfig()
+
+# VERSION = env.get("bpa_version", os.environ.get("BPA_VERSION", "")))
+VERSION = "2.0.0"
+BPA_VERSION = VERSION
 
 SCRIPT_NAME = env.get("script_name", os.environ.get("HTTP_SCRIPT_NAME", ""))
 FORCE_SCRIPT_NAME = env.get("force_script_name", "") or SCRIPT_NAME or None
@@ -15,7 +18,6 @@ FORCE_SCRIPT_NAME = env.get("force_script_name", "") or SCRIPT_NAME or None
 CCG_WEBAPP_ROOT = os.path.dirname(os.path.realpath(__file__))
 CCG_WRITABLE_DIRECTORY = env.get("writable_directory", os.path.join(CCG_WEBAPP_ROOT, "scratch"))
 
-BPA_VERSION = VERSION
 PROJECT_DIR = Path(__file__).ancestor(1)
 PROJECT_NAME = os.path.basename(CCG_WEBAPP_ROOT)
 
