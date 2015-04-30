@@ -52,6 +52,8 @@ USER ccg-user
 ENV HOME /data
 WORKDIR /data
 
+ENV APP_RELEASE BLEEDING_EDGE
+
 # entrypoint shell script that by default starts runserver
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["runserver"]
