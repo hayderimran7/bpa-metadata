@@ -138,7 +138,8 @@ rm_containers() {
 entrypoint() {
    ENTRYPOINT=${1:-bash}
    log_info "Entrypoint ${ENTRYPOINT}"
-   docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT} $2
+   # docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT} $2
+   docker exec -it ${PROJECT_NAME}_web_1 ${ENTRYPOINT} $2
 }
 
 usage() {
