@@ -257,6 +257,9 @@ def do_md5():
 
 
 def truncate():
+    """
+    Truncate Amplicon DB tables
+    """
     from django.db import connection
 
     cursor = connection.cursor()
@@ -266,7 +269,6 @@ def truncate():
 
 
 def run():
-    # get_all_metadata_from_server()
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.fetch_metadata_from_folder()
     truncate()
