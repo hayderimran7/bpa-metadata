@@ -68,7 +68,7 @@ def get_data(file_name):
                   ('sample_extraction_id', 'Sample extraction ID', None),
                   ('sequencing_facility', 'Sequencing facility', None),
                   ('target', 'Target', lambda s: s.upper().strip()),
-                  ('index', 'Index', None),
+                  ('index', 'Index', lambda s: s[:12]),
                   ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
                   ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
                   ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
