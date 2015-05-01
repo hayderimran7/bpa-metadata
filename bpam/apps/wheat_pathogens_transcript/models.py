@@ -38,7 +38,7 @@ class WheatPathogenTranscriptSequenceFile(SequenceFile):
     """
     Sequence Files resulting from a run
     """
-    project_name = 'Wheat_Pathogens_Transcript'
+    project_name = 'wheat_pathogens_transcript'
     sample = models.ForeignKey(WheatPathogenTranscriptSample)
     run = models.ForeignKey(WheatPathogenTranscriptRun)
     file_size = models.CharField(max_length=10, null=True, blank=True)

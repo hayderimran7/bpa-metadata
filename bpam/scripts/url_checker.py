@@ -11,6 +11,7 @@ from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
 from apps.wheat_pathogens.models import PathogenSequenceFile
+from apps.wheat_pathogens_transcript.models import WheatPathogenTranscriptSequenceFile
 from libs.logger_utils import get_logger
 from django.conf import settings
 
@@ -81,6 +82,15 @@ def check_wheat_pathogens(sleep_time):
         logger.error(e)
 
 
+def check_wheat_pathogens_transcript(sleep_time):
+    logger.info('Checking Wheat Pathogens Transcript')
+    session = requests.Session()
+    try:
+        process_object(sleep_time, session, WheatPathogenTranscriptSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
+
+
 def check_melanoma(sleep_time):
     logger.info('Checking Melanoma')
     session = requests.Session()
@@ -107,3 +117,4 @@ def run(sleep_time=SLEEP_TIME):
     check_gbr(sleep_time)
     check_wheat_cultivars(sleep_time)
     check_wheat_pathogens(sleep_time)
+    check_wheat_pathogens_transcript(sleep_time)

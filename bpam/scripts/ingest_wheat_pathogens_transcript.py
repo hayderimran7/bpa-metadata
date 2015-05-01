@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 from apps.common.models import DNASource, Sequencer
 
 from apps.wheat_pathogens_transcript.models import (
@@ -156,7 +156,14 @@ def ingest_runs(sample_data):
         if bpa_id is None:
             return
 
-        file_name = entry.sequence_filename.strip()
+        def get_file_name(_fname):
+            """
+            The filenames in the spreadsheet has paths prepended, strip them out
+            """
+            head, tail = os.path.split(_fname.strip())
+            return tail
+
+        file_name = get_file_name(entry.sequence_filename)
         if file_name != '':
             f = WheatPathogenTranscriptSequenceFile()
             f.sample = WheatPathogenTranscriptSample.objects.get(bpa_id=bpa_id)
