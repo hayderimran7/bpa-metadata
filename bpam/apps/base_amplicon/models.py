@@ -33,7 +33,7 @@ class AmpliconSequencingMetadata(DebugNote):
     sequencing_run_number = models.CharField(_('Sequencing run number'), max_length=40, blank=True, null=True)
     flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=5, blank=True, null=True)
     reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
-    name = models.CharField(_('Sample Name'), max_length=50, blank=True, null=True)
+    name = models.CharField(_('Sample Name'), max_length=100, blank=True, null=True)
     comments = models.TextField(_('Comments'), blank=True, null=True)
 
     analysis_software_version = models.CharField(_('Analysis Software Version'), max_length=100, blank=True, null=True)
