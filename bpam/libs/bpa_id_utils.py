@@ -43,7 +43,7 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
     """
     validator = BPAIdValidator(bpa_idx)
     if not validator.is_valid():
-        return None, validator.valid_report()
+        return None, validator.valid_report
 
     project = get_project(project_key, project_name)
     bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx,
@@ -95,14 +95,15 @@ class BPAIdValidator(object):
             self.valid = False
 
         # empties
-        if self.bpa_id == '':
+        elif self.bpa_id == '':
             self.valid_report = 'BPA ID is empty string'
             self.valid = False
 
         # no BPA prefix
-        if self.bpa_id.find(BPA_ID) == -1:
+        elif self.bpa_id.find(BPA_ID) == -1:
             self.valid_report = 'No "{0}" identifying the string as a BPA ID'.format(BPA_ID)
             self.valid = False
 
         # this function has failed to find a reason why this can't be a BPA ID....
-        self.valid = True
+        else:
+            self.valid = True
