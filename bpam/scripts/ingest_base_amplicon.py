@@ -25,18 +25,6 @@ BPA_ID = "102.100.100."
 BASE_DESCRIPTION = 'BASE'
 
 
-def get_bpa_id(e):
-    """
-    Get or make BPA ID
-    """
-
-    bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'BASE', 'BASE')
-    if not bpa_id:
-        logger.warning('Ignoring [{0}], not a good BPA ID'.format(e.bpa_id))
-        return None
-    return bpa_id
-
-
 def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
@@ -92,14 +80,25 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
+def _get_bpa_id(entry):
+    """
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'BASE', 'BASE')
+    if bpa_id is None:
+        logger.warning('Could not add entry on row {0}, BPA ID Invalid: {1}'.format(entry.row, report))
+        return None
+    return bpa_id
+
+
 def add_samples(data):
     """
     Add sequence files
     """
     for entry in data:
-        bpa_id = get_bpa_id(entry)
-        if bpa_id is None:
-            logger.warning('Could not add entry on row {0}'.format(entry.row))
+        bpa_id = _get_bpa_id(entry)
+        if not bpa_id:
             continue
 
         metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=entry.target)
@@ -269,8 +268,8 @@ def truncate():
 
 
 def run():
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
-    fetcher.fetch_metadata_from_folder()
+    # fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    # fetcher.fetch_metadata_from_folder()
     truncate()
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()

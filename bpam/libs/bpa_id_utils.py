@@ -21,7 +21,7 @@ def ingest_bpa_ids(data, project_key, project_name):
             bpa_id = e['bpa_id'].strip()
         elif isinstance(e, tuple):
             bpa_id = e.bpa_id.strip()
-        if is_good_bpa_id(bpa_id):
+        if BPAIdValidator(bpa_id).is_valid():
             id_set.add(bpa_id)
 
     add_id_set(id_set, project_key, project_name)
@@ -41,10 +41,9 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
     It also creates the necessary project.
     :rtype : bpa_id
     """
-
-    if not is_good_bpa_id(bpa_idx):
-        logger.warning('Given ID string failed good ID test')
-        return None
+    validator = BPAIdValidator(bpa_idx)
+    if not validator.is_valid():
+        return None, validator.valid_report()
 
     project = get_project(project_key, project_name)
     bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx,
@@ -54,7 +53,7 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
                                                         })
     if created:
         logger.debug("New BPA ID {0}".format(bpa_idx))
-    return bpa_id
+    return bpa_id, "OK"
 
 
 def add_id_set(id_set, project_key, project_name):
@@ -65,25 +64,45 @@ def add_id_set(id_set, project_key, project_name):
         get_bpa_id(bpa_id, project_key, project_name)
 
 
-def is_good_bpa_id(bpa_id):
+class BPAIdValidator(object):
     """
-    Determines if id is a good BPA ID
+    Given a BPA ID string, check validitty.
     """
 
-    if bpa_id is None:
-        logger.warning('BPA ID is None')
-        return False
+    def __init__(self, bpa_id):
+        self.bpa_id = bpa_id.strip()
+        self.valid_report = None
+        self.valid = None
 
-    bpa_id = bpa_id.strip()
-    # empties
-    if bpa_id == '':
-        logger.warning('BPA ID is empty string')
-        return False
+    def get_id(self):
+        """
+        Return validated ID
+        """
+        return self.bpa_id
 
-    # no BPA prefix
-    if bpa_id.find(BPA_ID) == -1:
-        logger.warning('No "{0}" identifying the string as a BPA ID'.format(BPA_ID))
-        return False
+    def is_valid(self):
+        if self.valid is None:
+            self.is_valid_bpa_id()
+        return self.valid
 
-    # this function has failed to find a reason why this can't be a BPA ID....
-    return True
+    def is_valid_bpa_id(self):
+        """
+        Determines if id is a valid BPA ID
+        """
+
+        if self.bpa_id is None:
+            self.valid_report = 'BPA ID is None'
+            self.valid = False
+
+        # empties
+        if self.bpa_id == '':
+            self.valid_report = 'BPA ID is empty string'
+            self.valid = False
+
+        # no BPA prefix
+        if self.bpa_id.find(BPA_ID) == -1:
+            self.valid_report = 'No "{0}" identifying the string as a BPA ID'.format(BPA_ID)
+            self.valid = False
+
+        # this function has failed to find a reason why this can't be a BPA ID....
+        self.valid = True
