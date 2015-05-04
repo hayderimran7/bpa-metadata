@@ -12,6 +12,7 @@ being the fist column of the fieldspec, the value are found in the column specis
 as mangled by the provided method.
 """
 
+import os
 import datetime
 from collections import namedtuple
 
@@ -63,6 +64,7 @@ class ExcelWrapper(object):
                  formatting_info=False,
                  pick_first_sheet=False):
 
+        self.file_name = file_name
         self.sheet_name = sheet_name
         self.header_length = header_length
         self.column_name_row_index = column_name_row_index
@@ -183,10 +185,10 @@ class ExcelWrapper(object):
         Returns all rows for the sheet as named tuples.
         """
         # row is added so we know where in the spreadsheet this came from
-        typ = namedtuple(typname, ['row'] + [n for n in self.field_names])
+        typ = namedtuple(typname, ['row', 'file_name'] + [n for n in self.field_names])
 
         for idx, row in enumerate(self._get_rows()):
-            tpl = [idx + self.header_length + 1]  # The original row pos in sheet, + 1 as excell row indexing start at 1
+            tpl = [idx + self.header_length + 1, os.path.basename(self.file_name)]  # The original row pos in sheet, + 1 as excell row indexing start at 1
             for name in self.field_names:
                 i = self.name_to_column_map[name]
                 func = self.name_to_func_map[name]
