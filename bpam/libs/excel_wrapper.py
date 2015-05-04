@@ -186,7 +186,7 @@ class ExcelWrapper(object):
         typ = namedtuple(typname, ['row'] + [n for n in self.field_names])
 
         for idx, row in enumerate(self._get_rows()):
-            tpl = [idx]
+            tpl = [idx + self.header_length + 1]  # The original row pos in sheet, + 1 as excell row indexing start at 1
             for name in self.field_names:
                 i = self.name_to_column_map[name]
                 func = self.name_to_func_map[name]
