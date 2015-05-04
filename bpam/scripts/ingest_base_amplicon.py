@@ -87,7 +87,7 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'BASE', 'BASE')
     if bpa_id is None:
-        logger.warning('Could not add entry on row {0}, BPA ID Invalid: {1}'.format(entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
     return bpa_id
 
