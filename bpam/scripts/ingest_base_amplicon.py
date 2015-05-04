@@ -32,7 +32,7 @@ def get_bpa_id(e):
 
     bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'BASE', 'BASE')
     if not bpa_id:
-        logger.warning('Ignoring {0}, not a good BPA ID'.format(e.bpa_id))
+        logger.warning('Ignoring [{0}], not a good BPA ID'.format(e.bpa_id))
         return None
     return bpa_id
 
