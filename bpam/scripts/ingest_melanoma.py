@@ -91,7 +91,6 @@ def ingest_samples(samples):
             return user_helper.get_user_by_full_name(name)
         return user_helper.get_user_by_full_name(names)
 
-
     def add_sample(e):
         bpa_id = _get_bpa_id(e)
         if bpa_id is None:
