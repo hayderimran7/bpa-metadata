@@ -38,11 +38,11 @@ def fix_dilution(val):
 
 def fix_pcr(pcr):
     """
-    'todo' is neither P, nor F, it will be F
+    Check pcr value
     """
     val = pcr.strip()
     if val not in ['P', 'F', '']:
-        logger.error('PCR value [{0}] is neither F nor P'.format(pcr))
+        logger.error('PCR value [{0}] is neither F, P or "", setting to X'.format(pcr))
         val = 'X'
     return val
 
@@ -268,8 +268,8 @@ def truncate():
 
 
 def run():
-    # fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
-    # fetcher.fetch_metadata_from_folder()
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.fetch_metadata_from_folder()
     truncate()
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()
