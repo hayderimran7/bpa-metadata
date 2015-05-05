@@ -24,6 +24,18 @@ DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'melanoma/')
 logger = logger_utils.get_logger(__name__)
 
 
+def _get_bpa_id(entry):
+    """
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        return None
+    return bpa_id
+
+
 def get_dna_source(description):
     """
     Get a DNA source if it exists, if it doesn't make it.
@@ -79,18 +91,17 @@ def ingest_samples(samples):
             return user_helper.get_user_by_full_name(name)
         return user_helper.get_user_by_full_name(names)
 
+
     def add_sample(e):
-        bpa_idx = e.bpa_id
-        if not bpa_id_utils.is_good_bpa_id(bpa_idx):
-            logger.warning("Ignoring '{0}', not a good BPA ID".format(bpa_idx))
+        bpa_id = _get_bpa_id(e)
+        if bpa_id is None:
             return
 
-        bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
         organism, _ = Organism.objects.get_or_create(genus="Homo", species="Sapiens")
 
         sample, created = MelanomaSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         if created:
-            sample.bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma')
+            sample.bpa_id = bpa_id
             sample.name = e.sample_name
             sample.requested_sequence_coverage = e.sequence_coverage.upper()
             sample.dna_source = get_dna_source(e.sample_dna_source)
@@ -130,7 +141,9 @@ def ingest_arrays(arrays):
         return 'U'
 
     for e in arrays:
-        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'MELANOMA', 'Melanoma', )
+        bpa_id = _get_bpa_id(e)
+        if bpa_id is None:
+            return
         Array.objects.get_or_create(
             bpa_id=bpa_id,
             batch_number=int(e.batch_no),
@@ -265,13 +278,9 @@ def ingest_runs(sample_data):
         """
         The run produced several files
         """
-
-        bpa_idx = entry.bpa_id.strip()
-        if not bpa_id_utils.is_good_bpa_id(bpa_idx):
-            logger.warning('Ignoring entry with invalid BPA ID:{0}'.format(bpa_idx))
-            return None
-
-        bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
+        bpa_id = _get_bpa_id(entry)
+        if bpa_id is None:
+            return
         run_number = get_run_number(entry)
         flow_cell_id = entry.flow_cell_id.strip()
         sample, _ = MelanomaSample.objects.get_or_create(bpa_id=bpa_id)
@@ -302,9 +311,8 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
-
-        if not bpa_id_utils.is_good_bpa_id(entry.bpa_id):
-            logger.warning('Did not add file, BPA ID {0} is wrong'.format(entry.bpa_id))
+        bpa_id = _get_bpa_id(entry)
+        if bpa_id is None:
             return
 
         file_name = entry.sequence_filename.strip()
@@ -314,7 +322,7 @@ def ingest_runs(sample_data):
             logger.warning('Filename is not set, ignoring')
             return
 
-        sample = MelanomaSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
+        sample = MelanomaSample.objects.get(bpa_id=bpa_id)
         f, created = MelanomaSequenceFile.objects.get_or_create(run=_run, sample=sample)
         if created:
             f.date_received_from_sequencing_facility = ingest_utils.get_date(entry.date_received)
