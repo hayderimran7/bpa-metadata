@@ -129,7 +129,10 @@ class ExcelWrapper(object):
             if col_index != -1:
                 cmap[attribute] = col_index
             else:
-                raise ColumnNotFoundException(column_name)
+                # raise ColumnNotFoundException(column_name)
+                logger.error("Column {} not found in {} ".format(column_name, self.file_name))
+                cmap[attribute] = None
+
         return cmap
 
     def set_name_to_func_map(self):
@@ -188,9 +191,15 @@ class ExcelWrapper(object):
         typ = namedtuple(typname, ['row', 'file_name'] + [n for n in self.field_names])
 
         for idx, row in enumerate(self._get_rows()):
-            tpl = [idx + self.header_length + 1, os.path.basename(self.file_name)]  # The original row pos in sheet, + 1 as excell row indexing start at 1
+            row_count = idx + self.header_length + 1
+            tpl = [row_count, os.path.basename(self.file_name)]  # The original row pos in sheet, + 1 as excell row indexing start at 1
             for name in self.field_names:
                 i = self.name_to_column_map[name]
+                # i is None if the column specified was not found, in that case,
+                # set the val to None as well
+                if i is None:
+                    tpl.append(None)
+                    continue
                 func = self.name_to_func_map[name]
                 cell = row[i]
                 ctype = cell.ctype
