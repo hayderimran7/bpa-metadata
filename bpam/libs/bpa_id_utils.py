@@ -70,9 +70,12 @@ class BPAIdValidator(object):
     """
 
     def __init__(self, bpa_id):
-        self.bpa_id = bpa_id.strip()
         self.valid_report = None
         self.valid = None
+        if bpa_id is not None:
+            self.bpa_id = bpa_id.strip()
+        else:
+            self.bpa_id = None
 
     def get_id(self):
         """
