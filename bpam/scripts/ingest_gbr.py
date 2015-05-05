@@ -26,16 +26,18 @@ METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/'  # this is whe
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata')
 
 
-def get_bpa_id(named_tup):
+def get_bpa_id(entry):
     """ Get a BPA ID object from id string in named tuple.
     :param named_tup: Named tuple with a bpa_id member.
-    :type named_tup: tuple
+    :type entry: tuple
     :rtype BPAUniqueID:
     """
-    if bpa_id_utils.is_good_bpa_id(named_tup.bpa_id):
-        return bpa_id_utils.get_bpa_id(named_tup.bpa_id, GBR_DESCRIPTION, 'GBR', note='Great Barrier Reef Sample')
-    else:
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, GBR_DESCRIPTION, 'GBR', note='Great Barrier Reef Sample')
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
+    return bpa_id
 
 
 def get_dna_source(description):
