@@ -23,6 +23,18 @@ METADATA_URL = 'https://downloads.bioplatforms.com/wheat_pathogens/metadata/'
 METADATA_FILE = 'current.xlsx'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens')
 
+def _get_bpa_id(entry):
+    """
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'WHEAT_PATHOGEN', 'Wheat Pathogens')
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        return None
+    return bpa_id
+
+
 
 def get_dna_source(description):
     """
@@ -75,7 +87,7 @@ def ingest_samples(samples):
         Adds new sample or updates existing sample
         """
 
-        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, 'WHEAT_PATHOGEN', 'Wheat Pathogens')
+        bpa_id = _get_bpa_id(e)
         if bpa_id is None:
             return
 
@@ -150,7 +162,7 @@ def ingest_runs(sample_data):
         return sequencer
 
     def get_sample(bpa_id):
-        sample, created = PathogenSample.objects.get_or_create(bpa_id__bpa_id=bpa_id)
+        sample, created = PathogenSample.objects.get_or_create(bpa_id=bpa_id)
         if created:
             logger.debug("Created sample ID {0}".format(bpa_id))
         return sample
@@ -170,7 +182,7 @@ def ingest_runs(sample_data):
         flow_cell_id = entry.flow_cell_id.strip()
         run_number = get_run_number(entry)
 
-        bpa_id = bpa_id_utils.get_bpa_id(entry.bpa_id, 'WHEAT_PATHOGEN', 'Wheat Pathogens')
+        bpa_id = _get_bpa_id(entry)
         if bpa_id is None:
             return
         try:
@@ -204,7 +216,7 @@ def ingest_runs(sample_data):
         """
         Add each sequence file produced by a run
         """
-        bpa_id = bpa_id_utils.get_bpa_id(entry.bpa_id, 'WHEAT_PATHOGEN', 'Wheat Pathogens')
+        bpa_id = _get_bpa_id(entry)
         if bpa_id is None:
             return
 
