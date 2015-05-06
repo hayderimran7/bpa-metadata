@@ -4,6 +4,7 @@
 {% block title %}Amplicon Metadata {% endblock %}
 
 {% block content %}
+<div class="well">
 <div class="panel panel-info">
     <div class="panel-body">
         <h3> Amplicon {{ metadata.target }} Metadata for BPA ID {{ metadata.bpa_id }}</h3>
@@ -38,7 +39,7 @@
         <tr>
             <td> PCR 1:10</td>
             <td>
-                {% if data.passed_pcr_1_to_10 %}
+                {% if metadata.passed_pcr_1_to_10 %}
                 <span class="glyphicon glyphicon-ok"></span>
                 {% else %}
                 <span class="glyphicon glyphicon-remove"></span>
@@ -48,7 +49,7 @@
         <tr>
             <td> PCR 1:100</td>
             <td>
-                {% if data.passed_pcr_1_to_100 %}
+                {% if metadata.passed_pcr_1_to_100 %}
                 <span class="glyphicon glyphicon-ok"></span>
                 {% else %}
                 <span class="glyphicon glyphicon-remove"></span>
@@ -58,7 +59,7 @@
         <tr>
             <td> PCR Neat</td>
             <td>
-                {% if data.passed_pcr_neat %}
+                {% if metadata.passed_pcr_neat %}
                 <span class="glyphicon glyphicon-ok"></span>
                 {% else %}
                 <span class="glyphicon glyphicon-remove"></span>
@@ -80,7 +81,7 @@
         </tbody>
     </table>
 </div>
-
+</div>
 {% include "sequencefilelist.html" %}
 
 {% endblock %}
