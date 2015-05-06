@@ -191,22 +191,37 @@ def parse_md5_file(md5_file):
             if extraction_id is None:
                 continue
 
-            if len(rest) != 8:
-                logger.error('Ignoring line {0} from {1} with missing data'.format(filename, md5_file))
+            if len(rest) == 8:
+                target, vendor, index, well, sequence, lane, run_num, run_id = rest
+
+                file_data['filename'] = filename
+                file_data['extraction_id'] = extraction_id
+                file_data['target'] = target
+                file_data['vendor'] = vendor
+                file_data['index'] = index
+                file_data['well'] = well
+                file_data['sequence'] = sequence
+                file_data['lane'] = lane
+                file_data['run'] = run_num
+                file_data['run_id'] = run_id
+
+            elif len(rest) == 9:
+                target, vendor, index1, index2, well, sequence, lane, run_num, run_id = rest
+
+                file_data['filename'] = filename
+                file_data['extraction_id'] = extraction_id
+                file_data['target'] = target
+                file_data['vendor'] = vendor
+                file_data['index'] = index1 + "," + index2
+                file_data['well'] = well
+                file_data['sequence'] = sequence
+                file_data['lane'] = lane
+                file_data['run'] = run_num
+                file_data['run_id'] = run_id
+            else:
+                logger.error('Ignoring line {} from {} with missing data'.format(filename, md5_file))
                 continue
 
-            target, vendor, index, well, sequence, lane, run_num, run_id = rest
-
-            file_data['filename'] = filename
-            file_data['extraction_id'] = extraction_id
-            file_data['target'] = target
-            file_data['vendor'] = vendor
-            file_data['index'] = index
-            file_data['well'] = well
-            file_data['sequence'] = sequence
-            file_data['lane'] = lane
-            file_data['run'] = run_num
-            file_data['run_id'] = run_id
             data.append(file_data)
 
     return data
