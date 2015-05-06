@@ -20,19 +20,21 @@ BASE_454 = 'BASE_454.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/454_metadata/')
 
 BPA_ID = "102.100.100"
-BASE_DESCRIPTION = 'BASE'
+PROJECT_DESCRIPTION = 'BASE'
+PROJECT_ID = 'BASE'
 
 
-@contract
-def get_bpa_id(named_tup):
-    """ Get a BPA ID object from id string in named tuple.
-    :param named_tup: Named tuple with a bpa_id member.
-    :type named_tup: tuple
+def _get_bpa_id(entry):
     """
-    if bpa_id_utils.is_good_bpa_id(named_tup.bpa_id):
-        return bpa_id_utils.get_bpa_id(named_tup.bpa_id, BASE_DESCRIPTION, 'BASE', note='base 454 Sample')
-    else:
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
+    return bpa_id
+
 
 
 @contract
@@ -141,7 +143,7 @@ def ingest(file_name):
     wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=2, column_name_row_index=1)
     for t in wrapper.get_all():
         # ID
-        bpa_id = get_bpa_id(t)
+        bpa_id = _get_bpa_id(t)
         if bpa_id is None:
             logger.warning('BPA ID {0} does not look like a proper BPA ID ignoring'.format(t.bpa_id))
             continue
