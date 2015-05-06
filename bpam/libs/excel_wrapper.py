@@ -116,7 +116,6 @@ class ExcelWrapper(object):
         for attribute, column_name, _ in self.field_spec:
             col_index = -1
             # because data vendors cannot get column names right, I have to give a range of alternatives
-
             if type(column_name) == tuple:
                 option_count = len(column_name)
                 for c, _name in enumerate(column_name):
@@ -129,8 +128,13 @@ class ExcelWrapper(object):
             if col_index != -1:
                 cmap[attribute] = col_index
             else:
-                # raise ColumnNotFoundException(column_name)
-                logger.error("Column {} not found in {} ".format(column_name, self.file_name))
+                # In previous versions, not finding a particular column was a
+                # breaking offence. But trying to force vendors to be compliant
+                # with the naming spec as published by BPA has proven to be
+                # futile quest, the have won, I give up. If a column is not
+                # found, throw your arms in the air and continue, hope that
+                # something later on does not break.
+                logger.warning("Column {} not found in {} ".format(column_name, self.file_name))
                 cmap[attribute] = None
 
         return cmap
