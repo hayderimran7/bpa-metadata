@@ -93,7 +93,7 @@ class BASESampleCache(object):
             return self.cache[bpa_idx]
         else:
             logger.info('Caching BPA ID {0}'.format(bpa_idx))
-            bpa_id = bpa_id_utils.get_bpa_id(bpa_idx, 'BASE', 'BASE', note='BASE OTU Ingest')
+            bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, 'BASE', 'BASE', note='BASE OTU Ingest')
             sample, created = BASESample.objects.get_or_create(bpa_id=bpa_id)
             self.cache[bpa_idx] = sample
             return sample
