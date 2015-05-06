@@ -21,7 +21,7 @@ class AmpliconSequencingMetadata(DebugNote):
     target = models.CharField(_('Type'), max_length=4,
                               choices=(('16S', '16S'), ('ITS', 'ITS'), ('18S', '18S'), ('A16S', 'A16S')))
 
-    index = models.CharField(_('Index'), max_length=12, blank=True, null=True)
+    index = models.CharField(_('Index'), max_length=50, blank=True, null=True)
 
     PASS_OR_FAIL = (('P', 'Pass'), ('F', 'Fail'))
     pcr_1_to_10 = models.CharField(_('PCR 1:10'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
