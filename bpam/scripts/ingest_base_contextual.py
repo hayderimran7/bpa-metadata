@@ -33,6 +33,18 @@ BASE_DESCRIPTION = 'BASE'
 CHEM_MIN_SENTINAL_VALUE = 0.0001
 
 
+def get_bpa_id(e):
+    """
+    Get or make BPA ID
+    """
+    idx = '{0}.{1}'.format(BPA_ID_PREFIX, e.sample_id)  # make a BPA ID string
+    bpa_id, report = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE')
+    if not bpa_id:
+        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+        return None
+    return bpa_id
+
+
 def get_horizon_classifications(classification_str):
     """
     map the classification string to the classification object
@@ -159,17 +171,6 @@ def get_data(file_name):
 
     return wrapper.get_all()
 
-
-def get_bpa_id(e):
-    """
-    Get or make BPA ID
-    """
-    idx = '{0}.{1}'.format(BPA_ID_PREFIX, e.sample_id)  # make a BPA ID string
-    bpa_id = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE')
-    if not bpa_id:
-        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
-        return None
-    return bpa_id
 
 
 def get_land_use(land_use_str, row):
