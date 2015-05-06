@@ -223,7 +223,9 @@ def add_md5(data):
         except ValueError:
             return None
 
-        bpa_id = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE', 'Created by BASE Amplicon ingestor')
+        bpa_id, report = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE', 'Created by BASE Amplicon ingestor')
+        if bpa_id is None:
+            return None
         sample, _ = BASESample.objects.get_or_create(bpa_id=bpa_id)
         return sample
 
@@ -231,7 +233,7 @@ def add_md5(data):
         sample = get_base_sample(extraction_id)
         if sample:
             _amplicon_run, _ = AmpliconRun.objects.get_or_create(sample=sample)
-            _amplicon_run.sequencing_facility = Facility.objects.get(name=_file_data['vendor'])
+            _amplicon_run.sequencing_facility = Facility.objects.get_or_create(name=_file_data['vendor'])[0]
             _amplicon_run.flow_cell_id = _file_data['well']
             _amplicon_run.save()
             return _amplicon_run
