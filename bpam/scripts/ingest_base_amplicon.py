@@ -57,6 +57,8 @@ def get_data(file_name):
                   ('sequencing_facility', 'Sequencing facility', None),
                   ('target', 'Target', lambda s: s.upper().strip()),
                   ('index', 'Index', lambda s: s[:12]),
+                  ('index1', 'Index 1', lambda s: s[:12]),
+                  ('index2', 'Index2', lambda s: s[:12]),
                   ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
                   ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
                   ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
@@ -92,6 +94,20 @@ def _get_bpa_id(entry):
     return bpa_id
 
 
+def _get_index(entry):
+    """
+    Archial amplicons have more than one index, take all available indexi and bunch them into
+    a single string. So be it.
+    """
+    indexi = []
+    for i in (entry.index, entry.index1, entry.index2):
+        if i is not None:
+            i = i.strip()
+            if i is not "":
+                indexi.append(i)
+    return ", ".join(indexi)
+
+
 def add_samples(data):
     """
     Add sequence files
@@ -107,11 +123,11 @@ def add_samples(data):
         metadata.name = entry.name
 
         metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
-        metadata.index = entry.index
+        metadata.index = _get_index(entry)
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
         metadata.pcr_1_to_100 = entry.pcr_1_to_100
         metadata.pcr_neat = entry.pcr_neat
-        metadata.dilution = entry.dilution
+        metadata.dilution = entry.dilution.upper()
         metadata.sequencing_run_number = entry.sequencing_run_number
         metadata.flow_cell_id = entry.flow_cell_id
         metadata.analysis_software_version = entry.analysis_software_version
