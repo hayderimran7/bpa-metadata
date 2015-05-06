@@ -28,6 +28,17 @@ METADATA_FILE = 'Wheat_Pathogen_Transcript_data.xlsx'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcript')
 
 
+def _get_bpa_id(entry):
+    """
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        return None
+    return bpa_id
+
 def ingest_samples(samples):
     def get_dna_source(description):
         """
@@ -41,7 +52,7 @@ def ingest_samples(samples):
         Adds new sample or updates existing sample
         """
 
-        bpa_id = bpa_id_utils.get_bpa_id(e.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
+        bpa_id = _get_bpa_id(e)
         if bpa_id is None:
             return
 
@@ -119,7 +130,7 @@ def ingest_runs(sample_data):
         """
         flow_cell_id = entry.flow_cell_id.strip()
 
-        bpa_id = bpa_id_utils.get_bpa_id(entry.bpa_id, '%s' % PROJECT_ID, PROJECT_DESCRIPTION)
+        bpa_id = _get_bpa_id(entry)
         if bpa_id is None:
             return
         try:
