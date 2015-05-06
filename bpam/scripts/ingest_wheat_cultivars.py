@@ -13,7 +13,8 @@ from unipath import Path
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
-DESCRIPTION = 'Wheat Cultivars'
+PROJECT_ID = 'WHEAT_CULTIVAR'
+PROJECT_DESCRIPTION = 'Wheat Cultivars'
 
 METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/metadata/'  # the folder
 METADATA_FILE = 'current.xlsx'
@@ -38,14 +39,14 @@ def get_dna_source(description):
     return source
 
 
-def get_bpa_id(e):
+def _get_bpa_id(entry):
     """
     Get or make BPA ID
     """
-    idx = e.bpa_id
-    bpa_id = bpa_id_utils.get_bpa_id(idx, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
-    if not bpa_id:
-        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
     return bpa_id
 
@@ -60,7 +61,7 @@ def ingest_samples(samples):
         Adds new sample or updates existing sample
         """
 
-        bpa_id = get_bpa_id(e)
+        bpa_id = _get_bpa_id(e)
         wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
         cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
@@ -156,7 +157,7 @@ def ingest_runs(sample_data):
         The run produced several files
         """
         flow_cell_id = entry.flow_cell_id.strip()
-        bpa_id = get_bpa_id(e)
+        bpa_id = _get_bpa_id(e)
         run_number = entry.run_number
         sample = get_sample(bpa_id)
 
