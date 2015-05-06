@@ -20,6 +20,18 @@ BPA_ID = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
 
 
+def _get_bpa_id(entry):
+    """
+    Get or make BPA ID
+    """
+
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
+    if bpa_id is None:
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        return None
+    return bpa_id
+
+
 def get_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -59,7 +71,7 @@ def get_data(file_name):
                   ('run', 'Run number', ingest_utils.get_clean_number),
                   ('flow_cell_id', 'Run #:Flow Cell ID', None),
                   ('lane_number', 'Lane number', ingest_utils.get_clean_number),
-                  ('file_name', 'FILE NAMES - supplied by sequencing facility', None),
+                  ('sequence_file_name', 'FILE NAMES - supplied by sequencing facility', None),
                   ('md5sum', 'MD5 Checksum', None),
                   ('date_data_sent', 'Date data sent/transferred', ingest_utils.get_date),
                   ]
@@ -77,11 +89,7 @@ def get_sample(entry):
     """
     Get the Sample by bpa_id
     """
-    if entry.bpa_id is None:
-        logger.warning('BPA ID not set in row {0}, ignoring'.format(entry.row))
-        return None
-
-    bpa_id = bpa_id_utils.get_bpa_id(entry.bpa_id, BASE_DESCRIPTION, 'BASE', note='BASE Metagenomics Sample')
+    bpa_id = _get_bpa_id(entry)
     if bpa_id is None:
         return None
 
@@ -140,7 +148,7 @@ def add_sequence_files(data):
 
         sequence_file = MetagenomicsSequenceFile()
         sequence_file.sample = sample
-        sequence_file.filename = file_row.file_name
+        sequence_file.filename = file_row.sequence_file_name
         sequence_file.md5 = file_row.md5sum
         sequence_file.index_number = file_row.index
         sequence_file.lane_number = file_row.lane_number
