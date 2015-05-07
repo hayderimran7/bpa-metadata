@@ -1,5 +1,8 @@
+import urlparse
+import urllib
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.conf import settings
 
 from apps.common.models import SequenceFile, Run
 from apps.base.models import BASESample
@@ -41,6 +44,17 @@ class MetagenomicsSequenceFile(SequenceFile):
 
     sample = models.ForeignKey(MetagenomicsSample)
     run = models.ForeignKey(MetagenomicsRun, null=True)
+
+    def get_url(self):
+        uj = urlparse.urljoin
+        uq = urllib.quote
+
+        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
+            'base',
+            'metagenomics',
+            uq(self.filename)))
+
+    url = property(get_url)
 
     class Meta:
         verbose_name_plural = _("Metagenomics Sequence Files")
