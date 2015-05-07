@@ -54,13 +54,13 @@
 
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'base:search' %}">Search</a>
-                    <a class="list-group-item" href="{% url 'base_contextual:index' %}">Contextual Data</a>
-                    <a class="list-group-item" href="{% url 'base_contextual:samples' %}">Samples in Context</a>
-                    <a class="list-group-item" href="{% url 'base_contextual:collectionsites' %}">Sites</a>
-                    <a class="list-group-item" href="{% url 'base_contextual:chemicalanalysis' %}">Chemical Analysis</a>
-                    <a class="list-group-item" href="{% url 'base_amplicon:index' %}">Amplicons</a>
-                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Metagenomics</a>
-                    <a class="list-group-item" href="{% url 'base_454:454samples' %}">454</a>
+                    <a class="list-group-item" href="{% url 'base_contextual:index' %}">Contextual Data </a>
+                    <a class="list-group-item" href="{% url 'base_contextual:samples' %}">Samples in Context  <span class="badge">{{ sample_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_contextual:collectionsites' %}">Sites <span class="badge">{{ site_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_contextual:chemicalanalysis' %}">Chemical Analysis<span class="badge">{{ chem_analysis_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:index' %}">Amplicons <span class="badge">{{ amplicon_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Metagenomics <span class="badge">{{ metagenomics_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_454:454samples' %}">454 <span class="badge">{{ 454_count }}</span></a>
                     <a class="list-group-item" href="{% url 'base:contacts' %}">Contacts</a>
                     <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request Access</a>
                 </div>

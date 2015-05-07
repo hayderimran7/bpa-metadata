@@ -11,7 +11,10 @@ from django.views.generic.base import View
 from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
-from apps.base_contextual.models import SampleContext, ChemicalAnalysis
+from apps.base_contextual.models import SampleContext, ChemicalAnalysis, CollectionSite
+from apps.base_amplicon.models import AmpliconSequencingMetadata
+from apps.base_metagenomics.models import MetagenomicsSample
+from apps.base_454.models import Sample454
 from search_export import CSVExporter, OTUExporter
 
 
@@ -20,6 +23,16 @@ logger = logging.getLogger("rainbow")
 
 class BaseView(TemplateView):
     template_name = 'base/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BaseView, self).get_context_data(**kwargs)
+        context['sample_count'] = SampleContext.objects.count()
+        context['site_count'] = CollectionSite.objects.count()
+        context['chem_analysis_count'] = ChemicalAnalysis.objects.count()
+        context['amplicon_count'] = AmpliconSequencingMetadata.objects.count()
+        context['metagenomics_count'] = MetagenomicsSample.objects.count()
+        context['454_count'] = Sample454.objects.count()
+        return context
 
 
 class AbstractSearchableListView(ListView, FormMixin):
