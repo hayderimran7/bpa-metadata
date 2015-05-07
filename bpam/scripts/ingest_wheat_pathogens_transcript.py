@@ -39,6 +39,7 @@ def _get_bpa_id(entry):
         return None
     return bpa_id
 
+
 def ingest_samples(samples):
     def get_dna_source(description):
         """

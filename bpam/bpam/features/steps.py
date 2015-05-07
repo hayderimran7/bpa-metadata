@@ -3,7 +3,7 @@ import random
 import string
 
 from lettuce import world, step
-import lettuce_webdriver.webdriver 
+import lettuce_webdriver.webdriver
 
 
 @step('I go to "(.*)"')

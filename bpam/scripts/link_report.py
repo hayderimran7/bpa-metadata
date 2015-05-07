@@ -3,13 +3,11 @@ Creates a report on missing sequence files
 """
 
 import xlwt
-
 from libs.logger_utils import get_logger
-
+from apps.melanoma.models import MelanomaSequenceFile
 
 logger = get_logger(__name__)
 
-from apps.melanoma.models import MelanomaSequenceFile
 
 MISSING_REPORT_NAME = 'missing_melanoma.xlsx'
 

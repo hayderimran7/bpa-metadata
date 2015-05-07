@@ -371,7 +371,7 @@ LOGGING = {
         }
     },
     'root': {
-        'handlers': ['console', 'errorfile',],
+        'handlers': ['console', 'errorfile'],
         'level': 'ERROR',
     },
     'loggers': {

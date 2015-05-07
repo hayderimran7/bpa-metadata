@@ -12,10 +12,6 @@ from libs.fetch_data import Fetcher
 from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
 from apps.base.models import BASESample
 from libs.excel_wrapper import ExcelWrapper
-from django.conf import settings
-
-
-# settings.DEBUG = False
 
 BPA_PREFIX = '102.100.100.'
 

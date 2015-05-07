@@ -1,7 +1,5 @@
-import os
-from lettuce import *
 from selenium import webdriver
-
+from lettuce import before, world, after
 import steps
 
 

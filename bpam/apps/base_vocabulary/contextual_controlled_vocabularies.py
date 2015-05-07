@@ -445,5 +445,3 @@ SoilTextureVocabulary = (
     ('Sand', 'Total of fine and coarse sand'),
     ('Gravel', '>2.0 mm'),
 )
-
-

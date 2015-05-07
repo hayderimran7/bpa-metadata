@@ -23,6 +23,7 @@ METADATA_URL = 'https://downloads.bioplatforms.com/wheat_pathogens/metadata/'
 METADATA_FILE = 'current.xlsx'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens')
 
+
 def _get_bpa_id(entry):
     """
     Get or make BPA ID

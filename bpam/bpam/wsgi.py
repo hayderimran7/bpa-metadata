@@ -17,6 +17,12 @@ import os
 import os.path
 from sys import path
 
+# This application object is used by any WSGI server configured to use this
+# file. This includes Django's development server, if the WSGI_APPLICATION
+# setting points here.
+from django.core.wsgi import get_wsgi_application
+from ccg_django_utils.conf import setup_prod_env
+
 # snippet to enable the virtualenv if installed as rpm
 activate_this = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'bin', 'activate_this.py')
 if os.path.exists(activate_this):
@@ -26,13 +32,6 @@ del activate_this
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 path.append(SITE_ROOT)
 
-# This application object is used by any WSGI server configured to use this
-# file. This includes Django's development server, if the WSGI_APPLICATION
-# setting points here.
-from django.core.wsgi import get_wsgi_application
-
-
-from ccg_django_utils.conf import setup_prod_env
 setup_prod_env("bpam")
 
 

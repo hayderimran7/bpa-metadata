@@ -69,7 +69,8 @@ ci_ssh_agent() {
 
 pythonlint() {
     activate_virtualenv
-    ${VIRTUALENV}/bin/flake8 ${PROJECT_NAME} --exclude=migrations --ignore=E501 --count
+    find . -type d -name ".ropeproject" -exec rm -fr {} \;
+    ${VIRTUALENV}/bin/flake8 bpam --exclude=migrations --ignore=E501,E303 --count
 }
 
 
