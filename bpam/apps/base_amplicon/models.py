@@ -1,5 +1,9 @@
+import urlparse
+import urllib
+
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.conf import settings
 
 from apps.common.models import SequenceFile, Facility, DebugNote, BPAUniqueID, Run
 from apps.base.models import BASESample
@@ -71,6 +75,17 @@ class AmpliconSequenceFile(SequenceFile):
     metadata = models.ForeignKey(AmpliconSequencingMetadata)
     run = models.ForeignKey(AmpliconRun)
     sample = models.ForeignKey(BASESample)
+
+    def get_url(self):
+        uj = urlparse.urljoin
+        uq = urllib.quote
+
+        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
+            'base/amplicons',
+            self.metadata.target.lower(),
+            uq(self.filename)))
+
+    url = property(get_url)
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")
