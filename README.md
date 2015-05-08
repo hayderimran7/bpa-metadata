@@ -14,8 +14,8 @@ its own local DB.
 
 * [Install docker and compose](https://docs.docker.com/compose/install/)
 * git clone https://github.com/muccg/bpa-metadata.git
-* ./develop.sh up
-* ./develop.sh ingest_all
+* `./develop.sh up`
+* `./develop.sh ingest_all`
 
 `develop.sh up` will spin up the stack. See `./develop.sh usage` for some utility methods, which typically are simple 
 wrappers arround docker:
