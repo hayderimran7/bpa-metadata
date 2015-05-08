@@ -1,4 +1,5 @@
 from rest_framework import generics
+from django.views.generic import TemplateView
 
 from .models import (
     LandUse,
@@ -14,6 +15,17 @@ from .models import (
 )
 
 import serializers
+
+
+class VocabularyView(TemplateView):
+    template_name = 'base_vocabulary/vocabulary.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyView, self).get_context_data(**kwargs)
+        context['land_use'] = LandUse.objects.all()
+        context['soil_texture'] = SoilTexture.objects.all()
+        context['soil_colour'] = SoilColour.objects.all()
+        return context
 
 
 class LandUseReadView(generics.ListAPIView):
@@ -63,4 +75,4 @@ class DrainageClassificationReadView(generics.ListAPIView):
 
 class ProfilePositionReadView(generics.ListAPIView):
     queryset = ProfilePosition.objects.all()
-    serializer_class = serializers.ProfilePositionSerializer
+    ferializer_class = serializers.ProfilePositionSerializer

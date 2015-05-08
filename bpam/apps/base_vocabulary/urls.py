@@ -5,6 +5,11 @@ from . import views
 urlpatterns = patterns(
     "",
     url(
+        regex=r'^vocabularies/$',
+        view=views.VocabularyView.as_view(),
+        name='all_vocabularies'
+    ),
+    url(
         regex=r'^landuse/$',
         view=views.LandUseReadView.as_view(),
         name='landuse_rest_api'
