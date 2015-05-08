@@ -25,6 +25,7 @@ class VocabularyView(TemplateView):
         context['land_use'] = LandUse.objects.all()
         context['soil_texture'] = SoilTexture.objects.all()
         context['soil_colour'] = SoilColour.objects.all()
+        context['ecozone'] = GeneralEcologicalZone.objects.all()
         return context
 
 
