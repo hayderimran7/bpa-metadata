@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}BASE Vocabulary{% endblock %}
+
+{% load staticfiles %}
+{% load mptt_tags %} 
+
+{% block content %}
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Soil Texture</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Colour</th>
+                    <th>Code</th>
+                </tr>
+                {% for color in soil_colour %}
+                <tr> 
+                    <td> {{ color.colour }} </td>
+                    <td> {{ color.code }} </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Soil Colour</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Texture</th>
+                    <th>Description</th>
+                </tr>
+                {% for stexture in soil_texture %}
+                <tr> 
+                    <td> {{ stexture.texture }} </td>
+                    <td> {{ stexture.description }} </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Land Use Vocabulary</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="root">
+                {% recursetree land_use %}
+                <li>
+                {{ node.description }}
+                {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+                {% endif %}
+                </li>
+                {% endrecursetree %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}
