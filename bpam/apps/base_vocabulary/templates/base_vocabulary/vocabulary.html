@@ -6,9 +6,8 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
+    <div class="row ">
         <div class="col-md-4">
-
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Soil Colour</h3>
@@ -20,7 +19,7 @@
                             <th>Code</th>
                         </tr>
                         {% for color in soil_colour %}
-                        <tr> 
+                        <tr>
                             <td> {{ color.colour }} </td>
                             <td> {{ color.code }} </td>
                         </tr>
@@ -42,7 +41,7 @@
                             <th>Description</th>
                         </tr>
                         {% for stexture in soil_texture %}
-                        <tr> 
+                        <tr>
                             <td> {{ stexture.texture }} </td>
                             <td> {{ stexture.description }} </td>
                         </tr>
@@ -64,7 +63,7 @@
                             <th>Note</th>
                         </tr>
                         {% for zone in ecozone %}
-                        <tr> 
+                        <tr>
                             <td> {{ zone.description }} </td>
                             <td> {{ zone.note }} </td>
                         </tr>
