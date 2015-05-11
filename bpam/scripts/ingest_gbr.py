@@ -391,7 +391,7 @@ def ingest_runs(sample_data):
         Add each sequence file produced by a run
         """
 
-        file_name = entry.sequence_filename.strip()
+        file_name = entry.sequence_filename.strip().replace("-", "_")
         if file_name != "":
             f = GBRSequenceFile()
             f.sample = GBRSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
