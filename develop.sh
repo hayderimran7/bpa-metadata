@@ -69,8 +69,8 @@ ci_ssh_agent() {
 
 pythonlint() {
     activate_virtualenv
-    find . -type d -name ".ropeproject" -exec rm -fr {} \;
-    ${VIRTUALENV}/bin/flake8 bpam --exclude=migrations --ignore=E501,E303 --count
+    # find . -type d -name ".ropeproject" -exec rm -fr {} \;
+    ${VIRTUALENV}/bin/flake8 bpam --exclude=migrations,.ropeproject --ignore=E501,E303 --count
 }
 
 
@@ -149,14 +149,11 @@ usage() {
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
    echo '                   ingest       Ingest metadata'
-   echo '                   ingest_all       Ingest metadata'
+   echo '                   ingest_all   Ingest metadata'
    echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker image stack'
    echo '                   rm           Remove all containers'
-   echo '                   rpm_build    Build rpm'
-   echo '                   rpm_publish  Publish rpm'
    echo '                   ci_staging   Continuous Integration staging'
-   echo '                   rpm_publish  Publish rpm'
    echo '                   pythonlint   Run python lint'
    echo '                   jslint       Run javascript lint'
    echo '                   unit_tests   Run unit tests'
