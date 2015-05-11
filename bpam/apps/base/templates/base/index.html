@@ -54,6 +54,7 @@
 
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'base:search' %}">Search</a>
+                    <a class="list-group-item" href="{% url 'base_vocabulary:all_vocabularies' %}">All Vocabularies</a>
                     <a class="list-group-item" href="{% url 'base_contextual:index' %}">Contextual Data </a>
                     <a class="list-group-item" href="{% url 'base_contextual:samples' %}">Samples in Context  <span class="badge">{{ sample_count }}</span></a>
                     <a class="list-group-item" href="{% url 'base_contextual:collectionsites' %}">Sites <span class="badge">{{ site_count }}</span></a>
