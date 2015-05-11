@@ -155,7 +155,6 @@ usage() {
    echo '                   rm           Remove all containers'
    echo '                   ci_staging   Continuous Integration staging'
    echo '                   pythonlint   Run python lint'
-   echo '                   jslint       Run javascript lint'
    echo '                   unit_tests   Run unit tests'
    echo '                   selenium     Run selenium tests'
    echo '                   usage'
@@ -164,9 +163,6 @@ usage() {
 case ${ACTION} in
 pythonlint)
     pythonlint
-    ;;
-jslint)
-    jslint
     ;;
 rpm_build)
     rpm_build
