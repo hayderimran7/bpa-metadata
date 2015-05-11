@@ -32,7 +32,6 @@ Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rm
                    rm           Remove all containers
                    ci_staging   Continuous Integration staging
                    pythonlint   Run python lint
-                   jslint       Run javascript lint
                    unit_tests   Run unit tests
                    selenium     Run selenium tests
                    usage
