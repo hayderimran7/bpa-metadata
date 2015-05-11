@@ -6,6 +6,7 @@ from .models import (
     SoilTexture,
     SoilColour,
     GeneralEcologicalZone,
+    BroadVegetationType,
     TillageType,
     HorizonClassification,
     AustralianSoilClassification,
@@ -26,6 +27,13 @@ class VocabularyView(TemplateView):
         context['soil_texture'] = SoilTexture.objects.all()
         context['soil_colour'] = SoilColour.objects.all()
         context['ecozone'] = GeneralEcologicalZone.objects.all()
+        context['vegetation'] = BroadVegetationType.objects.all()
+        context['tillage'] = TillageType.objects.all()
+        context['horizon'] = HorizonClassification.objects.all()
+        context['aus_soil'] = AustralianSoilClassification.objects.all()
+        context['fao_soil'] = FAOSoilClassification.objects.all()
+        context['drainage'] = DrainageClassification.objects.all()
+        context['profiles'] = ProfilePosition.objects.all()
         return context
 
 
