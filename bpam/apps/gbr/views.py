@@ -54,7 +54,7 @@ class CollectionSiteListView(ListView):
 
 class CollectionSiteDetailView(DetailView):
     model = CollectionSite
-    context_object_name = 'site'
+    context_object_name = 'collectionsite'
     template_name = 'gbr/collectionsite_detail.html'
 
 

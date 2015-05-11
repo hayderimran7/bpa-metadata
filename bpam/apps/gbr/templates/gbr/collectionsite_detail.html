@@ -5,16 +5,7 @@
 
 {% block content %}
 <script type="text/javascript">
-    var collectionsite = [{{site.lat
-    }
-    },
-    {
-        {
-            site.lon
-        }
-    }
-    ]
-    ;
+var collectionsite = [{{ collectionsite.lat }}, {{ collectionsite.lon }}] ;
 </script>
 
 <div class="container-fluid">
@@ -23,23 +14,22 @@
             {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
         </div>
         <div class="col-md-4">
-            <h3 class="unstacked">GBR Coral Collection Site <a class="name" href="{% url 'gbr:site' site.pk %}"> {{
-                site.get_name }}</a></h3>
+            <h3 class="unstacked">GBR Coral Collection Site <a class="name" href="{% url 'gbr:site' collectionsite.pk %}">{{ collectionsite.get_name }}</a></h3>
 
             <div>
                 <table id="collectionsite" class="table">
                     <tbody>
                     <tr>
                         <td><b>Latitude</b></td>
-                        <td class="lat">{{ site.lat }}</td>
+                        <td class="lat">{{ collectionsite.lat }}</td>
                     </tr>
                     <tr>
                         <td><b>Longitude</b></td>
-                        <td class="lgn">{{ site.lon }}</td>
+                        <td class="lgn">{{ collectionsite.lon }}</td>
                     </tr>
                     <tr>
                         <td><b>Note</b></td>
-                        <td>{{ site.comments|default:"" }}</td>
+                        <td>{{ collectionsite.comments|default:"" }}</td>
                     </tr>
                     </tbody>
                 </table>
