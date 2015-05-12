@@ -26,6 +26,20 @@ class CollectionSiteDetailView(DetailView):
     template_name = 'base_contextual/collectionsite_detail.html'
 
 
+class SampleMatrixListView(ListView):
+    model = SampleContext
+    context_object_name = 'records'
+    template_name = 'base_contextual/sample_matrix_list.html'
+    queryset = SampleContext.objects.select_related('bpa_id',
+                                                    'horizon_classification1',
+                                                    'horizon_classification2',
+                                                    'site__current_land_use',
+                                                    'site__general_ecological_zone',
+                                                    'site__vegetation_type',
+                                                    'site__soil_type_australian_classification')
+    # paginate_by = settings.DEFAULT_PAGINATION
+
+
 class SampleContextListView(ListView):
     model = SampleContext
     context_object_name = 'sample_contexts'

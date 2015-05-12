@@ -32,4 +32,8 @@ urlpatterns = patterns(
         regex=r'^samples',
         view=views.SampleContextListView.as_view(),
         name='samples'),
+    url(
+        regex=r'^samplematrix',
+        view=views.SampleMatrixListView.as_view(),
+        name='samplematrix'),
 )

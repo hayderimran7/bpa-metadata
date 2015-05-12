@@ -1,0 +1,118 @@
+<div class="panel panel-default">
+    <div class="table-responsive">
+        <table id="matrix" class="table table-striped tablesorter">
+            <thead>
+                <tr>
+                    <th>BPA ID</th>
+                    <th>Collection Site</th>
+                    <th>Horizon</th>
+                    <th>Depth</th>
+                    <th>Ecological Zone</th>
+                    <th>Current Land Use</th>
+                    <th>Vegetation</th>
+                    <th>Australian Soil Type</th>
+                    <th>Methodology</th>
+                    <th>Depth</th>
+                    <th>Moisture</th>
+                    <th>Colour</th>
+                    <th>Gravel</th>
+                    <th>Texture</th>
+                    <th>Course Sand</th>
+                    <th>Fine Sand</th>
+                    <th>Sand</th>
+                    <th>Silt</th>
+                    <th>Clay</th>
+                    <th>NH<sub>3</sub>-N</th>
+                    <th>NO<sub>3</sub><sup>−</sup></th>
+                    <th>Colwell P</th>
+                    <th>Colwell K</th>
+                    <th>Sulphur</th>
+                    <th>Organic Carbon</th>
+                    <th>Conductivity</th>
+                    <th>CaCl<sub>2</sub> pH</th>
+                    <th>H<sub>2</sub>O pH</th>
+                    <th>DTPA Cu</th>
+                    <th>DTPA Fe</th>
+                    <th>DTPA Mn</th>
+                    <th>DTPA Zn</th>
+                    <th>Exc Al</th>
+                    <th>Exc Ca</th>
+                    <th>Exc Mg</th>
+                    <th>Exc K</th>
+                    <th>Exc Na</th>
+                    <th>B Hot CaCl<sub>2</sub></th>
+                    <th>Total N</th>
+                    <th>Total C</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+            <tr>
+                <td>
+                    <a href="{% url 'base_contextual:chemicalanalysisdetail' bpa_id=record.bpa_id %}">{{ analysis.bpa_id }}</a>
+                </td>
+                <td>
+                    {% if record.site %}
+                    <a href="{% url 'base_contextual:collectionsitedetail' record.site.pk %}">
+                        {{ record.site.get_location_name }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ record.get_horizon_description }}</td>
+                <td>{{ record.depth }}</td>
+                <td>{{ record.site.general_ecological_zone }}</td>
+                <td>{{ record.site.current_land_use }}</td>
+                <td>{{ record.site.vegetation_type.vegetation }}</td>
+                <td>
+                    {% if record.site.soil_type_australian_classification %}
+                    <a href="https://www.google.com.au/search?q={{ record.site.soil_type_australian_classification }}+soil+australia">
+                        {{ record.site.soil_type_australian_classification }}
+                    </a>
+                    {% endif %}
+                </td>
+                <td>{{ record.methodological_notes }}</td>
+
+                <td>{{ analysis.depth }}</td>
+                <td>{{ analysis.moisture | default:"" | floatformat:3 }}</td>
+                <td>{{ analysis.colour| default:"" }}</td>
+                <td>{{ analysis.gravel| default:"" }}</td>
+                <td>{{ analysis.texture| default:"" | floatformat }}</td>
+                <td>{{ analysis.course_sand| default:"" | floatformat }}</td>
+                <td>{{ analysis.fine_sand| default:"" | floatformat }}</td>
+                <td>{{ analysis.sand| default:"" }}</td>
+                <td>{{ analysis.silt| default:"" }}</td>
+                <td>{{ analysis.clay| default:"" }}</td>
+                <td>{{ analysis.ammonium_nitrogen| default:"" }}</td>
+                <td>{{ analysis.nitrate_nitrogen| default:"" }}</td>
+                <td>{{ analysis.phosphorus_colwell| default:"" }}</td>
+                <td>{{ analysis.potassium_colwell| default:"" }}</td>
+                <td>{{ analysis.sulphur| default:"" }}</td>
+                <td>{{ analysis.organic_carbon| default:"" }}</td>
+                <td>{{ analysis.conductivity| default:"" }}</td>
+                <td>{{ analysis.cacl2_ph| default:"" }}</td>
+                <td>{{ analysis.h20_ph| default:"" }}</td>
+                <td>{{ analysis.dtpa_copper| default:"" }}</td>
+                <td>{{ analysis.dtpa_iron| default:"" }}</td>
+                <td>{{ analysis.dtpa_manganese | default:""}}</td>
+                <td>{{ analysis.dtpa_zinc| default:"" }}</td>
+                <td>{{ analysis.exc_aluminium | default:""}}</td>
+                <td>{{ analysis.exc_calcium| default:"" }}</td>
+                <td>{{ analysis.exc_magnesium| default:"" }}</td>
+                <td>{{ analysis.exc_potassium| default:"" }}</td>
+                <td>{{ analysis.exc_sodium| default:"" }}</td>
+                <td>{{ analysis.boron_hot_cacl2| default:"" }}</td>
+                <td>{{ analysis.total_nitrogen| default:"" }}</td>
+                <td>{{ analysis.total_carbon| default:"" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+$(document).ready(function () {
+        $(function () {
+            $("#matrix").tablesorter();
+            });
+        });
+    </script>
+</div>
