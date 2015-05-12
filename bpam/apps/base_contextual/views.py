@@ -1,4 +1,5 @@
 from django.views.generic import ListView, DetailView, TemplateView
+from django.shortcuts import get_object_or_404
 
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
 
@@ -10,7 +11,7 @@ class IndexView(TemplateView):
 class ChemicalAnalysisListView(ListView):
     model = ChemicalAnalysis
     context_object_name = 'reports'
-    queryset = ChemicalAnalysis.objects.select_related('bpa_id', 'colour')
+    queryset = ChemicalAnalysis.objects.select_related('bpa_id', 'colour')  # TODO colour ?
     # paginate_by = settings.DEFAULT_PAGINATION
 
 
@@ -48,3 +49,6 @@ class ChemicalAnalysisDetailView(DetailView):
     model = ChemicalAnalysis
     context_object_name = 'ca'
     template_name = 'base_contextual/chemicalanalysis_detail.html'
+
+    def get_object(self):
+        return get_object_or_404(ChemicalAnalysis, bpa_id=self.kwargs['bpa_id'])

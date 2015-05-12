@@ -9,7 +9,7 @@ urlpatterns = patterns(
         view=views.IndexView.as_view(),
         name='index'),
     url(
-        regex=r'^chemicalanalyses/(?P<pk>\d+)/$',
+        regex=r'^chemicalanalyses/(?P<bpa_id>\d{3,}.*)$',
         view=views.ChemicalAnalysisDetailView.as_view(),
         name='chemicalanalysisdetail'),
     url(
