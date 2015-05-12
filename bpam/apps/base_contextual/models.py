@@ -98,8 +98,8 @@ class CollectionSite(DebugNote):
         Get location name or lat, lon if no location name is available
         """
         if self.location_name:
-            return self.location_name
-        return u'{0}, {1}'.format(self.lat, self.lon)
+            return u'{} ({:4.4f}, {:4.4f})'.format(self.location_name, self.lat, self.lon)
+        return u'{:4.4f}, {:4.4f}'.format(self.lat, self.lon)
 
     @property
     def geom(self):

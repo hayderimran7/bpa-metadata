@@ -44,6 +44,9 @@ class SampleContextDetailView(DetailView):
     model = SampleContext
     template_name = 'base_contextual/sample_context_detail.html'
 
+    def get_object(self):
+        return get_object_or_404(SampleContext, bpa_id=self.kwargs['bpa_id'])
+
 
 class ChemicalAnalysisDetailView(DetailView):
     model = ChemicalAnalysis

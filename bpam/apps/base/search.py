@@ -233,8 +233,8 @@ class Searcher(object):
 
         def get_object_detail_view_link(klass, _bpa_id):
             try:
-                obj = klass.objects.get(bpa_id=_bpa_id)
-                return reverse(detail_view_map[klass], args=(obj.pk,))
+                #  obj = klass.objects.get(bpa_id=_bpa_id)
+                return reverse(detail_view_map[klass], kwargs={'bpa_id': _bpa_id.bpa_id})
             except klass.DoesNotExist:
                 return ""
 

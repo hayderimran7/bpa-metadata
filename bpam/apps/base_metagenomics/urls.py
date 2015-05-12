@@ -9,7 +9,7 @@ urlpatterns = patterns(
         view=views.SampleListView.as_view(),
         name='samples'),
     url(
-        regex=r'^sample/(?P<pk>.*)/$',
+        regex=r'^sample/(?P<bpa_id>\d{3,}.*)$',
         view=views.SampleDetailView.as_view(),
         name='sample'),
 )

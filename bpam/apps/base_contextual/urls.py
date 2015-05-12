@@ -25,7 +25,7 @@ urlpatterns = patterns(
         view=views.CollectionSiteListView.as_view(),
         name='collectionsites'),
     url(
-        regex=r'^sample/(?P<pk>.*)/$',
+        regex=r'^sample/(?P<bpa_id>\d{3,}.*)$',
         view=views.SampleContextDetailView.as_view(),
         name='sampledetail'),
     url(
