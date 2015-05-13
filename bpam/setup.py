@@ -76,6 +76,7 @@ install_requires = [
     'psycopg2==2.5.4',
     'model-mommy',
     'django-secure',
+    'django-queryset-csv'
 ]
 
 dev_requires = [

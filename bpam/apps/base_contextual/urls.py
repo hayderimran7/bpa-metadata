@@ -33,6 +33,10 @@ urlpatterns = patterns(
         view=views.SampleContextListView.as_view(),
         name='samples'),
     url(
+        regex=r'^samplematrix/csv',
+        view=views.get_matrix_csv,
+        name='samplematrix_csv'),
+    url(
         regex=r'^samplematrix',
         view=views.SampleMatrixListView.as_view(),
         name='samplematrix'),

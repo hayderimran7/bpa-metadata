@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from itertools import chain
-from operator import attrgetter
+import djqscsv
 from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 
@@ -36,6 +34,17 @@ class SampleMatrixListView(ListView):
     template_name = 'base_contextual/sample_matrix_list.html'
     queryset = SampleContext.objects.select_related()
     # paginate_by = settings.DEFAULT_PAGINATION
+
+
+def get_matrix_csv(request):
+    qs = SampleContext.objects.values('bpa_id',
+                                      'site__location_name',
+                                      'analysis__depth',
+                                      'analysis__moisture',
+                                      'analysis__colour',
+                                      'analysis__gravel',
+                                      )
+    return djqscsv.render_to_csv_response(qs)
 
 
 class SampleContextListView(ListView):

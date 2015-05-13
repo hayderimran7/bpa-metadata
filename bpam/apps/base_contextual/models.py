@@ -93,6 +93,7 @@ class CollectionSite(DebugNote):
 
     other_comments = models.TextField(_('Comments'), blank=True, null=True)
 
+    @property
     def get_location_name(self):
         """
         Get location name or lat, lon if no location name is available
