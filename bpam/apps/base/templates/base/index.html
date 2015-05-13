@@ -56,6 +56,7 @@
                     <a class="list-group-item" href="{% url 'base:search' %}">Search facility</a>
                     <a class="list-group-item" href="{% url 'base_vocabulary:all_vocabularies' %}">Contextual Data Vocabularies</a>
                     <a class="list-group-item" href="{% url 'base_contextual:collectionsites' %}">Collection Site Map<span class="badge">{{ site_count }}</span></a>
+                    <a class="list-group-item" href="{% url 'base_contextual:samplematrix' %}">Contextual Data Matrix<span class="badge">{{ sample_count }}</span></a>
                     <a class="list-group-item" href="{% url 'base_contextual:samples' %}">Samples in Context  <span class="badge">{{ sample_count }}</span></a>
                     <a class="list-group-item" href="{% url 'base_contextual:chemicalanalysis' %}">Chemical Analysis<span class="badge">{{ chem_analysis_count }}</span></a>
                     <a class="list-group-item" href="{% url 'base_amplicon:index' %}">Amplicons <span class="badge">{{ amplicon_count }}</span></a>
