@@ -6,7 +6,6 @@
                     <th>BPA ID</th>
                     <th>Collection Site</th>
                     <th>Horizon</th>
-                    <th>Depth</th>
                     <th>Ecological Zone</th>
                     <th>Current Land Use</th>
                     <th>Vegetation</th>
@@ -58,7 +57,6 @@
                     {% endif %}
                 </td>
                 <td>{{ record.get_horizon_description }}</td>
-                <td>{{ record.depth }}</td>
                 <td>{{ record.site.general_ecological_zone }}</td>
                 <td>{{ record.site.current_land_use }}</td>
                 <td>{{ record.site.vegetation_type.vegetation }}</td>
@@ -70,38 +68,38 @@
                     {% endif %}
                 </td>
                 <td>{{ record.methodological_notes }}</td>
-
-                <td>{{ analysis.depth }}</td>
-                <td>{{ analysis.moisture | default:"" | floatformat:3 }}</td>
-                <td>{{ analysis.colour| default:"" }}</td>
-                <td>{{ analysis.gravel| default:"" }}</td>
-                <td>{{ analysis.texture| default:"" | floatformat }}</td>
-                <td>{{ analysis.course_sand| default:"" | floatformat }}</td>
-                <td>{{ analysis.fine_sand| default:"" | floatformat }}</td>
-                <td>{{ analysis.sand| default:"" }}</td>
-                <td>{{ analysis.silt| default:"" }}</td>
-                <td>{{ analysis.clay| default:"" }}</td>
-                <td>{{ analysis.ammonium_nitrogen| default:"" }}</td>
-                <td>{{ analysis.nitrate_nitrogen| default:"" }}</td>
-                <td>{{ analysis.phosphorus_colwell| default:"" }}</td>
-                <td>{{ analysis.potassium_colwell| default:"" }}</td>
-                <td>{{ analysis.sulphur| default:"" }}</td>
-                <td>{{ analysis.organic_carbon| default:"" }}</td>
-                <td>{{ analysis.conductivity| default:"" }}</td>
-                <td>{{ analysis.cacl2_ph| default:"" }}</td>
-                <td>{{ analysis.h20_ph| default:"" }}</td>
-                <td>{{ analysis.dtpa_copper| default:"" }}</td>
-                <td>{{ analysis.dtpa_iron| default:"" }}</td>
-                <td>{{ analysis.dtpa_manganese | default:""}}</td>
-                <td>{{ analysis.dtpa_zinc| default:"" }}</td>
-                <td>{{ analysis.exc_aluminium | default:""}}</td>
-                <td>{{ analysis.exc_calcium| default:"" }}</td>
-                <td>{{ analysis.exc_magnesium| default:"" }}</td>
-                <td>{{ analysis.exc_potassium| default:"" }}</td>
-                <td>{{ analysis.exc_sodium| default:"" }}</td>
-                <td>{{ analysis.boron_hot_cacl2| default:"" }}</td>
-                <td>{{ analysis.total_nitrogen| default:"" }}</td>
-                <td>{{ analysis.total_carbon| default:"" }}</td>
+                <td>{{ record.depth }}</td>
+                
+                <td>{{ record.analysis.moisture | default:"" | floatformat:3 }}</td>
+                <td>{{ record.analysis.colour| default:"" }}</td>
+                <td>{{ record.analysis.gravel| default:"" }}</td>
+                <td>{{ record.analysis.texture| default:"" | floatformat }}</td>
+                <td>{{ record.analysis.course_sand| default:"" | floatformat }}</td>
+                <td>{{ record.analysis.fine_sand| default:"" | floatformat }}</td>
+                <td>{{ record.analysis.sand| default:"" }}</td>
+                <td>{{ record.analysis.silt| default:"" }}</td>
+                <td>{{ record.analysis.clay| default:"" }}</td>
+                <td>{{ record.analysis.ammonium_nitrogen| default:"" }}</td>
+                <td>{{ record.analysis.nitrate_nitrogen| default:"" }}</td>
+                <td>{{ record.analysis.phosphorus_colwell| default:"" }}</td>
+                <td>{{ record.analysis.potassium_colwell| default:"" }}</td>
+                <td>{{ record.analysis.sulphur| default:"" }}</td>
+                <td>{{ record.analysis.organic_carbon| default:"" }}</td>
+                <td>{{ record.analysis.conductivity| default:"" }}</td>
+                <td>{{ record.analysis.cacl2_ph| default:"" }}</td>
+                <td>{{ record.analysis.h20_ph| default:"" }}</td>
+                <td>{{ record.analysis.dtpa_copper| default:"" }}</td>
+                <td>{{ record.analysis.dtpa_iron| default:"" }}</td>
+                <td>{{ record.analysis.dtpa_manganese | default:""}}</td>
+                <td>{{ record.analysis.dtpa_zinc| default:"" }}</td>
+                <td>{{ record.analysis.exc_aluminium | default:""}}</td>
+                <td>{{ record.analysis.exc_calcium| default:"" }}</td>
+                <td>{{ record.analysis.exc_magnesium| default:"" }}</td>
+                <td>{{ record.analysis.exc_potassium| default:"" }}</td>
+                <td>{{ record.analysis.exc_sodium| default:"" }}</td>
+                <td>{{ record.analysis.boron_hot_cacl2| default:"" }}</td>
+                <td>{{ record.analysis.total_nitrogen| default:"" }}</td>
+                <td>{{ record.analysis.total_carbon| default:"" }}</td>
             </tr>
             {% endfor %}
             </tbody>

@@ -133,11 +133,11 @@ entrypoint() {
 }
 
 usage() {
-   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|ingest|ingest_all)'
+   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)'
    echo '                   build        Build all images'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
-   echo '                   ingest       Ingest metadata'
+   echo '                   runscript    Run one of the available scripts' 
    echo '                   ingest_all   Ingest metadata'
    echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker image stack'
@@ -152,7 +152,6 @@ usage() {
 case ${ACTION} in
 pythonlint)
     pythonlint
-    ;;
     ;;
 ci_staging)
     ci_ssh_agent

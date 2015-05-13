@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from itertools import chain
+from operator import attrgetter
 from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 
@@ -30,13 +34,7 @@ class SampleMatrixListView(ListView):
     model = SampleContext
     context_object_name = 'records'
     template_name = 'base_contextual/sample_matrix_list.html'
-    queryset = SampleContext.objects.select_related('bpa_id',
-                                                    'horizon_classification1',
-                                                    'horizon_classification2',
-                                                    'site__current_land_use',
-                                                    'site__general_ecological_zone',
-                                                    'site__vegetation_type',
-                                                    'site__soil_type_australian_classification')
+    queryset = SampleContext.objects.select_related()
     # paginate_by = settings.DEFAULT_PAGINATION
 
 

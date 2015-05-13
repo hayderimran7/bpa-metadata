@@ -172,7 +172,6 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
-
 def get_land_use(land_use_str, row):
     """
     Translate the land use string to a the landuse controlled vocabulary
@@ -328,6 +327,50 @@ def get_site(entry):
     return site
 
 
+def get_chemical_analysis(e, bpa_id):
+    """
+    Add the chemical analysis
+    """
+
+    analysis, created = ChemicalAnalysis.objects.get_or_create(bpa_id=bpa_id)
+    # structure
+    analysis.depth = e.depth
+    analysis.moisture = e.soil_moisture
+    analysis.colour = get_soil_colour(e)
+    analysis.gravel = e.gravel
+    analysis.texture = e.texture
+    analysis.course_sand = e.course_sand
+    analysis.fine_sand = e.fine_sand
+    analysis.sand = e.sand
+    analysis.silt = e.silt
+    analysis.clay = e.clay
+    # soil chemical
+    analysis.ammonium_nitrogen = e.ammonium_nitrogen
+    analysis.nitrate_nitrogen = e.nitrate_nitrogen
+    analysis.phosphorus_colwell = e.phosphorus_collwell
+    analysis.potassium_colwell = e.potassium_collwell
+    analysis.sulphur = e.sulphur
+    analysis.organic_carbon = e.organic_carbon
+    analysis.conductivity = e.conductivity
+    analysis.cacl2_ph = e.cacl2_ph
+    analysis.h20_ph = e.h20_ph
+    analysis.dtpa_copper = e.dtpa_copper
+    analysis.dtpa_iron = e.dtpa_iron
+    analysis.dtpa_manganese = e.dtpa_manganese
+    analysis.dtpa_zinc = e.dtpa_zinc
+    analysis.exc_aluminium = e.exc_aluminium
+    analysis.exc_calcium = e.exc_calcium
+    analysis.exc_magnesium = e.exc_magnesium
+    analysis.exc_potassium = e.exc_potassium
+    analysis.exc_sodium = e.exc_sodium
+    analysis.boron_hot_cacl2 = e.boron_hot_cacl2
+    analysis.total_nitrogen = e.total_nitrogen
+    analysis.total_carbon = e.total_carbon
+
+    analysis.save()
+    return analysis
+
+
 def add_samples(data):
     """
     Add samples. There is a sample per line for the source document
@@ -341,6 +384,7 @@ def add_samples(data):
         # always update, if the sample id is repeated more than once in the document, the last one wins
         sample.bpa_id = bpa_id
         sample.site = get_site(e)
+        sample.analysis = get_chemical_analysis(e, bpa_id)
         sample.depth = e.depth
 
         # horizons
@@ -353,54 +397,6 @@ def add_samples(data):
         sample.save()
 
 
-def add_chemical_analysis(data):
-    """
-    Add the chemical analysis
-    """
-
-    for e in data:
-        bpa_id = get_bpa_id(e)
-        if bpa_id is None:
-            continue
-
-        analysis, created = ChemicalAnalysis.objects.get_or_create(bpa_id=bpa_id)
-        # structure
-        analysis.depth = e.depth
-        analysis.moisture = e.soil_moisture
-        analysis.colour = get_soil_colour(e)
-        analysis.gravel = e.gravel
-        analysis.texture = e.texture
-        analysis.course_sand = e.course_sand
-        analysis.fine_sand = e.fine_sand
-        analysis.sand = e.sand
-        analysis.silt = e.silt
-        analysis.clay = e.clay
-        # soil chemical
-        analysis.ammonium_nitrogen = e.ammonium_nitrogen
-        analysis.nitrate_nitrogen = e.nitrate_nitrogen
-        analysis.phosphorus_colwell = e.phosphorus_collwell
-        analysis.potassium_colwell = e.potassium_collwell
-        analysis.sulphur = e.sulphur
-        analysis.organic_carbon = e.organic_carbon
-        analysis.conductivity = e.conductivity
-        analysis.cacl2_ph = e.cacl2_ph
-        analysis.h20_ph = e.h20_ph
-        analysis.dtpa_copper = e.dtpa_copper
-        analysis.dtpa_iron = e.dtpa_iron
-        analysis.dtpa_manganese = e.dtpa_manganese
-        analysis.dtpa_zinc = e.dtpa_zinc
-        analysis.exc_aluminium = e.exc_aluminium
-        analysis.exc_calcium = e.exc_calcium
-        analysis.exc_magnesium = e.exc_magnesium
-        analysis.exc_potassium = e.exc_potassium
-        analysis.exc_sodium = e.exc_sodium
-        analysis.boron_hot_cacl2 = e.boron_hot_cacl2
-        analysis.total_nitrogen = e.total_nitrogen
-        analysis.total_carbon = e.total_carbon
-
-        analysis.save()
-
-
 def do_metadata():
     def is_metadata(path):
         if path.isfile() and path.ext == '.xlsx':
@@ -411,7 +407,6 @@ def do_metadata():
         logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
         samples = list(get_data(metadata_file))
         add_samples(samples)
-        add_chemical_analysis(samples)
 
 
 def run():
