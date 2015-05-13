@@ -115,17 +115,6 @@ ci_staging() {
     ccg ${AWS_STAGING_INSTANCE} drun:'docker-untagged || true'
 }
 
-rpm_build() {
-    activate_virtualenv
-    mkdir -p data/rpmbuild
-    chmod o+rwx data/rpmbuild
-
-    fig --project-name ${PROJECT_NAME} -f fig-rpmbuild.yml up
-}
-
-rpm_publish() {
-    time ccg publish_testing_rpm:data/rpmbuild/RPMS/x86_64/${PROJECT_NAME}*.rpm,release=6
-}
 
 build() {
    activate_virtualenv
@@ -144,7 +133,7 @@ entrypoint() {
 }
 
 usage() {
-   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rmp_publish|ingest|ingest_all)'
+   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|ingest|ingest_all)'
    echo '                   build        Build all images'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
@@ -164,12 +153,6 @@ case ${ACTION} in
 pythonlint)
     pythonlint
     ;;
-rpm_build)
-    rpm_build
-    ;;
-rpm_publish)
-    ci_ssh_agent
-    rpm_publish
     ;;
 ci_staging)
     ci_ssh_agent
