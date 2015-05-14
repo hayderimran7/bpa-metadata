@@ -6,257 +6,265 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row ">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Soil Colour</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Colour</th>
-                            <th>Code</th>
-                        </tr>
-                        {% for color in soil_colour %}
-                        <tr>
-                            <td> {{ color.colour }} </td>
-                            <td> {{ color.code }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div role="tabpanel">
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Soil Texture</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Texture</th>
-                            <th>Description</th>
-                        </tr>
-                        {% for stexture in soil_texture %}
-                        <tr>
-                            <td> {{ stexture.texture }} </td>
-                            <td> {{ stexture.description }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#soil-colour" aria-controls="home" role="tab" data-toggle="tab">Soil Colour</a></li>
+            <li role="presentation"><a href="#soil-texture" aria-controls="profile" role="tab" data-toggle="tab">Soil Texture</a></li>
+            <li role="presentation"><a href="#vegetation-type" aria-controls="messages" role="tab" data-toggle="tab">Vegetation Type</a></li>
+            <li role="presentation"><a href="#tillage" aria-controls="messages" role="tab" data-toggle="tab">Tillage</a></li>
+            <li role="presentation"><a href="#horizon" aria-controls="messages" role="tab" data-toggle="tab">Horizon</a></li>
+            <li role="presentation"><a href="#land-use" aria-controls="messages" role="tab" data-toggle="tab">Land Use</a></li>
+            <li role="presentation"><a href="#aus-soil" aria-controls="messages" role="tab" data-toggle="tab">Australian Soil Classification</a></li>
+            <li role="presentation"><a href="#fao-soil" aria-controls="messages" role="tab" data-toggle="tab">FAO Soil Classification</a></li>
+            <li role="presentation"><a href="#drainage" aria-controls="messages" role="tab" data-toggle="tab">Drainage</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="messages" role="tab" data-toggle="tab">Profile</a></li>
+        </ul>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">General Ecological Zone</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Description</th>
-                            <th>Note</th>
-                        </tr>
-                        {% for zone in ecozone %}
-                        <tr>
-                            <td> {{ zone.description }} </td>
-                            <td> {{ zone.note }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="soil-colour">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Soil Colour</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Colour</th>
+                                <th>Code</th>
+                            </tr>
+                            {% for color in soil_colour %}
+                            <tr>
+                                <td> {{ color.colour }} </td>
+                                <td> {{ color.code }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Broad Vegetation Type</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Vegetation</th>
-                            <th>Note</th>
-                        </tr>
-                        {% for veg in vegetation %}
-                        <tr> 
-                            <td> {{ veg.vegetation }} </td>
-                            <td> {{ veg.note }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            <div role="tabpanel" class="tab-pane" id="soil-texture">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Soil Texture</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Texture</th>
+                                <th>Description</th>
+                            </tr>
+                            {% for stexture in soil_texture %}
+                            <tr>
+                                <td> {{ stexture.texture }} </td>
+                                <td> {{ stexture.description }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Tillage</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Tillage</th>
-                            <th>Description</th>
-                        </tr>
-                        {% for til in tillage %}
-                        <tr> 
-                            <td> {{ til.tillage }} </td>
-                            <td> {{ til.description }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Horizon</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Horizon</th>
-                            <th>Description</th>
-                        </tr>
-                        {% for hor in horizon %}
-                        <tr> 
-                            <td> {{ hor.horizon }} </td>
-                            <td> {{ hor.description }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            <div role="tabpanel" class="tab-pane" id="eco-zone">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">General Ecological Zone</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Description</th>
+                                <th>Note</th>
+                            </tr>
+                            {% for zone in ecozone %}
+                            <tr>
+                                <td> {{ zone.description }} </td>
+                                <td> {{ zone.note }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Land Use Vocabulary</h3>
+            <div role="tabpanel" class="tab-pane" id="vegetation-type">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Broad Vegetation Type</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Vegetation</th>
+                                <th>Note</th>
+                            </tr>
+                            {% for veg in vegetation %}
+                            <tr> 
+                                <td> {{ veg.vegetation }} </td>
+                                <td> {{ veg.note }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <ul class="root">
-                        {% recursetree land_use %}
-                        <li>
-                        {{ node.description }}
-                        {% if not node.is_leaf_node %}
-                        <ul class="children">
-                            {{ children }}
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="tillage">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Tillage</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Tillage</th>
+                                <th>Description</th>
+                            </tr>
+                            {% for til in tillage %}
+                            <tr> 
+                                <td> {{ til.tillage }} </td>
+                                <td> {{ til.description }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="horizon">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Horizon</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Horizon</th>
+                                <th>Description</th>
+                            </tr>
+                            {% for hor in horizon %}
+                            <tr> 
+                                <td> {{ hor.horizon }} </td>
+                                <td> {{ hor.description }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="land-use">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Land Use Vocabulary</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="root">
+                            {% recursetree land_use %}
+                            <li>
+                            {{ node.description }}
+                            {% if not node.is_leaf_node %}
+                            <ul class="children">
+                                {{ children }}
+                            </ul>
+                            {% endif %}
+                            </li>
+                            {% endrecursetree %}
                         </ul>
-                        {% endif %}
-                        </li>
-                        {% endrecursetree %}
-                    </ul>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Australian Soil Classification</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Classification</th>
-                            <th>Note</th>
-                        </tr>
-                        {% for class in aus_soil %}
-                        <tr> 
-                            <td> {{ class.classification }} </td>
-                            <td> {{ class.note }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            <div role="tabpanel" class="tab-pane" id="aus-soil">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Australian Soil Classification</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Classification</th>
+                                <th>Note</th>
+                            </tr>
+                            {% for class in aus_soil %}
+                            <tr> 
+                                <td> {{ class.classification }} </td>
+                                <td> {{ class.note }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">FAO Soil Classification</h3>
+            <div role="tabpanel" class="tab-pane" id="fao-soil">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">FAO Soil Classification</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Classification</th>
+                                <th>Note</th>
+                            </tr>
+                            {% for class in fao_soil %}
+                            <tr> 
+                                <td> {{ class.classification }} </td>
+                                <td> {{ class.note }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Classification</th>
-                            <th>Note</th>
-                        </tr>
-                        {% for class in fao_soil %}
-                        <tr> 
-                            <td> {{ class.classification }} </td>
-                            <td> {{ class.note }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="drainage">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Drainage</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Drainage</th>
+                                <th>Description</th>
+                            </tr>
+                            {% for drain in drainage %}
+                            <tr> 
+                                <td> {{ drain.drainage }} </td>
+                                <td> {{ drain.description }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Profile</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Profile</th>
+                            </tr>
+                            {% for profile in profiles %}
+                            <tr> 
+                                <td> {{ profile.position }} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Drainage</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Drainage</th>
-                            <th>Description</th>
-                        </tr>
-                        {% for drain in drainage %}
-                        <tr> 
-                            <td> {{ drain.drainage }} </td>
-                            <td> {{ drain.description }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Profile</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Profile</th>
-                        </tr>
-                        {% for profile in profiles %}
-                        <tr> 
-                            <td> {{ profile.position }} </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 {% endblock %}
