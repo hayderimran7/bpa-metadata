@@ -61,7 +61,7 @@ install_requires = [
     'ccg-django-utils',
     'django-debug-toolbar',
     'beautifulsoup4',
-    'djangorestframework==3.0.3',
+    'djangorestframework==3.1.0',
     'markdown',
     'django-filter',
     'lettuce_webdriver',
