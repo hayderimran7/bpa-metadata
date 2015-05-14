@@ -11,7 +11,8 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#soil-colour" aria-controls="home" role="tab" data-toggle="tab">Soil Colour</a></li>
             <li role="presentation"><a href="#soil-texture" aria-controls="profile" role="tab" data-toggle="tab">Soil Texture</a></li>
-            <li role="presentation"><a href="#vegetation-type" aria-controls="messages" role="tab" data-toggle="tab">Vegetation Type</a></li>
+            <li role="presentation"><a href="#vegetation-type" aria-controls="messages" role="tab" data-toggle="tab">Broad Vegetation Type</a></li>
+            <li role="presentation"><a href="#eco-zone" aria-controls="messages" role="tab" data-toggle="tab">General Ecological Zone</a></li>
             <li role="presentation"><a href="#tillage" aria-controls="messages" role="tab" data-toggle="tab">Tillage</a></li>
             <li role="presentation"><a href="#horizon" aria-controls="messages" role="tab" data-toggle="tab">Horizon</a></li>
             <li role="presentation"><a href="#land-use" aria-controls="messages" role="tab" data-toggle="tab">Land Use</a></li>
@@ -25,7 +26,7 @@
             <div role="tabpanel" class="tab-pane active" id="soil-colour">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Soil Colour</h3>
+                        <h3 class="panel-title">Soil Color </h3>
                     </div>
                     <div class="panel-body">
                         <table class="table">
@@ -42,6 +43,10 @@
                         </table>
                     </div>
                 </div>
+
+                <a href="{% url 'base_vocabulary:soilcolour_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="soil-texture">
@@ -64,6 +69,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:soiltexture_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="eco-zone">
@@ -86,6 +94,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:generalecologicalzone_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
 
@@ -109,6 +120,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:broadvegetationtype_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="tillage">
@@ -131,6 +145,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:tillagetype_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
 
@@ -154,6 +171,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:horizonclassification_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
 
@@ -177,6 +197,9 @@
                         </ul>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:landuse_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="aus-soil">
@@ -199,6 +222,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:australiansoilclassification_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="fao-soil">
@@ -221,6 +247,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:faosoilclassification_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="drainage">
@@ -243,6 +272,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:drainageclassification_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="profile">
@@ -263,6 +295,9 @@
                         </table>
                     </div>
                 </div>
+                <a href="{% url 'base_vocabulary:profileposition_rest_api' %}">
+                    <span class="glyphicon glyphicon-cog"></span>API
+                </a>
             </div>
         </div>
     </div>

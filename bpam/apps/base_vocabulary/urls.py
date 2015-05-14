@@ -30,6 +30,11 @@ urlpatterns = patterns(
         name='generalecologicalzone_rest_api'
     ),
     url(
+        regex=r'^broadvegetationtype/$',
+        view=views.BroadVegetationTypeView.as_view(),
+        name='broadvegetationtype_rest_api'
+    ),
+    url(
         regex=r'^tillagetype/$',
         view=views.TillageTypeReadView.as_view(),
         name='tillagetype_rest_api'

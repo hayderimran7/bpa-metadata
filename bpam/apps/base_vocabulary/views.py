@@ -62,6 +62,11 @@ class TillageTypeReadView(generics.ListAPIView):
     serializer_class = serializers.TillageTypeSerializer
 
 
+class BroadVegetationTypeView(generics.ListAPIView):
+    queryset = BroadVegetationType.objects.all()
+    serializer_class = serializers.BroadVegetationTypeSerializer
+
+
 class HorizonClassificationReadView(generics.ListAPIView):
     queryset = HorizonClassification.objects.all()
     serializer_class = serializers.HorizonClassificationSerializer
