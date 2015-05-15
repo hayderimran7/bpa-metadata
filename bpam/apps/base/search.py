@@ -260,7 +260,7 @@ class Searcher(object):
                 return "No Contextual Data" + str(e)
 
             if context.site:
-                return '{0} {1} {2}'.format(context.site.get_location_name(), context.get_horizon_description(),
+                return '{0} {1} {2}'.format(context.site.get_location_name, context.get_horizon_description(),
                                             context.site.vegetation_type).strip()
             else:
                 return "No Site Info"

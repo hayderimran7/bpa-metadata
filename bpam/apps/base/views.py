@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import json
 from StringIO import StringIO
 import logging
@@ -138,7 +141,8 @@ class BASESearchView(AbstractSearchableListView):
             searcher = Searcher(search_parameters)
             results = searcher.complex_search()
         except Exception, ex:
-            logger.error("Error occurred during search: request data = %s. Error = %s" % (request.POST, ex))
+            logger.error("Error occurred during search: request.POST={}".format(request.POST))
+            logger.error(ex)
             results = "An error occurred on the server"
 
         json.dump(results, response)
@@ -146,6 +150,7 @@ class BASESearchView(AbstractSearchableListView):
 
     def _get_search_parameters(self, post_data):
         parameters = {}
+
         parameters["search_all"] = post_data.get("search_all", "")
         parameters["search_operator"] = post_data.get("search_operator", "and")
         parameters["search_kingdom"] = post_data.get("kingdom", None)
