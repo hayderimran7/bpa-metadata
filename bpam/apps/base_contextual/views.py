@@ -130,6 +130,13 @@ class SampleContextDetailView(DetailView):
     def get_object(self):
         return get_object_or_404(SampleContext, bpa_id=self.kwargs['bpa_id'])
 
+    def get_context_data(self, **kwargs):
+        context = super(SampleContextDetailView, self).get_context_data(**kwargs)
+        context['ca'] = self.get_object().analysis
+        context['collectionsite'] = self.get_object().site
+
+        return context
+
 
 class ChemicalAnalysisDetailView(DetailView):
     model = ChemicalAnalysis
