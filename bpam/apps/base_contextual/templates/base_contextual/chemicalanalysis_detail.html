@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}BASE Contextual Site Detail {% endblock %}
 
-
 {% block content %}
 <div class="container-fluid">
     <div class="alert alert-info">
@@ -12,7 +11,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">BASE Chemical Analysis Detail for Sample {{ ca.bpa_id }}</div>
 
-        <table id="nice" class="table">
+        <table class="table">
             <tbody>
             <tr>
                 <td>BPA ID</td>
@@ -36,27 +35,63 @@
             </tr>
             <tr>
                 <td>% Gravel</td>
-                <td>{{ca.gravel}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.gravel}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.gravel}}%">
+                            {{ca.gravel}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>% Course Sand</td>
-                <td>{{ca.course_sand}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.course_sand}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.course_sand}}%">
+                            {{ca.course_sand}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>% Fine Sand</td>
-                <td>{{ca.fine_sand}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.fine_sand}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.fine_sand}}%">
+                            {{ca.fine_sand}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>% Sand</td>
-                <td>{{ca.sand}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.sand}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.sand}}%">
+                            {{ca.sand}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>% Silt</td>
-                <td>{{ca.silt}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.silt}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.silt}}%">
+                            {{ca.silt}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>% Clay</td>
-                <td>{{ca.clay}}</td>
+                <td>
+                    <div class="progress" style="margin-bottom: 0">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ca.clay}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ca.clay}}%">
+                            {{ca.clay}}%
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>Ammonium Nitrogen (NH<sub>3</sub>-N)</td>
