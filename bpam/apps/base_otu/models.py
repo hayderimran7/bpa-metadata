@@ -9,7 +9,7 @@ class OperationalTaxonomicUnit(models.Model):
 
     name = models.CharField(max_length=30)
     KINGDOMS = (('Bacteria', 'Bacteria'),
-                ('Archea', 'Archea'),
+                ('Archaea', 'Archaea'),
                 ('Eukaryota', 'Eukaryota'),
                 ('Fungi', 'Fungi'))
 
