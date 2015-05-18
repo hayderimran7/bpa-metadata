@@ -5,7 +5,7 @@ Utility functions to fetch data from web server
 """
 
 import os
-
+import glob
 import requests
 from bs4 import BeautifulSoup
 import logger_utils
@@ -32,6 +32,14 @@ class Fetcher():
 
             mkpath(self.target_folder)
 
+    def clean(self):
+        """
+        Clean up existing contents
+        """
+        files = glob.glob(self.target_folder + "/*")
+        for f in files:
+            os.remove(f)
+
     def fetch(self, name):
         """ fetch file from server """
 
@@ -50,5 +58,5 @@ class Fetcher():
         for link in BeautifulSoup(response.content).find_all('a'):
             metadata_filename = link.get('href')
             if metadata_filename.endswith('.xlsx') or metadata_filename.endswith('.txt') or metadata_filename.endswith(
-                    '.zip'):
+                '.zip') or metadata_filename.endswith('.gz'):
                 self.fetch(metadata_filename)
