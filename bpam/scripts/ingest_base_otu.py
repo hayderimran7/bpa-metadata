@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import zipfile
+import os
 import csv
+import gzip
 import time
 
 from unipath import Path
@@ -19,6 +20,9 @@ logger = logger_utils.get_logger(__name__)
 
 METADATA_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/all'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/otu/')
+
+# This is the flavours of ID names
+OTU_ID_FLAVOURS = ('OTUID', 'OTUId', 'OTUId##', 'otuid', 'OTU_Id')
 
 
 def strip_count(val):
@@ -38,10 +42,10 @@ def ingest_taxonomy(file_name):
     logger.info('Ingesting OTUs')
     logger.info('Now ingesting {0}'.format(file_name))
 
-    field_spec = [('otu_id', 'OTUID', None),
-                  ('kingdom', 'kingdom', strip_count),
+    field_spec = [('otu_id', OTU_ID_FLAVOURS, None),
+                  ('kingdom', ('Kingdom', 'kingdom', 'Domain', 'domain'), strip_count),
                   ('phylum', 'phylum', strip_count),
-                  ('otu_class', 'class', strip_count),
+                  ('otu_class', ('class', 'Class'), strip_count),
                   ('order', 'order', strip_count),
                   ('family', 'family', strip_count),
                   ('genus', 'genus', strip_count),
@@ -58,7 +62,7 @@ def ingest_taxonomy(file_name):
     otu_list = []
     for e in wrapper.get_all():
         if not is_valid_kingdom(e.kingdom):
-            logger.error('{0} is not a valid kingdom, ignoring'.format(e.kingdom))
+            logger.error('{} is not a valid kingdom, ignoring row {} in {}'.format(e.kingdom, e.row, e.file_name))
             continue
 
         otu_list.append(
@@ -70,7 +74,7 @@ def ingest_taxonomy(file_name):
                 order=e.order,
                 family=e.family,
                 genus=e.genus,
-                species=e.species)
+                species=lambda s: e.species if e.species else "unclassified")
         )
 
     logger.info('Bulk creating {0} OTUs'.format(len(otu_list)))
@@ -169,18 +173,15 @@ def ingest_otu_matrix(file_name):
     """
     populate the link table
     """
+    csv_file = os.path.splitext(file_name)[0]
+    logger.info('Unzipping {} to {}'.format(file_name, csv_file))
 
-    csv_files = []  # all cv files found in zip
-    if zipfile.is_zipfile(file_name):
-        logger.info('Unzipping {0}'.format(file_name))
-        with zipfile.ZipFile(file_name, 'r') as z:
-            csv_files = z.namelist()
-            z.extractall(DATA_DIR)
-    else:
-        logger.warning('{0} is not a zip file'.format(file_name))
+    with gzip.open(file_name, 'rb') as z_in:
+        out_f = open(csv_file, 'wb')
+        out_f.write(z_in.read())
+        z_in.close()
+        out_f.close()
 
-    for csvf in csv_files:
-        csv_file = Path(DATA_DIR, csvf)
         reporter = ProgressReporter(csv_file)
         logger.info('Now ingesting {0} with {1} lines'.format(csv_file, reporter.total_len))
         _ingest_csv_file(csv_file, reporter)
@@ -198,14 +199,14 @@ def _ingest_csv_file(csv_file, reporter):
         """
         inconsistent UTUID, OTUId
         """
-        for _ID in ('OTUID', 'OTUId'):
+        for _ID in OTU_ID_FLAVOURS:
             if _ID in _row:
                 _otu = otu_cache.get(_row[_ID])
                 _row.pop(_ID)  # get rid of ID column here so I don't have to filter it out below
                 return _otu, _row
 
         # should never get here
-        logger.error('Could not get OTUID')
+        logger.error('Could not get OTUID for row {}... in {}'.format(_row, csv_file))
         exit(0)
 
     def populate_sample_cache():
@@ -263,7 +264,7 @@ def do_taxonomies():
 
 def do_otu_matrix():
     def is_otu_matrix(path):
-        if path.isfile() and path.ext == '.zip':
+        if path.isfile() and path.ext == '.gz':
             return True
 
     logger.info('Ingesting BASE OTU Matrii from {0}'.format(DATA_DIR))
@@ -274,6 +275,7 @@ def do_otu_matrix():
 
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.clean()
     fetcher.fetch_metadata_from_folder()
     truncate()
 
