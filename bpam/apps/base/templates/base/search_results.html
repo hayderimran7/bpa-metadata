@@ -125,10 +125,10 @@
         </div>
 
         <script>
-            window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
-            window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
-            window.SEARCH_FORM_URL = "{% url 'base:search' %}";
-            window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
+window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
+window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
+window.SEARCH_FORM_URL = "{% url 'base:search' %}";
+window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
         </script>
 
         <script src="{% static 'base/search.js' %}"></script>
@@ -143,7 +143,7 @@
                         <thead>
                             <tr>
                                 <th>BPA ID</th>
-                                <th>Sample Context</th>
+                                <th><span class="glyphicon glyphicon-picture"></span> Sample Context</th>
                                 <th>Chemical Analysis</th>
                                 <th>Amplicon</th>
                                 <th>Metagenomics</th>
@@ -153,13 +153,15 @@
                         </tbody>
                     </table>
                     <script>
-                      $(document).ready(function () {
-                              $(function () {
-                                  $("#results").tablesorter();
-                                  });
-                              });
+$(document).ready(function () {
+        $(function () {
+            $("#results").tablesorter();
+            });
+        });
                     </script>
                 </div>
             </div>
         </div>
         {% endblock %}
+    </div>
+</div>
