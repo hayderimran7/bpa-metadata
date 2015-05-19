@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-{% load leaflet_tags %}
 {% block title %}BASE 454 Detail {% endblock %}
-
 
 {% block content %}
 
@@ -11,7 +9,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4> BASE 454 Detail for
-                        <a href="{% url 'base_metagenomics:sample' samplesample.bpa_id %}">
+                        <a href="{% url 'base_contextual:sampledetail' sample.bpa_id %}">
                             {{ sample.bpa_id }}
                         </a>
                     </h4>
