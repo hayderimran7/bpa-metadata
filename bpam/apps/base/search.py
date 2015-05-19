@@ -233,7 +233,7 @@ class Searcher(object):
 
         def get_object_detail_view_link(klass, _bpa_id):
             try:
-                #  obj = klass.objects.get(bpa_id=_bpa_id)
+                klass.objects.get(bpa_id=_bpa_id)  # if the klass does not exist, except out...
                 return reverse(detail_view_map[klass], kwargs={'bpa_id': _bpa_id.bpa_id})
             except klass.DoesNotExist:
                 return ""
@@ -256,12 +256,11 @@ class Searcher(object):
                 context = SampleContext.objects.select_related('bpa_id',
                                                                'context',
                                                                'context__site__vegetation_type').get(bpa_id=_bpa_id)
-            except SampleContext.DoesNotExist, e:
-                return "No Contextual Data" + str(e)
+            except SampleContext.DoesNotExist:
+                return ""
 
             if context.site:
-                return '{0} {1} {2}'.format(context.site.get_location_name, context.get_horizon_description(),
-                                            context.site.vegetation_type).strip()
+                return '{}'.format(context.site.get_location_name)
             else:
                 return "No Site Info"
 
