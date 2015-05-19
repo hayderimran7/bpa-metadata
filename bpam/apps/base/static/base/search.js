@@ -503,10 +503,10 @@ $(document).ready(function () {
         $(results).each(function (index, item) {
             var new_row = "<tr>" +
                 td(item.bpa_id) +
-                td(link(item.sc_display, item.sc, "No Data")) +
-                td(link("Chemical Analysis", item.ca, "No Data")) +
-                td(link("Amplicon", item.am, "No Data")) +
-                td(link("Metagenomics", item.mg, "No Data"))
+                td(link(item.sc_display, item.sc, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
+                td(link("Chemical Analysis", item.ca, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
+                td(link("Amplicon", item.am, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
+                td(link("Metagenomics", item.mg, "<span class=\"glyphicon glyphicon-remove\"></span>"))
             "</tr>";
 
             $("#results > tbody").append(new_row);
