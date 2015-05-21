@@ -6,6 +6,11 @@
 <script src="{% static 'base/spin.min.js' %}"></script>
 <div class="container-fluid">
     <form id="search_form" action="" class="form-inline" role="form" method="post">{% csrf_token %}
+
+        <div class="alert alert-info">
+            Use this facililty to search BASE data for samples of interest
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <input class="form-control" name="search_all" type="checkbox" value="search_all" id="search_all">
