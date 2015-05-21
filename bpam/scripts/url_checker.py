@@ -12,6 +12,8 @@ from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
 from apps.wheat_pathogens.models import PathogenSequenceFile
 from apps.wheat_pathogens_transcript.models import WheatPathogenTranscriptSequenceFile
+from apps.base_metagenomics.models import MetagenomicsSequenceFile
+from apps.base_amplicon.models import AmpliconSequenceFile
 from libs.logger_utils import get_logger
 from django.conf import settings
 
@@ -101,6 +103,28 @@ def check_melanoma(sleep_time):
         logger.error(e)
 
 
+def check_base_metagenomcis(sleep_time):
+    logger.info('Checking BASE Metagenomics')
+    session = requests.Session()
+    session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
+
+    try:
+        process_object(sleep_time, session, MetagenomicsSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
+
+
+def check_base_amplicons(sleep_time):
+    logger.info('Checking BASE Amplicons')
+    session = requests.Session()
+    session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
+
+    try:
+        process_object(sleep_time, session, AmpliconSequenceFile, 'url_verification', lambda obj: obj.get_url())
+    except django.db.utils.ProgrammingError, e:
+        logger.error(e)
+
+
 def run(sleep_time=SLEEP_TIME):
     """
     Pass parameters like below:
@@ -118,3 +142,5 @@ def run(sleep_time=SLEEP_TIME):
     check_wheat_cultivars(sleep_time)
     check_wheat_pathogens(sleep_time)
     check_wheat_pathogens_transcript(sleep_time)
+    check_base_metagenomcis(sleep_time)
+    check_base_amplicons(sleep_time)
