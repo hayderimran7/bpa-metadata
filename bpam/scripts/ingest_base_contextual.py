@@ -95,8 +95,8 @@ def get_data(file_name):
 
     field_spec = [('sample_id', 'Sample_ID', lambda s: s.strip()),
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
-                  ('lat', 'lat (-)', ingest_utils.get_clean_float),
-                  ('lon', 'lon', ingest_utils.get_clean_float),
+                  ('lat', 'latitude', ingest_utils.get_clean_float),
+                  ('lon', 'longitude', ingest_utils.get_clean_float),
                   ('depth', 'Depth', None),
                   ('horizon_classification', 'Horizon controlled vocab (1)', None),
                   ('description', 'Description', None),
