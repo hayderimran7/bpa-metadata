@@ -25,7 +25,7 @@ from apps.base_contextual.models import (
 logger = logger_utils.get_logger(__name__)
 
 METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
-CONTEXTUAL_DATA = 'BASE_Contextual_Data.xlsx'  # the file
+CONTEXTUAL_DATA = 'BASE_Contextual_Data_Final.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/contextual_metadata/')
 
 BPA_ID_PREFIX = "102.100.100"
@@ -37,10 +37,9 @@ def get_bpa_id(e):
     """
     Get or make BPA ID
     """
-    idx = '{0}.{1}'.format(BPA_ID_PREFIX, e.sample_id)  # make a BPA ID string
-    bpa_id, report = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE')
+    bpa_id, report = bpa_id_utils.get_bpa_id(e.sample_id, 'BASE', 'BASE')
     if not bpa_id:
-        logger.warning('Ignoring {0}, not a good BPA ID'.format(idx))
+        logger.warning('Ignoring {0}, not a good BPA ID'.format(e.sample_id))
         return None
     return bpa_id
 
@@ -94,8 +93,7 @@ def get_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('full_id', 'FULL_ID', None),
-                  ('sample_id', 'Sample_id', ingest_utils.get_int),  # the one I care about 102.100.100 + sample_id
+    field_spec = [('sample_id', 'Sample_ID', lambda s: s.strip()),
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
                   ('lat', 'lat (-)', ingest_utils.get_clean_float),
                   ('lon', 'lon', ingest_utils.get_clean_float),
