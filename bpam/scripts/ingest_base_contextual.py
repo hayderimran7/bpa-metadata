@@ -98,11 +98,11 @@ def get_data(file_name):
                   ('lat', 'latitude', ingest_utils.get_clean_float),
                   ('lon', 'longitude', ingest_utils.get_clean_float),
                   ('depth', 'Depth', None),
-                  ('horizon_classification', 'Horizon controlled vocab (1)', None),
-                  ('description', 'Description', None),
-                  ('current_land_use', 'Current land-use controlled vocab (2)', None),
-                  ('general_ecological_zone', 'General Ecological Zone controlled vocab (3)', None),
-                  ('vegetation_type_controlled_vocab', 'Vegetation Type Controlled vocab (4)', None),
+                  ('horizon_classification', 'Horizon', None),
+                  ('description', 'location description', None),
+                  ('current_land_use', 'Detailed land use', None),
+                  ('general_ecological_zone', 'General Ecological Zone', None),
+                  ('vegetation_type_controlled_vocab', 'Vegetation Type', None),
                   ('vegetation_total_cover', 'Vegetation Total cover (%)', None),
                   ('vegetation_dominant_trees', 'Vegetation Dom. Trees (%)', None),
                   ('elevation', 'Elevation ()', ingest_utils.get_clean_number),
@@ -174,7 +174,7 @@ def get_land_use(land_use_str, row):
     """
     Translate the land use string to a the landuse controlled vocabulary
     """
-    if land_use_str == '':
+    if land_use_str in ('', 'None'):
         return None
     try:
         return LandUse.objects.get(description__iexact=land_use_str)
@@ -197,7 +197,7 @@ def get_general_ecological_zone(entry):
 
 def get_vegetation_type(entry):
     veg_str = entry.vegetation_type_controlled_vocab
-    if veg_str == '':
+    if veg_str in ('', 'None'):
         return None
 
     try:
@@ -268,18 +268,12 @@ def get_site(entry):
     Add or get a site
     """
 
-    def get_fixed_lat():
-        if entry.lat > 0:
-            return -1 * entry.lat
-        else:
-            return entry.lat
-
     # only make a site once, the first entry wins
     if entry.lat is None or entry.lon is None:
         logger.warning('Site lat/lon empty, not creating site {0}'.format(entry.description))
         return None
 
-    site, created = CollectionSite.objects.get_or_create(lat=get_fixed_lat(), lon=entry.lon)
+    site, created = CollectionSite.objects.get_or_create(lat=entry.lat, lon=entry.lon)
     # the first set of site data wins
     if created:
         site.elevation = entry.elevation
@@ -409,6 +403,7 @@ def do_metadata():
 
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.clean()
     fetcher.fetch(CONTEXTUAL_DATA)
 
     do_metadata()
