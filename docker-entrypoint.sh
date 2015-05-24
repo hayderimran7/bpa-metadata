@@ -73,7 +73,6 @@ django_defaults() {
     echo "MEDIA_ROOT is ${MEDIA_ROOT}"
     echo "LOG_DIRECTORY is ${LOG_DIRECTORY}"
     echo "DJANGO_SETTINGS_MODULE is ${DJANGO_SETTINGS_MODULE}"
-    
     export DEPLOYMENT PRODUCTION DEBUG DBSERVER MEMCACHE WRITABLE_DIRECTORY STATIC_ROOT MEDIA_ROOT LOG_DIRECTORY DJANGO_SETTINGS_MODULE
 }
 
@@ -94,8 +93,8 @@ fi
 
 if [ "${COMMAND}" = 'runscript' ]
 then
-    echo "Runscript $2" 
-    django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    echo "Runscript $2"
+    django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runscript.log
     exit $?
 fi
 

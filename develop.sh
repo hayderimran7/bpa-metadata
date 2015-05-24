@@ -176,16 +176,16 @@ shell)
     docker exec -it ${PROJECT_NAME}_web_1 /bin/bash
     ;;
 superuser)
-    docker exec -it ${PROJECT_NAME}_web_1 /docker-entrypoint.sh superuser
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh superuser
     ;;
 ingest_all)
-    docker exec -it ${PROJECT_NAME}_web_1 /docker-entrypoint.sh ingest_all
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_all
     ;;
 runscript)
-    docker exec -it ${PROJECT_NAME}_web_1 /docker-entrypoint.sh runscript $1
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh runscript $2
     ;;
 nuclear)
-    docker exec -it ${PROJECT_NAME}_web_1 /docker-entrypoint.sh nuclear
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
     ;;
 unit_tests)
     unit_tests
@@ -194,7 +194,7 @@ selenium)
     selenium
     ;;
 checksecure)
-    docker exec -it ${PROJECT_NAME}_web_1 /docker-entrypoint.sh checksecure
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh checksecure
     ;;
 *)
     usage
