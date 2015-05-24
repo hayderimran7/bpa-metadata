@@ -99,8 +99,10 @@ def get_data(file_name):
                   ('lon', 'longitude', ingest_utils.get_clean_float),
                   ('depth', 'Depth', None),
                   ('horizon_classification', 'Horizon', None),
+                  ('storage_method', 'soil sample storage method', None),
                   ('description', 'location description', None),
                   ('current_land_use', 'Detailed land use', None),
+                  ('broad_land_use', 'broad land use', None),
                   ('general_ecological_zone', 'General Ecological Zone', None),
                   ('vegetation_type_controlled_vocab', 'Vegetation Type', None),
                   ('vegetation_total_cover', 'Vegetation Total cover (%)', None),
@@ -288,6 +290,7 @@ def get_site(entry):
 
         # controlled vocabularies
         site.current_land_use = get_land_use(entry.current_land_use, entry.row)
+        site.broad_land_use = get_land_use(entry.broad_land_use, entry.row)
         site.general_ecological_zone = get_general_ecological_zone(entry)
         site.vegetation_type = get_vegetation_type(entry)
         site.soil_type_australian_classification = get_australian_soil_classification(entry)
@@ -383,7 +386,7 @@ def add_samples(data):
         horizons = get_horizon_classifications(e.horizon_classification)
         sample.horizon_classification1 = horizons[0]
         sample.horizon_classification2 = horizons[1]
-
+        sample.storage_method = e.storage_method
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
         sample.methodological_notes = e.methodological_notes
         sample.save()

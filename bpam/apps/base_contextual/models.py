@@ -26,6 +26,7 @@ class CollectionSite(DebugNote):
 
     # controlled vocabularies
     current_land_use = models.ForeignKey(LandUse, related_name='current', null=True, verbose_name=_('Current Land Use'))
+    broad_land_use = models.ForeignKey(LandUse, related_name='broad', null=True, verbose_name=_('Broad Land Use'))
     general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True,
                                                 verbose_name=_('General Ecological Zone'))
     vegetation_type = models.ForeignKey(BroadVegetationType, null=True, verbose_name=_('Vegetation Type'))
@@ -172,7 +173,7 @@ class ChemicalAnalysis(models.Model):
 
 class SampleContext(DebugNote):
     """
-    A sample to collect sample specific info for contextual data.
+    A model to collect sample specific info for contextual data.
     """
 
     bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'), primary_key=True)
@@ -192,7 +193,7 @@ class SampleContext(DebugNote):
 
     def get_horizon_description(self):
         """
-        String combing horizon classifications
+        String combining horizon classifications
         """
         desc = []
         for c in (self.horizon_classification1, self.horizon_classification2):
