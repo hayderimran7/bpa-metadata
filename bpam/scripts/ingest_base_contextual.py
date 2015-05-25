@@ -404,9 +404,19 @@ def do_metadata():
         add_samples(samples)
 
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionSite._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(SampleContext._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(ChemicalAnalysis._meta.db_table))
+
+
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.clean()
     fetcher.fetch(CONTEXTUAL_DATA)
 
+    truncate()
     do_metadata()
