@@ -46,6 +46,7 @@ install_requires = [
     'pytz>=2013.7',
     'sqlparse>=0.1.9,<1.0',
     'django-bootstrap3>=3.0',
+    'django_bootstrap_breadcrumbs>=0.7.1',
     'django-tastypie==0.10.0',
     'xlrd>=0.9.2',
     'xlwt>=0.7.5',

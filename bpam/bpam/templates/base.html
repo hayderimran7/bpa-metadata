@@ -17,6 +17,14 @@
 
 {% bootstrap_javascript jquery=True %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {% clear_breadcrumbs %}
+    {% breadcrumb "Home" "/" %}
+{% endblock %}
+
+
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/jquery.tablesorter.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
@@ -82,6 +90,7 @@ body {
                 </button>
                 <p>
                 <a class="navbar-brand" href="{% url 'landing_page' %}">Bioplatforms Australia Metadata</a>
+                {% render_breadcrumbs %}
                 </p>
             </div>
             <div class="navbar-collapse collapse">

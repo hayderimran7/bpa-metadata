@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+{% load django_bootstrap_breadcrumbs %}
 
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "454" "base_454.views.index" %}
+{% endblock %}
 {% block title %}BASE Metagenomics Samples {% endblock %}
 
 {% block content %}

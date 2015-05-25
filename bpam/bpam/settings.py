@@ -299,6 +299,7 @@ INSTALLED_APPS = (
     'apps.gbr',
     'tinymce',
     'bootstrap3',
+    'django_bootstrap_breadcrumbs',
     'rest_framework',
     'explorer',
     'leaflet',
