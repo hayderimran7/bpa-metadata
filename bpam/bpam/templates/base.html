@@ -20,7 +20,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {% clear_breadcrumbs %}
-    {% breadcrumb "Home" "/" %}
+    {% breadcrumb "Bioplatforms Australia Metadata" "/" %}
 {% endblock %}
 
 
@@ -89,8 +89,9 @@ body {
                     <span class="icon-bar"></span>
                 </button>
                 <p>
-                <a class="navbar-brand" href="{% url 'landing_page' %}">Bioplatforms Australia Metadata</a>
-                {% render_breadcrumbs %}
+                <div class="navbar-brand">
+                    {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
+                </div>
                 </p>
             </div>
             <div class="navbar-collapse collapse">

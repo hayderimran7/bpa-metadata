@@ -3,6 +3,15 @@
 
 {% block content %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "454" "base_454:454samples" %}
+    {% breadcrumb sample.bpa_id "base_contextual:sampledetail" sample.bpa_id  %}
+{% endblock %}
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-4 col-md-4">

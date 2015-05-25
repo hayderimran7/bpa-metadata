@@ -2,6 +2,16 @@
 
 {% load staticfiles %}
 {% block content %}
+
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Contacts" "base:contacts" %}
+{% endblock %}
+
+
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-sm-2">

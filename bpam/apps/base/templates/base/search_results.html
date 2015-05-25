@@ -2,6 +2,13 @@
 {% load static from staticfiles %}
 {% block title %}Search Results {% endblock %}
 {% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Search" "base:search" %}
+{% endblock %}
+
 {% if search_form %}
 <script src="{% static 'base/spin.min.js' %}"></script>
 <div class="container-fluid">

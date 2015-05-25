@@ -1,22 +1,25 @@
 {% extends "base.html" %}
-{% load django_bootstrap_breadcrumbs %}
 
-{% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "454" "base_454.views.index" %}
-{% endblock %}
-{% block title %}BASE Metagenomics Samples {% endblock %}
+{% block title %}BASE 454 Samples {% endblock %}
 
 {% block content %}
 
 <h3>BASE 454 Samples</h3>
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "454" "base_454" %}
+{% endblock %}
+
 
 {% if samples %}
 {% include "base_454/sample_table.html" %}
 {% include "pagination.html" %}
 
 {% else %}
-<h3> No Contextual data is currently available </h3>
+<h3> No 454 data is currently available </h3>
 {% endif %}
 
 {% endblock %}

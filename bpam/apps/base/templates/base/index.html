@@ -1,8 +1,18 @@
 {% extends "base.html" %}
+
+
 {% block title %}BASE{% endblock %}
 
 {% load staticfiles %}
 {% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "index" %}
+{% endblock %}
+
 <div class="container-fluid">
     <div class="well">
 

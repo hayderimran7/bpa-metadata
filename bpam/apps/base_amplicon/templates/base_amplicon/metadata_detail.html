@@ -4,6 +4,16 @@
 {% block title %}Amplicon Metadata {% endblock %}
 
 {% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "All Amplicons" "base_amplicons:amplicons" %}
+    {% with "base_amplicons:amplicons_"|add:metadata.target as target_url %}
+    {% breadcrumb metadata.target target_url %}
+    {% endwith %}
+    {% breadcrumb metadata.bpa_id "base_amplicons:amplicon" metadata.pk %}
+{% endblock %}
 <div class="well">
 <div class="panel panel-info">
     <div class="panel-body">

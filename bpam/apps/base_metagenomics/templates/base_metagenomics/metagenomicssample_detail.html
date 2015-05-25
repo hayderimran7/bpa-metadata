@@ -4,7 +4,13 @@
 {% block title %}BASE Metagenomics Sample Detail {% endblock %}
 
 {% block content %}
-
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Metagenomics" "base_metagenomics:samples" %}
+    {% breadcrumb sample.bpa_id "base_metagenomics:sample" %}
+{% endblock %}
 <div class="container-fluid">
 
     <div class="row">
