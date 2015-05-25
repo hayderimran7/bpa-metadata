@@ -48,7 +48,7 @@
             {% for record in records %}
             <tr>
                 <td>
-                    <a href="{% url 'base_contextual:chemicalanalysisdetail' bpa_id=record.bpa_id %}">{{ record.bpa_id }}</a>
+                    <a href="{% url 'base_contextual:sampledetail' bpa_id=record.bpa_id %}">{{ record.bpa_id }}</a>
                 </td>
                 <td>
                     {% if record.site %}
