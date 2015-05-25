@@ -268,19 +268,22 @@ EcologicalZoneVocabulary = (
     ('Montane', ''),
     ('Riverine', ''),
     ('Estuarine', ''),
+    ('Mediterranian', ''),
+    ('Polar', ''),
     ('Other', '')
 )
 
 # 4) Vegetation Type
 BroadVegetationTypeVocabulary = (
     ('Marsh/bog', ''),
-    ('Healthland', ''),
+    ('Heathland', ''),
     ('Grassland', ''),
     ('Shrubland', ''),
     ('Woodland', ''),
     ('Forest', ''),
     ('Savannah', ''),
     ('Dune', ''),
+    ('Moss and lichen', ''),
     ('Other', ''),
 )
 

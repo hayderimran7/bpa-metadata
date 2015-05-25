@@ -57,37 +57,14 @@ class CollectionSite(DebugNote):
     fire_history = models.CharField(_('Fire History'), max_length=500, blank=True)
     fire_intensity = models.CharField(_('Fire Intensity'), max_length=500, blank=True)
     # land use
-    date_since_change_in_land_use = models.DateField(_('Date Since Land Use Change'), blank=True, null=True)
+    date_since_change_in_land_use = models.CharField(_('Date Since Land Use Change'), max_length=100, blank=True, null=True)
     immediate_previous_land_use = models.ForeignKey(LandUse, related_name='previous', blank=True, null=True)
-    crop_rotation_1 = models.ForeignKey(LandUse,
-                                        verbose_name=_('Crop rotation 1 year ago'),
-                                        related_name='crop_rotation_1',
-                                        max_length=100,
-                                        blank=True,
-                                        null=True)
-    crop_rotation_2 = models.ForeignKey(LandUse,
-                                        verbose_name=_('Crop rotation 2 years ago'),
-                                        related_name='crop_rotation_2',
-                                        max_length=100,
-                                        blank=True,
-                                        null=True)
-    crop_rotation_3 = models.ForeignKey(LandUse,
-                                        verbose_name=_('Crop rotation 3 years ago'),
-                                        related_name='crop_rotation_3',
-                                        max_length=100,
-                                        blank=True,
-                                        null=True)
-    crop_rotation_4 = models.ForeignKey(LandUse,
-                                        verbose_name=_('Crop rotation 4 years ago'),
-                                        related_name='crop_rotation_4',
-                                        max_length=100,
-                                        blank=True, null=True)
-    crop_rotation_5 = models.ForeignKey(LandUse,
-                                        verbose_name=_('Crop rotation 5 years ago'),
-                                        related_name='crop_rotation_5',
-                                        max_length=100,
-                                        blank=True,
-                                        null=True)
+
+    crop_rotation_1 = models.TextField(_('Crop rotation 1 year ago'), blank=True, null=True)
+    crop_rotation_2 = models.TextField(_('Crop rotation 2 years ago'), blank=True, null=True)
+    crop_rotation_3 = models.TextField(('Crop rotation 3 years ago'), blank=True, null=True)
+    crop_rotation_4 = models.TextField(_('Crop rotation 4 years ago'), blank=True, null=True)
+    crop_rotation_5 = models.TextField(_('Crop rotation 5 years ago'), blank=True, null=True)
 
     agrochemical_additions = models.CharField(_('Agrochemical Additions'), max_length=300, blank=True, null=True)
     tillage = models.ForeignKey(TillageType, blank=True, null=True)
@@ -189,6 +166,8 @@ class SampleContext(DebugNote):
                                                 related_name='two',
                                                 verbose_name=_('Horizon Classification Two'))
     depth = models.CharField(_('Soil Depth'), max_length=20, blank=True)
+
+    storage = models.CharField(_('Storage'), max_length=100, blank=True, null=True, help_text=_('Storage'))
     methodological_notes = models.TextField(_('Methodological Notes'), blank=True, null=True)
 
     def get_horizon_description(self):

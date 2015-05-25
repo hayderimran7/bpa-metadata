@@ -5,13 +5,34 @@
                 <tr>
                     <th>BPA ID</th>
                     <th>Collection Site</th>
-                    <th>Horizon</th>
-                    <th>Ecological Zone</th>
-                    <th>Current Land Use</th>
-                    <th>Vegetation</th>
-                    <th>Australian Soil Type</th>
-                    <th>Methodology</th>
+                    <th>Date Sampled</th>
                     <th>Depth</th>
+                    <th>Horizon</th>
+                    <th>Storage</th>
+                    <th>Broad Land Use</th>
+                    <th>Detailed Land Use</th>
+                    <th>Ecological Zone</th>
+                    <th>Vegetation Type</th>
+                    <th>Vegetation Cover</th>
+                    <th>Elevation</th>
+                    <th>Slope</th>
+                    <th>Slope Aspect</th>
+                    <th>Profile Position</th>
+                    <th>Australian Soil Classification</th>
+                    <th>FAO Soil Classification</th>
+                    <th>Immediate Previous Land Use</th>
+                    <th>Date since change in Land Use</th>
+                    <th>Crop Rotation 1 year since present</th>
+                    <th>Crop Rotation 2 years since present</th>
+                    <th>Crop Rotation 3 years since present</th>
+                    <th>Crop Rotation 4 years since present</th>
+                    <th>Crop Rotation 5 years since present</th>
+                    <th>Agrochemical Additions</th>
+                    <th>Tillage</th>
+                    <th>Fire History</th>
+                    <th>Fire Intensity</th>
+                    <th>Flooding</th>
+                    <th>Extreme Events</th>
                     <th>Moisture</th>
                     <th>Colour</th>
                     <th>Gravel</th>
@@ -41,7 +62,6 @@
                     <th>Exc Na</th>
                     <th>B Hot CaCl<sub>2</sub></th>
                     <th>Total N</th>
-                    <th>Total C</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,10 +76,19 @@
                         {{ record.site.get_location_name }}</a>
                     {% endif %}
                 </td>
+                <td>{{ record.site.date_sampled | default:"" }}</td>
+                <td>{{ record.depth }}</td>
                 <td>{{ record.get_horizon_description }}</td>
-                <td>{{ record.site.general_ecological_zone }}</td>
+                <td>{{ record.storage }}</td>
+                <td>{{ record.site.broad_land_use }}</td>
                 <td>{{ record.site.current_land_use }}</td>
+                <td>{{ record.site.general_ecological_zone }}</td>
                 <td>{{ record.site.vegetation_type.vegetation }}</td>
+                <td>{{ record.site.vegetation_total_cover }}</td>
+                <td>{{ record.site.elevation }}</td>
+                <td>{{ record.site.slope }}</td>
+                <td>{{ record.site.slope_aspect }}</td>
+                <td>{{ record.site.profile_position | default:"" }}</td>
                 <td>
                     {% if record.site.soil_type_australian_classification %}
                     <a href="https://www.google.com.au/search?q={{ record.site.soil_type_australian_classification }}+soil+australia">
@@ -67,9 +96,20 @@
                     </a>
                     {% endif %}
                 </td>
-                <td>{{ record.methodological_notes }}</td>
-                <td>{{ record.depth }}</td>
-                
+                <td>{{ record.site.soil_type_fao_classification | default:"" }}</td>
+                <td>{{ record.site.immediate_previous_land_use | default:"" }}</td>
+                <td>{{ record.site.date_since_change_in_land_use | default:"" }}</td>
+                <td>{{ record.site.crop_rotation_1| default:"" }}</td>
+                <td>{{ record.site.crop_rotation_2| default:"" }}</td>
+                <td>{{ record.site.crop_rotation_3| default:"" }}</td>
+                <td>{{ record.site.crop_rotation_4| default:"" }}</td>
+                <td>{{ record.site.crop_rotation_5| default:"" }}</td>
+                <td>{{ record.site.agrochemical_additions | default:"" }}</td>
+                <td>{{ record.site.tillage | default:"" }}</td>
+                <td>{{ record.site.fire_history | default:"" }}</td>
+                <td>{{ record.site.fire_intensity | default:"" }}</td>
+                <td>{{ record.site.flooding | default:"" }}</td>
+                <td>{{ record.site.environment_event | default:"" }}</td>
                 <td>{{ record.analysis.moisture | default:"" | floatformat:3 }}</td>
                 <td>{{ record.analysis.colour| default:"" }}</td>
                 <td>{{ record.analysis.gravel| default:"" }}</td>
@@ -99,7 +139,6 @@
                 <td>{{ record.analysis.exc_sodium| default:"" }}</td>
                 <td>{{ record.analysis.boron_hot_cacl2| default:"" }}</td>
                 <td>{{ record.analysis.total_nitrogen| default:"" }}</td>
-                <td>{{ record.analysis.total_carbon| default:"" }}</td>
             </tr>
             {% endfor %}
             </tbody>

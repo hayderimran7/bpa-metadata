@@ -101,8 +101,8 @@ def get_data(file_name):
                   ('horizon_classification', 'Horizon', None),
                   ('storage_method', 'soil sample storage method', None),
                   ('description', 'location description', None),
-                  ('current_land_use', 'Detailed land use', None),
                   ('broad_land_use', 'broad land use', None),
+                  ('current_land_use', 'Detailed land use', None),
                   ('general_ecological_zone', 'General Ecological Zone', None),
                   ('vegetation_type_controlled_vocab', 'Vegetation Type', None),
                   ('vegetation_total_cover', 'Vegetation Total cover (%)', None),
@@ -115,7 +115,7 @@ def get_data(file_name):
                   ('fao', 'FAO soil classification controlled vocab (7)', None),
                   # historic data
                   ('immediate_previous_land_use', 'Immediate Previous Land Use controlled vocab (2)', None),
-                  ('date_since_change_in_land_use', 'Date since change in Land Use', ingest_utils.get_date),
+                  ('date_since_change_in_land_use', 'Date since change in Land Use', None),
                   ('crop_rotation_1', 'Crop rotation 1yr since present', None),
                   ('crop_rotation_2', 'Crop rotation 2yrs since present', None),
                   ('crop_rotation_3', 'Crop rotation 3yrs since present', None),
@@ -126,7 +126,7 @@ def get_data(file_name):
                   ('fire_history', 'Fire', None),
                   ('fire_intensity', 'fire intensity if known', None),
                   ('flooding', 'Flooding', None),
-                  ('extreme_events', 'Extreme Events', None),
+                  ('extreme_event', 'Extreme Events', None),
                   # soil structual
                   ('soil_moisture', 'Soil moisture (%)', ingest_utils.get_clean_float),
                   ('soil_colour', 'Color controlled vocab (10)', None),
@@ -301,17 +301,17 @@ def get_site(entry):
         # history
         site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use, entry.row)
         site.date_since_change_in_land_use = entry.date_since_change_in_land_use
-        site.crop_rotation_1 = get_land_use(entry.crop_rotation_1, entry.row)
-        site.crop_rotation_2 = get_land_use(entry.crop_rotation_2, entry.row)
-        site.crop_rotation_3 = get_land_use(entry.crop_rotation_3, entry.row)
-        site.crop_rotation_4 = get_land_use(entry.crop_rotation_4, entry.row)
-        site.crop_rotation_5 = get_land_use(entry.crop_rotation_5, entry.row)
+        site.crop_rotation_1 = entry.crop_rotation_1
+        site.crop_rotation_2 = entry.crop_rotation_2
+        site.crop_rotation_3 = entry.crop_rotation_3
+        site.crop_rotation_4 = entry.crop_rotation_4
+        site.crop_rotation_5 = entry.crop_rotation_5
         site.agrochemical_additions = entry.agrochemical_additions
         site.tillage = get_tillage(entry)
         site.fire_history = entry.fire_history
         site.fire_intensity = entry.fire_intensity
         site.flooding = entry.flooding
-        site.extreme_events = entry.extreme_events
+        site.environment_event = entry.extreme_event
 
         # notes
         site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
@@ -386,7 +386,7 @@ def add_samples(data):
         horizons = get_horizon_classifications(e.horizon_classification)
         sample.horizon_classification1 = horizons[0]
         sample.horizon_classification2 = horizons[1]
-        sample.storage_method = e.storage_method
+        sample.storage = e.storage_method
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
         sample.methodological_notes = e.methodological_notes
         sample.save()
