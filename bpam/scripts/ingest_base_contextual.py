@@ -234,7 +234,7 @@ def get_fao_soil_classification(entry):
 
 def get_profile_position(entry):
     profile_str = entry.profile_position
-    if profile_str == '':
+    if profile_str in ('', 'No data'):
         return None
     try:
         return ProfilePosition.objects.get(position__iexact=profile_str)
