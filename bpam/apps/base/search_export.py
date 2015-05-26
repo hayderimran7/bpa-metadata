@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import logging
+import csv
 
 from django.db.models.fields.related import ForeignKey
 from apps.common.models import BPAUniqueID
@@ -32,16 +35,17 @@ class CSVExporter(object):
             else:
                 related_model = field.rel.to
                 fields.extend(self._get_fields(related_model, name))
+
         return fields
 
     def export(self, ids, export_file_obj):
-        import csv
-
         writer = csv.writer(export_file_obj)
         self.field_data = self._get_fields(self.model)
         writer.writerow(self._get_headers())
+
         for row in self._get_rows(ids):
             writer.writerow(row)
+
         export_file_obj.flush()
         export_file_obj.seek(0)
         return export_file_obj
@@ -143,9 +147,6 @@ class OTUExporter(CSVExporter):
                 ]
 
     def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
-
-        import csv
-
         writer_bacteria = csv.writer(file_obj_bacteria)
         writer_eukaryotes = csv.writer(file_obj_eukaryotes)
         writer_fungi = csv.writer(file_obj_fungi)
