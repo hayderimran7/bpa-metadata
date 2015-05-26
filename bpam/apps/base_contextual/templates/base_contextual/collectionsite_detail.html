@@ -3,6 +3,15 @@
 {% block title %}BASE Contextual Site Detail {% endblock %}
 
 {% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Collection Sites" "base_contextual:collectionsites" %}
+    {% breadcrumb  collectionsite.get_location_name "" %}
+{% endblock %}
+
 <script type="text/javascript">
 var collectionsite = [{{ collectionsite.lat }}, {{ collectionsite.lon }}] ;
 </script>

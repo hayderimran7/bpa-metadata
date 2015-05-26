@@ -8,11 +8,15 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "All Amplicons" "base_amplicon" %}
+    {% breadcrumb "Amplicons" "base_amplicon:index" %}
+    {% with "base_amplicons:amplicons_"|add:target as target_url %}
+    {% breadcrumb target target_url %}
+    {% endwith %}
 {% endblock %}
 
 
-<h3><a href="{% url 'base:index'%}">BASE</a> {{ target }} <a href="{% url 'base_amplicon:index'%}">Amplicon Metadata</a>
+<h3>
+    <a href="{% url 'base:index'%}">BASE</a> {{ target }} <a href="{% url 'base_amplicon:index'%}">Amplicon Metadata</a>
 </h3>
 
 {% if metadata_list %}

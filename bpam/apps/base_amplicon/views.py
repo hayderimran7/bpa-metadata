@@ -23,7 +23,13 @@ class AmpliconListView(ListView):
     model = AmpliconSequencingMetadata
     context_object_name = 'metadata_list'
     template_name = 'base_amplicon/metadata_list.html'
-    queryset = AmpliconSequencingMetadata.objects.select_related('bpa_id', 'sequencing_facility')
+
+    def get_context_data(self, **kwargs):
+        context = super(AmpliconListView, self).get_context_data(**kwargs)
+        context['target'] = 'all'
+        context['metadata_list'] = AmpliconSequencingMetadata.objects.select_related('bpa_id',
+                                                                                     'sequencing_facility')
+        return context
 
 
 class Amplicon16SListView(AmpliconListView):

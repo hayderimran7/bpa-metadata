@@ -3,8 +3,14 @@
 {% block title %}Sample Data{% endblock %}
 
 {% block content %}
-
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Samples" "base_contextual:samples" %}
+{% endblock %}
 {% if records %}
+
 <div class="container-fluid">
     <h3><a href="{% url 'base:index'%}">BASE</a> All Sample Data ({{records|length}} Records) </h3>
 

@@ -4,6 +4,13 @@
 {% block title %}BASE Contextual Collection Sites {% endblock %}
 
 {% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Collection Sites" "base_contextual:collectionsites" %}
+{% endblock %}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">

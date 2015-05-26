@@ -8,8 +8,8 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "All Amplicons" "base_amplicons:amplicons" %}
-    {% with "base_amplicons:amplicons_"|add:metadata.target as target_url %}
+    {% breadcrumb "All Amplicons" "base_amplicon:amplicons" %}
+    {% with "base_amplicon:amplicons_"|add:metadata.target as target_url %}
     {% breadcrumb metadata.target target_url %}
     {% endwith %}
     {% breadcrumb metadata.bpa_id "base_amplicons:amplicon" metadata.pk %}
