@@ -35,7 +35,15 @@
                 <table id="search_terms" class="table table-bordered table-striped table-condensed">
                     <thead>
                         <tr>
-                            <th>Search Type</th>
+                            <th>
+                                Search Type
+                                <a href="#" role="button" class="btn popovers" data-toggle="popover"
+                                    title="Search Values"
+                                    data-trigger="focus"
+                                    data-content="Searches may comprise single values or ranges of values.  For example, samples could be filtered by pH 4 - 8, or by pH 4">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </th>
                             <th>Field</th>
                             <th>Value</th>
                         </tr>
@@ -59,12 +67,6 @@
                             <input class="form-control" id="search_range_min0" name="search_range_min0" type=text>
                             <input class="form-control" id="search_range_max0" name="search_range_max0" type=text>
                             <input class="form-control" id="search_value0" name="search_value0" type=text>
-                            <button type="button" class="btn" data-toggle="popover"
-                                title="Search Values"
-                                data-trigger="focus"
-                                data-content="Searches may comprise single values or ranges of values.  For example, samples could be filtered by pH 4 - 8, or by pH 4">
-                                <span class="glyphicon glyphicon-info-sign"></span>
-                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -144,19 +146,6 @@
             </form>
         </div>
 
-        <script>
-            window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
-            window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
-            window.SEARCH_FORM_URL = "{% url 'base:search' %}";
-            window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
-
-            $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
-                    $('[data-toggle="popover"]').popover()
-            })
-        </script>
-
-        <script src="{% static 'base/search.js' %}"></script>
         {% endif %}
 
         <div class="container-fluid">
@@ -164,12 +153,12 @@
                 <div class="panel-heading">
                     Search Results
                     <input align=right type="button" id="export_button" class="btn btn-default" value="Export search results">
-                    <button type="button" class="btn" data-toggle="popover"
+                    <a href="#" role="button" class="btn popovers" data-toggle="popover"
                         title="Search Result"
                         data-trigger="focus"
                         data-content="Export an OTU abundance table, OTU taxonomy and representative OTU sequences for samples filling filtered search.">
                         <span class="glyphicon glyphicon-info-sign"></span>
-                    </button>
+                    </a>
                 </div>
                 <div class="panel-body">
                     <table id="results" class="table table-striped tablesorter table-bordered">
@@ -195,6 +184,19 @@
                 </div>
             </div>
         </div>
+        <script>
+            window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
+            window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
+            window.SEARCH_FORM_URL = "{% url 'base:search' %}";
+            window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
+
+            $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                    $('[data-toggle="popover"]').popover({html:true})
+            })
+        </script>
+
+        <script src="{% static 'base/search.js' %}"></script>
         {% endblock %}
     </div>
 </div>
