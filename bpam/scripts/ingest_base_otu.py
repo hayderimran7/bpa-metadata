@@ -65,6 +65,12 @@ def ingest_taxonomy(file_name):
             logger.error('{} is not a valid kingdom, ignoring row {} in {}'.format(e.kingdom, e.row, e.file_name))
             continue
 
+        def get_species():
+            if e.species is not None:
+                return e.species
+            else:
+                return "unclassified"
+
         otu_list.append(
             OperationalTaxonomicUnit(
                 name=e.otu_id,
@@ -74,7 +80,8 @@ def ingest_taxonomy(file_name):
                 order=e.order,
                 family=e.family,
                 genus=e.genus,
-                species=lambda s: e.species if e.species else "unclassified")
+                species=get_species()
+            )
         )
 
     logger.info('Bulk creating {0} OTUs'.format(len(otu_list)))
