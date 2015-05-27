@@ -32,12 +32,12 @@
                 or
                 <input class="form-control" name="search_operator" type="radio" id="op_or" value="or">Any
                 of the matching fields added below:
-                <table id="search_terms" class="table table-bordered table-striped table-condensed">
+                <table name="search_type_anchor"  id="search_terms" class="table table-bordered table-striped table-condensed">
                     <thead>
                         <tr>
                             <th>
                                 Search Type
-                                <a href="#" role="button" class="btn popovers" data-toggle="popover"
+                                <a href="#search_type_anchor" role="button" class="btn popovers" data-toggle="popover"
                                     title="Search Values"
                                     data-trigger="focus"
                                     data-content="Searches may comprise single values or ranges of values.  For example, samples could be filtered by pH 4 - 8, or by pH 4">
@@ -148,12 +148,12 @@
 
         {% endif %}
 
-        <div class="container-fluid">
+        <div name="search_results" class="container-fluid">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Search Results
                     <input align=right type="button" id="export_button" class="btn btn-default" value="Export search results">
-                    <a href="#" role="button" class="btn popovers" data-toggle="popover"
+                    <a href="#search_results" role="button" class="btn popovers" data-toggle="popover"
                         title="Search Result"
                         data-trigger="focus"
                         data-content="Export an OTU abundance table, OTU taxonomy and representative OTU sequences for samples filling filtered search.">
