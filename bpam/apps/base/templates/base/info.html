@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Information{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Information" "" %}
+{% endblock %}
+
+<div class="container-fluid">
+    <div class="well">
+        <h2>
+            <span class="glyphicon glyphicon-info-sign"> </span> OTU, Methods and other information 
+        </h2>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Amplicon</th>
+                    <th><span class="glyphicon glyphicon-download"></span> OTU</th>
+                    <th><span class="glyphicon glyphicon-download"></span> Taxonomy</th>
+                    <th><span class="glyphicon glyphicon-download"></span> FASTA</th>
+                    <th><span class="glyphicon glyphicon-download"></span> SOP</th>
+                    <th><span class="glyphicon glyphicon-download"></span> Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{% url 'base_amplicon:amplicons_16S' %}">16S</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_16S_OTU.csv.gz">OTU</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_16S_taxonomy.xlsx">Taxonomy</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_16S_OTU.fasta">FASTA</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/16S/16S_SOP.pdf">SOP</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/16S/16S_method.pdf">Method</a></td>
+                </tr>
+                <tr>
+                    <td><a href="{% url 'base_amplicon:amplicons_A16S' %}">A16S</td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A16S_OTU.csv.gz">OTU</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A16S_taxonomy.xlsx">Taxonomy</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A16S_OTU.fasta">FASTA</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/A16S/A16S_SOP.pdf">SOP</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/A16S/A16S_method.pdf">Method</a></td>
+                </tr>
+                <tr>
+                    <td><a href="{% url 'base_amplicon:amplicons_ITS' %}">ITS</td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_ITS_OTU.csv.gz">OTU</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_ITS_taxonomy.xlsx">Taxonomy</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_ITS_OTU.fasta">FASTA</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/ITS/ITS_SOP.pdf">SOP</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/ITS/ITS_method.pdf">Method</a></td>
+                </tr>
+                <tr>
+                    <td><a href="{% url 'base_amplicon:amplicons_18S' %}">A18S</td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A18S_OTU.csv.gz">OTU</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A18S_taxonomy.xlsx">Taxonomy</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/amplicons/otu/all/BASE_A18S_OTU.fasta">FASTA</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/A18S/A18S_SOP.pdf">SOP</a></td>
+                    <td><a href="https://downloads.bioplatforms.com/base/methods/A18S/A18S_method.pdf">Method</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <span class="glyphicon glyphicon-download"></span> <a href="https://downloads.bioplatforms.com/base/methods/" > All SOP and Methods</a>
+    </div>
+</div>
+
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}

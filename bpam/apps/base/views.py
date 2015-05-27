@@ -27,6 +27,8 @@ from .forms import BASESearchForm
 
 logger = logging.getLogger("rainbow")
 
+class InfoView(TemplateView):
+    template_name = 'base/info.html'
 
 class BaseView(TemplateView):
     template_name = 'base/index.html'

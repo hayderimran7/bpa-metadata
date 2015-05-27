@@ -27,6 +27,10 @@ urlpatterns = patterns(
         view=views.ContactsView.as_view(),
         name='contacts'),
     url(
+        regex=r'^information$',
+        view=views.InfoView.as_view(),
+        name='information'),
+    url(
         regex=r'^accessrequest',
         view=views.RequestAccess.as_view(),
         name='requestaccess'),
