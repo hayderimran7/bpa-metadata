@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import logging
 import csv
 
 from django.db.models.fields.related import ForeignKey
-from apps.common.models import BPAUniqueID
 
+from apps.common.models import BPAUniqueID
+from apps.base_otu.models import SampleOTU
 
 logger = logging.getLogger("rainbow")
 
@@ -30,7 +32,6 @@ class CSVExporter(object):
                 name = field.name
 
             if not isinstance(field, ForeignKey):
-
                 fields.append([name, name])
             else:
                 related_model = field.rel.to
@@ -51,7 +52,7 @@ class CSVExporter(object):
         return export_file_obj
 
     def _get_csv_filename(self):
-        return "%s.csv" % self.model.__name__
+        return "{}.csv".format(self.model.__name__)
 
     def _get_headers(self):
         return [pair[1] for pair in self.field_data]
@@ -73,7 +74,6 @@ class CSVExporter(object):
             for instance in instances:
                 values = []
                 for field_pair in self.field_data:
-
                     field_path = field_pair[0]
                     parts = field_path.split(".")
                     try:
@@ -88,7 +88,7 @@ class CSVExporter(object):
         try:
             bpa_id = BPAUniqueID.objects.get(bpa_id=_id)
         except BPAUniqueID.DoesNotExist:
-            logger.info("bpa_id %s does not exist!" % _id)
+            logger.info("bpa_id {} does not exist!".format(_id))
             return None
 
         return self._get_model_for_id(bpa_id)
@@ -106,7 +106,6 @@ class CSVExporter(object):
 
 class OTUExporter(CSVExporter):
     def __init__(self, kingdom, phylum, otu_class, order, family, genus, species):
-        from apps.base_otu.models import SampleOTU
 
         super(OTUExporter, self).__init__(SampleOTU)
         self.one_object_per_id = False
