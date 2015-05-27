@@ -5,7 +5,7 @@ import json
 import logging
 import zipfile
 
-from StringIO import StringIO
+from cStringIO import StringIO
 
 from django.http import Http404
 from django.views.generic import TemplateView
@@ -15,11 +15,12 @@ from django.http import HttpResponse
 from django.views.generic.base import View
 
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis, CollectionSite
+from apps.base_contextual import sample_context
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_metagenomics.models import MetagenomicsSample
 from apps.base_454.models import Sample454
 
-from search_export import CSVExporter, OTUExporter
+from search_export import OTUExporter
 from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
 from .forms import BASESearchForm
@@ -296,7 +297,7 @@ class StandardisedVocabularyLookUpView(View):
     def get(self, request, search_field=None):
         response = HttpResponse(content_type="application/json")
         model, field = self._get_standardised_vocab(search_field)
-        logger.debug('Get search field from model: {0} field: {1}'.format(model, field))
+        logger.debug('Get search field from model: {} field: {}'.format(model, field))
 
         if model is None:
             # response.status_code = 404
@@ -376,20 +377,9 @@ class SearchExportView(View):
         genus = request.GET.get("genus", "")
         species = request.GET.get("species", "")
 
-        # contextual data
-        contextual_data_csv = StringIO()
-        contextExporter = CSVExporter(SampleContext)
-        contextual_csv_data = contextExporter.export(ids, contextual_data_csv)
-
-        # chem analaysis
-        chemical_analysis_csv = StringIO()
-        chemical_analysis_exporter = CSVExporter(ChemicalAnalysis)
-        ca_csv_data = chemical_analysis_exporter.export(ids, chemical_analysis_csv)
-
         zippedfile = StringIO()
         zf = zipfile.ZipFile(zippedfile, mode='w', compression=zipfile.ZIP_DEFLATED)
-        zf.writestr('contextual_data.csv', contextual_csv_data.read())
-        zf.writestr('chemical_analysis.csv', ca_csv_data.read())
+        zf.writestr('contextual_data.csv', sample_context.get_matrix(ids))
 
         otu_bacteria_csv = StringIO()
         otu_eukaryotes_csv = StringIO()

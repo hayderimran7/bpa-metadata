@@ -8,7 +8,7 @@ from django.db.models.fields.related import ForeignKey
 
 from apps.common.models import BPAUniqueID
 from apps.base_otu.models import SampleOTU
-
+# from apps.base_contextual.sample_context import ContextExporter
 logger = logging.getLogger("rainbow")
 
 
@@ -88,7 +88,7 @@ class CSVExporter(object):
         try:
             bpa_id = BPAUniqueID.objects.get(bpa_id=_id)
         except BPAUniqueID.DoesNotExist:
-            logger.info("bpa_id {} does not exist!".format(_id))
+            logger.info("bpa_id {} does not exist...".format(_id))
             return None
 
         return self._get_model_for_id(bpa_id)
