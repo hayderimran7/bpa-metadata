@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 import json
-from StringIO import StringIO
 import logging
+import zipfile
+
+from StringIO import StringIO
 
 from django.http import Http404
 from django.views.generic import TemplateView
@@ -11,15 +13,16 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 from django.http import HttpResponse
 from django.views.generic.base import View
-from ..base_otu.models import OperationalTaxonomicUnit
-from .search import Searcher
-from .forms import BASESearchForm
+
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis, CollectionSite
 from apps.base_amplicon.models import AmpliconSequencingMetadata
 from apps.base_metagenomics.models import MetagenomicsSample
 from apps.base_454.models import Sample454
-from search_export import CSVExporter, OTUExporter
 
+from search_export import CSVExporter, OTUExporter
+from ..base_otu.models import OperationalTaxonomicUnit
+from .search import Searcher
+from .forms import BASESearchForm
 
 logger = logging.getLogger("rainbow")
 
@@ -61,8 +64,7 @@ class AbstractSearchableListView(ListView, FormMixin):
         allow_empty = self.get_allow_empty()
         self.context_object_name = self.get_search_items_name()
         if not allow_empty and len(self.object_list) == 0:
-            raise Http404(u"Empty list and '%(class_name)s.allow_empty' is False."
-                          % {'class_name': self.__class__.__name__})
+            raise Http404("Empty list and '{class_name}.allow_empty' is False.".format(class_name=self.__class__.__name__))
 
         context = self.get_context_data(object_list=self.object_list, search_form=self.form)
         return self.render_to_response(context)
@@ -332,13 +334,13 @@ class TaxonomyLookUpView(View):
         response = HttpResponse(content_type="application/json")
         if level is None:
             logger.info("taxonomic level is None")
-            logger.info("request = %s" % request)
+            logger.info("request = {}".forma(request))
             options = []
         else:
             levels = ['kingdom', 'phylum', 'otu_class', 'order', 'family', 'genus', 'species']
             if level not in levels:
-                logger.info("Level %s is not in %s" % (level, levels))
-                logger.info("request = %s" % request)
+                logger.info("Level {level} is not in {levels}".format(level=level, levels=levels))
+                logger.info("request = {}".format(request))
                 options = []
             else:
                 filter_expression = {level: taxon}
@@ -363,7 +365,6 @@ class RequestAccess(TemplateView):
 
 class SearchExportView(View):
     def get(self, request):
-        import zipfile
 
         ids = request.GET.get("ids", "").split(",")
 
@@ -375,10 +376,12 @@ class SearchExportView(View):
         genus = request.GET.get("genus", "")
         species = request.GET.get("species", "")
 
+        # contextual data
         contextual_data_csv = StringIO()
         contextExporter = CSVExporter(SampleContext)
         contextual_csv_data = contextExporter.export(ids, contextual_data_csv)
 
+        # chem analaysis
         chemical_analysis_csv = StringIO()
         chemical_analysis_exporter = CSVExporter(ChemicalAnalysis)
         ca_csv_data = chemical_analysis_exporter.export(ids, chemical_analysis_csv)
