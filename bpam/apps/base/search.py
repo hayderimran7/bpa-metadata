@@ -220,7 +220,6 @@ class Searcher(object):
     def _get_results(bpa_ids):
         """
         Get as much info as we can about these ids ( return list of dictionary with links etc)
-
         """
         from functools import partial
 

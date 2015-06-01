@@ -264,9 +264,7 @@ $(document).ready(function () {
                     else {
                         updateStandardisedOptions(newRow, null);
                     }
-
                 });
-
             });
         }
         else {
@@ -502,7 +500,7 @@ $(document).ready(function () {
 
         $(results).each(function (index, item) {
             var new_row = "<tr>" +
-                td(item.bpa_id) +
+                td(link(item.bpa_id, item.sc, "")) +
                 td(link(item.sc_display, item.sc, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
                 td(link("Chemical Analysis", item.ca, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
                 td(link("Amplicon", item.am, "<span class=\"glyphicon glyphicon-remove\"></span>")) +
@@ -544,7 +542,6 @@ $(document).ready(function () {
                 $('#' + targetId).trigger("change")
                 stopSpinner();
             });
-
         }
     }
 
