@@ -16,6 +16,23 @@
 <div class="container-fluid">
     <div class="well">
         <h2>
+            <span class="glyphicon glyphicon-info-sign"> </span> General Methods
+        </h2>
+        <div class="list-group">
+            <a href="https://downloads.bioplatforms.com/base/methods/general/BASE_sample_collection.pdf" class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> Sample Collection
+            </a>
+            <a href="https://downloads.bioplatforms.com/base/methods/general/DNA_extraction.pdf" class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> DNA Extraction
+            </a>
+            <a href="https://downloads.bioplatforms.com/base/methods/general/sequence_analysis.pdf" class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> Bioinformatic Analysis
+            </a>
+        </div>
+    </div>
+
+    <div class="well">
+        <h2>
             <span class="glyphicon glyphicon-info-sign"> </span> Amplicon methods and information
         </h2>
         <table class="table table-striped table-bordered">
@@ -62,53 +79,7 @@
         <span class="glyphicon glyphicon-download"></span> <a href="https://downloads.bioplatforms.com/base/methods/" > All Methods</a>
     </div>
 
-    <div class="well">
-        <h2>
-            <span class="glyphicon glyphicon-info-sign"> </span> General Methods
-        </h2>
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Amplicon</th>
-                    <th><span class="glyphicon glyphicon-download"></span> Sample Collection </th>
-                    <th><span class="glyphicon glyphicon-download"></span> DNA Extraction </th>
-                    <th><span class="glyphicon glyphicon-download"></span> Metagenomics Sequencing </th>
-                    <th><span class="glyphicon glyphicon-download"></span> Bioinformatic analysis </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a href="{% url 'base_amplicon:amplicons_16S' %}">16S</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/BASE_sample_collection.pdf">Collection Method</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/DNA_extraction.pdf">DNA Extraction</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/">Sequencing</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/sequence_analysis.pdf">Analysis</a></td>
-                </tr>
-                <tr>
-                    <td><a href="{% url 'base_amplicon:amplicons_A16S' %}">A16S</td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/BASE_sample_collection.pdf">Collection Method</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/DNA_extraction.pdf">DNA Extraction</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/">Sequencing</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/sequence_analysis.pdf">Analysis</a></td>
-                </tr>
-                <tr>
-                    <td><a href="{% url 'base_amplicon:amplicons_ITS' %}">ITS</td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/BASE_sample_collection.pdf">Collection Method</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/DNA_extraction.pdf">DNA Extraction</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/">Sequencing</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/sequence_analysis.pdf">Analysis</a></td>
-                </tr>
-                <tr>
-                    <td><a href="{% url 'base_amplicon:amplicons_18S' %}">18S</td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/BASE_sample_collection.pdf">Collection Method</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/DNA_extraction.pdf">DNA Extraction</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/">Sequencing</a></td>
-                    <td><a href="https://downloads.bioplatforms.com/base/methods/general/sequence_analysis.pdf">Analysis</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <span class="glyphicon glyphicon-download"></span> <a href="https://downloads.bioplatforms.com/base/methods/" > All Methods</a>
-    </div>
+
 </div>
 
 <script>
