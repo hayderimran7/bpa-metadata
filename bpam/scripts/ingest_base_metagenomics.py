@@ -57,9 +57,9 @@ def get_data(file_name):
             logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
             return ''
 
-    field_spec = [('bpa_id', 'BPA ID', set_id),
+    field_spec = [('bpa_id', ('BPA ID', 'Soil sample unique ID'), set_id),
                   ('sample_id', 'Sample extraction ID', None),
-                  ('genome_sequencing_facility', 'Genome Sequencing Facility', None),
+                  ('genome_sequencing_facility', ('Genome Sequencing Facility', 'Sequencing facility'), None),
                   ('date_received', 'Date Received by sequencing facility', ingest_utils.get_date),
                   ('comments', 'Comments by sequencing facility', None),
                   ('date_sequenced', 'Date sequenced', ingest_utils.get_date),
@@ -76,14 +76,22 @@ def get_data(file_name):
                   ('date_data_sent', 'Date data sent/transferred', ingest_utils.get_date),
                   ]
 
-    wrapper = ExcelWrapper(field_spec,
-                           file_name,
-                           sheet_name='BASE Metagenomics',
-                           header_length=1,
-                           column_name_row_index=0)
+    try:
+        wrapper = ExcelWrapper(field_spec,
+                               file_name,
+                               sheet_name='BASE Metagenomics',
+                               header_length=1,
+                               column_name_row_index=0)
 
-    return wrapper.get_all()
+        return wrapper.get_all()
+    except:
+        wrapper = ExcelWrapper(field_spec,
+                               file_name,
+                               sheet_name='Sheet1',
+                               header_length=1,
+                               column_name_row_index=1)
 
+        return wrapper.get_all()
 
 def get_sample(entry):
     """
@@ -172,8 +180,8 @@ def do_metadata():
 
 
 def run():
-    # get_all_metadata_from_server()
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 
     do_metadata()
