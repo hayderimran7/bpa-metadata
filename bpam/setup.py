@@ -48,7 +48,7 @@ install_requires = [
     'django-bootstrap3>=3.0',
     'django_bootstrap_breadcrumbs>=0.7.1',
     'django-tastypie==0.10.0',
-    'xlrd>=0.9.2',
+    'xlrd>=0.9.3',
     'xlwt>=0.7.5',
     'requests>=2.4.0',
     'django_compressor>=1.3',
