@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import re
 from datetime import date
 
 from apps.common.models import BPAUniqueID, BPAProject
@@ -66,8 +69,10 @@ def add_id_set(id_set, project_key, project_name):
 
 class BPAIdValidator(object):
     """
-    Given a BPA ID string, check validitty.
+    Given a BPA ID string, check validity.
     """
+
+    RE_ID = re.compile(r"^102\.100\.100\.\d*", re.MULTILINE)
 
     def __init__(self, bpa_id):
         self.valid_report = None
@@ -105,6 +110,10 @@ class BPAIdValidator(object):
         # no BPA prefix
         elif self.bpa_id.find(BPA_ID) == -1:
             self.valid_report = 'No "{0}" identifying the string as a BPA ID'.format(BPA_ID)
+            self.valid = False
+
+        elif self.RE_ID.match(self.bpa_id) is None:
+            self.valid_report = '{} does not match {}'.format(self.bpa_id, self.RE_ID.pattern)
             self.valid = False
 
         # this function has failed to find a reason why this can't be a BPA ID....

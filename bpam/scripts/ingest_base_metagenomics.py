@@ -57,41 +57,31 @@ def get_data(file_name):
             logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
             return ''
 
-    field_spec = [('bpa_id', ('BPA ID', 'Soil sample unique ID'), set_id),
+    field_spec = [('bpa_id', 'Soil sample unique ID', set_id),
                   ('sample_id', 'Sample extraction ID', None),
-                  ('genome_sequencing_facility', ('Genome Sequencing Facility', 'Sequencing facility'), None),
-                  ('date_received', 'Date Received by sequencing facility', ingest_utils.get_date),
-                  ('comments', 'Comments by sequencing facility', None),
-                  ('date_sequenced', 'Date sequenced', ingest_utils.get_date),
-                  ('library', 'Library', get_library_type),
-                  ('library_construction', 'Library Construction (insert size bp)', ingest_utils.get_clean_number),
-                  ('library_protocol', 'Library construction protocol', None),
+                  ('genome_sequencing_facility', 'Sequencing facility', None),
+                  ('taget', 'Target', None),
                   ('index', 'Index', ingest_utils.get_clean_number),
+                  ('library', 'Library', get_library_type),
+                  ('library_code', 'Library code', None),  # No, I don't know why
+                  ('library_construction', 'Library Construction - average insert size', ingest_utils.get_clean_number),
+                  ('insert_size_range', 'Insert size range', None),
+                  ('library_protocol', 'Library construction protocol', None),
                   ('sequencer', 'Sequencer', None),
                   ('run', 'Run number', ingest_utils.get_clean_number),
                   ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                  ('lane_number', 'Lane number', ingest_utils.get_clean_number),
-                  ('sequence_file_name', 'FILE NAMES - supplied by sequencing facility', None),
-                  ('md5sum', 'MD5 Checksum', None),
-                  ('date_data_sent', 'Date data sent/transferred', ingest_utils.get_date),
+                  ('lane_number', 'Lane number', None),
+                  ('casava_version', 'CASAVA version', None),
                   ]
 
-    try:
-        wrapper = ExcelWrapper(field_spec,
-                               file_name,
-                               sheet_name='BASE Metagenomics',
-                               header_length=1,
-                               column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec,
+                           file_name,
+                           sheet_name='Sheet1',
+                           header_length=3,
+                           column_name_row_index=1)
 
-        return wrapper.get_all()
-    except:
-        wrapper = ExcelWrapper(field_spec,
-                               file_name,
-                               sheet_name='Sheet1',
-                               header_length=1,
-                               column_name_row_index=1)
+    return wrapper.get_all()
 
-        return wrapper.get_all()
 
 def get_sample(entry):
     """
@@ -106,7 +96,6 @@ def get_sample(entry):
         sample.name = entry.sample_id
         sample.dna_extraction_protocol = entry.library_protocol
         sample.requested_sequence_coverage = entry.library_construction
-        sample.collection_date = entry.date_received
         sample.debug_note = ingest_utils.pretty_print_namedtuple(entry)
         sample.save()
         logger.debug('Adding Metagenomics Sample ' + bpa_id.bpa_id)
@@ -144,27 +133,15 @@ def get_run(entry):
     return met_run
 
 
-def add_sequence_files(data):
+def add_samples(data):
     """
-    Add sequence files
+    Add samples from metadata file
     """
-    for file_row in data:
-        sample = get_sample(file_row)
+    for entry in data:
+        sample = get_sample(entry)
         if sample is None:
             logger.warning('Could not add sample {0}'.format(sample))
             continue
-
-        sequence_file = MetagenomicsSequenceFile()
-        sequence_file.sample = sample
-        sequence_file.filename = file_row.sequence_file_name
-        sequence_file.md5 = file_row.md5sum
-        sequence_file.index_number = file_row.index
-        sequence_file.lane_number = file_row.lane_number
-        sequence_file.date_received_from_sequencing_facility = file_row.date_received
-        sequence_file.note = file_row.comments
-        sequence_file.run = get_run(file_row)
-
-        sequence_file.save()
 
 
 def do_metadata():
@@ -176,7 +153,7 @@ def do_metadata():
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info('Processing BASE Metagenomics Metadata file {0}'.format(metadata_file))
         samples = list(get_data(metadata_file))
-        add_sequence_files(samples)
+        add_samples(samples)
 
 
 def run():
