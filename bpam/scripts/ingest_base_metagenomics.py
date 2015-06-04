@@ -6,9 +6,14 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
+from libs import parse_md5
 
 from apps.common.models import Facility, Sequencer
-from apps.base_metagenomics.models import MetagenomicsSample, MetagenomicsSequenceFile, MetagenomicsRun
+from apps.base_metagenomics.models import (
+    MetagenomicsSample,
+    MetagenomicsSequenceFile,
+    MetagenomicsRun
+)
 
 
 logger = logger_utils.get_logger(__name__)
@@ -156,9 +161,71 @@ def do_metadata():
         add_samples(samples)
 
 
+def add_md5(data):
+    """
+    Add md5 data
+    """
+
+    def get_metagenomics_sample(idx):
+        bpa_id, report = bpa_id_utils.get_bpa_id(idx, 'BASE', 'BASE', 'Created by BASE Metagenomics ingestor')
+        if bpa_id is None:
+            return None
+        sample, _ = MetagenomicsSample.objects.get_or_create(bpa_id=bpa_id)
+        return sample
+
+    def get_run(_file_data):
+        sample = get_metagenomics_sample(file_data['bpa_id'])
+        if sample:
+            _amplicon_run, _ = MetagenomicsRun.objects.get_or_create(sample=sample)
+            _amplicon_run.sequencing_facility = Facility.objects.get_or_create(name=_file_data['facility'])[0]
+            _amplicon_run.flow_cell_id = _file_data['flowcell']
+            _amplicon_run.save()
+            return _amplicon_run
+        return None
+
+    for file_data in data:
+        _run = get_run(file_data)
+        sfile = MetagenomicsSequenceFile(run=_run, sample=_run.sample)
+        sfile.filename = file_data['filename']
+        sfile.analysed = True
+        sfile.md5 = file_data['md5']
+        sfile.save()
+
+
+def do_md5():
+    """
+    Ingest the md5 files
+    """
+
+    def is_md5file(path):
+        if path.isfile() and path.ext == '.md5' or path.ext == '.txt':
+            return True
+
+    logger.info('Ingesting BASE Amplicon md5 file information from {0}'.format(DATA_DIR))
+
+    for md5_file in DATA_DIR.walk(filter=is_md5file):
+        logger.info('Processing BASE Metagenomics md5 file {0}'.format(md5_file))
+        data = parse_md5.get_base_metagenomics_data(md5_file)
+        add_md5(data)
+
+
+def truncate():
+    """
+    Truncate Amplicon DB tables
+    """
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsSample._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsRun._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsSequenceFile._meta.db_table))
+
+
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 
+    truncate()
     do_metadata()
+    do_md5()
