@@ -8,6 +8,10 @@ class SampleListView(ListView):
     model = MetagenomicsSample
     context_object_name = 'samples'
 
+    def get_context_data(self, **kwargs):
+        context = super(SampleListView, self).get_context_data(**kwargs)
+        context['samples'] = MetagenomicsSample.objects.all()
+        return context
 
 class SampleDetailView(DetailView):
     model = MetagenomicsSample
