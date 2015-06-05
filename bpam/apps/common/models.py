@@ -257,6 +257,8 @@ class SequenceFile(models.Model):
 
     index_number = models.IntegerField(_('Index'), blank=True, null=True, )
     lane_number = models.IntegerField(_('Lane'), blank=True, null=True)
+    read_number = models.IntegerField(_('Read'), blank=True, null=True)
+
     date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
     filename = models.CharField(_('File Name'), max_length=300, blank=True, null=True)
     md5 = models.CharField(_('MD5 Checksum'), max_length=32, blank=True, null=True)

@@ -1,0 +1,24 @@
+<div class="panel panel-info">
+    <table id="run-list" class="table table-striped">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Name</th>
+                <th>Sequence Coverage</th>
+                <th>DNA Extraction Protocol</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for run in runs %}
+        <tr>
+            <td>
+                <a href="{% url 'base_metagenomics:sample' bpa_id=run.sample.bpa_id %}">{{ run.sample.bpa_id }}</a>
+            </td>
+            <td>{{ run.name }}</td>
+            <td>{{ run.requested_sequence_coverage }}</td>
+            <td>{{ run.dna_extraction_protocol }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

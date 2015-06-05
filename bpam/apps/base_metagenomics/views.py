@@ -1,8 +1,20 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
-from .models import MetagenomicsSample, MetagenomicsSequenceFile
+from .models import (
+    MetagenomicsSample,
+    MetagenomicsSequenceFile,
+    MetagenomicsRun)
 
+
+class RunListView(ListView):
+    model = MetagenomicsRun
+    context_object_name = 'runs'
+
+    def get_context_data(self, **kwargs):
+        context = super(RunListView, self).get_context_data(**kwargs)
+        context['runs'] = MetagenomicsRun.objects.all()
+        return context
 
 class SampleListView(ListView):
     model = MetagenomicsSample

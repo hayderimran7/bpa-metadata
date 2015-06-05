@@ -44,6 +44,8 @@ class MetagenomicsSequenceFile(SequenceFile):
 
     sample = models.ForeignKey(MetagenomicsSample)
     run = models.ForeignKey(MetagenomicsRun, null=True)
+    index = models.CharField(_('Index'), max_length=32, blank=True, null=True)
+
 
     def get_url(self):
         uj = urlparse.urljoin
