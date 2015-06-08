@@ -17,11 +17,12 @@ from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
 
-from apps.common.models import Facility, Sequencer
+from apps.common.models import Facility
 from apps.base_metagenomics.models import (
     MetagenomicsSample,
     MetagenomicsSequenceFile,
-    MetagenomicsRun
+    MetagenomicsRun,
+    Extraction
 )
 
 
@@ -39,136 +40,97 @@ def _get_bpa_id(entry):
     Get or make BPA ID
     """
 
-    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.sample_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
     if bpa_id is None:
         logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
     return bpa_id
 
 
-def get_data(file_name):
-    """
-    The data sets is relatively small, so make a in-memory copy to simplify some operations.
-    """
-
-    def get_library_type(library):
+class MetadataHandler(object):
+    def get_data(self, file_name):
         """
-        (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+        The data sets is relatively small, so make a in-memory copy to simplify some operations.
         """
-        new_str = library.lower()
-        if new_str.find('pair') >= 0:
-            return 'PE'
-        if new_str.find('single') >= 0:
-            return 'SE'
-        if new_str.find('mate') >= 0:
-            return 'MP'
-        return 'UN'
 
-    def set_id(_bpa_id):
-        if isinstance(_bpa_id, basestring):
-            return _bpa_id.strip().replace('/', '.')
-        else:
-            logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
-            return ''
+        def set_id(_bpa_id):
+            if isinstance(_bpa_id, basestring):
+                return _bpa_id.strip().replace('/', '.')
+            else:
+                logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
+                return ''
 
-    field_spec = [('bpa_id', 'Soil sample unique ID', set_id),
-                  ('sample_id', 'Sample extraction ID', None),
-                  ('sequencing_facility', 'Sequencing facility', None),
-                  ('taget', 'Target', None),
-                  ('index', 'Index', ingest_utils.get_clean_number),
-                  ('library', 'Library', get_library_type),
-                  ('library_code', 'Library code', None),  # No, I don't know why
-                  ('library_construction', 'Library Construction - average insert size', ingest_utils.get_clean_number),
-                  ('insert_size_range', 'Insert size range', None),
-                  ('library_protocol', 'Library construction protocol', None),
-                  ('sequencer', 'Sequencer', None),
-                  ('run', 'Run number', ingest_utils.get_clean_number),
-                  ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                  ('lane_number', 'Lane number', None),
-                  ('casava_version', 'CASAVA version', None),
-                  ]
+        field_spec = [('sample_id', 'Soil sample unique ID', set_id),
+                      ('extraction_id', 'Sample extraction ID', None),
+                      ('insert_size_range', 'Insert size range', None),
+                      ('library_construction_protocol', 'Library construction protocol', None),
+                      ('sequencer', 'Sequencer', None),
+                      ('casava_version', 'CASAVA version', None),
+                      ]
 
-    wrapper = ExcelWrapper(field_spec,
-                           file_name,
-                           sheet_name='Sheet1',
-                           header_length=3,
-                           column_name_row_index=1)
+        wrapper = ExcelWrapper(field_spec,
+                               file_name,
+                               sheet_name='Sheet1',
+                               header_length=3,
+                               column_name_row_index=1)
 
-    return wrapper.get_all()
+        return wrapper.get_all()
 
+    def get_sample(self, entry):
+        """
+        Get the Sample by bpa_id
+        """
 
-def get_sample(entry):
-    """
-    Get the Sample by bpa_id
-    """
-    bpa_id = _get_bpa_id(entry)
-    if bpa_id is None:
-        return None
+        bpa_id = _get_bpa_id(entry)
+        if bpa_id is None:
+            return None
 
-    sample, created = MetagenomicsSample.objects.get_or_create(bpa_id=bpa_id)
-    if created:
-        sample.name = entry.sample_id
-        sample.dna_extraction_protocol = entry.library_protocol
-        sample.requested_sequence_coverage = entry.library_construction
-        sample.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-        sample.save()
-        logger.debug('Adding Metagenomics Sample ' + bpa_id.bpa_id)
+        sample, created = MetagenomicsSample.objects.get_or_create(bpa_id=bpa_id)
+        if created:
+            sample.name = entry.sample_id
+            sample.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+            sample.save()
+            logger.debug('Adding Metagenomics Sample ' + bpa_id.bpa_id)
 
-    return sample
+        return sample
 
+    def get_extraction(self, sample, entry):
+        """
+        Add a extraction
+        """
+        print(entry)
+        extraction, created = Extraction.objects.get_or_create(extraction_id=entry.extraction_id)
+        if created:
+            extraction.sample = sample
+            extraction.insert_size_range = entry.insert_size_range
+            extraction.library_construction_protocol = entry.library_construction_protocol
+            extraction.sequencer = entry.sequencer
+            extraction.casava_version = entry.casava_version
+            extraction.save()
+        return extraction
 
-def get_run(entry):
-    def get_sequencer(name):
-        if name == '':
-            name = 'Unknown'
+    def add_samples(self, data):
+        """
+        Add samples from metadata file
+        """
 
-        sequencer, _ = Sequencer.objects.get_or_create(name=name)
-        return sequencer
+        for entry in data:
+            sample = self.get_sample(entry)
+            if sample is None:
+                logger.warning('Could not add sample {0}'.format(sample))
+            else:
+                self.get_extraction(sample, entry)
 
-    def get_facility(name):
-        if name == '':
-            name = 'Unknown'
+    def do(self):
+        def is_metadata(path):
+            if path.isfile() and path.ext == '.xlsx':
+                return True
 
-        facility, _ = Facility.objects.get_or_create(name=name)
-        return facility
-
-    met_run, created = MetagenomicsRun.objects.get_or_create(sample=get_sample(entry))
-    if created:
-        logger.info('New metagenomics run created')
-
-        met_run.flow_cell_id = entry.flow_cell_id.strip()
-        met_run.run_number = entry.run
-        met_run.index_number = entry.index
-        met_run.sequencer = get_sequencer(entry.sequencer.strip())
-        met_run.lane_number = entry.lane_number
-        met_run.genome_sequencing_facility = get_facility(entry.sequencing_facility)
-        met_run.save()
-
-    return met_run
-
-
-def add_samples(data):
-    """
-    Add samples from metadata file
-    """
-    for entry in data:
-        sample = get_sample(entry)
-        if sample is None:
-            logger.warning('Could not add sample {0}'.format(sample))
-            continue
-
-
-def do_metadata():
-    def is_metadata(path):
-        if path.isfile() and path.ext == '.xlsx':
-            return True
-
-    logger.info('Ingesting BASE Metagenomics metadata from {0}'.format(DATA_DIR))
-    for metadata_file in DATA_DIR.walk(filter=is_metadata):
-        logger.info('Processing BASE Metagenomics Metadata file {0}'.format(metadata_file))
-        samples = list(get_data(metadata_file))
-        add_samples(samples)
-
+        logger.info('Ingesting BASE Metagenomics metadata from {0}'.format(DATA_DIR))
+        for metadata_file in DATA_DIR.walk(filter=is_metadata):
+            logger.info('Processing BASE Metagenomics Metadata file {0}'.format(metadata_file))
+            samples = list(self.get_data(metadata_file))
+            self.add_samples(samples)
 
 
 def truncate():
@@ -181,11 +143,13 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsSample._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsRun._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(MetagenomicsSequenceFile._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(Extraction._meta.db_table))
 
 
 class MD5handler(object):
-    @static
-    def add_md5(entries):
+
+    @staticmethod
+    def add(entries):
         """ Add md5 data
         Args:
             entries (list): List of md5 dicts parsed from md5 file
@@ -220,8 +184,8 @@ class MD5handler(object):
             sfile.note = "BASE Metagenomics sequence file {}".format(entry['filename'])
             sfile.save()
 
-
-    def parse_md5(md5_file):
+    @staticmethod
+    def parse(md5_file):
         """ Parse given md5 file
 
         d33c76935c343df30572a2f719510eec  Sample_7910_1_PE_550bp_BASE_UNSW_H2TFJBCXX/7910_1_PE_550bp_BASE_UNSW_H2TFJBCXX_GAATTCGT-TATAGCCT_L001_R1_001.fastq.gz
@@ -272,7 +236,8 @@ class MD5handler(object):
 
         return data
 
-    def do_md5():
+    @staticmethod
+    def do():
         """
         Ingest the md5 files
         """
@@ -285,8 +250,8 @@ class MD5handler(object):
 
         for md5_file in DATA_DIR.walk(filter=is_md5file):
             logger.info('Processing BASE Metagenomics md5 file {0}'.format(md5_file))
-            md5_entries = parse_md5(md5_file)
-            add_md5(md5_entries)
+            md5_entries = MD5handler.parse(md5_file)
+            MD5handler.add(md5_entries)
 
 
 def run():
@@ -297,5 +262,7 @@ def run():
 
     truncate()
 
-    do_md5()
-    do_metadata()
+    mdh = MetadataHandler()
+    mdh.do()
+
+    MD5handler.do()

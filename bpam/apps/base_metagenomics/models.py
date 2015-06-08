@@ -27,6 +27,7 @@ class MetagenomicsRun(Run):
     """
     A Meta genomics sequence file generation Run
     """
+
     sample = models.ForeignKey(MetagenomicsSample)
 
     def __unicode__(self):
@@ -36,16 +37,33 @@ class MetagenomicsRun(Run):
         verbose_name_plural = _("Metagenomics Run")
 
 
+class Extraction(models.Model):
+    """
+    Many extractions can be made from a sample.
+    """
+
+    extraction_id = models.CharField(_('Extraction ID'), max_length=64, primary_key=True)
+    sample = models.ForeignKey(MetagenomicsSample)
+    library_construction_protocol = models.CharField(_('Library Construction Protocol'), max_length=64, blank=True, null=True)
+    sequencer = models.CharField(_('Sequencer'), max_length=64, blank=True, null=True)
+    casava_version = models.CharField(_('Casava Version'), max_length=16, blank=True, null=True)
+    insert_size_range = models.CharField(_('Insert Size Range'), max_length=64, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = _("Metagenomics Extractions")
+
+
 class MetagenomicsSequenceFile(SequenceFile):
     """
     Metagenomics Sequence File
     """
+
     project_name = 'base_metagenomics'
 
     sample = models.ForeignKey(MetagenomicsSample)
+    extraction = models.ForeignKey(Extraction, null=True)
     run = models.ForeignKey(MetagenomicsRun, null=True)
     index = models.CharField(_('Index'), max_length=32, blank=True, null=True)
-
 
     def get_url(self):
         uj = urlparse.urljoin
