@@ -98,10 +98,12 @@ class MetadataHandler(object):
         """
         Add a extraction
         """
-        print(entry)
-        extraction, created = Extraction.objects.get_or_create(extraction_id=entry.extraction_id)
+        if sample is None:
+            logger.error("Extractions without a source sample makes no sense")
+            return None
+
+        extraction, created = Extraction.objects.get_or_create(sample=sample, extraction_id=entry.extraction_id)
         if created:
-            extraction.sample = sample
             extraction.insert_size_range = entry.insert_size_range
             extraction.library_construction_protocol = entry.library_construction_protocol
             extraction.sequencer = entry.sequencer
@@ -168,7 +170,7 @@ class MD5handler(object):
                 _metagenomics_run, _ = MetagenomicsRun.objects.get_or_create(sample=sample)
                 _metagenomics_run.sequencing_facility, _ = Facility.objects.get_or_create(name=entry['facility'])
                 _metagenomics_run.flow_cell_id = entry['flowcell']
-                _metagenomics_run.run_number = entry['run']
+                # _metagenomics_run.run_number = entry['run']
                 _metagenomics_run.save()
                 return _metagenomics_run
             return None
@@ -177,7 +179,7 @@ class MD5handler(object):
             _run = get_run(entry)
             sfile = MetagenomicsSequenceFile(run=_run, sample=_run.sample)
             sfile.filename = entry['filename']
-            sfile.index_number = entry['index']
+            sfile.index = entry['index']
             sfile.lane_number = entry['lane']
             sfile.analysed = True
             sfile.md5 = entry['md5']
@@ -223,11 +225,11 @@ class MD5handler(object):
                     md5_entry['facility'] = facility
                     md5_entry['library'] = library
                     md5_entry['insert_size'] = insert_size
-                    md5_entry['flowcell'] = insert_size
+                    md5_entry['flowcell'] = flowcell
                     md5_entry['index'] = index
-                    md5_entry['lane'] = lane
-                    md5_entry['read'] = read
-                    md5_entry['run'] = run
+                    md5_entry['lane'] = ingest_utils.get_int(lane)
+                    md5_entry['read'] = ingest_utils.get_int(read)
+                    md5_entry['run'] = ingest_utils.get_int(run)
                 else:
                     logger.error('Ignoring line {} from {} with missing data'.format(filename, md5_file))
                     continue
