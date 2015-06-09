@@ -53,15 +53,20 @@ class MetadataHandler(object):
         The data sets is relatively small, so make a in-memory copy to simplify some operations.
         """
 
-        def set_id(_bpa_id):
-            if isinstance(_bpa_id, basestring):
-                return _bpa_id.strip().replace('/', '.')
+        def get_id(bpa_id):
+            if isinstance(bpa_id, basestring):
+                return bpa_id.strip().replace('/', '.')
             else:
-                logger.warning('Expected a valid BPA_ID got {0}'.format(_bpa_id))
+                logger.warning('Expected a valid BPA_ID got {0}'.format(bpa_id))
                 return ''
 
-        field_spec = [('sample_id', 'Soil sample unique ID', set_id),
-                      ('extraction_id', 'Sample extraction ID', None),
+        def get_extraction_id(eid):
+            id = eid.split('_')[1]
+            return int(id)
+
+
+        field_spec = [('sample_id', 'Soil sample unique ID', get_id),
+                      ('extraction_id', 'Sample extraction ID', get_extraction_id),
                       ('insert_size_range', 'Insert size range', None),
                       ('library_construction_protocol', 'Library construction protocol', None),
                       ('sequencer', 'Sequencer', None),
@@ -170,14 +175,23 @@ class MD5handler(object):
                 _metagenomics_run, _ = MetagenomicsRun.objects.get_or_create(sample=sample)
                 _metagenomics_run.sequencing_facility, _ = Facility.objects.get_or_create(name=entry['facility'])
                 _metagenomics_run.flow_cell_id = entry['flowcell']
-                # _metagenomics_run.run_number = entry['run']
+                _metagenomics_run.run_number = entry['run']
                 _metagenomics_run.save()
                 return _metagenomics_run
             return None
 
+        def get_extraction(bpa_id, extraction_id):
+            extraction, created = Extraction.objects.get_or_create(sample=get_metagenomics_sample(entry['bpa_id']), extraction_id=entry['extraction_id'])
+            if created:
+                extraction.note = 'Not mentioned in metadata, inferred from md5 data'
+                extraction.save()
+                logger.warning("Extraction {} created".format(extraction))
+            return extraction
+
         for entry in entries:
             _run = get_run(entry)
             sfile = MetagenomicsSequenceFile(run=_run, sample=_run.sample)
+            sfile.extraction = get_extraction(entry['bpa_id'], entry['extraction_id'])
             sfile.filename = entry['filename']
             sfile.index = entry['index']
             sfile.lane_number = entry['lane']
@@ -221,14 +235,13 @@ class MD5handler(object):
                     md5_entry['filename'] = filename
                     md5_entry['bpa_id'] = BPA_ID + bpa_id
                     md5_entry['extraction_id'] = extraction_id
-                    md5_entry['target'] = "metagenomics"
                     md5_entry['facility'] = facility
                     md5_entry['library'] = library
                     md5_entry['insert_size'] = insert_size
                     md5_entry['flowcell'] = flowcell
                     md5_entry['index'] = index
-                    md5_entry['lane'] = ingest_utils.get_int(lane)
-                    md5_entry['read'] = ingest_utils.get_int(read)
+                    md5_entry['lane'] = int(lane[1:])
+                    md5_entry['read'] = int(read[1:])
                     md5_entry['run'] = ingest_utils.get_int(run)
                 else:
                     logger.error('Ignoring line {} from {} with missing data'.format(filename, md5_file))

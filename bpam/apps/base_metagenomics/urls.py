@@ -5,6 +5,14 @@ from . import views
 urlpatterns = patterns(
     '',
     url(
+        regex=r'^files',
+        view=views.FileListView.as_view(),
+        name='files'),
+    url(
+        regex=r'^extractions',
+        view=views.ExtractionListView.as_view(),
+        name='extractions'),
+    url(
         regex=r'^samples',
         view=views.SampleListView.as_view(),
         name='samples'),

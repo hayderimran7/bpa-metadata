@@ -1,0 +1,30 @@
+<div class="panel panel-info">
+    <table id="run-list" class="table table-striped">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Extraction #</th>
+                <th>Insert Size Range</th>
+                <th>Library Construction Protocol</th>
+                <th>Sequencer</th>
+                <th>CASAVA Version</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ex in extractions %}
+        <tr>
+            <td>
+                <a href="{% url 'base_metagenomics:sample' bpa_id=ex.sample.bpa_id %}">{{ ex.sample.bpa_id }}</a>
+            </td>
+            <td>{{ ex.extraction_id}}</td>
+            <td>{{ ex.insert_size_range }}</td>
+            <td>{{ ex.library_construction_protocol }}</td>
+            <td>{{ ex.sequencer }}</td>
+            <td>{{ ex.casava_version }}</td>
+            <td>{{ ex.note }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

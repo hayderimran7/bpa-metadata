@@ -2,9 +2,26 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
 from .models import (
+    Extraction,
     MetagenomicsSample,
     MetagenomicsSequenceFile,
     MetagenomicsRun)
+
+
+class FileListView(ListView):
+    model = MetagenomicsSequenceFile
+    context_object_name = 'files'
+    template_name = 'base_metagenomics/file_list.html'
+
+
+class ExtractionListView(ListView):
+    model = Extraction
+    context_object_name = 'extractions'
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtractionListView, self).get_context_data(**kwargs)
+        context['extractions'] = Extraction.objects.all()
+        return context
 
 
 class RunListView(ListView):
@@ -16,6 +33,7 @@ class RunListView(ListView):
         context['runs'] = MetagenomicsRun.objects.all()
         return context
 
+
 class SampleListView(ListView):
     model = MetagenomicsSample
     context_object_name = 'samples'
@@ -24,6 +42,7 @@ class SampleListView(ListView):
         context = super(SampleListView, self).get_context_data(**kwargs)
         context['samples'] = MetagenomicsSample.objects.all()
         return context
+
 
 class SampleDetailView(DetailView):
     model = MetagenomicsSample

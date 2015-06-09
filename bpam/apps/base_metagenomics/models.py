@@ -42,15 +42,22 @@ class Extraction(models.Model):
     Many extractions can be made from a sample.
     """
 
-    extraction_id = models.CharField(_('Extraction ID'), max_length=64, primary_key=True)
     sample = models.ForeignKey(MetagenomicsSample)
+    extraction_id = models.CharField(_('Extraction ID'), max_length=64)
+
     library_construction_protocol = models.CharField(_('Library Construction Protocol'), max_length=64, blank=True, null=True)
     sequencer = models.CharField(_('Sequencer'), max_length=64, blank=True, null=True)
     casava_version = models.CharField(_('Casava Version'), max_length=16, blank=True, null=True)
     insert_size_range = models.CharField(_('Insert Size Range'), max_length=64, blank=True, null=True)
 
+    note = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return u'Extraction {0} for {1}'.format(self.extraction_id, self.sample.bpa_id)
+
     class Meta:
         verbose_name_plural = _("Metagenomics Extractions")
+        unique_together = (("sample", "extraction_id"),)
 
 
 class MetagenomicsSequenceFile(SequenceFile):

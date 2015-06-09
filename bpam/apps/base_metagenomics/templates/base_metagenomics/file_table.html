@@ -1,0 +1,38 @@
+<div class="panel panel-info">
+    <table id="run-list" class="table table-striped">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Extraction</th>
+                <th>Facility</th>
+                <th>Library</th>
+                <th>Insert Size</th>
+                <th>Flowcell</th>
+                <th>Index</th>
+                <th>Lane</th>
+                <th>Read</th>
+                <th>Name</th>
+                <th>MD5</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for file in files %}
+        <tr>
+            <td>
+                <a href="{% url 'base_metagenomics:sample' bpa_id=file.sample.bpa_id %}">{{ file.sample.bpa_id }}</a>
+            </td>
+            <td>{{ file.extraction.extraction_id}}</td>
+            <td>{{ file.facility }}</td>
+            <td>{{ file.library_construction_protocol }}</td>
+            <td>{{ file.insert_size }}</td>
+            <td>{{ file.flowcell }}</td>
+            <td>{{ file.index }}</td>
+            <td>{{ file.lane_number }}</td>
+            <td>{{ file.read }}</td>
+            <td>{{ file.filename }}</td>
+            <td>{{ file.md5 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}BASE Metagenomic Extractions {% endblock %}
+
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Metagenomics" "base_metagenomics" %}
+{% breadcrumb "Extractions" "base_metagenomics:extractions" %}
+{% endblock %}
+
+
+{% if extractions %}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-1 col-md-1">
+            <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
+            alt="BASE Metagenomic Extractions">
+        </div>
+
+        <div class="col-sm-11 col-md-11">
+            <h3><a href="{% url 'base:index' %}">BASE</a> Metagenomic Extractions</h3>
+            {% include "base_metagenomics/extraction_table.html" %}
+            {% include "pagination.html" %}
+        </div>
+
+    </div>
+</div>
+
+
+{% else %}
+<h3> No Metagenomic Extraction  Data is currently available </h3>
+{% endif %}
+
+{% endblock %}
