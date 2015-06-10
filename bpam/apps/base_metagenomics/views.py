@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 
 from .models import (
@@ -6,6 +6,10 @@ from .models import (
     MetagenomicsSample,
     MetagenomicsSequenceFile,
     MetagenomicsRun)
+
+
+class IndexView(TemplateView):
+    template_name = 'base_metagenomics/index.html'
 
 
 class FileListView(ListView):

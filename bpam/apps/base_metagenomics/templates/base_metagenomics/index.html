@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}BASE{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Metagenomics" "base_metagenomics:index" %}
+{% endblock %}
+
+
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+            </div>
+
+            <div class="col-sm-8 col-md-8">
+                <h2>
+                    All <a href="{% url 'base:index' %}">BASE</a> Metagenonmic Sequences
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'base_metagenomics:files' %}">All Metagenomic Sequence Files 
+                        <span class="badge">{{ files_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'base_metagenomics:extractions' %}">Extractions <span class="badge">{{ extraction_count }}</span>
+                    </a>
+                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Samples<span class="badge">{{ sample_count }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
