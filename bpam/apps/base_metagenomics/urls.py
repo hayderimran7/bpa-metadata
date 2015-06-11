@@ -5,6 +5,10 @@ from . import views
 urlpatterns = patterns(
     '',
     url(
+        regex=r'^files/csv',
+        view=views.get_file_csv,
+        name='files_csv'),
+    url(
         regex=r'^metagenomics',
         view=views.IndexView.as_view(),
         name='metagenomics'),

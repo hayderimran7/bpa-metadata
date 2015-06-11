@@ -25,10 +25,11 @@
 
         <div class="col-sm-11 col-md-11">
             <h3><a href="{% url 'base:index' %}">BASE</a> Metagenomic Sequence Files ({{ files|length }})</h3>
+            <p><a href="{% url 'base_metagenomics:files_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
             {% include "base_metagenomics/file_table.html" %}
+            <p><a href="{% url 'base_metagenomics:files_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
             {% include "pagination.html" %}
         </div>
-
     </div>
 </div>
 

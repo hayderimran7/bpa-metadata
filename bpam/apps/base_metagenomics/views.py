@@ -7,9 +7,22 @@ from .models import (
     MetagenomicsSequenceFile,
     MetagenomicsRun)
 
+import sequence_file_csv_export
+
+
+def get_file_csv(request):
+    return sequence_file_csv_export.get_csv()
+
 
 class IndexView(TemplateView):
     template_name = 'base_metagenomics/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['extraction_count'] = Extraction.objects.count()
+        context['file_count'] = MetagenomicsSequenceFile.objects.count()
+        context['sample_count'] = MetagenomicsSample.objects.count()
+        return context
 
 
 class FileListView(ListView):

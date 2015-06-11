@@ -6,17 +6,17 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Metagenomics" "base_metagenomics:samples" %}
-    {% breadcrumb sample.bpa_id "base_metagenomics:sample" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Metagenomics" "base_metagenomics:metagenomics" %}
+{% breadcrumb sample.bpa_id "base_metagenomics:sample" %}
 {% endblock %}
 <div class="container-fluid">
 
     <div class="row">
         <div class="col-sm-1 col-md-1">
             <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
-                 alt="BASE Metagenomics">
+            alt="BASE Metagenomics">
         </div>
 
         <div class="col-sm-11 col-md-11">
@@ -24,7 +24,7 @@
             <div class="panel panel-info">
                 <div class="panel-body">
                     <h3>
-                        <a href="{% url 'base_metagenomics:samples'%}"> BASE Metagenomics </a> Sample {{ sample.bpa_id }} Information
+                        <a href="{% url 'base_metagenomics:samples'%}"> BASE Metagenomic</a> Sample {{ sample.bpa_id }} Information
                     </h3>
                 </div>
                 <table id="info" class="table table-striped">
@@ -35,21 +35,21 @@
                     </tr>
                     <tr>
                         <td> DNA Extraction Protocol</td>
-                        <td> {{ sample.dna_extraction_protocol }}</td>
+                        <td> {{ sample.dna_extraction_protocol|default_if_none:"" }}</td>
                     </tr>
                     <tr>
                         <td> Sequence Coverage</td>
-                        <td> {{ sample.requested_sequence_coverage }}</td>
+                        <td> {{ sample.requested_sequence_coverage|default_if_none:"" }}</td>
                     </tr>
                     <tr>
                         <td> Note</td>
-                        <td> {{ sample.note }}</td>
+                        <td> {{ sample.note|default_if_none:"" }}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    {% include "sequencefilelist.html" %}
+    {% include "base_metagenomics/sequencefilelist.html" %}
 </div>
 {% endblock %}

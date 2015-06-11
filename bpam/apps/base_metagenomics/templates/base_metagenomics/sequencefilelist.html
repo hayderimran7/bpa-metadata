@@ -11,6 +11,7 @@
             <tr>
                 <th>Filename</th>
                 <th>MD5</th>
+                <th>Extraction</th>
                 <th>Run Description</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                 <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
             </td>
             <td class="md5">{{ sfile.md5 }}</td>
+            <td>{{ sfile.extraction }}</td>
             <td>{{ sfile.run|default_if_none:"" }}</td>
         </tr>
         {% endfor %}

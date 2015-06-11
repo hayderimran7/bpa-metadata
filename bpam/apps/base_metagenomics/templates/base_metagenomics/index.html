@@ -5,9 +5,9 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Metagenomics" "base_metagenomics:index" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Metagenomics" "base_metagenomics:index" %}
 {% endblock %}
 
 
@@ -25,11 +25,16 @@
                 </h2>
 
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'base_metagenomics:files' %}">All Metagenomic Sequence Files 
-                        <span class="badge">{{ files_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'base_metagenomics:extractions' %}">Extractions <span class="badge">{{ extraction_count }}</span>
+                    <a class="list-group-item" 
+                        href="{% url 'base_metagenomics:files' %}">All Metagenomic Sequence Files
+                        <span class="badge">{{ file_count }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Samples<span class="badge">{{ sample_count }}</span>
+                    <a class="list-group-item"
+                        href="{% url 'base_metagenomics:extractions' %}">Extractions
+                        <span class="badge">{{ extraction_count }}</span>
+                    </a>
+                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Samples
+                        <span class="badge">{{ sample_count }}</span>
                     </a>
                 </div>
             </div>
