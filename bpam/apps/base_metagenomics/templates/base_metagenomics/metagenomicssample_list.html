@@ -7,9 +7,10 @@
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Metagenomics" "base_metagenomics" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Metagenomics" "base_metagenomics:metagenomics" %}
+{% breadcrumb "Samples" "base_metagenomics:samples" %}
 {% endblock %}
 
 
@@ -19,7 +20,7 @@
     <div class="row">
         <div class="col-sm-1 col-md-1">
             <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
-                 alt="BASE Metagenomics">
+            alt="BASE Metagenomics">
         </div>
 
         <div class="col-sm-11 col-md-11">
