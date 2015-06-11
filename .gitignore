@@ -1,6 +1,7 @@
 syntax:glob
 *.log
 *.swp
+*.swo
 *~
 *.pyc
 *.html~

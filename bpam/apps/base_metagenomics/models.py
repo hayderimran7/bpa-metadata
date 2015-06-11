@@ -4,9 +4,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.conf import settings
 
-from apps.common.models import SequenceFile, Run
+from apps.common.models import SequenceFile, Run, Protocol
 from apps.base.models import BASESample
 
+class MetagenomicsProtocol(Protocol):
+    """
+    Metagenomics Protocol
+    """
 
 class MetagenomicsSample(BASESample):
     """
@@ -70,6 +74,7 @@ class MetagenomicsSequenceFile(SequenceFile):
     sample = models.ForeignKey(MetagenomicsSample)
     extraction = models.ForeignKey(Extraction, null=True)
     run = models.ForeignKey(MetagenomicsRun, null=True)
+    protocol = models.ForeignKey(MetagenomicsProtocol, null=True)
     index = models.CharField(_('Index'), max_length=32, blank=True, null=True)
 
     def get_url(self):

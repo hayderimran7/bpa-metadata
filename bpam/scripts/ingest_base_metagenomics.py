@@ -22,7 +22,8 @@ from apps.base_metagenomics.models import (
     MetagenomicsSample,
     MetagenomicsSequenceFile,
     MetagenomicsRun,
-    Extraction
+    Extraction,
+    MetagenomicsProtocol
 )
 
 
@@ -157,7 +158,8 @@ class MD5handler(object):
 
     @staticmethod
     def add(entries):
-        """ Add md5 data
+        """
+        Add md5 data
         Args:
             entries (list): List of md5 dicts parsed from md5 file
         """
@@ -181,16 +183,30 @@ class MD5handler(object):
             return None
 
         def get_extraction(bpa_id, extraction_id):
-            extraction, created = Extraction.objects.get_or_create(sample=get_metagenomics_sample(entry['bpa_id']), extraction_id=entry['extraction_id'])
+            extraction, created = Extraction.objects.get_or_create(
+                sample=get_metagenomics_sample(entry['bpa_id']),
+                extraction_id=entry['extraction_id'])
             if created:
                 extraction.note = 'Not mentioned in metadata, inferred from md5 data'
                 extraction.save()
                 logger.warning("Extraction {} created".format(extraction))
             return extraction
 
+        def get_protocol(entry):
+            protocol, created = MetagenomicsProtocol.objects.get_or_create(
+                library_type=entry['library'],
+                base_pairs=entry['insert_size'],
+                library_construction_protocol=entry.get('', 'bla'))
+            if created:
+                protocol.save()
+
+            return protocol
+
+
         for entry in entries:
             _run = get_run(entry)
             sfile = MetagenomicsSequenceFile(run=_run, sample=_run.sample)
+            sfile.protocol = get_protocol(entry)
             sfile.extraction = get_extraction(entry['bpa_id'], entry['extraction_id'])
             sfile.filename = entry['filename']
             sfile.index = entry['index']
@@ -228,25 +244,30 @@ class MD5handler(object):
                 no_extentions_filename = filename.split('.')[0]
                 parts = no_extentions_filename.split('_')
 
+                # 8268_2_PE_350bp_BASE_UNSW_H80EYADXX_ACAGTG_L001_R1_001.fastq.gz
                 if len(parts) == 11:
                     # UniqueID_extraction_library_insert-size_BASE_facility code_FlowID_Index_Lane_F1/R1
+                    # run ?
                     bpa_id, extraction_id, library, insert_size, _, facility, flowcell, index, lane, read, run = parts
-
-                    md5_entry['filename'] = filename
-                    md5_entry['bpa_id'] = BPA_ID + bpa_id
-                    md5_entry['extraction_id'] = extraction_id
-                    md5_entry['facility'] = facility
-                    md5_entry['library'] = library
-                    md5_entry['insert_size'] = insert_size
-                    md5_entry['flowcell'] = flowcell
-                    md5_entry['index'] = index
-                    md5_entry['lane'] = int(lane[1:])
-                    md5_entry['read'] = int(read[1:])
-                    md5_entry['run'] = ingest_utils.get_int(run)
+                elif len(parts) == 10:
+                    # UniqueID_extraction_library_insert-size_BASE_facility code_FlowID_Index_Lane_F1/R1
+                    bpa_id, extraction_id, library, insert_size, _, facility, flowcell, index, lane, read = parts
+                    run = 1
                 else:
-                    logger.error('Ignoring line {} from {} with missing data'.format(filename, md5_file))
+                    logger.error('Ignoring line {} from {} with missing data [{} not 10 or 11]'.format(filename, md5_file, len(parts)))
                     continue
 
+                md5_entry['filename'] = filename
+                md5_entry['bpa_id'] = BPA_ID + bpa_id
+                md5_entry['extraction_id'] = extraction_id
+                md5_entry['facility'] = facility
+                md5_entry['library'] = library # PE
+                md5_entry['insert_size'] = int(insert_size[:-2]) # 350bp
+                md5_entry['flowcell'] = flowcell
+                md5_entry['index'] = index
+                md5_entry['lane'] = int(lane[1:])
+                md5_entry['read'] = int(read[1:])
+                md5_entry['run'] = ingest_utils.get_int(run)
                 data.append(md5_entry)
 
         return data

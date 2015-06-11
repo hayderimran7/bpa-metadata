@@ -1,5 +1,5 @@
 <div class="panel panel-info">
-    <table id="run-list" class="table table-striped">
+    <table id="list" class="table table-striped">
         <thead>
             <tr>
                 <th>BPA ID</th>
@@ -22,10 +22,10 @@
                 <a href="{% url 'base_metagenomics:sample' bpa_id=file.sample.bpa_id %}">{{ file.sample.bpa_id }}</a>
             </td>
             <td>{{ file.extraction.extraction_id}}</td>
-            <td>{{ file.facility }}</td>
-            <td>{{ file.library_construction_protocol }}</td>
-            <td>{{ file.insert_size }}</td>
-            <td>{{ file.flowcell }}</td>
+            <td>{{ file.run.sequencing_facility }}</td>
+            <td>{{ file.protocol.library_type}}</td>
+            <td>{{ file.protocol.base_pairs }}</td>
+            <td>{{ file.run.flow_cell_id }}</td>
             <td>{{ file.index }}</td>
             <td>{{ file.lane_number }}</td>
             <td>{{ file.read }}</td>
@@ -37,11 +37,20 @@
                 <span title="Error {{ file.url_verification.status_note }} at {{ file.url_verification.checked_at }}"
                     class="glyphicon glyphicon-flag"></span>
                 {% endif %}
-                <a href="{{ file.get_url }}">{{ file.filename }}
-                </td>
-                <td>{{ file.md5 }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                <a href="{{ file.get_url }}">{{ file.filename }} </a>
+            </td>
+            <td class="md5">{{ file.md5 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+$(document).ready(function () {
+        $(function () {
+            $("#list").tablesorter();
+            });
+        });
+</script>
