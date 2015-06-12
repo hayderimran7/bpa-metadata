@@ -2,40 +2,40 @@
     <div class="table-responsive">
         <table id="chemicallist" class="table table-striped tablesorter">
             <thead>
-            <tr>
-                <th>BPA ID</th>
-                <th>Depth</th>
-                <th>Moisture</th>
-                <th>Colour</th>
-                <th>Gravel</th>
-                <th>Texture</th>
-                <th>Course Sand</th>
-                <th>Fine Sand</th>
-                <th>Sand</th>
-                <th>Silt</th>
-                <th>Clay</th>
-                <th>NH<sub>3</sub>-N</th>
-                <th>NO<sub>3</sub><sup>−</sup></th>
-                <th>Colwell P</th>
-                <th>Colwell K</th>
-                <th>Sulphur</th>
-                <th>Organic Carbon</th>
-                <th>Conductivity</th>
-                <th>CaCl<sub>2</sub> pH</th>
-                <th>H<sub>2</sub>O pH</th>
-                <th>DTPA Cu</th>
-                <th>DTPA Fe</th>
-                <th>DTPA Mn</th>
-                <th>DTPA Zn</th>
-                <th>Exc Al</th>
-                <th>Exc Ca</th>
-                <th>Exc Mg</th>
-                <th>Exc K</th>
-                <th>Exc Na</th>
-                <th>B Hot CaCl<sub>2</sub></th>
-                <th>Total N</th>
-                <th>Total C</th>
-            </tr>
+                <tr>
+                    <th>BPA ID</th>
+                    <th>Depth</th>
+                    <th>Moisture</th>
+                    <th>Colour</th>
+                    <th>Gravel</th>
+                    <th>Texture</th>
+                    <th>Course Sand</th>
+                    <th>Fine Sand</th>
+                    <th>Sand</th>
+                    <th>Silt</th>
+                    <th>Clay</th>
+                    <th>NH<sub>3</sub>-N</th>
+                    <th>NO<sub>3</sub><sup>−</sup></th>
+                    <th>Colwell P</th>
+                    <th>Colwell K</th>
+                    <th>Sulphur</th>
+                    <th>Organic Carbon</th>
+                    <th>Conductivity</th>
+                    <th>CaCl<sub>2</sub> pH</th>
+                    <th>H<sub>2</sub>O pH</th>
+                    <th>DTPA Cu</th>
+                    <th>DTPA Fe</th>
+                    <th>DTPA Mn</th>
+                    <th>DTPA Zn</th>
+                    <th>Exc Al</th>
+                    <th>Exc Ca</th>
+                    <th>Exc Mg</th>
+                    <th>Exc K</th>
+                    <th>Exc Na</th>
+                    <th>B Hot CaCl<sub>2</sub></th>
+                    <th>Total N</th>
+                    <th>Total C</th>
+                </tr>
             </thead>
             <tbody>
             {% for analysis in reports %}
@@ -81,11 +81,4 @@
         </table>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $(function () {
-                $("#chemicallist").tablesorter();
-            });
-        });
-    </script>
 </div>

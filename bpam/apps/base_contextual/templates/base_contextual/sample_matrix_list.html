@@ -5,9 +5,9 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Samples" "base_contextual:samples" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Samples" "base_contextual:samples" %}
 {% endblock %}
 {% if records %}
 
@@ -18,12 +18,12 @@
         Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
     </div>
 
-    <p><a href="{% url 'base_contextual:samplematrix_csv'%}">CSV Export</a> </p>
+    <p><a href="{% url 'base_contextual:samplematrix_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 
     {% include "base_contextual/sample_matrix_table.html" %}
     {% include "pagination.html" %}
 
-    <p><a href="{% url 'base_contextual:samplematrix_csv'%}">CSV Export</a> </p>
+    <p><a href="{% url 'base_contextual:samplematrix_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 </div>
 
 {% else %}

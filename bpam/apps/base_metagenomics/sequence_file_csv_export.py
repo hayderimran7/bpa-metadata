@@ -5,7 +5,7 @@ from .models import MetagenomicsSequenceFile
 field_header_map = {
     'sample_id': 'BPA Sample ID',
     'extraction__extraction_id': 'Extraction',
-    'run__sequencing_facility': 'Facility',
+    'run__sequencing_facility__name': 'Facility',
     'protocol__library_type': 'Library',
     'protocol__base_pairs': 'Insert Size',
     'run__flow_cell_id': 'Flowcell',
@@ -18,7 +18,7 @@ field_header_map = {
 values = (
     'sample_id',
     'extraction__extraction_id',
-    'run__sequencing_facility',
+    'run__sequencing_facility__name',
     'protocol__library_type',
     'protocol__base_pairs',
     'run__flow_cell_id',
