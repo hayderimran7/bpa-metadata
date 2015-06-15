@@ -10,6 +10,8 @@ import requests
 from bs4 import BeautifulSoup
 import logger_utils
 
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 logger = logger_utils.get_logger(__name__)
 
@@ -44,7 +46,7 @@ class Fetcher():
         """ fetch file from server """
 
         logger.info('Fetching {0} from {1}'.format(name, self.metadata_source_url))
-        r = requests.get(self.metadata_source_url + '/' + name, stream=True, auth=self.auth)
+        r = requests.get(self.metadata_source_url + '/' + name, stream=True, auth=self.auth, verify=False)
         with open(self.target_folder + '/' + name, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
@@ -54,7 +56,7 @@ class Fetcher():
     def fetch_metadata_from_folder(self):
         """ downloads metadata from archive """
 
-        response = requests.get(self.metadata_source_url, stream=True, auth=self.auth)
+        response = requests.get(self.metadata_source_url, stream=True, auth=self.auth, verify=False)
         for link in BeautifulSoup(response.content).find_all('a'):
             metadata_filename = link.get('href')
             if metadata_filename.endswith('.xlsx') or \
