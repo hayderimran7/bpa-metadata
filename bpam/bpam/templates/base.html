@@ -12,9 +12,10 @@
 <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
 <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
 {% load static from staticfiles %}
-{% load bootstrap3 %}
 {% load commontags %}
 
+{% load bootstrap3 %}
+{% bootstrap_css %}
 {% bootstrap_javascript jquery=True %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -23,18 +24,16 @@
 {% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
 {% endblock %}
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
 <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/css/jquery.tablesorter.pager.min.css"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
-
 
 <script>
 $(document).ready(function() {
@@ -93,7 +92,7 @@ $(document).ready(function() {
     cssGoto  : ".pagenum",
     // remove rows from the table to speed up the sort of large tables.
     // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-    removeRows: false,
+    removeRows: true,
     // output string - default is '{page}/{totalPages}';
     // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
     output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
