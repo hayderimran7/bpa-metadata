@@ -1,3 +1,4 @@
+<div class="well">
 <div class="alert alert-info" role="alert">
     To sort by multiple columns, press and hold the Shift key.
     <div class="bootstrap_buttons">
@@ -6,6 +7,7 @@
             Reset filters
         </button>
     </div>
+</div>
 </div>
 <table class="fancytable">
     <thead>
@@ -55,32 +57,32 @@
         </tr>
     </tfoot>
     <tbody>
-    {% for file in files %}
-    <tr>
-        <td>
-            <a href="{% url 'base_metagenomics:sample' bpa_id=file.sample.bpa_id %}">{{ file.sample.bpa_id }}</a>
-        </td>
-        <td>{{ file.extraction.extraction_id}}</td>
-        <td>{{ file.run.sequencing_facility }}</td>
-        <td>{{ file.protocol.library_type}}</td>
-        <td>{{ file.protocol.base_pairs }}</td>
-        <td>{{ file.run.flow_cell_id }}</td>
-        <td>{{ file.index }}</td>
-        <td>{{ file.lane_number }}</td>
-        <td>{{ file.read }}</td>
-        <td>
-            {% if file.url_verification.status_ok %}
-            <span title="Last checked {{ file.url_verification.checked_at }}"
-                class="glyphicon glyphicon-download"></span>
-            {% else %}
-            <span title="Error {{ file.url_verification.status_note }} at {{ file.url_verification.checked_at }}"
-                class="glyphicon glyphicon-flag"></span>
-            {% endif %}
-            <a href="{{ file.get_url }}">{{ file.filename }} </a>
-        </td>
-        <td class="md5">{{ file.md5 }}</td>
-    </tr>
-    {% endfor %}
+        {% for file in files %}
+        <tr>
+            <td>
+                <a href="{% url 'base_metagenomics:sample' bpa_id=file.sample.bpa_id %}">{{ file.sample.bpa_id }}</a>
+            </td>
+            <td>{{ file.extraction.extraction_id}}</td>
+            <td>{{ file.run.sequencing_facility }}</td>
+            <td>{{ file.protocol.library_type}}</td>
+            <td>{{ file.protocol.base_pairs }}</td>
+            <td>{{ file.run.flow_cell_id }}</td>
+            <td>{{ file.index }}</td>
+            <td>{{ file.lane_number }}</td>
+            <td>{{ file.read }}</td>
+            <td>
+                {% if file.url_verification.status_ok %}
+                <span title="Last checked {{ file.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-download"></span>
+                {% else %}
+                <span title="Error {{ file.url_verification.status_note }} at {{ file.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-flag"></span>
+                {% endif %}
+                <a href="{{ file.get_url }}">{{ file.filename }} </a>
+            </td>
+            <td class="md5">{{ file.md5 }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
-
+<div>

@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
 from .models import (
     Extraction,
@@ -57,7 +58,9 @@ class SampleListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SampleListView, self).get_context_data(**kwargs)
-        context['samples'] = MetagenomicsSample.objects.all()
+        context['samples'] = MetagenomicsSample.objects\
+            .annotate(metagenomics_file_count=Count('metagenomicssequencefile', distinct=True))\
+            .annotate(amplicon_file_count=Count('ampliconsequencefile', distinct=True))
         return context
 
 

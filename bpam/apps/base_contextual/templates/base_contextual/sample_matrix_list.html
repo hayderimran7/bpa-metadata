@@ -14,10 +14,6 @@
 <div class="container-fluid">
     <h3><a href="{% url 'base:index'%}">BASE</a> All Sample Data ({{records|length}} Records) </h3>
 
-    <div class="alert alert-info">
-        Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
-    </div>
-
     <p><a href="{% url 'base_contextual:samplematrix_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 
     {% include "base_contextual/sample_matrix_table.html" %}

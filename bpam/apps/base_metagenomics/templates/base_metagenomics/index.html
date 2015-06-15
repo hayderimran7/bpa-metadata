@@ -21,19 +21,19 @@
 
             <div class="col-sm-8 col-md-8">
                 <h2>
-                    All <a href="{% url 'base:index' %}">BASE</a> Metagenonmic Sequences
+                    All <a href="{% url 'base:index' %}">BASE</a> Metagenomic Sequences
                 </h2>
 
                 <div class="list-group">
                     <a class="list-group-item" 
-                        href="{% url 'base_metagenomics:files' %}">All Metagenomic Sequence Files
-                        <span class="badge">{{ file_count }}</span>
+                       href="{% url 'base_metagenomics:files' %}">All Metagenomic Sequence Files
+                       <span class="badge">{{ file_count }}</span>
                     </a>
                     <a class="list-group-item"
-                        href="{% url 'base_metagenomics:extractions' %}">Extractions
-                        <span class="badge">{{ extraction_count }}</span>
+                       href="{% url 'base_metagenomics:extractions' %}">Ordered by Extractions
+                       <span class="badge">{{ extraction_count }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Samples
+                    <a class="list-group-item" href="{% url 'base_metagenomics:samples' %}">Sample Counts
                         <span class="badge">{{ sample_count }}</span>
                     </a>
                 </div>
