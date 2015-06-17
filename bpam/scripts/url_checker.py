@@ -17,6 +17,9 @@ from apps.base_amplicon.models import AmpliconSequenceFile
 from libs.logger_utils import get_logger
 from django.conf import settings
 
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
+
 logger = get_logger(__name__)
 
 SLEEP_TIME = settings.DOWNLOADS_CHECKER_SLEEP  # time to rest between checks
@@ -34,7 +37,7 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         verifier.checked_url = url_fn(obj)
         sys.stderr.write("HEAD {}: ".format(verifier.checked_url))
         sys.stderr.flush()
-        r = session.head(verifier.checked_url)
+        r = session.head(verifier.checked_url, verify=False)
         # direct access, or a redirect to the backend. redirects are precise, so
         # we can be sure we'll find the backing file if they exist
         if r.status_code == 200 or r.status_code == 302:
