@@ -1,18 +1,18 @@
 <table id="contextsamples" class="table table-striped tablesorter">
-    <thead>
+<thead>
     <tr>
         <th>BPA ID</th>
         <th>Collection Site</th>
         <th>Horizon</th>
-        <th>Depth</th>
+        <th>Soil Depth (cm)</th>
         <th>Ecological Zone</th>
         <th>Current Land Use</th>
         <th>Vegetation</th>
         <th>Australian Soil Type</th>
         <th>Methodology</th>
     </tr>
-    </thead>
-    <tbody>
+</thead>
+<tbody>
     {% for context in sample_contexts %}
     <tr>
         <td>
@@ -39,5 +39,5 @@
         <td>{{ context.methodological_notes }}</td>
     </tr>
     {% endfor %}
-    </tbody>
+</tbody>
 </table>
