@@ -43,6 +43,12 @@ class BPAUniqueID(models.Model):
     def __unicode__(self):
         return self.bpa_id
 
+    def get_short_name(self):
+        """
+        Strips the common BPA prefix
+        """
+        return str(self.bpa_id).split('.')[-1]
+
 
 class FacilityManager(models.Manager):
     """

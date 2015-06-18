@@ -12,7 +12,7 @@
                 <td>
                     {% for sample in samples %}
                     <a href="{% url 'base_contextual:sampledetail' sample.bpa_id %}">
-                        {{ sample.bpa_id }}
+                        {{ sample.bpa_id.get_short_name }}
                     </a>
                     {% endfor %}
                 </td>
