@@ -62,7 +62,7 @@ class CollectionSite(DebugNote):
 
     crop_rotation_1 = models.TextField(_('Crop rotation 1 year ago'), blank=True, null=True)
     crop_rotation_2 = models.TextField(_('Crop rotation 2 years ago'), blank=True, null=True)
-    crop_rotation_3 = models.TextField(('Crop rotation 3 years ago'), blank=True, null=True)
+    crop_rotation_3 = models.TextField(_('Crop rotation 3 years ago'), blank=True, null=True)
     crop_rotation_4 = models.TextField(_('Crop rotation 4 years ago'), blank=True, null=True)
     crop_rotation_5 = models.TextField(_('Crop rotation 5 years ago'), blank=True, null=True)
 

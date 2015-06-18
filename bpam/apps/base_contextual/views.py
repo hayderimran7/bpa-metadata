@@ -8,6 +8,10 @@ from .models import ChemicalAnalysis, CollectionSite, SampleContext
 import sample_context
 
 
+def get_matrix_csv(request):
+    return sample_context.get_matrix_values()
+
+
 class IndexView(TemplateView):
     template_name = 'base_contextual/index.html'
 
@@ -29,17 +33,33 @@ class CollectionSiteDetailView(DetailView):
     model = CollectionSite
     template_name = 'base_contextual/collectionsite_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(CollectionSiteDetailView, self).get_context_data(**kwargs)
+        context['samples'] = SampleContext.objects.filter(site=self.get_object())
+
+        return context
+
+
+class SampleContextDetailView(DetailView):
+    model = SampleContext
+    template_name = 'base_contextual/sample_context_detail.html'
+
+    def get_object(self):
+        return get_object_or_404(SampleContext, bpa_id=self.kwargs['bpa_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super(SampleContextDetailView, self).get_context_data(**kwargs)
+        context['ca'] = self.get_object().analysis
+        context['collectionsite'] = self.get_object().site
+
+        return context
+
 
 class SampleMatrixListView(ListView):
     model = SampleContext
     context_object_name = 'records'
     template_name = 'base_contextual/sample_matrix_list.html'
     queryset = SampleContext.objects.select_related()
-    # paginate_by = settings.DEFAULT_PAGINATION
-
-
-def get_matrix_csv(request):
-    return sample_context.get_matrix_values()
 
 
 class SampleContextListView(ListView):
@@ -56,19 +76,6 @@ class SampleContextListView(ListView):
     # paginate_by = settings.DEFAULT_PAGINATION
 
 
-class SampleContextDetailView(DetailView):
-    model = SampleContext
-    template_name = 'base_contextual/sample_context_detail.html'
-
-    def get_object(self):
-        return get_object_or_404(SampleContext, bpa_id=self.kwargs['bpa_id'])
-
-    def get_context_data(self, **kwargs):
-        context = super(SampleContextDetailView, self).get_context_data(**kwargs)
-        context['ca'] = self.get_object().analysis
-        context['collectionsite'] = self.get_object().site
-
-        return context
 
 
 class ChemicalAnalysisDetailView(DetailView):

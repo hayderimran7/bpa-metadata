@@ -6,9 +6,9 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Collection Sites" "base_contextual:collectionsites" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Collection Sites" "base_contextual:collectionsites" %}
 {% endblock %}
 
 <div class="container-fluid">
@@ -25,10 +25,8 @@
                     <div class="input-group input-group-sm">
                         <input type="search" class="form-control" placeholder="Filter by name"/>
                         <span class="input-group-btn">
-                          <button type="submit" class="btn btn-default">
-                              <span class="glyphicon glyphicon-search"/>
-                          </button>
-                        </span>
+                            <button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"/>
+                            </button> 
                     </div>
                 </div>
             </div>
