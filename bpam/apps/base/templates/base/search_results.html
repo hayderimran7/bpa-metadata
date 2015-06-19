@@ -4,15 +4,17 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Search" "base:search" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Search" "base:search" %}
 {% endblock %}
 
 {% if search_form %}
 <script src="{% static 'base/spin.min.js' %}"></script>
 <div class="container-fluid">
-    <form id="search_form" action="" class="form-inline" role="form" method="post">{% csrf_token %}
+    <form id="search_form" action="" class="form-inline" role="form" method="post">
+
+        {% csrf_token %}
 
         <div class="alert alert-info">
             Use this facililty to search BASE data for samples of interest
@@ -49,10 +51,13 @@
                         <tr>
                             <th>
                                 Search Type
-                                <a href="#search_type_anchor" role="button" class="btn popovers" data-toggle="popover"
-                                    title="Search Values"
-                                    data-trigger="focus"
-                                    data-content="Searches may comprise single values or ranges of values.  For example, samples could be filtered by pH 4 - 8, or by pH 4">
+                                <a href="#search_type_anchor"
+                                   role="button"
+                                   class="btn popovers"
+                                   data-toggle="popover"
+                                   title="Search Values"
+                                   data-trigger="focus"
+                                   data-content="Searches may comprise single values or ranges of values.  For example, samples could be filtered by pH 4 - 8, or by pH 4">
                                     <span class="glyphicon glyphicon-info-sign"></span>
                                 </a>
                             </th>
@@ -61,26 +66,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td width="10%">
-                            <input class="form-control" name="search_type0" type="radio" id="field0" value="field"
-                            checked="checked">Single
-                            <input class="form-control" name="search_type0" type="radio" id="range0" value="range">Range
-                        </td>
+                        <tr>
+                            <td width="10%">
+                                <input class="form-control"
+                                       name="search_type0"
+                                       type="radio"
+                                       id="field0"
+                                       value="field"
+                                       checked="checked">Single
+                                       <input class="form-control" name="search_type0" type="radio" id="range0" value="range">Range
+                            </td>
 
-                        <td width="25%">
-                            <select class="form-control" id="search_field0" name="search_field0"> </select>
-                        </td>
+                            <td width="25%">
+                                <select class="form-control" id="search_field0" name="search_field0"> </select>
+                            </td>
 
-                        <td width="65%">
-                            <select class="form-control" id="search_standardised_value0"
-                                name="search_standardised_value0">
-                            </select>
-                            <input class="form-control" id="search_range_min0" name="search_range_min0" type=text>
-                            <input class="form-control" id="search_range_max0" name="search_range_max0" type=text>
-                            <input class="form-control" id="search_value0" name="search_value0" type=text>
-                        </td>
-                    </tr>
+                            <td width="65%">
+                                <select class="form-control" id="search_standardised_value0"
+                                                             name="search_standardised_value0">
+                                </select>
+                                <input class="form-control" id="search_range_min0" name="search_range_min0" type=text>
+                                <input class="form-control" id="search_range_max0" name="search_range_max0" type=text>
+                                <input class="form-control" id="search_value0" name="search_value0" type=text>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -90,11 +99,14 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <input checked class="form-control" name="enable_taxonomic_filters" type="checkbox"
-                value="enable_taxonomic_filters" id="enable_taxonomic_filters">
-                Apply Taxonomic Filters ? <input class="form-control" type="button" id="clear_taxonomic_filters"
-                value="clear"/>
+                <input checked class="form-control"
+                               name="enable_taxonomic_filters"
+                               type="checkbox"
+                               value="enable_taxonomic_filters"
+                               id="enable_taxonomic_filters">
+                Apply Taxonomic Filters ? <input class="form-control" type="button" id="clear_taxonomic_filters" value="Clear">
             </div>
+
             <div id="taxononomic_filter_panel" class="panel-body">
                 <table id="taxonomic_filter_table" class="table table-bordered table-striped table-condensed">
                     <thead>
@@ -102,45 +114,45 @@
                         <th>Value</th>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td width="10%">Kingdom</td>
-                        <td><select class="form-control" id="kingdom" name="kingdom">
-                                <option value="">---</option>
-                                <option value="Bacteria">Bacteria</option>
-                                <option value="Fungi">Fungi</option>
-                                <option value="Archaea">Archaea</option>
-                                <option value="Eukaryota">Eukaryota</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Phylum</td>
-                        <td>
-                            <select class="form-control" id="phylum" name="phylum"> </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Class</td>
-                        <td>
-                            <select class="form-control" id="otu_class" name="otu_class"> </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Order</td>
-                        <td>
-                            <select class="form-control" id="order" name="order"> </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Family</td>
-                        <td>
-                            <select class="form-control" id="family" name="family"> </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Genus</td>
-                        <td>
-                            <select class="form-control" id="genus" name="genus"> </select>
+                        <tr>
+                            <td width="10%">Kingdom</td>
+                            <td><select class="form-control" id="kingdom" name="kingdom">
+                                    <option value="">---</option>
+                                    <option value="Bacteria">Bacteria</option>
+                                    <option value="Fungi">Fungi</option>
+                                    <option value="Archaea">Archaea</option>
+                                    <option value="Eukaryota">Eukaryota</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Phylum</td>
+                            <td>
+                                <select class="form-control" id="phylum" name="phylum"> </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Class</td>
+                            <td>
+                                <select class="form-control" id="otu_class" name="otu_class"> </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Order</td>
+                            <td>
+                                <select class="form-control" id="order" name="order"> </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Family</td>
+                            <td>
+                                <select class="form-control" id="family" name="family"> </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Genus</td>
+                            <td>
+                                <select class="form-control" id="genus" name="genus"> </select>
                         </tr>
                         <tr>
                             <td>Species</td>
@@ -148,67 +160,67 @@
                                 <select class="form-control" id="species" name="species"> </select>
                             </td>
                         </tr>
-                        </tbody>
-                    </table>
-                    <input type="button" id="search_button" class="btn btn-default" value="Search">
-                    <span class="glyphicon glyphicon-search"> </span>
-                    </input>
-                </div>
-                <div id="spinner" class="spinner"></div>
-            </form>
-        </div>
-
-        {% endif %}
-
-        <div name="search_results" class="container-fluid">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Search Results
-                    <input align=right type="button" id="export_button" class="btn btn-default" value="Export search results">
-                    <a href="#search_results" role="button" class="btn popovers" data-toggle="popover"
-                        title="Search Result"
-                        data-trigger="focus"
-                        data-content="Export an OTU abundance table, OTU taxonomy and representative OTU sequences for samples filling filtered search.">
-                        <span class="glyphicon glyphicon-info-sign"></span>
-                    </a>
-                </div>
-                <div class="panel-body">
-                    <table id="results" class="table table-striped tablesorter table-bordered">
-                        <thead>
-                            <tr>
-                                <th>BPA ID</th>
-                                <th><span class="glyphicon glyphicon-picture"></span> Sample Context</th>
-                                <th>Chemical Analysis</th>
-                                <th>Amplicon</th>
-                                <th>Metagenomics</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <script>
-                        $(document).ready(function () {
-                                $(function () {
-                                    $("#results").tablesorter();
-                                    });
-                                });
-                    </script>
-                </div>
+                    </tbody>
+                </table>
+                <input type="button" id="search_button" class="btn btn-default" value="Search">
+                <span class="glyphicon glyphicon-search"> </span>
+                </input>
             </div>
+            <div id="spinner" class="spinner"></div>
         </div>
-        <script>
-            window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
-            window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
-            window.SEARCH_FORM_URL = "{% url 'base:search' %}";
-            window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
+    </form>
 
-            $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
-                    $('[data-toggle="popover"]').popover({html:true})
-            })
-        </script>
-
-        <script src="{% static 'base/search.js' %}"></script>
-        {% endblock %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Search Results
+            <input align=right type="button" id="export_button" class="btn btn-default" value="Export search results">
+            <a href="#search_results"
+               role="button"
+               class="btn popovers"
+               data-toggle="popover"
+               title="Search Result"
+               data-trigger="focus"
+               data-content="Export an OTU abundance table, OTU taxonomy and representative OTU sequences for samples filling filtered search.">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+        </div>
+        <table id="results" class="fancytable table-bordered">
+            <thead>
+                <tr>
+                    <th>BPA ID</th>
+                    <th><span class="glyphicon glyphicon-picture"></span> Sample Context</th>
+                    <th>Chemical Analysis</th>
+                    <th>Amplicon</th>
+                    <th>Metagenomics</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <th>BPA ID</th>
+                    <th><span class="glyphicon glyphicon-picture"></span> Sample Context</th>
+                    <th>Chemical Analysis</th>
+                    <th>Amplicon</th>
+                    <th>Metagenomics</th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </div>
+
+{% endif %}
+
+<script>
+    window.standardisedVocabularyEndPointURL = "{% url 'base:lookup' None %}".replace("None", "");
+    window.TAXONOMY_URL = "{% url 'base:taxonomy' None None %}".replace("/None/None", "");
+    window.SEARCH_FORM_URL = "{% url 'base:search' %}";
+    window.EXPORT_RESULTS_URL = "{% url 'base:searchexport' %}";
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="popover"]').popover({html:true})
+    })
+</script>
+
+<script src="{% static 'base/search.js' %}"></script>
+{% endblock %}
