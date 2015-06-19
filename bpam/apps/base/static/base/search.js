@@ -129,7 +129,6 @@ $(document).ready(function () {
     ];
 
     // helper functions
-
     function enabled(row, fieldId, bool) {
         var fieldSelector = "[id^='" + fieldId + "']"
         if (bool) {
@@ -347,15 +346,15 @@ $(document).ready(function () {
 
     function isNumericField(fieldName) {
 
-        var NUMERIC_FIELDS = ['lat', 'lon', 'elevation', 'moisture', 'texture',
+        var NUMERIC_FIELDS = [
+            'lat', 'lon', 'elevation', 'moisture', 'texture',
             'course_sand', 'fine_sand', 'sand', 'silt', 'clay',
-        'ammonium_nitrogen', 'nitrate_nitrogen', 'phosphorus_colwell',
-        'potassium_colwell', 'sulphur', 'organic_carbon', 'conductivity',
-        'cacl2_ph', 'h20_ph', 'dtpa_copper', 'dtpa_iron',
-        'dtpa_manganese', 'dtpa_zinc', 'exc_aluminium', 'exc_calcium',
-        'exc_magnesium', 'exc_potassium', 'exc_sodium', 'boron_hot_cacl2',
-        'total_nitrogen', 'total_carbon'];
-
+            'ammonium_nitrogen', 'nitrate_nitrogen', 'phosphorus_colwell',
+            'potassium_colwell', 'sulphur', 'organic_carbon', 'conductivity',
+            'cacl2_ph', 'h20_ph', 'dtpa_copper', 'dtpa_iron',
+            'dtpa_manganese', 'dtpa_zinc', 'exc_aluminium', 'exc_calcium',
+            'exc_magnesium', 'exc_potassium', 'exc_sodium', 'boron_hot_cacl2',
+            'total_nitrogen', 'total_carbon'];
 
         return NUMERIC_FIELDS.indexOf(fieldName) > -1;
     }
@@ -413,7 +412,6 @@ $(document).ready(function () {
                 // non range search term
                 var fieldValue = getFieldValue(row);
                 if (isNumericField(fieldCode)) {
-
                     if (!isNumeric(fieldValue)) {
                         var e = fieldName + " is numeric but a non numeric value was entered";
                         errors.push(e);
