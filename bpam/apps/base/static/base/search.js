@@ -193,14 +193,15 @@ $(document).ready(function () {
     })(jQuery, window);
 
     function wireUpAllSamplesSearchCheckBox() {
-        $("#search_all").click(function () {
-            $("#search_panel").toggle();
-        });
-    }
+        $("#enable_contextual_filters").click(function () {
+            $("#contextual_filter_panel").toggle();
 
-    function wireUptaxonomicSeachCheckBox() {
-        $("#enable_taxonomic_filters").click(function () {
-            $("#taxononomic_filter_panel").toggle();
+            if ($("#search_all").val() == "search_all") {
+                $("#search_all").val("XXXX");
+            } else if ($("#search_all").val() == "XXXX") {
+                $("#search_all").val("search_all");
+            }
+
         });
     }
 
@@ -356,7 +357,7 @@ $(document).ready(function () {
             'exc_magnesium', 'exc_potassium', 'exc_sodium', 'boron_hot_cacl2',
             'total_nitrogen', 'total_carbon'];
 
-        return NUMERIC_FIELDS.indexOf(fieldName) > -1;
+            return NUMERIC_FIELDS.indexOf(fieldName) > -1;
     }
 
     function isIntegerField(fieldName) {
@@ -450,6 +451,7 @@ $(document).ready(function () {
         }
 
         doSpin();
+
         $.post(SEARCH_FORM_URL,
                $("#search_form").serialize(),
                displayResults);
@@ -514,6 +516,8 @@ $(document).ready(function () {
             $("#results > tbody").append(new_row);
         }
 
+        // table sorter
+        
         stopSpinner();
     }
 
@@ -610,7 +614,6 @@ $(document).ready(function () {
     wireUpSearchFieldSelect(firstRow);
 
     wireUpAllSamplesSearchCheckBox();
-    wireUptaxonomicSeachCheckBox();
 
     wireUpSearchButton();
     wireUpTaxonomyDropDowns();
