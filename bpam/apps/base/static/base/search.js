@@ -517,7 +517,7 @@ $(document).ready(function () {
         }
 
         // table sorter
-        
+        $("#results").trigger('update') 
         stopSpinner();
     }
 
