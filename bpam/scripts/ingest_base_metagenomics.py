@@ -62,9 +62,10 @@ class MetadataHandler(object):
                 return ''
 
         def get_extraction_id(eid):
+            if eid.strip() == "":
+                return None
             id = eid.split('_')[1]
             return int(id)
-
 
         field_spec = [('sample_id', 'Soil sample unique ID', get_id),
                       ('extraction_id', 'Sample extraction ID', get_extraction_id),
