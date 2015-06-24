@@ -76,8 +76,6 @@ class SampleContextListView(ListView):
     # paginate_by = settings.DEFAULT_PAGINATION
 
 
-
-
 class ChemicalAnalysisDetailView(DetailView):
     model = ChemicalAnalysis
     context_object_name = 'ca'
