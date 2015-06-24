@@ -17,21 +17,37 @@
             {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
         </div>
         <div class="col-md-4" id="sitelist-container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3 class="unstacked">Collection Sites</h3>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="unstacked">BASE Collection Sites
+                    </h3>
                 </div>
-                <div class="col-lg-6">
-                    <div class="input-group input-group-sm">
-                        <input type="search" class="form-control" placeholder="Filter by name"/>
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default"> <span class="glyphicon glyphicon-search"/>
-                            </button> 
-                    </div>
-                </div>
+                <table id="sitelist" class="fancytable table-striped">
+                    <thead>
+                        <tr>
+                            <th class="name">Location Name</th>
+                            <th class="lat">Latitude</th>
+                            <th class="lng">Longitude</th>
+                            <th class="ele">Elevation</th>
+                            <th class="landuse">Current Land Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for site in sites %}
+                        <tr>
+                            <td class="name">
+                                <a href="{% url 'base_contextual:collectionsitedetail' site.pk %}">{{ site.get_location_name }}</a>
+                            </td>
+                            <td class="lat">{{ site.lat }}</td>
+                            <td class="lng">{{ site.lon }}</td>
+                            <td class="ele">{% if site.elevation %} {{ site.elevation }} {% endif %}</td>
+                            <td class="landuse">{% if site.current_land_use %} {{ site.current_land_use }} {% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <div class="container" id="search-num-results"></div>
-            {% include "base_contextual/collectionsite_table.html" %}
         </div>
     </div>
 </div>

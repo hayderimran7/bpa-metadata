@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block title %}BASE Contextual Site Detail {% endblock %}
 
-
 {% block content %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Samples" "base_contextual:samplematrix" %}
-    {% breadcrumb  samplecontext.bpa_id "" %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Samples" "base_contextual:samplematrix" %}
+{% breadcrumb  samplecontext.bpa_id "" %}
 {% endblock %}
 <div class="container-fluid">
     <div class="row">
@@ -26,33 +25,33 @@
 
                 <table class="table table-striped">
                     <tbody>
-                    <tr>
-                        <td><b>Site</b></td>
-                        <td>{% if samplecontext.site %}
-                            <a href="{% url 'base_contextual:collectionsitedetail' samplecontext.site.pk %}">
-                                {{ samplecontext.site.get_location_name }}
-                            </a>
-                            {% else %}
-                            No Site
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>Horizon Classification 1</b></td>
-                        <td>{{ samplecontext.horizon_classification1 }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Horizon Classification 2</b></td>
-                        <td>{{ samplecontext.horizon_classification2 }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Soil Depth (cm)</b></td>
-                        <td>{{ samplecontext.depth }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Storage</b></td>
-                        <td>{{ samplecontext.storage}}</td>
-                    </tr>
+                        <tr>
+                            <td><b>Site</b></td>
+                            <td>{% if samplecontext.site %}
+                                <a href="{% url 'base_contextual:collectionsitedetail' samplecontext.site.pk %}">
+                                    {{ samplecontext.site.get_location_name }}
+                                </a>
+                                {% else %}
+                                No Site
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Horizon Classification 1</b></td>
+                            <td>{{ samplecontext.horizon_classification1 }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Horizon Classification 2</b></td>
+                            <td>{{ samplecontext.horizon_classification2 }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Soil Depth (cm)</b></td>
+                            <td>{{ samplecontext.depth }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Storage</b></td>
+                            <td>{{ samplecontext.storage}}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -60,14 +59,11 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-md-4">
-            {% include "base_contextual/chemicalanalysis_detail_container.html" %}
+            {% include "base_contextual/collectionsite_detail_table.html" %}
         </div>
         <div class="col-sm-6 col-md-4">
-            <div class="panel panel-default">
-                {% include "base_contextual/collectionsite_detail_table.html" %}
-            </div>
+            {% include "base_contextual/chemicalanalysis_detail_container.html" %}
         </div>
     </div>
 </div>
 {% endblock %}
-

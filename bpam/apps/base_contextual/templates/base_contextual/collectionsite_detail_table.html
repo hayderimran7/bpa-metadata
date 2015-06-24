@@ -1,140 +1,145 @@
-<h3 class="unstacked">BASE Collection Site
-<a href="{% url 'base_contextual:collectionsitedetail' collectionsite.pk %}">
-    {{ collectionsite.get_location_name }}</a>
-</a>
-</h3>
 
 <div id="sitelist-container">
-    <table id="collectionsite" class="table">
-        <tbody>
-            <tr>
-                <td><b>Samples</b></td>
-                <td>
-                    {% for sample in samples %}
-                    <a href="{% url 'base_contextual:sampledetail' sample.bpa_id %}">
-                        {{ sample.bpa_id.get_short_name }}
-                    </a>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <td><b>Last Sample Date</b></td>
-                <td>{{ collectionsite.date_sampled|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Latitude</b></td>
-                <td>{{ collectionsite.lat }}</td>
-            </tr>
-            <tr>
-                <td><b>Longitude</b></td>
-                <td>{{ collectionsite.lon }}</td>
-            </tr>
-            <tr>
-                <td><b>Elevation</b></td>
-                <td>{{ collectionsite.elevation }}</td>
-            </tr>
-            <tr>
-                <td><b>Current Land Use</b></td>
-                <td>{{ collectionsite.current_land_use }}</td>
-            </tr>
-            <tr>
-                <td><b>General Ecological Zone</b></td>
-                <td>{{ collectionsite.general_ecological_zone }}</td>
-            </tr>
-            <tr>
-                <td><b>Vegetation Type</b></td>
-                <td>{{ collectionsite.vegetation_type.vegetation }}</td>
-            </tr>
-            <tr>
-                <td><b>Australian Soil Type Classification</b></td>
-                <td>
-                    {% if collectionsite.soil_type_australian_classification %}
-                    <a href="https://www.google.com.au/search?q={{ collectionsite.soil_type_australian_classification }}">
-                        {{ collectionsite.soil_type_australian_classification }}
-                    </a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td><b>FAO Soil Type Classification</b></td>
-                <td>{{ collectionsite.soil_type_fao_classification|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Vegetation Total Cover</b></td>
-                <td>{{ collectionsite.vegetation_total_cover|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Vegetation Dominant Trees</b></td>
-                <td>{{ collectionsite.vegetation_dominant_trees|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Slope</b></td>
-                <td>{{ collectionsite.slope|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Slope Aspect</b></td>
-                <td>{{ collectionsite.slope_aspect|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Profile Position</b></td>
-                <td>{{ collectionsite.profile_position|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Drainage Classification</b></td>
-                <td>{{ collectionsite.drainage_classification|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Environment Event</b></td>
-                <td>{{ collectionsite.environment_event|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Fire History</b></td>
-                <td>{{ collectionsite.fire_history|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Fire Intensity</b></td>
-                <td>{{ collectionsite.fire_intensity|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Date since change in land use</b></td>
-                <td>{{ collectionsite.date_since_change_in_land_use|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Immediate previous land use</b></td>
-                <td>{{ collectionsite.immediate_previous_land_use|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Crop rotation 1</b></td>
-                <td>{{ collectionsite.crop_rotation_1|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Crop rotation 2</b></td>
-                <td>{{ collectionsite.crop_rotation_2|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Crop rotation 3</b></td>
-                <td>{{ collectionsite.crop_rotation_3|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Crop rotation 4</b></td>
-                <td>{{ collectionsite.crop_rotation_4|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Crop rotation 5</b></td>
-                <td>{{ collectionsite.crop_rotation_5|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Agrochemical Additions</b></td>
-                <td>{{ collectionsite.agrochemical_additions|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Tillage</b></td>
-                <td>{{ collectionsite.tillage|default:"" }}</td>
-            </tr>
-            <tr>
-                <td><b>Comments</b></td>
-                <td>{{ collectionsite.comments|default:"" }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="unstacked">BASE Collection Site
+                <a href="{% url 'base_contextual:collectionsitedetail' collectionsite.pk %}">
+                    {{ collectionsite.get_location_name }}</a>
+                </a>
+            </h3>
+        </div>
+
+        <table id="collectionsite" class="table">
+            <tbody>
+                <tr>
+                    <td><b>Samples</b></td>
+                    <td>
+                        {% for sample in samples %}
+                        <a href="{% url 'base_contextual:sampledetail' sample.bpa_id %}">
+                            {{ sample.bpa_id.get_short_name }}
+                        </a>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Last Sample Date</b></td>
+                    <td>{{ collectionsite.date_sampled|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Latitude</b></td>
+                    <td>{{ collectionsite.lat }}</td>
+                </tr>
+                <tr>
+                    <td><b>Longitude</b></td>
+                    <td>{{ collectionsite.lon }}</td>
+                </tr>
+                <tr>
+                    <td><b>Elevation</b></td>
+                    <td>{{ collectionsite.elevation }}</td>
+                </tr>
+                <tr>
+                    <td><b>Current Land Use</b></td>
+                    <td>{{ collectionsite.current_land_use }}</td>
+                </tr>
+                <tr>
+                    <td><b>General Ecological Zone</b></td>
+                    <td>{{ collectionsite.general_ecological_zone }}</td>
+                </tr>
+                <tr>
+                    <td><b>Vegetation Type</b></td>
+                    <td>{{ collectionsite.vegetation_type.vegetation }}</td>
+                </tr>
+                <tr>
+                    <td><b>Australian Soil Type Classification</b></td>
+                    <td>
+                        {% if collectionsite.soil_type_australian_classification %}
+                        <a href="https://www.google.com.au/search?q={{ collectionsite.soil_type_australian_classification }}">
+                            {{ collectionsite.soil_type_australian_classification }}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>FAO Soil Type Classification</b></td>
+                    <td>{{ collectionsite.soil_type_fao_classification|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Vegetation Total Cover</b></td>
+                    <td>{{ collectionsite.vegetation_total_cover|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Vegetation Dominant Trees</b></td>
+                    <td>{{ collectionsite.vegetation_dominant_trees|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Slope</b></td>
+                    <td>{{ collectionsite.slope|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Slope Aspect</b></td>
+                    <td>{{ collectionsite.slope_aspect|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Profile Position</b></td>
+                    <td>{{ collectionsite.profile_position|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Drainage Classification</b></td>
+                    <td>{{ collectionsite.drainage_classification|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Environment Event</b></td>
+                    <td>{{ collectionsite.environment_event|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Fire History</b></td>
+                    <td>{{ collectionsite.fire_history|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Fire Intensity</b></td>
+                    <td>{{ collectionsite.fire_intensity|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Date since change in land use</b></td>
+                    <td>{{ collectionsite.date_since_change_in_land_use|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Immediate previous land use</b></td>
+                    <td>{{ collectionsite.immediate_previous_land_use|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Crop rotation 1</b></td>
+                    <td>{{ collectionsite.crop_rotation_1|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Crop rotation 2</b></td>
+                    <td>{{ collectionsite.crop_rotation_2|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Crop rotation 3</b></td>
+                    <td>{{ collectionsite.crop_rotation_3|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Crop rotation 4</b></td>
+                    <td>{{ collectionsite.crop_rotation_4|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Crop rotation 5</b></td>
+                    <td>{{ collectionsite.crop_rotation_5|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Agrochemical Additions</b></td>
+                    <td>{{ collectionsite.agrochemical_additions|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Tillage</b></td>
+                    <td>{{ collectionsite.tillage|default:"" }}</td>
+                </tr>
+                <tr>
+                    <td><b>Comments</b></td>
+                    <td>{{ collectionsite.comments|default:"" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
