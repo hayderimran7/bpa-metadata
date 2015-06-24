@@ -1,5 +1,5 @@
-<table id="sitelist" class="table table-striped tablesorter">
-    <thead>
+<table id="sitelist" class="fancytable table-striped">
+<thead>
     <tr>
         <th class="name">Location Name</th>
         <th class="lat">Latitude</th>
@@ -7,8 +7,8 @@
         <th class="ele">Elevation</th>
         <th class="landuse">Current Land Use</th>
     </tr>
-    </thead>
-    <tbody>
+</thead>
+<tbody>
     {% for site in sites %}
     <tr>
         <td class="name">
@@ -20,13 +20,6 @@
         <td class="landuse">{% if site.current_land_use %} {{ site.current_land_use }} {% endif %}</td>
     </tr>
     {% endfor %}
-    </tbody>
+</tbody>
 </table>
 
-<script>
-    $(document).ready(function () {
-        $(function () {
-            $("#sitelist").tablesorter();
-        });
-    });
-</script>

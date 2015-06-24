@@ -66,7 +66,6 @@ $(document).ready(function() {
     // this will apply the bootstrap theme if "uitheme" widget is included
     // the widgetOptions.uitheme is no longer required to be set
     theme : "bootstrap",
-
     widthFixed: true,
     debug: false,
 
@@ -92,7 +91,7 @@ $(document).ready(function() {
     cssGoto  : ".pagenum",
     // remove rows from the table to speed up the sort of large tables.
     // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-    removeRows: true,
+    removeRows: false,
     // output string - default is '{page}/{totalPages}';
     // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
     output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
