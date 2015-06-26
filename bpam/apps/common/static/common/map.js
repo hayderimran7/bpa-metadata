@@ -53,54 +53,8 @@ var BPAM = (function () {
             });
 
             make_fluid(map);
-
-            var refilter = function (text) {
-                var bounds = null;
-                var extendBounds = function (latLng) {
-                    if (bounds) {
-                        bounds.extend(latLng);
-                    } else {
-                        bounds = L.latLngBounds([latLng]);
-                    }
-                };
-
-                var total = 0, shown = 0;
-                rows.each(function (index, el) {
-                    var name = $(el).find(".name").text().toLowerCase();
-                    var href = $(el).find("td.name a").attr("href");
-                    var show = name.indexOf(text.toLowerCase()) >= 0;
-                    $(el).toggle(show);
-                    markers[href]._icon.style.display = show ? '' : 'none';
-                    markers[href]._shadow.style.display = show ? '' : 'none';
-                    total++;
-                    if (show) {
-                        shown++;
-                        extendBounds(markers[href].getLatLng());
-                    }
-                });
-
-                if (shown !== 0) {
-                    map.fitBounds(bounds);
-                }
-
-                $("#search-num-results").toggle(text !== "")
-                    .text(shown == 0 ? "No sites match"
-                        : shown + "/" + total + " sites match");
-                $("#sitelist").toggle(shown !== 0);
-            };
-
-            var searchbox = $("#sitelist-container input[type='search']")
-                .on("change", function (ev) {
-                    refilter($(this).val());
-                });
-            searchbox.next().find("button").click(function () {
-                refilter(searchbox.val());
-                return false;
-            });
-            if (searchbox.val()) {
-                refilter(searchbox.val());
-            }
         },
+
         map_init_detail: function (map, options) {
             var latlng = L.latLng(window.collectionsite);
             L.marker(latlng).addTo(map);
