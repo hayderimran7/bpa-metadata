@@ -3,11 +3,16 @@
 
 {% block title %}Great Barrier Reef Sample Detail {% endblock %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Samples" "gbr:samples" %}
+{% breadcrumb sample.bpa_id "gbr:sample" sample.bpa_id %}
+{% endblock %}
+
 {% block content %}
 <div class="panel panel-info">
-    <div class="panel-body">
-        <h3> GBR Sample {{ sample.bpa_id }} Information</h3>
-    </div>
     <table id="info" class="table table-striped">
         <tbody>
         <tr>
