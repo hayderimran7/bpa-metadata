@@ -1,6 +1,13 @@
 {% extends "base.html" %} 
-{% block title %}Great Barrier Reef{% endblock %}
 {%load staticfiles %} 
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% endblock %}
+{% block title %}Great Barrier Reef{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="well">
