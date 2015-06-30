@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}Great Barrier Reef Listing{% endblock %}
+ 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Sequence Files" "gbr:sequencefiles" %}
+{% endblock %}
 
 {% block content %}
 {% if sequencefiles %}
-<h3>Great Barrier Reef Sequence Files</h3>
 
 {% include "gbr/sequencefile_table.html" %}
 {% include "pagination.html" %}

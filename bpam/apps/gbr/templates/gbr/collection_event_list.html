@@ -3,6 +3,13 @@
 
 {% block title %}Great Barrier Reef Collection events {% endblock %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Collections" "gbr:collections" %}
+{% endblock %}
+
 {% block content %}
 {% if collections %}
 <div class="container-fluid">

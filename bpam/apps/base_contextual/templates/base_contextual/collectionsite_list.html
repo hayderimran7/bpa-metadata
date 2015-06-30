@@ -3,7 +3,6 @@
 
 {% block title %}BASE Contextual Collection Sites {% endblock %}
 
-{% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
@@ -11,6 +10,8 @@
 {% breadcrumb "Collection Sites" "base_contextual:collectionsites" %}
 {% endblock %}
 
+{% block content %}
+{% if sites %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
@@ -51,4 +52,8 @@
         </div>
     </div>
 </div>
+{% else %}
+<h3> No BASE collection sites are currently available</h3>
+{% endif %}
+
 {% endblock %}

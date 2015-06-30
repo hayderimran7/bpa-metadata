@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Samples" "gbr:samples" %}
+{% endblock %}
+
 {% block title %}Great Barrier Reef Samples {% endblock %}
 
 {% block content %}
-<h3>Great Barrier Reef Samples</h3>
 
 {% include "gbr/sample_table.html" %}
 {% include "pagination.html" %}
