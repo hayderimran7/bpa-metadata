@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Melanoma{% endblock %}
-
 {% load staticfiles %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Melanoma" "index" %}
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="well">
         <div class="row">
 
             <div class="col-sm-5 col-md-5 col-lg-3">
-                <img class="img-responsive img-rounded" src="{% static 'melanoma/melanoma.jpg' %}"
+                <img class="img-responsive img-rounded"
+                     src="{% static 'melanoma/melanoma.jpg' %}"
                      alt="Melanoma">
             </div>
 
@@ -23,13 +30,13 @@
                 </p>
                 <ul>
                     <li>
-                    60x (or greater) for tumour samples
+                        60x (or greater) for tumour samples
                     </li>
                     <li>
-                    40x for cell line samples
+                        40x for cell line samples
                     </li>
                     <li>
-                    40x for control blood samples
+                        40x for control blood samples
                     </li>
                 </ul>
 
@@ -37,35 +44,34 @@
                 Partner organisations include:
                 <ol>
                     <li>
-                    Melanoma Institute Australia
+                        Melanoma Institute Australia
                     </li>
                     <li>
-                    John Curtin School of Medical Research, ANU
+                        John Curtin School of Medical Research, ANU
                     </li>
                     <li>
-                    Berghoffer Queensland Institute of Medical Research
+                        Berghoffer Queensland Institute of Medical Research
                     </li>
                     <li>
-                    University of Sydney
+                        University of Sydney
                     </li>
                     <li>
-                    Harry Perkins Institute of Medical Research
+                        Harry Perkins Institute of Medical Research
                     </li>
                     <li>
-                    Peter MacCallum Cancer Centre
+                        Peter MacCallum Cancer Centre
                     </li>
                     <li>
-                    Ludwig Institute for Cancer Research
+                        Ludwig Institute for Cancer Research
                     </li>
                     <li>
-                    University of Queensland
+                        University of Queensland
                     </li>
                     <li>
-                    Cancer Council NSW
+                        Cancer Council NSW
                     </li>
                 </ol>
                 </p>
-
 
                 <p>
                 Note, the sequence information in this repository is only part of the total number of genomes sequenced (the remainder is available upon request). 
@@ -84,7 +90,6 @@
             </div>
 
             <div class="col-sm-8 col-md-3 col-lg-3">
-
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'melanoma:samples' %}">
                         Samples <span class="badge">{{ sample_size }}</span>
@@ -92,7 +97,7 @@
                     <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}">
                         Sequence Files <span class="badge">{{ sequence_file_size }}</span>
                     </a>
-                   <a class="list-group-item" href="{% url 'melanoma:arrays' %}">
+                    <a class="list-group-item" href="{% url 'melanoma:arrays' %}">
                         Arrays <span class="badge">{{ array_size }}</span>
                     </a>
                     <a class="list-group-item" href="{% url 'melanoma:contacts' %}">Contacts</a>

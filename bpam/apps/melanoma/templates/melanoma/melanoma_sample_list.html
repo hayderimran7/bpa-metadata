@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Melanoma" "melanoma:index" %}
+{% breadcrumb "Samples" "melanoma:samples" %}
+{% endblock %}
+
 {% block title %}Melanoma Listing{% endblock %}
 
 {% block content %}
 {% if samples %}
-<h3>Melanoma Sample List ({{samples|length}})</h3>
 
 {% include "melanoma/melanoma_sample_list_table.html" %}
-
-<form>
-    <input type="hidden" id="bpa-catalog-base" value="{% url 'melanoma:samples' %}"/>
-</form>
-
 {% include "pagination.html" %}
 
 {% else %}
