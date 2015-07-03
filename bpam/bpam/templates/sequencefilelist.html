@@ -5,40 +5,62 @@
             {{ sequencefiles|length }} Related Sequence files available for BPA Sample ID {{ sample.bpa_id }}
         </div>
     </div>
+</div>
 
-    <table id="sequence-list" class="table table-striped">
-        <thead>
-            <tr>
-                <th>Filename</th>
-                <th>MD5</th>
-                <th>Run Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sfile in sequencefiles %}
-            <tr>
-                <td>
-                    {% if sfile.url_verification.status_ok %}
-                    <span title="Last checked {{ sfile.url_verification.checked_at }}"
-                          class="glyphicon glyphicon-download"></span>
-                    {% else %}
-                    <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
-                          class="glyphicon glyphicon-flag"></span>
-                    {% endif %}
-                    <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
-                </td>
-                <td class="md5">{{ sfile.md5 }}</td>
-                <td>{{ sfile.run|default_if_none:"" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#filetable" aria-controls="home" role="tab" data-toggle="tab">Sequence Files</a></li>
+        <li role="presentation"><a href="#urllist" aria-controls="profile" role="tab" data-toggle="tab">URL List</a></li>
+    </ul>
 
-    <div class="well">
-        wget
-        {% for sfile in sequencefiles %}
-        {{ sfile.get_url }}
-        {% endfor %}
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="filetable">
+            <div class="panel-body">
+                <table id="sequence-list" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>MD5</th>
+                            <th>Run Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sfile in sequencefiles %}
+                        <tr>
+                            <td>
+                                {% if sfile.url_verification.status_ok %}
+                                <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                                      class="glyphicon glyphicon-download"></span>
+                                {% else %}
+                                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                                      class="glyphicon glyphicon-flag"></span>
+                                {% endif %}
+                                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
+                            </td>
+                            <td class="md5">{{ sfile.md5 }}</td>
+                            <td>{{ sfile.run|default_if_none:"" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="urllist">
+            <div class="panel-heading">
+                You can use the URL list below with tools like <code>wget</code> or <code>curl</code> to fetch only the listed sequence files from the archive.
+            </div>
+
+            <div class="panel-body">
+                <p>
+                <samp>
+                    {% for sfile in sequencefiles %}
+                    {{ sfile.get_url }}
+                    {% endfor %}
+                </p>
+                </samp>
+            </div>
+        </div>
     </div>
 </div>
 
