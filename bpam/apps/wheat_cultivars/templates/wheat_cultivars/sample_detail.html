@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Wheat Cultivars" "wheat_cultivars:index" %}
+{% breadcrumb "Sample" "" %}
+{% endblock %}
+
 {% block title %}Great Barrier Reef Sample Detail {% endblock %}
 
 {% block content %}
@@ -10,54 +17,54 @@
     </div>
     <table id="info" class="table table-striped">
         <tbody>
-        <tr>
-            <td> Sample Name</td>
-            <td> {{ sample.name }}</td>
-        </tr>
-        <tr>
-            <td> Organism</td>
-            <td> {{ sample.organism }}</td>
-        </tr>
-        <tr>
-            <td> Sample Label</td>
-            <td> {{ sample.sample_label}}</td>
-        </tr>
-        <tr>
-            <td> Cultivar Code</td>
-            <td> {{ sample.cultivar_code}}</td>
-        </tr>
-        <tr>
-            <td> DNA/RNA Source</td>
-            <td> {{ sample.dna_source }}</td>
-        </tr>
-        <tr>
-            <td> DNA/RNA Concentration</td>
-            <td> {{ sample.dna_rna_concentration }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Coverage</td>
-            <td> {{ sample.requested_sequence_coverage }}</td>
-        </tr>
-        <tr>
-            <td> Contact Bioinformatician</td>
-            <td> {{ sample.contact_bioinformatician }}</td>
-        </tr>
-        <tr>
-            <td> Extract Name</td>
-            <td> {{ sample.extract_name }}</td>
-        </tr>
-        <tr>
-            <td> Protocol Reference</td>
-            <td> {{ sample.protocol_reference }}</td>
-        </tr>
-        <tr>
-            <td> Casava Version</td>
-            <td> {{ sample.casava_version }}</td>
-        </tr>
-        <tr>
-            <td> Note</td>
-            <td> {{ sample.comments_by_facility }}</td>
-        </tr>
+            <tr>
+                <td> Sample Name</td>
+                <td> {{ sample.name }}</td>
+            </tr>
+            <tr>
+                <td> Organism</td>
+                <td> {{ sample.organism }}</td>
+            </tr>
+            <tr>
+                <td> Sample Label</td>
+                <td> {{ sample.sample_label}}</td>
+            </tr>
+            <tr>
+                <td> Cultivar Code</td>
+                <td> {{ sample.cultivar_code}}</td>
+            </tr>
+            <tr>
+                <td> DNA/RNA Source</td>
+                <td> {{ sample.dna_source }}</td>
+            </tr>
+            <tr>
+                <td> DNA/RNA Concentration</td>
+                <td> {{ sample.dna_rna_concentration }}</td>
+            </tr>
+            <tr>
+                <td> Sequence Coverage</td>
+                <td> {{ sample.requested_sequence_coverage }}</td>
+            </tr>
+            <tr>
+                <td> Contact Bioinformatician</td>
+                <td> {{ sample.contact_bioinformatician }}</td>
+            </tr>
+            <tr>
+                <td> Extract Name</td>
+                <td> {{ sample.extract_name }}</td>
+            </tr>
+            <tr>
+                <td> Protocol Reference</td>
+                <td> {{ sample.protocol_reference }}</td>
+            </tr>
+            <tr>
+                <td> Casava Version</td>
+                <td> {{ sample.casava_version }}</td>
+            </tr>
+            <tr>
+                <td> Note</td>
+                <td> {{ sample.comments_by_facility }}</td>
+            </tr>
         </tbody>
     </table>
 </div>

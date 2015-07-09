@@ -70,7 +70,11 @@
             <td>{{ sfile.run.flow_cell_id }}</td>
             <td>{{ sfile.lane_number }}</td>
             <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-            <td>{{ sfile.md5 }}</td>
+            <td>
+                <code>
+                    {{ sfile.md5 }}
+                </code>
+            </td>
             <td>{{ sfile.file_size }}</td>
         </tr>
         {% endfor %}

@@ -1,53 +1,54 @@
 {% extends "base.html" %}
 {% block title %}Wheat Cultivars{% endblock %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Wheat Cultivars" "wheat_cultivars:index" %}
+{% endblock %}
+
 {% load staticfiles %}
 {% block content %}
 <div class="container-fluid">
     <div class="well">
         <div class="row">
             <div class="4 col-md-5 col-lg-3">
-                <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.jpg' %}"
+                <img class="img-responsive img-rounded"
+                     src="{% static 'wheat_cultivars/wheat.jpg' %}"
                      alt="Wheat Cultivars">
             </div>
 
             <div class="4 col-md-5 col-lg-3">
                 <h2> Wheat Cultivars </h2>
-                <p>
-                This dataset contains genomic sequence information from 16 wheat varieties of importance to Australia selected and prioritised by the major stakeholders of the Australian grains research community based on availability of mapping populations and genetic diversity.
-                </p>
+
+                <p> This dataset contains genomic sequence information from 16
+                wheat varieties of importance to Australia selected and
+                prioritised by the major stakeholders of the Australian grains
+                research community based on availability of mapping populations
+                and genetic diversity.
+                </p> 
 
                 <p>
-                Wheat leaf and/or root tissue samples where sequenced to generate approximately 10x coverage of each variety’s genome.
+                Wheat leaf and/or root tissue samples where sequenced to
+                generate approximately 10x coverage of each variety’s genome.
                 </p>
 
                 <p>
                 Partner organisations include:
                 <ul>
-                    <li>
-                    Australian Centre for Plant Functional Genomics 
-                    </li>
-                    <li>
-                    CSIRO
-                    </li>
-                    <li>
-                    Victorian Department of Environment and Primary Industries
-                    </li>
-                    <li>
-                    Murdoch University
-                    </li>
-                    <li>
-                    University of Queensland
-                    </li>
-                    <li>
-                    Grains Research and Development Corporation
-                    </li>
+                    <li> Australian Centre for Plant Functional Genomics </li>
+                    <li> CSIRO </li>
+                    <li> Victorian Department of Environment and Primary Industries </li>
+                    <li> Murdoch University </li>
+                    <li> University of Queensland </li>
+                    <li> Grains Research and Development Corporation </li>
                 </ul>
                 </p>
+
                 <p>
                 For more information please visit:
                 <a href="http://www.bioplatforms.com/wheat-sequencing/">
-                http://www.bioplatforms.com/wheat-sequencing/
+                    http://www.bioplatforms.com/wheat-sequencing/
                 </a>
                 </p>
 
