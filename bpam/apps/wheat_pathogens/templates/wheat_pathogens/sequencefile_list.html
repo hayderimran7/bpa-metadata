@@ -4,7 +4,7 @@
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Wheat Pathogens Genomes" "wheat_pathogens:index" %}
-{% breadcrumb "Wheat Pathogens Genomes Sequence Files" "wheat_pathogens:files" %}
+{% breadcrumb "Sequence Files" "wheat_pathogens:files" %}
 {% endblock %}
 
 {% block title %}Wheat Pathogen Genome Sequence Files {% endblock %}
@@ -70,11 +70,7 @@
             <td>{{ sfile.run.flow_cell_id }}</td>
             <td>{{ sfile.lane_number }}</td>
             <td><a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-            <td>
-                <code>
-                    {{ sfile.md5 }}
-                </code>
-            </td>
+            <td class="md5"> {{ sfile.md5 }} </td>
             <td>{{ sfile.file_size }}</td>
         </tr>
         {% endfor %}
