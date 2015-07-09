@@ -1,14 +1,22 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Wheat Pathogens Genomes" "wheat_pathogens:index" %}
+{% endblock %}
+
 {% block title %}Wheat Pathogen Genomes{% endblock %}
 
-{% load staticfiles %}
 {% block content %}
 <div class="container-fluid">
     <div class="well">
         <div class="row">
 
             <div class="col-sm-5 col-md-5 col-lg-3">
-                <img class="img-responsive img-rounded" src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}"
+                <img class="img-responsive img-rounded"
+                     src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}"
                      alt="Wheat Pathogens Genomes">
                 Image of Stagonospora Nodorum infected wheat: European Journal of Plant Pathology (2006) 114:275–282
             </div>
@@ -23,30 +31,18 @@
                 The genomes were selected for analysis by a consortium of Australian wheat pathogen researchers from the following organisations:
 
                 <ul>
-                    <li>
-                    Australian National University
-                    </li>
-                    <li>
-                    CSIRO
-                    </li>
-                    <li>
-                    Curtin University
-                    </li>
-                    <li>
-                    Charles Sturt University
-                    </li>
-                    <li>
-                    NSW Department of Primary industry
-                    </li>
-                    <li>
-                    Grains Research and Development Corporation
-                    </li>
+                    <li> Australian National University </li>
+                    <li> CSIRO </li>
+                    <li> Curtin University </li> 
+                    <li> Charles Sturt University </li>
+                    <li> NSW Department of Primary industry </li>
+                    <li> Grains Research and Development Corporation </li>
                 </ul>
                 </p>
                 <p>
                 For more information please visit:
                 <a href="http://www.bioplatforms.com/wheat-defense/">
-                http://www.bioplatforms.com/wheat-defense/
+                    http://www.bioplatforms.com/wheat-defense/
                 </a>
                 </p>
             </div>

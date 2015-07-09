@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Wheat Pathogens Genomes" "wheat_pathogens:index" %}
+{% breadcrumb "Wheat Pathogens Genomes Samples" "wheat_pathogens:samples" %}
+{% breadcrumb "Sample" "" %}
+{% endblock %}
 {% block title %}Wheat Pathogens Genome Sample Detail {% endblock %}
 
 {% block content %}
@@ -10,54 +17,54 @@
     </div>
     <table id="info" class="table table-striped">
         <tbody>
-        <tr>
-            <td> Sample Name</td>
-            <td> {{ sample.name }}</td>
-        </tr>
-        <tr>
-            <td> Organism</td>
-            <td> {{ sample.organism }}</td>
-        </tr>
-        <tr>
-            <td> Sample Label</td>
-            <td> {{ sample.sample_label}}</td>
-        </tr>
-        <tr>
-            <td> Isolate Name</td>
-            <td> {{ sample.official_variety_name}}</td>
-        </tr>
-        <tr>
-            <td> DNA Source</td>
-            <td> {{ sample.dna_source }}</td>
-        </tr>
-        <tr>
-            <td> Wheat Pathogenicity</td>
-            <td> {{ sample.wheat_pathogenicity }}</td>
-        </tr>
-        <tr>
-            <td> Original Source Host Species</td>
-            <td> {{ sample.original_source_host_species }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Coverage</td>
-            <td> {{ sample.requested_sequence_coverage }}</td>
-        </tr>
-        <tr>
-            <td> Collection Location</td>
-            <td> {{ sample.collection_location }}</td>
-        </tr>
-        <tr>
-            <td> Protocol Reference</td>
-            <td> {{ sample.protocol_reference }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Date</td>
-            <td> {{ sample.date_sequenced }}</td>
-        </tr>
-        <tr>
-            <td> Note</td>
-            <td> {{ sample.comments_by_facility }}</td>
-        </tr>
+            <tr>
+                <td> Sample Name</td>
+                <td> {{ sample.name }}</td>
+            </tr>
+            <tr>
+                <td> Organism</td>
+                <td> {{ sample.organism }}</td>
+            </tr>
+            <tr>
+                <td> Sample Label</td>
+                <td> {{ sample.sample_label}}</td>
+            </tr>
+            <tr>
+                <td> Isolate Name</td>
+                <td> {{ sample.official_variety_name}}</td>
+            </tr>
+            <tr>
+                <td> DNA Source</td>
+                <td> {{ sample.dna_source }}</td>
+            </tr>
+            <tr>
+                <td> Wheat Pathogenicity</td>
+                <td> {{ sample.wheat_pathogenicity }}</td>
+            </tr>
+            <tr>
+                <td> Original Source Host Species</td>
+                <td> {{ sample.original_source_host_species }}</td>
+            </tr>
+            <tr>
+                <td> Sequence Coverage</td>
+                <td> {{ sample.requested_sequence_coverage }}</td>
+            </tr>
+            <tr>
+                <td> Collection Location</td>
+                <td> {{ sample.collection_location }}</td>
+            </tr>
+            <tr>
+                <td> Protocol Reference</td>
+                <td> {{ sample.protocol_reference }}</td>
+            </tr>
+            <tr>
+                <td> Sequence Date</td>
+                <td> {{ sample.date_sequenced }}</td>
+            </tr>
+            <tr>
+                <td> Note</td>
+                <td> {{ sample.comments_by_facility }}</td>
+            </tr>
         </tbody>
     </table>
 </div>
