@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Wheat Pathogens Transcript" "index" %}
+{% breadcrumb "Wheat Pathogens Transcript Sequence Files" "wheat_pathogens_transcript:sequencefiles" %}
+{% breadcrumb "Sample" "wheat_pathogens_transcript:sample" %}
+{% endblock %}
 {% block title %}Wheat Pathogens Transcript Sample Detail {% endblock %}
 
 {% block content %}
@@ -10,58 +17,58 @@
     </div>
     <table id="info" class="table table-striped">
         <tbody>
-        <tr>
-            <td> Project</td>
-            <td> {{ sample.project }}</td>
-        </tr>
-        <tr>
-            <td> Sample Name</td>
-            <td> {{ sample.name }}</td>
-        </tr>
-        <tr>
-            <td> Contact Scientist</td>
-            <td> {{ sample.contact_scientist }}</td>
-        </tr>
-        <tr>
-            <td> Contact Scientist email</td>
-            <td> {{ sample.contact_scientist.email }}</td>
-        </tr>
-        <tr>
-            <td> Institution</td>
-            <td> {{ sample.institution}}</td>
-        </tr>
-        <tr>
-            <td> Species</td>
-            <td> {{ sample.species }}</td>
-        </tr>
-        <tr>
-            <td> Sample Type</td>
-            <td> {{ sample.sample_type }}</td>
-        </tr>
-        <tr>
-            <td> RNA Source</td>
-            <td> {{ sample.dna_source.description }}</td>
-        </tr>
-        <tr>
-            <td> Extraction Method</td>
-            <td> {{ sample.extraction_method }}</td>
-        </tr>
-        <tr>
-            <td> Growth Protocol</td>
-            <td> {{ sample.growth_protocol }}</td>
-        </tr>
-        <tr>
-            <td> Treatment Protocol</td>
-            <td> {{ sample.treatment_protocol }}</td>
-        </tr>
-        <tr>
-            <td> Experimental Design</td>
-            <td> {{ sample.experimental_design }}</td>
-        </tr>
-        <tr>
-            <td> Note</td>
-            <td> {{ sample.note }}</td>
-        </tr>
+            <tr>
+                <td> Project</td>
+                <td> {{ sample.project }}</td>
+            </tr>
+            <tr>
+                <td> Sample Name</td>
+                <td> {{ sample.name }}</td>
+            </tr>
+            <tr>
+                <td> Contact Scientist</td>
+                <td> {{ sample.contact_scientist }}</td>
+            </tr>
+            <tr>
+                <td> Contact Scientist email</td>
+                <td> {{ sample.contact_scientist.email }}</td>
+            </tr>
+            <tr>
+                <td> Institution</td>
+                <td> {{ sample.institution}}</td>
+            </tr>
+            <tr>
+                <td> Species</td>
+                <td> {{ sample.species }}</td>
+            </tr>
+            <tr>
+                <td> Sample Type</td>
+                <td> {{ sample.sample_type }}</td>
+            </tr>
+            <tr>
+                <td> RNA Source</td>
+                <td> {{ sample.dna_source.description }}</td>
+            </tr>
+            <tr>
+                <td> Extraction Method</td>
+                <td> {{ sample.extraction_method }}</td>
+            </tr>
+            <tr>
+                <td> Growth Protocol</td>
+                <td> {{ sample.growth_protocol }}</td>
+            </tr>
+            <tr>
+                <td> Treatment Protocol</td>
+                <td> {{ sample.treatment_protocol }}</td>
+            </tr>
+            <tr>
+                <td> Experimental Design</td>
+                <td> {{ sample.experimental_design }}</td>
+            </tr>
+            <tr>
+                <td> Note</td>
+                <td> {{ sample.note }}</td>
+            </tr>
         </tbody>
     </table>
 </div>
