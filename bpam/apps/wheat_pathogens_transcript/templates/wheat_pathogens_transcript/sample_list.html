@@ -14,14 +14,23 @@
 
 {% if samples %}
 
-<table id="sample-list" class="table table-striped">
+<div class="alert alert-info" role="alert">
+    To sort by multiple columns, press and hold the Shift key.
+    <div class="bootstrap_buttons">
+        <button type="button" class="reset btn" data-column="0" data-filter="">
+            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
+            Reset filters
+        </button>
+    </div>
+</div>
+
+<table class="fancytable">
     <thead>
         <tr>
             <th>BPA ID</th>
             <th>Sample Name</th>
             <th>Project</th>
             <th>Contact Scientist</th>
-            <th>Contact Scientist email</th>
             <th>Institution</th>
             <th>Species</th>
             <th>Sample Type</th>
@@ -42,7 +51,6 @@
             <td>{{ sample.name }}</td>
             <td>{{ sample.project}}</td>
             <td>{{ sample.contact_scientist }}</td>
-            <td>{{ sample.contact_scientist.email }}</td>
             <td>{{ sample.institution }}</td>
             <td>{{ sample.species }}</td>
             <td>{{ sample.sample_type }}</td>
@@ -55,8 +63,40 @@
         </tr>
         {% endfor %}
     </tbody>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Sample Name</th>
+            <th>Project</th>
+            <th>Contact Scientist</th>
+            <th>Institution</th>
+            <th>Species</th>
+            <th>Sample Type</th>
+            <th>RNA Source</th>
+            <th>Extraction Method</th>
+            <th>Growth Protocol</th>
+            <th>Treatment Protocol</th>
+            <th>Experimental Design</th>
+            <th>Notes</th>
+        </tr>
+        <tr>
+            <th colspan="13" class="ts-pager form-horizontal">
+                <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
+                <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+                <span class="pagedisplay"></span>
+                <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
+                <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+                <select class="pagesize input-mini" title="Select page size">
+                    <option selected="selected" value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                </select>
+                <select class="pagenum input-mini" title="Select page number"></select>
+            </th>
+        </tr>
+    </tfoot>
 </table>
-
 
 {% else %}
 <h3> No Wheat Pathogen Transcript Data is currently available </h3>
