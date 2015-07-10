@@ -16,7 +16,7 @@
 
         <div class="row">
             <div class="col-sm-4 col-md-6 col-lg-3">
-                <img class="img-responsive img-rounded" src="{% static 'base/base.jpg' %}" alt="BASE">
+                <img class="img-responsive img-rounded" src="{% static 'base/base.png' %}" alt="BASE">
             </div>
 
             <div class="col-sm-4 col-md-3 col-lg-3">
@@ -62,44 +62,69 @@
 
                 <div class="list-group">
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right" title="Search BASE OTU and contextual matrices to identify samples of interest"
-                                                                                          href="{% url 'base:search' %}">
+                       data-container="body"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="Search BASE OTU and contextual matrices to identify samples of interest"
+                       href="{% url 'base:search' %}">
                         <span class="glyphicon glyphicon-search"></span> Search facility
                     </a>
-                    <a class="list-group-item" href="{% url 'base_vocabulary:all_vocabularies' %}">Contextual Data Vocabularies</a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right"
-                                                                   title="View an interactive map of all sample locations"
-                                                                   href="{% url 'base_contextual:collectionsites' %}">Collection Site Map<span class="badge">{{ site_count }}</span>
+                        href="{% url 'base_vocabulary:all_vocabularies' %}">Contextual Data Vocabularies
                     </a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right"
-                                                                   title="Browse all site contextual data (may take some time to load)"
-                                                                   href="{% url 'base_contextual:samplematrix' %}">Contextual Data Matrix<span class="badge">{{ sample_count }}</span>
+                       data-container="body"
+                       data-toggle="tooltip" 
+                       data-placement="right"
+                       title="View an interactive map of all sample locations"
+                       href="{% url 'base_contextual:collectionsites' %}">Collection Site Map<span class="badge">{{ site_count }}</span>
                     </a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right"
-                                                                   title="View methodological metadata pertaining to the sequencing of each sample and amplicon and link to sequencing data for each sample"
-                                                                   href="{% url 'base_amplicon:index' %}">Amplicons <span class="badge">{{ amplicon_count }}</span>
+                       data-container="body"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="Browse all site contextual data (may take some time to load)"
+                       href="{% url 'base_contextual:samplematrix' %}">Contextual Data Matrix<span class="badge">{{ sample_count }}</span>
                     </a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right"
-                                                                   title="View methodological metadata pertaining to the sequencing of shotgun metagenomics for each sample and link to sequencing data for each sample"
-                                                                   href="{% url 'base_metagenomics:metagenomics' %}">Metagenomics <span class="badge">{{ metagenomics_count }}</span>
+                       data-container="body" 
+                       data-toggle="tooltip" 
+                       data-placement="right"
+                       title="View methodological metadata pertaining to the sequencing of each sample and amplicon and link to sequencing data for each sample"
+                       href="{% url 'base_amplicon:index' %}">Amplicons <span class="badge">{{ amplicon_count }}</span>
                     </a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right"
-                                                                   title="Full OTU tables, OTU taxonomy and equences representing OTU’s (fasta), soil sample collection and sequencing methods"
-                                                                   href="{% url 'base:information' %}">OTU’s, Methods and other information
+                       data-container="body" 
+                       data-toggle="tooltip" 
+                       data-placement="right"
+                       title="View methodological metadata pertaining to the sequencing of shotgun metagenomics for each sample and link to sequencing data for each sample"
+                       href="{% url 'base_metagenomics:metagenomics' %}">Metagenomics <span class="badge">{{ metagenomics_count }}</span>
                     </a>
+
                     <a class="list-group-item"
-                       data-container="body" data-toggle="tooltip" data-placement="right" 
-                                                                   title="Link to data collected during initial project phase, prior to migration to illumina"
-                                                                   href="{% url 'base_454:454samples' %}">454 <span class="badge">{{ 454_count }}</span>
+                       data-container="body"
+                       data-toggle="tooltip" 
+                       data-placement="right"
+                       title="Full OTU tables, OTU taxonomy and equences representing OTU’s (fasta), soil sample collection and sequencing methods"
+                       href="{% url 'base:information' %}">OTU’s, Methods and other information
                     </a>
+
+                    <a class="list-group-item"
+                       data-container="body"
+                       data-toggle="tooltip"
+                       data-placement="right" 
+                       title="Link to data collected during initial project phase, prior to migration to illumina"
+                       href="{% url 'base_454:454samples' %}">454 <span class="badge">{{ 454_count }}</span>
+                    </a>
+
                     <a class="list-group-item" href="{% url 'base:contacts' %}">Contacts</a>
-                    <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request data download access
-                    </a>
+                    
+                    <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request data download access </a>
                 </div>
 
             </div>
