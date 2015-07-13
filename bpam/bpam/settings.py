@@ -155,7 +155,29 @@ LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-25.27, 133.775),
     'DEFAULT_ZOOM': 4,
     'ATTRIBUTION_PREFIX': '',
-    'TILES': 'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
+    # 'TILES': 'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
+    'TILES': [
+        ('MapQuest Open Aerial',
+         'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
+         {'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'},
+         ),
+        # ('MapQuest Open Aerial Sat', 'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', ''),
+        # ('Stamen', 'http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png', ''),
+        ('ESRI',
+         'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+         {'attribution': '&copy; i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'},
+         ),
+        ('OSM B&W',
+         'http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png',
+         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'},
+         ),
+        ('Thunderforest',
+         'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
+         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'},
+         ),
+    ],
+    'MINIMAP': True,
+    'RESET_VIEW': False
 }
 
 SUIT_CONFIG = {
@@ -212,7 +234,7 @@ SUIT_CONFIG = {
         '-',
         {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
         # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
-    )
+)
 }
 
 SITE_ID = 1
@@ -371,22 +393,22 @@ LOGGING = {
             'include_html': True
         }
     },
-    'root': {
-        'handlers': ['console', 'errorfile'],
-        'level': 'ERROR',
+'root': {
+    'handlers': ['console', 'errorfile'],
+    'level': 'ERROR',
+},
+'loggers': {
+    'django': {
+        'handlers': ['null'],
+        'propagate': False,
+        'level': 'INFO',
     },
-    'loggers': {
-        'django': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'INFO',
-        },
-        'registry_log': {
-            'handlers': ['registryfile', 'console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    }
+    'registry_log': {
+        'handlers': ['registryfile', 'console'],
+        'level': 'DEBUG',
+        'propagate': False,
+    },
+}
 }
 
 
