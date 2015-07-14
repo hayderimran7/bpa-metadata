@@ -3,224 +3,221 @@
 {% load staticfiles %}
 
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-{% block head_meta_viewport %}
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-{% endblock %}
+  <head>
+    <meta charset="utf-8"/>
+    {% block head_meta_viewport %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% endblock %}
 
-<title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
-<link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
-{% load static from staticfiles %}
-{% load commontags %}
+    <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
+    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
+    {% load static from staticfiles %}
+    {% load commontags %}
 
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery=True %}
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery=True %}
 
-{% load django_bootstrap_breadcrumbs %}
-{% block breadcrumbs %}
-{% clear_breadcrumbs %}
-{% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
-{% endblock %}
+    {% load django_bootstrap_breadcrumbs %}
+    {% block breadcrumbs %}
+    {% clear_breadcrumbs %}
+    {% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
+    {% endblock %}
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
-<link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/css/jquery.tablesorter.pager.min.css"/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
+    <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/css/jquery.tablesorter.pager.min.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
-<script src="https://togetherjs.com/togetherjs-min.js"></script>
-<script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
 
-<script>
-$(document).ready(function() {
-  $.tablesorter.themes.bootstrap = {
-    // these classes are added to the table. To see other table classes available,
-    // look here: http://getbootstrap.com/css/#tables
-    table        : 'table table-bordered table-striped',
-    caption      : 'caption',
-    // header class names
-    header       : 'bootstrap-header', // give the header a gradient background (theme.bootstrap_2.css)
-    sortNone     : '',
-    sortAsc      : '',
-    sortDesc     : '',
-    active       : '', // applied when column is sorted
-    hover        : '', // custom css required - a defined bootstrap style may not override other classes
-    // icon class names
-    icons        : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
-    iconSortNone : 'bootstrap-icon-unsorted', // class name added to icon when column is not sorted
-    iconSortAsc  : 'glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
-    iconSortDesc : 'glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
-    filterRow    : '', // filter row class; use widgetOptions.filter_cssFilter for the input/select element
-    footerRow    : '',
-    footerCells  : '',
-    even         : '', // even row zebra striping
-    odd          : ''  // odd row zebra striping
-  };
+    <script>
+      $(document).ready(function() {
+        $.tablesorter.themes.bootstrap = {
+          // these classes are added to the table. To see other table classes available,
+          // look here: http://getbootstrap.com/css/#tables
+          table        : 'table table-bordered table-striped',
+          caption      : 'caption',
+            // header class names
+          header       : 'bootstrap-header', // give the header a gradient background (theme.bootstrap_2.css)
+          sortNone     : '',
+          sortAsc      : '',
+          sortDesc     : '',
+          active       : '', // applied when column is sorted
+          hover        : '', // custom css required - a defined bootstrap style may not override other classes
+            // icon class names
+          icons        : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
+          iconSortNone : 'bootstrap-icon-unsorted', // class name added to icon when column is not sorted
+          iconSortAsc  : 'glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
+          iconSortDesc : 'glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
+          filterRow    : '', // filter row class; use widgetOptions.filter_cssFilter for the input/select element
+          footerRow    : '',
+          footerCells  : '',
+          even         : '', // even row zebra striping
+          odd          : ''  // odd row zebra striping
+        };
 
-  // call the tablesorter plugin and apply the uitheme widget
-  $(".fancytable").tablesorter({
-    // this will apply the bootstrap theme if "uitheme" widget is included
-    // the widgetOptions.uitheme is no longer required to be set
-    theme : "bootstrap",
-    widthFixed: true,
-    debug: false,
+        // call the tablesorter plugin and apply the uitheme widget
+        $(".fancytable").tablesorter({
+          // this will apply the bootstrap theme if "uitheme" widget is included
+          // the widgetOptions.uitheme is no longer required to be set
+          theme : "bootstrap",
+          widthFixed: true,
+          debug: false,
 
-    headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
+          headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
-    // widget code contained in the jquery.tablesorter.widgets.js file
-    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-    widgets : [ "uitheme", "filter", ],
+            // widget code contained in the jquery.tablesorter.widgets.js file
+            // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+          widgets : [ "uitheme", "filter", ],
 
-    widgetOptions : {
-      // using the default zebra striping class name, so it actually isn't included in the theme variable above
-      // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
-      zebra : ["even", "odd"],
-      // reset filters button
-      filter_reset : ".reset",
-      // extra css class name (string or array) added to the filter element (input or select)
-      filter_cssFilter: "form-control",
-    }
-  })
-  .tablesorterPager({
-    container: $(".ts-pager"),
-    // target the pager page select dropdown - choose a page
-    cssGoto  : ".pagenum",
-    // remove rows from the table to speed up the sort of large tables.
-    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-    removeRows: true,
-    // output string - default is '{page}/{totalPages}';
-    // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
-  });
+          widgetOptions : {
+            // using the default zebra striping class name, so it actually isn't included in the theme variable above
+            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
+            zebra : ["even", "odd"],
+            // reset filters button
+            filter_reset : ".reset",
+              // extra css class name (string or array) added to the filter element (input or select)
+            filter_cssFilter: "form-control",
+          }
+        })
+        .tablesorterPager({
+          container: $(".ts-pager"),
+          // target the pager page select dropdown - choose a page
+          cssGoto  : ".pagenum",
+          // remove rows from the table to speed up the sort of large tables.
+          // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+          removeRows: true,
+            // output string - default is '{page}/{totalPages}';
+            // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+          output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+        });
 
-  // table without pager
-  $(".nopagertable").tablesorter({
-    theme : "bootstrap",
-    widthFixed: true,
-    debug: false,
+        // table without pager
+        $(".nopagertable").tablesorter({
+          theme : "bootstrap",
+          widthFixed: true,
+          debug: false,
 
-    headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
+          headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
-    // widget code contained in the jquery.tablesorter.widgets.js file
-    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-    widgets : [ "uitheme", ],
+            // widget code contained in the jquery.tablesorter.widgets.js file
+            // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+          widgets : [ "uitheme", ],
 
-    widgetOptions : {
-      // using the default zebra striping class name, so it actually isn't included in the theme variable above
-      // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
-      zebra : ["even", "odd"],
-      // reset filters button
-      filter_reset : ".reset",
-      // extra css class name (string or array) added to the filter element (input or select)
-      filter_cssFilter: "form-control",
-    }
-  });
-});
+          widgetOptions : {
+            // using the default zebra striping class name, so it actually isn't included in the theme variable above
+            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
+            zebra : ["even", "odd"],
+            // reset filters button
+            filter_reset : ".reset",
+              // extra css class name (string or array) added to the filter element (input or select)
+            filter_cssFilter: "form-control",
+          }
+        });
+      });
 
-</script>
-{% bootstrap_css %}
-{% block extra_head %}
-{% endblock %}
+    </script>
+    {% bootstrap_css %}
+    {% block extra_head %}
+    {% endblock %}
 
-<style>
-/* Sticky footer styles */
-html,
-body {
-    height: 100%;
-    /* The html and body elements cannot have any padding or margin. */
-}
+    <style>
+      /* Sticky footer styles */
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
 
-/* Wrapper for page content to push down footer */
-#wrap {
-    min-height: 100%;
-    height: auto;
-    /* Negative indent footer by its height */
-    margin: 0 auto -60px;
-    /* Pad bottom by footer height */
-    padding: 0 0 60px;
-}
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto;
+        /* Negative indent footer by its height */
+        margin: 0 auto -60px;
+        /* Pad bottom by footer height */
+        padding: 0 0 60px;
+      }
 
-/* Set the fixed height of the footer here */
-#footer {
-    height: 60px;
-    background-color: #f5f5f5;
-}
+      /* Set the fixed height of the footer here */
+      #footer {
+        height: 60px;
+        background-color: #f5f5f5;
+      }
 
-/* Custom page CSS */
-/* Not required for template or sticky footer method. */
+      /* Custom page CSS */
+      /* Not required for template or sticky footer method. */
 
-.container {
-    width: auto;
-    #max-width: 680px;
-    padding: 0 15px;
-}
+      .container {
+        width: auto;
+          #max-width: 680px;
+        padding: 0 15px;
+      }
 
-.container .credit {
-    margin: 20px 0;
-}
+      .container .credit {
+        margin: 20px 0;
+      }
 
-.md5 {
-    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
-}
+      .md5 {
+        font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+      }
 
-</style>
+    </style>
 
-</head>
-<body>
-<div id="wrap">
-    <div class="navbar navbar-default" role="navigation">
+  </head>
+  <body>
+    <div id="wrap">
+      <div class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <p>
-                <div class="navbar-brand">
-                    {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
-                </div>
-                </p>
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <p>
+            <div class="navbar-brand">
+              {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
+            </p>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
 
-                <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right">
 
-                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{ user.username }}</a></li>
-                    {% else %}
-                    <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
-                    {% endif %}
-                    <li><a id="start-togetherjs" onclick="TogetherJS(this); return false;">Collaborate</a></li>
-                </ul>
-            </div>
+              <li><a href="{% url 'admin:index' %}">Admin</a></li>
+              {% if user.is_authenticated %}
+              <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{ user.username }}</a></li>
+              {% else %}
+              <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
+              {% endif %}
+              <li><a id="start-togetherjs" onclick="TogetherJS(this); return false;">Collaborate</a></li>
+            </ul>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="content-div">
+      <div class="content-div">
         {% block content %}{% endblock %}
+      </div>
     </div>
-</div>
 
-<div id="footer">
-    <div class="container">
+    <div id="footer">
+      <div class="container">
         <p class="text-muted credit">
         &copy; Bioplatforms Australia, bpa-metadata {% bpam_version %}.
         <a href="http://ccgapps.com.au"> Centre for Comparative Genomics, Murdoch University, Western Australia.</a>
         GPL v3.0<a href="https://github.com/muccg/bpa-metadata"> Source</a>
         </p>
+      </div>
     </div>
-</div>
-
-</body>
-
-
+  </body>
 </html>

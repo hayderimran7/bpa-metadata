@@ -11,6 +11,16 @@
 {% endblock %}
 {% if records %}
 
+<style>
+    #spinner {
+        width: 150px;height: 150px;
+        -webkit-animation: sweep 1s infinite linear;
+        border-radius:75px;
+        border-bottom:5px solid blue;
+    }
+    @-webkit-keyframes sweep { to { -webkit-transform: rotate(360deg); } }
+</style>
+
 <div class="container-fluid">
     <h3><a href="{% url 'base:index'%}">BASE</a> All Sample Data ({{records|length}} Records) </h3>
 
