@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.views.generic import TemplateView, ListView, DetailView
 
 from .models import GBRSample, GBRSequenceFile, CollectionEvent, CollectionSite
