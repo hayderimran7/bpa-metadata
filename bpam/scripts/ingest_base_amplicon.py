@@ -122,7 +122,7 @@ def add_samples(data):
         metadata.sample_extraction_id = entry.sample_extraction_id
         metadata.name = entry.name
 
-        if sequencing_facility is not None:
+        if entry.sequencing_facility is not None:
             metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
         metadata.index = _get_index(entry)
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
