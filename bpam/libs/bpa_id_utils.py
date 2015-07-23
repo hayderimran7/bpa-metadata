@@ -54,8 +54,6 @@ def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
                                                             'project': project,
                                                             'note': note
                                                         })
-    if created:
-        logger.debug("New BPA ID {0}".format(bpa_idx))
     return bpa_id, "OK"
 
 

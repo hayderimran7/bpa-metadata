@@ -41,8 +41,8 @@ def fix_pcr(pcr):
     Check pcr value
     """
     val = pcr.strip()
-    if val not in ['P', 'F', '']:
-        logger.error('PCR value [{0}] is neither F, P or "", setting to X'.format(pcr))
+    if val not in ('P', 'F', ''):
+        logger.error('PCR value [{0}] is neither F, P or "", setting to X'.format(pcr.encode('utf8')))
         val = 'X'
     return val
 
@@ -53,31 +53,31 @@ def get_data(file_name):
     """
 
     field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
-                  ('sample_extraction_id', 'Sample extraction ID', None),
-                  ('sequencing_facility', 'Sequencing facility', None),
-                  ('target', 'Target', lambda s: s.upper().strip()),
-                  ('index', 'Index', lambda s: s[:12]),
-                  ('index1', 'Index 1', lambda s: s[:12]),
-                  ('index2', 'Index2', lambda s: s[:12]),
-                  ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
-                  ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
-                  ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
-                  ('dilution', 'Dilution used', fix_dilution),
-                  ('sequencing_run_number', 'Sequencing run number', None),
-                  ('flow_cell_id', 'Flowcell', None),
-                  ('reads', ('# of RAW reads', '# of reads'), ingest_utils.get_int),
-                  ('name', 'Sample name on sample sheet', None),
-                  ('analysis_software_version', 'AnalysisSoftwareVersion', None),
-                  ('comments', 'Comments', None),
-                  ]
+            ('sample_extraction_id', 'Sample extraction ID', None),
+            ('sequencing_facility', 'Sequencing facility', None),
+            ('target', 'Target', lambda s: s.upper().strip()),
+            ('index', 'Index', lambda s: s[:12]),
+            ('index1', 'Index 1', lambda s: s[:12]),
+            ('index2', 'Index2', lambda s: s[:12]),
+            ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
+            ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
+            ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
+            ('dilution', 'Dilution used', fix_dilution),
+            ('sequencing_run_number', 'Sequencing run number', None),
+            ('flow_cell_id', 'Flowcell', None),
+            ('reads', ('# of RAW reads', '# of reads'), ingest_utils.get_int),
+            ('name', 'Sample name on sample sheet', None),
+            ('analysis_software_version', 'AnalysisSoftwareVersion', None),
+            ('comments', 'Comments', None),
+            ]
 
     wrapper = ExcelWrapper(field_spec,
-                           file_name,
-                           sheet_name='Sheet1',
-                           header_length=4,
-                           column_name_row_index=1,
-                           formatting_info=True,
-                           pick_first_sheet=True)
+            file_name,
+            sheet_name='Sheet1',
+            header_length=4,
+            column_name_row_index=1,
+            formatting_info=True,
+            pick_first_sheet=True)
 
     return wrapper.get_all()
 
@@ -122,7 +122,7 @@ def add_samples(data):
         metadata.sample_extraction_id = entry.sample_extraction_id
         metadata.name = entry.name
 
-        metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
+        # metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
         metadata.index = _get_index(entry)
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
         metadata.pcr_1_to_100 = entry.pcr_1_to_100
@@ -163,6 +163,13 @@ def parse_md5_file(md5_file):
     targets = ('16S', '18S', 'ITS', 'A16S')
 
     def get_bpa_id_from_filename(parts):
+        try:
+            int(parts[0])
+        except ValueError:
+            logger.error("{} is not a BPA_ID".format(parts[0]))
+            return None, None
+
+
         for _target in targets:
             _index = parts.index(_target) if _target in parts else -1
             if _index != -1:
@@ -184,15 +191,14 @@ def parse_md5_file(md5_file):
             md5, filename = line.split()
             file_data['md5'] = md5
 
-            filename = filename.replace('-', '_')
             filename_parts = filename.split('_')
-
             extraction_id, rest = get_bpa_id_from_filename(filename_parts)
             if extraction_id is None:
                 continue
 
-            if len(rest) == 8:
-                target, vendor, index, well, sequence, lane, run_num, run_id = rest
+            # 12897_1_16S_AGRF_TTCCTAGGTGAG_A801W_S67_L001_I1
+            if len(rest) == 7:
+                target, vendor, index, well, sequence, lane, run_num = rest
 
                 file_data['filename'] = filename
                 file_data['extraction_id'] = extraction_id
@@ -203,10 +209,9 @@ def parse_md5_file(md5_file):
                 file_data['sequence'] = sequence
                 file_data['lane'] = lane
                 file_data['run'] = run_num
-                file_data['run_id'] = run_id
 
-            elif len(rest) == 9:
-                target, vendor, index1, index2, well, sequence, lane, run_num, run_id = rest
+            elif len(rest) == 8:
+                target, vendor, index1, index2, well, sequence, lane, run_num = rest
 
                 file_data['filename'] = filename
                 file_data['extraction_id'] = extraction_id
@@ -217,7 +222,6 @@ def parse_md5_file(md5_file):
                 file_data['sequence'] = sequence
                 file_data['lane'] = lane
                 file_data['run'] = run_num
-                file_data['run_id'] = run_id
             else:
                 logger.error('Ignoring line {} from {} with missing data'.format(filename, md5_file))
                 continue
@@ -258,8 +262,10 @@ def add_md5(data):
         extraction_id = file_data['extraction_id']
         target = file_data['target']
         try:
-            metadata = AmpliconSequencingMetadata.objects.get(target=target,
-                                                              sample_extraction_id=extraction_id)
+            metadata = AmpliconSequencingMetadata.objects.get(
+                    target=target,
+                    sample_extraction_id=extraction_id)
+
         except AmpliconSequencingMetadata.DoesNotExist:
             logger.warning('No Amplicon Metadata for {0} {1}'.format(extraction_id, target))
             continue
@@ -302,7 +308,9 @@ def truncate():
 
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher.clean()
     fetcher.fetch_metadata_from_folder()
+
     truncate()
     # find all the spreadsheets in the data directory and ingest them
     do_metadata()
