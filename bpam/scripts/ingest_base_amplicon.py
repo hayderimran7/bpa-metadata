@@ -122,8 +122,10 @@ def add_samples(data):
         metadata.sample_extraction_id = entry.sample_extraction_id
         metadata.name = entry.name
 
-        if entry.sequencing_facility is not None:
-            metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
+        # fix this to be handled by run
+        # if entry.sequencing_facility is not None:
+        #    metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
+
         metadata.index = _get_index(entry)
         metadata.pcr_1_to_10 = entry.pcr_1_to_10
         metadata.pcr_1_to_100 = entry.pcr_1_to_100
@@ -266,6 +268,9 @@ def add_md5(data):
             metadata = AmpliconSequencingMetadata.objects.get(
                     target=target,
                     sample_extraction_id=extraction_id)
+            # sequncing faciliy dropped from metadata
+            metadata.sequencing_facility = Facility.objects.get_or_create(name=file_data['vendor'])[0]
+            metadata.save()
 
         except AmpliconSequencingMetadata.DoesNotExist:
             logger.warning('No Amplicon Metadata for {0} {1}'.format(extraction_id, target))
