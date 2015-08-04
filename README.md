@@ -44,6 +44,10 @@ Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rm
 ## Licence
 BPA Metadata is released under the GPL Version 3.0 licence. See source for a licence copy.
 
+## Contributing
+* Fork next_release branch
+* Make changes on a feature branch
+* Submit pull request
 
 ## CCG Internal documentation
 
