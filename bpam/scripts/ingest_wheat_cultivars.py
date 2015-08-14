@@ -16,10 +16,9 @@ BPA_ID = "102.100.100"
 PROJECT_ID = 'WHEAT_CULTIVAR'
 PROJECT_DESCRIPTION = 'Wheat Cultivars'
 
-METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/metadata/'  # the folder
-METADATA_FILE = 'current.xlsx'
+# all metadata and checksums should be linked out here
+METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/tracking/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
-
 
 def get_dna_source(description):
     """
@@ -62,6 +61,9 @@ def ingest_samples(samples):
         """
 
         bpa_id = _get_bpa_id(e)
+        if bpa_id is None:
+            return
+
         wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
         cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
@@ -83,12 +85,11 @@ def get_cultivar_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
+    field_spec = [('bpa_id', ('Unique ID', 'Soil sample unique ID'), lambda s: s.replace('/', '.')),
                   ('variety', 'Variety', None),
                   ('cultivar_code', 'Comment[Sample code]', None),  # C
                   ('library', 'Parameter Value[library layout]', None),
-                  ('library_construction', 'Parameter Value[library nominal fragment size]',
-                   ingest_utils.get_clean_number),
+                  ('library_construction', 'Parameter Value[library nominal fragment size]', ingest_utils.get_clean_number),
                   ('index', 'Parameter Value[index]', None),
                   ('extract_name', 'Extract Name', None),
                   ('cycle_count', 'Parameter Value[Cycle count]', ingest_utils.get_clean_number),
@@ -106,9 +107,9 @@ def get_cultivar_sample_data(file_name):
     wrapper = ExcelWrapper(
         field_spec,
         file_name,
-        sheet_name='a_genome_seq_assay_BPA-Wheat-Cu',
-        header_length=1,
-        column_name_row_index=0)
+        sheet_name='Sheet1',
+        header_length=3,
+        column_name_row_index=1)
     return wrapper.get_all()
 
 
@@ -156,7 +157,11 @@ def ingest_runs(sample_data):
         """
         The run produced several files
         """
-        flow_cell_id = entry.flow_cell_id.strip()
+        flow_cell_id = entry.flow_cell_id
+        if flow_cell_id is None:
+            return
+
+        flow_cell_id = flow_cell_id.strip()
         bpa_id = _get_bpa_id(e)
         run_number = entry.run_number
         sample = get_sample(bpa_id)
@@ -188,7 +193,11 @@ def ingest_runs(sample_data):
 
         # Use the corrected sequence filename, as for this project (Wheat Cultivars),
         # that's what the user wants to see
-        file_name = entry.corrected_sequence_filename.strip()
+        file_name = entry.corrected_sequence_filename
+        if file_name is None:
+            return
+
+        file_name = corrected_sequence_filename.strip()
         if file_name != "":
             f = CultivarSequenceFile()
             f.sample = CultivarSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
@@ -217,18 +226,27 @@ def truncate():
 
 
 def ingest(file_name):
-    logger.info('Starting Wheat Cultivar metadata import')
     sample_data = list(get_cultivar_sample_data(file_name))
     bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
     ingest_samples(sample_data)
     ingest_runs(sample_data)
-    logger.info('Wheat Cultivar metadata import complete')
 
+
+def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
+
+    logger.info('Ingesting Wheat Cultivars metadata from {0}'.format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing Wheat Cultivars {0}'.format(metadata_file))
+        ingest(metadata_file)
 
 def run():
     truncate()
 
     fetcher = Fetcher(DATA_DIR, METADATA_URL)
-    fetcher.fetch(METADATA_FILE)
+    fetcher.clean()
+    fetcher.fetch_metadata_from_folder()
 
-    ingest(Path(DATA_DIR, METADATA_FILE))
+    do_metadata()

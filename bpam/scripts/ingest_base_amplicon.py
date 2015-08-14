@@ -52,7 +52,8 @@ def get_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
+    field_spec = [
+            ('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
             ('sample_extraction_id', 'Sample extraction ID', None),
             ('sequencing_facility', 'Sequencing facility', None),
             ('target', 'Target', lambda s: s.upper().strip()),
