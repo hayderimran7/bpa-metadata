@@ -9,6 +9,7 @@ from libs.excel_wrapper import ExcelWrapper
 
 from libs.fetch_data import Fetcher
 from unipath import Path
+from collections import namedtuple
 
 logger = get_logger(__name__)
 
@@ -242,6 +243,113 @@ def do_metadata():
         logger.info('Processing Wheat Cultivars {0}'.format(metadata_file))
         ingest(metadata_file)
 
+
+def parse_md5_file(md5_file):
+    """
+    Parse md5 file
+    PAS_AD08TAACXX_GCCAAT_L002_R1.fastq.gz
+    """
+
+    Cultivar = namedtuple('Cultivar', 'desc bpa_id')
+    cultivars = {
+            'DRY': Cultivar('Drysdale', '102.100.100.13703'),
+            'GLA': Cultivar('Gladius', '102.100.100.13704'),
+            'RAC': Cultivar('RAC 875', '102.100.100.13705'),
+            'EXC': Cultivar('Excalibur', '102.100.100.13706'),
+            'KUK': Cultivar('Kukri', '102.100.100.13707'),
+            'ACB': Cultivar('AC Barry', '102.100.100.13708'),
+            'BAX': Cultivar('Baxter', '102.100.100.13709'),
+            'CH7': Cultivar('Chara', '102.100.100.13710'),
+            'VOL': Cultivar('Volcani DD1', '102.100.100.13711'),
+            'WES': Cultivar('Westonia', '102.100.100.13712'),
+            'PAS': Cultivar('Pastor', '102.100.100.13713'),
+            'XIA': Cultivar('Xiaoyan 54', '102.100.100.13714'),
+            'YIT': Cultivar('Yitpi', '102.100.100.13715'),
+            'ALS': Cultivar('Alsen', '102.100.100.13716'),
+            'WYA': Cultivar('Wyalcatchem', '102.100.100.13717'),
+            'H45': Cultivar('H45', '102.100.100.13718'),
+        }
+
+
+    data = []
+
+    with open(md5_file) as f:
+        for line in f.read().splitlines():
+            line = line.strip()
+            if line == '':
+                continue
+
+            file_data = {}
+            md5, filename = line.split()
+            file_data['md5'] = md5
+
+            filename_parts = filename.split('.')[0].split('_')
+            key = filename_parts[0]
+            cultivar = cultivars.get(key, None)
+            if cultivar is None:
+                log.warning("".format(key))
+                continue
+
+            # PAS_AD08TAACXX_GCCAAT_L002_R1.fastq.gz
+            if len(filename_parts) == 5:
+                key, flowcell, index, lane, run = filename_parts
+
+                file_data['filename'] = filename
+                file_data['md5'] = md5
+                file_data['bpa_id'] = cultivar.bpa_id
+                file_data['key'] = key
+                file_data['flowcell'] = flowcell
+                file_data['index'] = index
+                file_data['lane'] = lane
+                file_data['run'] = run
+                file_data['description'] = cultivar.desc
+            else:
+                logger.error('Ignoring line {} from {} with incomprehensible data'.format(filename, md5_file))
+                continue
+
+            data.append(file_data)
+
+    return data
+
+
+def add_md5(data):
+    """
+    Add md5 data
+    """
+
+    def get_bpa_id(bpa_idx):
+        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_ID, 'Created by Wheat Cultivar ingestor')
+        if bpa_id is None:
+            return None
+        sample, _ = CultivarSample.objects.get_or_create(bpa_id=bpa_id)
+        return sample
+
+
+    for file_data in data:
+        f = CultivarSequenceFile()
+        f.sample = get_bpa_id(file_data['bpa_id'])
+        f.lane_number = ingest_utils.get_clean_number(file_data["lane"])
+        f.filename = file_data["filename"] 
+        f.md5 = file_data["md5"]
+        f.save()
+
+
+def do_md5():
+    """
+    Ingest the md5 files
+    """
+
+    def is_md5file(path):
+        if path.isfile() and path.ext == '.md5':
+            return True
+
+    logger.info('Ingesting Wheat Cultivar md5 file information from {0}'.format(DATA_DIR))
+    for md5_file in DATA_DIR.walk(filter=is_md5file):
+        logger.info('Processing Wheat Cultivar md5 file {0}'.format(md5_file))
+        data = parse_md5_file(md5_file)
+        add_md5(data)
+
+
 def run():
     truncate()
 
@@ -249,4 +357,5 @@ def run():
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 
+    do_md5()
     do_metadata()
