@@ -303,6 +303,20 @@ def parse_md5_file(md5_file):
                 file_data['lane'] = int(lane[1:])
                 file_data['run'] = int(run[1:])
                 file_data['description'] = cultivar.desc
+
+            # older files does not have the index
+            elif len(filename_parts) == 4:
+                key, flowcell, lane, run = filename_parts
+
+                file_data['filename'] = filename
+                file_data['md5'] = md5
+                file_data['bpa_id'] = cultivar.bpa_id
+                file_data['key'] = key
+                file_data['flowcell'] = flowcell
+                file_data['index'] = "NoIndex"
+                file_data['lane'] = int(lane[1:])
+                file_data['run'] = int(run[1:])
+                file_data['description'] = cultivar.desc
             else:
                 logger.error('Ignoring line {} from {} with incomprehensible data'.format(filename, md5_file))
                 continue
@@ -351,7 +365,6 @@ def add_md5(data):
         f.filename = file_data["filename"]
         f.md5 = file_data["md5"]
         f.save()
-        logger.info("Wheat Cultivar sequence file {} ingested".format(f.filename))
 
 
 def do_md5():
