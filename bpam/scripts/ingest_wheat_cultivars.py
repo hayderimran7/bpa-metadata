@@ -287,7 +287,7 @@ def parse_md5_file(md5_file):
             key = filename_parts[0]
             cultivar = cultivars.get(key, None)
             if cultivar is None:
-                log.warning("".format(key))
+                logger.warning("Key {} from {} ignored".format(key, md5_file))
                 continue
 
             # PAS_AD08TAACXX_GCCAAT_L002_R1.fastq.gz
@@ -300,8 +300,8 @@ def parse_md5_file(md5_file):
                 file_data['key'] = key
                 file_data['flowcell'] = flowcell
                 file_data['index'] = index
-                file_data['lane'] = lane
-                file_data['run'] = run
+                file_data['lane'] = int(lane[1:])
+                file_data['run'] = int(run[1:])
                 file_data['description'] = cultivar.desc
             else:
                 logger.error('Ignoring line {} from {} with incomprehensible data'.format(filename, md5_file))
@@ -321,17 +321,37 @@ def add_md5(data):
         bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_ID, 'Created by Wheat Cultivar ingestor')
         if bpa_id is None:
             return None
-        sample, _ = CultivarSample.objects.get_or_create(bpa_id=bpa_id)
-        return sample
+        return bpa_id
 
 
+    def get_run(flow_cell_id, run_number, sample):
+        cultivar_run, _ = CultivarRun.objects.get_or_create(
+            flow_cell_id=flow_cell_id,
+            run_number=run_number,
+            sample=sample)
+        return cultivar_run
+
+    organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
     for file_data in data:
+
+        bpa_idx = file_data["bpa_id"]
+        bpa_id = get_bpa_id(bpa_idx)
+        if bpa_id is None:
+            continue
+
+        flowcell = file_data["flowcell"]
+        run_number = file_data["run"]
+        lane = file_data["lane"]
+
         f = CultivarSequenceFile()
-        f.sample = get_bpa_id(file_data['bpa_id'])
-        f.lane_number = ingest_utils.get_clean_number(file_data["lane"])
-        f.filename = file_data["filename"] 
+        sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
+        f.sample = sample
+        f.lane_number = lane
+        f.run = get_run(flowcell, run_number, sample)
+        f.filename = file_data["filename"]
         f.md5 = file_data["md5"]
         f.save()
+        logger.info("Wheat Cultivar sequence file {} ingested".format(f.filename))
 
 
 def do_md5():
