@@ -23,7 +23,10 @@ def ingest_bpa_ids(data, project_key, project_name):
         if isinstance(e, dict):
             bpa_id = e['bpa_id'].strip()
         elif isinstance(e, tuple):
-            bpa_id = e.bpa_id.strip()
+            if e.bpa_id is not None:
+                bpa_id = e.bpa_id.strip()
+            else:
+                continue
         if BPAIdValidator(bpa_id).is_valid():
             id_set.add(bpa_id)
 
