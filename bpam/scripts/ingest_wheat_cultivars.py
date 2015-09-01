@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from apps.common.models import DNASource, Sequencer
-from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarRun, CultivarSequenceFile
+from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
@@ -221,7 +221,6 @@ def truncate():
 
     cursor = connection.cursor()
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSample._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarRun._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarProtocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
 
@@ -272,6 +271,7 @@ def parse_md5_file(md5_file):
 
 
     data = []
+    MD5Parsed = namedtuple('MD5Parsed', 'cultivar_key lib_type lb_size flowcell barcode lane read')
 
     with open(md5_file) as f:
         for line in f.read().splitlines():
@@ -279,47 +279,32 @@ def parse_md5_file(md5_file):
             if line == '':
                 continue
 
-            file_data = {}
+            file_data = MD5Parsed()
             md5, filename = line.split()
-            file_data['md5'] = md5
+            file_data.md5 = md5
 
             filename_parts = filename.split('.')[0].split('_')
-            key = filename_parts[0]
-            cultivar = cultivars.get(key, None)
+            cultivar_key = filename_parts[0]
+            cultivar = cultivars.get(cultivar_key, None)
             if cultivar is None:
-                logger.warning("Key {} from {} ignored".format(key, md5_file))
+                logger.warning("Key {} from {} ignored".format(cultivar_key, md5_file))
                 continue
 
-            # PAS_AD08TAACXX_GCCAAT_L002_R1.fastq.gz
-            if len(filename_parts) == 5:
-                key, flowcell, index, lane, run = filename_parts
+            # WYA_PE_300bp_AD0ALYACXX_ATCACG_L003_R2.fastq.gz
+            # [Cultivar_key]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
+            if len(filename_parts) == 7:
+                cultivar_key, lib_type, lb_size, flowcell, barcode, lane, read = filename_parts
 
-                file_data['filename'] = filename
-                file_data['md5'] = md5
-                file_data['bpa_id'] = cultivar.bpa_id
-                file_data['key'] = key
-                file_data['flowcell'] = flowcell
-                file_data['index'] = index
-                file_data['lane'] = int(lane[1:])
-                file_data['run'] = int(run[1:])
-                file_data['description'] = cultivar.desc
-
-            # older files does not have the index
-            elif len(filename_parts) == 4:
-                key, flowcell, lane, run = filename_parts
-
-                file_data['filename'] = filename
-                file_data['md5'] = md5
-                file_data['bpa_id'] = cultivar.bpa_id
-                file_data['key'] = key
-                file_data['flowcell'] = flowcell
-                file_data['index'] = "NoIndex"
-                file_data['lane'] = int(lane[1:])
-                file_data['run'] = int(run[1:])
-                file_data['description'] = cultivar.desc
-            else:
-                logger.error('Ignoring line {} from {} with incomprehensible data'.format(filename, md5_file))
-                continue
+                file_data.filename = filename
+                file_data.md5 = md5
+                file_data.cultivar_key = cultivar_key
+                file_data.bpa_id = cultivar.bpa_id
+                file_data.cultivar = cultivar
+                file_data.flowcell = flowcell
+                file_data.barcode = barcode
+                file_data.lane = int(lane[1:])
+                file_data.read = int(read[1:])
+                file_data.description = cultivar.desc
 
             data.append(file_data)
 
@@ -337,33 +322,26 @@ def add_md5(data):
             return None
         return bpa_id
 
-
-    def get_run(flow_cell_id, run_number, sample):
-        cultivar_run, _ = CultivarRun.objects.get_or_create(
-            flow_cell_id=flow_cell_id,
-            run_number=run_number,
-            sample=sample)
-        return cultivar_run
-
     organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
-    for file_data in data:
 
-        bpa_idx = file_data["bpa_id"]
+    for file_data in data:
+        bpa_idx = file_data.bpa_id
         bpa_id = get_bpa_id(bpa_idx)
         if bpa_id is None:
             continue
 
-        flowcell = file_data["flowcell"]
-        run_number = file_data["run"]
-        lane = file_data["lane"]
+        flowcell = file_data.flowcell
 
         f = CultivarSequenceFile()
         sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         f.sample = sample
+        
+        f.index_number = file_data.barcode
+        f.read_number = file_data.read
         f.lane_number = lane
-        f.run = get_run(flowcell, run_number, sample)
-        f.filename = file_data["filename"]
-        f.md5 = file_data["md5"]
+
+        f.filename = file_data.filename
+        f.md5 = file_data.md5
         f.save()
 
 
