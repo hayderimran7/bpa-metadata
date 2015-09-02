@@ -249,29 +249,79 @@ def parse_md5_file(md5_file):
     PAS_AD08TAACXX_GCCAAT_L002_R1.fastq.gz
     """
 
-    Cultivar = namedtuple('Cultivar', 'desc bpa_id')
-    cultivars = {
-            'DRY': Cultivar('Drysdale', '102.100.100.13703'),
-            'GLA': Cultivar('Gladius', '102.100.100.13704'),
-            'RAC': Cultivar('RAC 875', '102.100.100.13705'),
-            'EXC': Cultivar('Excalibur', '102.100.100.13706'),
-            'KUK': Cultivar('Kukri', '102.100.100.13707'),
-            'ACB': Cultivar('AC Barry', '102.100.100.13708'),
-            'BAX': Cultivar('Baxter', '102.100.100.13709'),
-            'CH7': Cultivar('Chara', '102.100.100.13710'),
-            'VOL': Cultivar('Volcani DD1', '102.100.100.13711'),
-            'WES': Cultivar('Westonia', '102.100.100.13712'),
-            'PAS': Cultivar('Pastor', '102.100.100.13713'),
-            'XIA': Cultivar('Xiaoyan 54', '102.100.100.13714'),
-            'YIT': Cultivar('Yitpi', '102.100.100.13715'),
-            'ALS': Cultivar('Alsen', '102.100.100.13716'),
-            'WYA': Cultivar('Wyalcatchem', '102.100.100.13717'),
-            'H45': Cultivar('H45', '102.100.100.13718'),
-        }
+    class MD5ParsedLine(object):
 
+        Cultivar = namedtuple('Cultivar', 'desc bpa_id')
+        cultivars = {
+                'DRY': Cultivar('Drysdale', '102.100.100.13703'),
+                'GLA': Cultivar('Gladius', '102.100.100.13704'),
+                'RAC': Cultivar('RAC 875', '102.100.100.13705'),
+                'EXC': Cultivar('Excalibur', '102.100.100.13706'),
+                'KUK': Cultivar('Kukri', '102.100.100.13707'),
+                'ACB': Cultivar('AC Barry', '102.100.100.13708'),
+                'BAX': Cultivar('Baxter', '102.100.100.13709'),
+                'CH7': Cultivar('Chara', '102.100.100.13710'),
+                'VOL': Cultivar('Volcani DD1', '102.100.100.13711'),
+                'WES': Cultivar('Westonia', '102.100.100.13712'),
+                'PAS': Cultivar('Pastor', '102.100.100.13713'),
+                'XIA': Cultivar('Xiaoyan 54', '102.100.100.13714'),
+                'YIT': Cultivar('Yitpi', '102.100.100.13715'),
+                'ALS': Cultivar('Alsen', '102.100.100.13716'),
+                'WYA': Cultivar('Wyalcatchem', '102.100.100.13717'),
+                'H45': Cultivar('H45', '102.100.100.13718'),
+            }
+
+        def __init__(self, line):
+            self._line = line
+
+            self.cultivar_key = None
+            self.cultivar = None
+            self.lib_type = None
+            self.lb_size = None
+            self.flowcell = None
+            self.barcode = None
+
+            self.md5 = None
+            self.filename = None
+
+            self.__parse_line()
+
+            self.ok = False
+
+        def __parse_line(self):
+            """ unpack the md5 line """
+            self.md5, self.filename = self._line.split()
+
+            filename_parts = self.filename.split('.')[0].split('_')
+            self.cultivar_key = filename_parts[0]
+            self.cultivar = self.cultivars.get(self.cultivar_key, None)
+
+            # WYA_PE_300bp_AD0ALYACXX_ATCACG_L003_R2.fastq.gz
+            # [Cultivar_key]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
+            if len(filename_parts) == 7:
+                _key, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read = filename_parts
+                self.ok = True
+            else:
+                self.ok = False # be explicit
+
+        @property
+        def lane(self):
+            return self.lane
+
+        @lane.setter
+        def lane(self, val):
+            print(val)
+            self.lane = int(val[1:])
+
+        @property
+        def read(self):
+            return self.read
+
+        @read.setter
+        def read(self, val):
+            self.read = int(val[1:])
 
     data = []
-    MD5Parsed = namedtuple('MD5Parsed', 'cultivar_key lib_type lb_size flowcell barcode lane read')
 
     with open(md5_file) as f:
         for line in f.read().splitlines():
@@ -279,39 +329,14 @@ def parse_md5_file(md5_file):
             if line == '':
                 continue
 
-            file_data = MD5Parsed()
-            md5, filename = line.split()
-            file_data.md5 = md5
-
-            filename_parts = filename.split('.')[0].split('_')
-            cultivar_key = filename_parts[0]
-            cultivar = cultivars.get(cultivar_key, None)
-            if cultivar is None:
-                logger.warning("Key {} from {} ignored".format(cultivar_key, md5_file))
-                continue
-
-            # WYA_PE_300bp_AD0ALYACXX_ATCACG_L003_R2.fastq.gz
-            # [Cultivar_key]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
-            if len(filename_parts) == 7:
-                cultivar_key, lib_type, lb_size, flowcell, barcode, lane, read = filename_parts
-
-                file_data.filename = filename
-                file_data.md5 = md5
-                file_data.cultivar_key = cultivar_key
-                file_data.bpa_id = cultivar.bpa_id
-                file_data.cultivar = cultivar
-                file_data.flowcell = flowcell
-                file_data.barcode = barcode
-                file_data.lane = int(lane[1:])
-                file_data.read = int(read[1:])
-                file_data.description = cultivar.desc
-
-            data.append(file_data)
+            parsed_line = MD5ParsedLine(line)
+            if parsed_line.ok:
+                data.append(parsed_line)
 
     return data
 
 
-def add_md5(data):
+def add_md5(md5_lines):
     """
     Add md5 data
     """
@@ -324,24 +349,23 @@ def add_md5(data):
 
     organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
 
-    for file_data in data:
-        bpa_idx = file_data.bpa_id
+    for md5_line in md5_lines:
+        bpa_idx = md5_line.bpa_id
         bpa_id = get_bpa_id(bpa_idx)
         if bpa_id is None:
             continue
 
-        flowcell = file_data.flowcell
+        flowcell = md5_line.flowcell
 
         f = CultivarSequenceFile()
         sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         f.sample = sample
-        
-        f.index_number = file_data.barcode
-        f.read_number = file_data.read
+        f.index_number = md5_line.barcode
+        f.read_number = md5_line.read
         f.lane_number = lane
 
-        f.filename = file_data.filename
-        f.md5 = file_data.md5
+        f.filename = md5_line.filename
+        f.md5 = md5_line.md5
         f.save()
 
 
