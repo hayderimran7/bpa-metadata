@@ -21,24 +21,6 @@ PROJECT_DESCRIPTION = 'Wheat Cultivars'
 METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/tracking/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
-def get_dna_source(description):
-    """
-    Get a DNA source if it exists, if it doesn't make it.
-    """
-
-    description = description.strip().capitalize()
-    if description == '':
-        logger.debug('Set blank description to unknown')
-        description = 'Unknown'
-
-    source, created = DNASource.objects.get_or_create(description=description)
-    if created:
-        source.note = 'Added by Wheat Cultivars Project'
-        source.save()
-
-    return source
-
-
 def _get_bpa_id(entry):
     """
     Get or make BPA ID
@@ -250,7 +232,6 @@ def parse_md5_file(md5_file):
     """
 
     class MD5ParsedLine(object):
-
         Cultivar = namedtuple('Cultivar', 'desc bpa_id')
         cultivars = {
                 'DRY': Cultivar('Drysdale', '102.100.100.13703'),
@@ -276,6 +257,7 @@ def parse_md5_file(md5_file):
 
             self.cultivar_key = None
             self.cultivar = None
+            self.bpa_id = None
             self.lib_type = None
             self.lb_size = None
             self.flowcell = None
@@ -284,9 +266,31 @@ def parse_md5_file(md5_file):
             self.md5 = None
             self.filename = None
 
+            self._lane = None
+            self._read = None
+
+            self._ok = False
+
             self.__parse_line()
 
-            self.ok = False
+        def is_ok(self):
+            return self._ok
+
+        @property
+        def lane(self):
+            return self._lane
+
+        @lane.setter
+        def lane(self, val):
+            self._lane = int(val[1:])
+
+        @property
+        def read(self):
+            return self._read
+
+        @read.setter
+        def read(self, val):
+            self._read = int(val[1:])
 
         def __parse_line(self):
             """ unpack the md5 line """
@@ -294,32 +298,22 @@ def parse_md5_file(md5_file):
 
             filename_parts = self.filename.split('.')[0].split('_')
             self.cultivar_key = filename_parts[0]
+
+            # there are some files with an unknown cultivar code
             self.cultivar = self.cultivars.get(self.cultivar_key, None)
+            if self.cultivar is None:
+                self._ok = False
+                return
+
+            self.bpa_id = self.cultivar.bpa_id
 
             # WYA_PE_300bp_AD0ALYACXX_ATCACG_L003_R2.fastq.gz
             # [Cultivar_key]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
             if len(filename_parts) == 7:
                 _key, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read = filename_parts
-                self.ok = True
+                self._ok = True
             else:
-                self.ok = False # be explicit
-
-        @property
-        def lane(self):
-            return self.lane
-
-        @lane.setter
-        def lane(self, val):
-            print(val)
-            self.lane = int(val[1:])
-
-        @property
-        def read(self):
-            return self.read
-
-        @read.setter
-        def read(self, val):
-            self.read = int(val[1:])
+                self._ok = False # be explicit
 
     data = []
 
@@ -330,7 +324,7 @@ def parse_md5_file(md5_file):
                 continue
 
             parsed_line = MD5ParsedLine(line)
-            if parsed_line.ok:
+            if parsed_line.is_ok():
                 data.append(parsed_line)
 
     return data
@@ -360,14 +354,46 @@ def add_md5(md5_lines):
         f = CultivarSequenceFile()
         sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         f.sample = sample
-        f.index_number = md5_line.barcode
+        f.barcode = md5_line.barcode
         f.read_number = md5_line.read
-        f.lane_number = lane
+        f.lane_number = md5_line.lane
 
         f.filename = md5_line.filename
         f.md5 = md5_line.md5
         f.save()
 
+def get_cultivar_sample_characteristics(file_name):
+    """
+    The data sets is relatively small, so make a in-memory copy to simplify some operations.
+    """
+
+    field_spec = [
+            ("source_name", "BPA ID", None),
+            ("code", "Code", None),
+            ("bpa_id", "BPA ID", lambda s: s.replace("/", ".")),
+            ("characteristics", "Characteristics", None),
+            ("organism", "Organism", None),
+            ("variety", "Variety", None),
+            ("organism_part", "Organism part", None),
+            ("pedigree", "Pedigree", None),
+            ("developmental_stage", "Developmental stage", None),
+            ("yield_properties", "Yield properties", None),
+            ("morphology", "Morphology", None),
+            ("maturity", "Maturity", None),
+            ("pathogen_tolerance", "Pathogen tolerance", None),
+            ("drought_tolerance", "Drought tolerance", None),
+            ("soil_tolerance", "Soil tolerance", None),
+            ("classification", "Classification", None),
+            ("url", "Link", None),
+            ]
+
+    wrapper = ExcelWrapper(
+        field_spec,
+        file_name,
+        sheet_name="Characteristics",
+        header_length=1,
+        column_name_row_index=1)
+    return wrapper.get_all()
 
 def do_md5():
     """
