@@ -8,7 +8,7 @@
 {% breadcrumb "Sample" "" %}
 {% endblock %}
 
-{% block title %}Great Barrier Reef Sample Detail {% endblock %}
+{% block title %}Wheat Cultivar Sample Detail {% endblock %}
 
 {% block content %}
 <div class="panel panel-info">
@@ -22,32 +22,48 @@
                 <td> {{ sample.name }}</td>
             </tr>
             <tr>
-                <td> Organism</td>
-                <td> {{ sample.organism }}</td>
-            </tr>
-            <tr>
-                <td> Sample Label</td>
-                <td> {{ sample.sample_label}}</td>
+                <td> Source Name</td>
+                <td> {{ sample.source_name }}</td>
             </tr>
             <tr>
                 <td> Cultivar Code</td>
                 <td> {{ sample.cultivar_code}}</td>
             </tr>
             <tr>
-                <td> DNA/RNA Source</td>
-                <td> {{ sample.dna_source }}</td>
+                <td> Variety</td>
+                <td> {{ sample.variety }}</td>
             </tr>
             <tr>
-                <td> DNA/RNA Concentration</td>
-                <td> {{ sample.dna_rna_concentration }}</td>
+                <td> Sample Label</td>
+                <td> {{ sample.sample_label}}</td>
             </tr>
             <tr>
-                <td> Sequence Coverage</td>
-                <td> {{ sample.requested_sequence_coverage }}</td>
+                <td> Organism</td>
+                <td> {{ sample.organism }}</td>
             </tr>
             <tr>
-                <td> Contact Bioinformatician</td>
-                <td> {{ sample.contact_bioinformatician }}</td>
+                <td> Organism Part</td>
+                <td> {{ sample.organism_part }}</td>
+            </tr>
+            <tr>
+                <td> Pedigree </td>
+                <td> {{ sample.pedigree }}</td>
+            </tr>
+            <tr>
+                <td> Developmental Stage </td>
+                <td> {{ sample.dev_stage }}</td>
+            </tr>
+            <tr>
+                <td> Yield Properties </td>
+                <td> {{ sample.yield_properties }}</td>
+            </tr>
+            <tr>
+                <td> Morphology </td>
+                <td> {{ sample.morphology }}</td>
+            </tr>
+            <tr>
+                <td> Maturity </td>
+                <td> {{ sample.maturity }}</td>
             </tr>
             <tr>
                 <td> Extract Name</td>
