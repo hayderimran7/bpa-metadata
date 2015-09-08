@@ -66,20 +66,24 @@
                 <td> {{ sample.maturity }}</td>
             </tr>
             <tr>
-                <td> Extract Name</td>
-                <td> {{ sample.extract_name }}</td>
+                <td> Pathogen Tolerance </td>
+                <td> {{ sample.pathogen_tolerance }}</td>
             </tr>
             <tr>
-                <td> Protocol Reference</td>
-                <td> {{ sample.protocol_reference }}</td>
+                <td> Drought Tolerance </td>
+                <td> {{ sample.drought_tolerance }}</td>
             </tr>
             <tr>
-                <td> Casava Version</td>
-                <td> {{ sample.casava_version }}</td>
+                <td> Soil Tolerance </td>
+                <td> {{ sample.soil_tolerance }}</td>
             </tr>
             <tr>
-                <td> Note</td>
-                <td> {{ sample.comments_by_facility }}</td>
+                <td> Classification </td>
+                <td> {{ sample.classification }}</td>
+            </tr>
+            <tr>
+                <td> GRIS </td>
+                <td> <a href="{{ sample.url }}"> {{ sample.url }} </a></td>
             </tr>
         </tbody>
     </table>

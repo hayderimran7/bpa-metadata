@@ -38,6 +38,8 @@ def ingest_samples(samples):
     Add all the cultivar samples
     """
 
+    wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
+
     def add_sample(e):
         """
         Adds new sample or updates existing sample
@@ -47,14 +49,31 @@ def ingest_samples(samples):
         if bpa_id is None:
             return
 
-        wheat_organism, _ = Organism.objects.get_or_create(genus='Triticum', species='Aestivum')
         cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
+        cultivar_sample.name = e.variety # DDD
+        cultivar_sample.variety = e.variety
+        cultivar_sample.cultivar_code = e.code
+        cultivar_sample.source_name = e.source_name
+        cultivar_sample.characteristics= e.characteristics
         cultivar_sample.organism = wheat_organism
-        cultivar_sample.name = e.variety
-        cultivar_sample.cultivar_code = e.cultivar_code
-        cultivar_sample.casava_version = e.casava_version
+
+        cultivar_sample.organism_part = e.organism_part
+        cultivar_sample.pedigree = e.pedigree
+        cultivar_sample.dev_stage = e.dev_stage
+        cultivar_sample.yield_properties = e.yield_properties
+        cultivar_sample.morphology = e.morphology
+        cultivar_sample.maturity  = e.maturity
+
+        cultivar_sample.pathogen_tolerance  = e.pathogen_tolerance
+        cultivar_sample.drought_tolerance  = e.drought_tolerance
+        cultivar_sample.soil_tolerance = e.soil_tolerance
+
+        cultivar_sample.classification= e.classification
+        cultivar_sample.url= e.url
+
         cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
+
         cultivar_sample.save()
         logger.info("Ingested Cultivars sample {0}".format(cultivar_sample.name))
 
@@ -97,13 +116,6 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarProtocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
 
-
-def ingest(file_name):
-    sample_data = list(get_cultivar_sample_data(file_name))
-    bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
-    ingest_samples(sample_data)
-
-
 def do_metadata():
     def is_metadata(path):
         if path.isfile() and path.ext == '.xlsx':
@@ -112,7 +124,9 @@ def do_metadata():
     logger.info('Ingesting Wheat Cultivars metadata from {0}'.format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info('Processing Wheat Cultivars {0}'.format(metadata_file))
-        ingest(metadata_file)
+        sample_data = list(get_cultivar_sample_characteristics(metadata_file))
+        bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
+        ingest_samples(sample_data)
 
 
 def parse_md5_file(md5_file):
@@ -246,7 +260,6 @@ def add_md5(md5_lines):
         f.sample = sample
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
-        f.run_number = md5_line.run_number
         f.lane_number = md5_line.lane
 
         f.filename = md5_line.filename
@@ -255,26 +268,26 @@ def add_md5(md5_lines):
 
 def get_cultivar_sample_characteristics(file_name):
     """
-    The data sets is relatively small, so make a in-memory copy to simplify some operations.
+    This is the data from the Characteristics Sheet
     """
 
     field_spec = [
             ("source_name", "BPA ID", None),
-            ("code", "Code", None),
+            ("code", "CODE", None),
             ("bpa_id", "BPA ID", lambda s: s.replace("/", ".")),
             ("characteristics", "Characteristics", None),
             ("organism", "Organism", None),
             ("variety", "Variety", None),
             ("organism_part", "Organism part", None),
             ("pedigree", "Pedigree", None),
-            ("developmental_stage", "Developmental stage", None),
+            ("dev_stage", "Developmental stage", None),
             ("yield_properties", "Yield properties", None),
             ("morphology", "Morphology", None),
             ("maturity", "Maturity", None),
             ("pathogen_tolerance", "Pathogen tolerance", None),
             ("drought_tolerance", "Drought tolerance", None),
             ("soil_tolerance", "Soil tolerance", None),
-            ("classification", "Classification", None),
+            ("classification", "International classification", None),
             ("url", "Link", None),
             ]
 
@@ -282,8 +295,7 @@ def get_cultivar_sample_characteristics(file_name):
         field_spec,
         file_name,
         sheet_name="Characteristics",
-        header_length=1,
-        column_name_row_index=1)
+        header_length=1)
     return wrapper.get_all()
 
 def do_md5():
@@ -309,5 +321,5 @@ def run():
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 
-    do_md5()
     do_metadata()
+    do_md5()

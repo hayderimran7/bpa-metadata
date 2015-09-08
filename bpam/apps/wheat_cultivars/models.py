@@ -17,7 +17,7 @@ class CultivarSample(Sample, DebugNote):
 
     organism = models.ForeignKey(Organism)
     organism_part = models.CharField(_("Organism Part"), max_length=100, null=True, blank=True)
-    pedigree = models.CharField(_("Pedigree"), max_length=200, null=True, blank=True)
+    pedigree = models.TextField(_("Pedigree"), null=True, blank=True)
     dev_stage = models.CharField(_("Developmental Stage"), max_length=200, null=True, blank=True)
     yield_properties = models.CharField(_("Yield"), max_length=200, null=True, blank=True)
     morphology = models.CharField(_("Morphology"), max_length=200, null=True, blank=True)
