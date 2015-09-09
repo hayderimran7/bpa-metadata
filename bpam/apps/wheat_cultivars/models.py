@@ -34,6 +34,7 @@ class CultivarSample(Sample, DebugNote):
 class CultivarProtocol(Protocol):
     casava_version = models.CharField(max_length=10, null=True, blank=True)
 
+
 class CultivarSequenceFile(SequenceFile):
     """
     Sequence Files resulting from a run
@@ -41,6 +42,7 @@ class CultivarSequenceFile(SequenceFile):
 
     project_name = 'wheat_cultivars'
     sample = models.ForeignKey(CultivarSample)
+    protocol = models.ForeignKey(CultivarProtocol)
     run_number = models.IntegerField(null=True, blank=True)
     barcode = models.CharField(max_length=20, null=True, blank=True)
 

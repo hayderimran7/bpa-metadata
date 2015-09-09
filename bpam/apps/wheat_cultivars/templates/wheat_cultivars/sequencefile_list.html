@@ -45,12 +45,12 @@
                 <a href="{% url 'wheat_cultivars:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
             </td>
             <td>{{ sfile.sample.name }}</td>
-            <td>{{ sfile.run.protocol.library_type }}</td>
-            <td>{{ sfile.run.protocol.base_pairs }}</td>
-            <td>{{ sfile.run.protocol.library_construction_protocol }}</td>
-            <td>{{ sfile.run.sequencer }}</td>
-            <td>{{ sfile.run.run_number }}</td>
-            <td>{{ sfile.run.flow_cell_id }}</td>
+            <td>{{ sfile.protocol.library_type }}</td>
+            <td>{{ sfile.protocol.base_pairs }}</td>
+            <td>{{ sfile.protocol.library_construction_protocol }}</td>
+            <td>{{ sfile.sequencer }}</td>
+            <td>{{ sfile.run_number }}</td>
+            <td>{{ sfile.barcode }}</td>
             <td>{{ sfile.lane_number }}</td>
             <td>
                 {% if sfile.url_verification.status_ok %}

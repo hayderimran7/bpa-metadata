@@ -178,6 +178,12 @@ class Protocol(models.Model):
         return u'Size:{0}, Type:{1}, Protocol:{2}'.format(self.base_pairs, self.library_type,
                                                           self.library_construction_protocol)
 
+    def set_base_pairs(self, val):
+        if val.find("bp") > -1:
+            self.base_pairs = int(val[:-2])
+        elif val.find("kb") > -1:
+            self.base_pairs = int(val[:-2]) * 1000
+
 
 class Sample(models.Model):
     """

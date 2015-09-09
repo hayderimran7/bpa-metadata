@@ -21,7 +21,7 @@ PROJECT_DESCRIPTION = 'Wheat Cultivars'
 METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/tracking/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
-def _get_bpa_id(entry):
+def get_bpa_id(entry):
     """
     Get or make BPA ID
     """
@@ -32,7 +32,6 @@ def _get_bpa_id(entry):
         return None
     return bpa_id
 
-
 def ingest_samples(samples):
     """
     Add all the cultivar samples
@@ -42,10 +41,10 @@ def ingest_samples(samples):
 
     def add_sample(e):
         """
-        Adds new sample or updates existing sample
+        Adds cultivar sample from spreadsheet
         """
 
-        bpa_id = _get_bpa_id(e)
+        bpa_id = get_bpa_id(e)
         if bpa_id is None:
             return
 
@@ -80,8 +79,7 @@ def ingest_samples(samples):
     for sample in samples:
         add_sample(sample)
 
-
-def get_cultivar_sample_data(file_name):
+def get_run_data(file_name):
     """
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
@@ -107,15 +105,6 @@ def get_cultivar_sample_data(file_name):
         header_length=1)
     return wrapper.get_all()
 
-
-def truncate():
-    from django.db import connection
-
-    cursor = connection.cursor()
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSample._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarProtocol._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
-
 def do_metadata():
     def is_metadata(path):
         if path.isfile() and path.ext == '.xlsx':
@@ -127,7 +116,6 @@ def do_metadata():
         sample_data = list(get_cultivar_sample_characteristics(metadata_file))
         bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
         ingest_samples(sample_data)
-
 
 def parse_md5_file(md5_file):
     """
@@ -163,7 +151,7 @@ def parse_md5_file(md5_file):
             self.cultivar = None
             self.bpa_id = None
             self.lib_type = None
-            self.lb_size = None
+            self.lib_size = None
             self.flowcell = None
             self.barcode = None
 
@@ -233,31 +221,31 @@ def parse_md5_file(md5_file):
 
     return data
 
-
 def add_md5(md5_lines):
     """
     Add md5 data
     """
-
-    def get_bpa_id(bpa_idx):
-        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_ID, 'Created by Wheat Cultivar ingestor')
-        if bpa_id is None:
-            return None
-        return bpa_id
-
     organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
 
     for md5_line in md5_lines:
         bpa_idx = md5_line.bpa_id
-        bpa_id = get_bpa_id(bpa_idx)
+        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION)
         if bpa_id is None:
             continue
 
         flowcell = md5_line.flowcell
 
+        protocol = CultivarProtocol()
+        protocol.library_type = md5_line.lib_type
+        protocol.set_base_pairs(md5_line.lib_size
+        protocol.library_construction = "SET"
+        protocol.library_construction_protocol = "SET"
+        protocol.save()
+
         f = CultivarSequenceFile()
         sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         f.sample = sample
+        f.protocol = protocol
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
         f.lane_number = md5_line.lane
@@ -313,6 +301,13 @@ def do_md5():
         data = parse_md5_file(md5_file)
         add_md5(data)
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSample._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarProtocol._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
 
 def run():
     truncate()
