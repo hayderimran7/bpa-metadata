@@ -52,7 +52,7 @@ activate_virtualenv() {
         log_warning "There is no ${VIRTUALENV} here, making it."
         virtualenv ${VIRTUALENV}
         . ${VIRTUALENV}/bin/activate
-        pip install fig
+        pip install docker-compose
         pip install 'flake8>=2.0,<2.1'
    else
       source ${VIRTUALENV}/bin/activate
@@ -79,7 +79,7 @@ unit_tests() {
 
     mkdir -p data/tests
     chmod o+rwx data/tests
-    fig --project-name ${PROJECT_NAME} -f fig-test.yml up
+    docker-compose --project-name ${PROJECT_NAME} -f fig-test.yml up
 }
 
 up() {
@@ -87,7 +87,7 @@ up() {
     mkdir -p data/dev
     chmod o+rwx data/dev
 
-    fig --project-name ${PROJECT_NAME} up
+    docker-compose --project-name ${PROJECT_NAME} up
 }
 
 
@@ -96,7 +96,7 @@ selenium() {
     mkdir -p data/selenium
     chmod o+rwx data/selenium
 
-    fig --project-name ${PROJECT_NAME} -f fig-selenium.yml up
+    docker-compose --project-name ${PROJECT_NAME} -f fig-selenium.yml up
 }
 
 
@@ -104,25 +104,25 @@ ci_staging() {
     ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/docker/unstable'
     ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/data'
     ccg ${AWS_STAGING_INSTANCE} drun:'chmod o+w ${PROJECT_NAME}/data'
-    ccg ${AWS_STAGING_INSTANCE} putfile:fig-staging.yml,${PROJECT_NAME}/fig-staging.yml
+    ccg ${AWS_STAGING_INSTANCE} putfile:docker-compose-staging.yml,${PROJECT_NAME}/fig-staging.yml
     ccg ${AWS_STAGING_INSTANCE} putfile:docker/unstable/Dockerfile,${PROJECT_NAME}/docker/unstable/Dockerfile
 
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml stop'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml kill'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml rm --force -v'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml build --no-cache webstaging'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && fig -f fig-staging.yml up -d'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml stop'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml kill'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml rm --force -v'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml build --no-cache webstaging'
+    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml up -d'
     ccg ${AWS_STAGING_INSTANCE} drun:'docker-untagged || true'
 }
 
 
 build() {
    activate_virtualenv
-   fig --project-name ${PROJECT_NAME} build
+   docker-compose --project-name ${PROJECT_NAME} build
 }
 
 rm_containers() {
-   fig --project-name ${PROJECT_NAME} rm
+   docker-compose --project-name ${PROJECT_NAME} rm
 }
 
 entrypoint() {
