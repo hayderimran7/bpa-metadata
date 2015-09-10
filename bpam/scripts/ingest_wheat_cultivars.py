@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from apps.common.models import DNASource, Sequencer
-from apps.wheat_cultivars.models import Organism, CultivarProtocol, CultivarSample, CultivarSequenceFile
+from apps.wheat_cultivars.models import Organism, Protocol, CultivarSample, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
@@ -233,11 +233,9 @@ def add_md5(md5_lines):
         if bpa_id is None:
             continue
 
-        flowcell = md5_line.flowcell
-
-        protocol = CultivarProtocol()
+        protocol = Protocol()
         protocol.library_type = md5_line.lib_type
-        protocol.set_base_pairs(md5_line.lib_size
+        protocol.set_base_pairs(md5_line.lib_size)
         protocol.library_construction = "SET"
         protocol.library_construction_protocol = "SET"
         protocol.save()
@@ -246,6 +244,7 @@ def add_md5(md5_lines):
         sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
         f.sample = sample
         f.protocol = protocol
+        f.flowcell = md5_line.flowcell
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
         f.lane_number = md5_line.lane
@@ -306,7 +305,7 @@ def truncate():
 
     cursor = connection.cursor()
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSample._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarProtocol._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(Protocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
 
 def run():

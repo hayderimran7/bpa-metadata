@@ -4,14 +4,14 @@ from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
 from .models import CultivarSample
-from .models import CultivarProtocol
+from .models import Protocol
 from .models import CultivarSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
     class Meta:
         fields = "__all__"
-        model = CultivarProtocol
+        model = Protocol
         widgets = {
             'library_construction_protocol': LinkedSelect,
             'note': AutosizedTextarea(attrs={'class': 'input-large',
@@ -110,5 +110,5 @@ class CultivarsSequenceFileAdmin(SequenceFileAdmin):
 
 
 admin.site.register(CultivarSample, SampleAdmin)
-admin.site.register(CultivarProtocol, ProtocolAdmin)
+admin.site.register(Protocol, ProtocolAdmin)
 admin.site.register(CultivarSequenceFile, CultivarsSequenceFileAdmin)
