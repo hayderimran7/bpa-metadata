@@ -248,7 +248,6 @@ def add_md5(md5_lines, run_data):
 
         key = md5_line.bpa_id + md5_line.flowcell + md5_line.lib_type + md5_line.lib_size
         run = run_data.get(key, Run(run_number=-1, casava_version="-", lib_cons_proto="-", lib_range="-", sequencer="-"))
-        print(run)
         protocol = Protocol()
         protocol.library_type = md5_line.lib_type
         protocol.set_base_pairs(md5_line.lib_size)
