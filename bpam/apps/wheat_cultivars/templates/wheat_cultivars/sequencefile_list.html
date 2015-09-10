@@ -54,8 +54,8 @@
             <td>{{ sfile.barcode }}</td>
             <td>{{ sfile.lane_number }}</td>
             <td>{{ sfile.protocol.library_construction_protocol }}</td>
-            <td>{{ sfile.sequencer }}</td>
-            <td {{ sfile.casava }}</td>
+            <td>{{ sfile.protocol.sequencer }}</td>
+            <td> {{ sfile.casava_version }}</td>
             <td>
                 {% if sfile.url_verification.status_ok %}
                 <span title="Last checked {{ sfile.url_verification.checked_at }}"

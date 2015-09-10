@@ -40,6 +40,7 @@ class Protocol(models.Model):
     library_construction = models.CharField(_('Construction'), max_length=200, blank=True, null=True)
     base_pairs = models.IntegerField(_('Base Pairs'), blank=True, null=True)
     library_construction_protocol = models.CharField(_('Construction Protocol'), max_length=200)
+    sequencer = models.CharField(_('Sequencer'), max_length=200)
     note = models.TextField(blank=True)
 
     class Meta:
@@ -67,7 +68,6 @@ class CultivarSequenceFile(SequenceFile):
     run_number = models.IntegerField(null=True, blank=True)
     barcode = models.CharField(max_length=20, null=True, blank=True)
     flowcell = models.CharField(max_length=20, null=True, blank=True)
-
 
     casava_version = models.CharField(max_length=10, null=True, blank=True)
 

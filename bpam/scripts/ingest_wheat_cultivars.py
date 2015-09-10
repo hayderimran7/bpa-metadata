@@ -21,6 +21,8 @@ PROJECT_DESCRIPTION = 'Wheat Cultivars'
 METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/tracking/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
+Run = namedtuple('Run', 'run_number casava_version lib_cons_proto lib_range sequencer')
+
 def get_bpa_id(entry):
     """
     Get or make BPA ID
@@ -31,6 +33,41 @@ def get_bpa_id(entry):
         logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
     return bpa_id
+
+def get_run_lookup():
+    """
+    Run data is uniquely defined by
+    - bpa_id
+    - flowcell
+    - library type
+    - library size
+
+    Values recorded per key are:
+    - run_number
+    - CASAVA version
+    - library construction protocol
+    - sequencer
+    - range
+    """
+
+    def is_metadata(path):
+        if path.isfile() and path.ext == '.xlsx':
+            return True
+
+    logger.info('Ingesting Wheat Cultivars run metadata from {0}'.format(DATA_DIR))
+    run_data = {}
+
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info('Processing Wheat Cultivars {0}'.format(metadata_file))
+        run_data = list(get_run_data(metadata_file))
+
+    run_lookup = {}
+
+    for run in run_data:
+        key = run.bpa_id + run.flowcell + run.library + run.library_construction
+        runt = Run(run.run_number, run.casava_version, run.library_construction_protocol, run.library_range, run.sequencer)
+        run_lookup[key] = runt
+    return run_lookup
 
 def ingest_samples(samples):
     """
@@ -48,6 +85,7 @@ def ingest_samples(samples):
         if bpa_id is None:
             return
 
+
         cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
         cultivar_sample.name = e.variety # DDD
@@ -62,14 +100,14 @@ def ingest_samples(samples):
         cultivar_sample.dev_stage = e.dev_stage
         cultivar_sample.yield_properties = e.yield_properties
         cultivar_sample.morphology = e.morphology
-        cultivar_sample.maturity  = e.maturity
+        cultivar_sample.maturity = e.maturity
 
-        cultivar_sample.pathogen_tolerance  = e.pathogen_tolerance
-        cultivar_sample.drought_tolerance  = e.drought_tolerance
+        cultivar_sample.pathogen_tolerance = e.pathogen_tolerance
+        cultivar_sample.drought_tolerance = e.drought_tolerance
         cultivar_sample.soil_tolerance = e.soil_tolerance
 
-        cultivar_sample.classification= e.classification
-        cultivar_sample.url= e.url
+        cultivar_sample.classification = e.classification
+        cultivar_sample.url = e.url
 
         cultivar_sample.debug_note = ingest_utils.INGEST_NOTE + ingest_utils.pretty_print_namedtuple(e)
 
@@ -78,32 +116,6 @@ def ingest_samples(samples):
 
     for sample in samples:
         add_sample(sample)
-
-def get_run_data(file_name):
-    """
-    The data sets is relatively small, so make a in-memory copy to simplify some operations.
-    """
-
-    field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
-                  ('variety', 'Variety', None),
-                  ('cultivar_code', 'Code', None),
-                  ('library', 'Library code', None),
-                  ('library_construction', 'Library Construction - average insert size', None),
-                  ('range', 'Range', None),
-                  ('library_construction_protocol', 'Library construction protocol', None),
-                  ('sequencer', 'Sequencer', None),
-                  ('run_number', 'Run number', ingest_utils.get_clean_number),
-                  ('flow_cell_id', 'Flow Cell ID', None),
-                  ('index', 'Index', None),
-                  ('casava_version', 'CASAVA version', None),
-                  ]
-
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name='Metadata',
-        header_length=1)
-    return wrapper.get_all()
 
 def do_metadata():
     def is_metadata(path):
@@ -221,10 +233,11 @@ def parse_md5_file(md5_file):
 
     return data
 
-def add_md5(md5_lines):
+def add_md5(md5_lines, run_data):
     """
     Add md5 data
     """
+
     organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
 
     for md5_line in md5_lines:
@@ -233,11 +246,14 @@ def add_md5(md5_lines):
         if bpa_id is None:
             continue
 
+        key = md5_line.bpa_id + md5_line.flowcell + md5_line.lib_type + md5_line.lib_size
+        run = run_data.get(key, Run(run_number=-1, casava_version="-", lib_cons_proto="-", lib_range="-", sequencer="-"))
+        print(run)
         protocol = Protocol()
         protocol.library_type = md5_line.lib_type
         protocol.set_base_pairs(md5_line.lib_size)
-        protocol.library_construction = "SET"
-        protocol.library_construction_protocol = "SET"
+        protocol.library_construction_protocol = run.lib_cons_proto
+        protocol.sequencer = run.sequencer
         protocol.save()
 
         f = CultivarSequenceFile()
@@ -248,10 +264,38 @@ def add_md5(md5_lines):
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
         f.lane_number = md5_line.lane
+        f.run_number = run.run_number
+        f.casava_version = run.casava_version
 
         f.filename = md5_line.filename
         f.md5 = md5_line.md5
         f.save()
+
+def get_run_data(file_name):
+    """
+    The run metadata for this set
+    """
+
+    field_spec = [('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
+                  ('variety', 'Variety', None),
+                  ('cultivar_code', 'Code', None),
+                  ('library', 'Library code', None),
+                  ('library_construction', 'Library Construction - average insert size', None),
+                  ('library_range', 'Range', None),
+                  ('library_construction_protocol', 'Library construction protocol', None),
+                  ('sequencer', 'Sequencer', None),
+                  ('run_number', 'Run number', ingest_utils.get_clean_number),
+                  ('flowcell', 'Flow Cell ID', None),
+                  ('index', 'Index', None),
+                  ('casava_version', 'CASAVA version', None),
+                  ]
+
+    wrapper = ExcelWrapper(
+        field_spec,
+        file_name,
+        sheet_name='Metadata',
+        header_length=1)
+    return wrapper.get_all()
 
 def get_cultivar_sample_characteristics(file_name):
     """
@@ -290,6 +334,8 @@ def do_md5():
     Ingest the md5 files
     """
 
+    run_data = get_run_lookup()
+
     def is_md5file(path):
         if path.isfile() and path.ext == '.md5':
             return True
@@ -298,7 +344,7 @@ def do_md5():
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info('Processing Wheat Cultivar md5 file {0}'.format(md5_file))
         data = parse_md5_file(md5_file)
-        add_md5(data)
+        add_md5(data, run_data)
 
 def truncate():
     from django.db import connection
