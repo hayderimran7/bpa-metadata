@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
 from . import views
+from . import data_export
 
 urlpatterns = patterns(
     '',
@@ -16,6 +17,10 @@ urlpatterns = patterns(
         regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
         name='sample'),
+    url(
+        regex=r'^sequencefiles/csv',
+        view=data_export.get_sequencefiles,
+        name='sequencefiles_csv'),
     url(
         regex=r'^sequencefiles',
         view=views.SequenceFileListView.as_view(),

@@ -22,6 +22,7 @@
         </button>
     </div>
 </div>
+<p><a href="{% url 'wheat_cultivars:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 <table class="fancytable">
     <thead>
         <tr>
@@ -104,6 +105,7 @@
         </tfoot>
     </tbody>
 </table>
+<p><a href="{% url 'wheat_cultivars:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 
 {% else %}
 <h3> No Wheat Cultivar Sequence Data is currently available </h3>
