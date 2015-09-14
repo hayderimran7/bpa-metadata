@@ -448,6 +448,121 @@ def ingest():
             logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
 
 
+def parse_md5_file(md5_file):
+    """
+    Parse md5 file
+    """
+
+        def __init__(self, line):
+            self._line = line
+
+            self.bpa_id = None
+            self.vendor = None
+            self.lib_type = None
+            self.lib_size = None
+            self.flowcell = None
+            self.barcode = None
+
+            self.md5 = None
+            self.filename = None
+
+            self._lane = None
+            self._read = None
+
+            self._ok = False
+
+            self.__parse_line()
+
+        def is_ok(self):
+            return self._ok
+
+        @property
+        def lane(self):
+            return self._lane
+
+        @lane.setter
+        def lane(self, val):
+            self._lane = int(val[1:])
+
+        @property
+        def read(self):
+            return self._read
+
+        @read.setter
+        def read(self, val):
+            self._read = int(val[1:])
+
+        def __parse_line(self):
+            """ unpack the md5 line """
+            self.md5, self.filename = self._line.split()
+
+            filename_parts = self.filename.split('.')[0].split('_')
+
+            # [bpaid]_[vendor]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
+            if len(filename_parts) == :
+                self.bpaid, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read = filename_parts
+                self._ok = True
+            else:
+                self._ok = False
+
+    data = []
+
+    with open(md5_file) as f:
+        for line in f.read().splitlines():
+            line = line.strip()
+            if line == '':
+                continue
+
+            parsed_line = MD5ParsedLine(line)
+            if parsed_line.is_ok():
+                data.append(parsed_line)
+
+    return data
+
+def add_md5(md5_lines, run_data):
+    """
+    Add md5 data
+    """
+
+    organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
+
+    for md5_line in md5_lines:
+        bpa_idx = md5_line.bpa_id
+        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION)
+        if bpa_id is None:
+            continue
+
+        f = CultivarSequenceFile()
+        sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
+        f.sample = sample
+        f.protocol = protocol
+        f.flowcell = md5_line.flowcell
+        f.barcode = md5_line.barcode
+        f.read_number = md5_line.read
+        f.lane_number = md5_line.lane
+        f.run_number = run.run_number
+        f.casava_version = run.casava_version
+
+        f.filename = md5_line.filename
+        f.md5 = md5_line.md5
+        f.save()
+
+
+def ingest_md5():
+    """
+    Ingest the md5 files
+    """
+
+    def is_md5file(path):
+        if path.isfile() and path.ext == '.md5':
+            return True
+
+    logger.info('Ingesting GBR md5 file information from {0}'.format(DATA_DIR))
+    for md5_file in DATA_DIR.walk(filter=is_md5file):
+        logger.info('Processing GBR md5 file {0}'.format(md5_file))
+        data = parse_md5_file(md5_file)
+        add_md5(data, run_data)
+
 def truncate():
     from django.db import connection
 
@@ -471,4 +586,7 @@ def run():
     truncate()
 
     ingest_old_format(Path(OLD_DATA_DIR, OLD_METADATA_FILE))
+
+    ingest_md5()
+
     ingest()
