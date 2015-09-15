@@ -41,12 +41,16 @@ def get_project(key, name):
     return project
 
 
-def get_bpa_id(bpa_idx, project_key, project_name, note=INGEST_NOTE):
+def get_bpa_id(bpa_idx, project_key, project_name, add_prefix=False, note=INGEST_NOTE):
     """
     Get a BPA ID, if it does not exist, make it
     It also creates the necessary project.
     :rtype : bpa_id
     """
+
+    if add_prefix is True and bpa_idx is not None:
+        bpa_idx = BPA_ID + '.' + bpa_idx
+
     validator = BPAIdValidator(bpa_idx)
     if not validator.is_valid():
         return None, validator.valid_report

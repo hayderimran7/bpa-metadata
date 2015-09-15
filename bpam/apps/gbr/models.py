@@ -104,7 +104,7 @@ class GBRSequenceFile(SequenceFile):
 
     project_name = 'gbr'
     sample = models.ForeignKey(GBRSample)
-    run = models.ForeignKey(GBRRun)
+    run = models.ForeignKey(GBRRun, null=True)
 
     def __unicode__(self):
-        return u'Run {0} for {1}'.format(self.run, self.filename)
+        return u'{}'.format(self.filename)

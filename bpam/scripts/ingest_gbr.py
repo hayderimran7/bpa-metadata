@@ -10,11 +10,13 @@ from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
 from libs.fetch_data import Fetcher
 from unipath import Path
+from collections import namedtuple
 
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
-GBR_DESCRIPTION = 'Great Barrier Reef'
+PROJECT_ID = "GBR"
+PROJECT_DESCRIPTION = "Great Barrier Reef"
 
 # the old google doc format
 OLD_METADATA_URL = 'https://downloads.bioplatforms.com/gbr/old_format_metadata/'  # the folder
@@ -33,7 +35,7 @@ def get_bpa_id(entry):
     :rtype BPAUniqueID:
     """
 
-    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, GBR_DESCRIPTION, 'GBR', note='Great Barrier Reef Sample')
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, 'GBR', note='Great Barrier Reef Sample')
     if bpa_id is None:
         logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
@@ -103,7 +105,7 @@ def ingest_samples(samples):
         collector = user_helper.get_user(
             entry.collector_name,
             entry.contact_email,
-            (GBR_DESCRIPTION, ))
+            (PROJECT_DESCRIPTION, ))
         collection_event, created = CollectionEvent.objects.get_or_create(
             collection_date=collection_date,
             collector=collector)
@@ -176,13 +178,13 @@ def ingest_samples(samples):
         gbr_sample.contact_scientist = user_helper.get_user(
             e.contact_scientist,
             e.contact_email,
-            (GBR_DESCRIPTION, e.contact_affiliation))
+            (PROJECT_DESCRIPTION, e.contact_affiliation))
 
         # bio informatician
         gbr_sample.contact_bioinformatician_name = user_helper.get_user(
             e.contact_bioinformatician_name,
             e.contact_bioinformatician_email,
-            (GBR_DESCRIPTION,))
+            (PROJECT_DESCRIPTION,))
 
         gbr_sample.sequencing_notes = e.sequencing_notes
         gbr_sample.dna_rna_concentration = ingest_utils.get_clean_float(e.dna_rna_concentration)
@@ -417,7 +419,7 @@ def _ingest(sample_data):
     :return:
     """
     # pre-populate the BPA ID's
-    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), 'GBR', 'Great Barrier Reef')
+    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION) 
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
@@ -448,62 +450,78 @@ def ingest():
             logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
 
 
+class MD5ParsedLine(object):
+    def __init__(self, line):
+        self._line = line
+
+        self.bpa_id = None
+        self.vendor = None
+        self.lib_type = None
+        self.lib_size = None
+        self.flowcell = None
+        self.barcode = None
+
+        self.md5 = None
+        self.filename = None
+
+        self._lane = None
+        self._read = None
+
+        self._ok = False
+
+        self.__parse_line()
+
+    def is_ok(self):
+        return self._ok
+
+    @property
+    def lane(self):
+        return self._lane
+
+    @lane.setter
+    def lane(self, val):
+        self._lane = int(val[1:])
+
+    @property
+    def read(self):
+        return self._read
+
+    @read.setter
+    def read(self, val):
+        self._read = int(val[1:])
+
+    def __parse_line(self):
+        """ unpack the md5 line """
+        self.md5, self.filename = self._line.split()
+
+        filename_parts = self.filename.split('.')[0].split('_')
+        # [bpaid]_[vendor]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
+        # ['14706', 'GBR', 'UNSW', 'PE', '399bp', 'HB049ADXX', 'CGTACG', 'L001', 'R1', '001']
+        if len(filename_parts) == 10:
+            self.bpa_id, _, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read, _ = filename_parts
+            self._ok = True
+        elif len(filename_parts) == 11:
+            # ['14658', 'GBR', 'UNSW', '16Sa', 'AB50N', 'TAAGGCGA', 'TCGACTAG', 'S1', 'L001', 'I1', '001']
+            self.bpa_id, _, self.vendor, self.amplicon, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
+            self.index = index1 + '-' + index2
+            self._ok = True
+        elif len(filename_parts) == 8:
+            # ['13208', 'GBR', 'UNSW', 'H8P31ADXX', 'TCCTGAGC', 'L002', 'R2', '001']
+            print("whaaaat")
+            print(filename_parts)
+            self.bpa_id, _, self.vendor,  self.flowcell, self.index, self.lane, self.read, _ = filename_parts
+            self._ok = True
+        else:
+            print("XXXX")
+            print(filename_parts)
+            self._ok = False
+
+
+
 def parse_md5_file(md5_file):
     """
     Parse md5 file
     """
-
-        def __init__(self, line):
-            self._line = line
-
-            self.bpa_id = None
-            self.vendor = None
-            self.lib_type = None
-            self.lib_size = None
-            self.flowcell = None
-            self.barcode = None
-
-            self.md5 = None
-            self.filename = None
-
-            self._lane = None
-            self._read = None
-
-            self._ok = False
-
-            self.__parse_line()
-
-        def is_ok(self):
-            return self._ok
-
-        @property
-        def lane(self):
-            return self._lane
-
-        @lane.setter
-        def lane(self, val):
-            self._lane = int(val[1:])
-
-        @property
-        def read(self):
-            return self._read
-
-        @read.setter
-        def read(self, val):
-            self._read = int(val[1:])
-
-        def __parse_line(self):
-            """ unpack the md5 line """
-            self.md5, self.filename = self._line.split()
-
-            filename_parts = self.filename.split('.')[0].split('_')
-
-            # [bpaid]_[vendor]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
-            if len(filename_parts) == :
-                self.bpaid, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read = filename_parts
-                self._ok = True
-            else:
-                self._ok = False
 
     data = []
 
@@ -519,29 +537,26 @@ def parse_md5_file(md5_file):
 
     return data
 
-def add_md5(md5_lines, run_data):
+def add_md5(md5_lines):
     """
     Add md5 data
     """
 
-    organism, _ = Organism.objects.get_or_create(genus="Triticum", species="Aestivum")
-
     for md5_line in md5_lines:
         bpa_idx = md5_line.bpa_id
-        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION)
+        bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
+        print(bpa_id)
+
         if bpa_id is None:
             continue
 
-        f = CultivarSequenceFile()
-        sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=organism)
+        f = GBRSequenceFile()
+        sample, created = GBRSample.objects.get_or_create(bpa_id=bpa_id)
         f.sample = sample
-        f.protocol = protocol
         f.flowcell = md5_line.flowcell
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
         f.lane_number = md5_line.lane
-        f.run_number = run.run_number
-        f.casava_version = run.casava_version
 
         f.filename = md5_line.filename
         f.md5 = md5_line.md5
@@ -561,7 +576,7 @@ def ingest_md5():
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info('Processing GBR md5 file {0}'.format(md5_file))
         data = parse_md5_file(md5_file)
-        add_md5(data, run_data)
+        add_md5(data)
 
 def truncate():
     from django.db import connection
@@ -581,7 +596,8 @@ def run():
 
     # fetch the new data formats
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
-    fetcher.fetch_metadata_from_folder()
+    #fetcher.clean()
+    #fetcher.fetch_metadata_from_folder()
 
     truncate()
 
