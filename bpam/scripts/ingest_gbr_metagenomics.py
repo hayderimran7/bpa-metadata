@@ -24,8 +24,8 @@ OLD_METADATA_FILE = 'refuge2020_metadata.xlsx'
 OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/old_format')
 
 # the newer format
-METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/'  # this is where the new metadata is kept
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata')
+METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/metagenomics/'  # this is where the new metadata is kept
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata/metagenomics/')
 
 
 def get_bpa_id(entry):
@@ -500,20 +500,11 @@ class MD5ParsedLine(object):
         if len(filename_parts) == 10:
             self.bpa_id, _, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read, _ = filename_parts
             self._ok = True
-        elif len(filename_parts) == 11:
-            # ['14658', 'GBR', 'UNSW', '16Sa', 'AB50N', 'TAAGGCGA', 'TCGACTAG', 'S1', 'L001', 'I1', '001']
-            self.bpa_id, _, self.vendor, self.amplicon, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
-            self.index = index1 + '-' + index2
-            self._ok = True
         elif len(filename_parts) == 8:
             # ['13208', 'GBR', 'UNSW', 'H8P31ADXX', 'TCCTGAGC', 'L002', 'R2', '001']
-            print("whaaaat")
-            print(filename_parts)
             self.bpa_id, _, self.vendor,  self.flowcell, self.index, self.lane, self.read, _ = filename_parts
             self._ok = True
         else:
-            print("XXXX")
-            print(filename_parts)
             self._ok = False
 
 
