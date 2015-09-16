@@ -3,7 +3,8 @@
 import sys
 
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
+from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample
+from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
@@ -106,9 +107,12 @@ def add_md5(md5_lines):
         if bpa_id is None:
             continue
 
-        f = GBRSequenceFile()
+        f = AmpliconSequenceFile()
         sample, created = GBRSample.objects.get_or_create(bpa_id=bpa_id)
+        metadata = AmpliconSequencingMetadata()
+        
         f.sample = sample
+        f.metadata = metadata
         f.flowcell = md5_line.flowcell
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
