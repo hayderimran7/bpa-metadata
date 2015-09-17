@@ -319,6 +319,7 @@ INSTALLED_APPS = (
     'apps.wheat_cultivars',
     'apps.melanoma',
     'apps.gbr',
+    'apps.gbr_amplicon',
     'tinymce',
     'bootstrap3',
     'django_bootstrap_breadcrumbs',
@@ -419,6 +420,7 @@ if env.get("DEBUG_TOOLBAR", False):
 
 # downloads URL
 BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
+BPA_GBR_URL = 'https://downloads.bioplatforms.com/'
 DEFAULT_PAGINATION = 50
 
 # This honours the X-Forwarded-Host header set by our nginx frontend when

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Great Barrier Reef{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "GBR" "gbr:index" %}
+    {% breadcrumb "Amplicons" "gbr_amplicon:index" %}
+{% endblock %}
+
+
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <img class="img-responsive img-rounded" src="{% static 'gbr/coral.png' %}" alt="GBR">
+            </div>
+
+            <div class="col-sm-8 col-md-8">
+                <h2>
+                    All <a href="{% url 'gbr:index' %}">Great Barrier Reef</a> Amplicons
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'gbr_amplicon:amplicons' %}">All Amplicons <span class="badge">{{ all_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr_amplicon:amplicons_ITS' %}">ITS <span class="badge">{{ ITS_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr_amplicon:amplicons_16S' %}">16S <span class="badge">{{ 16S_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr_amplicon:amplicons_A16S' %}">A16S <span class="badge">{{ A16S_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'gbr_amplicon:amplicons_18S' %}">18S <span class="badge">{{ 18S_size }}</span> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

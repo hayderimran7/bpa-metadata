@@ -18,11 +18,11 @@ urlpatterns = patterns(
     url(r'^base/vocabulary/', include('apps.base_vocabulary.urls', namespace='base_vocabulary')),
     # Great Barrier reef
     url(r'^gbr/', include('apps.gbr.urls', namespace='gbr')),
+    url(r'^gbr/amplicon/', include('apps.gbr_amplicon.urls', namespace='gbr_amplicon')),
     # Wheat
     url(r'^wheat_cultivars/', include('apps.wheat_cultivars.urls', namespace='wheat_cultivars')),
     url(r'^wheat_pathogens/', include('apps.wheat_pathogens.urls', namespace='wheat_pathogens')),
-    url(r'^wheat_pathogens_transcript/',
-        include('apps.wheat_pathogens_transcript.urls', namespace='wheat_pathogens_transcript')),
+    url(r'^wheat_pathogens_transcript/', include('apps.wheat_pathogens_transcript.urls', namespace='wheat_pathogens_transcript')),
     # Melanoma
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # System

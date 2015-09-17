@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Great Barrier Reef Amplicon Metadata {% endblock %}
+
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "gbr" "base:index" %}
+    {% breadcrumb "Amplicons" "gbr_amplicon:index" %}
+    {% with "gbr_amplicons:amplicons_"|add:target as target_url %}
+    {% breadcrumb target target_url %}
+    {% endwith %}
+{% endblock %}
+
+
+<h3>
+    <a href="{% url 'gbr:index'%}">Great Barrier Reef</a> {{ target }} <a href="{% url 'gbr_amplicon:index'%}">Amplicon Metadata</a>
+</h3>
+
+{% if metadata_list %}
+{% include "gbr_amplicon/metadata_table.html" %}
+{% include "pagination.html" %}
+
+{% else %}
+<h3> No Amplicon data is currently available </h3>
+{% endif %}
+
+{% endblock %}

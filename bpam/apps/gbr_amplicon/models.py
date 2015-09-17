@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, SequenceFile, Organism, DebugNote, BPAUniqueID
+from apps.common.models import Protocol, SequenceFile, Organism, DebugNote, BPAUniqueID, Facility
 from apps.gbr.models import GBRSample
 
 class AmpliconSequencingMetadata(DebugNote):
@@ -10,11 +10,11 @@ class AmpliconSequencingMetadata(DebugNote):
     GBR Amplicon metadata
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'))
+    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'), related_name="%(app_label)s_%(class)s_related")
     sample_extraction_id = models.CharField(_('Sample Extraction ID'), max_length=200, blank=True, null=True)
     sequencing_facility = models.ForeignKey(Facility,
                                             verbose_name=_('Sequencing Facility'),
-                                            related_name='base_amplicon',
+                                            related_name='%(app_label)s_%(class)s',
                                             blank=True,
                                             null=True)
 
@@ -68,7 +68,7 @@ class AmpliconSequenceFile(SequenceFile):
         uj = urlparse.urljoin
         uq = urllib.quote
 
-        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
+        return uj(settings.BPA_GBR_URL, "%s/%s/%s" % (
             'gbr/amplicons',
             self.metadata.target.lower(),
             uq(self.filename)))

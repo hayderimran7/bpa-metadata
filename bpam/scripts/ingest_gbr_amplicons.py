@@ -67,7 +67,7 @@ class MD5ParsedLine(object):
         self.md5, self.filename = self._line.split()
 
         filename_parts = self.filename.split('.')[0].split('_')
-        elif len(filename_parts) == 11:
+        if len(filename_parts) == 11:
             # ['14658', 'GBR', 'UNSW', '16Sa', 'AB50N', 'TAAGGCGA', 'TCGACTAG', 'S1', 'L001', 'I1', '001']
             self.bpa_id, _, self.vendor, self.amplicon, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
             self.index = index1 + '-' + index2
@@ -107,10 +107,9 @@ def add_md5(md5_lines):
         if bpa_id is None:
             continue
 
-        f = AmpliconSequenceFile()
-        sample, created = GBRSample.objects.get_or_create(bpa_id=bpa_id)
-        metadata = AmpliconSequencingMetadata()
-        
+        sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
+        metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+        f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample, metadata=metadata)
         f.sample = sample
         f.metadata = metadata
         f.flowcell = md5_line.flowcell
@@ -137,14 +136,21 @@ def ingest_md5():
         data = parse_md5_file(md5_file)
         add_md5(data)
 
-def run():
-    # fetch the old data file
-    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f'))
-    fetcher.fetch(OLD_METADATA_FILE)
+def truncate():
+    """
+    Truncate Amplicon DB tables
+    """
+    from django.db import connection
 
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequencingMetadata._meta.db_table))
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequenceFile._meta.db_table))
+
+
+def run():
     # fetch the new data formats
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
-
+    truncate()
     ingest_md5()

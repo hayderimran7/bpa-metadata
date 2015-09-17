@@ -20,8 +20,7 @@ urlpatterns = patterns(
     url(
         regex=r'^taxonomy/(?P<level>.*)/(?P<taxon>.*)',
         view=views.TaxonomyLookUpView.as_view(),
-        name='taxonomy',
-    ),
+        name='taxonomy'),
     url(
         regex=r'^contacts$',
         view=views.ContactsView.as_view(),

@@ -31,8 +31,7 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField(_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True,
-                              help_text='Unique BPA ID')
+    bpa_id = models.CharField(_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True, help_text='Unique BPA ID')
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 
@@ -277,7 +276,7 @@ class SequenceFile(models.Model):
     analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
 
-    url_verification = models.ForeignKey(URLVerification, null=True)
+    url_verification = models.ForeignKey(URLVerification, null=True, related_name="%(app_label)s_%(class)s_related")
 
     class Meta:
         abstract = True
