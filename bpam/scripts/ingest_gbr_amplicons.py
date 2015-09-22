@@ -94,6 +94,30 @@ def parse_md5_file(md5_file):
 
     return data
 
+
+def get_sequencing_metadata(bpa_id, md5_line):
+    """
+    Populates the amplicon sequencing metadata object from the import md5 line
+    """
+
+    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+    metadata.sample_extraction_id = ""
+    metadata.sequencing_facility = Facility.objects.add(md5_line.vendor)
+    metadata.target = md5_line.amplicon[:-1]
+    metadata.index = md5_line.index
+    metadata.flow_cell_id = md5_line.flowcell
+    metadata.name = md5_line.filename
+    metadata.pcr_1_to_10 = None
+    metadata.pcr_1_to_100 = None
+    metadata.pcr_neat = None
+    metadata.dilution = None
+    metadata.sequencing_run_number = None
+    metadata.reads = None
+    metadata.analysis_software_version = None
+    metadata.save()
+
+    return metadata
+
 def add_md5(md5_lines):
     """
     Add md5 data
@@ -102,13 +126,13 @@ def add_md5(md5_lines):
     for md5_line in md5_lines:
         bpa_idx = md5_line.bpa_id
         bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
-        print(bpa_id)
 
         if bpa_id is None:
             continue
 
         sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
-        metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+        metadata = get_sequencing_metadata(bpa_id, md5_line)
+
         f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample, metadata=metadata)
         f.sample = sample
         f.metadata = metadata
@@ -119,6 +143,8 @@ def add_md5(md5_lines):
 
         f.filename = md5_line.filename
         f.md5 = md5_line.md5
+
+
         f.save()
 
 def ingest_md5():

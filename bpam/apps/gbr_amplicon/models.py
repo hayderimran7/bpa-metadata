@@ -1,5 +1,8 @@
-from django.db import models
+import urlparse
+import urllib
+
 from django.conf import settings
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Protocol, SequenceFile, Organism, DebugNote, BPAUniqueID, Facility
@@ -29,7 +32,6 @@ class AmpliconSequencingMetadata(DebugNote):
     pcr_neat = models.CharField(_('Neat PCR'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
     dilution = models.CharField(_('Dilution Used'), max_length=5, blank=True, null=True,
                                 choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
-
     sequencing_run_number = models.CharField(_('Sequencing run number'), max_length=40, blank=True, null=True)
     flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=5, blank=True, null=True)
     reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
