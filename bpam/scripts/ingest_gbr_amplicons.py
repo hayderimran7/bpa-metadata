@@ -22,6 +22,44 @@ PROJECT_DESCRIPTION = "Great Barrier Reef"
 METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/amplicons/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata/amplicons/')
 
+
+def get_data(file_name):
+    """
+    The data sets is relatively small, so make a in-memory copy to simplify some operations.
+    """
+
+    field_spec = [
+            ('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
+            ('sample_extraction_id', 'Sample extraction ID', None),
+            ('sequencing_facility', 'Sequencing facility', None),
+            ('target', 'Target', lambda s: s.upper().strip()),
+            ('index', 'Index', lambda s: s[:12]),
+            ('index1', 'Index 1', lambda s: s[:12]),
+            ('index2', 'Index2', lambda s: s[:12]),
+            ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
+            ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
+            ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
+            ('dilution', 'Dilution used', fix_dilution),
+            ('sequencing_run_number', 'Sequencing run number', None),
+            ('flow_cell_id', 'Flowcell', None),
+            ('reads', ('# of RAW reads', '# of reads'), ingest_utils.get_int),
+            ('name', 'Sample name on sample sheet', None),
+            ('analysis_software_version', 'AnalysisSoftwareVersion', None),
+            ('comments', 'Comments', None),
+            ]
+
+    wrapper = ExcelWrapper(field_spec,
+            file_name,
+            sheet_name='Sheet1',
+            header_length=4,
+            column_name_row_index=1,
+            formatting_info=True,
+            pick_first_sheet=True)
+
+    return wrapper.get_all()
+
+
+
 class MD5ParsedLine(object):
     def __init__(self, line):
         self._line = line
@@ -100,10 +138,11 @@ def get_sequencing_metadata(bpa_id, md5_line):
     Populates the amplicon sequencing metadata object from the import md5 line
     """
 
-    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id)
+    target = md5_line.amplicon[:-1] # TODO what is a/b ?
+
+    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=target)
     metadata.sample_extraction_id = ""
     metadata.sequencing_facility = Facility.objects.add(md5_line.vendor)
-    metadata.target = md5_line.amplicon[:-1]
     metadata.index = md5_line.index
     metadata.flow_cell_id = md5_line.flowcell
     metadata.name = md5_line.filename
@@ -133,7 +172,7 @@ def add_md5(md5_lines):
         sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
         metadata = get_sequencing_metadata(bpa_id, md5_line)
 
-        f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample, metadata=metadata)
+        f = AmpliconSequenceFile()
         f.sample = sample
         f.metadata = metadata
         f.flowcell = md5_line.flowcell
