@@ -19,38 +19,122 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
-METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/amplicons/'
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata/amplicons/')
+METADATA_URL = "https://downloads.bioplatforms.com/gbr/metadata/amplicons/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/amplicons/")
 
 
-def get_data(file_name):
+def fix_dilution(val):
     """
-    The data sets is relatively small, so make a in-memory copy to simplify some operations.
+    Some source xcell files ship with the dilution column type as time.
+    xlrd advertises support for format strings but not implemented.
+    So stuff it.
+    """
+    if isinstance(val, float):
+        return u"1:10"  # yea, that"s how we roll...
+    return val
+
+
+def fix_pcr(pcr):
+    """
+    Check pcr value
+    """
+    val = pcr.strip()
+    if val not in ("P", "F", ""):
+        logger.error("PCR value [{0}] is neither F, P or "", setting to X".format(pcr.encode("utf8")))
+        val = "X"
+    return val
+
+def _get_index(entry):
+    """
+    Archial amplicons have more than one index, take all available indexi and bunch them into
+    a single string. So be it.
+    """
+    indexi = []
+    for i in (entry.index1, entry.index2):
+        if i is not None:
+            i = i.strip()
+            if i is not "":
+                indexi.append(i)
+    return ", ".join(indexi)
+
+def add_samples(data):
+    """
+    Add sequence files
+    """
+    for entry in data:
+        bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
+        if not bpa_id:
+            continue
+
+        metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=entry.target)
+
+        metadata.sample_extraction_id = entry.sample_extraction_id
+        metadata.name = entry.name
+
+        # This may be set by older formats here, or later from md5
+        if entry.sequencing_facility is not None:
+            metadata.sequencing_facility = Facility.objects.add(entry.sequencing_facility)
+
+        metadata.index = _get_index(entry)
+        metadata.pcr_1_to_10 = entry.pcr_1_to_10
+        metadata.pcr_1_to_100 = entry.pcr_1_to_100
+        metadata.pcr_neat = entry.pcr_neat
+        metadata.dilution = entry.dilution.upper()
+        metadata.sequencing_run_number = entry.sequencing_run_number
+        metadata.flow_cell_id = entry.flow_cell_id
+        metadata.analysis_software_version = entry.analysis_software_version
+        metadata.reads = entry.reads
+        metadata.comments = entry.comments
+        metadata.debug_note = ingest_utils.pretty_print_namedtuple(entry)
+
+        try:
+            metadata.save()
+        except DataError, e:
+            logger.error(e)
+            logger.error(entry)
+            exit()
+
+
+def do_metadata():
+    def is_metadata(path):
+        if path.isfile() and path.ext == ".xlsx":
+            return True
+
+    logger.info("Ingesting GBR Amplicon metadata from {0}".format(DATA_DIR))
+    for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        logger.info("Processing GBR Amplicon Metadata file {0}".format(metadata_file))
+        samples = list(get_metadata(metadata_file))
+        add_samples(samples)
+
+def get_metadata(file_name):
+    """
+    Parse fields from the metadata spreadsheet
     """
 
     field_spec = [
-            ('bpa_id', 'Soil sample unique ID', lambda s: s.replace('/', '.')),
-            ('sample_extraction_id', 'Sample extraction ID', None),
-            ('sequencing_facility', 'Sequencing facility', None),
-            ('target', 'Target', lambda s: s.upper().strip()),
-            ('index', 'Index', lambda s: s[:12]),
-            ('index1', 'Index 1', lambda s: s[:12]),
-            ('index2', 'Index2', lambda s: s[:12]),
-            ('pcr_1_to_10', '1:10 PCR, P=pass, F=fail', fix_pcr),
-            ('pcr_1_to_100', '1:100 PCR, P=pass, F=fail', fix_pcr),
-            ('pcr_neat', 'neat PCR, P=pass, F=fail', fix_pcr),
-            ('dilution', 'Dilution used', fix_dilution),
-            ('sequencing_run_number', 'Sequencing run number', None),
-            ('flow_cell_id', 'Flowcell', None),
-            ('reads', ('# of RAW reads', '# of reads'), ingest_utils.get_int),
-            ('name', 'Sample name on sample sheet', None),
-            ('analysis_software_version', 'AnalysisSoftwareVersion', None),
-            ('comments', 'Comments', None),
+            ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
+            ("sample_extraction_id", "Sample extraction ID", ingest_utils.get_int),
+            ("sequencing_facility", "Sequencing facility", None),
+            # ("target", "Target", lambda s: s.upper().strip()),
+            ("target", "Target", lambda s: "16S"),
+            ("i7_index", "I7_Index_ID", None),
+            ("index1", "index", None),
+            ("index2", "index2", None),
+            ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", fix_pcr),
+            ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", fix_pcr),
+            ("pcr_neat", "neat PCR, P=pass, F=fail", fix_pcr),
+            ("dilution", "Dilution used", fix_dilution),
+            ("sequencing_run_number", "Sequencing run number", None),
+            ("flow_cell_id", "Flowcell", None),
+            ("reads", "# of reads", ingest_utils.get_int),
+            ("name", "Sample name on sample sheet", None),
+            ("analysis_software_version", "AnalysisSoftwareVersion", None),
+            ("comments", "Comments", None),
             ]
 
     wrapper = ExcelWrapper(field_spec,
             file_name,
-            sheet_name='Sheet1',
+            sheet_name="Sheet1",
             header_length=4,
             column_name_row_index=1,
             formatting_info=True,
@@ -104,11 +188,11 @@ class MD5ParsedLine(object):
         """ unpack the md5 line """
         self.md5, self.filename = self._line.split()
 
-        filename_parts = self.filename.split('.')[0].split('_')
+        filename_parts = self.filename.split(".")[0].split("_")
         if len(filename_parts) == 11:
-            # ['14658', 'GBR', 'UNSW', '16Sa', 'AB50N', 'TAAGGCGA', 'TCGACTAG', 'S1', 'L001', 'I1', '001']
+            # ["14658", "GBR", "UNSW", "16Sa", "AB50N", "TAAGGCGA", "TCGACTAG", "S1", "L001", "I1", "001"]
             self.bpa_id, _, self.vendor, self.amplicon, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
-            self.index = index1 + '-' + index2
+            self.index = index1 + "-" + index2
             self._ok = True
         else:
             self._ok = False
@@ -123,7 +207,7 @@ def parse_md5_file(md5_file):
     with open(md5_file) as f:
         for line in f.read().splitlines():
             line = line.strip()
-            if line == '':
+            if line == "":
                 continue
 
             parsed_line = MD5ParsedLine(line)
@@ -141,18 +225,9 @@ def get_sequencing_metadata(bpa_id, md5_line):
     target = md5_line.amplicon[:-1] # TODO what is a/b ?
 
     metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=target)
-    metadata.sample_extraction_id = ""
     metadata.sequencing_facility = Facility.objects.add(md5_line.vendor)
     metadata.index = md5_line.index
     metadata.flow_cell_id = md5_line.flowcell
-    metadata.name = md5_line.filename
-    metadata.pcr_1_to_10 = None
-    metadata.pcr_1_to_100 = None
-    metadata.pcr_neat = None
-    metadata.dilution = None
-    metadata.sequencing_run_number = None
-    metadata.reads = None
-    metadata.analysis_software_version = None
     metadata.save()
 
     return metadata
@@ -192,12 +267,12 @@ def ingest_md5():
     """
 
     def is_md5file(path):
-        if path.isfile() and path.ext == '.md5':
+        if path.isfile() and path.ext == ".md5":
             return True
 
-    logger.info('Ingesting GBR md5 file information from {0}'.format(DATA_DIR))
+    logger.info("Ingesting GBR md5 file information from {0}".format(DATA_DIR))
     for md5_file in DATA_DIR.walk(filter=is_md5file):
-        logger.info('Processing GBR md5 file {0}'.format(md5_file))
+        logger.info("Processing GBR md5 file {0}".format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
 
@@ -208,14 +283,16 @@ def truncate():
     from django.db import connection
 
     cursor = connection.cursor()
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequencingMetadata._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(AmpliconSequenceFile._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(AmpliconSequencingMetadata._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
 def run():
     # fetch the new data formats
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", "gbr33f"))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
     truncate()
+
+    do_metadata()
     ingest_md5()
