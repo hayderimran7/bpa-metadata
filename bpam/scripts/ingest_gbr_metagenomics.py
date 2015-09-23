@@ -395,8 +395,8 @@ def ingest_runs(sample_data):
 
         file_name = entry.sequence_filename.strip().replace("-", "_")
         if file_name != "":
-            f = GBRSequenceFile()
-            f.sample = GBRSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
+            sample = GBRSample.objects.get(bpa_id__bpa_id=entry.bpa_id)
+            f, _ = GBRSequenceFile.objects.get_or_create(filename=file_name, sample=sample)
             f.date_received_from_sequencing_facility = ingest_utils.get_date(
                 entry.date_received_by_genome_sequencing_facility)
             f.run = gbr_run
@@ -536,20 +536,16 @@ def add_md5(md5_lines):
     for md5_line in md5_lines:
         bpa_idx = md5_line.bpa_id
         bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
-        print(bpa_id)
 
         if bpa_id is None:
             continue
 
-        f = GBRSequenceFile()
         sample, created = GBRSample.objects.get_or_create(bpa_id=bpa_id)
-        f.sample = sample
+        f, _ = GBRSequenceFile.objects.get_or_create(sample=sample, filename=md5_line.filename)
         f.flowcell = md5_line.flowcell
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
         f.lane_number = md5_line.lane
-
-        f.filename = md5_line.filename
         f.md5 = md5_line.md5
         f.save()
 
@@ -582,15 +578,15 @@ def truncate():
 
 def run():
     # fetch the old data file
-    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f')) # bad form but aparently OK
     fetcher.fetch(OLD_METADATA_FILE)
 
     # fetch the new data formats
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
-    #fetcher.clean()
-    #fetcher.fetch_metadata_from_folder()
+    fetcher.clean()
+    fetcher.fetch_metadata_from_folder()
 
-    truncate()
+    # truncate()
 
     ingest_old_format(Path(OLD_DATA_DIR, OLD_METADATA_FILE))
 

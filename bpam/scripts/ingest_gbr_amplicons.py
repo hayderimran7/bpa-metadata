@@ -115,7 +115,7 @@ def get_metadata(file_name):
             ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
             ("sample_extraction_id", "Sample extraction ID", ingest_utils.get_int),
             ("sequencing_facility", "Sequencing facility", None),
-            # ("target", "Target", lambda s: s.upper().strip()),
+            # ("target", "Target", lambda s: s.upper().strip()), # FIXME
             ("target", "Target", lambda s: "16S"),
             ("i7_index", "I7_Index_ID", None),
             ("index1", "index", None),
@@ -247,9 +247,7 @@ def add_md5(md5_lines):
         sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
         metadata = get_sequencing_metadata(bpa_id, md5_line)
 
-        f = AmpliconSequenceFile()
-        f.sample = sample
-        f.metadata = metadata
+        f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample, metadata=metadata)
         f.flowcell = md5_line.flowcell
         f.barcode = md5_line.barcode
         f.read_number = md5_line.read
