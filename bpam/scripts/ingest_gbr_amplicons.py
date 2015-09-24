@@ -30,7 +30,7 @@ def fix_dilution(val):
     So stuff it.
     """
     if isinstance(val, float):
-        return u"1:10"  # yea, that"s how we roll...
+        return u"1:10"  # yea, that's how we roll...
     return val
 
 
@@ -247,17 +247,13 @@ def add_md5(md5_lines):
         sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
         metadata = get_sequencing_metadata(bpa_id, md5_line)
 
-        f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample, metadata=metadata)
-        f.flowcell = md5_line.flowcell
-        f.barcode = md5_line.barcode
-        f.read_number = md5_line.read
-        f.lane_number = md5_line.lane
-
-        f.filename = md5_line.filename
-        f.md5 = md5_line.md5
-
-
-        f.save()
+        f, _ = AmpliconSequenceFile.objects.get_or_create(
+                sample=sample,
+                metadata=metadata,
+                read_number = md5_line.read,
+                lane_number = md5_line.lane,
+                filename = md5_line.filename,
+                md5 = md5_line.md5)
 
 def ingest_md5():
     """
@@ -290,7 +286,7 @@ def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", "gbr33f"))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
-    truncate()
+    # truncate()
 
     do_metadata()
     ingest_md5()

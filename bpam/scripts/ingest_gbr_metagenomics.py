@@ -419,7 +419,7 @@ def _ingest(sample_data):
     :return:
     """
     # pre-populate the BPA ID's
-    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION) 
+    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION)
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
