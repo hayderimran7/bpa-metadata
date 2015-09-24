@@ -1,6 +1,126 @@
+<style type="text/css">
+    .popover{
+        max-width:600px;
+    }
+</style>
+
 <div class="alert alert-info" role="alert">
-    Note that a value of 0.0001 typically indicates a below-threshold reading. A empty cell indicates no data.
-    To sort by multiple columns, press and hold the Shift key.
+    Note that a value of 0.0001 typically indicates a below-threshold reading. 
+
+<a href="#"
+    role="button"
+    class="btn popovers"
+    data-toggle="popover"
+    title="Detection limits"
+    data-trigger="focus"
+    data-html="true"
+    data-container="body"
+    data-content=' 
+    
+    <table class="table table-bordered">
+        <tr>
+            <td>Test</td>
+            <td>Analyte</td>
+            <td>Reporting Limit</td>
+        </tr>
+        <tr>
+            <td> COLWELL P+K </td>
+            <td> P </td>
+            <td> 2 </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>K</td>
+            <td>15</td>
+        </tr>
+        <tr>
+            <td> PH, EC </td>
+            <td> PH </td>
+            <td> 2DP </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td> Electrical Conductivity</td>
+            <td> 0.01 </td>
+        </tr>
+        <tr>
+            <td> NITRATE, AMMONIUM</td>
+            <td> NH4</td>
+            <td>1 </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>NO3</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td> ORGANIC CARBON </td>
+            <td> OC% </td>
+            <td> 0.05 </td>
+        </tr>
+        <tr>
+            <td>SULPHUR KCL40</td>
+            <td>S</td>
+            <td>0.5</td>
+        </tr>
+        <tr>
+            <td> DTPA TRACE ELEMENTS</td>
+            <td> CU </td>
+            <td> 0.01 </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>ZN</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>MN</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>FE</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>Exchangeable Cations (without Pre-wash) AL  0.001 </td>
+            <td>AL</td>
+            <td>0.001</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>CA</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>MG</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>K</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>NA</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td>BORON</td>
+            <td>B</td>
+            <td>0.1</td>
+        </tr>
+    </table>
+   '>
+    <span class="glyphicon glyphicon-info-sign"></span>
+       Detection limits
+    </a>
+
+    <p>A empty cell indicates no data. To sort by multiple columns, press and hold the Shift key.</p>
+    
     <div class="bootstrap_buttons">
         <button type="button" class="reset btn" data-column="0" data-filter="">
             <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
@@ -8,6 +128,7 @@
         </button>
     </div>
 </div>
+
 <table  class="fancytable">
     <thead>
         <tr>
@@ -231,3 +352,10 @@
         </tr>
     </tfoot>
 </table>
+
+
+<script>
+    $('[data-toggle="popover"]').popover({
+        container: 'body'
+    });
+</script>

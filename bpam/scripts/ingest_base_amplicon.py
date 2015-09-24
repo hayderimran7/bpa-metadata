@@ -308,9 +308,9 @@ def truncate():
     from django.db import connection
 
     cursor = connection.cursor()
-    cursor.execute("TRUNCATE TABLE "{0}" CASCADE".format(AmpliconSequencingMetadata._meta.db_table))
-    cursor.execute("TRUNCATE TABLE "{0}" CASCADE".format(AmpliconRun._meta.db_table))
-    cursor.execute("TRUNCATE TABLE "{0}" CASCADE".format(AmpliconSequenceFile._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {0} CASCADE".format(AmpliconSequencingMetadata._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {0} CASCADE".format(AmpliconRun._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {0} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
 def run():
