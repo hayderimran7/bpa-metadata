@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN env --unset=DEBIAN_FRONTEND
 
-ENV APP_RELEASE 2.0.9
+ENV APP_RELEASE 2.0.10
 
 WORKDIR /app
 RUN git clone --depth=1 --branch=$APP_RELEASE https://github.com/muccg/bpa-metadata.git . \

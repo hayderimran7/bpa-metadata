@@ -116,7 +116,7 @@ dependency_links = [
 
 setup(
     name='bpam',
-    version='2.0.3',
+    version='2.0.10',
     description="BPA Metadata Management",
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
