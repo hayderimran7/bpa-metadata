@@ -7,7 +7,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Great Barrier Reef" "base:index" %}
+    {% breadcrumb "Great Barrier Reef" "gbr:index" %}
     {% breadcrumb "All Amplicons" "gbr_amplicon:amplicons" %}
     {% with "gbr_amplicon:amplicons_"|add:metadata.target as target_url %}
     {% breadcrumb metadata.target target_url %}
