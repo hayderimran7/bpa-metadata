@@ -164,7 +164,7 @@ class Protocol(models.Model):
     library_type = models.CharField(_('Type'), max_length=2, choices=LIB_TYPES)
     library_construction = models.CharField(_('Construction'), max_length=200, blank=True, null=True)
     base_pairs = models.IntegerField(_('Base Pairs'), blank=True, null=True)
-    library_construction_protocol = models.CharField(_('Construction Protocol'), max_length=200)
+    library_construction_protocol = models.TextField(_('Construction Protocol'))
     note = models.TextField(blank=True)
 
     class Meta:
@@ -194,7 +194,7 @@ class Sample(models.Model):
     dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
 
     name = models.CharField(_('Sample Name'), max_length=200)
-    dna_extraction_protocol = models.CharField(_('DNA Extraction Protocol'), max_length=200, blank=True, null=True)
+    dna_extraction_protocol = models.TextField(_('DNA Extraction Protocol'), blank=True, null=True)
     requested_sequence_coverage = models.CharField(max_length=50, blank=True)
     collection_date = models.DateField(_('Collection Date'), blank=True, null=True)
     date_sent_to_sequencing_facility = models.DateField(_('Date sent to sequencing facility'), blank=True, null=True)

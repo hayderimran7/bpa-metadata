@@ -19,13 +19,13 @@ PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
 # the old google doc format
-OLD_METADATA_URL = 'https://downloads.bioplatforms.com/gbr/old_format_metadata/'  # the folder
-OLD_METADATA_FILE = 'refuge2020_metadata.xlsx'
-OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/old_format')
+OLD_METADATA_URL = "https://downloads.bioplatforms.com/gbr/old_format_metadata/"  # the folder
+OLD_METADATA_FILE = "current"
+OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/old_format")
 
 # the newer format
-METADATA_URL = 'https://downloads.bioplatforms.com/gbr/metadata/metagenomics/'  # this is where the new metadata is kept
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'gbr/metadata/metagenomics/')
+METADATA_URL = "https://downloads.bioplatforms.com/gbr/metadata/metagenomics/"  # this is where the new metadata is kept
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/metagenomics/")
 
 
 def get_bpa_id(entry):
@@ -35,26 +35,26 @@ def get_bpa_id(entry):
     :rtype BPAUniqueID:
     """
 
-    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, 'GBR', note='Great Barrier Reef Sample')
+    bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, "GBR", note="Great Barrier Reef Sample")
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row, report))
         return None
     return bpa_id
 
 
 def get_dna_source(description):
     """
-    Get a DNA source if it exists, if it doesn't make it.
+    Get a DNA source if it exists, if it doesn"t make it.
     """
 
     description = str(description).strip().capitalize()
-    if description == '':
-        logger.debug('Set blank description to unknown')
-        description = 'Unknown'
+    if description == "":
+        logger.debug("Set blank description to unknown")
+        description = "Unknown"
 
     source, created = DNASource.objects.get_or_create(description=description)
     if created:
-        source.note = 'Added by GBR Project'
+        source.note = "Added by GBR Project"
         source.save()
 
     return source
@@ -69,13 +69,13 @@ def ingest_samples(samples):
         try:
             genus, species = name.strip().split()
         except ValueError, e:
-            logger.error('Problem Parsing organism from {0} : {1}'.format(name, e))
+            logger.error("Problem Parsing organism from {0} : {1}".format(name, e))
             return None
 
         organism, created = Organism.objects.get_or_create(genus=genus, species=species)
         if created:
-            logger.info('Adding Organism {0}'.format(name))
-            organism.note = 'GBR Related Organism'
+            # logger.info("Adding Organism {}".format(str(name)))
+            organism.note = "GBR Related Organism"
             organism.save()
         return organism
 
@@ -84,7 +84,7 @@ def ingest_samples(samples):
         :param entry: data tuple
         :type entry: tuple
         """
-        if entry.gps_location.strip() == '':
+        if entry.gps_location.strip() == "":
             return None
 
         lat, lon = entry.gps_location.split()
@@ -92,7 +92,7 @@ def ingest_samples(samples):
         lon = float(lon)
         site, created = CollectionSite.objects.get_or_create(lat=lat,
                                                              lon=lon,
-                                                             defaults={'site_name': entry.collection_site})
+                                                             defaults={"site_name": entry.collection_site})
 
         return site
 
@@ -127,21 +127,24 @@ def ingest_samples(samples):
 
         def get_library_type(library):
             """
-            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            (("PE", "Paired End"), ("SE", "Single End"), ("MP", "Mate Pair"))
             """
 
+            if library is None:
+                return "UN"
+
             new_str = library.lower()
-            if new_str.find('pair') >= 0:
-                return 'PE'
-            if new_str.find('single') >= 0:
-                return 'SE'
-            if new_str.find('mate') >= 0:
-                return 'MP'
-            return 'UN'
+            if new_str.find("pair") >= 0:
+                return "PE"
+            if new_str.find("single") >= 0:
+                return "SE"
+            if new_str.find("mate") >= 0:
+                return "MP"
+            return "UN"
 
         base_pairs_string = entry.library_construction
         library_type = get_library_type(entry.library)
-        library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
+        library_construction_protocol = entry.library_construction_protocol.replace(",", "").capitalize()
 
         protocol, _ = GBRProtocol.objects.get_or_create(
             base_pairs_string=base_pairs_string,
@@ -157,14 +160,14 @@ def ingest_samples(samples):
 
         bpa_id = get_bpa_id(e)
         if bpa_id is None:
-            logger.warning('BPA ID {0} does not look like a real ID, ignoring'.format(bpa_id))
+            logger.warning("BPA ID {0} does not look like a real ID, ignoring".format(bpa_id))
             return
 
         gbr_sample, created = GBRSample.objects.get_or_create(
             bpa_id=bpa_id,
             defaults={
-                'organism': get_organism(e.species),
-                'collection_event': get_collection_event(e)
+                "organism": get_organism(e.species),
+                "collection_event": get_collection_event(e)
             }
         )
 
@@ -211,52 +214,52 @@ def get_gbr_sample_data_old_format(file_name):
     """
 
     field_spec = [
-        ('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
-        ('species', 'Species', None),
-        ('dataset', 'Dataset', None),
-        ('sample_description', 'Sample Description', None),
-        ('collection_site', 'Site of collection', None),
-        ('collection_date', 'Date of collection', None),
-        ('collector_name', 'Collector', None),
-        ('gps_location', 'GPS Location', None),
-        ('water_temp', 'water temp', None),
-        ('ph', 'pH', None),
-        ('depth', 'Depth (m)', None),
-        ('collection_comment', 'Comment (free text)', None),
-        ('other', 'Other', None),  # more comments
-        ('sequencing_notes', 'Sequencing Notes', None),
-        ('contact_scientist', 'contact scientist', None),
-        ('contact_affiliation', 'Contact affiliation', None),
-        ('contact_email', 'Contact email', None),
-        ('dna_rna_source', 'DNA/RNA Source', None),
-        ('dna_extraction_protocol', 'DNA extraction protocol', None),
-        ('dna_rna_concentration', 'DNA/RNA conc (ng/ul)', None),
-        ('total_dna_rna_shipped', 'Total volume of DNA/RNA shipped (uL)', None),
-        ('sequencing_facility', 'Genome Sequencing Facility', None),
-        ('date_received_by_genome_sequencing_facility', 'Date Received by sequencing facility', None),
-        ('comments_by_facility', 'Comments by sequencing facility', None),
-        ('date_sequenced', 'Date sequenced', None),
-        ('library', 'Library', None),
-        ('library_construction', 'Library Construction (insert size bp)', None),
-        ('requested_read_length', 'Requested read length (bp)', None),
-        ('library_construction_protocol', 'Library construction protocol', None),
-        ('index_number', 'Index sequence', None),
-        ('sequencer', 'Sequencer', None),
-        ('run_number', 'Run number', None),
-        ('flow_cell_id', 'Run #:Flow Cell ID', None),
-        ('lane_number', 'Lane number', None),
-        ('sequence_filename', 'FILE NAMES - supplied by sequencing facility', None),
-        ('sequence_filetype', 'file type', None),
-        ('md5_checksum', 'MD5 checksum', None),
-        ('contact_bioinformatician_name', 'Contact bioinformatician', None),
-        ('contact_bioinformatician_email', 'Email contact', None),
-        ('date_data_sent', 'Date data sent/transferred', None),
+        ("bpa_id", "Unique ID", lambda s: s.replace("/", ".")),
+        ("species", "Species", None),
+        ("dataset", "Dataset", None),
+        ("sample_description", "Sample Description", None),
+        ("collection_site", "Site of collection", None),
+        ("collection_date", "Date of collection", None),
+        ("collector_name", "Collector", None),
+        ("gps_location", "GPS Location", None),
+        ("water_temp", "water temp", None),
+        ("ph", "pH", None),
+        ("depth", "Depth (m)", None),
+        ("collection_comment", "Comment (free text)", None),
+        ("other", "Other", None),  # more comments
+        ("sequencing_notes", "Sequencing Notes", None),
+        ("contact_scientist", "contact scientist", None),
+        ("contact_affiliation", "Contact affiliation", None),
+        ("contact_email", "Contact email", None),
+        ("dna_rna_source", "DNA/RNA Source", None),
+        ("dna_extraction_protocol", "DNA extraction protocol", None),
+        ("dna_rna_concentration", "DNA/RNA conc (ng/ul)", None),
+        ("total_dna_rna_shipped", "Total volume of DNA/RNA shipped (uL)", None),
+        ("sequencing_facility", "Genome Sequencing Facility", None),
+        ("date_received_by_genome_sequencing_facility", "Date Received by sequencing facility", None),
+        ("comments_by_facility", "Comments by sequencing facility", None),
+        ("date_sequenced", "Date sequenced", None),
+        ("library", "Library", None),
+        ("library_construction", "Library Construction (insert size bp)", None),
+        ("requested_read_length", "Requested read length (bp)", None),
+        ("library_construction_protocol", "Library construction protocol", None),
+        ("index_number", "Index sequence", None),
+        ("sequencer", "Sequencer", None),
+        ("run_number", "Run number", None),
+        ("flow_cell_id", "Run #:Flow Cell ID", None),
+        ("lane_number", "Lane number", None),
+        ("sequence_filename", "FILE NAMES - supplied by sequencing facility", None),
+        ("sequence_filetype", "file type", None),
+        ("md5_checksum", "MD5 checksum", None),
+        ("contact_bioinformatician_name", "Contact bioinformatician", None),
+        ("contact_bioinformatician_email", "Email contact", None),
+        ("date_data_sent", "Date data sent/transferred", None),
     ]
 
     wrapper = ExcelWrapper(
         field_spec,
         file_name,
-        sheet_name='DNA library Sequencing - Pilot',
+        sheet_name="Sample Metadata",
         header_length=1,
         column_name_row_index=0)
     return wrapper.get_all()
@@ -270,23 +273,23 @@ def get_gbr_sample_data(file_name):
     """
 
     field_spec = [
-        ('bpa_id', 'Sample unique ID', lambda s: s.replace('/', '.')),
-        ('sequencing_facility', 'Sequencing facility', None),
-        ('index_number', 'Index', None),
-        ('library', 'Library', None),
-        ('library_code', 'Library code', None),  # no need to figure out like with the older format
-        ('library_construction', 'Library Construction - average insert size', None),
-        ('library_construction_range', 'Insert size range', None),
-        ('library_construction_protocol', 'Library construction protocol', None),
-        ('sequencer', 'Sequencer', None),
-        ('run_number', 'Run number', None),
-        ('flow_cell_id', 'Run #:Flow Cell ID', None),
-        ('lane_number', 'Lane number', None)]
+        ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
+        ("sequencing_facility", "Sequencing facility", None),
+        ("index_number", "Index", None),
+        ("library", "Library", None),
+        ("library_code", "Library code", None),  # no need to figure out like with the older format
+        ("library_construction", "Library Construction - average insert size", None),
+        ("library_construction_range", "Insert size range", None),
+        ("library_construction_protocol", "Library construction protocol", None),
+        ("sequencer", "Sequencer", None),
+        ("run_number", "Run number", None),
+        ("flow_cell_id", "Run #:Flow Cell ID", None),
+        ("lane_number", "Lane number", None)]
 
     wrapper = ExcelWrapper(
         field_spec,
         file_name,
-        sheet_name='Sheet1',
+        sheet_name="Sheet1",
         header_length=3,
         column_name_row_index=1)
     return wrapper.get_all()
@@ -296,20 +299,23 @@ def ingest_runs(sample_data):
     def get_protocol(entry):
         def get_library_type(libtype):
             """
-            (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'))
+            (("PE", "Paired End"), ("SE", "Single End"), ("MP", "Mate Pair"))
             """
+            if libtype is None:
+                return ""
+
             new_str = libtype.lower()
-            if new_str.find('pair') >= 0:
-                return 'PE'
-            if new_str.find('single') >= 0:
-                return 'SE'
-            if new_str.find('mate') >= 0:
-                return 'MP'
-            return 'UN'
+            if new_str.find("pair") >= 0:
+                return "PE"
+            if new_str.find("single") >= 0:
+                return "SE"
+            if new_str.find("mate") >= 0:
+                return "MP"
+            return "UN"
 
         base_pairs = ingest_utils.get_clean_number(entry.requested_read_length)
         library_type = get_library_type(entry.library)
-        library_construction_protocol = entry.library_construction_protocol.replace(',', '').capitalize()
+        library_construction_protocol = entry.library_construction_protocol.replace(",", "").capitalize()
 
         try:
             protocol = GBRProtocol.objects.get(base_pairs=base_pairs,
@@ -349,11 +355,11 @@ def ingest_runs(sample_data):
         run_number = ingest_utils.get_clean_number(entry.run_number)
         if run_number is None:
             # see if its ANU and parse the run_number from the filename
-            if entry.sequencing_facility.strip() == 'ANU':
+            if entry.sequencing_facility.strip() == "ANU":
                 filename = entry.sequence_filename.strip()
                 if filename != "":
                     try:
-                        run_number = ingest_utils.get_clean_number(filename.split('_')[7])
+                        run_number = ingest_utils.get_clean_number(filename.split("_")[7])
                         logger.info("ANU run_number {0} parsed from filename".format(run_number))
                     except IndexError:
                         logger.info("Filename {0} wrong format".format(filename))
@@ -382,7 +388,7 @@ def ingest_runs(sample_data):
         gbr_run.protocol = get_protocol(e)
         gbr_run.save()
 
-        # FIXME, I'm sure this is wrong
+        # FIXME, I"m sure this is wrong
         gbr_run.protocol.run = gbr_run
         gbr_run.protocol.save()
 
@@ -418,14 +424,14 @@ def _ingest(sample_data):
     :param sample_data:
     :return:
     """
-    # pre-populate the BPA ID's
+    # pre-populate the BPA ID"s
     bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION)
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
 
 def ingest_old_format(file_name):
-    logger.info('Ingesting GBR metadata from {0} (Old google doc)'.format(DATA_DIR))
+    logger.info("Ingesting GBR metadata from {0} (Old google doc)".format(DATA_DIR))
     sample_data = list(get_gbr_sample_data_old_format(file_name))
     _ingest(sample_data)
 
@@ -437,17 +443,17 @@ def ingest():
     """
 
     def is_metadata(path):
-        if path.isfile() and path.ext == '.xlsx':
+        if path.isfile() and path.ext == ".xlsx":
             return True
 
-    logger.info('Ingesting GBR metadata from {0}'.format(DATA_DIR))
+    logger.info("Ingesting GBR metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
-        logger.info('Processing GBR Metadata file {0}'.format(metadata_file))
+        logger.info("Processing GBR Metadata file {0}".format(metadata_file))
         try:
             sample_data = get_gbr_sample_data(metadata_file)
             _ingest(sample_data)
         except ColumnNotFoundException, e:
-            logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
+            logger.error("File {0} could not be ingested, column name error: {1}".format(metadata_file, e))
 
 
 class MD5ParsedLine(object):
@@ -494,14 +500,14 @@ class MD5ParsedLine(object):
         """ unpack the md5 line """
         self.md5, self.filename = self._line.split()
 
-        filename_parts = self.filename.split('.')[0].split('_')
+        filename_parts = self.filename.split(".")[0].split("_")
         # [bpaid]_[vendor]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
-        # ['14706', 'GBR', 'UNSW', 'PE', '399bp', 'HB049ADXX', 'CGTACG', 'L001', 'R1', '001']
+        # ["14706", "GBR", "UNSW", "PE", "399bp", "HB049ADXX", "CGTACG", "L001", "R1", "001"]
         if len(filename_parts) == 10:
             self.bpa_id, _, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read, _ = filename_parts
             self._ok = True
         elif len(filename_parts) == 8:
-            # ['13208', 'GBR', 'UNSW', 'H8P31ADXX', 'TCCTGAGC', 'L002', 'R2', '001']
+            # ["13208", "GBR", "UNSW", "H8P31ADXX", "TCCTGAGC", "L002", "R2", "001"]
             self.bpa_id, _, self.vendor,  self.flowcell, self.index, self.lane, self.read, _ = filename_parts
             self._ok = True
         else:
@@ -519,7 +525,7 @@ def parse_md5_file(md5_file):
     with open(md5_file) as f:
         for line in f.read().splitlines():
             line = line.strip()
-            if line == '':
+            if line == "":
                 continue
 
             parsed_line = MD5ParsedLine(line)
@@ -556,12 +562,12 @@ def ingest_md5():
     """
 
     def is_md5file(path):
-        if path.isfile() and path.ext == '.md5':
+        if path.isfile() and path.ext == ".md5":
             return True
 
-    logger.info('Ingesting GBR md5 file information from {0}'.format(DATA_DIR))
+    logger.info("Ingesting GBR md5 file information from {0}".format(DATA_DIR))
     for md5_file in DATA_DIR.walk(filter=is_md5file):
-        logger.info('Processing GBR md5 file {0}'.format(md5_file))
+        logger.info("Processing GBR md5 file {0}".format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
 
@@ -569,20 +575,20 @@ def truncate():
     from django.db import connection
 
     cursor = connection.cursor()
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRSample._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRRun._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(GBRProtocol._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionEvent._meta.db_table))
-    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CollectionSite._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(GBRSample._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(GBRRun._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(GBRProtocol._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(CollectionEvent._meta.db_table))
+    cursor.execute("TRUNCATE TABLE {} CASCADE".format(CollectionSite._meta.db_table))
 
 
 def run():
     # fetch the old data file
-    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f')) # bad form but aparently OK
+    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=("bpa", "gbr33f")) # bad form but aparently OK
     fetcher.fetch(OLD_METADATA_FILE)
 
     # fetch the new data formats
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", "gbr33f"))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 
