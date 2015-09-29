@@ -501,10 +501,9 @@ class MD5ParsedLine(object):
         self.md5, self.filename = self._line.split()
 
         filename_parts = self.filename.split(".")[0].split("_")
-        # [bpaid]_[vendor]_[Library_Type]_[Library_Size]_[FLowcel]_[Barcode]_L[Lane_number]_R[Read_Number].
-        # ["14706", "GBR", "UNSW", "PE", "399bp", "HB049ADXX", "CGTACG", "L001", "R1", "001"]
+        # ["14706", "PE", "399bp", "GBR", "UNSW", "HB049ADXX", "CGTACG", "L001", "R1", "001"]
         if len(filename_parts) == 10:
-            self.bpa_id, _, self.vendor, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read, _ = filename_parts
+            self.bpa_id, self.lib_type, self.lib_size, _, self.vendor, self.flowcell, self.barcode, self.lane, self.read, _ = filename_parts
             self._ok = True
         elif len(filename_parts) == 8:
             # ["13208", "GBR", "UNSW", "H8P31ADXX", "TCCTGAGC", "L002", "R2", "001"]

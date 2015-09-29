@@ -27,6 +27,7 @@
             <th>BPA ID</th>
             <th>Name</th>
             <th>Organism</th>
+            <th>Dataset</th>
             <th>DNA/RNA Source</th>
             <th>Library</th>
             <th>Library Construction</th>
@@ -41,6 +42,7 @@
             </td>
             <td>{{ sample.name }}</td>
             <td>{{ sample.organism }}</td>
+            <td>{{ sample.dataset }}</td>
             <td>{{ sample.dna_source.description }}</td>
             <td>{{ sample.protocol.base_pairs_string }}</td>
             <td>{{ sample.protocol.library_construction_protocol }}</td>
@@ -53,13 +55,14 @@
             <th>BPA ID</th>
             <th>Name</th>
             <th>Organism</th>
+            <th>Dataset</th>
             <th>DNA/RNA Source</th>
             <th>Library</th>
             <th>Library Construction</th>
             <th>Protocol</th>
         </tr>
         <tr>
-            <th colspan="7" class="ts-pager form-horizontal">
+            <th colspan="8" class="ts-pager form-horizontal">
                 <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
                 <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
                 <span class="pagedisplay"></span>
