@@ -18,6 +18,10 @@ urlpatterns = patterns(
         view=views.CollectionView.as_view(),
         name='collection'),
     url(
+        regex=r'^samples/csv',
+        view=data_export.get_samples,
+        name='samples_csv'),
+    url(
         regex=r'^samples',
         view=views.SampleListView.as_view(),
         name='samples'),

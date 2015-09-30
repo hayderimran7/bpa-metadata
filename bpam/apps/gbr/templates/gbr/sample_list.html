@@ -21,6 +21,7 @@
         </button>
     </div>
 </div>
+<p><a href="{% url 'gbr:samples_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 <table class="fancytable">
     <thead>
         <tr>
@@ -79,6 +80,8 @@
         </tr>
     </tfoot>
 </table>
+
+<p><a href="{% url 'gbr:samples_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 
 {% else %}
 <h3> No Great Barrier Reef Sample Data is currently available </h3>

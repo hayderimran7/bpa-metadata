@@ -20,7 +20,7 @@ PROJECT_DESCRIPTION = "Great Barrier Reef"
 
 # the old google doc format
 OLD_METADATA_URL = "https://downloads.bioplatforms.com/gbr/old_format_metadata/"  # the folder
-OLD_METADATA_FILE = "current"
+OLD_METADATA_FILE = "current.xlsx"
 OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/old_format")
 
 # the newer format
@@ -46,11 +46,10 @@ def get_dna_source(description):
     """
     Get a DNA source if it exists, if it doesn"t make it.
     """
+    if description is None:
+        description = ""
 
-    description = str(description).strip().capitalize()
-    if description == "":
-        logger.debug("Set blank description to unknown")
-        description = "Unknown"
+    description = description.strip()
 
     source, created = DNASource.objects.get_or_create(description=description)
     if created:
@@ -513,7 +512,6 @@ class MD5ParsedLine(object):
             self._ok = False
 
 
-
 def parse_md5_file(md5_file):
     """
     Parse md5 file
@@ -532,6 +530,7 @@ def parse_md5_file(md5_file):
                 data.append(parsed_line)
 
     return data
+
 
 def add_md5(md5_lines):
     """
@@ -569,6 +568,7 @@ def ingest_md5():
         logger.info("Processing GBR md5 file {0}".format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
+
 
 def truncate():
     from django.db import connection
