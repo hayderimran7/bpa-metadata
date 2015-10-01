@@ -29,8 +29,6 @@
             <th>Filename</th>
             <th>MD5</th>
             <th>Sample Name</th>
-            <th>Run Date</th>
-            <th>Run Description</th>
         </tr>
     </thead>
     <tbody>
@@ -50,8 +48,6 @@
             </td>
             <td style="font-family: monospace">{{ sfile.md5 }}</td>
             <td>{{ sfile.sample.name }}</td>
-            <td>{{ sfile.date_received_from_sequencing_facility }}</td>
-            <td>{{ sfile.run }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -61,11 +57,9 @@
             <th>Filename</th>
             <th>MD5</th>
             <th>Sample Name</th>
-            <th>Run Date</th>
-            <th>Run Description</th>
         </tr>
         <tr>
-            <th colspan="6" class="ts-pager form-horizontal">
+            <th colspan="4" class="ts-pager form-horizontal">
                 <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
                 <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
                 <span class="pagedisplay"></span>
