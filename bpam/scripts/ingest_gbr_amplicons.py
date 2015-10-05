@@ -115,8 +115,7 @@ def get_metadata(file_name):
             ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
             ("sample_extraction_id", "Sample extraction ID", ingest_utils.get_int),
             ("sequencing_facility", "Sequencing facility", None),
-            # ("target", "Target", lambda s: s.upper().strip()), # FIXME
-            ("target", "Target", lambda s: "16S"),
+            ("target", "Target", lambda s: s.upper().strip()),
             ("i7_index", "I7_Index_ID", None),
             ("index1", "index", None),
             ("index2", "index2", None),
@@ -147,22 +146,7 @@ def get_metadata(file_name):
 class MD5ParsedLine(object):
     def __init__(self, line):
         self._line = line
-
-        self.bpa_id = None
-        self.vendor = None
-        self.lib_type = None
-        self.lib_size = None
-        self.flowcell = None
-        self.barcode = None
-
-        self.md5 = None
-        self.filename = None
-
-        self._lane = None
-        self._read = None
-
         self._ok = False
-
         self.__parse_line()
 
     def is_ok(self):
@@ -189,9 +173,9 @@ class MD5ParsedLine(object):
         self.md5, self.filename = self._line.split()
 
         filename_parts = self.filename.split(".")[0].split("_")
-        if len(filename_parts) == 11:
-            # ["14658", "GBR", "UNSW", "16Sa", "AB50N", "TAAGGCGA", "TCGACTAG", "S1", "L001", "I1", "001"]
-            self.bpa_id, _, self.vendor, self.amplicon, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
+        if len(filename_parts) == 12:
+            # 14658_GBR_UNSW_16S_R341-806_AB50N_CTCTCTAC_CTATTAAG_S54_L001_I1_001.fastq.gz
+            self.bpa_id, _, self.vendor, self.amplicon, self.amplicon_range, self.flowcell, index1, index2, self.i5index, self.lane, self.read, _ = filename_parts
             self.index = index1 + "-" + index2
             self._ok = True
         else:
@@ -222,9 +206,7 @@ def get_sequencing_metadata(bpa_id, md5_line):
     Populates the amplicon sequencing metadata object from the import md5 line
     """
 
-    target = md5_line.amplicon[:-1] # TODO what is a/b ?
-
-    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=target)
+    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=md5_line.amplicon)
     metadata.sequencing_facility = Facility.objects.add(md5_line.vendor)
     metadata.index = md5_line.index
     metadata.flow_cell_id = md5_line.flowcell
