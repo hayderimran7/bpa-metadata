@@ -118,7 +118,6 @@ def get_date(dt):
     When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
     if it wasn't, it may still be a valid date string.
     """
-
     if dt is None:
         return None
 
