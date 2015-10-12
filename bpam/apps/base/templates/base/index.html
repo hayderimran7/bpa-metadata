@@ -71,7 +71,18 @@
                     </a>
 
                     <a class="list-group-item"
-                        href="{% url 'base_vocabulary:all_vocabularies' %}">Contextual Data Vocabularies
+                       data-container="body"
+                       data-toggle="tooltip"
+                       data-placement="right"
+                       title="Atlas of Living Australia visualisation tools enabling visualisation of BASE data"
+                       href="http://base.ala.org.au/datacheck/datasets">
+                        <span><img height="20px;" src="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/supporting-graphic-element-flat.png"/></span>
+                        ALA Visualisation Tools
+                    </a>
+
+                    <a class="list-group-item"
+                       href="{% url 'base_vocabulary:all_vocabularies' %}">
+                        Contextual Data Vocabularies
                     </a>
 
                     <a class="list-group-item"
