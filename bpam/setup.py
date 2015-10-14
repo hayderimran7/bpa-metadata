@@ -31,7 +31,7 @@ else:
 
 install_requires = [
     'Django==1.7.6',
-    'Django-suit',
+    'Django-suit==0.2.15',
     'django-crispy-forms',
     'python-memcached>=1.53,<2.0',
     'Unipath>=1.0,<2.0',

@@ -192,6 +192,7 @@ SUIT_CONFIG = {
                     'melanomaprotocol',
                     'melanomarun',
                     'tumorstage')},
+        # GBR
         {'app': 'gbr', 'label': 'Great Barrier Reef',
          'models': ('gbrsample',
                     'gbrsequencefile',
@@ -199,6 +200,10 @@ SUIT_CONFIG = {
                     'collectionevent',
                     'gbrrun',
                     'gbrprotocol',)},
+        '-',
+        # barcode
+        {'app': 'barcode', 'label': 'Barcode',
+         'models': ('sheet',)},
         '-',
         # Wheat Pathogens Genome
         {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens Genome',
@@ -320,6 +325,7 @@ INSTALLED_APPS = (
     'apps.melanoma',
     'apps.gbr',
     'apps.gbr_amplicon',
+    'apps.barcode',
     'tinymce',
     'bootstrap3',
     'django_bootstrap_breadcrumbs',
