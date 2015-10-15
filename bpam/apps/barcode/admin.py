@@ -33,7 +33,7 @@ class SheetAdmin(admin.ModelAdmin):
             ("Determination",
                 {"fields": ("author", "manuscript", "conservation_code", "determiner_name", "date_of_determination", "determiner_role", "name_comment", "frequency", "locality", "state",), }),
             ("Collector",
-                {"fields": ("collector" collector_number collection_date collection_date voucher voucher_id voucher_site type_status ), }),
+                {"fields": ("collector", "collector_number", "collection_date", "voucher", "voucher_id", "voucher_site", "type_status"), }),
             ("Note",
                 {"fields": ("note",) }),
             ]
