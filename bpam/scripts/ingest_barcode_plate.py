@@ -1,57 +1,51 @@
-import csv
+# -*- coding: utf-8 -*-
 
-from libs import ingest_utils logger_utils
+import csv
+from unipath import Path
+
+from libs import ingest_utils, logger_utils
 from libs.fetch_data import Fetcher
-from apps.bpaauth.models import BPAUser
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/bpa/barcode/plate/'
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'barcode/plate/')
+METADATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/plate/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_plate/")
 
 
-def get_data(users_file):
-    with open(users_file, 'rb') as contacts:
-        fieldnames = ['Project', 'First name', 'Last name', 'Organisation', 'Email', 'Interest', 'Lab']
-        reader = csv.DictReader(contacts, fieldnames=fieldnames, restkey='therest')
+def UnicodeDictReader(str_data, encoding="utf8", **kwargs):
+    csv_reader = csv.DictReader(str_data, **kwargs)
+    keymap = dict((k, k.decode(encoding)) for k in csv_reader.fieldnames)
+    for row in csv_reader:
+        yield dict((keymap[k], v.decode(encoding)) for k, v in row.iteritems())
+
+
+def add_plates(plates):
+    for plate in plates:
+        print(plate)
+
+def get_plate_data(plate_file):
+    with open(plate_file, "r") as plates_f:
+        reader = UnicodeDictReader(plates_f, encoding="cp1252")
         return ingest_utils.strip_all(reader)
 
-
-def filter_contacts(contact):
+def ingest_plates():
     """
-    If for some reason the contact line is unsuitable, filter it out.
-    """
-    username = user_helper.make_username(contact)
-    if not username:
-        return True
-
-    if contact['Project'].strip() == 'Project':
-        return True
-
-    return False
-
-
-def ingest_contacts(users_file):
-    """
-    Contacts associated with BPA projects
+    Herbarium plates
     """
 
-    for contact in get_data(users_file):
-        if filter_contacts(contact):
-            continue
+    def is_csv(path):
+        if path.isfile() and path.ext == ".csv":
+            return True
 
-        # if the user already exists, she probably is part of several projects so add her to those groups
-        username = user_helper.make_username(contact)
-        try:
-            existing_user = BPAUser.objects.get(username=username)
-            group = user_helper.get_group(contact['Project'])
-            existing_user.groups.add(group)
-            existing_user.save()
-        except BPAUser.DoesNotExist:
-            user_helper.make_new_user(username, contact)
+    logger.info("Ingesting Plate data from {0}".format(DATA_DIR))
+    for plate_file in DATA_DIR.walk(filter=is_csv):
+        logger.info("Processing barcode plate {0}".format(plate_file))
+        plates = list(get_plate_data(plate_file))
+        add_plates(plates)
 
 
 def run():
     fetcher = Fetcher(DATA_DIR, METADATA_URL)
-    fetcher.fetch(BPA_USERS_FILE)
-    ingest_contacts(DATA_DIR + BPA_USERS_FILE)
+    fetcher.clean()
+    fetcher.fetch_metadata_from_folder()
+    ingest_plates()

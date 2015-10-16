@@ -17,9 +17,7 @@ logger = logger_utils.get_logger(__name__)
 
 
 class Fetcher():
-    """
-    facilitates fetching data from webserver
-    """
+    """ facilitates fetching data from webserver """
 
     def __init__(self, target_folder, metadata_source_url, auth=None):
         self.target_folder = target_folder
@@ -35,9 +33,8 @@ class Fetcher():
             mkpath(self.target_folder)
 
     def clean(self):
-        """
-        Clean up existing contents
-        """
+        """ Clean up existing contents """
+
         files = glob.glob(self.target_folder + "/*")
         for f in files:
             os.remove(f)
@@ -45,9 +42,9 @@ class Fetcher():
     def fetch(self, name):
         """ fetch file from server """
 
-        logger.info('Fetching {0} from {1}'.format(name, self.metadata_source_url))
-        r = requests.get(self.metadata_source_url + '/' + name, stream=True, auth=self.auth, verify=False)
-        with open(self.target_folder + '/' + name, 'wb') as f:
+        logger.info("Fetching {0} from {1}".format(name, self.metadata_source_url))
+        r = requests.get(self.metadata_source_url + "/" + name, stream=True, auth=self.auth, verify=False)
+        with open(self.target_folder + "/" + name, "wb") as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
@@ -57,11 +54,12 @@ class Fetcher():
         """ downloads metadata from archive """
 
         response = requests.get(self.metadata_source_url, stream=True, auth=self.auth, verify=False)
-        for link in BeautifulSoup(response.content).find_all('a'):
-            metadata_filename = link.get('href')
-            if metadata_filename.endswith('.xlsx') or \
-                    metadata_filename.endswith('.txt') or \
-                    metadata_filename.endswith('.zip') or \
-                    metadata_filename.endswith('.gz') or \
-                    metadata_filename.endswith('.md5'):
+        for link in BeautifulSoup(response.content).find_all("a"):
+            metadata_filename = link.get("href")
+            if metadata_filename.endswith(".xlsx") or \
+                    metadata_filename.endswith(".txt") or \
+                    metadata_filename.endswith(".csv") or \
+                    metadata_filename.endswith(".zip") or \
+                    metadata_filename.endswith(".gz") or \
+                    metadata_filename.endswith(".md5"):
                 self.fetch(metadata_filename)
