@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Sheet(models.Model):
     sheet_number = models.IntegerField("Sheet Number", primary_key=True)
-    name_id = models.IntegerField("Name ID", null=True, blank=True)
+    name_id = models.TextField("Name ID", null=True, blank=True)
     plant_description = models.TextField("Plant Description", null=True, blank=True)
     site_description = models.TextField("Site Description", null=True, blank=True)
     vegetation = models.TextField("Vegetation", null=True, blank=True)
@@ -12,7 +12,7 @@ class Sheet(models.Model):
     latitude = models.FloatField("Latitude", help_text="Degree decimal")
     longitude = models.FloatField("Longitude", help_text="Degree decimal")
     datum = models.CharField("Datum", max_length=50, null=True, blank=True)
-    geocode_accuracy = models.IntegerField("Geocode Accuracy", max_length=100, null=True, blank=True)
+    geocode_accuracy = models.FloatField("Geocode Accuracy", max_length=100, null=True, blank=True)
     geocode_method = models.CharField("Gecode Method", max_length=100, null=True, blank=True)
     barker_coordinate_accuracy_flag = models.IntegerField("Barker Coordinate Accuracy Flag", null=True, blank=True)
 

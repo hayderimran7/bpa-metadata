@@ -12,6 +12,7 @@ class SheetAdmin(admin.ModelAdmin):
             fields = "__all__"
             model = Sheet
             widgets = {
+                    "name_id": AutosizedTextarea(attrs={"class": "input-small", "style": "width:55%"}),
                     "latitude": EnclosedInput(prepend="icon-map-marker"),
                     "longitude": EnclosedInput(prepend="icon-map-marker"),
                     "note": AutosizedTextarea(attrs={"class": "input-large", "style": "width:95%"}),
@@ -38,7 +39,7 @@ class SheetAdmin(admin.ModelAdmin):
                 {"fields": ("note",) }),
             ]
 
-    list_display = ("sheet_number", "latitude", "longitude", "note")
+    list_display = ("sheet_number", "family", "genus", "species", "latitude", "longitude", "note")
     search_fields = ("sheet_number", "latitude", "longitude", "note")
     list_filter = ("sheet_number", "latitude", "longitude",)
 
