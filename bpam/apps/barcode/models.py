@@ -41,10 +41,10 @@ class Sheet(models.Model):
     collector = models.CharField("Collector", max_length=100, null=True, blank=True)
     collector_number = models.CharField("Collector Number", max_length=100, null=True, blank=True)
     collection_date = models.DateField("Collection Date", null=True, blank=True)
-    voucher = models.CharField("Voucher", max_length=100, null=True, blank=True)
+    voucher = models.TextField("Voucher", null=True, blank=True)
     voucher_id = models.IntegerField("Voucher ID", null=True, blank=True)
-    voucher_site = models.CharField("Voucher Site", max_length=100, null=True, blank=True)
-    type_status = models.CharField("Type Status", max_length=100, null=True, blank=True)
+    voucher_site = models.CharField("Voucher Site", max_length=300, null=True, blank=True)
+    type_status = models.CharField("Type Status", max_length=300, null=True, blank=True)
 
     note = models.TextField("Note", null=True, blank=True)
 

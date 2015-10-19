@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.db import IntegrityError
 import csv
 from unipath import Path
 
@@ -23,37 +24,58 @@ def add_sheets(sheets):
         return False
 
     for sheet in sheets:
-        Sheet.objects.get_or_create(
-                sheet_number=sheet["Sheet Number"],
-                name_id=sheet["NameID"],
-                plant_description=sheet["Plant Description"],
-                site_description=sheet["Site Description"],
-                vegetation=sheet["Vegetation"],
+        try:
+            sheet, created = Sheet.objects.get_or_create(
+                    sheet_number=sheet["Sheet Number"],
+                    name_id=sheet["NameID"],
+                    plant_description=sheet["Plant Description"],
+                    site_description=sheet["Site Description"],
+                    vegetation=sheet["Vegetation"],
 
-                latitude=sheet["Latitude"],
-                longitude=sheet["Longitude"],
-                datum=sheet["Datum"],
-                geocode_accuracy=ingest_utils.get_clean_float(sheet["Geocode Accuracy"]),
-                geocode_method=sheet["Geocode Method"],
-                barker_coordinate_accuracy_flag=ingest_utils.get_int(sheet["Barker Coordinate Accuracy Flag"]),
+                    # position
+                    latitude=sheet["Latitude"],
+                    longitude=sheet["Longitude"],
+                    datum=sheet["Datum"],
+                    geocode_accuracy=ingest_utils.get_clean_float(sheet["Geocode Accuracy"]),
+                    geocode_method=sheet["Geocode Method"],
+                    barker_coordinate_accuracy_flag=ingest_utils.get_int(sheet["Barker Coordinate Accuracy Flag"]),
 
-                family=sheet["Family"],
-                genus=sheet["Genus"],
-                species=sheet["Species"],
-                rank=sheet["Rank"],
-                infraspecies_qualifier=sheet["Infraspecies Qualifier"],
-                infraspecies=sheet["Infraspecies"],
-                alien=is_alien(sheet["Alien"]),
+                    # flora
+                    family=sheet["Family"],
+                    genus=sheet["Genus"],
+                    species=sheet["Species"],
+                    rank=sheet["Rank"],
+                    infraspecies_qualifier=sheet["Infraspecies Qualifier"],
+                    infraspecies=sheet["Infraspecies"],
+                    alien=is_alien(sheet["Alien"]),
 
+                    # determination
+                    author=sheet["Author"],
+                    manuscript=sheet["Manuscript"],
+                    conservation_code=sheet["Conservation Code"],
+                    determiner_name=sheet["Determiner Name"],
+                    date_of_determination=ingest_utils.get_date(sheet["Date of Determination"]),
+                    determiner_role=sheet["Determiner Role"],
+                    name_comment=sheet["Name Comment"],
+                    frequency=sheet["Frequency"],
+                    locality=sheet["Locality"],
+                    state=sheet["State"],
 
-                author=sheet["Author"],
-                manuscript=sheet["Manuscript"],
-                conservation_code=sheet["Conservation Code"],
-                determiner_name=sheet["Determiner Name"],
+                    # collector
+                    collector=sheet["Collector"],
+                    collector_number=sheet["Collector's Number"],
+                    collection_date=ingest_utils.get_date(sheet["Collection Date"]),
+                    voucher=sheet["Voucher"],
+                    voucher_id=ingest_utils.get_int(sheet["VoucherID"]),
+                    voucher_site=sheet["Voucher Site"],
+                    type_status=sheet["Type Status"],
 
-
-                note=sheet["Other Notes"]
-                )
+                    note=sheet["Other Notes"]
+                    )
+        except IntegrityError as e:
+            logger.error("Sheet {} is duplicated".format(sheet["Sheet Number"]))
+            logger.error("{}".format(e.message))
+            logger.error("{}".format(sheet))
 
 def UnicodeDictReader(str_data, encoding="utf8", **kwargs):
     csv_reader = csv.DictReader(str_data, **kwargs)

@@ -21,6 +21,7 @@ class SheetAdmin(admin.ModelAdmin):
                     "vegetation": AutosizedTextarea(attrs={"class": "input-large", "style": "width:95%"}),
                     "name_comment": AutosizedTextarea(attrs={"class": "input-large", "style": "width:95%"}),
                     "locality": AutosizedTextarea(attrs={"class": "input-large", "style": "width:95%"}),
+                    "voucher": AutosizedTextarea(attrs={"class": "input-large", "style": "width:95%"}),
                     }
 
     form = SheetForm
