@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Barcode" "barcode:index" %}
+{% breadcrumb "Sheets" "barcode:sheets" %}
+{% endblock %}
+
+{% block title %}Barcode Sheets {% endblock %}
+
+{% block content %}
+
+{% if sheets %}
+<div class="alert alert-info" role="alert">
+    To sort by multiple columns, press and hold the Shift key.
+    <div class="bootstrap_buttons">
+        <button type="button" class="reset btn" data-column="0" data-filter="">
+            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
+            Reset filters
+        </button>
+    </div>
+</div>
+<p><a href="{% url 'barcode:sheets_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
+<table class="fancytable">
+    <thead>
+        <tr>
+            <th>Sheet ID</th>
+            <th>Name ID</th>
+            <th>Plant Description</th>
+            <th>Site Description</th>
+            <th>Vegetation</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Datum</th>
+            <th>Geocode Accuracy</th>
+            <th>Geocode Method</th>
+            <th>Geocode Barker Flag</th>
+            <th>Family</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>Rank</th>
+            <th>Infraspecies Qualifier</th>
+            <th>Infraspecies</th>
+            <th>Alien</th>
+            <th>Author</th>
+            <th>Manuscript</th>
+            <th>Conservation Code</th>
+            <th>Determiner Name</th>
+            <th>Determination Date</th>
+            <th>Determiner Role</th>
+            <th>Name Comment</th>
+            <th>Frequency</th>
+            <th>Locallity</th>
+            <th>State</th>
+            <th>Collector</th>
+            <th>Collector Number</th>
+            <th>Collection Date</th>
+            <th>Voucher</th>
+            <th>Voucher ID</th>
+            <th>Voucher Site</th>
+            <th>Type Status</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sheet in sheets %}
+        <tr>
+            <td>
+                <a href="{% url 'barcode:sheet' sheet.pk %}">{{ sheet.sheet_number }}</a>
+            </td>
+            <td>{{ sheet.name_id }}</td>
+            <td>{{ sheet.plant_description}}</td>
+            <td>{{ sheet.site_description}}</td>
+            <td>{{ sheet.vegetation }}</td>
+            <td>{{ sheet.latitude }}</td>
+            <td>{{ sheet.longitude }}</td>
+            <td>{{ sheet.datum }}</td>
+            <td>{{ sheet.geocode_accuracy }}</td>
+            <td>{{ sheet.geocode_method }}</td>
+            <td>{{ sheet.barker_coordinate_accuracy_flag }}</td>
+            <td>{{ sheet.family }}</td>
+            <td>{{ sheet.genus }}</td>
+            <td>{{ sheet.species }}</td>
+            <td>{{ sheet.rank}}</td>
+            <td>{{ sheet.infraspecies_qualifier}}</td>
+            <td>{{ sheet.infraspecies}}</td>
+            <td>{{ sheet.alien}}</td>
+            <td>{{ sheet.author}}</td>
+            <td>{{ sheet.manuscript}}</td>
+            <td>{{ sheet.conservation_code}}</td>
+            <td>{{ sheet.determiner_name}}</td>
+            <td>{{ sheet.date_of_determination}}</td>
+            <td>{{ sheet.determiner_role}}</td>
+            <td>{{ sheet.name_comment}}</td>
+            <td>{{ sheet.frequency}}</td>
+            <td>{{ sheet.locallity}}</td>
+            <td>{{ sheet.state}}</td>
+            <td>{{ sheet.collector}}</td>
+            <td>{{ sheet.collector_number}}</td>
+            <td>{{ sheet.collector_date}}</td>
+            <td>{{ sheet.voucher}}</td>
+            <td>{{ sheet.voucher_id}}</td>
+            <td>{{ sheet.voucher_site}}</td>
+            <td>{{ sheet.type_status}}</td>
+            <td>{{ sheet.note}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Sheet ID</th>
+            <th>Name ID</th>
+            <th>Plant Description</th>
+            <th>Site Description</th>
+            <th>Vegetation</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Datum</th>
+            <th>Geocode Accuracy</th>
+            <th>Geocode Method</th>
+            <th>Geocode Barker Flag</th>
+            <th>Family</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>Rank</th>
+            <th>Infraspecies Qualifier</th>
+            <th>Infraspecies</th>
+            <th>Alien</th>
+            <th>Author</th>
+            <th>Manuscript</th>
+            <th>Conservation Code</th>
+            <th>Determiner Name</th>
+            <th>Determination Date</th>
+            <th>Determiner Role</th>
+            <th>Name Comment</th>
+            <th>Frequency</th>
+            <th>Locallity</th>
+            <th>State</th>
+            <th>Collector</th>
+            <th>Collector Number</th>
+            <th>Collection Date</th>
+            <th>Voucher</th>
+            <th>Voucher ID</th>
+            <th>Voucher Site</th>
+            <th>Type Status</th>
+            <th>Note</th>
+        </tr>
+        <tr>
+            <th colspan="36" class="ts-pager form-horizontal">
+                <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
+                <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+                <span class="pagedisplay"></span>
+                <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
+                <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+                <select class="pagesize input-mini" title="Select page size">
+                    <option selected="selected" value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                </select>
+                <select class="pagenum input-mini" title="Select page number"></select>
+            </th>
+        </tr>
+    </tfoot>
+</table>
+
+<p><a href="{% url 'barcode:sheets_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
+
+{% else %}
+<h3> No Barcode sheet Data is currently available </h3>
+{% endif %}
+
+{% endblock %}

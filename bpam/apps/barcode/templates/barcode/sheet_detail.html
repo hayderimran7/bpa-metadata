@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Sheet Detail {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Barcode" "barcode:index" %}
+{% breadcrumb "Sheets" "barcode:sheets" %}
+{% breadcrumb sheet.sheet_number "barcode:sheet" sheet.sheet_number %}
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-info">
+    <table id="info" class="table table-striped">
+        <tbody>
+        <tr>
+            <td> Sheet Number</td>
+            <td> {{ sheet.sheet_number }}</td>
+        </tr>
+        <tr>
+            <td> Name ID</td>
+            <td> {{ sheet.name_id }}</td>
+        </tr>
+        <tr>
+            <td> Plant Description</td>
+            <td> {{ sheet.plant_description }}</td>
+        </tr>
+        <tr>
+            <td> Site Description</td>
+            <td> {{ sheet.site_description}}</td>
+        </tr>
+        <tr>
+            <td> Notes</td>
+            <td> {{ sheet.note }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% include "sequencefilelist.html" %}
+
+{% endblock %}

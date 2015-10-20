@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 
-{% load staticfiles %}
+{% block title %}Great Barrier Reef Listing{% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
-{% breadcrumb "Melanoma" "melanoma:index" %}
-{% breadcrumb "Samples" "melanoma:samples" %}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Sequence Files" "gbr:sequencefiles" %}
 {% endblock %}
 
-{% block title %}Melanoma Listing{% endblock %}
-
 {% block content %}
-{% if samples %}
+{% if sequencefiles %}
 
 <div class="alert alert-info" role="alert">
     To sort by multiple columns, press and hold the Shift key.
@@ -23,59 +21,55 @@
         </button>
     </div>
 </div>
+<p><a href="{% url 'gbr:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 <table class="fancytable">
     <thead>
         <tr>
             <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
             <th>Sample Name</th>
-            <th>Tumour Stage</th>
-            <th>Sequence Coverage</th>
-            <th>Sex</th>
-            <th>DNA Source</th>
         </tr>
     </thead>
     <tbody>
-        {% for sample in samples %}
+        {% for sfile in sequencefiles %}
         <tr>
+            <td> <a href="{% url 'gbr:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
             <td>
-                <a href="{% url 'melanoma:sample' sample.bpa_id %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.tumor_stage }}</td>
-            <td>{{ sample.requested_sequence_coverage }}</td>
-            <td>
-                {% if sample.is_male %}
-                <img width="20px" src="{% static 'melanoma/male.svg' %}" >
-                {% elif sample.is_female %}
-                <img width="20px" src="{% static 'melanoma/woman.svg' %} ">
+                {% if sfile.url_verification.status_ok %}
+                <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-download">
+                </span>
+                {% else %}
+                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-flag"></span>
                 {% endif %}
+                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
             </td>
-            </td>
-            <td>{{ sample.dna_source }}</td>
+            <td style="font-family: monospace">{{ sfile.md5 }}</td>
+            <td>{{ sfile.sample.name }}</td>
         </tr>
         {% endfor %}
     </tbody>
     <tfoot>
         <tr>
             <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
             <th>Sample Name</th>
-            <th>Tumour Stage</th>
-            <th>Sequence Coverage</th>
-            <th>Sex</th>
-            <th>DNA Source</th>
         </tr>
         <tr>
-            <th colspan="6" class="ts-pager form-horizontal">
+            <th colspan="4" class="ts-pager form-horizontal">
                 <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
                 <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
                 <span class="pagedisplay"></span>
                 <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
                 <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
                 <select class="pagesize input-mini" title="Select page size">
-                    <option value="10">10</option>
+                    <option selected="selected" value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
-                    <option selected="selected" value="40">40</option>
+                    <option value="40">40</option>
                 </select>
                 <select class="pagenum input-mini" title="Select page number"></select>
             </th>
@@ -83,8 +77,9 @@
     </tfoot>
 </table>
 
+<p><a href="{% url 'gbr:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
 {% else %}
-<h3> No Melanoma Sequence Data is currently available </h3>
+<h3> No GBR Sequence Data is currently available </h3>
 {% endif %}
 
 {% endblock %}

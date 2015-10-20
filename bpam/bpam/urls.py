@@ -25,6 +25,8 @@ urlpatterns = patterns(
     url(r'^wheat_pathogens_transcript/', include('apps.wheat_pathogens_transcript.urls', namespace='wheat_pathogens_transcript')),
     # Melanoma
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
+    # Barcode
+    url(r'^barcode/', include('apps.barcode.urls', namespace='barcode')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

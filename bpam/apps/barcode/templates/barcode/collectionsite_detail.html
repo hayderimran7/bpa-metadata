@@ -1,0 +1,47 @@
+{% extends "common/geographic_map.html" %}
+{% load leaflet_tags %}
+{% block title %}GBR Coral Collection Site Detail {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Sites" "gbr:sites" %}
+{% breadcrumb  collectionsite.get_name "" %}
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    var collectionsite = [{{ collectionsite.lat }}, {{ collectionsite.lon }}] ;
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
+        </div>
+        <div class="col-md-4">
+            <h3 class="unstacked">GBR Coral Collection Site <a class="name" href="{% url 'gbr:site' collectionsite.pk %}">{{ collectionsite.get_name }}</a></h3>
+
+            <div>
+                <table id="collectionsite" class="table">
+                    <tbody>
+                        <tr>
+                            <td><b>Latitude</b></td>
+                            <td class="lat">{{ collectionsite.lat }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Longitude</b></td>
+                            <td class="lgn">{{ collectionsite.lon }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Note</b></td>
+                            <td>{{ collectionsite.comments|default:"" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
