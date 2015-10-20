@@ -4,25 +4,25 @@ from . import views
 from . import data_export
 
 urlpatterns = patterns(
-    '',
+    "",
     url(
-        regex=r'^$',
+        regex=r"^$",
         view=views.BarcodeView.as_view(),
-        name='index'),
+        name="index"),
     url(
-        regex=r'^contacts$',
+        regex=r"^contacts$",
         view=views.ContactsView.as_view(),
-        name='contacts'),
+        name="contacts"),
     url(
-        regex=r'^sheets/(?P<pk>.*)/$',
+        regex=r"^sheets/(?P<pk>.*)/$",
         view=views.SheetDetailView.as_view(),
-        name='sheet'),
+        name="sheet"),
     url(
-        regex=r'^sheets',
-        view=views.SheetListView.as_view(),
-        name='sheets'),
-    url(
-        regex=r'^sheets/csv',
+        regex=r"^sheets/csv",
         view=data_export.get_sheets,
-        name='sheets_csv'),
+        name="sheets_csv"),
+    url(
+        regex=r"^sheets",
+        view=views.SheetListView.as_view(),
+        name="sheets"),
 )
