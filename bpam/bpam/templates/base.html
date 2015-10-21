@@ -24,10 +24,10 @@
     {% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
     {% endblock %}
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
-    <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/css/jquery.tablesorter.pager.min.css"/>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/js/jquery.tablesorter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/js/jquery.tablesorter.widgets.min.js"></script>
+    <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/css/jquery.tablesorter.pager.min.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/js/extras/jquery.tablesorter.pager.min.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
@@ -66,8 +66,9 @@
           // this will apply the bootstrap theme if "uitheme" widget is included
           // the widgetOptions.uitheme is no longer required to be set
           theme : "bootstrap",
-          widthFixed: true,
+          widthFixed: false,
           debug: false,
+          showProcessing: true,
 
           headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
@@ -100,8 +101,9 @@
         // table without pager
         $(".nopagertable").tablesorter({
           theme : "bootstrap",
-          widthFixed: true,
+          widthFixed: false,
           debug: false,
+          showProcessing: true,
 
           headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
