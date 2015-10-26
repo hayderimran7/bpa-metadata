@@ -19,10 +19,16 @@
             <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
             Reset filters
         </button>
+        <button id="popover" type="button" class="btn btn-default">
+            Select Column
+        </button>
+        <div class="hidden">
+            <div id="popover-target"></div>
+        </div>
     </div>
 </div>
 <p><a href="{% url 'barcode:sheets_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
-<table class="fancytable">
+<table class="nopagertable bootstrap-popup" style="width:auto">
     <thead>
         <tr>
             <th>Sheet ID</th>
