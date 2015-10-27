@@ -28,6 +28,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/js/jquery.tablesorter.widgets.min.js"></script>
     <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/css/jquery.tablesorter.pager.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.2/js/extras/jquery.tablesorter.pager.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.5/js/widgets/widget-columnSelector.min.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
@@ -73,7 +74,7 @@
 
           // widget code contained in the jquery.tablesorter.widgets.js file
           // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-          widgets : [ "uitheme", "filter", "resizable", "stickyHeaders", ],
+          widgets : [ "uitheme", "filter", "resizable", "stickyHeaders", "columnSelector", "storage"],
 
           widgetOptions : {
             // using the default zebra striping class name, so it actually isn't included in the theme variable above
@@ -123,18 +124,14 @@
           }
         });
 
-  /*** Bootstrap popover demo ***/
+        // note: no container is defined!
+        $(".bootstrap-popup").tablesorter({
+          theme: 'blue',
+          widgets: ['zebra', 'columnSelector', 'stickyHeaders']
+        });
 
-  // initialize column selector using default settings
-  // note: no container is defined!
-  $(".bootstrap-popup").tablesorter({
-    theme: 'blue',
-    widgets: ['zebra', 'columnSelector', 'stickyHeaders']
-  });
-
-  // call this function to copy the column selection code into the popover
-  $.tablesorter.columnSelector.attachTo( $('.bootstrap-popup'), '#popover-target');
-
+        // call this function to copy the column selection code into the popover
+        $.tablesorter.columnSelector.attachTo( $('.columnselect-popup'), '#popover-target');
 
         $('#popover')
           .popover({
@@ -189,6 +186,14 @@
 
       .md5 {
         font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+      }
+
+      #popover-target label {
+        margin: 0 5px;
+        display: block;
+      }
+      #popover-target input {
+        margin-right: 5px;
       }
 
     </style>

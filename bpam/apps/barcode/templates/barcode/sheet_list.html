@@ -20,19 +20,21 @@
             Reset filters
         </button>
         <button id="popover" type="button" class="btn btn-default">
-            Select Column
+            Select Columns
         </button>
+
         <div class="hidden">
             <div id="popover-target"></div>
         </div>
     </div>
 </div>
+
 <p><a href="{% url 'barcode:sheets_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
-<table class="nopagertable bootstrap-popup" style="width:auto">
+<table class="fancytable columnselect-popup" style="width:auto">
     <thead>
         <tr>
-            <th>Sheet ID</th>
-            <th>Name ID</th>
+            <th data-priority="critical">Sheet ID</th>
+            <th data-priority="1">Name ID</th>
             <th>Plant Description</th>
             <th>Site Description</th>
             <th>Vegetation</th>
