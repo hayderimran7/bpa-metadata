@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#/data/metadata/bar -*- coding: utf-8 -*-
 
 from django.db import IntegrityError
 import csv
@@ -12,7 +12,7 @@ from apps.barcode.models import Sheet
 logger = logger_utils.get_logger(__name__)
 
 METADATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/sheet/"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheet/")
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
 
 
 def add_sheets(sheets):
@@ -110,8 +110,8 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {0} CASCADE".format(Sheet._meta.db_table))
 
 def run():
-    #fetcher = Fetcher(DATA_DIR, METADATA_URL)
-    #fetcher.clean()
-    #fetcher.fetch_metadata_from_folder()
+    fetcher = Fetcher(DATA_DIR, METADATA_URL)
+    fetcher.clean()
+    fetcher.fetch_metadata_from_folder()
     truncate()
     ingest_sheets()
