@@ -40,11 +40,11 @@
         var setup = {
           colReorder: true,
           buttons: [
-            'copy', 'excel', 'pdf', 'csv'
+            'copy', 'excel', 'pdf', 'csv', 'colvis'
           ]
         };
         var ft = $('.fancytable').DataTable(setup);
-        ft.buttons().container().appendTo( $('.boostrap_buttons', ft.table().container() ) );
+        ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
         $('.fancytable').addClass('table-striped table-bordered table-condensed');
 
 
