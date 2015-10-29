@@ -40,10 +40,11 @@
         var setup = {
           colReorder: true,
           stateSave: true,
+          processing: true,
           buttons: [
             'colvis', 'copy', 'csv','excel', 'print'
           ],
-          // fixedHeader: true,
+          fixedHeader: true,
         };
         var ft = $('.fancytable').DataTable(setup);
         ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
