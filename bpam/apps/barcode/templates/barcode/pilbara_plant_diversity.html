@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+{%load staticfiles %} 
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Barcode" "barcode:index" %}
+{% breadcrumb "Pilbara Plant Diversity" "barcode:pilbara_index" %}
+{% endblock %}
+{% block title %}Pilabra Plant Diversity{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="well">
+        <div class="row">
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'barcode/pilbara.png' %}" alt="Barcode">
+                <p>
+                Tall Mulla Mulla (Ptilotus nobilis) on stony spinifex gibber plains adjacent to the Fortescue Marsh.  Photo by Jeff Pinder, DPaW
+                </p>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+
+                <h2>Pilbara Plant Diversity</h2>
+                <ul>
+                    <li> <a href="http://www.dpaw.wa.gov.au/plants-and-animals/wa-herbarium">Western Australia Herbarium</a></li>
+                    <li> <a href="https://florabase.dpaw.wa.gov.au/">Western Australia Flora Database</a></li>
+                    <li> <a href="http://www.dpaw.wa.gov.au/about-us/science-and-research/biological-surveys/115-pilbara-biological-survey">Pilbara Biological Survey</a></li>
+                </ul>
+
+                For more information please visit:<br>
+                <a href="http://www.bioplatforms.com/dna-barcoding/"> http://www.bioplatforms.com/dna-barcoding/ </a>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'barcode:pilbara_sheets' %}">Pilbara Herbarium Sheets<span class="badge">{{ sheet_count }}</span></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,20 +4,22 @@ from django.views.generic import TemplateView, ListView, DetailView
 
 from .models import Sheet
 
-# portal page
-class BarcodeView(TemplateView):
+class BarcodeIndex(TemplateView):
     template_name = "barcode/index.html"
 
+class PilbaraFloraIndex(TemplateView):
+    template_name = "barcode/pilbara_plant_diversity.html"
+    
     def get_context_data(self, **kwargs):
-        context = super(BarcodeView, self).get_context_data(**kwargs)
+        context = super(PilbaraFloraIndex, self).get_context_data(**kwargs)
         context["sheet_count"] = Sheet.objects.count()
         return context
-
 
 class SheetListView(ListView):
     model = Sheet
     context_object_name = "sheets"
     template_name = "barcode/sheet_list.html"
+
 
 class SheetDetailView(DetailView):
     model = Sheet
@@ -28,6 +30,7 @@ class SheetDetailView(DetailView):
         context = super(SheetDetailView, self).get_context_data(**kwargs)
         context["sequencefiles"] = []
         return context
+
 
 class ContactsView(TemplateView):
     template_name = "barcode/contacts.html"

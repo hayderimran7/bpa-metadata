@@ -39,14 +39,16 @@
       $(document).ready(function() {
         var setup = {
           colReorder: true,
+          stateSave: true,
           buttons: [
-            'copy', 'excel', 'pdf', 'csv', 'colvis'
-          ]
+            'colvis', 'copy', 'csv','excel', 'print'
+          ],
+          // fixedHeader: true,
         };
         var ft = $('.fancytable').DataTable(setup);
         ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
-        $('.fancytable').addClass('table-striped table-bordered table-condensed');
 
+        $('.fancytable').addClass('table-striped table-bordered table-condensed');
 
       });
     </script>

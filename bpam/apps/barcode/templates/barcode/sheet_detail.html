@@ -7,8 +7,9 @@
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Barcode" "barcode:index" %}
-{% breadcrumb "Sheets" "barcode:sheets" %}
-{% breadcrumb sheet.sheet_number "barcode:sheet" sheet.sheet_number %}
+{% breadcrumb "Pilbara Plant Diversity" "barcode:pilbara_index" %}
+{% breadcrumb "Pilbara Flora Sheets" "barcode:pilbara_sheets" %}
+{% breadcrumb sheet.sheet_number "barcode:pilbara_sheet" sheet.sheet_number %}
 {% endblock %}
 
 {% block content %}
