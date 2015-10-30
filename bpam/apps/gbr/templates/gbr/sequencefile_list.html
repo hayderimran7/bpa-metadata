@@ -16,7 +16,7 @@
     To sort by multiple columns, press and hold the Shift key.
     <div class="bootstrap_buttons"> </div>
 </div>
-<table class="fancytable">
+<table class="ccgtable">
     <thead>
         <tr>
             <th>BPA ID</th>
@@ -25,6 +25,14 @@
             <th>Sample Name</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
+            <th>Sample Name</th>
+        </tr>
+    </tfoot>
     <tbody>
         {% for sfile in sequencefiles %}
         <tr>
@@ -45,14 +53,6 @@
         </tr>
         {% endfor %}
     </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Filename</th>
-            <th>MD5</th>
-            <th>Sample Name</th>
-        </tr>
-    </tfoot>
 </table>
 
 <p><a href="{% url 'gbr:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>

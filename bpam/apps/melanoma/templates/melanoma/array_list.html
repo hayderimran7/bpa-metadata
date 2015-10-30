@@ -16,7 +16,7 @@
     To sort by multiple columns, press and hold the Shift key.
     <div class="bootstrap_buttons"> </div>
 </div>
-<table class="fancytable">
+<table class="ccgtable">
     <thead>
         <tr>
             <th>BPA ID</th>
@@ -28,6 +28,17 @@
             <th>Gender</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Array ID</th>
+            <th>Batch Number</th>
+            <th>Well ID</th>
+            <th>MIA ID</th>
+            <th>Call Rate</th>
+            <th>Gender</th>
+        </tr>
+    </tfoot>
     <tbody>
         {% for array in arrays %}
         <tr>
@@ -49,17 +60,6 @@
         </tr>
         {% endfor %}
     </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Array ID</th>
-            <th>Batch Number</th>
-            <th>Well ID</th>
-            <th>MIA ID</th>
-            <th>Call Rate</th>
-            <th>Gender</th>
-        </tr>
-    </tfoot>
 </table>
 
 {% else %}

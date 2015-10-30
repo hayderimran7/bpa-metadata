@@ -5,9 +5,9 @@
 {% block content %}
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Great Barrier Reef" "gbr:index" %}
-    {% breadcrumb "Amplicons" "gbr_amplicon:index" %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Amplicons" "gbr_amplicon:index" %}
 {% endblock %}
 
 

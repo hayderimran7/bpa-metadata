@@ -16,7 +16,7 @@
 
 {% if samples %}
 
-<table class="fancytable">
+<table class="ccgtable">
     <thead>
         <tr>
             <th>BPA ID</th>
@@ -30,6 +30,19 @@
             <th>Note</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Sample ID</th>
+            <th>Aurora Purified</th>
+            <th>DNA Storage Nunc Plate</th>
+            <th>DNA Storage Nunc Tube</th>
+            <th>DNA Storage Nunc Well Location</th>
+            <th>Submitter</th>
+            <th>Date Received</th>
+            <th>Note</th>
+        </tr>
+    </tfoot>
     <tbody>
         {% for sample in samples %}
         <tr>
@@ -53,19 +66,6 @@
         </tr>
         {% endfor %}
     </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample ID</th>
-            <th>Aurora Purified</th>
-            <th>DNA Storage Nunc Plate</th>
-            <th>DNA Storage Nunc Tube</th>
-            <th>DNA Storage Nunc Well Location</th>
-            <th>Submitter</th>
-            <th>Date Received</th>
-            <th>Note</th>
-        </tr>
-    </tfoot>
 </table>
 
 {% else %}

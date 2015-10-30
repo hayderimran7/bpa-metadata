@@ -18,7 +18,7 @@
     To sort by multiple columns, press and hold the Shift key.
     <div class="bootstrap_buttons"> </div>
 </div>
-<table class="fancytable">
+<table class="ccgtable">
     <thead>
         <tr>
             <th>BPA ID</th>
@@ -29,6 +29,16 @@
             <th>DNA Source</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Sample Name</th>
+            <th>Tumour Stage</th>
+            <th>Sequence Coverage</th>
+            <th>Sex</th>
+            <th>DNA Source</th>
+        </tr>
+    </tfoot>
     <tbody>
         {% for sample in samples %}
         <tr>
@@ -49,16 +59,6 @@
         </tr>
         {% endfor %}
     </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Tumour Stage</th>
-            <th>Sequence Coverage</th>
-            <th>Sex</th>
-            <th>DNA Source</th>
-        </tr>
-    </tfoot>
 </table>
 
 {% else %}
