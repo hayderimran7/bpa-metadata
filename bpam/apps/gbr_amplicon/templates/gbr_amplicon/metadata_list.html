@@ -2,7 +2,6 @@
 
 {% block title %}Great Barrier Reef Amplicon Metadata {% endblock %}
 
-{% block content %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
@@ -14,6 +13,7 @@
 {% endwith %}
 {% endblock %}
 
+{% block content %}
 {% if metadata_list %}
 
 <div class="container-fluid">
@@ -22,7 +22,7 @@
         <div class="bootstrap_buttons"></div>
     </div>
 
-    <table class="ccgtable">
+    <table class="ccgtable" width="100%">
         <thead>
             <tr>
                 <th>BPA ID</th>

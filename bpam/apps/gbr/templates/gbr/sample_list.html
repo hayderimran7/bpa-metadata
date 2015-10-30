@@ -12,55 +12,57 @@
 {% block content %}
 
 {% if samples %}
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"> </div>
+
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Name</th>
+                <th>Organism</th>
+                <th>Dataset</th>
+                <th>DNA/RNA Source</th>
+                <th>Library</th>
+                <th>Library Construction</th>
+                <th>Protocol</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Name</th>
+                <th>Organism</th>
+                <th>Dataset</th>
+                <th>DNA/RNA Source</th>
+                <th>Library</th>
+                <th>Library Construction</th>
+                <th>Protocol</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'gbr:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.name }}</td>
+                <td>{{ sample.organism }}</td>
+                <td>{{ sample.dataset }}</td>
+                <td>{{ sample.dna_source.description }}</td>
+                <td>{{ sample.protocol.base_pairs_string }}</td>
+                <td>{{ sample.protocol.library_construction_protocol }}</td>
+                <td>{{ sample.dna_extraction_protocol }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Great Barrier Reef Sample Data is currently available </h3>
+    {% endif %}
 </div>
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Name</th>
-            <th>Organism</th>
-            <th>Dataset</th>
-            <th>DNA/RNA Source</th>
-            <th>Library</th>
-            <th>Library Construction</th>
-            <th>Protocol</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Name</th>
-            <th>Organism</th>
-            <th>Dataset</th>
-            <th>DNA/RNA Source</th>
-            <th>Library</th>
-            <th>Library Construction</th>
-            <th>Protocol</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'gbr:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.organism }}</td>
-            <td>{{ sample.dataset }}</td>
-            <td>{{ sample.dna_source.description }}</td>
-            <td>{{ sample.protocol.base_pairs_string }}</td>
-            <td>{{ sample.protocol.library_construction_protocol }}</td>
-            <td>{{ sample.dna_extraction_protocol }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% else %}
-<h3> No Great Barrier Reef Sample Data is currently available </h3>
-{% endif %}
-
 {% endblock %}

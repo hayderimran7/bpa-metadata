@@ -37,7 +37,7 @@
 
     <script>
       $(document).ready(function() {
-        var setup = {
+        var ccg_full_setup = {
           colReorder: true,
           stateSave: true,
           processing: true,
@@ -46,10 +46,17 @@
           ],
           fixedHeader: true,
         };
-        var ft = $('.ccgtable').DataTable(setup);
+        var ft = $('.ccgtable').DataTable(ccg_full_setup);
         ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
-
         $('.ccgtable').addClass('table-striped table-bordered table-condensed');
+
+        var ccg_slim_setup = {
+          colReorder: true,
+          stateSave: true,
+          paging: false
+        };
+        var ft = $('.ccgslimtable').DataTable(ccg_slim_setup);
+        $('.ccgslimtable').addClass('table-striped table-bordered table-condensed');
 
       });
     </script>
