@@ -11,54 +11,56 @@
 
 {% block content %}
 {% if sequencefiles %}
-<h3>Melanoma Sequence Files</h3>
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"> </div>
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Filename</th>
+                <th>MD5</th>
+                <th>Sample Name</th>
+                <th>Run Description</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Filename</th>
+                <th>MD5</th>
+                <th>Sample Name</th>
+                <th>Run Description</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sfile in sequencefiles %}
+            <tr>
+                <td> <a href="{% url 'melanoma:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
+                <td>
+                    {% if sfile.url_verification.status_ok %}
+                    <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-download"></span>
+                    {% else %}
+                    <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-flag"></span>
+                    {% endif %}
+                    <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
+                <td class="md5">{{ sfile.md5 }}</td>
+                <td>{{ sfile.sample.name }}</td>
+                <td>{{ sfile.run }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Melanoma Sequence Data is currently available </h3>
+    {% endif %}
+
+    {% endblock %}
+
 </div>
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Filename</th>
-            <th>MD5</th>
-            <th>Sample Name</th>
-            <th>Run Description</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Filename</th>
-            <th>MD5</th>
-            <th>Sample Name</th>
-            <th>Run Description</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sfile in sequencefiles %}
-        <tr>
-            <td> <a href="{% url 'melanoma:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
-            <td>
-                {% if sfile.url_verification.status_ok %}
-                <span title="Last checked {{ sfile.url_verification.checked_at }}"
-                      class="glyphicon glyphicon-download"></span>
-                {% else %}
-                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
-                      class="glyphicon glyphicon-flag"></span>
-                {% endif %}
-                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a></td>
-            <td class="md5">{{ sfile.md5 }}</td>
-            <td>{{ sfile.sample.name }}</td>
-            <td>{{ sfile.run }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% else %}
-<h3> No Melanoma Sequence Data is currently available </h3>
-{% endif %}
-
-{% endblock %}

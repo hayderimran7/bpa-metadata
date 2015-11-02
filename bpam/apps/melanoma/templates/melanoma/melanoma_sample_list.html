@@ -14,55 +14,57 @@
 {% block content %}
 {% if samples %}
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"> </div>
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Tumour Stage</th>
+                <th>Sequence Coverage</th>
+                <th>Sex</th>
+                <th>DNA Source</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Tumour Stage</th>
+                <th>Sequence Coverage</th>
+                <th>Sex</th>
+                <th>DNA Source</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'melanoma:sample' sample.bpa_id %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.name }}</td>
+                <td>{{ sample.tumor_stage }}</td>
+                <td>{{ sample.requested_sequence_coverage }}</td>
+                <td>
+                    {% if sample.is_male %}
+                    <img width="20px" src="{% static 'melanoma/male.svg' %}">
+                    {% elif sample.is_female %}
+                    <img width="20px" src="{% static 'melanoma/woman.svg' %}">
+                    {% endif %}
+                </td>
+                <td>{{ sample.dna_source }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h3> No Melanoma Sequence Data is currently available </h3>
+    {% endif %}
+
+    {% endblock %}
+
 </div>
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Tumour Stage</th>
-            <th>Sequence Coverage</th>
-            <th>Sex</th>
-            <th>DNA Source</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Tumour Stage</th>
-            <th>Sequence Coverage</th>
-            <th>Sex</th>
-            <th>DNA Source</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'melanoma:sample' sample.bpa_id %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.tumor_stage }}</td>
-            <td>{{ sample.requested_sequence_coverage }}</td>
-            <td>
-                {% if sample.is_male %}
-                <img width="20px" src="{% static 'melanoma/male.svg' %}">
-                {% elif sample.is_female %}
-                <img width="20px" src="{% static 'melanoma/woman.svg' %}">
-                {% endif %}
-            </td>
-            <td>{{ sample.dna_source }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% else %}
-<h3> No Melanoma Sequence Data is currently available </h3>
-{% endif %}
-
-{% endblock %}
