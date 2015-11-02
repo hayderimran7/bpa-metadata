@@ -8,9 +8,8 @@ from django.db.models.fields.related import ForeignKey
 
 from apps.common.models import BPAUniqueID
 from apps.base_otu.models import SampleOTU
-# from apps.base_contextual.sample_context import ContextExporter
-logger = logging.getLogger("rainbow")
 
+logger = logging.getLogger("rainbow")
 
 class CSVExporter(object):
     def __init__(self, model):
@@ -145,8 +144,8 @@ class OTUExporter(CSVExporter):
                 ["otu.species", "Species"],
                 ]
 
-    def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
-        writer_bacteria = csv.writer(file_obj_bacteria)
+        def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
+            writer_bacteria = csv.writer(file_obj_bacteria)
         writer_eukaryotes = csv.writer(file_obj_eukaryotes)
         writer_fungi = csv.writer(file_obj_fungi)
         writer_archea = csv.writer(file_obj_archea)

@@ -4,69 +4,75 @@
 
 {% block content %}
 
-<h3>BASE 454 Samples</h3>
-
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "BASE" "base:index" %}
-{% breadcrumb "454" "base_454" %}
+{% breadcrumb "454 Samples" "base_454" %}
 {% endblock %}
 
 
 {% if samples %}
 
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample ID</th>
-            <th>Aurora Purified</th>
-            <th>DNA Storage Nunc Plate</th>
-            <th>DNA Storage Nunc Tube</th>
-            <th>DNA Storage Nunc Well Location</th>
-            <th>Submitter</th>
-            <th>Date Received</th>
-            <th>Note</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample ID</th>
-            <th>Aurora Purified</th>
-            <th>DNA Storage Nunc Plate</th>
-            <th>DNA Storage Nunc Tube</th>
-            <th>DNA Storage Nunc Well Location</th>
-            <th>Submitter</th>
-            <th>Date Received</th>
-            <th>Note</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'base_454:454sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.sample_id }}</td>
-            <td>
-                {% if sample.aurora_purified %}
-                <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
-            </td>
-            <td>{{ sample.dna_storage_nunc_plate }}</td>
-            <td>{{ sample.dna_storage_nunc_tube }}</td>
-            <td>{{ sample.dna_storage_nunc_well_location }}</td>
-            <td>{{ sample.submitter }}</td>
-            <td>{{ sample.date_received }}</td>
-            <td>{{ sample.note }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample ID</th>
+                <th>Aurora Purified</th>
+                <th>DNA Storage Nunc Plate</th>
+                <th>DNA Storage Nunc Tube</th>
+                <th>DNA Storage Nunc Well Location</th>
+                <th>Submitter</th>
+                <th>Date Received</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample ID</th>
+                <th>Aurora Purified</th>
+                <th>DNA Storage Nunc Plate</th>
+                <th>DNA Storage Nunc Tube</th>
+                <th>DNA Storage Nunc Well Location</th>
+                <th>Submitter</th>
+                <th>Date Received</th>
+                <th>Note</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'base_454:454sampledetail' sample.pk %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.sample_id }}</td>
+                <td>
+                    {% if sample.aurora_purified %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>{{ sample.dna_storage_nunc_plate }}</td>
+                <td>{{ sample.dna_storage_nunc_tube }}</td>
+                <td>{{ sample.dna_storage_nunc_well_location }}</td>
+                <td>{{ sample.submitter }}</td>
+                <td>{{ sample.date_received }}</td>
+                <td>{{ sample.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 
 {% else %}
 <h3> No 454 data is currently available </h3>

@@ -11,7 +11,7 @@ from apps.barcode.models import Sheet
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/sheet/"
+METADATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/raw/pilbara_flora/sheet/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
 
 
