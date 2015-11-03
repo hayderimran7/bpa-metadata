@@ -10,81 +10,83 @@
 {% block title %}Wheat Cultivar Sequence Files{% endblock %}
 {% block content %}
 
-{% if sequencefiles %}
-<h3>Wheat Cultivar Sequence Files</h3>
+<div class="container-fluid">
+    {% if sequencefiles %}
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"> </div>
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Library</th>
+                <th>Library Construction</th>
+                <th>Read</th>
+                <th>Flow Cell ID</th>
+                <th>Barcode</th>
+                <th>Lane Number</th>
+                <th>Library Construction Protocol</th>
+                <th>Sequencer</th>
+                <th>Casava Version</th>
+                <th>Filename</th>
+                <th>MD5</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Library</th>
+                <th>Sequencer</th>
+                <th>Read Number</th>
+                <th>Flow Cell ID</th>
+                <th>Barcode</th>
+                <th>Lane Number</th>
+                <th>Library Construction</th>
+                <th>Library Construction Protocol</th>
+                <th>Casava Version</th>
+                <th>Filename</th>
+                <th>MD5</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sfile in sequencefiles %}
+            <tr>
+                <td>
+                    <a href="{% url 'wheat_cultivars:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
+                </td>
+                <td>{{ sfile.sample.name }}</td>
+                <td>{{ sfile.protocol.library_type }}</td>
+                <td>{{ sfile.protocol.base_pairs }}</td>
+                <td>{{ sfile.read_number }}</td>
+                <td>{{ sfile.flowcell }}</td>
+                <td>{{ sfile.barcode }}</td>
+                <td>{{ sfile.lane_number }}</td>
+                <td>{{ sfile.protocol.library_construction_protocol }}</td>
+                <td>{{ sfile.protocol.sequencer }}</td>
+                <td> {{ sfile.casava_version }}</td>
+                <td>
+                    {% if sfile.url_verification.status_ok %}
+                    <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-download"></span>
+                    {% else %}
+                    <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                          class="glyphicon glyphicon-flag"></span>
+                    {% endif %}
+                    <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
+                </td>
+                <td class="md5">{{ sfile.md5 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Wheat Cultivar Sequence Data is currently available </h3>
+    {% endif %}
 </div>
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Library</th>
-            <th>Library Construction</th>
-            <th>Read</th>
-            <th>Flow Cell ID</th>
-            <th>Barcode</th>
-            <th>Lane Number</th>
-            <th>Library Construction Protocol</th>
-            <th>Sequencer</th>
-            <th>Casava Version</th>
-            <th>Filename</th>
-            <th>MD5</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Library</th>
-            <th>Sequencer</th>
-            <th>Read Number</th>
-            <th>Flow Cell ID</th>
-            <th>Barcode</th>
-            <th>Lane Number</th>
-            <th>Library Construction</th>
-            <th>Library Construction Protocol</th>
-            <th>Casava Version</th>
-            <th>Filename</th>
-            <th>MD5</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sfile in sequencefiles %}
-        <tr>
-            <td>
-                <a href="{% url 'wheat_cultivars:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a>
-            </td>
-            <td>{{ sfile.sample.name }}</td>
-            <td>{{ sfile.protocol.library_type }}</td>
-            <td>{{ sfile.protocol.base_pairs }}</td>
-            <td>{{ sfile.read_number }}</td>
-            <td>{{ sfile.flowcell }}</td>
-            <td>{{ sfile.barcode }}</td>
-            <td>{{ sfile.lane_number }}</td>
-            <td>{{ sfile.protocol.library_construction_protocol }}</td>
-            <td>{{ sfile.protocol.sequencer }}</td>
-            <td> {{ sfile.casava_version }}</td>
-            <td>
-                {% if sfile.url_verification.status_ok %}
-                <span title="Last checked {{ sfile.url_verification.checked_at }}"
-                      class="glyphicon glyphicon-download"></span>
-                {% else %}
-                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
-                      class="glyphicon glyphicon-flag"></span>
-                {% endif %}
-                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
-            </td>
-            <td class="md5">{{ sfile.md5 }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
-{% else %}
-<h3> No Wheat Cultivar Sequence Data is currently available </h3>
-{% endif %}
 {% endblock %}

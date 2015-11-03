@@ -11,47 +11,47 @@
 
 {% block content %}
 
-<h3>Wheat Cultivar Samples</h3>
+<div class="container-fluid">
+    {% if samples %}
 
-{% if samples %}
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"></div>
+    </div>
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"></div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Cultivar</th>
+                <th>Cultivar Code</th>
+                <th>Classification</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Cultivar</th>
+                <th>Cultivar Code</th>
+                <th>Classification</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'wheat_cultivars:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.name }}</td>
+                <td>{{ sample.cultivar_code }}</td>
+                <td>{{ sample.classification }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Wheat Cultivar Data is currently available </h3>
+    {% endif %}
 </div>
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Cultivar</th>
-            <th>Cultivar Code</th>
-            <th>Classification</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Cultivar</th>
-            <th>Cultivar Code</th>
-            <th>Classification</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'wheat_cultivars:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.cultivar_code }}</td>
-            <td>{{ sample.classification }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% else %}
-<h3> No Wheat Cultivar Data is currently available </h3>
-{% endif %}
-
 {% endblock %}

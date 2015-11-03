@@ -10,75 +10,75 @@
 
 {% block content %}
 
-<h3>Wheat Pathogen Transcript Samples</h3>
-
 {% if samples %}
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons"> </div>
+<div class="container-fluid">
+
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+
+    <table class="ccgtable">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Project</th>
+                <th>Contact Scientist</th>
+                <th>Institution</th>
+                <th>Species</th>
+                <th>Sample Type</th>
+                <th>RNA Source</th>
+                <th>Extraction Method</th>
+                <th>Growth Protocol</th>
+                <th>Treatment Protocol</th>
+                <th>Experimental Design</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Name</th>
+                <th>Project</th>
+                <th>Contact Scientist</th>
+                <th>Institution</th>
+                <th>Species</th>
+                <th>Sample Type</th>
+                <th>RNA Source</th>
+                <th>Extraction Method</th>
+                <th>Growth Protocol</th>
+                <th>Treatment Protocol</th>
+                <th>Experimental Design</th>
+                <th>Notes</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'wheat_pathogens_transcript:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.name }}</td>
+                <td>{{ sample.project}}</td>
+                <td>{{ sample.contact_scientist }}</td>
+                <td>{{ sample.institution }}</td>
+                <td>{{ sample.species }}</td>
+                <td>{{ sample.sample_type }}</td>
+                <td>{{ sample.dna_source.description }}</td>
+                <td>{{ sample.extraction_method }}</td>
+                <td>{{ sample.growth_protocol }}</td>
+                <td>{{ sample.treatment_protocol }}</td>
+                <td>{{ sample.experimental_design }}</td>
+                <td>{{ sample.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Wheat Pathogen Transcript Data is currently available </h3>
+    {% endif %}
 </div>
-
-<table class="ccgtable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Project</th>
-            <th>Contact Scientist</th>
-            <th>Institution</th>
-            <th>Species</th>
-            <th>Sample Type</th>
-            <th>RNA Source</th>
-            <th>Extraction Method</th>
-            <th>Growth Protocol</th>
-            <th>Treatment Protocol</th>
-            <th>Experimental Design</th>
-            <th>Notes</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Sample Name</th>
-            <th>Project</th>
-            <th>Contact Scientist</th>
-            <th>Institution</th>
-            <th>Species</th>
-            <th>Sample Type</th>
-            <th>RNA Source</th>
-            <th>Extraction Method</th>
-            <th>Growth Protocol</th>
-            <th>Treatment Protocol</th>
-            <th>Experimental Design</th>
-            <th>Notes</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'wheat_pathogens_transcript:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.project}}</td>
-            <td>{{ sample.contact_scientist }}</td>
-            <td>{{ sample.institution }}</td>
-            <td>{{ sample.species }}</td>
-            <td>{{ sample.sample_type }}</td>
-            <td>{{ sample.dna_source.description }}</td>
-            <td>{{ sample.extraction_method }}</td>
-            <td>{{ sample.growth_protocol }}</td>
-            <td>{{ sample.treatment_protocol }}</td>
-            <td>{{ sample.experimental_design }}</td>
-            <td>{{ sample.note }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-{% else %}
-<h3> No Wheat Pathogen Transcript Data is currently available </h3>
-{% endif %}
-
 {% endblock %}
