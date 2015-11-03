@@ -9,7 +9,7 @@
 {% breadcrumb "Samples" "melanoma:samples" %}
 {% endblock %}
 
-{% block title %}Melanoma Listing{% endblock %}
+{% block title %}Melanoma Samples{% endblock %}
 
 {% block content %}
 {% if samples %}
@@ -40,7 +40,7 @@
                 <th>DNA Source</th>
             </tr>
         </tfoot>
-        <tbody>
+           <tbody>
             {% for sample in samples %}
             <tr>
                 <td>
@@ -49,12 +49,18 @@
                 <td>{{ sample.name }}</td>
                 <td>{{ sample.tumor_stage }}</td>
                 <td>{{ sample.requested_sequence_coverage }}</td>
-                <td>
-                    {% if sample.is_male %}
-                    <img width="20px" src="{% static 'melanoma/male.svg' %}">
-                    {% elif sample.is_female %}
-                    <img width="20px" src="{% static 'melanoma/woman.svg' %}">
-                    {% endif %}
+
+                {% if sample.is_male %}
+                <td data-order="male" data-search="male">
+                    <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="male">
+                </td>
+                {% elif sample.is_female %}
+                <td data-order="female" data-search="female">
+                    <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="female">
+                </td>
+                {% else %}
+                <td data-order="unknown"> </td>
+                {% endif %}
                 </td>
                 <td>{{ sample.dna_source }}</td>
             </tr>

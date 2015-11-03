@@ -51,12 +51,17 @@
                 <td>{{ array.well_id }}</td>
                 <td>{{ array.mia_id }}</td>
                 <td>{{ array.call_rate }}</td>
-                <td>
-                    {% if array.is_male %}
+                {% if array.is_male %}
+                <td data-order="male" data-search="male">
                     <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="male">
-                    {% elif array.is_female %}
+                </td>
+                {% elif array.is_female %}
+                <td data-order="female" data-search="female">
                     <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="female">
-                    {% endif %}
+                </td>
+                {% else %}
+                <td data-order="unknown"> </td>
+                {% endif %}
                 </td>
             </tr>
             {% endfor %}
