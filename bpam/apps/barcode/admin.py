@@ -27,7 +27,7 @@ class SheetAdmin(admin.ModelAdmin):
     form = SheetForm
     fieldsets = [
             ("Sheet",
-                {"fields": ("sheet_number", "name_id", "plant_description", "site_description", "vegetation",), }),
+                {"fields": ("bpa_id", "sheet_number", "name_id", "plant_description", "site_description", "vegetation",), }),
             ("Location",
                 {"fields": ("latitude", "longitude", "geocode_accuracy", "geocode_method", "barker_coordinate_accuracy_flag", "datum",), }),
             ("Flora",
@@ -40,8 +40,8 @@ class SheetAdmin(admin.ModelAdmin):
                 {"fields": ("note",) }),
             ]
 
-    list_display = ("sheet_number", "family", "genus", "species", "latitude", "longitude", "note")
-    search_fields = ("sheet_number", "latitude", "longitude", "note")
+    list_display = ("bpa_id", "sheet_number", "family", "genus", "species", "latitude", "longitude", "note")
+    search_fields = ("bpa_id", "sheet_number", "latitude", "longitude", "note")
     list_filter = ("sheet_number", "latitude", "longitude",)
 
 admin.site.register(Sheet, SheetAdmin)

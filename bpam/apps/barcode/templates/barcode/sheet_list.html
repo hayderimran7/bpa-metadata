@@ -24,6 +24,7 @@
     <table class="ccgtable" >
         <thead>
             <tr>
+                <th>BPA ID</th>
                 <th>Sheet ID</th>
                 <th>Name ID</th>
                 <th>Plant Description</th>
@@ -64,6 +65,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th>BPA ID</th>
                 <th>Sheet ID</th>
                 <th>Name ID</th>
                 <th>Plant Description</th>
@@ -105,6 +107,7 @@
         <tbody>
             {% for sheet in sheets %}
             <tr>
+                <td>{{ sheet.bpa_id }}</td>
                 <td>
                     <a href="{% url 'barcode:pilbara_sheet' sheet.pk %}">{{ sheet.sheet_number }}</a>
                 </td>

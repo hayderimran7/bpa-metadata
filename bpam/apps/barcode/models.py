@@ -1,8 +1,14 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from apps.common.models import BPAUniqueID
+
 class Sheet(models.Model):
+    """ Single herbarium sheet """
+
     sheet_number = models.IntegerField("Sheet Number", primary_key=True)
+    bpa_id = models.OneToOneField(BPAUniqueID, verbose_name=_('BPA ID'), null=True, blank=True)
+
     name_id = models.TextField("Name ID", null=True, blank=True)
     plant_description = models.TextField("Plant Description", null=True, blank=True)
     site_description = models.TextField("Site Description", null=True, blank=True)
