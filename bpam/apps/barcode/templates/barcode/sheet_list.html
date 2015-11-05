@@ -107,7 +107,7 @@
         <tbody>
             {% for sheet in sheets %}
             <tr>
-                <td>{{ sheet.bpa_id }}</td>
+                <td>{{ sheet.bpa_id|default_if_none:"" }}</td>
                 <td>
                     <a href="{% url 'barcode:pilbara_sheet' sheet.pk %}">{{ sheet.sheet_number }}</a>
                 </td>

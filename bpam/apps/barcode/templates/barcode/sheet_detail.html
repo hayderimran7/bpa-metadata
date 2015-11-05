@@ -18,6 +18,10 @@
     <table id="info" class="table table-striped">
         <tbody>
         <tr>
+            <td><strong>BPA ID</strong></td>
+            <td>{{ sheet.bpa_id|default_if_none:"" }}</td>
+        </tr>
+        <tr>
             <td><strong>Sheet Number</strong></td>
             <td>{{ sheet.sheet_number }}</td>
         </tr>
