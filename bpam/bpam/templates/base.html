@@ -55,8 +55,10 @@
           stateSave: true,
           paging: false
         };
-        var ft = $('.ccgslimtable').DataTable(ccg_slim_setup);
+        var slimtable = $('.ccgslimtable').DataTable(ccg_slim_setup);
         $('.ccgslimtable').addClass('table-striped table-bordered table-condensed');
+
+        // $('.ccgslimtable').on('search.dt', L.map._resize);
 
       });
     </script>
