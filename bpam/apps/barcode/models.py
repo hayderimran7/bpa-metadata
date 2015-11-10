@@ -54,3 +54,16 @@ class Sheet(models.Model):
 
     note = models.TextField("Note", null=True, blank=True)
 
+    @property
+    def get_site_description(self):
+        """ Get collection site description or lat, lon if no location name is available """
+
+        if self.site_description:
+            return u'{:4.4f}, {:4.4f} ({})'.format(self.latitude, self.longitude, self.site_description[:20])
+        return u'{:4.4f}, {:4.4f}'.format(self.latitude, self.longitude)
+
+    @property
+    def get_classification(self):
+        """ Plant classification """
+
+        return u'{} {} {}'.format(self.family, self.genus, self.species)

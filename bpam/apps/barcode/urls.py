@@ -25,4 +25,8 @@ urlpatterns = patterns(
         regex=r"^pilbara_flora/sheets",
         view=views.SheetListView.as_view(),
         name="pilbara_sheets"),
+    url(
+        regex=r"^pilbara_flora/sites",
+        view=views.PilbaraCollectionSiteListView.as_view(),
+        name="pilbara_sites"),
 )

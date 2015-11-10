@@ -9,17 +9,21 @@ class BarcodeIndex(TemplateView):
 
 class PilbaraFloraIndex(TemplateView):
     template_name = "barcode/pilbara_plant_diversity.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super(PilbaraFloraIndex, self).get_context_data(**kwargs)
         context["sheet_count"] = Sheet.objects.count()
         return context
 
+class PilbaraCollectionSiteListView(ListView):
+    model = Sheet
+    context_object_name = 'sheets'
+    template_name = "barcode/pilbara_collection_site_list.html"
+
 class SheetListView(ListView):
     model = Sheet
     context_object_name = "sheets"
     template_name = "barcode/sheet_list.html"
-
 
 class SheetDetailView(DetailView):
     model = Sheet
