@@ -21,19 +21,13 @@ RUN env --unset=DEBIAN_FRONTEND
 
 WORKDIR /app
 RUN echo GITTAG \
-    && git clone --depth=1 --branch=GITTAG  git@github.com:muccg/bpa-metadata.git .
+    && git clone --depth=1 --branch=GITTAG  https://github.com/muccg/bpa-metadata.git .
 
 # install python deps
-COPY bpam/*requirements.txt /app/bpam/
-WORKDIR /app
 RUN pip install -r bpam/runtime-requirements.txt
-
-
-# Copy code and install the app
-COPY . /app
 RUN pip install -e bpam
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN cp docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 8000 9000 9001 9100 9101

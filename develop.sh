@@ -121,7 +121,7 @@ mint_docker_image() {
    image="muccg/${PROJECT_NAME}"
    gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
    gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
-   template="$(cat docker/Dockerfile.prod)"
+   template="$(cat docker/Dockerfile.in)"
 
    # avoid building naming images from branches 
    if [ $gitbranch != "master" ]
