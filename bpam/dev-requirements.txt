@@ -1,0 +1,11 @@
+psycopg2>=2.5.0,<2.6.0
+flake8
+Werkzeug
+coverage
+django-discover-runner
+model-mommy
+tendo
+docutils
+pygments
+docopt
+jinja2

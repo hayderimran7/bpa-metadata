@@ -7,7 +7,6 @@ ACTION=$1
 
 PROJECT_NAME='bpametadata'
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
-AWS_STAGING_INSTANCE='ccg_syd_nginx_staging'
 
 ######### Logging ##########
 COLOR_NORMAL=$(tput sgr0)
@@ -100,22 +99,6 @@ selenium() {
 }
 
 
-ci_staging() {
-    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/docker/unstable'
-    ccg ${AWS_STAGING_INSTANCE} drun:'mkdir -p ${PROJECT_NAME}/data'
-    ccg ${AWS_STAGING_INSTANCE} drun:'chmod o+w ${PROJECT_NAME}/data'
-    ccg ${AWS_STAGING_INSTANCE} putfile:docker-compose-staging.yml,${PROJECT_NAME}/fig-staging.yml
-    ccg ${AWS_STAGING_INSTANCE} putfile:docker/unstable/Dockerfile,${PROJECT_NAME}/docker/unstable/Dockerfile
-
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml stop'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml kill'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml rm --force -v'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml build --no-cache webstaging'
-    ccg ${AWS_STAGING_INSTANCE} drun:'cd ${PROJECT_NAME} && docker-compose -f fig-staging.yml up -d'
-    ccg ${AWS_STAGING_INSTANCE} drun:'docker-untagged || true'
-}
-
-
 build() {
    activate_virtualenv
    docker-compose --project-name ${PROJECT_NAME} build
@@ -128,13 +111,53 @@ rm_containers() {
 entrypoint() {
    ENTRYPOINT=${1:-bash}
    log_info "Entrypoint ${ENTRYPOINT}"
-   # docker run --rm -i -t -v $(pwd):/app/ --link="${PROJECT_NAME}_db_1:db" ${PROJECT_NAME}_web ${ENTRYPOINT} $2
    docker exec -it ${PROJECT_NAME}_web_1 ${ENTRYPOINT} $2
 }
+
+
+mint_docker_image() {
+   activate_virtualenv
+
+   image="muccg/${PROJECT_NAME}"
+   gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+   gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
+   template="$(cat docker/Dockerfile.prod)"
+
+   # avoid building naming images from branches 
+   if [ $gitbranch != "master" ]
+   then
+      gittag=$gitbranch
+   fi
+
+   # log the Dockerfile
+   echo "########################################"
+   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in
+   echo "########################################"
+
+   # attempt to warm up docker cache
+   docker pull ${image} || true
+
+   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build --pull=true -t ${image} -
+   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${DATE} -
+
+   if [ -z ${gittag+x} ]
+   then
+      echo "No git tag set"
+   else
+      echo "Git tag ${gittag}"
+      sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${gittag} -
+      docker push ${image}:${gittag}
+   fi
+
+   docker push ${image}
+   docker push ${image}:${DATE}
+}
+
 
 usage() {
    echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)'
    echo '                   build        Build all images'
+   echo '                   mint         Mint and push new docker images from current checked out tag'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
    echo '                   runscript    Run one of the available scripts' 
@@ -142,7 +165,6 @@ usage() {
    echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker image stack'
    echo '                   rm           Remove all containers'
-   echo '                   ci_staging   Continuous Integration staging'
    echo '                   pythonlint   Run python lint'
    echo '                   unit_tests   Run unit tests'
    echo '                   selenium     Run selenium tests'
@@ -162,6 +184,9 @@ start)
     ;;
 build)
     build
+    ;;
+mint)
+   mint_docker_image
     ;;
 rm)
     rm_containers
