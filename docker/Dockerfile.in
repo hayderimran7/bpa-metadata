@@ -2,7 +2,6 @@ FROM muccg/python-base:ubuntu14.04-2.7
 MAINTAINER https://github.com/muccg/bpa-metadata
 
 ENV PYTHONUNBUFFERED=1
-ENV APP_RELEASE GITTAG
 
 ENV DEBIAN_FRONTEND noninteractive
 # Project specific deps
@@ -20,19 +19,24 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
 
-WORKDIR /app
-RUN git clone --depth=1 --branch=GITTAG  https://github.com/muccg/bpa-metadata.git .
-
 # install python deps
-RUN pip install -r bpam/runtime-requirements.txt
-RUN pip install -e bpam
+COPY requirements /app/requirements
+WORKDIR /app
+RUN pip install -r requirements/runtime-requirements.txt
+RUN pip install -r requirements/dev-requirements.txt
+RUN pip install -r requirements/test-requirements.txt
 
-RUN cp docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
+
+# Copy code and install the app
+COPY . /app
+RUN pip install -e bpam
 
 EXPOSE 8000 9000 9001 9100 9101
 VOLUME ["/app", "/data"]
 
+ENV APP_RELEASE GITTAG
 ENV HOME /data
 WORKDIR /data
 
