@@ -5,7 +5,7 @@ TOPDIR=$(cd $(dirname $0); pwd)
 
 ACTION=$1
 
-PROJECT_NAME='bpa-metadata'
+PROJECT_NAME='bpametadata'
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
 
 ######### Logging ##########
