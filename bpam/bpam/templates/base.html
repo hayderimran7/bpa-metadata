@@ -24,10 +24,10 @@
     {% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
     {% endblock %}
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
-    <link rel="stylesheet" url="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/css/jquery.tablesorter.pager.min.css"/>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/extras/jquery.tablesorter.pager.min.js"></script>
+    {% bootstrap_css %}
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
@@ -37,92 +37,32 @@
 
     <script>
       $(document).ready(function() {
-        $.tablesorter.themes.bootstrap = {
-          // these classes are added to the table. To see other table classes available,
-          // look here: http://getbootstrap.com/css/#tables
-          table        : 'table table-bordered table-striped',
-          caption      : 'caption',
-            // header class names
-          header       : 'bootstrap-header', // give the header a gradient background (theme.bootstrap_2.css)
-          sortNone     : '',
-          sortAsc      : '',
-          sortDesc     : '',
-          active       : '', // applied when column is sorted
-          hover        : '', // custom css required - a defined bootstrap style may not override other classes
-            // icon class names
-          icons        : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
-          iconSortNone : 'bootstrap-icon-unsorted', // class name added to icon when column is not sorted
-          iconSortAsc  : 'glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
-          iconSortDesc : 'glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
-          filterRow    : '', // filter row class; use widgetOptions.filter_cssFilter for the input/select element
-          footerRow    : '',
-          footerCells  : '',
-          even         : '', // even row zebra striping
-          odd          : ''  // odd row zebra striping
+        var ccg_full_setup = {
+          colReorder: true,
+          stateSave: true,
+          processing: true,
+          buttons: [
+            'colvis', 'copy', 'csv','excel', 'print'
+          ],
+          fixedHeader: true,
         };
+        var ft = $('.ccgtable').DataTable(ccg_full_setup);
+        ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
+        $('.ccgtable').addClass('table-striped table-bordered table-condensed');
 
-        // call the tablesorter plugin and apply the uitheme widget
-        $(".fancytable").tablesorter({
-          // this will apply the bootstrap theme if "uitheme" widget is included
-          // the widgetOptions.uitheme is no longer required to be set
-          theme : "bootstrap",
-          widthFixed: true,
-          debug: false,
+        var ccg_slim_setup = {
+          colReorder: true,
+          stateSave: true,
+          paging: false
+        };
+        var slimtable = $('.ccgslimtable').DataTable(ccg_slim_setup);
+        $('.ccgslimtable').addClass('table-striped table-bordered table-condensed');
 
-          headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
+        // $('.ccgslimtable').on('search.dt', L.map._resize);
 
-            // widget code contained in the jquery.tablesorter.widgets.js file
-            // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-          widgets : [ "uitheme", "filter", ],
-
-          widgetOptions : {
-            // using the default zebra striping class name, so it actually isn't included in the theme variable above
-            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
-            zebra : ["even", "odd"],
-            // reset filters button
-            filter_reset : ".reset",
-              // extra css class name (string or array) added to the filter element (input or select)
-            filter_cssFilter: "form-control",
-          }
-        })
-        .tablesorterPager({
-          container: $(".ts-pager"),
-          // target the pager page select dropdown - choose a page
-          cssGoto  : ".pagenum",
-          // remove rows from the table to speed up the sort of large tables.
-          // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-          removeRows: true,
-            // output string - default is '{page}/{totalPages}';
-            // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-          output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
-        });
-
-        // table without pager
-        $(".nopagertable").tablesorter({
-          theme : "bootstrap",
-          widthFixed: true,
-          debug: false,
-
-          headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
-
-            // widget code contained in the jquery.tablesorter.widgets.js file
-            // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-          widgets : [ "uitheme", ],
-
-          widgetOptions : {
-            // using the default zebra striping class name, so it actually isn't included in the theme variable above
-            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
-            zebra : ["even", "odd"],
-            // reset filters button
-            filter_reset : ".reset",
-              // extra css class name (string or array) added to the filter element (input or select)
-            filter_cssFilter: "form-control",
-          }
-        });
       });
-
     </script>
-    {% bootstrap_css %}
+
     {% block extra_head %}
     {% endblock %}
 
@@ -167,6 +107,13 @@
         font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
       }
 
+      #popover-target label {
+        margin: 0 5px;
+        display: block;
+      }
+      #popover-target input {
+        margin-right: 5px;
+      }
     </style>
 
   </head>
@@ -215,7 +162,7 @@
         <p class="text-muted credit">
         &copy; Bioplatforms Australia, bpa-metadata {% bpam_version %}.
         <a href="http://ccgapps.com.au"> Centre for Comparative Genomics, Murdoch University, Western Australia.</a>
-       GNU Affero General Public License <a href="https://github.com/muccg/bpa-metadata"> Source</a>
+        GNU Affero General Public License <a href="https://github.com/muccg/bpa-metadata"> Source</a>
         </p>
       </div>
     </div>

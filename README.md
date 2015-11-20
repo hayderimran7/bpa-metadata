@@ -21,16 +21,16 @@ its own local DB.
 wrappers arround docker:
 
 ```bash
-Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|rpm_build|rmp_publish|ingest|ingest_all)
+Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)
                    build        Build all images
+                   mint         Mint and push new docker images from current checked out tag
                    shell        Create and shell into a new web image, used for db checking with Django env available
                    superuser    Create Django superuser
-                   ingest       Ingest metadata
+                   runscript    Run one of the available scripts
                    ingest_all   Ingest metadata
                    checksecure  Run security check
                    up           Spins up docker image stack
                    rm           Remove all containers
-                   ci_staging   Continuous Integration staging
                    pythonlint   Run python lint
                    unit_tests   Run unit tests
                    selenium     Run selenium tests

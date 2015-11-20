@@ -11,92 +11,72 @@
 
 {% block content %}
 
-<h3>Wheat Pathogen Genome Samples</h3>
-
-{% if samples %}
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons">
-        <button type="button" class="reset btn" data-column="0" data-filter="">
-            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
-            Reset filters
-        </button>
+<div class="container-fluid">
+    {% if samples %}
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"></div>
     </div>
+
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Name</th>
+                <th>Isolate Name</th>
+                <th>Kingdom</th>
+                <th>Phylum</th>
+                <th>Species</th>
+                <th>Original Source Host Species</th>
+                <th>Isolate Collection Location</th>
+                <th>Pathogenicity Towards Wheat</th>
+                <th>Contact Scientist</th>
+                <th>DNA Source</th>
+                <th>DNA Extraction Protocol</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Name</th>
+                <th>Isolate Name</th>
+                <th>Kingdom</th>
+                <th>Phylum</th>
+                <th>Species</th>
+                <th>Original Source Host Species</th>
+                <th>Isolate Collection Location</th>
+                <th>Pathogenicity Towards Wheat</th>
+                <th>Contact Scientist</th>
+                <th>DNA Source</th>
+                <th>DNA Extraction Protocol</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for sample in samples %}
+            <tr>
+                <td>
+                    <a href="{% url 'wheat_pathogens:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                </td>
+                <td>{{ sample.name }}</td>
+                <td>{{ sample.official_variety_name }}</td>
+                <td>{{ sample.organism.kingdom }}</td>
+                <td>{{ sample.organism.phylum }}</td>
+                <td>{{ sample.organism.species }}</td>
+                <td>{{ sample.original_source_host_species }}</td>
+                <td>{{ sample.collection_location }}</td>
+                <td>{{ sample.wheat_pathogenicity }}</td>
+                <td>{{ sample.contact_scientist }}</td>
+                <td>{{ sample.dna_source.description }}</td>
+                <td>{{ sample.dna_extraction_protocol }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Wheat Pathogen Data is currently available </h3>
+    {% endif %}
+
 </div>
-
-<table class="fancytable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Name</th>
-            <th>Isolate Name</th>
-            <th class="filter-select filter-exact" data-placeholder="Kingdom">Kingdom</th>
-            <th>Phylum</th>
-            <th>Species</th>
-            <th>Original Source Host Species</th>
-            <th>Isolate Collection Location</th>
-            <th>Pathogenicity Towards Wheat</th>
-            <th>Contact Scientist</th>
-            <th>DNA Source</th>
-            <th>DNA Extraction Protocol</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for sample in samples %}
-        <tr>
-            <td>
-                <a href="{% url 'wheat_pathogens:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-            </td>
-            <td>{{ sample.name }}</td>
-            <td>{{ sample.official_variety_name }}</td>
-            <td>{{ sample.organism.kingdom }}</td>
-            <td>{{ sample.organism.phylum }}</td>
-            <td>{{ sample.organism.species }}</td>
-            <td>{{ sample.original_source_host_species }}</td>
-            <td>{{ sample.collection_location }}</td>
-            <td>{{ sample.wheat_pathogenicity }}</td>
-            <td>{{ sample.contact_scientist }}</td>
-            <td>{{ sample.dna_source.description }}</td>
-            <td>{{ sample.dna_extraction_protocol }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Name</th>
-            <th>Isolate Name</th>
-            <th>Kingdom</th>
-            <th>Phylum</th>
-            <th>Species</th>
-            <th>Original Source Host Species</th>
-            <th>Isolate Collection Location</th>
-            <th>Pathogenicity Towards Wheat</th>
-            <th>Contact Scientist</th>
-            <th>DNA Source</th>
-            <th>DNA Extraction Protocol</th>
-        </tr>
-        <tr>
-            <th colspan="12" class="ts-pager form-horizontal">
-                <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-                <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
-                <span class="pagedisplay"></span>
-                <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-                <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
-                <select class="pagesize input-mini" title="Select page size">
-                    <option selected="selected" value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                </select>
-                <select class="pagenum input-mini" title="Select page number"></select>
-            </th>
-        </tr>
-    </tfoot>
-</table>
-
-{% else %}
-<h3> No Wheat Pathogen Data is currently available </h3>
-{% endif %}
 
 {% endblock %}

@@ -2,26 +2,20 @@
 
 {% block title %}BASE Amplicon Metadata {% endblock %}
 
-{% block content %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "BASE" "base:index" %}
-    {% breadcrumb "Amplicons" "base_amplicon:index" %}
-    {% with "base_amplicons:amplicons_"|add:target as target_url %}
-    {% breadcrumb target target_url %}
-    {% endwith %}
+{{ block.super }}
+{% breadcrumb "BASE" "base:index" %}
+{% breadcrumb "Amplicons" "base_amplicon:index" %}
+{% with "base_amplicons:amplicons_"|add:target as target_url %}
+{% breadcrumb target target_url %}
+{% endwith %}
 {% endblock %}
 
-
-<h3>
-    <a href="{% url 'base:index'%}">BASE</a> {{ target }} <a href="{% url 'base_amplicon:index'%}">Amplicon Metadata</a>
-</h3>
-
+{% block content %}
 {% if metadata_list %}
 {% include "base_amplicon/metadata_table.html" %}
-{% include "pagination.html" %}
 
 {% else %}
 <h3> No Amplicon data is currently available </h3>

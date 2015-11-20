@@ -124,18 +124,17 @@
     <p>A empty cell indicates no data. To sort by multiple columns, press and hold the Shift key.</p>
     
     <div class="bootstrap_buttons">
-        <button type="button" class="reset btn" data-column="0" data-filter="">
-            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
-            Reset filters
-        </button>
+        <div class="hidden">
+            <div id="popover-target"></div>
+        </div>
     </div>
 </div>
 
-<table  class="fancytable">
+<table class="ccgtable columnselect-popup">
     <thead>
         <tr>
-            <th>BPA ID</th>
-            <th>Collection Site</th>
+            <th data-priority="critical">BPA ID</th>
+            <th data-priority="1">Collection Site</th>
             <th>Date Sampled</th>
             <th>Soil Depth (cm)</th>
             <th class="filter-select filter-exact" data-placeholder="Horizon">Horizon</th>
@@ -195,6 +194,69 @@
             <th>Total N</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Collection Site</th>
+            <th>Date Sampled</th>
+            <th>Soil Depth (cm)</th>
+            <th>Horizon</th>
+            <th>Storage</th>
+            <th>Broad Land Use</th>
+            <th>Detailed Land Use</th>
+            <th>Ecological Zone</th>
+            <th>Vegetation Type</th>
+            <th>Vegetation Cover</th>
+            <th>Elevation</th>
+            <th>Slope</th>
+            <th>Slope Aspect</th>
+            <th>Profile Position</th>
+            <th>Australian Soil Classification</th>
+            <th>FAO Soil Classification</th>
+            <th>Immediate Previous Land Use</th>
+            <th>Date since change in Land Use</th>
+            <th>Crop Rotation 1 year since present</th>
+            <th>Crop Rotation 2 years since present</th>
+            <th>Crop Rotation 3 years since present</th>
+            <th>Crop Rotation 4 years since present</th>
+            <th>Crop Rotation 5 years since present</th>
+            <th>Agrochemical Additions</th>
+            <th>Tillage</th>
+            <th>Fire History</th>
+            <th>Fire Intensity</th>
+            <th>Flooding</th>
+            <th>Extreme Events</th>
+            <th>Moisture</th>
+            <th>Colour</th>
+            <th>Gravel</th>
+            <th>Texture</th>
+            <th>Course Sand</th>
+            <th>Fine Sand</th>
+            <th>Sand</th>
+            <th>Silt</th>
+            <th>Clay</th>
+            <th>NH<sub>3</sub>-N</th>
+            <th>NO<sub>3</sub><sup>−</sup></th>
+            <th>Colwell P</th>
+            <th>Colwell K</th>
+            <th>Sulphur</th>
+            <th>Organic Carbon</th>
+            <th>Conductivity</th>
+            <th>CaCl<sub>2</sub> pH</th>
+            <th>H<sub>2</sub>O pH</th>
+            <th>DTPA Cu</th>
+            <th>DTPA Fe</th>
+            <th>DTPA Mn</th>
+            <th>DTPA Zn</th>
+            <th>Exc Al</th>
+            <th>Exc Ca</th>
+            <th>Exc Mg</th>
+            <th>Exc K</th>
+            <th>Exc Na</th>
+            <th>B Hot CaCl<sub>2</sub></th>
+            <th>Total N</th>
+        </tr>
+    </tfoot>
     <tbody>
         {% for record in records %}
         <tr>
@@ -274,85 +336,6 @@
         {% endfor %}
     </tbody>
 
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Collection Site</th>
-            <th>Date Sampled</th>
-            <th>Soil Depth (cm)</th>
-            <th>Horizon</th>
-            <th>Storage</th>
-            <th>Broad Land Use</th>
-            <th>Detailed Land Use</th>
-            <th>Ecological Zone</th>
-            <th>Vegetation Type</th>
-            <th>Vegetation Cover</th>
-            <th>Elevation</th>
-            <th>Slope</th>
-            <th>Slope Aspect</th>
-            <th>Profile Position</th>
-            <th>Australian Soil Classification</th>
-            <th>FAO Soil Classification</th>
-            <th>Immediate Previous Land Use</th>
-            <th>Date since change in Land Use</th>
-            <th>Crop Rotation 1 year since present</th>
-            <th>Crop Rotation 2 years since present</th>
-            <th>Crop Rotation 3 years since present</th>
-            <th>Crop Rotation 4 years since present</th>
-            <th>Crop Rotation 5 years since present</th>
-            <th>Agrochemical Additions</th>
-            <th>Tillage</th>
-            <th>Fire History</th>
-            <th>Fire Intensity</th>
-            <th>Flooding</th>
-            <th>Extreme Events</th>
-            <th>Moisture</th>
-            <th>Colour</th>
-            <th>Gravel</th>
-            <th>Texture</th>
-            <th>Course Sand</th>
-            <th>Fine Sand</th>
-            <th>Sand</th>
-            <th>Silt</th>
-            <th>Clay</th>
-            <th>NH<sub>3</sub>-N</th>
-            <th>NO<sub>3</sub><sup>−</sup></th>
-            <th>Colwell P</th>
-            <th>Colwell K</th>
-            <th>Sulphur</th>
-            <th>Organic Carbon</th>
-            <th>Conductivity</th>
-            <th>CaCl<sub>2</sub> pH</th>
-            <th>H<sub>2</sub>O pH</th>
-            <th>DTPA Cu</th>
-            <th>DTPA Fe</th>
-            <th>DTPA Mn</th>
-            <th>DTPA Zn</th>
-            <th>Exc Al</th>
-            <th>Exc Ca</th>
-            <th>Exc Mg</th>
-            <th>Exc K</th>
-            <th>Exc Na</th>
-            <th>B Hot CaCl<sub>2</sub></th>
-            <th>Total N</th>
-        </tr>
-        <tr>
-            <th colspan="59" class="ts-pager form-horizontal">
-                <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-                <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
-                <span class="pagedisplay"></span>
-                <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-                <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
-                <select class="pagesize input-mini" title="Select page size">
-                    <option selected="selected" value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                </select>
-                <select class="pagenum input-mini" title="Select page number"></select>
-            </th>
-        </tr>
-    </tfoot>
 </table>
 
 

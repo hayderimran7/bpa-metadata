@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Barcode" "barcode:index" %}
+{% breadcrumb "Contacts" "barcode:contacts" %}
+
+{% endblock %}
+{% block title %}Great Barrier Reef{% endblock %}
+{% block content %}
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row"> 
+        <h2> Bioplatforms Australia </h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Ellen van Dam</strong><br> 
+                Operations Manager<br>
+                Bioplatforms Australia Ltd<br>
+                Level 4, Bldg F7B, Research Park Drive<br>
+                Macquarie University, NSW, 2109, Australia<br>
+                Phone: +612 9850 6247<br>
+                Mobile: +61 405 438 228<br>
+                Fax: +612 9850 6200 <br>
+                <a href="mailto:evandam@bioplatforms.com"> evandam@bioplatforms.com</a><br>
+                <a href="www.bioplatforms.com">www.bioplatforms.com</a>
+            </address>
+        </div>
+    </div>
+    <div class="row"> 
+        <h2> Forrestry </h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Andrew Lowe</strong><br>
+                University of Adelaide<br>
+                Phone: +61 883 131 149 <br>
+                <a href="mailto:andrew.lowe@adelaide.edu.au">andrew.lowe@adelaide.edu.au</a><br>
+            </address>
+        </div>
+    </div>
+    <div class="row"> 
+        <h2> Subterranean Fauna </h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Steve Cooper</strong><br>
+                South Australia Museum<br>
+                Phone: +61 831 35575 <br>
+                <a href="mailto:steve.cooper@samuseum.sa.gov.au">steve.cooper@samuseum.sa.gov.au</a><br>
+            </address>
+        </div>
+        <div class="col-sm-2">
+            <address>
+                <strong>Andy Austin</strong><br>
+                Australian Centre for Evolutionary Biology &amp; Biodiversity<br>
+                Phone: +61 883 138 240 <br>
+                <a href="mailto:andy.austin@adelaide.edu.au">andy.austin@adelaide.edu.au</a><br>
+            </address>
+        </div>
+        <div class="col-sm-2">
+            <address>
+                <strong>Michael Rix</strong><br>
+                Western Australian Museum<br>
+                Phone: +61 892 123 865 <br>
+                <a href="mailto:michael.rix@museum.wa.gov.au">michael.rix@museum.wa.gov.au</a><br>
+            </address>
+        </div>
+    </div>
+    <div class="row"> 
+        <h2>Orchids</h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Katharina Schulte</strong><br>
+                Australian Tropical Herbarium<br>
+                Phone: +61 7 4232 1686 <br>
+                <a href="mailto:katharina.schulte@jcu.edu.au">katharina.schulte@jcu.edu.au</a><br>
+            </address>
+        </div>
+    </div>
+
+    <div class="row"> 
+        <h2>Pilbara Flora</h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Paul Nevill</strong><br>
+                Curtin University<br>
+                Phone: +61 8 9266 4216 <br>
+                <a href="mailto:paul.nevill@curtin.edu.au">paul.nevill@curtin.edu.au</a><br>
+            </address>
+        </div>
+    </div>
+
+    <div class="row"> 
+        <h2>Fish</h2>
+        <div class="col-sm-2">
+            <address>
+                <strong>Sharon Appleyard</strong><br>
+                CSIRO National Research Collections of Australia<br>
+                Phone: +61 3 6232 5458<br>
+                <a href="sharon.appleyard@csiro.au">sharon.appleyard@csiro.au</a><br>
+            </address>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

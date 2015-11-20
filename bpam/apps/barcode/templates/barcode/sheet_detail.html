@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Sheet Detail {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Barcode" "barcode:index" %}
+{% breadcrumb "Pilbara Plant Diversity" "barcode:pilbara_index" %}
+{% breadcrumb "Pilbara Flora Sheets" "barcode:pilbara_sheets" %}
+{% breadcrumb sheet.sheet_number "barcode:pilbara_sheet" sheet.sheet_number %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <table id="info" class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <td><strong>BPA ID</strong></td>
+            <td>{{ sheet.bpa_id|default_if_none:"" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Sheet Number</strong></td>
+            <td>{{ sheet.sheet_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Name ID</strong></td>
+            <td>{{ sheet.name_id }}</td>
+        </tr>
+        <tr>
+            <td><strong>Plant Description</strong></td>
+            <td>{{ sheet.plant_description }}</td>
+        </tr>
+        <tr>
+            <td><strong>Site Description</strong></td>
+            <td>{{ sheet.site_description }}</td>
+        </tr>
+        <tr>
+            <td><strong>Vegetation</strong></td>
+            <td>{{ sheet.vegetation }}</td>
+        </tr>
+        <tr>
+            <td><strong>Position</strong></td>
+            <td>{{ sheet.latitude }}, {{ sheet.longitude }}, Datum: {{ sheet.datum }}, Accuracy: {{ sheet.geocode_accuracy }}, Method: {{ sheet.geocode_method }}, Barker code: {{ barker_coordinate_accuracy_flag }}</td>
+        </tr>
+        <tr>
+            <td><strong>Family</strong></td>
+            <td>{{ sheet.family }}</td>
+        </tr>
+        <tr>
+            <td><strong>Genus</strong></td>
+            <td>{{ sheet.genus }}</td>
+        </tr>
+        <tr>
+            <td><strong>Species</strong></td>
+            <td>{{ sheet.species }}</td>
+        </tr>
+        <tr>
+            <td><strong>Rank</strong></td>
+            <td>{{ sheet.rank }}</td>
+        </tr>
+        <tr>
+            <td><strong>Infraspecies Qualifier</strong></td>
+            <td>{{ sheet.infraspecies_qualifier }}</td>
+        </tr>
+        <tr>
+            <td><strong>Infraspecies</strong></td>
+            <td>{{ sheet.infraspecies }}</td>
+        </tr>
+        <tr>
+            <td><strong>Alien</strong></td>
+            <td>{{ sheet.alien }}</td>
+        </tr>
+        <tr>
+            <td><strong>Author</strong></td>
+            <td>{{ sheet.author }}</td>
+        </tr>
+        <tr>
+            <td><strong>Manuscript</strong></td>
+            <td>{{ sheet.manuscript }}</td>
+        </tr>
+        <tr>
+            <td><strong>Conservation Code</strong></td>
+            <td>{{ sheet.conservation_code }}</td>
+        </tr>
+        <tr>
+            <td><strong>Determiner Name</strong></td>
+            <td>{{ sheet.determiner_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Date of Determination</strong></td>
+            <td>{{ sheet.date_of_determination}}</td>
+        </tr>
+        <tr>
+            <td><strong>Determiner Role</strong></td>
+            <td>{{ sheet.determiner_role }}</td>
+        </tr>
+        <tr>
+            <td><strong>Name Comment</strong></td>
+            <td>{{ sheet.name_comment }}</td>
+        </tr>
+        <tr>
+            <td><strong>Frequency</strong></td>
+            <td>{{ sheet.frequency }}</td>
+        </tr>
+        <tr>
+            <td><strong>Locality</strong></td>
+            <td>{{ sheet.locality }}</td>
+        </tr>
+        <tr>
+            <td><strong>State</strong></td>
+            <td>{{ sheet.state }}</td>
+        </tr>
+        <tr>
+            <td><strong>Collector</strong></td>
+            <td>{{ sheet.collector }}</td>
+        </tr>
+        <tr>
+            <td><strong>Collector Number</strong></td>
+            <td>{{ sheet.collector_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Collection Date</strong></td>
+            <td>{{ sheet.collection_date }}</td>
+        </tr>
+        <tr>
+            <td><strong>Voucher</strong></td>
+            <td>{{ sheet.voucher }}</td>
+        </tr>
+        <tr>
+            <td><strong>Voucher ID</strong></td>
+            <td>{{ sheet.voucher_id }}</td>
+        </tr>
+        <tr>
+            <td><strong>Voucher Site</strong></td>
+            <td>{{ sheet.voucher_site }}</td>
+        </tr>
+        <tr>
+            <td><strong>Type Status</strong></td>
+            <td>{{ sheet.type_status }}</td>
+        </tr>
+        <tr>
+            <td><strong>Notes</strong></td>
+            <td>{{ sheet.note }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% include "sequencefilelist.html" %}
+
+{% endblock %}

@@ -18,22 +18,88 @@
 
     <div class="row">
         <div class="col-sm-1 col-md-1">
-            <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
-                                                    alt="BASE Metagenomic Sequence Files">
+            <img class="img-responsive img-rounded" 
+                 src="{% static 'base_metagenomics/metagenomics.gif' %}"
+                 alt="BASE Metagenomic Sequence Files">
         </div>
 
         <div class="col-sm-11 col-md-11">
             <h3><a href="{% url 'base:index' %}">BASE</a> Metagenomic Sequence Files ({{ files|length }})</h3>
-            <p><a href="{% url 'base_metagenomics:files_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
-            {% include "base_metagenomics/file_table.html" %}
-            <p><a href="{% url 'base_metagenomics:files_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
-            {% include "pagination.html" %}
+
+            <div class="alert alert-info" role="alert">
+                To sort by multiple columns, press and hold the Shift key.
+                <div class="bootstrap_buttons"> </div>
+            </div>
+
+            <table class="ccgtable">
+                <thead>
+                    <tr>
+                        <th>BPA Sample</th>
+                        <th>Extraction</th>
+                        <th>Facility</th>
+                        <th>Library</th>
+                        <th>Insert Size</th>
+                        <th>Flowcell</th>
+                        <th>Index</th>
+                        <th>Lane</th>
+                        <th>Read</th>
+                        <th>Name</th>
+                        <th>MD5</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>BPA Sample</th>
+                        <th>Extraction</th>
+                        <th>Facility</th>
+                        <th>Library</th>
+                        <th>Insert Size</th>
+                        <th>Flowcell</th>
+                        <th>Index</th>
+                        <th>Lane</th>
+                        <th>Read</th>
+                        <th>Name</th>
+                        <th>MD5</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'base_metagenomics:sample' bpa_id=file.sample.bpa_id %}">{{ file.sample.bpa_id }}</a>
+                        </td>
+                        <td>{{ file.extraction.extraction_id}}</td>
+                        <td>{{ file.run.sequencing_facility }}</td>
+                        <td>{{ file.protocol.library_type}}</td>
+                        <td>{{ file.protocol.base_pairs }}</td>
+                        <td>{{ file.run.flow_cell_id }}</td>
+                        <td>{{ file.index }}</td>
+                        <td>{{ file.lane_number }}</td>
+                        <td>{{ file.read }}</td>
+                        <td>
+                            {% if file.url_verification.status_ok %}
+                            <span title="Last checked {{ file.url_verification.checked_at }}"
+                                  class="glyphicon glyphicon-download"></span>
+                            {% else %}
+                            <span title="Error {{ file.url_verification.status_note }} at {{ file.url_verification.checked_at }}"
+                                  class="glyphicon glyphicon-flag"></span>
+                            {% endif %}
+                            <a href="{{ file.get_url }}">{{ file.filename }} </a>
+                        </td>
+                        <td class="md5">{{ file.md5 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+            </div>
         </div>
     </div>
+
+    {% else %}
+    <h3> No Metagenomic Sequence Files are currently available </h3>
+    {% endif %}
+
+    {% endblock %}
+
 </div>
-
-{% else %}
-<h3> No Metagenomic Sequence Files are currently available </h3>
-{% endif %}
-
-{% endblock %}

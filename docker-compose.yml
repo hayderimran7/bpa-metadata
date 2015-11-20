@@ -1,6 +1,6 @@
 # data only container pattern
 data:
-  image: muccg/base:debian8
+  image: muccg/debian8-base
   volumes:
     - .:/app
     - ./data/dev:/data
@@ -11,7 +11,7 @@ db:
     - POSTGRES_USER=webapp
     - POSTGRES_PASSWORD=webapp
   ports:
-    - ":5432"
+    - 5432
 
 cache:
   image: memcached:1.4
@@ -25,6 +25,7 @@ nginx:
 
 web:
   build: .
+  dockerfile: ./docker/Dockerfile.dev
   command: runserver
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.settings

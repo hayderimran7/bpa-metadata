@@ -3,6 +3,7 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
 from .models import GBRSample, GBRSequenceFile, CollectionEvent, CollectionSite
+from apps.gbr_amplicon.models import AmpliconSequencingMetadata
 
 
 class GBRView(TemplateView):
@@ -14,6 +15,7 @@ class GBRView(TemplateView):
         context['file_count'] = GBRSequenceFile.objects.count()
         context['collection_events_count'] = CollectionEvent.objects.count()
         context['collection_sites_count'] = CollectionSite.objects.count()
+        context['amplicon_count'] = AmpliconSequencingMetadata.objects.count()
         return context
 
 

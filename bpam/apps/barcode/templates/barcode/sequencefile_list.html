@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Great Barrier Reef Listing{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Sequence Files" "gbr:sequencefiles" %}
+{% endblock %}
+
+{% block content %}
+{% if sequencefiles %}
+
+<div class="alert alert-info" role="alert">
+    To sort by multiple columns, press and hold the Shift key.
+    <div class="bootstrap_buttons">
+        <button type="button" class="reset btn" data-column="0" data-filter="">
+            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
+            Reset filters
+        </button>
+    </div>
+</div>
+<p><a href="{% url 'gbr:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
+<table class="ccgtable">
+    <thead>
+        <tr>
+            <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
+            <th>Sample Name</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>BPA ID</th>
+            <th>Filename</th>
+            <th>MD5</th>
+            <th>Sample Name</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        {% for sfile in sequencefiles %}
+        <tr>
+            <td> <a href="{% url 'gbr:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
+            <td>
+                {% if sfile.url_verification.status_ok %}
+                <span title="Last checked {{ sfile.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-download">
+                </span>
+                {% else %}
+                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
+                      class="glyphicon glyphicon-flag"></span>
+                {% endif %}
+                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
+            </td>
+            <td style="font-family: monospace">{{ sfile.md5 }}</td>
+            <td>{{ sfile.sample.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'gbr:sequencefiles_csv'%}"><span class="glyphicon glyphicon-download"></span> CSV Export</a> </p>
+{% else %}
+<h3> No GBR Sequence Data is currently available </h3>
+{% endif %}
+
+{% endblock %}

@@ -2,26 +2,72 @@
 
 {% block title %}Great Barrier Reef Amplicon Metadata {% endblock %}
 
-{% block content %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "Great Barrier Reef" "gbr:index" %}
-    {% breadcrumb "Amplicons" "gbr_amplicon:index" %}
-    {% with "gbr_amplicons:amplicons_"|add:target as target_url %}
-    {% breadcrumb target target_url %}
-    {% endwith %}
+{{ block.super }}
+{% breadcrumb "Great Barrier Reef" "gbr:index" %}
+{% breadcrumb "Amplicons" "gbr_amplicon:index" %}
+{% with "gbr_amplicons:amplicons_"|add:target as target_url %}
+{% breadcrumb target target_url %}
+{% endwith %}
 {% endblock %}
 
-
-<h3>
-    <a href="{% url 'gbr:index'%}">Great Barrier Reef</a> {{ target }} <a href="{% url 'gbr_amplicon:index'%}">Amplicon Metadata</a>
-</h3>
-
+{% block content %}
 {% if metadata_list %}
-{% include "gbr_amplicon/metadata_table.html" %}
-{% include "pagination.html" %}
+
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"></div>
+    </div>
+
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Extraction ID</th>
+                <th>Facility</th>
+                <th>Run Number</th>
+                <th>Amplicon</th>
+                <th>Index</th>
+                <th>Dilution</th>
+                <th>Analysis Software Version</th>
+                <th>Reads</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Sample Extraction ID</th>
+                <th>Facility</th>
+                <th>Run Number</th>
+                <th>Amplicon</th>
+                <th>Index</th>
+                <th>Dilution</th>
+                <th>Analysis Software Version</th>
+                <th>Reads</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for data in metadata_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'gbr_amplicon:amplicon' data.pk %}">{{ data.bpa_id }}</a>
+                </td>
+                <td>{{ data.sample_extraction_id }}</td>
+                <td>{{ data.sequencing_facility }}</td>
+                <td>{{ data.sequencing_run_number }}</td>
+                <td>{{ data.target }}</td>
+                <td>{{ data.index }}</td>
+                <td>{{ data.dilution }}</td>
+                <td>{{ data.analysis_software_version }}</td>
+                <td>{{ data.reads }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% else %}
 <h3> No Amplicon data is currently available </h3>

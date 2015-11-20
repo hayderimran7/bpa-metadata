@@ -19,16 +19,48 @@
 
     <div class="row">
         <div class="col-sm-1 col-md-1">
-            <img class="img-responsive img-rounded" src="{% static 'base_metagenomics/metagenomics.gif' %}"
-            alt="BASE Metagenomics">
+            <img class="img-responsive img-rounded" 
+                 src="{% static 'base_metagenomics/metagenomics.gif' %}"
+                 alt="BASE Metagenomics">
         </div>
 
         <div class="col-sm-11 col-md-11">
             <h3><a href="{% url 'base:index' %}">BASE</a> Metagenomics Samples</h3>
-            {% include "base_metagenomics/sample_table.html" %}
-            {% include "pagination.html" %}
-        </div>
 
+
+            <div class="alert alert-info" role="alert">
+                To sort by multiple columns, press and hold the Shift key.
+                <div class="bootstrap_buttons"> </div>
+            </div>
+
+            <table class="ccgtable" width="100%">
+                <thead>
+                    <tr>
+                        <th>BPA ID</th>
+                        <th>Metagenomic Count</th>
+                        <th>Amplicon Count</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>BPA ID</th>
+                        <th>Metagenomic Count</th>
+                        <th>Amplicon Count</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for sample in samples %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'base_metagenomics:sample' bpa_id=sample.bpa_id %}">{{ sample.bpa_id }}</a>
+                        </td>
+                        <td> {{ sample.metagenomics_file_count }} </td>
+                        <td> {{ sample.amplicon_file_count }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

@@ -10,82 +10,67 @@
 {% endblock %}
 {% block content %}
 {% if arrays %}
-<h2>Melanoma Arrays</h2>
 
-<div class="alert alert-info" role="alert">
-    To sort by multiple columns, press and hold the Shift key.
-    <div class="bootstrap_buttons">
-        <button type="button" class="reset btn" data-column="0" data-filter="">
-            <i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i>
-            Reset filters
-        </button>
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
     </div>
-</div>
-<table class="fancytable">
-    <thead>
-        <tr>
-            <th>BPA ID</th>
-            <th>Array ID</th>
-            <th>Batch Number</th>
-            <th>Well ID</th>
-            <th>MIA ID</th>
-            <th>Call Rate</th>
-            <th>Gender</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for array in arrays %}
-        <tr>
-            <td>
-                <a href="{% url 'melanoma:sample' array.bpa_id %}">{{ array.bpa_id }}</a>
-            </td>
-            <td>{{ array.array_id }}</td>
-            <td>{{ array.batch_number }}</td>
-            <td>{{ array.well_id }}</td>
-            <td>{{ array.mia_id }}</td>
-            <td>{{ array.call_rate }}</td>
-            <td>
+
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Array ID</th>
+                <th>Batch Number</th>
+                <th>Well ID</th>
+                <th>MIA ID</th>
+                <th>Call Rate</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Array ID</th>
+                <th>Batch Number</th>
+                <th>Well ID</th>
+                <th>MIA ID</th>
+                <th>Call Rate</th>
+                <th>Gender</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for array in arrays %}
+            <tr>
+                <td>
+                    <a href="{% url 'melanoma:sample' array.bpa_id %}">{{ array.bpa_id }}</a>
+                </td>
+                <td>{{ array.array_id }}</td>
+                <td>{{ array.batch_number }}</td>
+                <td>{{ array.well_id }}</td>
+                <td>{{ array.mia_id }}</td>
+                <td>{{ array.call_rate }}</td>
                 {% if array.is_male %}
-                <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="BASE">
+                <td data-order="male" data-search="male">
+                    <img width="20px" src="{% static 'melanoma/male.svg' %}" alt="male">
+                </td>
                 {% elif array.is_female %}
-                <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="BASE">
+                <td data-order="female" data-search="female">
+                    <img width="20px" src="{% static 'melanoma/woman.svg' %}" alt="female">
+                </td>
+                {% else %}
+                <td data-order="unknown"> </td>
                 {% endif %}
-            </td>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        </tr>
-        {% endfor %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>BPA ID</th>
-            <th>Array ID</th>
-            <th>Batch Number</th>
-            <th>Well ID</th>
-            <th>MIA ID</th>
-            <th>Call Rate</th>
-            <th>Gender</th>
-        </tr>
-        <tr>
-            <th colspan="7" class="ts-pager form-horizontal">
-                <button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-                <button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
-                <span class="pagedisplay"></span>
-                <button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-                <button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
-                <select class="pagesize input-mini" title="Select page size">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option selected="selected" value="40">40</option>
-                </select>
-                <select class="pagenum input-mini" title="Select page number"></select>
-            </th>
-        </tr>
-    </tfoot>
-</table>
+    {% else %}
+    <h3> No Melanoma Array Data is currently available </h3>
+    {% endif %}
 
-{% else %}
-<h3> No Melanoma Array Data is currently available </h3>
-{% endif %}
-
-{% endblock %}
+    {% endblock %}
+</div>
