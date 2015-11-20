@@ -156,6 +156,7 @@ mint_docker_image() {
 
 usage() {
    echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)'
+
    echo '                   build        Build all images'
    echo '                   mint         Mint and push new docker images from current checked out tag'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
@@ -211,6 +212,9 @@ runscript)
     ;;
 nuclear)
     docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
+    ;;
+ingest_gbr)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_gbr
     ;;
 unit_tests)
     unit_tests

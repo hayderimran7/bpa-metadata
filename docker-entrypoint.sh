@@ -107,6 +107,7 @@ then
     django-admin.py runscript ingest_melanoma --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_gbr_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_gbr_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_gbr_smrt --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_wheat_pathogens --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
@@ -128,6 +129,15 @@ then
     exit $?
 fi
 
+if [ "${COMMAND}" = 'ingest_gbr' ]
+then
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_gbr_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py runscript ingest_gbr_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    # django-admin.py runscript ingest_gbr_smrt --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+
+    exit $?
+fi
 
 # set superuser 
 if [ "${COMMAND}" = 'superuser' ]
@@ -157,7 +167,7 @@ then
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
     django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
-uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
+    uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
     exit $?
 fi
 
@@ -190,7 +200,6 @@ fi
 if [ "$COMMAND" = 'lettuce' ]
 then
     echo "[Run] Starting lettuce"
-
     django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml 2>&1 | tee /data/lettuce.log
     exit $?
 fi
