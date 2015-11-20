@@ -2,6 +2,7 @@ FROM muccg/python-base:ubuntu14.04-2.7
 MAINTAINER https://github.com/muccg/bpa-metadata
 
 ENV PYTHONUNBUFFERED=1
+ENV APP_RELEASE GITTAG
 
 ENV DEBIAN_FRONTEND noninteractive
 # Project specific deps
@@ -20,8 +21,7 @@ RUN apt-get update && apt-get install -y \
 RUN env --unset=DEBIAN_FRONTEND
 
 WORKDIR /app
-RUN echo GITTAG \
-    && git clone --depth=1 --branch=GITTAG  https://github.com/muccg/bpa-metadata.git .
+RUN git clone --depth=1 --branch=GITTAG  https://github.com/muccg/bpa-metadata.git .
 
 # install python deps
 RUN pip install -r bpam/runtime-requirements.txt
