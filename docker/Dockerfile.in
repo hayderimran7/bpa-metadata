@@ -3,6 +3,9 @@ MAINTAINER https://github.com/muccg/bpa-metadata
 
 ENV PYTHONUNBUFFERED=1
 
+ARG GIT_TAG=next_release
+ENV GIT_TAG $GIT_TAG
+
 ENV DEBIAN_FRONTEND noninteractive
 # Project specific deps
 RUN apt-get update && apt-get install -y \
@@ -36,7 +39,6 @@ RUN pip install -e bpam
 EXPOSE 8000 9000 9001 9100 9101
 VOLUME ["/app", "/data"]
 
-ENV APP_RELEASE GITTAG
 ENV HOME /data
 WORKDIR /data
 
