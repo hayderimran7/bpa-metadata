@@ -8,7 +8,7 @@ from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
 
-VERSION = env.get("bpa_version", os.environ.get("APP_RELEASE", "UNKNOWN_VERSION"))
+VERSION = env.get("bpa_version", os.environ.get("GIT_TAG", "UNKNOWN_VERSION"))
 BPA_VERSION = VERSION
 
 SCRIPT_NAME = env.get("script_name", os.environ.get("HTTP_SCRIPT_NAME", ""))
