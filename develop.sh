@@ -7,6 +7,9 @@ ACTION=$1
 
 PROJECT_NAME='bpametadata'
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
+: ${DOCKER_BUILD_OPTIONS:="--pull=true"}
+
+DATE=$(date +%Y.%m.%d)
 
 ######### Logging ##########
 COLOR_NORMAL=$(tput sgr0)
@@ -115,42 +118,40 @@ entrypoint() {
 }
 
 
-mint_docker_image() {
+dockerbuild() {
    activate_virtualenv
 
    image="muccg/${PROJECT_NAME}"
    gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
    gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
-   template="$(cat docker/Dockerfile.in)"
 
-   # avoid building naming images from branches 
+   # only use tags when on master (release) branch
    if [ $gitbranch != "master" ]
    then
+      echo "Ignoring tags, not on master branch"
       gittag=$gitbranch
    fi
 
-   # log the Dockerfile
-   echo "########################################"
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in
-   echo "########################################"
+   # if no git tag, then use branch name
+   if [ -z ${gittag+x} ]
+   then
+      echo "No git tag set, using branch name"
+      gittag=$gitbranch
+   fi
+
+   echo "############################################################# ${PROJECT_NAME} ${gittag}"
 
    # attempt to warm up docker cache
    docker pull ${image} || true
 
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build --pull=true -t ${image} -
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${DATE} -
-
-   if [ -z ${gittag+x} ]
-   then
-      echo "No git tag set"
-   else
-      echo "Git tag ${gittag}"
-      sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${gittag} -
-      docker push ${image}:${gittag}
-   fi
-
-   docker push ${image}
-   docker push ${image}:${DATE}
+   for tag in "${image}:${gittag}" "${image}:${gittag}-${DATE}"
+   do
+      echo "############################################################# ${PROJECT_NAME} ${tag}"
+      set -x
+      docker build ${DOCKER_BUILD_OPTIONS} --build-arg GIT_TAG=${gittag} -t ${tag} -f Dockerfile .
+      docker push ${tag}
+      set +x
+   done
 }
 
 
@@ -158,7 +159,7 @@ usage() {
    echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)'
 
    echo '                   build        Build all images'
-   echo '                   mint         Mint and push new docker images from current checked out tag'
+   echo '                   dockerbuild  Build and push new docker images from current checked out tag'
    echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
    echo '                   superuser    Create Django superuser'
    echo '                   runscript    Run one of the available scripts' 
@@ -186,8 +187,8 @@ start)
 build)
     build
     ;;
-mint)
-   mint_docker_image
+dockerbuild)
+    dockerbuild
     ;;
 rm)
     rm_containers
