@@ -122,29 +122,31 @@ mint_docker_image() {
    gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
    gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
 
+   generated_dockerfile=./docker/generated_dockerfile
+
    # avoid building naming images from branches 
    if [ $gitbranch != "master" ]
    then
       gittag=$gitbranch
    fi
 
-   # log the Dockerfile
-   echo "########################################"
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in
-   echo "########################################"
+   # generate Dockerfile, tag is changed, when paramaterised docker
+   # builds becomes avilable this will go away
+   sed -e "s/GITTAG/${gittag}/g" Dockerfile > $generated_dockerfile
+   cat $generated_dockerfile
 
    # attempt to warm up docker cache
    docker pull ${image} || true
 
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build --pull=true -t ${image} -
-   sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${DATE} -
+   docker build --file=$generated_dockerfile --pull=true -t ${image} .
+   docker build --file=$generated_dockerfile -t ${image}:${DATE} .
 
    if [ -z ${gittag+x} ]
    then
       echo "No git tag set"
    else
       echo "Git tag ${gittag}"
-      sed -e "s/GITTAG/${gittag}/g" docker/Dockerfile.in | docker build -t ${image}:${gittag} -
+      docker build --file=$generated_dockerfile -t ${image}:${gittag} .
       docker push ${image}:${gittag}
    fi
 
