@@ -54,7 +54,9 @@ activate_virtualenv() {
         log_warning "There is no ${VIRTUALENV} here, making it."
         virtualenv ${VIRTUALENV}
         . ${VIRTUALENV}/bin/activate
-        pip install docker-compose
+        # there's little point in ensuring docker-compose is available if docker 
+        # isn't
+        # pip install docker-compose
         pip install 'flake8>=2.0,<2.1'
    else
       source ${VIRTUALENV}/bin/activate
