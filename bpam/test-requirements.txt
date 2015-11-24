@@ -1,3 +1,0 @@
-django-nose>=1.2
-nose>=1.2.1
-dingus
