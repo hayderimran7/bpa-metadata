@@ -166,8 +166,10 @@ usage() {
    echo '                   superuser    Create Django superuser'
    echo '                   runscript    Run one of the available scripts' 
    echo '                   ingest_all   Ingest metadata'
+   echo '                   ingest_gbr   Ingest GBR metadata'
+   echo '                   ingest_base  Ingest BASE metadata'
    echo '                   checksecure  Run security check'
-   echo '                   up           Spins up docker image stack'
+   echo '                   up           Spins up docker development stack'
    echo '                   rm           Remove all containers'
    echo '                   pythonlint   Run python lint'
    echo '                   unit_tests   Run unit tests'
@@ -218,6 +220,9 @@ nuclear)
     ;;
 ingest_gbr)
     docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_gbr
+    ;;
+ingest_base)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_base
     ;;
 unit_tests)
     unit_tests
