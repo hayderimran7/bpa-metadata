@@ -33,7 +33,6 @@ def truncate():
     cursor = connection.cursor()
     cursor.execute("TRUNCATE TABLE {0} CASCADE".format(Sheet._meta.db_table))
 
-
 class Mapper(object):
     """ Maps sheets to BPA IDs """
 

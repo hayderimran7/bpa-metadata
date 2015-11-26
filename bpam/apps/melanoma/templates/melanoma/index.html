@@ -21,86 +21,72 @@
 
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <h2> Melanoma </h2>
-                <p>
-                The Melanoma Genomics Project aims to whole genome sequence approximately 500 melanoma patients.
-                </p>
+                <p> The Melanoma Genomics Project aims to whole genome sequence approximately 500 melanoma patients.</p>
 
-                <p>
-                The samples sequenced include brain, lymph, primary and metastatic tumours as well as cell line derived samples. The following coverage levels were generated for each sample:
-                </p>
+                <p> The samples sequenced include brain, lymph, primary and
+                metastatic tumours as well as cell line derived samples. The
+                following coverage levels were generated for each sample:</p>
+
                 <ul>
-                    <li>
-                        60x (or greater) for tumour samples
-                    </li>
-                    <li>
-                        40x for cell line samples
-                    </li>
-                    <li>
-                        40x for control blood samples
-                    </li>
+                    <li> 60x (or greater) for tumour samples </li>
+                    <li> 40x for cell line samples </li>
+                    <li> 40x for control blood samples </li>
                 </ul>
 
                 <p>
                 Partner organisations include:
                 <ol>
-                    <li>
-                        Melanoma Institute Australia
-                    </li>
-                    <li>
-                        John Curtin School of Medical Research, ANU
-                    </li>
-                    <li>
-                        Berghoffer Queensland Institute of Medical Research
-                    </li>
-                    <li>
-                        University of Sydney
-                    </li>
-                    <li>
-                        Harry Perkins Institute of Medical Research
-                    </li>
-                    <li>
-                        Peter MacCallum Cancer Centre
-                    </li>
-                    <li>
-                        Ludwig Institute for Cancer Research
-                    </li>
-                    <li>
-                        University of Queensland
-                    </li>
-                    <li>
-                        Cancer Council NSW
-                    </li>
+                    <li> Melanoma Institute Australia </li>
+                    <li> John Curtin School of Medical Research, ANU </li>
+                    <li> Berghoffer Queensland Institute of Medical Research </li>
+                    <li> University of Sydney </li>
+                    <li> Harry Perkins Institute of Medical Research </li>
+                    <li> Peter MacCallum Cancer Centre </li>
+                    <li> Ludwig Institute for Cancer Research </li>
+                    <li> University of Queensland </li>
+                    <li> Cancer Council NSW </li>
                 </ol>
                 </p>
 
-                <p>
-                Note, the sequence information in this repository is only part of the total number of genomes sequenced (the remainder is available upon request). 
-                </p>
+                <p> Note, the sequence information in this repository is only
+                part of the total number of genomes sequenced (the remainder is
+                available upon request).</p>
 
-                <p>
-                Due to ethics requirements this data is only available upon request to the collaborators by authenticated researchers. It is anticipated this data will also be made available through the International Cancer Genome Consortium.
-                </p>
+                <p> Due to ethics requirements this data is only available upon
+                request to the collaborators by authenticated researchers. It
+                is anticipated this data will also be made available through
+                the International Cancer Genome Consortium.  </p>
 
-                <p>
-                For more information please visit:
-                </p>
-                <a href="http://www.bioplatforms.com/melanoma/">
-                    http://www.bioplatforms.com/melanoma/
-                </a>
+                <p> For more information please visit: </p>
+                <a href="http://www.bioplatforms.com/melanoma/"> http://www.bioplatforms.com/melanoma/ </a>
             </div>
 
             <div class="col-sm-8 col-md-3 col-lg-3">
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'melanoma:samples' %}">
-                        Samples <span class="badge">{{ sample_size }}</span>
+                    <a class="list-group-item" 
+                       href="{% url 'melanoma:samples' %}">
+                        Samples 
+                        <span class="badge">{{ sample_size }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'melanoma:sequencefiles' %}">
-                        Sequence Files <span class="badge">{{ sequence_file_size }}</span>
+                    <a class="list-group-item" 
+                       href="{% url 'melanoma:sequencefiles' %}">
+                        Sequence Files 
+                        <span class="badge">{{ sequence_file_size }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'melanoma:arrays' %}">
+                    <a class="list-group-item"
+                       href="{% url 'melanoma:arrays' %}">
                         Arrays <span class="badge">{{ array_size }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'melanoma:contacts' %}">Contacts</a>
+                    <a class="list-group-item" 
+                       href="https://downloads.bioplatforms.com/bpa/melanoma/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item" 
+                       href="{% url 'melanoma:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
                 </div>
             </div>
         </div>

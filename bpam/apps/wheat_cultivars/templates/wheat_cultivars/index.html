@@ -57,13 +57,24 @@
             <div class="col-sm-5 col-md-5 col-lg-3">
 
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'wheat_cultivars:samples' %}">
-                        Cultivars <span class="badge">{{ sample_size }}</span>
+                    <a class="list-group-item"
+                       href="{% url 'wheat_cultivars:samples' %}">
+                       Cultivars <span class="badge">{{ sample_size }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'wheat_cultivars:sequencefiles' %}">
-                        Sequence Files <span class="badge">{{ sequence_file_size }}</span>
+                    <a class="list-group-item"
+                       href="{% url 'wheat_cultivars:sequencefiles' %}">
+                       Sequence Files <span class="badge">{{ sequence_file_size }}</span>
                     </a>
-                    <a class="list-group-item" href="{% url 'wheat_cultivars:contacts' %}">Contacts</a>
+                    <a class="list-group-item" 
+                       href="https://downloads.bioplatforms.com/bpa/wheat_cultivars/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item" 
+                       href="{% url 'wheat_cultivars:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
                 </div>
             </div>
         </div>

@@ -54,7 +54,16 @@
                     <a class="list-group-item" href="{% url 'gbr:sequencefiles' %}">Sequence Files <span class="badge">{{ file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'gbr:sites' %}">Collection Sites <span class="badge">{{ collection_sites_count }}</span></a>
                     <a class="list-group-item" href="{% url 'gbr:collections' %}">Collection Events <span class="badge">{{ collection_events_count }}</span></a>
-                    <a class="list-group-item" href="{% url 'gbr:contacts' %}">Contacts</a>
+                    <a class="list-group-item" 
+                       href="https://downloads.bioplatforms.com/bpa/gbr/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item" 
+                       href="{% url 'gbr:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
                 </div>
             </div>
 
