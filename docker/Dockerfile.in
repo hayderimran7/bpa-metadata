@@ -1,8 +1,10 @@
+# Dockerfile template. ${GITTAG} needs to be set.
 FROM muccg/python-base:ubuntu14.04-2.7
 MAINTAINER https://github.com/muccg/bpa-metadata
 
 ENV PYTHONUNBUFFERED=1
 
+ARG PIP_OPTS="--no-cache-dir"
 ARG GIT_TAG=next_release
 ENV GIT_TAG $GIT_TAG
 
@@ -23,25 +25,21 @@ RUN apt-get update && apt-get install -y \
 RUN env --unset=DEBIAN_FRONTEND
 
 # install python deps
-COPY requirements /app/requirements
+COPY . /app
 WORKDIR /app
-RUN pip install -r requirements/runtime-requirements.txt
-RUN pip install -r requirements/dev-requirements.txt
-RUN pip install -r requirements/test-requirements.txt
+RUN virtualenv /env
+RUN /env/bin/pip ${PIP_OPTS} -r requirements/runtime-requirements.txt
+RUN /env/bin/pip ${PIP_OPTS} install -e bpam
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Copy code and install the app
-COPY . /app
-RUN pip install -e bpam
+EXPOSE 9000 9001 
+VOLUME ["/data"]
 
-EXPOSE 8000 9000 9001 9100 9101
-VOLUME ["/app", "/data"]
-
+USER ccg-user
 ENV HOME /data
 WORKDIR /data
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["runserver"]
-
+CMD ["uwsgi"]

@@ -150,7 +150,7 @@ dockerbuild() {
    do
       echo "############################################################# ${PROJECT_NAME} ${tag}"
       set -x
-      docker build ${DOCKER_BUILD_OPTIONS} --build-arg GIT_TAG=${gittag} -t ${tag} -f Dockerfile .
+      docker build ${DOCKER_BUILD_OPTIONS} --build-arg GIT_TAG=${gittag} -t ${tag} -f ./docker/Dockerfile.in
       docker push ${tag}
       set +x
    done

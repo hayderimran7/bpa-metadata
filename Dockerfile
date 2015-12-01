@@ -1,1 +1,1 @@
-./docker/Dockerfile.in
+./docker/Dockerfile.dev
