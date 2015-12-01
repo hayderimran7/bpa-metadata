@@ -176,8 +176,7 @@ then
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
     django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
-    uwsgi ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
-    exit $?
+    exec uwsgi --die-on-term --ini ${UWSGI_OPTS} 2>&1 | tee /data/uwsgi.log
 fi
 
 # runserver entrypoint
@@ -188,29 +187,28 @@ then
     : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${WEBPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
     echo "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
 
+    echo "Django collectstatic"
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-collectstatic.log
+    echo "Django migrate"
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-migrate.log
-
-    django-admin.py ${RUNSERVER_OPTS} 2>&1 | tee /data/runserver.log
-    exit $?
+    
+    echo "Django runserver"
+    exec django-admin.py ${RUNSERVER_OPTS} 2>&1 | tee /data/runserver.log
 fi
 
 # runtests entrypoint
 if [ "$COMMAND" = 'runtests' ] 
 then
-    echo "[Run] Starting tests"
+    echo "Django test"
     cd /app/bpam
-    django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runtests.log
-
-    exit $?
+    exec django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runtests.log
 fi
 
 # lettuce entrypoint
 if [ "$COMMAND" = 'lettuce' ]
 then
     echo "[Run] Starting lettuce"
-    django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml 2>&1 | tee /data/lettuce.log
-    exit $?
+    exec django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml 2>&1 | tee /data/lettuce.log
 fi
 
 echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest|runscript]"
