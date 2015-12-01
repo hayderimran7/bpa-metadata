@@ -23,7 +23,7 @@ nginx:
   ports:
     - "8443:443"
 
-web:
+runserver:
   build: .
   command: runserver
   environment:
@@ -40,14 +40,14 @@ web:
     - cache
 
 uwsgi:
-  image: bpametadata_web
+  image: bpametadata_runserver
   command: uwsgi
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.settings
     - DBUSER=webapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
-    - WAIT_FOR_WEB=1
+    - WAIT_FOR_RUNSERVER=1
   volumes_from:
     - data
   ports:
@@ -58,4 +58,4 @@ uwsgi:
   links:
     - db
     - cache
-    - web
+    - runserver

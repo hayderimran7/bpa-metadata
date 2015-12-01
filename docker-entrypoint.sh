@@ -37,8 +37,9 @@ wait_for_services() {
 
 
 defaults() {
-    : ${QUEUESERVER:="mq"}
-    : ${QUEUEPORT:="5672"}
+
+    : ${ENV_PATH:="/env/bin"}
+
     : ${DBSERVER:="db"}
     : ${DBPORT:="5432"}
     : ${WEBSERVER="web"}
@@ -49,6 +50,9 @@ defaults() {
     : ${DBUSER="webapp"}
     : ${DBNAME="${DBUSER}"}
     : ${DBPASS="${DBUSER}"}
+
+    . ${ENV_PATH}/activate
+
     export DBSERVER DBPORT DBUSER DBNAME DBPASS
 }
 
