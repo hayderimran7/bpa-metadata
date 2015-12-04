@@ -253,7 +253,7 @@ class URLVerification(models.Model):
     """
 
     checked_url = models.URLField()
-    checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
+    checked_at = models.DateTimeField()
     status_ok = models.NullBooleanField(null=True, default=False)
     status_note = models.TextField()
 

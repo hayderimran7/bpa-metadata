@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base_vocabulary', '0002_vocabulary'),
-        ('common', '__first__'),
+        ('common', '0001_initial'),
+        ('base_vocabulary', '__first__'),
     ]
 
     operations = [
@@ -46,11 +46,12 @@ class Migration(migrations.Migration):
                 ('boron_hot_cacl2', models.FloatField(null=True, verbose_name='Boron Hot CaCl2', blank=True)),
                 ('total_nitrogen', models.FloatField(null=True, verbose_name='Total Nitrogen', blank=True)),
                 ('total_carbon', models.FloatField(null=True, verbose_name='Total Carbon', blank=True)),
+                ('bpa_id', models.ForeignKey(verbose_name='BPA ID', to='common.BPAUniqueID')),
+                ('colour', models.ForeignKey(verbose_name='Soil Colour', to='base_vocabulary.SoilColour', null=True)),
             ],
             options={
                 'verbose_name_plural': 'Sample Chemical Essays',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='CollectionSite',
@@ -72,14 +73,15 @@ class Migration(migrations.Migration):
                 ('environment_event', models.CharField(max_length=100, blank=True)),
                 ('fire_history', models.CharField(max_length=500, verbose_name='Fire History', blank=True)),
                 ('fire_intensity', models.CharField(max_length=500, verbose_name='Fire Intensity', blank=True)),
-                ('date_since_change_in_land_use', models.DateField(null=True, verbose_name='Date Since Land Use Change', blank=True)),
+                ('date_since_change_in_land_use', models.CharField(max_length=100, null=True, verbose_name='Date Since Land Use Change', blank=True)),
+                ('crop_rotation_1', models.TextField(null=True, verbose_name='Crop rotation 1 year ago', blank=True)),
+                ('crop_rotation_2', models.TextField(null=True, verbose_name='Crop rotation 2 years ago', blank=True)),
+                ('crop_rotation_3', models.TextField(null=True, verbose_name='Crop rotation 3 years ago', blank=True)),
+                ('crop_rotation_4', models.TextField(null=True, verbose_name='Crop rotation 4 years ago', blank=True)),
+                ('crop_rotation_5', models.TextField(null=True, verbose_name='Crop rotation 5 years ago', blank=True)),
                 ('agrochemical_additions', models.CharField(max_length=300, null=True, verbose_name='Agrochemical Additions', blank=True)),
                 ('other_comments', models.TextField(null=True, verbose_name='Comments', blank=True)),
-                ('crop_rotation_1', models.ForeignKey(related_name='crop_rotation_1', blank=True, to='base_vocabulary.LandUse', max_length=100, null=True, verbose_name='Crop rotation 1 year ago')),
-                ('crop_rotation_2', models.ForeignKey(related_name='crop_rotation_2', blank=True, to='base_vocabulary.LandUse', max_length=100, null=True, verbose_name='Crop rotation 2 years ago')),
-                ('crop_rotation_3', models.ForeignKey(related_name='crop_rotation_3', blank=True, to='base_vocabulary.LandUse', max_length=100, null=True, verbose_name='Crop rotation 3 years ago')),
-                ('crop_rotation_4', models.ForeignKey(related_name='crop_rotation_4', blank=True, to='base_vocabulary.LandUse', max_length=100, null=True, verbose_name='Crop rotation 4 years ago')),
-                ('crop_rotation_5', models.ForeignKey(related_name='crop_rotation_5', blank=True, to='base_vocabulary.LandUse', max_length=100, null=True, verbose_name='Crop rotation 5 years ago')),
+                ('broad_land_use', models.ForeignKey(related_name='broad', verbose_name='Broad Land Use', to='base_vocabulary.LandUse', null=True)),
                 ('current_land_use', models.ForeignKey(related_name='current', verbose_name='Current Land Use', to='base_vocabulary.LandUse', null=True)),
                 ('drainage_classification', models.ForeignKey(verbose_name='Drainage Classification', to='base_vocabulary.DrainageClassification', null=True)),
                 ('general_ecological_zone', models.ForeignKey(verbose_name='General Ecological Zone', to='base_vocabulary.GeneralEcologicalZone', null=True)),
@@ -93,16 +95,17 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Collection Sites',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='SampleContext',
             fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('debug_note', models.TextField(null=True, verbose_name='Original Data', blank=True)),
-                ('bpa_id', models.ForeignKey(primary_key=True, verbose_name='BPA ID', serialize=False, to='common.BPAUniqueID')),
                 ('depth', models.CharField(max_length=20, verbose_name='Soil Depth', blank=True)),
+                ('storage', models.CharField(help_text='Storage', max_length=100, null=True, verbose_name='Storage', blank=True)),
                 ('methodological_notes', models.TextField(null=True, verbose_name='Methodological Notes', blank=True)),
                 ('analysis', models.ForeignKey(to='base_contextual.ChemicalAnalysis', null=True)),
+                ('bpa_id', models.OneToOneField(verbose_name='BPA ID', to='common.BPAUniqueID')),
                 ('horizon_classification1', models.ForeignKey(related_name='one', verbose_name='Horizon Classification One', to='base_vocabulary.HorizonClassification', null=True)),
                 ('horizon_classification2', models.ForeignKey(related_name='two', verbose_name='Horizon Classification Two', to='base_vocabulary.HorizonClassification', null=True)),
                 ('site', models.ForeignKey(to='base_contextual.CollectionSite', null=True)),
@@ -110,22 +113,9 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Sample Context',
             },
-            bases=(models.Model,),
         ),
         migrations.AlterUniqueTogether(
             name='collectionsite',
             unique_together=set([('lat', 'lon')]),
-        ),
-        migrations.AddField(
-            model_name='chemicalanalysis',
-            name='bpa_id',
-            field=models.ForeignKey(verbose_name='BPA ID', to='common.BPAUniqueID'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='chemicalanalysis',
-            name='colour',
-            field=models.ForeignKey(verbose_name='Soil Colour', to='base_vocabulary.SoilColour', null=True),
-            preserve_default=True,
         ),
     ]

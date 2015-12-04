@@ -15,8 +15,7 @@ class Sample454(DebugNote):
     dna_storage_nunc_tube = models.CharField(_('Nunc Tube'), max_length=12, blank=True, null=True, default='')
     dna_storage_nunc_well_location = models.CharField(_('Well Location'), max_length=30, blank=True, null=True)
     agrf_batch_number = models.CharField(_('AGRF Batch Number'), max_length=15, blank=True, null=True)
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter',
-                                  verbose_name=_('Submitter'), )
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='454_submitter+', verbose_name=_('Submitter'), )
     date_received = models.DateField(blank=True, null=True)
 
     # AGRF Adelaide extraction

@@ -109,7 +109,22 @@ ingest_gbr() {
 if [ "${COMMAND}" = 'nuclear' ]
 then
     django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py makemigrations bpaauth --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations common --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base_otu --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations base_454 --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations melanoma --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations gbr --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations gbr_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations wheat_pathogens --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations barcode --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     exit $?
 fi
 

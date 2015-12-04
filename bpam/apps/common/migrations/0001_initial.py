@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -22,7 +22,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'BPA Project',
                 'verbose_name_plural': 'BPA Projects',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='BPAUniqueID',
@@ -35,7 +34,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'BPA Unique ID',
                 'verbose_name_plural': "BPA Unique ID's",
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='DNASource',
@@ -48,7 +46,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'DNA Source',
                 'verbose_name_plural': 'DNA Sources',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Facility',
@@ -60,7 +57,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Facilities',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Organism',
@@ -80,7 +76,6 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Organisms',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Sequencer',
@@ -91,19 +86,15 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Sequencer',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='URLVerification',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('checked_url', models.URLField()),
-                ('checked_at', models.DateTimeField(auto_now=True, auto_now_add=True)),
+                ('checked_at', models.DateTimeField()),
                 ('status_ok', models.NullBooleanField(default=False)),
                 ('status_note', models.TextField()),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
     ]

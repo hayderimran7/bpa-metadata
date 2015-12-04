@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import Sample, DebugNote
 
-from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
+# from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
 
 
 class BASESample(Sample, DebugNote):
@@ -11,7 +11,7 @@ class BASESample(Sample, DebugNote):
     BASE sample
     """
 
-    otus = models.ManyToManyField(OperationalTaxonomicUnit, through=SampleOTU)
+    # otus = models.ManyToManyField(OperationalTaxonomicUnit, through=SampleOTU)
 
     def __unicode__(self):
         return u"{0}".format(self.bpa_id)
