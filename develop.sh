@@ -206,6 +206,9 @@ up)
 shell)
     docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
     ;;
+admin)
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
+    ;;
 superuser)
     docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser
     ;;

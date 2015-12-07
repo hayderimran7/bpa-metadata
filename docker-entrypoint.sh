@@ -106,9 +106,7 @@ ingest_gbr() {
     # django-admin.py runscript ingest_gbr_smrt --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 }
 
-if [ "${COMMAND}" = 'nuclear' ]
-then
-    django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
+make_migrations() {
     django-admin.py makemigrations bpaauth --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations common --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations base --traceback --settings=${DJANGO_SETTINGS_MODULE}
@@ -124,6 +122,12 @@ then
     django-admin.py makemigrations wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations barcode --traceback --settings=${DJANGO_SETTINGS_MODULE}
+}
+
+if [ "${COMMAND}" = 'nuclear' ]
+then
+    django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    make_migrations
     django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     exit $?
 fi
@@ -164,6 +168,19 @@ fi
 if [ "${COMMAND}" = 'ingest_base' ]
 then
     ingest_base
+    exit $?
+fi
+
+if [ "${COMMAND}" = 'admin' ]
+then
+    echo "admin"
+    if [ "$2" = "" ]
+    then 
+        admincmd="help"
+    else
+        admincmd=$2
+    fi
+    django-admin.py $admincmd --settings=${DJANGO_SETTINGS_MODULE}
     exit $?
 fi
 
