@@ -190,8 +190,8 @@ class Sample(models.Model):
     """
 
     bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))  # PK
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
+    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'), related_name="%(app_label)s_%(class)s_sample")
 
     name = models.CharField(_('Sample Name'), max_length=200)
     dna_extraction_protocol = models.TextField(_('DNA Extraction Protocol'), blank=True, null=True)
