@@ -42,7 +42,7 @@ Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|in
 - *Staging* https://staging.ccgapps.com.au/bpa-metadata/
 
 ## Licence
-BPA Metadata is released under the GPL Version 3.0 licence. See source for a licence copy.
+BPA Metadata is released under the GNU Affero GPL. See source for a licence copy.
 
 ## Contributing
 * Fork next_release branch
