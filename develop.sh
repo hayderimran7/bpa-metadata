@@ -116,7 +116,7 @@ rm_containers() {
 entrypoint() {
    ENTRYPOINT=${1:-bash}
    log_info "Entrypoint ${ENTRYPOINT}"
-   docker exec -it ${PROJECT_NAME}_web_1 ${ENTRYPOINT} $2
+   docker exec -it ${PROJECT_NAME}_uwsgi_1 ${ENTRYPOINT} $2
 }
 
 
@@ -204,25 +204,25 @@ up)
     up
     ;;
 shell)
-    docker exec -it ${PROJECT_NAME}_web_1 /bin/bash
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /bin/bash
     ;;
 superuser)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh superuser
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh superuser
     ;;
 ingest_all)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_all
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_all
     ;;
 runscript)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh runscript $2
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh runscript $2
     ;;
 nuclear)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh nuclear
     ;;
 ingest_gbr)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_gbr
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_gbr
     ;;
 ingest_base)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh ingest_base
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_base
     ;;
 unit_tests)
     unit_tests
@@ -231,7 +231,7 @@ selenium)
     selenium
     ;;
 checksecure)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh checksecure
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh checksecure
     ;;
 *)
     usage
