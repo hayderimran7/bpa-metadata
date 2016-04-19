@@ -16,18 +16,30 @@ db:
 cache:
   image: memcached:1.4
 
-runserver:
-  build: .
-  command: runserver
+nginx:
+  image: muccg/nginx-uwsgi:1.7
+  links:
+    - uwsgi
+  ports:
+    - "8443:443"
+
+uwsgi:
+  image: bpametadata_runserver
+  command: uwsgi
   environment:
     - DJANGO_SETTINGS_MODULE=bpam.settings
     - DBUSER=webapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
+    - WAIT_FOR_RUNSERVER=1
   volumes_from:
     - data
   ports:
-    - "8000:8000"
+    - "9000:9000"
+    - "9001:9001"
+    - "9100:9100"
+    - "9101:9101"
   links:
     - db
     - cache
+    - runserver
