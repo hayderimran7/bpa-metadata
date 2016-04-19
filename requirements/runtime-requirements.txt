@@ -37,7 +37,6 @@ uwsgi==2.0.8
 uwsgitop
 pyinotify==0.9.4
 Werkzeug
-model-mommy
 django-secure
 django-queryset-csv
 ccg-django-utils==0.4.2
