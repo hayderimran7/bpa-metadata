@@ -25,6 +25,5 @@ VOLUME ["/app", "/data"]
 ENV HOME /data
 WORKDIR /data
 
-USER ccg-user
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["runserver"]
