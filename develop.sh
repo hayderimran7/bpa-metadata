@@ -121,7 +121,7 @@ entrypoint() {
 
 
 dockerbuild() {
-   activate_virtualenv
+   #activate_virtualenv
 
    image="muccg/${PROJECT_NAME}"
    gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
