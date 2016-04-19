@@ -153,7 +153,7 @@ class SampleContext(DebugNote):
     A model to collect sample specific info for contextual data.
     """
 
-    bpa_id = models.ForeignKey(BPAUniqueID, verbose_name=_('BPA ID'), primary_key=True)
+    bpa_id = models.OneToOneField(BPAUniqueID, verbose_name=_('BPA ID'))
     site = models.ForeignKey(CollectionSite, null=True)  # there may be no site set
     analysis = models.ForeignKey(ChemicalAnalysis, null=True)  # there may be no site set
 

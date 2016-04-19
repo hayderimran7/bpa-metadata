@@ -190,8 +190,8 @@ class Sample(models.Model):
     """
 
     bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name=_('BPA ID'))  # PK
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'))
+    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
+    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name=_('DNA Source'), related_name="%(app_label)s_%(class)s_sample")
 
     name = models.CharField(_('Sample Name'), max_length=200)
     dna_extraction_protocol = models.TextField(_('DNA Extraction Protocol'), blank=True, null=True)
@@ -253,7 +253,7 @@ class URLVerification(models.Model):
     """
 
     checked_url = models.URLField()
-    checked_at = models.DateTimeField(auto_now=True, auto_now_add=True)
+    checked_at = models.DateTimeField()
     status_ok = models.NullBooleanField(null=True, default=False)
     status_note = models.TextField()
 

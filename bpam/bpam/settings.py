@@ -24,8 +24,6 @@ TEMPLATE_DIRS = (
     PROJECT_DIR.child('bpam.templates'),
 )
 
-# Make this unique, and don't share it with anybody.
-# see: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env.get("secret_key", "change-it")
 
 # Default SSL on and forced, turn off if necessary
@@ -44,10 +42,6 @@ SECURE_BROWSER_XSS_FILTER = env.get("secure_browser_xss_filter", PRODUCTION)
 SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
 
-# Default all email to ADMINS and MANAGERS to root@localhost.
-# Puppet redirects this to something appropriate depend on the environment.
-# see: https://docs.djangoproject.com/en/1.7/ref/settings/#admins
-# see: https://docs.djangoproject.com/en/1.7/ref/settings/#managers
 ADMINS = [
     ("alert", env.get("alert_email", "root@localhost"))
 ]
@@ -57,24 +51,17 @@ MANAGERS = ADMINS
 if env.get("ENABLE_EMAIL", False):
     print('Enabling Email')
     # email settings for sending email error alerts etc
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host
     EMAIL_HOST = env.get("email_host", "")
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-port
     EMAIL_PORT = env.get("email_port", 25)
 
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host-user
     EMAIL_HOST_USER = env.get("email_host_user", "")
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-host-password
     EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
 
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-use-tls
     EMAIL_USE_TLS = env.get("email_use_tls", False)
 
-    # see: https://docs.djangoproject.com/en/1.7/ref/settings/#email-subject-prefix
     EMAIL_APP_NAME = "BPA Metadata "
     EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
 
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#email-backend
     if EMAIL_HOST:
         EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     elif DEBUG:
@@ -87,18 +74,12 @@ if env.get("ENABLE_EMAIL", False):
 
             mkpath(EMAIL_FILE_PATH)
 
-    # See: https://docs.djangoproject.com/en/1.7/ref/settings/#server-email
     SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
     RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
-    # email address to receive datasync client log notifications
     LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
-    # email address to receive datasync key upload notifications
     KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
-    # email address to receive registration requests
     REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
 
-
-# See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
 DATABASES = {
@@ -112,7 +93,6 @@ DATABASES = {
     }
 }
 
-# http://www.django-rest-framework.org/
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -122,10 +102,6 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10
 }
 
-# cookies
-# see: https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-age
-# see: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-name
-# you SHOULD change the cookie to use HTTPONLY and SECURE when in production
 SESSION_COOKIE_AGE = env.get("session_cookie_age", 60 * 60)
 SESSION_COOKIE_PATH = '{0}/'.format(SCRIPT_NAME)
 SESSION_SAVE_EVERY_REQUEST = env.get("session_save_every_request", True)
@@ -138,8 +114,6 @@ CSRF_COOKIE_DOMAIN = env.get("csrf_cookie_domain", "") or SESSION_COOKIE_DOMAIN
 CSRF_COOKIE_PATH = env.get("csrf_cookie_path", SESSION_COOKIE_PATH)
 CSRF_COOKIE_SECURE = env.get("csrf_cookie_secure", PRODUCTION)
 
-# Default date input formats, may be overridden
-# see: https://docs.djangoproject.com/en/1.4/ref/settings/#date-input-formats
 TIME_ZONE = env.get("time_zone", 'Australia/Perth')
 LANGUAGE_CODE = env.get("language_code", 'en-us')
 USE_I18N = env.get("use_i18n", True)
@@ -155,14 +129,11 @@ LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-25.27, 133.775),
     'DEFAULT_ZOOM': 4,
     'ATTRIBUTION_PREFIX': '',
-    # 'TILES': 'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
     'TILES': [
         ('MapQuest Open Aerial',
          'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
          {'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'},
          ),
-        # ('MapQuest Open Aerial Sat', 'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', ''),
-        # ('Stamen', 'http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png', ''),
         ('ESRI',
          'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
          {'attribution': '&copy; i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'},
@@ -249,12 +220,10 @@ USE_TZ = True
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_ROOT = env.get('media_root', PROJECT_DIR.child("media"))
 MEDIA_URL = ''
 
 # These may be overridden, but it would be nice to stick to this convention
-# see: https://docs.djangoproject.com/en/1.4/ref/settings/#static-url
 STATIC_ROOT = env.get('static_root', os.path.join(CCG_WEBAPP_ROOT, 'static'))
 STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 
@@ -282,7 +251,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.doc.XViewMiddleware',
+    # 'django.middleware.doc.XViewMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -336,9 +305,6 @@ INSTALLED_APPS = (
     'djangosecure',
 )
 
-# #
-# # LOGGING
-# #
 LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_WEBAPP_ROOT, "log"))
 try:
     if not os.path.exists(LOG_DIRECTORY):
@@ -432,7 +398,6 @@ DEFAULT_PAGINATION = 50
 
 # This honours the X-Forwarded-Host header set by our nginx frontend when
 # constructing redirect URLS.
-# see: https://docs.djangoproject.com/en/1.4/ref/settings/#use-x-forwarded-host
 USE_X_FORWARDED_HOST = env.get("use_x_forwarded_host", True)
 
 if env.get("memcache", ""):

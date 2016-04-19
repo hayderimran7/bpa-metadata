@@ -204,25 +204,28 @@ up)
     up
     ;;
 shell)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /bin/bash
+    docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
+    ;;
+admin)
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
     ;;
 superuser)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh superuser
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser
     ;;
 ingest_all)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_all
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh ingest_all
     ;;
 runscript)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh runscript $2
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh runscript $2
     ;;
 nuclear)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh nuclear
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh nuclear
     ;;
 ingest_gbr)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_gbr
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh ingest_gbr
     ;;
 ingest_base)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh ingest_base
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh ingest_base
     ;;
 unit_tests)
     unit_tests
