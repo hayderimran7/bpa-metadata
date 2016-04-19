@@ -116,7 +116,7 @@ rm_containers() {
 entrypoint() {
    ENTRYPOINT=${1:-bash}
    log_info "Entrypoint ${ENTRYPOINT}"
-   docker exec -it ${PROJECT_NAME}_uwsgi_1 ${ENTRYPOINT} $2
+   docker exec -it ${PROJECT_NAME}_runserver_1 ${ENTRYPOINT} $2
 }
 
 
@@ -234,7 +234,7 @@ selenium)
     selenium
     ;;
 checksecure)
-    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh checksecure
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh checksecure
     ;;
 *)
     usage
