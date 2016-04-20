@@ -17,8 +17,8 @@ class IndexView(TemplateView):
 class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
-    queryset = MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
-                                                           'url_verification', 'md5')
+    queryset = MelanomaSequenceFile.objects.select_related(
+        'sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification')
     # paginate_by = settings.DEFAULT_PAGINATION
 
 
