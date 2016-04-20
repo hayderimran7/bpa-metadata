@@ -49,6 +49,7 @@ def _get_bpa_id(entry):
 
 
 class MetadataHandler(object):
+
     def get_data(self, file_name):
         """
         The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -203,7 +204,6 @@ class MD5handler(object):
 
             return protocol
 
-
         for entry in entries:
             _run = get_run(entry)
             sfile = MetagenomicsSequenceFile(run=_run, sample=_run.sample)
@@ -262,8 +262,8 @@ class MD5handler(object):
                 md5_entry['bpa_id'] = BPA_ID + bpa_id
                 md5_entry['extraction_id'] = extraction_id
                 md5_entry['facility'] = facility
-                md5_entry['library'] = library # PE
-                md5_entry['insert_size'] = int(insert_size[:-2]) # 350bp
+                md5_entry['library'] = library  # PE
+                md5_entry['insert_size'] = int(insert_size[:-2])  # 350bp
                 md5_entry['flowcell'] = flowcell
                 md5_entry['index'] = index
                 md5_entry['lane'] = int(lane[1:])

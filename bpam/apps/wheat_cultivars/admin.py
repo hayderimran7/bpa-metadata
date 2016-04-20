@@ -9,6 +9,7 @@ from .models import CultivarSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = Protocol
@@ -28,9 +29,8 @@ class ProtocolAdmin(admin.ModelAdmin):
     list_filter = ('library_type',)
 
 
-
-
 class SequenceFileInlineForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = CultivarSequenceFile
@@ -42,7 +42,9 @@ class SequenceFileInlineForm(forms.ModelForm):
 
 
 class SampleAdmin(admin.ModelAdmin):
+
     class SampleForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = CultivarSample

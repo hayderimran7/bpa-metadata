@@ -30,6 +30,7 @@ class CultivarSample(Sample, DebugNote):
     classification = models.CharField(_("Classification"), max_length=200, null=True, blank=True)
     url = models.URLField(_("URL"), null=True, blank=True)
 
+
 class Protocol(models.Model):
     """
     Protocol
@@ -56,6 +57,7 @@ class Protocol(models.Model):
             self.base_pairs = int(val[:-2])
         elif val.find("kb") > -1:
             self.base_pairs = int(val[:-2]) * 1000
+
 
 class CultivarSequenceFile(SequenceFile):
     """

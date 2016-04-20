@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import sys
+from django.utils import DataError
 
-from apps.common.models import DNASource, Facility, Sequencer
-from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample
+from apps.common.models import Facility
+from apps.gbr.models import GBRSample
 from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
-from libs import ingest_utils, user_helper
+from libs import ingest_utils
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
-from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
+from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 from unipath import Path
-from collections import namedtuple
 
 logger = get_logger(__name__)
 
@@ -44,6 +43,7 @@ def fix_pcr(pcr):
         val = "X"
     return val
 
+
 def _get_index(entry):
     """
     Archial amplicons have more than one index, take all available indexi and bunch them into
@@ -56,6 +56,7 @@ def _get_index(entry):
             if i is not "":
                 indexi.append(i)
     return ", ".join(indexi)
+
 
 def add_samples(data):
     """
@@ -89,7 +90,7 @@ def add_samples(data):
 
         try:
             metadata.save()
-        except DataError, e:
+        except DataError as e:
             logger.error(e)
             logger.error(entry)
             exit()
@@ -106,44 +107,45 @@ def do_metadata():
         samples = list(get_metadata(metadata_file))
         add_samples(samples)
 
+
 def get_metadata(file_name):
     """
     Parse fields from the metadata spreadsheet
     """
 
     field_spec = [
-            ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
-            ("sample_extraction_id", "Sample extraction ID", ingest_utils.get_int),
-            ("sequencing_facility", "Sequencing facility", None),
-            ("target", "Target", lambda s: s.upper().strip()),
-            ("i7_index", "I7_Index_ID", None),
-            ("index1", "index", None),
-            ("index2", "index2", None),
-            ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", fix_pcr),
-            ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", fix_pcr),
-            ("pcr_neat", "neat PCR, P=pass, F=fail", fix_pcr),
-            ("dilution", "Dilution used", fix_dilution),
-            ("sequencing_run_number", "Sequencing run number", None),
-            ("flow_cell_id", "Flowcell", None),
-            ("reads", "# of reads", ingest_utils.get_int),
-            ("name", "Sample name on sample sheet", None),
-            ("analysis_software_version", "AnalysisSoftwareVersion", None),
-            ("comments", "Comments", None),
-            ]
+        ("bpa_id", "Sample unique ID", lambda s: s.replace("/", ".")),
+        ("sample_extraction_id", "Sample extraction ID", ingest_utils.get_int),
+        ("sequencing_facility", "Sequencing facility", None),
+        ("target", "Target", lambda s: s.upper().strip()),
+        ("i7_index", "I7_Index_ID", None),
+        ("index1", "index", None),
+        ("index2", "index2", None),
+        ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", fix_pcr),
+        ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", fix_pcr),
+        ("pcr_neat", "neat PCR, P=pass, F=fail", fix_pcr),
+        ("dilution", "Dilution used", fix_dilution),
+        ("sequencing_run_number", "Sequencing run number", None),
+        ("flow_cell_id", "Flowcell", None),
+        ("reads", "# of reads", ingest_utils.get_int),
+        ("name", "Sample name on sample sheet", None),
+        ("analysis_software_version", "AnalysisSoftwareVersion", None),
+        ("comments", "Comments", None),
+    ]
 
     wrapper = ExcelWrapper(field_spec,
-            file_name,
-            sheet_name="Sheet1",
-            header_length=4,
-            column_name_row_index=1,
-            formatting_info=True,
-            pick_first_sheet=True)
+                           file_name,
+                           sheet_name="Sheet1",
+                           header_length=4,
+                           column_name_row_index=1,
+                           formatting_info=True,
+                           pick_first_sheet=True)
 
     return wrapper.get_all()
 
 
-
 class MD5ParsedLine(object):
+
     def __init__(self, line):
         self._line = line
         self._ok = False
@@ -181,6 +183,7 @@ class MD5ParsedLine(object):
         else:
             self._ok = False
 
+
 def parse_md5_file(md5_file):
     """
     Parse md5 file
@@ -214,6 +217,7 @@ def get_sequencing_metadata(bpa_id, md5_line):
 
     return metadata
 
+
 def add_md5(md5_lines):
     """
     Add md5 data
@@ -230,12 +234,13 @@ def add_md5(md5_lines):
         metadata = get_sequencing_metadata(bpa_id, md5_line)
 
         f, _ = AmpliconSequenceFile.objects.get_or_create(
-                sample=sample,
-                metadata=metadata,
-                read_number = md5_line.read,
-                lane_number = md5_line.lane,
-                filename = md5_line.filename,
-                md5 = md5_line.md5)
+            sample=sample,
+            metadata=metadata,
+            read_number=md5_line.read,
+            lane_number=md5_line.lane,
+            filename=md5_line.filename,
+            md5=md5_line.md5)
+
 
 def ingest_md5():
     """
@@ -251,6 +256,7 @@ def ingest_md5():
         logger.info("Processing GBR md5 file {0}".format(md5_file))
         data = parse_md5_file(md5_file)
         add_md5(data)
+
 
 def truncate():
     """

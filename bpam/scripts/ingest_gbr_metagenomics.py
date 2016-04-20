@@ -10,7 +10,6 @@ from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
 from libs.fetch_data import Fetcher
 from unipath import Path
-from collections import namedtuple
 
 logger = get_logger(__name__)
 
@@ -67,7 +66,7 @@ def ingest_samples(samples):
 
         try:
             genus, species = name.strip().split()
-        except ValueError, e:
+        except ValueError as e:
             logger.error("Problem Parsing organism from {0} : {1}".format(name, e))
             return None
 
@@ -451,11 +450,12 @@ def ingest():
         try:
             sample_data = get_gbr_sample_data(metadata_file)
             _ingest(sample_data)
-        except ColumnNotFoundException, e:
+        except ColumnNotFoundException as e:
             logger.error("File {0} could not be ingested, column name error: {1}".format(metadata_file, e))
 
 
 class MD5ParsedLine(object):
+
     def __init__(self, line):
         self._line = line
 
@@ -506,7 +506,7 @@ class MD5ParsedLine(object):
             self._ok = True
         elif len(filename_parts) == 8:
             # ["13208", "GBR", "UNSW", "H8P31ADXX", "TCCTGAGC", "L002", "R2", "001"]
-            self.bpa_id, _, self.vendor,  self.flowcell, self.index, self.lane, self.read, _ = filename_parts
+            self.bpa_id, _, self.vendor, self.flowcell, self.index, self.lane, self.read, _ = filename_parts
             self._ok = True
         else:
             self._ok = False
@@ -583,7 +583,7 @@ def truncate():
 
 def run():
     # fetch the old data file
-    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=("bpa", "gbr33f")) # bad form but aparently OK
+    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=("bpa", "gbr33f"))  # bad form but aparently OK
     fetcher.fetch(OLD_METADATA_FILE)
 
     # fetch the new data formats

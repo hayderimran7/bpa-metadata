@@ -121,7 +121,7 @@ class OTUCache(object):
                 otu = OperationalTaxonomicUnit.objects.get(name=otu_name)
                 self.cache[otu_name] = otu
                 return otu
-            except OperationalTaxonomicUnit.DoesNotExist, e:
+            except OperationalTaxonomicUnit.DoesNotExist as e:
                 logger.error('OTU {} Does not exist {}'.format(otu_name, str(e)))
                 return None
 
@@ -153,6 +153,7 @@ class BPAIDLookup(object):
 
 
 class ProgressReporter(object):
+
     def __init__(self, file_name):
         self.file_name = file_name
         self.total_len = self.file_len(file_name)

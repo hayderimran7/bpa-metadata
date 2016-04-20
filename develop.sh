@@ -71,10 +71,8 @@ ci_ssh_agent() {
 }
 
 
-pythonlint() {
-    activate_virtualenv
-    # find . -type d -name ".ropeproject" -exec rm -fr {} \;
-    ${VIRTUALENV}/bin/flake8 bpam --exclude=migrations,.ropeproject --ignore=E501,E303 --count
+lint() {
+    docker run --rm -v $PWD:/app muccg/pylint:python2 /app/ --ignore=E501,E731 --exclude=migrations,docs,initial_data,setup.py,settings.py,wsgi.py
 }
 
 
@@ -171,15 +169,15 @@ usage() {
    echo '                   checksecure  Run security check'
    echo '                   up           Spins up docker development stack'
    echo '                   rm           Remove all containers'
-   echo '                   pythonlint   Run python lint'
+   echo '                   lint         Run linter'
    echo '                   unit_tests   Run unit tests'
    echo '                   selenium     Run selenium tests'
    echo '                   usage'
 }
 
 case ${ACTION} in
-pythonlint)
-    pythonlint
+lint)
+    lint
     ;;
 ci_staging)
     ci_ssh_agent

@@ -7,10 +7,12 @@ from django.conf import settings
 from apps.common.models import SequenceFile, Run, Protocol
 from apps.base.models import BASESample
 
+
 class MetagenomicsProtocol(Protocol):
     """
     Metagenomics Protocol
     """
+
 
 class MetagenomicsSample(BASESample):
     """

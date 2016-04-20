@@ -20,15 +20,15 @@ class Sample454(DebugNote):
 
     # AGRF Adelaide extraction
     adelaide_extraction_sample_weight = models.CharField(
-            _("Extraction Sample Weight (mg)"),
-            max_length=30,
-            blank=True,
-            null=True)  # another abused "integer" field
+        _("Extraction Sample Weight (mg)"),
+        max_length=30,
+        blank=True,
+        null=True)  # another abused "integer" field
     adelaide_fluorimetry = models.FloatField(_("Fluorimetry ng/uL gDNA"), blank=True, null=True)
     adelaide_pcr_inhibition = models.CharField(
-            _("PCR Inhibition (neat plus spike) 16S (V3-V8)"),
-            max_length=2,
-            choices=RESULT)
+        _("PCR Inhibition (neat plus spike) 16S (V3-V8)"),
+        max_length=2,
+        choices=RESULT)
     adelaide_pcr1 = models.CharField(_("PCR1 (neat) 16S (V3-V8)"), max_length=2, choices=RESULT)
     adelaide_pcr2 = models.CharField(_("PCR2 (1:100) 16S (V3-V8)"), max_length=2, choices=RESULT)
     adelaide_date_shipped_to_agrf_454 = models.DateField(_("DNA shipped to AGRF (454)"), blank=True, null=True)

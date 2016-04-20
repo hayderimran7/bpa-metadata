@@ -10,6 +10,7 @@ import logger_utils
 logger = logger_utils.get_logger(__name__)
 BPA_PREFIX = "102.100.100."
 
+
 def get_base_metagenomics_data(md5_file):
     """
     Parse md5 file

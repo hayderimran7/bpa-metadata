@@ -34,7 +34,6 @@ def _get_bpa_id(entry):
     return bpa_id
 
 
-
 def get_dna_source(description):
     """ Get a DNA source if it exists, if it doesn't make it.  """
 

@@ -36,7 +36,6 @@ def _get_bpa_id(entry):
     return bpa_id
 
 
-
 @contract
 def get_sample_454(bpa_id):
     """ Get the Sample given a BPAUniqueID object
@@ -187,7 +186,7 @@ def ingest(file_name):
 
         try:
             sample.save()
-        except Exception, e:
+        except Exception as e:
             logger.error(e)
             sys.exit(1)
 

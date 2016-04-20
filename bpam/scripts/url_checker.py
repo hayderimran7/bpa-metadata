@@ -65,7 +65,7 @@ def check_gbr(sleep_time):
 
     try:
         process_object(sleep_time, session, GBRSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -74,7 +74,7 @@ def check_wheat_cultivars(sleep_time):
     session = requests.Session()
     try:
         process_object(sleep_time, session, CultivarSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -83,7 +83,7 @@ def check_wheat_pathogens(sleep_time):
     session = requests.Session()
     try:
         process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -92,7 +92,7 @@ def check_wheat_pathogens_transcript(sleep_time):
     session = requests.Session()
     try:
         process_object(sleep_time, session, WheatPathogenTranscriptSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -102,7 +102,7 @@ def check_melanoma(sleep_time):
     session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
     try:
         process_object(sleep_time, session, MelanomaSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -113,7 +113,7 @@ def check_base_metagenomcis(sleep_time):
 
     try:
         process_object(sleep_time, session, MetagenomicsSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 
@@ -124,7 +124,7 @@ def check_base_amplicons(sleep_time):
 
     try:
         process_object(sleep_time, session, AmpliconSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError, e:
+    except django.db.utils.ProgrammingError as e:
         logger.error(e)
 
 

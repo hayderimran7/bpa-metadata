@@ -22,6 +22,7 @@ admin.site.register(AmpliconSequenceFile, AmpliconSequenceFileAdmin)
 
 
 class SequenceFileInlineForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = AmpliconSequenceFile
@@ -33,7 +34,9 @@ class SequenceFileInlineForm(forms.ModelForm):
 
 
 class AmpliconMetadaAdmin(admin.ModelAdmin):
+
     class SampleForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = AmpliconSequencingMetadata
@@ -101,4 +104,3 @@ class AmpliconMetadaAdmin(admin.ModelAdmin):
     list_filter = ('bpa_id', 'sequencing_facility', )
 
 admin.site.register(AmpliconSequencingMetadata, AmpliconMetadaAdmin)
-

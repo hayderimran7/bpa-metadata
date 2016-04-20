@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from apps.common.models import DNASource, Sequencer
 from apps.wheat_cultivars.models import Organism, Protocol, CultivarSample, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils
@@ -23,6 +22,7 @@ DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
 Run = namedtuple('Run', 'run_number casava_version lib_cons_proto lib_range sequencer')
 
+
 def get_bpa_id(entry):
     """
     Get or make BPA ID
@@ -33,6 +33,7 @@ def get_bpa_id(entry):
         logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
         return None
     return bpa_id
+
 
 def get_run_lookup():
     """
@@ -69,6 +70,7 @@ def get_run_lookup():
         run_lookup[key] = runt
     return run_lookup
 
+
 def ingest_samples(samples):
     """
     Add all the cultivar samples
@@ -85,14 +87,13 @@ def ingest_samples(samples):
         if bpa_id is None:
             return
 
-
         cultivar_sample, created = CultivarSample.objects.get_or_create(bpa_id=bpa_id, organism=wheat_organism)
 
-        cultivar_sample.name = e.variety # DDD
+        cultivar_sample.name = e.variety  # DDD
         cultivar_sample.variety = e.variety
         cultivar_sample.cultivar_code = e.code
         cultivar_sample.source_name = e.source_name
-        cultivar_sample.characteristics= e.characteristics
+        cultivar_sample.characteristics = e.characteristics
         cultivar_sample.organism = wheat_organism
 
         cultivar_sample.organism_part = e.organism_part
@@ -117,6 +118,7 @@ def ingest_samples(samples):
     for sample in samples:
         add_sample(sample)
 
+
 def do_metadata():
     def is_metadata(path):
         if path.isfile() and path.ext == '.xlsx':
@@ -129,6 +131,7 @@ def do_metadata():
         bpa_id_utils.ingest_bpa_ids(sample_data, 'WHEAT_CULTIVAR', 'Wheat Cultivars')
         ingest_samples(sample_data)
 
+
 def parse_md5_file(md5_file):
     """
     Parse md5 file
@@ -138,23 +141,23 @@ def parse_md5_file(md5_file):
     class MD5ParsedLine(object):
         Cultivar = namedtuple('Cultivar', 'desc bpa_id')
         cultivars = {
-                'DRY': Cultivar('Drysdale', '102.100.100.13703'),
-                'GLA': Cultivar('Gladius', '102.100.100.13704'),
-                'RAC': Cultivar('RAC 875', '102.100.100.13705'),
-                'EXC': Cultivar('Excalibur', '102.100.100.13706'),
-                'KUK': Cultivar('Kukri', '102.100.100.13707'),
-                'ACB': Cultivar('AC Barry', '102.100.100.13708'),
-                'BAX': Cultivar('Baxter', '102.100.100.13709'),
-                'CH7': Cultivar('Chara', '102.100.100.13710'),
-                'VOL': Cultivar('Volcani DD1', '102.100.100.13711'),
-                'WES': Cultivar('Westonia', '102.100.100.13712'),
-                'PAS': Cultivar('Pastor', '102.100.100.13713'),
-                'XIA': Cultivar('Xiaoyan 54', '102.100.100.13714'),
-                'YIT': Cultivar('Yitpi', '102.100.100.13715'),
-                'ALS': Cultivar('Alsen', '102.100.100.13716'),
-                'WYA': Cultivar('Wyalcatchem', '102.100.100.13717'),
-                'H45': Cultivar('H45', '102.100.100.13718'),
-            }
+            'DRY': Cultivar('Drysdale', '102.100.100.13703'),
+            'GLA': Cultivar('Gladius', '102.100.100.13704'),
+            'RAC': Cultivar('RAC 875', '102.100.100.13705'),
+            'EXC': Cultivar('Excalibur', '102.100.100.13706'),
+            'KUK': Cultivar('Kukri', '102.100.100.13707'),
+            'ACB': Cultivar('AC Barry', '102.100.100.13708'),
+            'BAX': Cultivar('Baxter', '102.100.100.13709'),
+            'CH7': Cultivar('Chara', '102.100.100.13710'),
+            'VOL': Cultivar('Volcani DD1', '102.100.100.13711'),
+            'WES': Cultivar('Westonia', '102.100.100.13712'),
+            'PAS': Cultivar('Pastor', '102.100.100.13713'),
+            'XIA': Cultivar('Xiaoyan 54', '102.100.100.13714'),
+            'YIT': Cultivar('Yitpi', '102.100.100.13715'),
+            'ALS': Cultivar('Alsen', '102.100.100.13716'),
+            'WYA': Cultivar('Wyalcatchem', '102.100.100.13717'),
+            'H45': Cultivar('H45', '102.100.100.13718'),
+        }
 
         def __init__(self, line):
             self._line = line
@@ -217,7 +220,7 @@ def parse_md5_file(md5_file):
                 _key, self.lib_type, self.lib_size, self.flowcell, self.barcode, self.lane, self.read = filename_parts
                 self._ok = True
             else:
-                self._ok = False # be explicit
+                self._ok = False  # be explicit
 
     data = []
 
@@ -232,6 +235,7 @@ def parse_md5_file(md5_file):
                 data.append(parsed_line)
 
     return data
+
 
 def add_md5(md5_lines, run_data):
     """
@@ -270,6 +274,7 @@ def add_md5(md5_lines, run_data):
         f.md5 = md5_line.md5
         f.save()
 
+
 def get_run_data(file_name):
     """
     The run metadata for this set
@@ -296,30 +301,31 @@ def get_run_data(file_name):
         header_length=1)
     return wrapper.get_all()
 
+
 def get_cultivar_sample_characteristics(file_name):
     """
     This is the data from the Characteristics Sheet
     """
 
     field_spec = [
-            ("source_name", "BPA ID", None),
-            ("code", "CODE", None),
-            ("bpa_id", "BPA ID", lambda s: s.replace("/", ".")),
-            ("characteristics", "Characteristics", None),
-            ("organism", "Organism", None),
-            ("variety", "Variety", None),
-            ("organism_part", "Organism part", None),
-            ("pedigree", "Pedigree", None),
-            ("dev_stage", "Developmental stage", None),
-            ("yield_properties", "Yield properties", None),
-            ("morphology", "Morphology", None),
-            ("maturity", "Maturity", None),
-            ("pathogen_tolerance", "Pathogen tolerance", None),
-            ("drought_tolerance", "Drought tolerance", None),
-            ("soil_tolerance", "Soil tolerance", None),
-            ("classification", "International classification", None),
-            ("url", "Link", None),
-            ]
+        ("source_name", "BPA ID", None),
+        ("code", "CODE", None),
+        ("bpa_id", "BPA ID", lambda s: s.replace("/", ".")),
+        ("characteristics", "Characteristics", None),
+        ("organism", "Organism", None),
+        ("variety", "Variety", None),
+        ("organism_part", "Organism part", None),
+        ("pedigree", "Pedigree", None),
+        ("dev_stage", "Developmental stage", None),
+        ("yield_properties", "Yield properties", None),
+        ("morphology", "Morphology", None),
+        ("maturity", "Maturity", None),
+        ("pathogen_tolerance", "Pathogen tolerance", None),
+        ("drought_tolerance", "Drought tolerance", None),
+        ("soil_tolerance", "Soil tolerance", None),
+        ("classification", "International classification", None),
+        ("url", "Link", None),
+    ]
 
     wrapper = ExcelWrapper(
         field_spec,
@@ -327,6 +333,7 @@ def get_cultivar_sample_characteristics(file_name):
         sheet_name="Characteristics",
         header_length=1)
     return wrapper.get_all()
+
 
 def do_md5():
     """
@@ -345,6 +352,7 @@ def do_md5():
         data = parse_md5_file(md5_file)
         add_md5(data, run_data)
 
+
 def truncate():
     from django.db import connection
 
@@ -352,6 +360,7 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSample._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(Protocol._meta.db_table))
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
+
 
 def run():
     truncate()

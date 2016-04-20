@@ -14,7 +14,6 @@ Options:
 
 from docopt import docopt
 import logging
-from pprint import pprint
 from collections import namedtuple
 import re
 

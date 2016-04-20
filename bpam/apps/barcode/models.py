@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.common.models import BPAUniqueID
 
+
 class Sheet(models.Model):
     """ Single herbarium sheet """
 
@@ -25,7 +26,7 @@ class Sheet(models.Model):
     # flora
     family = models.CharField("Family", max_length=100, null=True, blank=True)
     genus = models.CharField("Genus", max_length=100, null=True, blank=True)
-    species = models.CharField("Species",max_length=100, null=True, blank=True)
+    species = models.CharField("Species", max_length=100, null=True, blank=True)
     rank = models.CharField("Rank", max_length=100, null=True, blank=True)
     infraspecies_qualifier = models.CharField("Infraspecies Qualifier", max_length=100, null=True, blank=True)
     infraspecies = models.CharField("Infraspecies", max_length=100, null=True, blank=True)

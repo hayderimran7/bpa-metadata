@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import djqscsv
-from cStringIO import StringIO
 from .models import CultivarSequenceFile
 
 
@@ -28,7 +27,7 @@ sequence_file_headers = {
     "casava_version": "Casava",
     "filename": "File Name",
     "md5": "MD5 Checksum",
-    }
+}
 
 sequence_file_values = (
     "sample__bpa_id",
@@ -53,9 +52,9 @@ sequence_file_values = (
     "casava_version",
     "filename",
     "md5",
-    )
+)
+
 
 def get_sequencefiles(response):
     qs = CultivarSequenceFile.objects.values(*sequence_file_values)
     return djqscsv.render_to_csv_response(qs, field_header_map=sequence_file_headers)
-

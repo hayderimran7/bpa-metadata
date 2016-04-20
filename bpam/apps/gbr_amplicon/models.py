@@ -5,8 +5,9 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import Protocol, SequenceFile, Organism, DebugNote, BPAUniqueID, Facility
+from apps.common.models import SequenceFile, DebugNote, BPAUniqueID, Facility
 from apps.gbr.models import GBRSample
+
 
 class AmpliconSequencingMetadata(DebugNote):
     """
@@ -79,4 +80,3 @@ class AmpliconSequenceFile(SequenceFile):
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")
-

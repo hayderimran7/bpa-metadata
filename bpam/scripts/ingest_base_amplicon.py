@@ -53,32 +53,32 @@ def get_data(file_name):
     """
 
     field_spec = [
-            ("bpa_id", "Soil sample unique ID", lambda s: s.replace("/", ".")),
-            ("sample_extraction_id", "Sample extraction ID", None),
-            ("sequencing_facility", "Sequencing facility", None),
-            ("target", "Target", lambda s: s.upper().strip()),
-            ("index", "Index", lambda s: s[:12]),
-            ("index1", "Index 1", lambda s: s[:12]),
-            ("index2", "Index2", lambda s: s[:12]),
-            ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", fix_pcr),
-            ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", fix_pcr),
-            ("pcr_neat", "neat PCR, P=pass, F=fail", fix_pcr),
-            ("dilution", "Dilution used", fix_dilution),
-            ("sequencing_run_number", "Sequencing run number", None),
-            ("flow_cell_id", "Flowcell", None),
-            ("reads", ("# of RAW reads", "# of reads"), ingest_utils.get_int),
-            ("name", "Sample name on sample sheet", None),
-            ("analysis_software_version", "AnalysisSoftwareVersion", None),
-            ("comments", "Comments", None),
-            ]
+        ("bpa_id", "Soil sample unique ID", lambda s: s.replace("/", ".")),
+        ("sample_extraction_id", "Sample extraction ID", None),
+        ("sequencing_facility", "Sequencing facility", None),
+        ("target", "Target", lambda s: s.upper().strip()),
+        ("index", "Index", lambda s: s[:12]),
+        ("index1", "Index 1", lambda s: s[:12]),
+        ("index2", "Index2", lambda s: s[:12]),
+        ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", fix_pcr),
+        ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", fix_pcr),
+        ("pcr_neat", "neat PCR, P=pass, F=fail", fix_pcr),
+        ("dilution", "Dilution used", fix_dilution),
+        ("sequencing_run_number", "Sequencing run number", None),
+        ("flow_cell_id", "Flowcell", None),
+        ("reads", ("# of RAW reads", "# of reads"), ingest_utils.get_int),
+        ("name", "Sample name on sample sheet", None),
+        ("analysis_software_version", "AnalysisSoftwareVersion", None),
+        ("comments", "Comments", None),
+    ]
 
     wrapper = ExcelWrapper(field_spec,
-            file_name,
-            sheet_name="Sheet1",
-            header_length=4,
-            column_name_row_index=1,
-            formatting_info=True,
-            pick_first_sheet=True)
+                           file_name,
+                           sheet_name="Sheet1",
+                           header_length=4,
+                           column_name_row_index=1,
+                           formatting_info=True,
+                           pick_first_sheet=True)
 
     return wrapper.get_all()
 
@@ -141,7 +141,7 @@ def add_samples(data):
 
         try:
             metadata.save()
-        except DataError, e:
+        except DataError as e:
             logger.error(e)
             logger.error(entry)
             exit()
@@ -172,7 +172,6 @@ def parse_md5_file(md5_file):
         except ValueError:
             logger.error("{} is not a BPA_ID".format(parts[0]))
             return None, None
-
 
         for _target in targets:
             _index = parts.index(_target) if _target in parts else -1
@@ -267,8 +266,8 @@ def add_md5(data):
         target = file_data["target"]
         try:
             metadata = AmpliconSequencingMetadata.objects.get(
-                    target=target,
-                    sample_extraction_id=extraction_id)
+                target=target,
+                sample_extraction_id=extraction_id)
             # sequencing faciliy dropped from metadata
             metadata.sequencing_facility = Facility.objects.get_or_create(name=file_data["vendor"])[0]
             metadata.save()

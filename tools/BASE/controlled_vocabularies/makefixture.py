@@ -13,7 +13,6 @@ Options:
 """
 
 import logging
-from tendo import colorer
 
 from docopt import docopt
 import csv
@@ -64,7 +63,7 @@ def print_fixtures(args, fixturelist):
 
     fixture_name = args['FIXTURE']
     if fixture_name:
-        with codecs.open(args['FIXTURE'], "w",  encoding='utf-8') as f:
+        with codecs.open(args['FIXTURE'], "w", encoding='utf-8') as f:
             json.dump(fixturelist, f, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': '))
     else:
         print(json.dumps(fixturelist, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -82,4 +81,3 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG)
 
     main(args)
-

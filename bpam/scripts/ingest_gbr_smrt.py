@@ -10,7 +10,6 @@ from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
 from libs.fetch_data import Fetcher
 from unipath import Path
-from collections import namedtuple
 
 logger = get_logger(__name__)
 
@@ -68,7 +67,7 @@ def ingest_samples(samples):
 
         try:
             genus, species = name.strip().split()
-        except ValueError, e:
+        except ValueError as e:
             logger.error('Problem Parsing organism from {0} : {1}'.format(name, e))
             return None
 
@@ -419,7 +418,7 @@ def _ingest(sample_data):
     :return:
     """
     # pre-populate the BPA ID's
-    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION) 
+    bpa_id_utils.add_id_set(set([e.bpa_id for e in sample_data]), PROJECT_ID, PROJECT_DESCRIPTION)
     ingest_samples(sample_data)
     ingest_runs(sample_data)
 
@@ -446,11 +445,12 @@ def ingest():
         try:
             sample_data = get_gbr_sample_data(metadata_file)
             _ingest(sample_data)
-        except ColumnNotFoundException, e:
+        except ColumnNotFoundException as e:
             logger.error('File {0} could not be ingested, column name error: {1}'.format(metadata_file, e))
 
 
 class MD5ParsedLine(object):
+
     def __init__(self, line):
         self._line = line
 
@@ -507,11 +507,10 @@ class MD5ParsedLine(object):
             self._ok = True
         elif len(filename_parts) == 8:
             # ['13208', 'GBR', 'UNSW', 'H8P31ADXX', 'TCCTGAGC', 'L002', 'R2', '001']
-            self.bpa_id, _, self.vendor,  self.flowcell, self.index, self.lane, self.read, _ = filename_parts
+            self.bpa_id, _, self.vendor, self.flowcell, self.index, self.lane, self.read, _ = filename_parts
             self._ok = True
         else:
             self._ok = False
-
 
 
 def parse_md5_file(md5_file):
@@ -532,6 +531,7 @@ def parse_md5_file(md5_file):
                 data.append(parsed_line)
 
     return data
+
 
 def add_md5(md5_lines):
     """
@@ -574,6 +574,7 @@ def ingest_md5():
         data = parse_md5_file(md5_file)
         add_md5(data)
 
+
 def truncate():
     from django.db import connection
 
@@ -592,8 +593,8 @@ def run():
 
     # fetch the new data formats
     fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
-    #fetcher.clean()
-    #fetcher.fetch_metadata_from_folder()
+    # fetcher.clean()
+    # fetcher.fetch_metadata_from_folder()
 
     truncate()
 
