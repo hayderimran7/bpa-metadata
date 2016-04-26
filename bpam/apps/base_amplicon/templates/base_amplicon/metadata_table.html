@@ -49,11 +49,11 @@
                 <td>
                     <a href="{% url 'base_amplicon:amplicon' data.pk %}">{{ data.bpa_id }}</a>
                 </td>
-                <td>{{ data.sra_id }}</td>
+                <td>{{ data.bpa_id.sra_id |default:"" }}</td>
                 <td>{{ data.sample_extraction_id }}</td>
-                <td>{{ data.name }}</td>
+                <td>{{ data.name |default:"" }}</td>
                 <td>{{ data.sequencing_facility }}</td>
-                <td>{{ data.sequencing_run_number }}</td>
+                <td>{{ data.sequencing_run_number |default:"" }}</td>
                 <td>{{ data.target }}</td>
                 <td>{{ data.index }}</td>
                 <td>
