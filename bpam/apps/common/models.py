@@ -32,6 +32,7 @@ class BPAUniqueID(models.Model):
     """
 
     bpa_id = models.CharField(_('BPA ID'), max_length=200, blank=False, primary_key=True, unique=True, help_text='Unique BPA ID')
+    sra_id = models.CharField(_('SRA ID'), max_length=12, blank=True, null=True, unique=True, help_text='SRA ID')
     project = models.ForeignKey(BPAProject)
     note = models.TextField(blank=True)
 

@@ -10,6 +10,7 @@
         <thead>
             <tr>
                 <th>BPA ID</th>
+                <th>SRA biosample accession</th>
                 <th>Sample Extraction ID</th>
                 <th>Name</th>
                 <th class="filter-select filter-exact" data-placeholder="Facility">Facility</th>
@@ -27,6 +28,7 @@
         <tfoot>
             <tr>
                 <th>BPA ID</th>
+                <th>SRA biosample accession</th>
                 <th>Sample Extraction ID</th>
                 <th>Name</th>
                 <th>Facility</th>
@@ -47,6 +49,7 @@
                 <td>
                     <a href="{% url 'base_amplicon:amplicon' data.pk %}">{{ data.bpa_id }}</a>
                 </td>
+                <td>{{ data.sra_id }}</td>
                 <td>{{ data.sample_extraction_id }}</td>
                 <td>{{ data.name }}</td>
                 <td>{{ data.sequencing_facility }}</td>
