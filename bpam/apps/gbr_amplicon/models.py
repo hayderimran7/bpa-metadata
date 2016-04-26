@@ -67,16 +67,8 @@ class AmpliconSequenceFile(SequenceFile):
     metadata = models.ForeignKey(AmpliconSequencingMetadata)
     sample = models.ForeignKey(GBRSample)
 
-    def get_url(self):
-        uj = urlparse.urljoin
-        uq = urllib.quote
-
-        return uj(settings.BPA_GBR_URL, "%s/%s/%s" % (
-            'gbr/amplicons',
-            self.metadata.target.lower(),
-            uq(self.filename)))
-
-    url = property(get_url)
+    def get_path_parts(self):
+        return ('gbr/amplicons', self.metadata.target.lower())
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")

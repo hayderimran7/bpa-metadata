@@ -1,6 +1,7 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from django.shortcuts import render
 from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
+from apps.common.models import BPAMirror
 
 
 class IndexView(TemplateView):
@@ -20,6 +21,11 @@ class SequenceFileListView(ListView):
     queryset = MelanomaSequenceFile.objects.select_related(
         'sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification')
     # paginate_by = settings.DEFAULT_PAGINATION
+
+    def get_context_data(self, **kwargs):
+        context = super(ListView, self).get_context_data(**kwargs)
+        context['mirrors'] = BPAMirror.objects.all()
+        return context
 
 
 class ArrayListView(ListView):
@@ -44,6 +50,7 @@ class SampleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         context['sequencefiles'] = MelanomaSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        context['mirrors'] = BPAMirror.objects.all()
 
         return context
 

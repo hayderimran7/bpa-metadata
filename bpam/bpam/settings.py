@@ -392,8 +392,6 @@ if env.get("DEBUG_TOOLBAR", False):
     INTERNAL_IPS = ('127.0.0.1', '172.16.2.189',)  # explicitly set this for your environment
 
 # downloads URL
-BPA_BASE_URL = 'https://downloads.bioplatforms.com/'
-BPA_GBR_URL = 'https://downloads.bioplatforms.com/'
 DEFAULT_PAGINATION = 50
 
 # This honours the X-Forwarded-Host header set by our nginx frontend when

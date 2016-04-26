@@ -72,23 +72,14 @@ class MetagenomicsSequenceFile(SequenceFile):
     """
 
     project_name = 'base_metagenomics'
-
     sample = models.ForeignKey(MetagenomicsSample)
     extraction = models.ForeignKey(Extraction, null=True)
     run = models.ForeignKey(MetagenomicsRun, null=True)
     protocol = models.ForeignKey(MetagenomicsProtocol, null=True)
     index = models.CharField(_('Index'), max_length=32, blank=True, null=True)
 
-    def get_url(self):
-        uj = urlparse.urljoin
-        uq = urllib.quote
-
-        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
-            'base',
-            'metagenomics',
-            uq(self.filename)))
-
-    url = property(get_url)
+    def get_path_parts(self):
+        return ('base', 'metagenomics')
 
     class Meta:
         verbose_name_plural = _("Metagenomics Sequence Files")

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic import TemplateView, ListView, DetailView
+from apps.common.models import BPAMirror
 
 from .models import Sheet
 
@@ -37,7 +38,8 @@ class SheetDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SheetDetailView, self).get_context_data(**kwargs)
-        context["sequencefiles"] = []
+        context['sequencefiles'] = []
+        context['mirrors'] = BPAMirror.objects.all()
         return context
 
 

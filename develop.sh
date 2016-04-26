@@ -207,6 +207,9 @@ shell)
 admin)
     docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
     ;;
+set_mirrors)
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin set_mirrors
+    ;;
 superuser)
     docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser
     ;;

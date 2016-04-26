@@ -76,16 +76,8 @@ class AmpliconSequenceFile(SequenceFile):
     run = models.ForeignKey(AmpliconRun)
     sample = models.ForeignKey(BASESample)
 
-    def get_url(self):
-        uj = urlparse.urljoin
-        uq = urllib.quote
-
-        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
-            'base/amplicons',
-            self.metadata.target.lower(),
-            uq(self.filename)))
-
-    url = property(get_url)
+    def get_path_parts(self):
+        return ('base/amplicons', self.metadata.target.lower())
 
     class Meta:
         verbose_name_plural = _("Amplicon Sequence Files")

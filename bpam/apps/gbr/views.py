@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 
 from .models import GBRSample, GBRSequenceFile, CollectionEvent, CollectionSite
 from apps.gbr_amplicon.models import AmpliconSequencingMetadata
+from apps.common.models import BPAMirror
 
 
 class GBRView(TemplateView):
@@ -33,6 +34,7 @@ class SampleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         context['sequencefiles'] = GBRSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        context['mirrors'] = BPAMirror.objects.all()
 
         return context
 

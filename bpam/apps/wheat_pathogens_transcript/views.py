@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
+from apps.common.models import BPAMirror
 from .models import (
     WheatPathogenTranscriptSample,
     WheatPathogenTranscriptSequenceFile
@@ -30,6 +31,7 @@ class SampleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
+        context['mirrors'] = BPAMirror.objects.all()
         context['sequencefiles'] = WheatPathogenTranscriptSequenceFile.objects.filter(
             sample__bpa_id=context['sample'].bpa_id)
 

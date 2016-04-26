@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
+from apps.common.models import BPAMirror
 
 from .models import (
     Extraction,
@@ -72,6 +73,7 @@ class SampleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         context['sequencefiles'] = MetagenomicsSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        context['mirrors'] = BPAMirror.objects.all()
         return context
 
     def get_object(self):

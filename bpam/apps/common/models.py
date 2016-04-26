@@ -6,6 +6,27 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 
+class BPAMirror(models.Model):
+    """
+    A download site, offering the BPA Archive catalogue
+    via a base prefix.
+    """
+    name = models.CharField(max_length=30, primary_key=True)
+    base_url = models.URLField(max_length=200)
+    order = models.IntegerField(unique=True)
+
+    def __repr__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['order']
+
+    @classmethod
+    def primary(cls):
+        "Returns the lowest order (primary) mirror"
+        return cls.objects.all()[0]
+
+
 class BPAProject(models.Model):
     """
     The BPA project
@@ -292,13 +313,18 @@ class SequenceFile(models.Model):
         else:
             return False
 
-    def get_url(self, source_path="all"):
+    def get_path_parts(self):
+        return (self.project_name, 'all')
+
+    def get_url(self, mirror=None):
         uj = urlparse.urljoin
         uq = urllib.quote
 
-        return uj(settings.BPA_BASE_URL, "%s/%s/%s" % (
-            self.project_name,
-            source_path,
+        if mirror is None:
+            mirror = BPAMirror.primary()
+
+        return uj(mirror.base_url, "%s/%s" % (
+            '/'.join(uq(t) for t in self.get_path_parts()),
             uq(self.filename)))
 
     url = property(get_url)

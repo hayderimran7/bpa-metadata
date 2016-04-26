@@ -1,3 +1,5 @@
+{% load commontags %}
+
 {% if sequencefiles %}
 <div class="panel panel-success">
     <div class="panel-heading">
@@ -9,12 +11,17 @@
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#filetable" aria-controls="home" role="tab" data-toggle="tab">Sequence Files</a></li>
-        <li role="presentation"><a href="#urllist" aria-controls="profile" role="tab" data-toggle="tab">URL List</a></li>
+        {% for mirror in mirrors %}
+        <li role="presentation" {% if forloop.first %}class="active"{% endif %}><a href="#filetable{{forloop.counter}}" aria-controls="home" role="tab" data-toggle="tab">Sequence Files (Mirror {{forloop.counter}})</a></li>
+        {% endfor %}
+        {% for mirror in mirrors %}
+        <li role="presentation"><a href="#urllist{{forloop.counter}}" aria-controls="profile" role="tab" data-toggle="tab">URL List (Mirror {{forloop.counter}})</a></li>
+        {% endfor %}
     </ul>
 
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="filetable">
+        {% for mirror in mirrors %}
+        <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="filetable{{forloop.counter}}">
             <div class="panel-body">
                 <table id="sequence-list" class="table table-striped">
                     <thead>
@@ -35,7 +42,7 @@
                                 <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
                                       class="glyphicon glyphicon-flag"></span>
                                 {% endif %}
-                                <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
+                                <a href="{% sample_url mirror sfile %}">{{ sfile.filename }}</a>
                             </td>
                             <td class="md5">{{ sfile.md5 }}</td>
                             <td>{{ sfile.run|default_if_none:"" }}</td>
@@ -45,8 +52,10 @@
                 </table>
             </div>
         </div>
+        {% endfor %}
 
-        <div role="tabpanel" class="tab-pane" id="urllist">
+        {% for mirror in mirrors %}
+        <div role="tabpanel" class="tab-pane" id="urllist{{forloop.counter}}">
             <div class="panel-heading">
                 You can use the URL list below with tools like <code>wget</code> or <code>curl</code> to fetch only the listed sequence files from the archive.
             </div>
@@ -55,12 +64,13 @@
                 <p>
                 <samp>
                     {% for sfile in sequencefiles %}
-                    {{ sfile.get_url }}
+                    {% sample_url mirror sfile %}<br/>
                     {% endfor %}
                 </p>
                 </samp>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 
