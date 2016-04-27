@@ -26,6 +26,10 @@ urlpatterns = patterns(
         view=views.ContactsView.as_view(),
         name='contacts'),
     url(
+        regex=r'^acknowledgements$',
+        view=views.AcknowledgementView.as_view(),
+        name='acknowledgement'),
+    url(
         regex=r'^information$',
         view=views.InfoView.as_view(),
         name='information'),
