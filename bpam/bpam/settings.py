@@ -3,7 +3,6 @@
 
 import os
 
-from unipath import Path
 from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
@@ -14,14 +13,13 @@ BPA_VERSION = VERSION
 SCRIPT_NAME = env.get("script_name", os.environ.get("HTTP_SCRIPT_NAME", ""))
 FORCE_SCRIPT_NAME = env.get("force_script_name", "") or SCRIPT_NAME or None
 
-CCG_WEBAPP_ROOT = os.path.dirname(os.path.realpath(__file__))
-CCG_WRITABLE_DIRECTORY = env.get("writable_directory", os.path.join(CCG_WEBAPP_ROOT, "scratch"))
+WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-PROJECT_DIR = Path(__file__).ancestor(1)
-PROJECT_NAME = os.path.basename(CCG_WEBAPP_ROOT)
+# a directory that will be writable by the webserver, for storing various files...
+WRITABLE_DIRECTORY = env.get("writable_directory", "/tmp")
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child('bpam.templates'),
+    os.path.join(WEBAPP_ROOT, 'bpam', 'templates'),
 )
 
 SECRET_KEY = env.get("secret_key", "change-it")
@@ -62,23 +60,24 @@ if env.get("ENABLE_EMAIL", False):
     EMAIL_APP_NAME = "BPA Metadata "
     EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
 
+    SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
+    RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
+    LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
+    KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
+    REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
+
     if EMAIL_HOST:
         EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     elif DEBUG:
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     else:
         EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-        EMAIL_FILE_PATH = os.path.join(CCG_WRITABLE_DIRECTORY, "mail")
+        EMAIL_FILE_PATH = os.path.join(WRITABLE_DIRECTORY, "mail")
         if not os.path.exists(EMAIL_FILE_PATH):
             from distutils.dir_util import mkpath
-
             mkpath(EMAIL_FILE_PATH)
-
-    SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
-    RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
-    LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
-    KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
-    REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
@@ -220,11 +219,11 @@ USE_TZ = True
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
-MEDIA_ROOT = env.get('media_root', PROJECT_DIR.child("media"))
+MEDIA_ROOT = env.get('media_root', os.path.join(WEBAPP_ROOT, 'static', 'media'))
 MEDIA_URL = ''
 
 # These may be overridden, but it would be nice to stick to this convention
-STATIC_ROOT = env.get('static_root', os.path.join(CCG_WEBAPP_ROOT, 'static'))
+STATIC_ROOT = env.get('static_root', os.path.join(WEBAPP_ROOT, 'static'))
 STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 
 
@@ -305,7 +304,11 @@ INSTALLED_APPS = (
     'djangosecure',
 )
 
-LOG_DIRECTORY = env.get('log_directory', os.path.join(CCG_WEBAPP_ROOT, "log"))
+
+# #
+# # LOGGING
+# #
+LOG_DIRECTORY = env.get('log_directory', os.path.join(WEBAPP_ROOT, "log"))
 try:
     if not os.path.exists(LOG_DIRECTORY):
         os.mkdir(LOG_DIRECTORY)
@@ -359,6 +362,13 @@ LOGGING = {
             'when': 'midnight',
             'formatter': 'db'
         },
+         'access_logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIRECTORY, 'access.log'),
+            'when': 'midnight',
+            'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': [],
@@ -367,22 +377,28 @@ LOGGING = {
             'include_html': True
         }
     },
-'root': {
-    'handlers': ['console', 'errorfile'],
-    'level': 'ERROR',
-},
-'loggers': {
-    'django': {
-        'handlers': ['null'],
-        'propagate': False,
-        'level': 'INFO',
+    'root': {
+        'handlers': ['console', 'errorfile', 'mail_admins'],
+        'level': 'ERROR',
     },
-    'registry_log': {
-        'handlers': ['registryfile', 'console'],
-        'level': 'DEBUG',
-        'propagate': False,
-    },
-}
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'registry_log': {
+            'handlers': ['registryfile', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # The following logger used by django useraudit
+        'django.security': {
+            'handlers': ['access_logfile', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
+    }
 }
 
 
@@ -419,13 +435,10 @@ else:
     }
 
     SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-    SESSION_FILE_PATH = CCG_WRITABLE_DIRECTORY
+    SESSION_FILE_PATH = WRITABLE_DIRECTORY
 
 CHMOD_USER = env.get("repo_user", "apache")
 CHMOD_GROUP = env.get("repo_group", "apache")
-
-REPO_FILES_ROOT = env.get("repo_files_root", os.path.join(CCG_WRITABLE_DIRECTORY, 'files'))
-QUOTE_FILES_ROOT = env.get("quote_files_root", os.path.join(CCG_WRITABLE_DIRECTORY, 'quotes'))
 
 # this is here to placate the new system check framework, its also set in testsettings,
 # where it belongs
