@@ -150,7 +150,6 @@ class BASESearchView(AbstractSearchableListView):
         except Exception, ex:
             logger.error("Error occurred during search: request.POST={}".format(request.POST))
             logger.error(ex)
-            raise ex
             results = "An error occurred on the server"
 
         json.dump(results, response)

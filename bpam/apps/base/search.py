@@ -252,9 +252,7 @@ class Searcher(object):
 
         def sc_display(_bpa_id):
             try:
-                context = SampleContext.objects.select_related('bpa_id',
-                                                               'context',
-                                                               'context__site__vegetation_type').get(bpa_id=_bpa_id)
+                context = SampleContext.objects.select_related('bpa_id').get(bpa_id=_bpa_id)
             except SampleContext.DoesNotExist:
                 return ""
 
