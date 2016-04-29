@@ -38,7 +38,7 @@ Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|in
 ```
 
 ## Sites
-- *Production* https://ccgapps.com.au/bpa-metadata/
+- *Production* https://download.ccgapps.com.au/metadata/
 - *Staging* https://staging.ccgapps.com.au/bpa-metadata/
 
 ## Licence
