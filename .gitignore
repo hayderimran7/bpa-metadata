@@ -31,3 +31,5 @@ bpam/bpam/static/
 bpam/.ropeproject/
 .ropeproject/
 data/
+virt*/
+.version
