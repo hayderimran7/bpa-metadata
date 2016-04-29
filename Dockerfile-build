@@ -1,5 +1,5 @@
 # Container used to build bpa-metadata
-FROM muccg/bpam-base
+FROM muccg/bpametadata-base
 MAINTAINER https://github.com/muccg/bpa-metadata
 
 ARG ARG_GIT_TAG=next_release

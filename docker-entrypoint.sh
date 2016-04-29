@@ -249,6 +249,29 @@ then
     exec django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml
 fi
 
+# prepare a tarball of build
+if [ "$COMMAND" = 'tarball' ]
+then
+    echo "[Run] Preparing a tarball of build"
+
+    cd /app
+    rm -rf /app/*
+    echo $GIT_TAG
+    set -x
+    git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-metadata.git .
+
+    # install python deps
+    # Note: Environment vars are used to control the bahviour of pip (use local devpi for instance)
+    pip install ${PIP_OPTS} --upgrade -r requirements/production.txt
+    pip install -e .
+    set +x
+    
+    # create release tarball
+    DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/bpam"
+    cd /data
+    exec tar -cpzf bpametadata-${GIT_TAG}.tar.gz ${DEPS}
+fi
+
 echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest|runscript]"
 echo "[RUN]: $@"
 
