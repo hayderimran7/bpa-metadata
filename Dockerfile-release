@@ -7,7 +7,7 @@ ENV GIT_TAG $ARG_GIT_TAG
 
 ENV DJANGO_SETTINGS_MODULE bpam.prodsettings
 
-ADD build/bpatrack-$GIT_TAG.tar.gz /
+ADD build/bpametadata-$GIT_TAG.tar.gz /
 
 EXPOSE 9100 9101
 VOLUME ["/data"]
