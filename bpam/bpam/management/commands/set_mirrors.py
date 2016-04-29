@@ -13,6 +13,10 @@ class Command(BaseCommand):
                 'name': 'CCG',
                 'base_url': 'https://downloads.bioplatforms.com'
             },
+            {
+                'name': 'QCIF',
+                'base_url': 'https://downloads-qcif.bioplatforms.com'
+            },
         ]
         [BPAMirror.objects.get_or_create(order=i, **t) for i, t in enumerate(sites)]
         print("Primary mirror is `%s'." % (repr(BPAMirror.primary())))
