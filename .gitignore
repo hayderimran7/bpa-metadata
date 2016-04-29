@@ -33,3 +33,4 @@ bpam/.ropeproject/
 data/
 virt*/
 .version
+build/
