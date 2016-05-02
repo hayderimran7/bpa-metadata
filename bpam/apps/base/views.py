@@ -23,7 +23,7 @@ from apps.base_454.models import Sample454
 from search_export import OTUExporter
 from ..base_otu.models import OperationalTaxonomicUnit
 from .search import Searcher
-from .forms import BASESearchForm
+from .forms import BASESearchForm, RequestAccessForm
 
 logger = logging.getLogger("rainbow")
 
@@ -363,11 +363,26 @@ class TaxonomyLookUpView(View):
 class ContactsView(TemplateView):
     template_name = 'base/contacts.html'
 
+
 class AcknowledgementView(TemplateView):
     template_name = 'base/acknowledgement.html'
 
+
 class RequestAccess(TemplateView):
     template_name = 'base/request_access.html'
+    form_class = RequestAccessForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # Mail it
+            return HttpResponseRedirect('/success/')
+
+        return render(request, self.template_name, {'form': form})
 
 
 class SearchExportView(View):

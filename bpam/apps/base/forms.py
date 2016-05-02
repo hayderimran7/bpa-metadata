@@ -165,3 +165,9 @@ class BASESearchForm(forms.Form):
             pass
 
         return integer_conversion_ok or float_conversion_ok
+
+
+class RequestAccessForm(forms.Form):
+    from_email = forms.EmailField(required=True)
+    subject = forms.CharField(required=True)
+    message = forms.CharField(widget=forms.Textarea)

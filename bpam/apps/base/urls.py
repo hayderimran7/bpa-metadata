@@ -34,7 +34,7 @@ urlpatterns = patterns(
         view=views.InfoView.as_view(),
         name='information'),
     url(
-        regex=r'^accessrequest',
+        regex=r'^requestaccess',
         view=views.RequestAccess.as_view(),
         name='requestaccess'),
     url(
