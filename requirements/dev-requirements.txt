@@ -1,6 +1,6 @@
-flake8
 Werkzeug
 coverage
 django-discover-runner
 docutils
+flake8
 pygments
