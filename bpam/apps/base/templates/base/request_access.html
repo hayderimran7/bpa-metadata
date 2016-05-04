@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}BASE{% endblock %}
-
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 {% block content %}
 
 {% load django_bootstrap_breadcrumbs %}
@@ -13,51 +13,27 @@
 
 
 <div id="contacts">
-    <div class="row">
-        <div class="col-sm-offset-3 col-sm-6">
-            <div class="alert alert-info" role="alert">
-                <span class="glyphicon glyphicon-info-sign"> </span>
-                BASE data is publically available.  For administrative purposes
-                and to enable us to assess the utility of the database, it's
-                frequency of utilisation and the type of use data is being put
-                to, we require a "request for access" to be processed.
-            </div>
-            <form name="sentMessage" class="well" id="contactForm" action="base_access_request" method="post" >
-                <legend>BASE Data Access Request</legend>
-                <div class="control-group">
-                    <div class="controls">
-                        <input type="text" class="form-control"
-                        placeholder="Full Name" id="name" required
-                        data-validation-required-message="Please enter your name"/>
+  <div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+      <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-info-sign"> </span>
+        BASE data is publically available.  For administrative purposes
+        and to enable us to assess the utility of the database, it's
+        frequency of utilisation and the type of use data is being put
+        to, we require a "request for access" to be processed.
+      </div>
+      <form name="sentMessage" class="well" id="contactForm" action="{% url 'base:requestaccess' %}" method="post">
+        {% csrf_token %}
+        <legend>BASE Data Access Request</legend>
+        {{ form.as_p }}
 
-                        <p class="help-block"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <input type="email" class="form-control" placeholder="Email"
-                        id="email" required
-                        data-validation-required-message="Please enter your email address"/>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <div class="controls">
-                        <textarea rows="10" cols="100" class="form-control"
-                            placeholder="Message" id="message" required
-                            data-validation-required-message="Please enter your message" minlength="5"
-                            data-validation-minlength-message="Min 5 characters"
-                            maxlength="999" style="resize:none">
-                        </textarea>
-                    </div>
-                </div>
-                <div id="success"></div>
-                <!-- For success/fail messages -->
-                <button type="submit" class="btn btn-primary pull-right">Send</button>
-                <br/>
-            </form>
-        </div>
+        <div id="success"></div>
+        <!-- For success/fail messages -->
+        <button type="submit" class="btn btn-primary pull-right">Send</button>
+        <br/>
+      </form>
     </div>
+  </div>
 </div>
 
 

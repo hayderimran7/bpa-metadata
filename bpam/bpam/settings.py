@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-/MAIL
 # Django settings for bpa metadata project.
 
 import os
@@ -45,39 +45,13 @@ ADMINS = [
 ]
 MANAGERS = ADMINS
 
-
-if env.get("ENABLE_EMAIL", False):
-    print('Enabling Email')
-    # email settings for sending email error alerts etc
-    EMAIL_HOST = env.get("email_host", "")
-    EMAIL_PORT = env.get("email_port", 25)
-
-    EMAIL_HOST_USER = env.get("email_host_user", "")
-    EMAIL_HOST_PASSWORD = env.get("email_host_password", "")
-
-    EMAIL_USE_TLS = env.get("email_use_tls", False)
-
-    EMAIL_APP_NAME = "BPA Metadata "
-    EMAIL_SUBJECT_PREFIX = env.get("email_subject_prefix", "PROD " if env.get("production", False) else "DEV ")
-
-    SERVER_EMAIL = env.get("server_email", "bpam@ccgapps.com.au")
-    RETURN_EMAIL = env.get("return_email", "noreply@ccgapps.com.au")
-    LOGS_TO_EMAIL = env.get("logs_to_email", "log_email@ccgapps.com.au")
-    KEYS_TO_EMAIL = env.get("keys_to_email", "key_email@ccgapps.com.au")
-    REGISTRATION_TO_EMAIL = env.get("registration_to_email", "reg_email@ccgapps.com.au")
-
-    if EMAIL_HOST:
-        EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    elif DEBUG:
-        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    else:
-        EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-        EMAIL_FILE_PATH = os.path.join(WRITABLE_DIRECTORY, "mail")
-        if not os.path.exists(EMAIL_FILE_PATH):
-            from distutils.dir_util import mkpath
-            mkpath(EMAIL_FILE_PATH)
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+# mailgun email
+DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY')
+MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME')
+EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Metadata] ')
+SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 

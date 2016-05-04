@@ -13,6 +13,9 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 from django.http import HttpResponse
 from django.views.generic.base import View
+from django.shortcuts import render, redirect
+
+from django.core.mail import BadHeaderError, send_mail
 
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis, CollectionSite
 from apps.base_contextual import sample_context
@@ -368,7 +371,8 @@ class AcknowledgementView(TemplateView):
     template_name = 'base/acknowledgement.html'
 
 
-class RequestAccess(TemplateView):
+class RequestAccessView(TemplateView):
+
     template_name = 'base/request_access.html'
     form_class = RequestAccessForm
 
@@ -379,8 +383,18 @@ class RequestAccess(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            # Mail it
-            return HttpResponseRedirect('/success/')
+            from_email = form.cleaned_data['from_email']
+            name = form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            try:
+                send_mail("BASE Access Request", message, from_email, ['sthysel@gmail.com'])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+
+            logger.info("Sent BASE Request email from {} {}".format(from_email, message))
+            return render(request, self.template_name, {'form': form})
+        else:
+            logger.error("Error sending BASE Access Request: {}".format(form))
 
         return render(request, self.template_name, {'form': form})
 

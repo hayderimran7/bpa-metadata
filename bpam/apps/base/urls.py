@@ -2,7 +2,6 @@ from django.conf.urls import patterns, url
 
 from . import views
 
-
 urlpatterns = patterns(
     '',
     url(
@@ -35,7 +34,7 @@ urlpatterns = patterns(
         name='information'),
     url(
         regex=r'^requestaccess',
-        view=views.RequestAccess.as_view(),
+        view=views.RequestAccessView.as_view(),
         name='requestaccess'),
     url(
         regex=r'^searchexport',
