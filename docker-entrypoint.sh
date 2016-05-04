@@ -262,7 +262,7 @@ then
 
     # install python deps
     # Note: Environment vars are used to control the bahviour of pip (use local devpi for instance)
-    pip install ${PIP_OPTS} --upgrade -r requirements/production.txt
+    pip install ${PIP_OPTS} --upgrade -r requirements/runtime-requirements.txt
     pip install -e .
     set +x
     
