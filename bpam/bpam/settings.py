@@ -422,3 +422,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 DOWNLOADS_CHECKER_USER = env.get('downloads_checker_user', 'downloads_checker')
 DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'ch3ck3r')
 DOWNLOADS_CHECKER_SLEEP = env.get('downloads_checker_sleep', 0.0)
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+

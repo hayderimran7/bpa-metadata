@@ -25,11 +25,11 @@
       <form name="sentMessage" class="well" id="contactForm" action="{% url 'base:requestaccess' %}" method="post">
         {% csrf_token %}
         <legend>BASE Data Access Request</legend>
-        {{ form.as_p }}
+        {{ form | crispy }}
 
         <div id="success"></div>
         <!-- For success/fail messages -->
-        <button type="submit" class="btn btn-primary pull-right">Send</button>
+        <button type="submit" class="btn btn-primary ">Send</button>
         <br/>
       </form>
     </div>
