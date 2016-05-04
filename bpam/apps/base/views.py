@@ -7,6 +7,7 @@ import zipfile
 
 from cStringIO import StringIO
 
+from django.conf import settings
 from django.http import Http404
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormMixin
@@ -387,14 +388,13 @@ class RequestAccessView(TemplateView):
             name = form.cleaned_data['name']
             message = form.cleaned_data['message']
             try:
-                send_mail("BASE Access Request", message, from_email, ['sthysel@gmail.com'])
+                send_mail("BASE Access Request", message, from_email, settings.BASE_REQUEST_LIST)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
 
             logger.info("Sent BASE Request email from {} {}".format(from_email, message))
+
             return render(request, self.template_name, {'form': form})
-        else:
-            logger.error("Error sending BASE Access Request: {}".format(form))
 
         return render(request, self.template_name, {'form': form})
 

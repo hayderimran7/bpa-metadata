@@ -47,11 +47,17 @@ MANAGERS = ADMINS
 
 # mailgun email
 DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
-EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+# default to mailgun, but if the API key is not set, fall back to console
+EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django_mailgun.MailgunBackend')
 MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY')
+if MAILGUN_ACCESS_KEY == "NOTSET":
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME')
 EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Metadata] ')
 SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+
+# list of emails to send BASE access requests to
+BASE_REQUEST_LIST = env.get('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgapps.com.au'])
 
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 

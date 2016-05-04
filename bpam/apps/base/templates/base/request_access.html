@@ -22,16 +22,9 @@
         frequency of utilisation and the type of use data is being put
         to, we require a "request for access" to be processed.
       </div>
-      <form name="sentMessage" class="well" id="contactForm" action="{% url 'base:requestaccess' %}" method="post">
-        {% csrf_token %}
         <legend>BASE Data Access Request</legend>
-        {{ form | crispy }}
-
-        <div id="success"></div>
-        <!-- For success/fail messages -->
-        <button type="submit" class="btn btn-primary ">Send</button>
+        {% crispy form %}
         <br/>
-      </form>
     </div>
   </div>
 </div>

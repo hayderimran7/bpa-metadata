@@ -1,5 +1,8 @@
 # coding=utf-8
 from django import forms
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+
 from apps.base_otu.models import OperationalTaxonomicUnit
 
 KINGDOMS = list(OperationalTaxonomicUnit.KINGDOMS)
@@ -168,6 +171,27 @@ class BASESearchForm(forms.Form):
 
 
 class RequestAccessForm(forms.Form):
-    from_email = forms.EmailField(required=True)
-    name = forms.CharField(required=True)
-    message = forms.CharField(widget=forms.Textarea)
+    from_email = forms.EmailField(
+        label="Your email address", 
+        required=True)
+
+    name = forms.CharField(
+        label="Your name",
+        required=True)
+
+    message = forms.CharField(
+        label="Request to Bioplatforms Australia",
+        initial="Please grant me access to the BASE project sequence data",
+        widget=forms.Textarea,
+        required=True,
+        max_length=1000)
+
+    def __init__(self, *args, **kwargs):
+        super(RequestAccessForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'id-basecontactform'
+        self.helper.form_class = 'well'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'requestaccess'
+
+        self.helper.add_input(Submit('submit', 'Submit'))

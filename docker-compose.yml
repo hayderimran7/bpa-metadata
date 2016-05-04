@@ -14,30 +14,15 @@ cache:
     service: cache
 
 
-nginx:
-  extends:
-    file: docker-compose-common.yml
-    service: nginx
-  links:
-    - uwsgi
-
 runserver:
   extends:
     file: docker-compose-common.yml
     service: runserver
+  environment:
+    - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
   volumes_from:
     - datadev
   links:
     - db
     - cache
 
-uwsgi:
-  extends:
-    file: docker-compose-common.yml
-    service: uwsgi
-  volumes_from:
-    - datadev
-  links:
-    - db
-    - cache
-    - runserver:web
