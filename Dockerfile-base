@@ -1,7 +1,7 @@
 FROM muccg/python-base:debian8-2.7
 MAINTAINER https://github.com/muccg/bpa-metadata
 
-ENV PROJECT_NAME bpam
+ENV PROJECT_NAME bpametadata
 ENV PROJECT_SOURCE https://github.com/muccg/bpa-metadata.git
 ENV DEPLOYMENT prod
 ENV PRODUCTION 1

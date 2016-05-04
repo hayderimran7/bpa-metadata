@@ -28,7 +28,7 @@ DOCKER_COMPOSE_BUILD_OPTS=''
 
 
 usage() {
-  cat << EOF
+    cat << EOF
   Wrapper script to call common tools while developing ${PROJECT_NAME}
 
   Environment:
@@ -47,6 +47,7 @@ usage() {
   OPTIONS:
   dev            Pull up stack and start developing
   dev_build      Build dev stack images
+  prod_build     Build production image from current tag or branch
   baseimage      Build base image
   buildimage     Build build image
   devimage       Build dev image
@@ -69,22 +70,22 @@ usage() {
   ${PROGNAME} dev_build
   ${PROGNAME} dev
 EOF
-  exit 1
+    exit 1
 }
 
 # logs and feedback
 info () {
-  printf "\r  [ \033[00;34mINFO\033[0m ] $1\n"
+    printf "\r  [ \033[00;34mINFO\033[0m ] $1\n"
 }
 
 success () {
-  printf "\r\033[2K  [ \033[00;32m OK \033[0m ] $1\n"
+    printf "\r\033[2K  [ \033[00;32m OK \033[0m ] $1\n"
 }
 
 fail () {
-  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-  echo ''
-  exit 1
+    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+    echo ''
+    exit 1
 }
 
 display_env() {
@@ -107,19 +108,19 @@ docker_options() {
     _pip_proxy
 
     if [ ${DOCKER_PULL} = "1" ]; then
-         DOCKER_BUILD_PULL="--pull=true"
-         DOCKER_COMPOSE_BUILD_PULL="--pull"
+        DOCKER_BUILD_PULL="--pull=true"
+        DOCKER_COMPOSE_BUILD_PULL="--pull"
     else
-         DOCKER_BUILD_PULL="--pull=false"
-         DOCKER_COMPOSE_BUILD_PULL=""
+        DOCKER_BUILD_PULL="--pull=false"
+        DOCKER_COMPOSE_BUILD_PULL=""
     fi
 
     if [ ${DOCKER_NO_CACHE} = "1" ]; then
-         DOCKER_BUILD_NOCACHE="--no-cache=true"
-         DOCKER_COMPOSE_BUILD_NOCACHE="--no-cache"
+        DOCKER_BUILD_NOCACHE="--no-cache=true"
+        DOCKER_COMPOSE_BUILD_NOCACHE="--no-cache"
     else
-         DOCKER_BUILD_NOCACHE="--no-cache=false"
-         DOCKER_COMPOSE_BUILD_NOCACHE=""
+        DOCKER_BUILD_NOCACHE="--no-cache=false"
+        DOCKER_COMPOSE_BUILD_NOCACHE=""
     fi
 
     DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS} ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} ${DOCKER_BUILD_PIP_PROXY}"
@@ -137,7 +138,7 @@ _http_proxy() {
 
     if [ ${SET_HTTP_PROXY} = "1" ]; then
         local http_proxy="http://${DOCKER_ROUTE}:3128"
-	CMD_ENV="${CMD_ENV} http_proxy=http://${DOCKER_ROUTE}:3128"
+        CMD_ENV="${CMD_ENV} http_proxy=http://${DOCKER_ROUTE}:3128"
         success "Proxy $http_proxy"
     else
         info 'Not setting http_proxy'
@@ -153,8 +154,8 @@ _pip_proxy() {
 
     if [ ${SET_PIP_PROXY} = "1" ]; then
         # use a local devpi install
-	PIP_INDEX_URL="http://${DOCKER_ROUTE}:3141/root/pypi/+simple/"
-	PIP_TRUSTED_HOST="${DOCKER_ROUTE}"
+        PIP_INDEX_URL="http://${DOCKER_ROUTE}:3141/root/pypi/+simple/"
+        PIP_TRUSTED_HOST="${DOCKER_ROUTE}"
     fi
 
     CMD_ENV="${CMD_ENV} NO_PROXY=${DOCKER_ROUTE} no_proxy=${DOCKER_ROUTE} PIP_INDEX_URL=${PIP_INDEX_URL} PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}"
@@ -173,10 +174,10 @@ _ci_ssh_agent() {
 
     # load key if defined by bamboo
     if [ -z ${bamboo_CI_SSH_KEY+x} ]; then
-	info "loading default ssh keys"
+        info "loading default ssh keys"
         ssh-add || true
     else
-	info "loading bamboo_CI_SSH_KEY ssh keys"
+        info "loading bamboo_CI_SSH_KEY ssh keys"
         ssh-add ${bamboo_CI_SSH_KEY} || true
     fi
 
@@ -300,13 +301,6 @@ create_release_tarball() {
     success "$(ls -lh build/* | grep ${gittag})"
 }
 
-create_release_image() {
-    info 'create release image'
-    # assumes that base image and release tarball have been created
-    _docker_release_build Dockerfile-release ${DOCKER_IMAGE}
-    success "$(docker images | grep ${DOCKER_IMAGE} | grep ${gittag}-${DATE} | sed 's/  */ /g')"
-}
-
 # Production
 start_prod() {
     info 'start prod'
@@ -334,8 +328,8 @@ create_prod_image() {
     for tag in "${DOCKER_IMAGE}:${gittag}" "${DOCKER_IMAGE}:${gittag}-${DATE}"; do
         info "Building ${PROJECT_NAME} ${tag}"
         set -x
-	      # don't try and pull the base image
-	      (${CMD_ENV}; docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f Dockerfile-prod .)
+        # don't try and pull the base image
+        (${CMD_ENV}; docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f Dockerfile-prod .)
         set +x
         success "$(docker images | grep ${DOCKER_IMAGE} | grep ${gittag} | sed 's/  */ /g')"
 
@@ -343,7 +337,7 @@ create_prod_image() {
             set -x
             docker push ${tag}
             set +x
-	          success "pushed ${tag}"
+            success "pushed ${tag}"
         fi
     done
 
@@ -352,10 +346,10 @@ create_prod_image() {
 
 # lint using flake8
 python_lint() {
-  info "python lint"
-  pip install 'flake8>=2.0,<2.1'
-  flake8 bpam --count
-  success "python lint"
+    info "python lint"
+    pip install 'flake8>=2.0,<2.1'
+    flake8 bpam --count
+    success "python lint"
 }
 
 # Test
@@ -480,14 +474,14 @@ make_virtualenv() {
     info "make virtualenv"
     # check requirements
     if ! which virtualenv > /dev/null; then
-      fail "virtualenv is required by develop.sh but it isn't installed."
+        fail "virtualenv is required by develop.sh but it isn't installed."
     fi
     if [ ! -e ${VIRTUALENV} ]; then
         virtualenv ${VIRTUALENV}
     fi
 
     if ! which docker-compose > /dev/null; then
-      pip install 'docker-compose<1.6' --upgrade || true
+        pip install 'docker-compose<1.6' --upgrade || true
     fi
     success "$(docker-compose --version)"
 }

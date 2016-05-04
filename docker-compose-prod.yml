@@ -23,12 +23,11 @@ nginxprod:
 
 uwsgiprod:
   image: muccg/bpametadata:${GIT_TAG}
-  command: uwsgi_fixtures
+  command: uwsgi
   environment:
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
-    - WAIT_FOR_MONGO=1
   volumes_from:
     - dataprod
   links:
