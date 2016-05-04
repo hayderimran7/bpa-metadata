@@ -1,36 +1,43 @@
-# data only container pattern
-data:
-  image: muccg/debian8-base
-  volumes:
-    - .:/app
-    - ./data/dev:/data
+datadev:
+  extends:
+    file: docker-compose-common.yml
+    service: datadev
 
 db:
-  image: mdillon/postgis:9.5
-  environment:
-    - POSTGRES_USER=webapp
-    - POSTGRES_PASSWORD=webapp
-  ports:
-    - 5432
+  extends:
+    file: docker-compose-common.yml
+    service: db
 
 cache:
-  image: memcached:1.4
+  extends:
+    file: docker-compose-common.yml
+    service: cache
+
+
+nginx:
+  extends:
+    file: docker-compose-common.yml
+    service: nginx
+  links:
+    - uwsgi
 
 runserver:
-  build: .
-  dockerfile: Dockerfile-dev
-  command: runserver
-  environment:
-    - DJANGO_SETTINGS_MODULE=bpam.settings
-    - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
-    - DJANGO_MAILGUN_SERVER_NAME=${DJANGO_MAILGUN_SERVER_NAME}
-    - DBUSER=webapp
-    - WAIT_FOR_DB=1
-    - WAIT_FOR_CACHE=1
+  extends:
+    file: docker-compose-common.yml
+    service: runserver
   volumes_from:
-    - data
-  ports:
-    - "8000:8000"
+    - datadev
   links:
     - db
     - cache
+
+uwsgi:
+  extends:
+    file: docker-compose-common.yml
+    service: uwsgi
+  volumes_from:
+    - datadev
+  links:
+    - db
+    - cache
+    - runserver:web
