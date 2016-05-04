@@ -46,7 +46,7 @@ usage() {
 
   OPTIONS:
   dev            Pull up stack and start developing
-  dev_rebuild    Rebuild dev stack images
+  dev_build       Build dev stack images
   baseimage      Build base image
   buildimage     Build build image
   devimage       Build dev image
@@ -66,7 +66,7 @@ usage() {
 
   Example, start dev with no proxy and rebuild everything:
   SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ${PROGNAME} dev_rebuild
-  ${PROGNAME} dev_rebuild
+  ${PROGNAME} dev_build
   ${PROGNAME} dev
 EOF
   exit 1
