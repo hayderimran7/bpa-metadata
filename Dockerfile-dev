@@ -1,6 +1,6 @@
 #
-FROM muccg/rdrf-build
-MAINTAINER https://github.com/muccg/rdrf
+FROM muccg/bpametadata-build
+MAINTAINER https://github.com/muccg/bpametadata
 
 #At build time changing these args allow us to use a local devpi mirror
 # Unchanged, these defaults allow pip to behave as noremal
@@ -26,16 +26,16 @@ WORKDIR /app
 
 # Add our python deps in multiple docker layers
 # hgvs was failing due to lack of nose, hence the order
-COPY rdrf/dev-requirements.txt /app/rdrf/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r rdrf/dev-requirements.txt
-COPY rdrf/test-requirements.txt /app/rdrf/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r rdrf/test-requirements.txt
-COPY rdrf/runtime-requirements.txt /app/rdrf/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r rdrf/runtime-requirements.txt
+COPY ./requirements/dev-requirements.txt /app/bpam/
+RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/dev-requirements.txt
+COPY ./requirements/test-requirements.txt /app/bpam/
+RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/test-requirements.txt
+COPY ./requirements/runtime-requirements.txt /app/bpam/
+RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/runtime-requirements.txt
 
 # Copy code and install the app
 COPY . /app
-RUN pip ${PIP_OPTS} install --upgrade -e rdrf
+RUN pip ${PIP_OPTS} install --upgrade -e bpam
 
 EXPOSE 8000 9000 9001 9100 9101
 VOLUME ["/app", "/data"]

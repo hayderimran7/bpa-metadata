@@ -1,11 +1,6 @@
-Django==1.8.12
-psycopg2>=2.5.0,<2.6.0
-flake8
 Werkzeug
 coverage
 django-discover-runner
-tendo
 docutils
+flake8
 pygments
-docopt
-jinja2
