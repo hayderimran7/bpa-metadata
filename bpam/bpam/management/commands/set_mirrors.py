@@ -10,8 +10,8 @@ class Command(BaseCommand):
         BPAMirror.objects.all().delete()
         sites = [
             {
-                'name': 'CCG',
-                'base_url': 'https://downloads.bioplatforms.com'
+                'name': 'MU',
+                'base_url': 'https://downloads-mu.bioplatforms.com'
             },
             {
                 'name': 'QCIF',
