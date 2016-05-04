@@ -1,4 +1,4 @@
-Django==1.8.12
+Django==1.8.13
 Django-suit==0.2.15
 django-crispy-forms
 django-mailgun==0.9.1

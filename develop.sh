@@ -8,72 +8,11 @@ readonly PROGNAME=$(basename $0)
 
 . ./lib.sh
 
-
 CMD_ENV="DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY} DJANGO_MAILGUN_SERVER_NAME=${DJANGO_MAILGUN_SERVER_NAME} PYTHONUNBUFFERED=1"
 DOCKER_BUILD_OPTS=''
 DOCKER_ROUTE=''
 DOCKER_RUN_OPTS='-e PIP_INDEX_URL -e PIP_TRUSTED_HOST'
 DOCKER_COMPOSE_BUILD_OPTS=''
-
-
-create_release_image() {
-  info 'create release image'
-  # assumes that base image and release tarball have been created
-  _docker_release_build Dockerfile-release ${DOCKER_IMAGE}
-  success "$(docker images | grep ${DOCKER_IMAGE} | grep ${gittag}-${DATE} | sed 's/  */ /g')"
-}
-
-start_release() {
-  info 'start release'
-  mkdir -p data/release
-  chmod o+rwx data/release
-
-  set -x
-  GIT_TAG=${gittag} docker-compose --project-name ${PROJECT_NAME} -f docker-compose-release.yml rm --force
-  GIT_TAG=${gittag} docker-compose --project-name ${PROJECT_NAME} -f docker-compose-release.yml up
-  set +x
-}
-
-start_dev() {
-  info 'start dev'
-  mkdir -p data/dev
-  chmod o+rwx data/dev
-  set -x
-  ( ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} up )
-  set +x
-}
-
-rm_images() {
-  info 'rm images'
-  set -x
-  ( ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} rm )
-  set +x
-}
-
-_ci_docker_login() {
-  info 'Docker login'
-
-  if [ -z ${bamboo_DOCKER_EMAIL+x} ]; then
-    fail 'bamboo_DOCKER_EMAIL not set'
-  fi
-  if [ -z ${bamboo_DOCKER_USERNAME+x} ]; then
-    fail 'bamboo_DOCKER_USERNAME not set'
-  fi
-  if [ -z ${bamboo_DOCKER_PASSWORD+x} ]; then
-    fail 'bamboo_DOCKER_PASSWORD not set'
-  fi
-
-  docker login  -e "${bamboo_DOCKER_EMAIL}" -u ${bamboo_DOCKER_USERNAME} --password="${bamboo_DOCKER_PASSWORD}"
-  success "Docker login"
-}
-
-# lint using flake8
-python_lint() {
-  info "python lint"
-  pip install 'flake8>=2.0,<2.1'
-  flake8 bpam --count
-  success "python lint"
-}
 
 echo ''
 info "$0 $@"
@@ -88,6 +27,9 @@ case $ACTION in
         ;;
     jslint)
         js_lint
+        ;;
+    rm)
+        rm_images
         ;;
     dev)
         start_dev

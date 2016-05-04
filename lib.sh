@@ -46,7 +46,7 @@ usage() {
 
   OPTIONS:
   dev            Pull up stack and start developing
-  dev_build       Build dev stack images
+  dev_build      Build dev stack images
   baseimage      Build base image
   buildimage     Build build image
   devimage       Build dev image
@@ -72,6 +72,7 @@ EOF
   exit 1
 }
 
+# logs and feedback
 info () {
   printf "\r  [ \033[00;34mINFO\033[0m ] $1\n"
 }
@@ -130,7 +131,7 @@ docker_options() {
     CMD_ENV="export ${CMD_ENV}"
 }
 
-
+# Proxies
 _http_proxy() {
     info 'http proxy'
 
@@ -142,7 +143,6 @@ _http_proxy() {
         info 'Not setting http_proxy'
     fi
 }
-
 
 _pip_proxy() {
     info 'pip proxy'
@@ -162,7 +162,6 @@ _pip_proxy() {
 
     success "Pip index url ${PIP_INDEX_URL}"
 }
-
 
 # ssh setup for ci
 _ci_ssh_agent() {
@@ -190,7 +189,6 @@ _ci_ssh_agent() {
     ssh-add -l
 }
 
-
 _ci_docker_login() {
     info 'Docker login'
 
@@ -207,7 +205,6 @@ _ci_docker_login() {
     docker login  -e "${bamboo_DOCKER_EMAIL}" -u ${bamboo_DOCKER_USERNAME} --password="${bamboo_DOCKER_PASSWORD}"
     success "Docker login"
 }
-
 
 # figure out what branch/tag we are on
 _git_tag() {
@@ -238,7 +235,16 @@ _git_tag() {
     success "git tag: ${gittag}"
 }
 
+# Base
+create_base_image() {
+    info 'create base image'
+    set -x
+    (${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
+    set +x
+    success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
+}
 
+# Dev
 create_dev_image() {
     info 'create dev image'
     set -x
@@ -247,7 +253,17 @@ create_dev_image() {
     success "$(docker images | grep muccg/${PROJECT_NAME}-dev | sed 's/  */ /g')"
 }
 
+start_dev() {
+    info 'start dev'
+    mkdir -p data/dev
+    chmod o+rwx data/dev
 
+    set -x
+    (${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} -f docker-compose.yml up)
+    set +x
+}
+
+# Build
 create_build_image() {
     info 'create build image'
 
@@ -258,15 +274,17 @@ create_build_image() {
     success "$(docker images | grep muccg/${PROJECT_NAME}-build | sed 's/  */ /g')"
 }
 
+# Release
+start_release() {
+    info 'start release'
+    mkdir -p data/release
+    chmod o+rwx data/release
 
-create_base_image() {
-    info 'create base image'
     set -x
-    (${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
+    GIT_TAG=${gittag} docker-compose --project-name ${PROJECT_NAME} -f docker-compose-release.yml rm --force
+    GIT_TAG=${gittag} docker-compose --project-name ${PROJECT_NAME} -f docker-compose-release.yml up
     set +x
-    success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
 }
-
 
 create_release_tarball() {
     info 'create release tarball'
@@ -282,7 +300,14 @@ create_release_tarball() {
     success "$(ls -lh build/* | grep ${gittag})"
 }
 
+create_release_image() {
+    info 'create release image'
+    # assumes that base image and release tarball have been created
+    _docker_release_build Dockerfile-release ${DOCKER_IMAGE}
+    success "$(docker images | grep ${DOCKER_IMAGE} | grep ${gittag}-${DATE} | sed 's/  */ /g')"
+}
 
+# Production
 start_prod() {
     info 'start prod'
     mkdir -p data/prod
@@ -295,18 +320,6 @@ start_prod() {
     GIT_TAG=${gittag} docker-compose --project-name ${PROJECT_NAME} -f docker-compose-prod.yml up
     set +x
 }
-
-
-start_dev() {
-    info 'start dev'
-    mkdir -p data/dev
-    chmod o+rwx data/dev
-
-    set -x
-    (${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} up)
-    set +x
-}
-
 
 create_prod_image() {
     info 'create prod image'
@@ -321,8 +334,8 @@ create_prod_image() {
     for tag in "${DOCKER_IMAGE}:${gittag}" "${DOCKER_IMAGE}:${gittag}-${DATE}"; do
         info "Building ${PROJECT_NAME} ${tag}"
         set -x
-	# don't try and pull the base image
-	(${CMD_ENV}; docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f Dockerfile-prod .)
+	      # don't try and pull the base image
+	      (${CMD_ENV}; docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f Dockerfile-prod .)
         set +x
         success "$(docker images | grep ${DOCKER_IMAGE} | grep ${gittag} | sed 's/  */ /g')"
 
@@ -330,14 +343,22 @@ create_prod_image() {
             set -x
             docker push ${tag}
             set +x
-	    success "pushed ${tag}"
+	          success "pushed ${tag}"
         fi
     done
 
     success 'create prod image'
 }
 
+# lint using flake8
+python_lint() {
+  info "python lint"
+  pip install 'flake8>=2.0,<2.1'
+  flake8 bpam --count
+  success "python lint"
+}
 
+# Test
 _start_test_stack() {
     info 'test stack up'
     mkdir -p data/tests
@@ -349,6 +370,16 @@ _start_test_stack() {
     success 'test stack up'
 }
 
+start_test_stack() {
+    _start_test_stack --force-recreate
+}
+
+rm_images() {
+    info 'rm images'
+    set -x
+    ( ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} rm )
+    set +x
+}
 
 _stop_test_stack() {
     info 'test stack down'
@@ -357,12 +388,6 @@ _stop_test_stack() {
     set +x
     success 'test stack down'
 }
-
-
-start_test_stack() {
-    _start_test_stack --force-recreate
-}
-
 
 run_unit_tests() {
     info 'run unit tests'
@@ -378,7 +403,6 @@ run_unit_tests() {
     return $rval
 }
 
-
 _start_selenium() {
     info 'selenium stack up'
     mkdir -p data/selenium
@@ -390,7 +414,6 @@ _start_selenium() {
     success 'selenium stack up'
 }
 
-
 _stop_selenium() {
     info 'selenium stack down'
     set -x
@@ -399,11 +422,9 @@ _stop_selenium() {
     success 'selenium stack down'
 }
 
-
 start_seleniumhub() {
     _start_selenium --force-recreate
 }
-
 
 start_lettucetests() {
     set -x
@@ -415,7 +436,6 @@ start_lettucetests() {
 
     return $rval
 }
-
 
 lettuce() {
     info 'lettuce'
@@ -431,7 +451,6 @@ lettuce() {
     exit $rval
 }
 
-
 start_seleniumtests() {
     set -x
     set +e
@@ -442,7 +461,6 @@ start_seleniumtests() {
 
     return $rval
 }
-
 
 selenium() {
     info 'selenium'
@@ -457,7 +475,6 @@ selenium() {
 
     exit $rval
 }
-
 
 make_virtualenv() {
     info "make virtualenv"
