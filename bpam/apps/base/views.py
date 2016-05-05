@@ -374,12 +374,13 @@ class AcknowledgementView(TemplateView):
 
 class RequestAccessView(TemplateView):
 
-    template_name = 'base/request_access.html'
+    request_template_name = 'base/request_access.html'
+    success_template_name = 'base/success.html'
     form_class = RequestAccessForm
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.request_template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -393,10 +394,9 @@ class RequestAccessView(TemplateView):
                 return HttpResponse('Invalid header found.')
 
             logger.info("Sent BASE Request email from {} {}".format(from_email, message))
-
-            return render(request, self.template_name, {'form': form})
-
-        return render(request, self.template_name, {'form': form})
+            return render(request, self.success_template_name, {'form': form})
+        else:
+            return render(request, self.request_template_name, {'form': form})
 
 
 class SearchExportView(View):

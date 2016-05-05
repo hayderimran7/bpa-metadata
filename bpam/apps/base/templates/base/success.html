@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}BASE{% endblock %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "BASE" "base:index" %}
+    {% breadcrumb "Data Access Request Success" "base:access" %}
+{% endblock %}
+
+
+<div id="success">
+  <div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+      <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-info-sign"> </span>
+        Your request has been submitted.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
