@@ -4,7 +4,7 @@ import sys
 
 from contracts import contract
 from unipath import Path
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs.logger_utils import get_logger
 from libs import bpa_id_utils
@@ -208,9 +208,9 @@ def do_metadata():
         logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
         ingest(metadata_file)
 
-
 def run():
-    truncate()
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    password = get_password('base')
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.fetch(BASE_454)
+    truncate()
     do_metadata()

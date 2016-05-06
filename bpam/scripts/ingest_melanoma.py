@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from apps.common.models import DNASource, Facility, Sequencer
 from apps.melanoma.models import (
     TumorStage,
@@ -347,11 +347,11 @@ def ingest(spreadsheet_file):
     ingest_arrays(list(get_array_data(spreadsheet_file)))
     ingest_runs(sample_data)
 
-
 def run():
+    password = get_password("melanoma")
     logger.info('Ingesting spreadsheet: from {0}'.format(METADATA_URL))
     # Organism.objects.get_or_create(genus="Homo", species="Sapiens")
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('melanoma', 'm3lan0ma'))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('melanoma', password))
 
     fetcher.fetch(METADATA_FILE)
     ingest(DATA_DIR + METADATA_FILE)

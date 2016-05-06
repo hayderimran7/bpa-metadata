@@ -11,7 +11,7 @@
 import os
 
 from unipath import Path
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
@@ -292,8 +292,9 @@ class MD5handler(object):
 
 
 def run():
+    password = get_password('base')
     # get all current metadata, this includes md5 and xlsx metadata files
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
 

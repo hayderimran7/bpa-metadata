@@ -8,7 +8,7 @@ from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from unipath import Path
 
 logger = get_logger(__name__)
@@ -587,12 +587,13 @@ def truncate():
 
 
 def run():
+    password = get_password("gbr")
     # fetch the old data file
-    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=('bpa', password))
     fetcher.fetch(OLD_METADATA_FILE)
 
     # fetch the new data formats
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', 'gbr33f'))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('bpa', password))
     # fetcher.clean()
     # fetcher.fetch_metadata_from_folder()
 

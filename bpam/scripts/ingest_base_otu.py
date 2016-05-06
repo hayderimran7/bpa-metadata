@@ -9,7 +9,7 @@ from unipath import Path
 from libs import logger_utils
 from libs import bpa_id_utils
 from libs import ingest_utils
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
 from apps.base.models import BASESample
 from libs.excel_wrapper import ExcelWrapper
@@ -282,7 +282,8 @@ def do_otu_matrix():
 
 
 def run():
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    password = get_password('base')
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
     truncate()

@@ -9,7 +9,7 @@ from libs import ingest_utils
 from libs import bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from unipath import Path
 
 logger = get_logger(__name__)
@@ -270,8 +270,9 @@ def truncate():
 
 
 def run():
+    password = get_password('gbr')
     # fetch the new data formats
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", "gbr33f"))
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", password))
     fetcher.clean()
     fetcher.fetch_metadata_from_folder()
     # truncate()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from unipath import Path
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
@@ -414,7 +414,8 @@ def truncate():
 
 
 def run():
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    password = get_password('base')
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.clean()
     fetcher.fetch(CONTEXTUAL_DATA)
 

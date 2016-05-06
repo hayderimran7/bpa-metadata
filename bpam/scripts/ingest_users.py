@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import csv
 
 from libs import ingest_utils, user_helper, logger_utils
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from apps.bpaauth.models import BPAUser
 from unipath import Path
 
@@ -54,6 +56,7 @@ def ingest_contacts(users_file):
 
 
 def run():
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    password = get_password('users')
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.fetch(BPA_USERS_FILE)
     ingest_contacts(DATA_DIR + BPA_USERS_FILE)

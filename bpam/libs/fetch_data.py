@@ -15,6 +15,26 @@ requests.packages.urllib3.disable_warnings()
 
 logger = logger_utils.get_logger(__name__)
 
+project_name_passwd_map = {
+    "melanoma": "BPA_MELANOMA_DOWNLOADS_PASSWORD",
+    "base": "BPA_BASE_DOWNLOADS_PASSWORD",
+    "users": "BPA_USERS_DOWNLOADS_PASSWORD",
+    "gbr": "BPA_GBR_DOWNLOADS_PASSWORD",
+}
+
+def get_password(project_name=None):
+    """Get downloads password for project from environment """
+
+    password_env = project_name_passwd_map.get(project_name, None)
+    if password_env is None:
+        logger.error("set project_name")
+        sys.exit()
+
+    password = os.environ[melanoma_env_pass]
+    if password == "":
+        logger.error("Please set shell variable {} to current BPA {} project password".format(password_env, project_name))
+        sys.exit()
+    return password
 
 class Fetcher():
     """ facilitates fetching data from webserver """

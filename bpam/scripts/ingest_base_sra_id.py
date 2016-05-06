@@ -1,8 +1,11 @@
+
+# -*- coding: utf-8 -*-
+
 import csv
 import sys
 
 from libs import ingest_utils, user_helper, logger_utils
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from apps.common.models import BPAUniqueID
 from unipath import Path
 
@@ -38,6 +41,7 @@ def ingest_ids(ids_file):
 
 
 def run():
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', 'b4s3'))
+    password = get_password('base')
+    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
     fetcher.fetch(SAMPLE_ID_FILE)
     ingest_ids(DATA_DIR + SAMPLE_ID_FILE)
