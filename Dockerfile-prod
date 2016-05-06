@@ -6,6 +6,8 @@ ARG ARG_GIT_TAG
 
 ENV GIT_TAG $ARG_GIT_TAG
 
+ENV DJANGO_SETTINGS_MODULE bpam.settings
+
 RUN env | sort
 
 ADD build/${PROJECT_NAME}-${GIT_TAG}.tar.gz /

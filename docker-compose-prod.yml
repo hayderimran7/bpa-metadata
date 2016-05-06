@@ -15,6 +15,7 @@ cacheprod:
     service: cache
 
 nginxprod:
+  hostname: bpam-nginx-prod
   extends:
     file: docker-compose-common.yml
     service: nginx
@@ -22,12 +23,15 @@ nginxprod:
     - uwsgiprod:uwsgi
 
 uwsgiprod:
+  hostname: bpam-uwsgi-prod
   image: muccg/bpametadata:${GIT_TAG}
   command: uwsgi
   environment:
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
+    - DJANGO_MAILGUN_API_KEY=""
+    - DJANGO_MAILGUN_SERVER_NAME=""
   volumes_from:
     - dataprod
   links:

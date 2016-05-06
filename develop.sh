@@ -57,6 +57,9 @@ case $ACTION in
     devimage)
         create_dev_image
         ;;
+    releaseimage)
+        create_release_image
+        ;;
     ci_dockerbuild)
         _ci_ssh_agent
         _ci_docker_login
