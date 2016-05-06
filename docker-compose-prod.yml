@@ -15,7 +15,6 @@ cacheprod:
     service: cache
 
 nginxprod:
-  hostname: bpam-nginx-prod
   extends:
     file: docker-compose-common.yml
     service: nginx
@@ -23,7 +22,6 @@ nginxprod:
     - uwsgiprod:uwsgi
 
 uwsgiprod:
-  hostname: bpam-uwsgi-prod
   image: muccg/bpametadata:${GIT_TAG}
   command: uwsgi
   environment:
