@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 BPA_ID = "102.100.100"
 DESCRIPTION = 'Wheat Pathogens Transcript'
 
-METADATA_URL = 'https://downloads.bioplatforms.com/wheat_pathogens_transcript/metadata/'
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens_transcript/metadata/'
 METADATA_FILE = 'Wheat_Pathogen_Transcript_data.xlsx'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_pathogens_transcript')
 

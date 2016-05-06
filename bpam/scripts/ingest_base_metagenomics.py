@@ -29,7 +29,7 @@ from apps.base_metagenomics.models import (
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/base/tracking/metagenomics/'
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/tracking/metagenomics/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/metagenomics_metadata/')
 
 BPA_ID = "102.100.100."

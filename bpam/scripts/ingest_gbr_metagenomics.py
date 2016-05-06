@@ -18,12 +18,12 @@ PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
 # the old google doc format
-OLD_METADATA_URL = "https://downloads.bioplatforms.com/gbr/old_format_metadata/"  # the folder
+OLD_METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/old_format_metadata/"  # the folder
 OLD_METADATA_FILE = "current.xlsx"
 OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/old_format")
 
 # the newer format
-METADATA_URL = "https://downloads.bioplatforms.com/gbr/metadata/metagenomics/"  # this is where the new metadata is kept
+METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/metadata/metagenomics/"  # this is where the new metadata is kept
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/metagenomics/")
 
 

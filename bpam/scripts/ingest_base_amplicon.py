@@ -18,7 +18,7 @@ from apps.base.models import BASESample
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = "https://downloads.bioplatforms.com/base/tracking/amplicons/"
+METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/base/tracking/amplicons/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "base/amplicon_metadata/")
 
 BPA_ID = "102.100.100."

@@ -8,7 +8,7 @@ from unipath import Path
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
 SAMPLE_ID_FILE = 'Biosample_accessions.csv'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'biosample_id/')
 
