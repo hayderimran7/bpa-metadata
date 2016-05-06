@@ -28,9 +28,8 @@ runserver:
   image: muccg/bpametadata-dev
   command: runserver
   environment:
-    - DJANGO_SETTINGS_MODULE=bpam.settings
-    - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
-    - DJANGO_MAILGUN_SERVER_NAME=${DJANGO_MAILGUN_SERVER_NAME}
+    - DJANGO_MAILGUN_API_KEY
+    - DJANGO_MAILGUN_SERVER_NAME
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
@@ -41,9 +40,8 @@ uwsgi:
   image: muccg/bpametadata-dev
   command: uwsgi
   environment:
-    - DJANGO_SETTINGS_MODULE=bpam.settings
-    - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
-    - DJANGO_MAILGUN_SERVER_NAME=${DJANGO_MAILGUN_SERVER_NAME}
+    - DJANGO_MAILGUN_API_KEY
+    - DJANGO_MAILGUN_SERVER_NAME
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
