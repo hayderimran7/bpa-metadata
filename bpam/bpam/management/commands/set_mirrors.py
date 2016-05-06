@@ -10,12 +10,12 @@ class Command(BaseCommand):
         BPAMirror.objects.all().delete()
         sites = [
             {
-                'name': 'MU',
-                'base_url': 'https://downloads-mu.bioplatforms.com'
+                'name': 'QCIF',
+                'base_url': 'https://downloads-qcif.bioplatforms.com/bpa/'
             },
             {
-                'name': 'QCIF',
-                'base_url': 'https://downloads-qcif.bioplatforms.com'
+                'name': 'MU',
+                'base_url': 'https://downloads-mu.bioplatforms.com/bpa/'
             },
         ]
         [BPAMirror.objects.get_or_create(order=i, **t) for i, t in enumerate(sites)]

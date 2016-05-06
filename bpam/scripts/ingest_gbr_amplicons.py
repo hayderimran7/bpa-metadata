@@ -18,7 +18,7 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
-METADATA_URL = "https://downloads.bioplatforms.com/gbr/metadata/amplicons/"
+METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/metadata/amplicons/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/amplicons/")
 
 
