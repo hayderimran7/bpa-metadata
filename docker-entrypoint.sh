@@ -42,7 +42,7 @@ function defaults() {
     : ${DBNAME="${DBUSER}"}
     : ${DBPASS="${DBUSER}"}
 
-    : ${DOCKER_ROUTE:=$(/sbin/ip route|awk '/default/ { print { }')}
+    : ${DOCKER_ROUTE:=$(/sbin/ip route|awk '/default/ { print $3 }')}
 
     : ${RUNSERVER="web"}
     : ${RUNSERVERPORT="8000"}
