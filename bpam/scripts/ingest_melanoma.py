@@ -17,7 +17,7 @@ from unipath import Path
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
-METADATA_URL = 'https://downloads.bioplatforms.com/melanoma/metadata/'  # the folder
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/melanoma/metadata/'  # the folder
 METADATA_FILE = 'metadata.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'melanoma/')
 

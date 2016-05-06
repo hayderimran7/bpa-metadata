@@ -18,7 +18,7 @@ BPA_PREFIX = '102.100.100.'
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/base/amplicons/otu/all'
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/amplicons/otu/all'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/otu/')
 
 # This is the flavours of ID names

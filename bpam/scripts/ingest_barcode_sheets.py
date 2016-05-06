@@ -53,7 +53,7 @@ class Mapper(object):
     def mapsheets(self):
         """ Map the herbarium sheets to BPA ID's """
 
-        DATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/raw/pilbara_flora/map/"
+        DATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/raw/pilbara_flora/map/"
         DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_map/")
 
         fetcher = Fetcher(DATA_DIR, DATA_URL)
@@ -139,7 +139,7 @@ class SheetAdder(object):
     def add(self):
         """ Adds all herbarium sheets """
 
-        METADATA_URL = "https://downloads.bioplatforms.com/bpa/barcode/raw/pilbara_flora/sheets/"
+        METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/raw/pilbara_flora/sheets/"
         DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
 
         fetcher = Fetcher(DATA_DIR, METADATA_URL)

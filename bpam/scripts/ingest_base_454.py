@@ -15,7 +15,7 @@ from apps.base_454.models import Sample454
 
 logger = get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
 BASE_454 = 'BASE_454.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/454_metadata/')
 

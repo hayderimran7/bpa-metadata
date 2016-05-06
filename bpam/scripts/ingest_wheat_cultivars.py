@@ -17,7 +17,7 @@ PROJECT_ID = 'WHEAT_CULTIVAR'
 PROJECT_DESCRIPTION = 'Wheat Cultivars'
 
 # all metadata and checksums should be linked out here
-METADATA_URL = 'https://downloads.bioplatforms.com/wheat_cultivars/tracking/'
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/wheat_cultivars/tracking/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'wheat_cultivars')
 
 Run = namedtuple('Run', 'run_number casava_version lib_cons_proto lib_range sequencer')

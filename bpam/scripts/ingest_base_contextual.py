@@ -24,7 +24,7 @@ from apps.base_contextual.models import (
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/base/metadata/'  # the folder
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
 CONTEXTUAL_DATA = 'contextual-latest.xlsx'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/contextual_metadata/')
 

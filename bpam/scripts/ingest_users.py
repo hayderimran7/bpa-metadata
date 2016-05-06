@@ -9,7 +9,7 @@ from unipath import Path
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads.bioplatforms.com/bpa_support/users/'  # the folder
+METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/bpa_support/users/'  # the folder
 BPA_USERS_FILE = 'bpa_users.csv'  # the file
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'users/')
 
