@@ -30,6 +30,8 @@ uwsgiprod:
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
+    - DJANGO_MAILGUN_API_KEY=""
+    - DJANGO_MAILGUN_SERVER_NAME=""
   volumes_from:
     - dataprod
   links:
