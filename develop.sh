@@ -176,6 +176,9 @@ case $ACTION in
     nuclear)
         docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh nuclear
         ;;
+    ingest_all)
+        docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh ingest_all
+        ;;
     checksecure)
         docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh checksecure
         ;;

@@ -5,6 +5,7 @@ Utility functions to fetch data from web server
 """
 
 import os
+import sys
 import glob
 import requests
 from bs4 import BeautifulSoup
@@ -25,15 +26,22 @@ project_name_passwd_map = {
 def get_password(project_name=None):
     """Get downloads password for project from environment """
 
+    def complain_and_quit():
+        logger.error("Please set shell variable {} to current BPA {} project password".format(password_env, project_name))
+        sys.exit()
+
     password_env = project_name_passwd_map.get(project_name, None)
     if password_env is None:
         logger.error("set project_name")
         sys.exit()
 
-    password = os.environ[melanoma_env_pass]
+    if password_env not in os.environ:
+        complain_and_quit()
+
+    password = os.environ[password_env]
     if password == "":
-        logger.error("Please set shell variable {} to current BPA {} project password".format(password_env, project_name))
-        sys.exit()
+        complain_and_quit()
+
     return password
 
 class Fetcher():
