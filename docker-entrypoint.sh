@@ -1,17 +1,16 @@
 #!/bin/bash
 
-COMMAND=$1
 
 # wait for a given host:port to become available
-dockerwait() {
-    host=$1
-    port=$2
-    while ! exec 6<>/dev/tcp/${host}/${port}
-    do
-        echo "$(date) - waiting to connect ${host} ${port}"
+#
+# $1 host
+# $2 port
+function dockerwait {
+    while ! exec 6<>/dev/tcp/$1/$2; do
+        echo "$(date) - waiting to connect $1 $2"
         sleep 5
     done
-    echo "$(date) - connected to $host $port"
+    echo "$(date) - connected to $1 $2"
 
     exec 6>&-
     exec 6<&-
@@ -20,76 +19,68 @@ dockerwait() {
 
 # wait for services to become available
 # this prevents race conditions using fig
-wait_for_services() {
-    if [[ "$WAIT_FOR_QUEUE" ]] ; then
-        dockerwait $QUEUESERVER $QUEUEPORT
-    fi
+function wait_for_services() {
     if [[ "$WAIT_FOR_DB" ]] ; then
         dockerwait $DBSERVER $DBPORT
     fi
     if [[ "$WAIT_FOR_CACHE" ]] ; then
         dockerwait $CACHESERVER $CACHEPORT
     fi
-    if [[ "$WAIT_FOR_WEB" ]] ; then
-        dockerwait $WEBSERVER $WEBPORT
+    if [[ "$WAIT_FOR_RUNSERVER" ]] ; then
+        dockerwait $RUNSERVER $RUNSERVERPORT
+    fi
+    if [[ "$WAIT_FOR_HOST_PORT" ]]; then
+        dockerwait $DOCKER_ROUTE $WAIT_FOR_HOST_PORT
     fi
 }
 
 
-defaults() {
-
-    : ${ENV_PATH:="/env/bin"}
-
+function defaults() {
     : ${DBSERVER:="db"}
     : ${DBPORT:="5432"}
-    : ${WEBSERVER="web"}
-    : ${WEBPORT="8000"}
-    : ${CACHESERVER="cache"}
-    : ${CACHEPORT="11211"}
-
     : ${DBUSER="webapp"}
     : ${DBNAME="${DBUSER}"}
     : ${DBPASS="${DBUSER}"}
 
-    . ${ENV_PATH}/activate
+    : ${DOCKER_ROUTE:=$(/sbin/ip route|awk '/default/ { print { }')}
 
-    export DBSERVER DBPORT DBUSER DBNAME DBPASS
+    : ${RUNSERVER="web"}
+    : ${RUNSERVERPORT="8000"}
+    : ${CACHESERVER="cache"}
+    : ${CACHEPORT="11211"}
+    : ${MEMCACHE:="${CACHESERVER}:${CACHEPORT}"}
+
+    export DBSERVER DBPORT DBUSER DBNAME DBPASS MEMCACHE DOCKER_ROUTE
 }
 
 
-django_defaults() {
-    : ${DEPLOYMENT="dev"}
-    : ${PRODUCTION=0}
-    : ${DEBUG=1}
-    : ${MEMCACHE="${CACHESERVER}:${CACHEPORT}"}
-    : ${WRITABLE_DIRECTORY="/data/scratch"}
-    : ${STATIC_ROOT="/data/static"}
-    : ${MEDIA_ROOT="/data/static/media"}
-    : ${LOG_DIRECTORY="/data/log"}
-    : ${DJANGO_SETTINGS_MODULE="bpam.settings"}
+function selenium_defaults {
+    : ${SELENIUM_URL:="http://$DOCKER_ROUTE:$RUNSERVERPORT/"}
+    #: ${SELENIUM_BROWSER:="*googlechrome"}
+    : ${SELENIUM_BROWSER:="*firefox"}
 
-    echo "DEPLOYMENT is ${DEPLOYMENT}"
-    echo "PRODUCTION is ${PRODUCTION}"
-    echo "DEBUG is ${DEBUG}"
-    echo "MEMCACHE is ${MEMCACHE}"
-    echo "WRITABLE_DIRECTORY is ${WRITABLE_DIRECTORY}"
-    echo "STATIC_ROOT is ${STATIC_ROOT}"
-    echo "MEDIA_ROOT is ${MEDIA_ROOT}"
-    echo "LOG_DIRECTORY is ${LOG_DIRECTORY}"
-    echo "DJANGO_SETTINGS_MODULE is ${DJANGO_SETTINGS_MODULE}"
-    export DEPLOYMENT PRODUCTION DEBUG DBSERVER MEMCACHE WRITABLE_DIRECTORY STATIC_ROOT MEDIA_ROOT LOG_DIRECTORY DJANGO_SETTINGS_MODULE
+    if [ ${DEPLOYMENT} = "prod" ]; then
+        SELENIUM_URL="https://$DOCKER_ROUTE:8443/app/"
+    fi
+
+    export SELENIUM_URL SELENIUM_BROWSER
 }
 
-echo "HOME is ${HOME}"
-echo "WHOAMI is $(whoami)"
 
-defaults
-django_defaults
-wait_for_services
+function _django_migrate {
+    echo "running migrate"
+    django-admin.py migrate  --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
+}
+
+
+function _django_collectstatic {
+    echo "running collectstatic"
+    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/collectstatic.log
+}
 
 
 # BASE
-ingest_base() {
+function ingest_base() {
     django-admin.py runscript ingest_base_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_base_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
@@ -99,15 +90,17 @@ ingest_base() {
     django-admin.py runscript ingest_base_otu --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 }
 
+
 # Great Barrier Reef
-ingest_gbr() {
+function ingest_gbr() {
     django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_gbr_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py runscript ingest_gbr_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     # django-admin.py runscript ingest_gbr_smrt --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 }
 
-make_migrations() {
+
+function make_migrations() {
     django-admin.py makemigrations bpaauth --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations common --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations base --traceback --settings=${DJANGO_SETTINGS_MODULE}
@@ -125,23 +118,28 @@ make_migrations() {
     django-admin.py makemigrations barcode --traceback --settings=${DJANGO_SETTINGS_MODULE}
 }
 
-if [ "${COMMAND}" = 'nuclear' ]
-then
+
+trap exit SIGHUP SIGINT SIGTERM
+defaults
+env | grep -iv PASS | sort
+wait_for_services
+
+
+# reset database and perform all migrations
+if [ "$1" = 'nuclear' ]; then
     django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
     make_migrations
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    exit $?
+    exec django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 fi
 
-if [ "${COMMAND}" = 'runscript' ]
-then
+# runscript entrypoint
+if [ "$1" = 'runscript' ]; then
     echo "Runscript $2"
-    django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runscript.log
-    exit $?
+    exec django-admin.py runscript $2 --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runscript.log
 fi
 
-if [ "${COMMAND}" = 'ingest_all' ]
-then
+# ingest all bpa project data
+if [ "$1" = 'ingest_all' ]; then
     django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 
     django-admin.py runscript ingest_bpa_projects --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
@@ -155,121 +153,97 @@ then
     ingest_base
 
     # links
-    django-admin.py runscript url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-
-    exit $?
+    exec django-admin.py runscript url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 fi
 
-if [ "${COMMAND}" = 'ingest_gbr' ]
-then
+# ingest gbr
+if [ "$1" = 'ingest_gbr' ]; then
     ingest_gbr
     exit $?
 fi
 
-if [ "${COMMAND}" = 'ingest_base' ]
-then
+# ingest base
+if [ "$1" = 'ingest_base' ]; then
     ingest_base
     exit $?
 fi
 
-if [ "${COMMAND}" = 'admin' ]
-then
-    echo "admin"
-    if [ "$2" = "" ]
-    then 
-        admincmd="help"
-    else
-        admincmd=$2
-    fi
-    django-admin.py $admincmd --settings=${DJANGO_SETTINGS_MODULE}
-    exit $?
-fi
-
 # set superuser 
-if [ "${COMMAND}" = 'superuser' ]
-then
+if [ "$1" = 'superuser' ]; then
     echo "Setting superuser (admin)"
-    django-admin.py  createsuperuser --email="admin@ccg.com" --settings=${DJANGO_SETTINGS_MODULE}
-    exit $?
+    exec django-admin.py  createsuperuser --email="admin@ccg.com"
 fi
 
 # security by django checksecure
-if [ "$COMMAND" = 'checksecure' ]
-then
+if [ "$1" = 'checksecure' ]; then
     echo "[Run] Running Django checksecure"
-    django-admin.py checksecure --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/checksecure.log
-
-    exit $?
+    exec django-admin.py checksecure --traceback 2>&1 | tee /data/checksecure.log
 fi
 
 # uwsgi entrypoint
-if [ "$COMMAND" = 'uwsgi' ]
-then
+if [ "$1" = 'uwsgi' ]; then
     echo "[Run] Starting uwsgi"
 
     : ${UWSGI_OPTS="/app/uwsgi/docker.ini"}
     echo "UWSGI_OPTS is ${UWSGI_OPTS}"
 
-    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
-    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
-    django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
+     _django_collectstatic
+     _django_migrate
+
     exec uwsgi --die-on-term --ini ${UWSGI_OPTS}
 fi
 
 # runserver entrypoint
-if [ "$COMMAND" = 'runserver' ]
-then
+if [ "$1" = 'runserver' ]; then
     echo "[Run] Starting runserver"
 
-    : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${WEBPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
+    : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${RUNSERVERPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
     echo "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
 
-    echo "Django collectstatic"
-    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-collectstatic.log
-    echo "Django migrate"
-    django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-migrate.log
-    django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/runserver-migrate.log
+     _django_collectstatic
 
-    echo "Django runserver"
+     # some one off bpa goop
+     django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
+
+     _django_migrate
+
+    echo "running runserver ..."
     exec django-admin.py ${RUNSERVER_OPTS}
 fi
 
 # runtests entrypoint
-if [ "$COMMAND" = 'runtests' ] 
-then
-    echo "Django test"
-    cd /app/bpam
-    exec django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE}
+if [ "$1" = 'runtests' ]; then 
+    echo "[Run] Starting tests"
+    exec django-admin.py test --traceback
 fi
 
 # lettuce entrypoint
-if [ "$COMMAND" = 'lettuce' ]
-then
+if [ "$1" = 'lettuce' ]; then
     echo "[Run] Starting lettuce"
     exec django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml
 fi
 
 # prepare a tarball of build
-if [ "$COMMAND" = 'tarball' ]
-then
+if [ "$1" = 'tarball' ]; then
     echo "[Run] Preparing a tarball of build"
 
     cd /app
     rm -rf /app/*
     echo $GIT_TAG
     set -x
-    git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-metadata.git .
+    git clone --depth=1 --branch=$GIT_TAG ${PROJECT_SOURCE} .
+    git ls-remote ${PROJECT_SOURCE} ${GIT_TAG} > .version
 
     # install python deps
     # Note: Environment vars are used to control the behaviour of pip (use local devpi for instance)
     pip install ${PIP_OPTS} --upgrade -r requirements/runtime-requirements.txt
-    pip install -e .
+    pip install -e bpam
     set +x
     
     # create release tarball
     DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/bpam"
     cd /data
-    exec tar -cpzf bpametadata-${GIT_TAG}.tar.gz ${DEPS}
+    exec tar -cpzf ${PROJECT_NAME}-${GIT_TAG}.tar.gz ${DEPS}
 fi
 
 echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest|runscript]"
