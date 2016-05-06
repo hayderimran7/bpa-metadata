@@ -263,7 +263,8 @@ then
     # install python deps
     # Note: Environment vars are used to control the behaviour of pip (use local devpi for instance)
     pip install ${PIP_OPTS} --upgrade -r requirements/runtime-requirements.txt
-    pip install -e .
+    # going to move this one up
+    pip install -e ./bpam/
     set +x
     
     # create release tarball
