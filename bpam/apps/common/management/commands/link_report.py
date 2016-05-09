@@ -3,6 +3,7 @@ Creates a report on missing sequence files
 """
 
 import xlwt
+from django.core.management.base import BaseCommand
 from libs.logger_utils import get_logger
 from apps.melanoma.models import MelanomaSequenceFile
 
@@ -29,7 +30,10 @@ def make_report(not_ok):
     logger.info('Wrote report {0}'.format(MISSING_REPORT_NAME))
 
 
-def run():
-    # melanoma
-    not_ok = [f for f in MelanomaSequenceFile.objects.all() if not f.link_ok()]
-    make_report(not_ok)
+class Command(BaseCommand):
+    help = 'Link Report, Melanoma Only'
+
+    def handle(self, *args, **options):
+        # melanoma
+        not_ok = [f for f in MelanomaSequenceFile.objects.all() if not f.link_ok()]
+        make_report(not_ok)

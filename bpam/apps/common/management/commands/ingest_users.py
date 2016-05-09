@@ -2,6 +2,7 @@
 
 import csv
 
+from django.core.management.base import BaseCommand, CommandError
 from libs import ingest_utils, user_helper, logger_utils
 from libs.fetch_data import Fetcher, get_password
 from apps.bpaauth.models import BPAUser
@@ -22,9 +23,8 @@ def get_data(users_file):
 
 
 def filter_contacts(contact):
-    """
-    If for some reason the contact line is unsuitable, filter it out.
-    """
+    """ If for some reason the contact line is unsuitable, filter it out. """
+    
     username = user_helper.make_username(contact)
     if not username:
         return True
@@ -36,9 +36,7 @@ def filter_contacts(contact):
 
 
 def ingest_contacts(users_file):
-    """
-    Contacts associated with BPA projects
-    """
+    """ Contacts associated with BPA projects """
 
     for contact in get_data(users_file):
         if filter_contacts(contact):
@@ -55,8 +53,11 @@ def ingest_contacts(users_file):
             user_helper.make_new_user(username, contact)
 
 
-def run():
-    password = get_password('users')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-    fetcher.fetch(BPA_USERS_FILE)
-    ingest_contacts(DATA_DIR + BPA_USERS_FILE)
+class Command(BaseCommand):
+    help = 'Ingest Users'
+
+    def handle(self, *args, **options):
+        password = get_password('users')
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher.fetch(BPA_USERS_FILE)
+        ingest_contacts(DATA_DIR + BPA_USERS_FILE)

@@ -5,6 +5,7 @@ import sys
 from pprint import pprint
 
 import django
+from django.core.management.base import BaseCommand
 import requests
 from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
@@ -16,6 +17,7 @@ from apps.base_metagenomics.models import MetagenomicsSequenceFile
 from apps.base_amplicon.models import AmpliconSequenceFile
 from libs.logger_utils import get_logger
 from django.conf import settings
+from datetime import datetime
 
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
@@ -31,6 +33,7 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
         if getattr(obj, attr_name) is None:
             uv = URLVerification()
             uv.status_ok = False
+            uv.checked_at = datetime.now()
             uv.save()
             setattr(obj, attr_name, uv)
         verifier = getattr(obj, attr_name)
@@ -128,22 +131,15 @@ def check_base_amplicons(sleep_time):
         logger.error(e)
 
 
-def run(sleep_time=SLEEP_TIME):
-    """
-    Pass parameters like below:
-    vpython-bpam manage.py runscript url_checker --script-args 0.1
-    """
-    try:
-        sleep_time = float(sleep_time)
-    except ValueError:
-        sys.stderr.write("sleep_time parameter must be a float.\n")
-        sys.stderr.write("Continuing with default value: %f\n" % SLEEP_TIME)
-        sleep_time = SLEEP_TIME
+class Command(BaseCommand):
+    help = 'URL Validator'
 
-    check_melanoma(sleep_time)
-    check_gbr(sleep_time)
-    check_wheat_cultivars(sleep_time)
-    check_wheat_pathogens(sleep_time)
-    check_wheat_pathogens_transcript(sleep_time)
-    check_base_metagenomcis(sleep_time)
-    check_base_amplicons(sleep_time)
+    def handle(self, *args, **options):
+
+        check_melanoma(SLEEP_TIME)
+        check_gbr(SLEEP_TIME)
+        check_wheat_cultivars(SLEEP_TIME)
+        check_wheat_pathogens(SLEEP_TIME)
+        check_wheat_pathogens_transcript(SLEEP_TIME)
+        check_base_metagenomcis(SLEEP_TIME)
+        check_base_amplicons(SLEEP_TIME)
