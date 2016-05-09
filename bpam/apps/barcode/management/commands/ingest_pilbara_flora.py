@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.core.management.base import BaseCommand, CommandError
 from django.db import IntegrityError
 import csv
 from unipath import Path
@@ -53,7 +54,7 @@ class Mapper(object):
     def mapsheets(self):
         """ Map the herbarium sheets to BPA ID's """
 
-        DATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/raw/pilbara_flora/map/"
+        DATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/map/"
         DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_map/")
 
         fetcher = Fetcher(DATA_DIR, DATA_URL)
@@ -139,7 +140,7 @@ class SheetAdder(object):
     def add(self):
         """ Adds all herbarium sheets """
 
-        METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/raw/pilbara_flora/sheets/"
+        METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/sheets/"
         DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
 
         fetcher = Fetcher(DATA_DIR, METADATA_URL)
@@ -157,8 +158,11 @@ class SheetAdder(object):
             self.add_sheets(sheets)
 
 
-def run():
-    truncate()
+class Command(BaseCommand):
+    help = 'Ingest barcode sheets'
 
-    SheetAdder().add()
-    Mapper().mapsheets()
+    def handle(self, *args, **options):
+        truncate()
+
+        SheetAdder().add()
+        Mapper().mapsheets()

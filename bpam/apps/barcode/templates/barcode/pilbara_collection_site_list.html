@@ -9,46 +9,46 @@
 {% breadcrumb "Barcode" "barcode:index" %}
 {% breadcrumb "Pilbara Plant Diversity" "barcode:pilbara_index" %}
 {% breadcrumb "Collection Sites" "barcode:pilbara" %}
-{http://www.slate.com/articles/health_and_science/science/2009/12/buildabomber.html% endblock %}
+{% endblock %}
 
 {% block content %}
 {% if sheets %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8">
-            {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
-        </div>
-        <div class="col-md-4" id="sitelist-container">
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="unstacked">Pilbara Collection Sites </h3>
-                </div>
-                <table id="sitelist" class="ccgslimtable">
-                    <thead>
-                        <tr>
-                            <th class="name">Site Description</th>
-                            <th class="lat">Latitude</th>
-                            <th class="lng">Longitude</th>
-                            <th>Classification</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for sheet in sheets %}
-                        <tr>
-                            <td class="name">
-                                <a href="{% url 'barcode:pilbara_sheet' sheet.pk %}">{{ sheet.get_site_description }}</a>
-                            </td>
-                            <td class="lat">{{ sheet.latitude }}</td>
-                            <td class="lng">{{ sheet.longitude }}</td>
-                            <td>{{ sheet.get_classification  }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-md-8">
+      {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
     </div>
+    <div class="col-md-4" id="sitelist-container">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="unstacked">Pilbara Collection Sites </h3>
+        </div>
+        <table id="sitelist" class="ccgslimtable">
+          <thead>
+            <tr>
+              <th class="name">Site Description</th>
+              <th class="lat">Latitude</th>
+              <th class="lng">Longitude</th>
+              <th>Classification</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sheet in sheets %}
+            <tr>
+              <td class="name">
+                <a href="{% url 'barcode:pilbara_sheet' sheet.pk %}">{{ sheet.get_site_description }}</a>
+              </td>
+              <td class="lat">{{ sheet.latitude }}</td>
+              <td class="lng">{{ sheet.longitude }}</td>
+              <td>{{ sheet.get_classification  }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 {% else %}
 <h3> No Pilbara collection sites are currently available</h3>
