@@ -4,6 +4,7 @@
 Ingests BASE Amplicon metadata from server into database.
 """
 
+from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import DataError
 from unipath import Path
 from libs.excel_wrapper import ExcelWrapper
@@ -312,13 +313,16 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {0} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
-def run():
-    password = get_password('base')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("base", password))
-    fetcher.clean()
-    fetcher.fetch_metadata_from_folder()
+class Command(BaseCommand):
+    help = 'Ingest BASE Amplicon Metadata'
 
-    truncate()
-    # find all the spreadsheets in the data directory and ingest them
-    do_metadata()
-    do_md5()
+    def handle(self, *args, **options):
+        password = get_password('base')
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("base", password))
+        fetcher.clean()
+        fetcher.fetch_metadata_from_folder()
+
+        truncate()
+        # find all the spreadsheets in the data directory and ingest them
+        do_metadata()
+        do_md5()
