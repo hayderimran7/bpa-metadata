@@ -239,7 +239,6 @@ if [ "$1" = 'tarball' ]; then
     pip install ${PIP_OPTS} --upgrade -r requirements/runtime-requirements.txt
     pip install -e bpam
     set +x
-    
     # create release tarball
     DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/bpam"
     cd /data

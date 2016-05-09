@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from django.utils import DataError
+from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
 from apps.common.models import Facility
 from apps.gbr.models import GBRSample
 from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
-from libs import ingest_utils
+from django.db.utils import DataError
 from libs import bpa_id_utils
-from libs.logger_utils import get_logger
+from libs import ingest_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
+from libs.logger_utils import get_logger
 from unipath import Path
 
 logger = get_logger(__name__)
@@ -269,13 +271,16 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
-def run():
-    password = get_password('gbr')
-    # fetch the new data formats
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", password))
-    fetcher.clean()
-    fetcher.fetch_metadata_from_folder()
-    # truncate()
+class Command(BaseCommand):
+    help = 'Ingest Great Barrier Reef Amplicons'
 
-    do_metadata()
-    ingest_md5()
+    def handle(self, *args, **options):
+        password = get_password('gbr')
+        # fetch the new data formats
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", password))
+        fetcher.clean()
+        fetcher.fetch_metadata_from_folder()
+        # truncate()
+
+        do_metadata()
+        ingest_md5()
