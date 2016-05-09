@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.core.management.base import BaseCommand, CommandError
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 from apps.common.models import DNASource, Facility, Sequencer
@@ -37,18 +38,14 @@ def _get_bpa_id(entry):
 
 
 def get_dna_source(description):
-    """
-    Get a DNA source if it exists, if it doesn't make it.
-    """
+    """ Get a DNA source if it exists, if it doesn't make it. """
 
     source, _ = DNASource.objects.get_or_create(description=description.capitalize())
     return source
 
 
 def get_tumor_stage(description):
-    """
-    Get the tumor stage if it exists, else make it.
-    """
+    """ Get the tumor stage if it exists, else make it. """
 
     description = description.capitalize()
     if description == "":
@@ -347,11 +344,14 @@ def ingest(spreadsheet_file):
     ingest_arrays(list(get_array_data(spreadsheet_file)))
     ingest_runs(sample_data)
 
-def run():
-    password = get_password("melanoma")
-    logger.info('Ingesting spreadsheet: from {0}'.format(METADATA_URL))
-    # Organism.objects.get_or_create(genus="Homo", species="Sapiens")
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('melanoma', password))
+class Command(BaseCommand):
+    help = 'Ingest Melanoma'
 
-    fetcher.fetch(METADATA_FILE)
-    ingest(DATA_DIR + METADATA_FILE)
+    def handle(self, *args, **options):
+        password = get_password("melanoma")
+        logger.info('Ingesting spreadsheet: from {0}'.format(METADATA_URL))
+        # Organism.objects.get_or_create(genus="Homo", species="Sapiens")
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('melanoma', password))
+
+        fetcher.fetch(METADATA_FILE)
+        ingest(DATA_DIR + METADATA_FILE)
