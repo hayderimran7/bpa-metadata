@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from unipath import Path
+from django.core.management.base import BaseCommand, CommandError
 from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
@@ -413,11 +414,14 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(ChemicalAnalysis._meta.db_table))
 
 
-def run():
-    password = get_password('base')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-    fetcher.clean()
-    fetcher.fetch(CONTEXTUAL_DATA)
+class Command(BaseCommand):
+    help = 'Ingest BASE Contextual Data'
 
-    truncate()
-    do_metadata()
+    def handle(self, *args, **options):
+        password = get_password('base')
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher.clean()
+        fetcher.fetch(CONTEXTUAL_DATA)
+
+        truncate()
+        do_metadata()
