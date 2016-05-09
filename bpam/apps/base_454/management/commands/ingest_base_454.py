@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
+from django.core.management.base import BaseCommand, CommandError
 from contracts import contract
 from unipath import Path
 from libs.fetch_data import Fetcher, get_password
@@ -208,9 +208,12 @@ def do_metadata():
         logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
         ingest(metadata_file)
 
-def run():
-    password = get_password('base')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-    fetcher.fetch(BASE_454)
-    truncate()
-    do_metadata()
+class Command(BaseCommand):
+    help = 'Ingest BASE 454 Data'
+
+    def handle(self, *args, **options):
+        password = get_password('base')
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher.fetch(BASE_454)
+        truncate()
+        do_metadata()

@@ -38,12 +38,11 @@ def fix_dilution(val):
 
 
 def fix_pcr(pcr):
-    """
-    Check pcr value
-    """
-    val = pcr.strip()
+    """ Check pcr value """
+
+    val = pcr.encode('utf-8').strip()
     if val not in ("P", "F", ""):
-        logger.error("PCR value [{0}] is neither F, P or "", setting to X".format(pcr.encode("utf8")))
+        logger.error("PCR value [{}] is neither F, P or "", setting to X".format(val))
         val = "X"
     return val
 
