@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.core.management.base import BaseCommand, CommandError
 from apps.wheat_cultivars.models import Organism, Protocol, CultivarSample, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils
@@ -362,12 +363,15 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(CultivarSequenceFile._meta.db_table))
 
 
-def run():
-    truncate()
+class Command(BaseCommand):
+    help = 'Ingest Wheat Cultivars'
 
-    fetcher = Fetcher(DATA_DIR, METADATA_URL)
-    fetcher.clean()
-    fetcher.fetch_metadata_from_folder()
+    def handle(self, *args, **options):
+        truncate()
 
-    do_metadata()
-    do_md5()
+        fetcher = Fetcher(DATA_DIR, METADATA_URL)
+        fetcher.clean()
+        fetcher.fetch_metadata_from_folder()
+
+        do_metadata()
+        do_md5()
