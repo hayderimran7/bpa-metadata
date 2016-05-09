@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import os
+from django.core.management.base import BaseCommand, CommandError
 from apps.common.models import DNASource, Sequencer, Facility
 from apps.wheat_pathogens.models import (
     Organism,
@@ -287,11 +289,14 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {0} CASCADE".format(PathogenSequenceFile._meta.db_table))
 
 
-def run():
-    truncate()
+class Command(BaseCommand):
+    help = 'Ingest Wheat Pathogens Metadata'
 
-    # fetch the old data file
-    fetcher = Fetcher(DATA_DIR, METADATA_URL)
-    fetcher.fetch(METADATA_FILE)
+    def handle(self, *args, **options):
+        truncate()
 
-    ingest(Path(DATA_DIR, METADATA_FILE))
+        # fetch the old data file
+        fetcher = Fetcher(DATA_DIR, METADATA_URL)
+        fetcher.fetch(METADATA_FILE)
+
+        ingest(Path(DATA_DIR, METADATA_FILE))
