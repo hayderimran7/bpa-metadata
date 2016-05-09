@@ -5,6 +5,7 @@ import csv
 import gzip
 import time
 
+from django.core.management.base import BaseCommand, CommandError
 from unipath import Path
 from libs import logger_utils
 from libs import bpa_id_utils
@@ -281,12 +282,15 @@ def do_otu_matrix():
         ingest_otu_matrix(matrix_file)
 
 
-def run():
-    password = get_password('base')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-    fetcher.clean()
-    fetcher.fetch_metadata_from_folder()
-    truncate()
+class Command(BaseCommand):
+    help = 'Ingest BASE OTU Data'
 
-    do_taxonomies()
-    do_otu_matrix()
+    def handle(self, *args, **options):
+        password = get_password('base')
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher.clean()
+        fetcher.fetch_metadata_from_folder()
+        truncate()
+
+        do_taxonomies()
+        do_otu_matrix()
