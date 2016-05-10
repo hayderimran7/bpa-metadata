@@ -28,8 +28,8 @@ uwsgiprod:
     - DBUSER=bpamapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
-    - DJANGO_MAILGUN_API_KEY
-    - DJANGO_MAILGUN_SERVER_NAME
+    - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
+    - DJANGO_MAILGUN_SERVER_NAME=mg.ccgapps.com.au
   volumes_from:
     - dataprod
   links:

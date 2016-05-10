@@ -171,17 +171,12 @@ class BASESearchForm(forms.Form):
 
 
 class RequestAccessForm(forms.Form):
-    from_email = forms.EmailField(
-        label="Your email address", 
-        required=True)
-
-    name = forms.CharField(
-        label="Your name",
-        required=True)
-
+    from_email = forms.EmailField(label="Your email address", required=True)
+    name = forms.CharField(label="Your name", required=True)
+    affiliation = forms.CharField(label="Affiliation", required=True)
     message = forms.CharField(
         label="Request to Bioplatforms Australia",
-        initial="Please grant me access to the BASE project sequence data",
+        initial="Please provide a brief outline of interest in the BASE project sequence data",
         widget=forms.Textarea,
         required=True,
         max_length=1000)

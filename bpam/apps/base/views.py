@@ -377,6 +377,7 @@ class RequestAccessView(TemplateView):
     request_template_name = 'base/request_access.html'
     success_template_name = 'base/success.html'
     form_class = RequestAccessForm
+    email_template = "Name: {0}\n Affiliation: {1}\n {2}"
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -387,7 +388,9 @@ class RequestAccessView(TemplateView):
         if form.is_valid():
             from_email = form.cleaned_data['from_email']
             name = form.cleaned_data['name']
+            affiliation = form.cleaned_data['affiliation']
             message = form.cleaned_data['message']
+            email = self.email_template.format(name, affiliation, message)
             try:
                 send_mail("BASE Access Request", message, from_email, settings.BASE_REQUEST_LIST)
             except BadHeaderError:

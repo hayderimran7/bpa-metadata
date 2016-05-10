@@ -55,7 +55,7 @@ EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Metadata] ')
 SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
 # list of emails to send BASE access requests to
-BASE_REQUEST_LIST = env.get('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgapps.com.au'])
+BASE_REQUEST_LIST = env.getlist('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgapps.com.au'])
 
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
