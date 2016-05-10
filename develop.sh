@@ -19,9 +19,6 @@ case $ACTION in
     jslint)
         js_lint
         ;;
-    rm)
-        rm_images
-        ;;
     dev)
         start_dev
         ;;
