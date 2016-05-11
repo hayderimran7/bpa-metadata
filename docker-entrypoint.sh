@@ -81,6 +81,7 @@ function _django_collectstatic {
 
 # BASE
 function ingest_base() {
+    django-admin.py set_vocabulary--settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py ingest_base_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py ingest_base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py ingest_base_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
