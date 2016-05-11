@@ -56,7 +56,7 @@ def _profileposition():
     """Set Profile Position Vocabulary """
     
     logger.info(_profileposition.__doc__)
-    for position in ProfilePositionVocabulary:
+    for position, note in ProfilePositionVocabulary:
         logger.info(position)
         ProfilePosition.objects.get_or_create(position=position)
 
