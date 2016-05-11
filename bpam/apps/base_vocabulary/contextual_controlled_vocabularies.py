@@ -1,7 +1,8 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 # 1) Horizon
+
 HorizonClassificationVocabulary = (
     ('O',
      'The organic or litter layer mainly over the soil surface composed of fresh and decaying plant residue. Typically composed of >25% organic soil materials.  This layer can usually be easily brushed away by hand.'),
@@ -260,15 +261,15 @@ LandUseVocabulary = (
 
 # 3) Ecological Zone
 EcologicalZoneVocabulary = (
-    ('Arid', ''),
+    ('Arid', 'Hot and Dry'),
     ('Temperate', ''),
-    ('Tropical (dry)', ''),
-    ('Tropical (wet)', ''),
+    ('Tropical (dry)', 'Low rainfall'),
+    ('Tropical (wet)', 'High rainfall'),
     ('Coastal', ''),
     ('Montane', ''),
     ('Riverine', ''),
     ('Estuarine', ''),
-    ('Mediterranian', ''),
+    ('Mediterranean', ''),
     ('Polar', ''),
     ('Other', '')
 )
