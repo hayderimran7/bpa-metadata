@@ -89,4 +89,4 @@ class DrainageClassificationReadView(generics.ListAPIView):
 
 class ProfilePositionReadView(generics.ListAPIView):
     queryset = ProfilePosition.objects.all()
-    ferializer_class = serializers.ProfilePositionSerializer
+    serializer_class = serializers.ProfilePositionSerializer
