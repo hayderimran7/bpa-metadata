@@ -19,16 +19,13 @@ case $ACTION in
     jslint)
         js_lint
         ;;
-    dev)
+    start_dev)
         start_dev
         ;;
-    dev_build)
+    build_dev)
         create_base_image
         create_build_image
         create_dev_image
-        ;;
-    dev_full)
-        start_dev_full
         ;;
     releasetarball)
         create_release_tarball
@@ -36,7 +33,7 @@ case $ACTION in
     start_prod)
         start_prod
         ;;
-    prod_build)
+    build_prod)
         create_base_image
         create_build_image
         create_release_tarball
