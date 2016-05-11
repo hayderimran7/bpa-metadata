@@ -24,7 +24,7 @@ package_data = get_data_files()
 
 setup(
     name='bpam',
-    version='3.0.15',
+    version='3.0.16',
     description="BPA Metadata Management",
     author='Centre for Comparative Genomics',
     author_email='web@ccg.murdoch.edu.au',
