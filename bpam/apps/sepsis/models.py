@@ -1,14 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import (
-    SequenceFile,
-    DebugNote,
-)
+from apps.common.models import SequenceFile, BPAUniqueID
 
-class Host(models.Model, DebugNote):
+class Host(models.Model):
     """ Host from who sepsis sample was collected"""
 
     host_description = models.CharField('Host Description', max_length=200, blank=True, null=True)
@@ -62,7 +61,7 @@ class GenomicsMethod(Method):
 class ProteomicsMethod(Method):
     """Proteomics Metadata"""
 
-    sample_fractionation = models.IntegerField('Sample Fractionation', max_length=60, blank=True, null=True)
+    sample_fractionation = models.IntegerField('Sample Fractionation', blank=True, null=True)
     lc_column_type = models.CharField('LC/column type', max_length=100, blank=True, null=True)
     gradient = models.CharField('Gradient time (min)  /  % ACN (start-finish main gradient) / flow', max_length=100, blank=True, null=True)
     column = models.CharField('Sample on column(µg) ', max_length=100, blank=True, null=True)
@@ -71,7 +70,7 @@ class ProteomicsMethod(Method):
 
 
 # Little point in expanding the common Sample Type
-class SepsisSample(models.Model, DebugNote):
+class SepsisSample(models.Model):
     """ Sepsis Sample """
 
     bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name='BPA ID')

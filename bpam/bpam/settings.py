@@ -273,6 +273,7 @@ INSTALLED_APPS = (
     'apps.gbr',
     'apps.gbr_amplicon',
     'apps.barcode',
+    'apps.sepsis',
     'tinymce',
     'bootstrap3',
     'django_bootstrap_breadcrumbs',
