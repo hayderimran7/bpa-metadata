@@ -68,6 +68,11 @@ class ProteomicsMethod(Method):
     mass_spectrometer = models.CharField('Mass Spectrometer', max_length=100, blank=True, null=True)
     aquisition_mode = models.CharField('Acquisition Mode / fragmentation', max_length=100, blank=True, null=True)
 
+    # TODO, might be unnecessary
+class TranscriptomicsMethod(Method):
+    """Transcriptomics Metadata"""
+    pass
+
 
 # Little point in expanding the common Sample Type
 class SepsisSample(models.Model):
@@ -107,7 +112,7 @@ class SepsisSequenceFile(SequenceFile):
         abstract = True
 
 class ProteomicsFile(SepsisSequenceFile):
-    """Sequence file from Proteomics analysis process"""
+    """Sequence file from the proteomics analysis process"""
 
     method = models.ForeignKey(ProteomicsMethod, related_name="%(app_label)s_%(class)s_proteomicsfile")
 
@@ -115,9 +120,17 @@ class ProteomicsFile(SepsisSequenceFile):
         return u'{}'.format(self.filename)
 
 class GenomicsFile(SepsisSequenceFile):
-    """Sequence file from Genomics analysis process"""
+    """Sequence file from the genomics analysis process"""
 
     method = models.ForeignKey(GenomicsMethod, related_name="%(app_label)s_%(class)s_genomicsfile")
+
+    def __unicode__(self):
+        return u'{}'.format(self.filename)
+
+class TranscriptomicsFile(SepsisSequenceFile):
+    """Sequence file from the transcriptomics analysis process"""
+
+    method = models.ForeignKey(TranscriptomicsMethod, related_name="%(app_label)s_%(class)s_transcriptomicsfile")
 
     def __unicode__(self):
         return u'{}'.format(self.filename)
