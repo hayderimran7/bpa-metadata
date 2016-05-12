@@ -26,7 +26,7 @@ class Host(models.Model, DebugNote):
 
 
 class Method(models.Model):
-    """Sample preparation method"""
+    """Sample preparation method metadata"""
 
     note = models.TextField('Note', max_length=200, blank=True, null=True)
     growth_condition_temperature = models.IntegerField('Growth condition temperature', blank=True, null=True, help_text="Degrees Centigrade")
@@ -35,9 +35,40 @@ class Method(models.Model):
 
     class Meta:
         verbose_name = _('Growth Methods')
+        abstract = True
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.growth_condition_media, self.growth_condition_temperature, self.growth_condition_time)
+
+
+class GenomicsMethod(Method):
+    """Genomics Metadata"""
+
+    library_construction_protocol = models.CharField('Library Construction Protocol', max_length=100, blank=True, null=True)
+    insert_size_range = models.CharField('Insert Size Range', max_length=20, blank=True, null=True)
+    sequencer = models.CharField('Sequencer', max_length=100, blank=True, null=True)
+    sequencer_run_id = models.CharField('Sequencer run ID', max_length=20, blank=True, null=True)
+    smrt_cell_id = models.CharField('SMRT Cell ID', max_length=60, blank=True, null=True)
+    cell_position = models.CharField('Cell Position', max_length=60, blank=True, null=True)
+    rs_version = models.CharField('RS Version', max_length=20, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Genomics Methods')
+
+    def __unicode__(self):
+        return u'{} {} {}'.format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
+
+
+class ProteomicsMethod(Method):
+    """Proteomics Metadata"""
+
+    sample_fractionation = models.IntegerField('Sample Fractionation', max_length=60, blank=True, null=True)
+    lc_column_type = models.CharField('LC/column type', max_length=100, blank=True, null=True)
+    gradient = models.CharField('Gradient time (min)  /  % ACN (start-finish main gradient) / flow', max_length=100, blank=True, null=True)
+    column = models.CharField('Sample on column(µg) ', max_length=100, blank=True, null=True)
+    mass_spectrometer = models.CharField('Mass Spectrometer', max_length=100, blank=True, null=True)
+    aquisition_mode = models.CharField('Acquisition Mode / fragmentation', max_length=100, blank=True, null=True)
+
 
 # Little point in expanding the common Sample Type
 class SepsisSample(models.Model, DebugNote):
@@ -69,6 +100,25 @@ class SepsisSequenceFile(SequenceFile):
 
     project_name = 'sepsis'
     sample = models.ForeignKey(SepsisSample)
+
+    def __unicode__(self):
+        return u'{}'.format(self.filename)
+
+    class Meta:
+        abstract = True
+
+class ProteomicsFile(SepsisSequenceFile):
+    """Sequence file from Proteomics analysis process"""
+
+    method = models.ForeignKey(ProteomicsMethod, related_name="%(app_label)s_%(class)s_proteomicsfile")
+
+    def __unicode__(self):
+        return u'{}'.format(self.filename)
+
+class GenomicsFile(SepsisSequenceFile):
+    """Sequence file from Genomics analysis process"""
+
+    method = models.ForeignKey(GenomicsMethod, related_name="%(app_label)s_%(class)s_genomicsfile")
 
     def __unicode__(self):
         return u'{}'.format(self.filename)
