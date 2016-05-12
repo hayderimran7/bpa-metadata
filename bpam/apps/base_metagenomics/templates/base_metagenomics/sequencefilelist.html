@@ -20,13 +20,12 @@
         <tr>
             <td>
                 {% if sfile.url_verification.status_ok %}
-                <span title="Last checked {{ sfile.url_verification.checked_at }}"
-                    class="glyphicon glyphicon-download"></span>
-                {% else %}
-                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}"
-                    class="glyphicon glyphicon-flag"></span>
-                {% endif %}
+                <span title="Last checked {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-download"></span>
                 <a href="{{ sfile.get_url }}">{{ sfile.filename }}</a>
+                {% else %}
+                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-flag"></span>
+                {{ sfile.filename }}
+                {% endif %}
             </td>
             <td class="md5">{{ sfile.md5 }}</td>
             <td>{{ sfile.extraction }}</td>
