@@ -77,9 +77,7 @@ class FacilityManager(models.Manager):
     """
 
     def add(self, name):
-        """
-        I the name is empty return the Unknown Facility
-        """
+        """ If the name is empty return the Unknown Facility """
         name = name.strip().upper()
         if name == '':
             name = 'Unknown'
@@ -88,9 +86,7 @@ class FacilityManager(models.Manager):
 
 
 class Facility(models.Model):
-    """
-    The Sequencing Facility
-    """
+    """ The Sequencing Facility """
 
     facilities = {'RAM': 'Ramaciotti',
                   'UNSW': 'UNSW',
