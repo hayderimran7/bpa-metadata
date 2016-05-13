@@ -68,7 +68,7 @@ class ProteomicsMethod(Method):
     mass_spectrometer = models.CharField('Mass Spectrometer', max_length=100, blank=True, null=True)
     aquisition_mode = models.CharField('Acquisition Mode / fragmentation', max_length=100, blank=True, null=True)
 
-    # TODO, might be unnecessary
+# TODO
 class TranscriptomicsMethod(Method):
     """Transcriptomics Metadata"""
     pass
