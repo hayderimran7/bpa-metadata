@@ -10,18 +10,18 @@ from apps.common.models import SequenceFile, BPAUniqueID
 class Host(models.Model):
     """ Host from who sepsis sample was collected"""
 
-    host_description = models.CharField('Host Description', max_length=200, blank=True, null=True)
-    host_location = models.CharField('Host Location', max_length=200, blank=True, null=True, help_text="State, Country")
-    host_sex = models.CharField('Host Sex', max_length=1, blank=True, null=True, choices=(('M','Male'), ('F', 'Female')))
-    host_age = models.IntegerField('Host Age', blank=True, null=True)
-    host_dob = models.DateField('Host Day of Birth', blank=True, null=True, help_text="DD/MM/YY")
-    host_disease_outcome = models.TextField('Host Disease Outcome', blank=True, null=True)
+    description = models.CharField('Host Description', max_length=200, blank=True, null=True)
+    location = models.CharField('Host Location', max_length=200, blank=True, null=True, help_text="State, Country")
+    sex = models.CharField('Host Sex', max_length=1, blank=True, null=True, choices=(('M','Male'), ('F', 'Female')))
+    age = models.IntegerField('Host Age', blank=True, null=True)
+    dob = models.DateField('Host Day of Birth', blank=True, null=True, help_text="DD/MM/YY")
+    disease_outcome = models.TextField('Host Disease Outcome', blank=True, null=True)
 
     class Meta:
         verbose_name = _('Host')
 
     def __unicode__(self):
-        return u'{}'.format(self.description)
+        return "{} {} {} {}".format(self.description, self.location, self.sex, self.age)
 
 
 class Method(models.Model):
@@ -30,7 +30,7 @@ class Method(models.Model):
     note = models.TextField('Note', max_length=200, blank=True, null=True)
     growth_condition_temperature = models.IntegerField('Growth condition temperature', blank=True, null=True, help_text="Degrees Centigrade")
     growth_condition_time = models.IntegerField('Growth condition time', blank=True, null=True, help_text="Hours")
-    growth_condition_media = models.IntegerField('Growth condition media', blank=True, null=True)
+    growth_condition_media = models.CharField('Growth condition media', max_length=200, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Growth Method'
