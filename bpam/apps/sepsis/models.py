@@ -18,7 +18,7 @@ class Host(models.Model):
     host_disease_outcome = models.TextField('Host Disease Outcome', blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Hosts')
+        verbose_name = _('Host')
 
     def __unicode__(self):
         return u'{}'.format(self.description)
@@ -33,7 +33,7 @@ class Method(models.Model):
     growth_condition_media = models.IntegerField('Growth condition media', blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Growth Methods')
+        verbose_name = 'Growth Method'
         abstract = True
 
     def __unicode__(self):
@@ -52,7 +52,7 @@ class GenomicsMethod(Method):
     rs_version = models.CharField('RS Version', max_length=20, blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Genomics Methods')
+        verbose_name = 'Genomics Method'
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
@@ -68,6 +68,11 @@ class ProteomicsMethod(Method):
     mass_spectrometer = models.CharField('Mass Spectrometer', max_length=100, blank=True, null=True)
     aquisition_mode = models.CharField('Acquisition Mode / fragmentation', max_length=100, blank=True, null=True)
 
+    class Meta:
+        verbose_name = 'Proteomics Method'
+
+    def __unicode__(self):
+        return u'{} {} {}'.format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
 # TODO
 class TranscriptomicsMethod(Method):
     """Transcriptomics Metadata"""

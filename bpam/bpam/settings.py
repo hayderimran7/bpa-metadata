@@ -184,6 +184,7 @@ SUIT_CONFIG = {
         {'app': 'base_contextual', 'label': 'BASE Contextual', },
         {'app': 'base_otu', 'label': 'BASE OTU', },
         {'app': 'base_454', 'label': 'BASE 454', },
+        {'app': 'sepsis', 'label': 'Sepsis', },
         '-',
         {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
         # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
