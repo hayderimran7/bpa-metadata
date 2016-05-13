@@ -4,3 +4,5 @@ django-discover-runner
 docutils
 flake8
 pygments
+pygraphviz
+pydot
