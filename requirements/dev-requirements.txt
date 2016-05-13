@@ -5,4 +5,4 @@ docutils
 flake8
 pygments
 pygraphviz
-pydot
+pydot2
