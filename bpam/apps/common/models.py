@@ -11,7 +11,8 @@ from django.conf import settings
 class BPAMirror(models.Model):
     """
     A download site, offering the BPA Archive catalogue
-    via a base prefix.
+    via a base prefix
+    .
     """
     name = models.CharField(max_length=30, primary_key=True)
     base_url = models.URLField(max_length=200)
@@ -67,9 +68,7 @@ class BPAUniqueID(models.Model):
         return self.bpa_id
 
     def get_short_name(self):
-        """
-        Strips the common BPA prefix
-        """
+        """ Strips the common BPA prefix """
         return str(self.bpa_id).split('.')[-1]
 
 

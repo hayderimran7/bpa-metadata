@@ -282,6 +282,7 @@ INSTALLED_APPS = (
     'explorer',
     'leaflet',
     'djangosecure',
+    'import_export',
 )
 
 

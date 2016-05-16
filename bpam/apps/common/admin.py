@@ -110,7 +110,7 @@ class SequenceFileAdmin(admin.ModelAdmin):
 class BPAProjectAdmin(admin.ModelAdmin):
     class BPAProjectForm(forms.ModelForm):
         class Meta:
-            fields = "__all__"
+            fields = ('key', 'name', 'description', 'note')
             model = BPAProject
             widgets = {
                 'note': AutosizedTextarea(attrs={'class': 'input-large',
@@ -119,7 +119,7 @@ class BPAProjectAdmin(admin.ModelAdmin):
 
     form = BPAProjectForm
     fields = ('name', 'description', 'note')
-    list_display = ('name', 'key', 'description')
+    list_display = ('name', 'description')
 
 
 admin.site.register(BPAProject, BPAProjectAdmin)

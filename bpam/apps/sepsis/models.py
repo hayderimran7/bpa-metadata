@@ -83,12 +83,12 @@ class TranscriptomicsMethod(Method):
 class SepsisSample(models.Model):
     """ Sepsis Sample """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name='BPA ID')
+    bpa_id = models.OneToOneField(BPAUniqueID, verbose_name='BPA ID')
     taxon_or_organism = models.TextField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.TextField('Strain Or Isolate', max_length=200, blank=True, null=True)
     strain_description = models.TextField('Strain Description', max_length=300, blank=True, null=True)
     gram_stain = models.CharField('Gram Staining', max_length=3, choices=(('POS', 'Positive'), ('NEG', 'Negative')))
-    serovar = models.CharField('Serovar', max_length=30, blank=True, null=True)
+    serovar = models.CharField('Serovar', max_length=100, blank=True, null=True)
     key_virulence_genes = models.CharField('Key Virulence Genes', max_length=100, blank=True, null=True)
     isolation_source = models.CharField('Isolation Source', max_length=100, blank=True, null=True)
     publication_reference = models.CharField('Publication Reference', max_length=200, blank=True, null=True)
@@ -99,7 +99,10 @@ class SepsisSample(models.Model):
     host = models.ForeignKey(Host, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
 
     def __unicode__(self):
-        return u'{0}:{1}, {2}'.format(self.bpa_id, self.taxon_or_organism, self.strain_or_isolate)
+        try:
+            return u"{}:{}, {}".format(self.bpa_id, self.taxon_or_organism, self.strain_or_isolate)
+        except:
+            return u"NO_BPA_ID:{}, {}".format(self.taxon_or_organism, self.strain_or_isolate)
 
     class Meta:
         verbose_name = _('Sepsis Sample')

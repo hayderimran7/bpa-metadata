@@ -22,10 +22,16 @@ projects = (
     Project('WHEAT_PATHOGEN', 'Wheat Pathogens', 'Wheat Pathogens', ''),
 )
 
+def truncate():
+    from django.db import connection
+
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(BPAProject._meta.db_table))
 
 def set_bpa_projects():
-    """ Set BPA Projects if not set already. """
+    """ Create BPA Projects """
 
+    truncate()
     for project in projects:
         BPAProject.objects.get_or_create(key=project.key,
                                          name=project.name,
