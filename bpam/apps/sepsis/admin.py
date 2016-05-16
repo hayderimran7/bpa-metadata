@@ -17,6 +17,7 @@ from .models import (
     TranscriptomicsMethod,
     TranscriptomicsFile,
     SepsisSample,
+    SampleTrack,
 )
 
 # BPA_sample_ID	Gram_staining_(positive_or_negative)
@@ -158,6 +159,7 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
     list_filter = list_display
 
 admin.site.register(Host)
+admin.site.register(SampleTrack)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
 admin.site.register(GenomicsMethod)
 admin.site.register(GenomicsFile)

@@ -5,7 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import SequenceFile, BPAUniqueID
+from apps.common.models import SequenceFile, BPAUniqueID, Facility
 
 class Host(models.Model):
     """ Host from who sepsis sample was collected"""
@@ -142,3 +142,29 @@ class TranscriptomicsFile(SepsisSequenceFile):
 
     def __unicode__(self):
         return u'{}'.format(self.filename)
+
+
+class SampleTrack(models.Model):
+    """ Track the Sepsis Sample """
+
+    sample =  models.ForeignKey(SepsisSample)
+    given_to = models.CharField("Given To", max_length=200, blank=True, null=True, help_text="Sample was delivered to")
+    allocation_date = models.DateField("Allocation Date", blank=True, null=True, help_text="DD/MM/YY")
+
+    work_order = models.CharField("Work Order", max_length=50, blank=True, null=True)
+    replicate = models.IntegerField("Replicate", blank=True, null=True)
+    omics = models.CharField("Omics Type", max_length=50, blank=True, null=True)
+    analytical_platform = models.CharField("Analytical Platform", max_length=100, blank=True, null=True)
+    facility = models.ForeignKey(Facility, blank=True, null=True)
+
+    sample_submission_date = models.DateField("Sample Submission Date", blank=True, null=True, help_text="DD/MM/YY")
+    sample_submission_date = models.DateField("Sample Submission Date", blank=True, null=True, help_text="DD/MM/YY")
+    contextual_data_submission_date = models.DateField("Contextual Data Submission Date", blank=True, null=True, help_text="DD/MM/YY")
+    data_generated = models.BooleanField("Data generated", default=False)
+    archive_ingestion_date = models.DateField("Archive Ingestion Date", blank=True, null=True, help_text="DD/MM/YY")
+    curation_url = models.URLField("Curation URL", blank=True, null=True)
+    dataset_url = models.URLField("Dataset URL", blank=True, null=True)
+
+    
+    def __unicode__(self):
+        return u'{}'.format(self.sample)

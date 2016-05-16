@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 from apps.common.models import DNASource, Facility, Sequencer
@@ -151,10 +151,16 @@ def ingest_arrays(arrays):
         )
 
 
+def strip_path(fname):
+    """strips / """
+    i = fname.rfind("/")
+    if i != -1:
+        return fname[i:]
+    return fname
+
+
 def get_melanoma_sample_data(file_name):
-    """
-    The data sets is relatively small, so make a in-memory copy to simplify some operations.
-    """
+    """ The data sets is relatively small, so make a in-memory copy to simplify some operations. """
 
     field_spec = [('bpa_id', 'Unique Identifier', lambda s: s.replace('/', '.')),
                   ('sample_name', 'Sample Name', None),
@@ -182,7 +188,7 @@ def get_melanoma_sample_data(file_name):
                   ('run_number', 'Run number', None),
                   ('flow_cell_id', 'Run #:Flow Cell ID', None),
                   ('lane_number', 'Lane number', None),
-                  ('sequence_filename', 'Sequence file names - supplied by sequencing facility', None),
+                  ('sequence_filename', 'Sequence file names - supplied by sequencing facility', strip_path),
                   ('md5_checksum', 'MD5 checksum', None),
                   ]
 
@@ -343,6 +349,7 @@ def ingest(spreadsheet_file):
     ingest_samples(sample_data)
     ingest_arrays(list(get_array_data(spreadsheet_file)))
     ingest_runs(sample_data)
+    
 
 class Command(BaseCommand):
     help = 'Ingest Melanoma'
