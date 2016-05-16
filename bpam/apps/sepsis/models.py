@@ -84,6 +84,8 @@ class SepsisSample(models.Model):
     """ Sepsis Sample """
 
     bpa_id = models.OneToOneField(BPAUniqueID, verbose_name='BPA ID')
+    host = models.ForeignKey(Host, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
+
     taxon_or_organism = models.TextField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.TextField('Strain Or Isolate', max_length=200, blank=True, null=True)
     strain_description = models.TextField('Strain Description', max_length=300, blank=True, null=True)
@@ -93,10 +95,8 @@ class SepsisSample(models.Model):
     isolation_source = models.CharField('Isolation Source', max_length=100, blank=True, null=True)
     publication_reference = models.CharField('Publication Reference', max_length=200, blank=True, null=True)
     contact_researcher = models.CharField('Contact Researcher', max_length=200, blank=True, null=True)
-    collection_date = models.DateField('Collection Date', blank=True, null=True, help_text="DD/MM/YY")
+    culture_collection_date = models.DateField('Collection Date', blank=True, null=True, help_text="DD/MM/YY")
     culture_collection_id = models.CharField('Culture Collection ID', max_length=100, blank=True, null=True)
-
-    host = models.ForeignKey(Host, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
 
     def __unicode__(self):
         try:

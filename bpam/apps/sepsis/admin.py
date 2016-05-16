@@ -6,6 +6,7 @@ from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, Enclos
 from apps.common.admin import SequenceFileAdmin, BPAUniqueID, BPAProject
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
+from dateutil.parser import parse as date_parser
 
 from .models import (
     Host,
@@ -56,6 +57,21 @@ class BPAIDField(fields.Field):
         bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         return bpa_id
 
+class DateField(fields.Field):
+    """
+    This field automatically parses a number of known date formats and returns
+    the standard python date
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(DateField, self).__init__(*args, **kwargs)
+
+    def clean(self, data):
+        try:
+            return date_parser(data[self.column_name])
+        except ValueError:
+            return None
+
 
 class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
@@ -64,13 +80,13 @@ class SepsisSampleResource(resources.ModelResource):
     taxon_or_organism = fields.Field(attribute="taxon_or_organism", column_name="Taxon_OR_organism")
     strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
     serovar = fields.Field(attribute="serovar", column_name="Serovar")
-    key_virolence_genes = fields.Field(attribute="key_virolence_genes", column_name="Key_virolence_genes")
+    key_virulence_genes = fields.Field(attribute="key_virulence_genes", column_name="Key_virulence_genes")
     strain_description = fields.Field(attribute="strain_description", column_name="Strain_description")
     isolation_source = fields.Field(attribute="isolation_source", column_name="Isolation_source")
     publication_reference = fields.Field(attribute="publication_reference", column_name="Publication_reference")
     contact_researcher = fields.Field(attribute="contact_researcher", column_name="Contact_researcher")
     culture_collection_id = fields.Field(attribute="culture_collection_id", column_name="Culture_collection_ID (alternative name[s])")
-    culture_collection_date = fields.Field(
+    culture_collection_date = DateField(
         widget=widgets.DateWidget(format="%d/%m/%y"),
         attribute="culture_collection_date",
         column_name="Culture_collection_date (DD/MM/YY)",
@@ -121,6 +137,25 @@ class SepsisSampleResource(resources.ModelResource):
 
 class SepsisSampleAdmin(ImportExportModelAdmin):
     resource_class = SepsisSampleResource
+
+    date_hierarchy = 'culture_collection_date'
+
+    list_display=(
+        "bpa_id",
+        "taxon_or_organism",
+        "strain_or_isolate",
+        "gram_stain",
+        "serovar",
+        "key_virulence_genes",
+        "strain_description",
+        "isolation_source",
+        "publication_reference",
+        "contact_researcher",
+        "culture_collection_id",
+        "culture_collection_date",
+    )
+
+    list_filter = list_display
 
 admin.site.register(Host)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
