@@ -47,7 +47,6 @@ from .models import (
 # Host_description
 
 class BPAIDField(fields.Field):
-
     def __init__(self, *args, **kwargs):
         super(BPAIDField, self).__init__(*args, **kwargs)
 
@@ -57,6 +56,19 @@ class BPAIDField(fields.Field):
         project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
         bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         return bpa_id
+
+
+class SepsisSampleField(fields.Field):
+    def __init__(self, *args, **kwargs):
+        super(SepsisSampleField, self).__init__(*args, **kwargs)
+
+    def clean(self, data):
+        bpaid = data[self.column_name]
+        bpaid = bpaid.replace("/", ".")
+        project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+        sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
+        return sample
 
 class DateField(fields.Field):
     """
@@ -162,17 +174,21 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
 class SampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
 
-    sample = fields.Field(attribute="sample", column_name="BPA ID")
+    sample = SepsisSampleField(
+        column_name='BPA ID',
+        attribute='sample',
+        widget=widgets.ForeignKeyWidget(SepsisSample),
+    )
     given_to = fields.Field(attribute="given_to", column_name="Given to")
     allocation_date = DateField(
         widget=widgets.DateWidget(format="%d/%m/%y"),
-        attribute="culture_collection_date",
-        column_name="Culture_collection_date (DD/MM/YY)",
+        attribute="allocation_date",
+        column_name="Date allocated",
     )
 
 
     class Meta:
-        import_id_fields = ('', )
+        import_id_fields = ('sample', )
         model = SampleTrack
 
 class TrackAdmin(ImportExportModelAdmin):
