@@ -158,8 +158,44 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
 
     list_filter = list_display
 
+
+class SampleTrackResource(resources.ModelResource):
+    """Sample tracking mappings"""
+
+    sample = fields.Field(attribute="sample", column_name="BPA ID")
+    given_to = fields.Field(attribute="given_to", column_name="Given to")
+    allocation_date = DateField(
+        widget=widgets.DateWidget(format="%d/%m/%y"),
+        attribute="culture_collection_date",
+        column_name="Culture_collection_date (DD/MM/YY)",
+    )
+
+
+    class Meta:
+        import_id_fields = ('', )
+        model = SampleTrack
+
+class TrackAdmin(ImportExportModelAdmin):
+    resource_class = SampleTrackResource
+    list_display = (
+        "sample",
+        "replicate",
+        "given_to",
+        "allocation_date",
+        "work_order",
+        "omics",
+        "analytical_platform",
+        "facility",
+        "sample_submission_date",
+        "contextual_data_submission_date",
+        "data_generated",
+        "archive_ingestion_date",
+        "dataset_url",
+        "curation_url",
+        )
+
 admin.site.register(Host)
-admin.site.register(SampleTrack)
+admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
 admin.site.register(GenomicsMethod)
 admin.site.register(GenomicsFile)

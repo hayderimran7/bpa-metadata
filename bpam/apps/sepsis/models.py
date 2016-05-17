@@ -158,7 +158,6 @@ class SampleTrack(models.Model):
     facility = models.ForeignKey(Facility, blank=True, null=True)
 
     sample_submission_date = models.DateField("Sample Submission Date", blank=True, null=True, help_text="DD/MM/YY")
-    sample_submission_date = models.DateField("Sample Submission Date", blank=True, null=True, help_text="DD/MM/YY")
     contextual_data_submission_date = models.DateField("Contextual Data Submission Date", blank=True, null=True, help_text="DD/MM/YY")
     data_generated = models.BooleanField("Data generated", default=False)
     archive_ingestion_date = models.DateField("Archive Ingestion Date", blank=True, null=True, help_text="DD/MM/YY")
