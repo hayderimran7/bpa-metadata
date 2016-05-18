@@ -98,10 +98,7 @@ class SepsisSample(models.Model):
     culture_collection_id = models.CharField("Culture Collection ID", max_length=100, blank=True, null=True)
 
     def __unicode__(self):
-        try:
-            return u"{}:{}, {}".format(self.bpa_id, self.taxon_or_organism, self.strain_or_isolate)
-        except:
-            return u"NO_BPA_ID:{}, {}".format(self.taxon_or_organism, self.strain_or_isolate)
+        return ",".join([e for e in (self.bpa_id.bpa_id, self.taxon_or_organism, self.strain_or_isolate) if e])
 
     class Meta:
         verbose_name = "Sepsis Sample"
@@ -146,7 +143,7 @@ class TranscriptomicsFile(SepsisSequenceFile):
 class SampleTrack(models.Model):
     """ Track the Sepsis Sample """
 
-    sample =  models.ForeignKey(SepsisSample)
+    sample =  models.ForeignKey(SepsisSample, related_name="%(app_label)s_%(class)s_track")
     given_to = models.CharField("Given To", max_length=200, blank=True, null=True, help_text="Sample was delivered to")
     allocation_date = models.DateField("Allocation Date", blank=True, null=True, help_text="DD/MM/YY")
 
@@ -163,10 +160,11 @@ class SampleTrack(models.Model):
     curation_url = models.URLField("Curation URL", blank=True, null=True)
     dataset_url = models.URLField("Dataset URL", blank=True, null=True)
 
-    
     def __unicode__(self):
-        return u"{}".format(self.sample)
+        try:
+            return u"{}".format(self.sample)
+        except tDoesNotExist:
+            return u"Sepsis Sample Track"
 
-    
     class Meta:
         verbose_name = "Sample Tracking Information"

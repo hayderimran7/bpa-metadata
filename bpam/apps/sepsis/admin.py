@@ -58,17 +58,6 @@ class BPAIDField(fields.Field):
         return bpa_id
 
 
-class SepsisSampleField(fields.Field):
-    def __init__(self, *args, **kwargs):
-        super(SepsisSampleField, self).__init__(*args, **kwargs)
-
-    def clean(self, data):
-        bpaid = data[self.column_name]
-        bpaid = bpaid.replace("/", ".")
-        project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
-        sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
-        return sample
 
 class DateField(fields.Field):
     """
@@ -89,7 +78,7 @@ class DateField(fields.Field):
 class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
 
-    bpa_id = BPAIDField(attribute="bpa_id", column_name="BPA_sample_ID")
+    bpa_id = BPAIDField(attribute="bpa_id", column_name="BPA ID")
     taxon_or_organism = fields.Field(attribute="taxon_or_organism", column_name="Taxon_OR_organism")
     strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
     serovar = fields.Field(attribute="serovar", column_name="Serovar")
@@ -171,6 +160,19 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
     list_filter = list_display
 
 
+class SepsisSampleField(fields.Field):
+    def __init__(self, *args, **kwargs):
+        super(SepsisSampleField, self).__init__(*args, **kwargs)
+
+    def clean(self, data):
+        bpaid = data[self.column_name]
+        bpaid = bpaid.replace("/", ".")
+        project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+        sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
+        return sample
+
+
 class SampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
 
@@ -179,6 +181,7 @@ class SampleTrackResource(resources.ModelResource):
         attribute='sample',
         widget=widgets.ForeignKeyWidget(SepsisSample),
     )
+
     given_to = fields.Field(attribute="given_to", column_name="Given to")
     allocation_date = DateField(
         widget=widgets.DateWidget(format="%d/%m/%y"),
