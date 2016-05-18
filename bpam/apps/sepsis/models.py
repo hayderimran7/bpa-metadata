@@ -85,9 +85,9 @@ class SepsisSample(models.Model):
     bpa_id = models.OneToOneField(BPAUniqueID, verbose_name="BPA ID")
     host = models.ForeignKey(Host, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
 
-    taxon_or_organism = models.TextField("Taxon or Organism", max_length=200, blank=True, null=True)
-    strain_or_isolate = models.TextField("Strain Or Isolate", max_length=200, blank=True, null=True)
-    strain_description = models.TextField("Strain Description", max_length=300, blank=True, null=True)
+    taxon_or_organism = models.CharField("Taxon or Organism", max_length=200, blank=True, null=True)
+    strain_or_isolate = models.CharField("Strain Or Isolate", max_length=200, blank=True, null=True)
+    strain_description = models.CharField("Strain Description", max_length=300, blank=True, null=True)
     gram_stain = models.CharField("Gram Staining", max_length=3, choices=(("POS", "Positive"), ("NEG", "Negative")))
     serovar = models.CharField("Serovar", max_length=100, blank=True, null=True)
     key_virulence_genes = models.CharField("Key Virulence Genes", max_length=100, blank=True, null=True)
@@ -163,7 +163,7 @@ class SampleTrack(models.Model):
     def __unicode__(self):
         try:
             return u"{}".format(self.sample)
-        except tDoesNotExist:
+        except SepsisSample.DoesNotExist:
             return u"Sepsis Sample Track"
 
     class Meta:

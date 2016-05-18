@@ -7,6 +7,7 @@ from apps.common.admin import SequenceFileAdmin, BPAUniqueID, BPAProject
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
 from dateutil.parser import parse as date_parser
+import ingest
 
 from .models import (
     Host,
@@ -51,12 +52,7 @@ class BPAIDField(fields.Field):
         super(BPAIDField, self).__init__(*args, **kwargs)
 
     def clean(self, data):
-        bpaid = data[self.column_name]
-        bpaid = bpaid.replace("/", ".")
-        project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
-        return bpa_id
-
+        return ingest.get_bpa_id(data[self.column_name])
 
 
 class DateField(fields.Field):
@@ -70,10 +66,9 @@ class DateField(fields.Field):
 
     def clean(self, data):
         try:
-            return date_parser(data[self.column_name])
+            return ingest.get_date(data[self.column_name])
         except ValueError:
             return None
-
 
 class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
@@ -94,37 +89,7 @@ class SepsisSampleResource(resources.ModelResource):
         column_name="Culture_collection_date (DD/MM/YY)",
     )
 
-    # # Host
-    # host_description = fields.Field(
-    #     column_name='Host_description',
-    #     attribute='host_description',
-    #     widget=widgets.ForeignKeyWidget(Host, 'description'))
-
-    # host_location = fields.Field(
-    #     column_name='Host_location (state, country)',
-    #     attribute='host_location',
-    #     widget=widgets.ForeignKeyWidget(Host, 'location'))
-
-    # host_age = fields.Field(
-    #     column_name='Host_age',
-    #     attribute='host_location',
-    #     widget=widgets.ForeignKeyWidget(Host, 'age'))
-
-    # host_dob = fields.Field(
-    #     column_name='Host_DOB (DD/MM/YY)',
-    #     attribute='host_dob',
-    #     widget=widgets.ForeignKeyWidget(Host, 'dob'))
-
-    # host_sex = fields.Field(
-    #     column_name='Host_sex (M/F))',
-    #     attribute='host_sex',
-    #     widget=widgets.ForeignKeyWidget(Host, 'sex'))
-
-    # host_disease_outcome = fields.Field(
-    #     column_name='Host_disease_outcome)',
-    #     attribute='host_disease_outcome',
-    #     widget=widgets.ForeignKeyWidget(Host, 'disease_outcome'))
-
+    # TODO
     # growth_condition_time =
     # growth_condition_temperature =
     # growth_condition_media =
@@ -132,6 +97,12 @@ class SepsisSampleResource(resources.ModelResource):
     # analytical_facility =
     # analytical_platform =
     # experimental_sample_preparation_method =
+
+    def init_instance(self, row):
+        obj = self._meta.model()
+        obj.host = ingest.get_host(row)
+        obj.bpa_id = ingest.get_bpa_id(row.get("BPA ID"))
+        return obj
 
     class Meta:
         import_id_fields = ('bpa_id', )
@@ -142,7 +113,7 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
 
     date_hierarchy = 'culture_collection_date'
 
-    list_display=(
+    list_display = (
         "bpa_id",
         "taxon_or_organism",
         "strain_or_isolate",
@@ -157,7 +128,14 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
         "culture_collection_date",
     )
 
-    list_filter = list_display
+    list_filter = (
+        "bpa_id__bpa_id",
+        "taxon_or_organism",
+        "strain_or_isolate",
+        "gram_stain",
+        "serovar",
+        "key_virulence_genes",
+        )
 
 
 class SepsisSampleField(fields.Field):
@@ -196,6 +174,7 @@ class SampleTrackResource(resources.ModelResource):
 
 class TrackAdmin(ImportExportModelAdmin):
     resource_class = SampleTrackResource
+    date_hierarchy = 'allocation_date'
     list_display = (
         "sample",
         "replicate",
@@ -213,7 +192,31 @@ class TrackAdmin(ImportExportModelAdmin):
         "curation_url",
         )
 
-admin.site.register(Host)
+    list_filter = (
+        "sample",
+        "facility",
+        "replicate",
+        "data_generated",
+        "given_to",
+        "dataset_url",
+    )
+
+class HostAdmin(ImportExportModelAdmin):
+    list_display = (
+        "description",
+        "location",
+        "sex",
+        "age",
+        "dob",
+        "disease_outcome",
+        )
+
+    list_filter = (
+        "description",
+        "sex",
+    )
+
+admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
 admin.site.register(GenomicsMethod)
