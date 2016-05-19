@@ -83,7 +83,7 @@ class SepsisSample(models.Model):
     """ Sepsis Sample """
 
     bpa_id = models.OneToOneField(BPAUniqueID, verbose_name="BPA ID")
-    host = models.ForeignKey(Host, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
+    host = models.ForeignKey(Host, blank=True, null=True, related_name="samples")
 
     taxon_or_organism = models.CharField("Taxon or Organism", max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField("Strain Or Isolate", max_length=200, blank=True, null=True)

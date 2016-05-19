@@ -9,6 +9,8 @@ urlpatterns = patterns(
     '',
     # rest api
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    # SEPSIS
+    url(r'^sepsis/', include('apps.sepsis.urls', namespace='sepsis')),
     # BASE
     url(r'^base/', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/', include('apps.base_metagenomics.urls', namespace='base_metagenomics')),
