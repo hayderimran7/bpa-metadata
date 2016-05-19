@@ -40,4 +40,5 @@ urlpatterns = patterns(
         regex=r'^searchexport',
         view=views.SearchExportView.as_view(),
         name='searchexport'),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 )

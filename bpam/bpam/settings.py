@@ -279,6 +279,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'django_bootstrap_breadcrumbs',
     'rest_framework',
+    'rest_framework_swagger',
     'explorer',
     'leaflet',
     'djangosecure',
