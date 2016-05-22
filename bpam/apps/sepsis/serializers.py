@@ -14,12 +14,13 @@ from .models import (
     SampleTrack,
 )
 
+class HostSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Host
+
 class BPAProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BPAProject
-        extra_kwargs = {
-            'url': {'view_name': 'bpaproject-detail',},
-        }
 
 class BPAUniqueIDSerializer(serializers.HyperlinkedModelSerializer):
     project = BPAProjectSerializer()
@@ -27,18 +28,10 @@ class BPAUniqueIDSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BPAUniqueID
 
-        extra_kwargs = {
-            'url': {'view_name': 'bpauniqueid-detail',},
-        }
-
 class SepsisSampleSerializer(serializers.HyperlinkedModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
         model = SepsisSample
-        exclude = ("host", )
-
-        extra_kwargs = {
-            'url': {'view_name': 'sepsissample-detail', },
-        }
+        exclude = ("bpa_id", )
 

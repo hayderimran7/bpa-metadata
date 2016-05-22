@@ -54,7 +54,6 @@ class BPAIDField(fields.Field):
     def clean(self, data):
         return ingest.get_bpa_id(data[self.column_name])
 
-
 class DateField(fields.Field):
     """
     This field automatically parses a number of known date formats and returns
@@ -70,6 +69,7 @@ class DateField(fields.Field):
         except ValueError:
             return None
 
+ 
 class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
 
@@ -137,7 +137,6 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
         "key_virulence_genes",
         )
 
-
 class SepsisSampleField(fields.Field):
     def __init__(self, *args, **kwargs):
         super(SepsisSampleField, self).__init__(*args, **kwargs)
@@ -149,7 +148,6 @@ class SepsisSampleField(fields.Field):
         bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
         return sample
-
 
 class SampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
@@ -201,7 +199,28 @@ class TrackAdmin(ImportExportModelAdmin):
         "dataset_url",
     )
 
+
+class HostResource(resources.ModelResource):
+    """Maps contextual file to host """
+
+    description = fields.Field(attribute="description", column_name="Host_description")
+    location = fields.Field(attribute="location", column_name="Host_location (state, country)")
+    sex = fields.Field(attribute="sex", column_name="Host_sex (F/M)")
+    age = fields.Field(attribute="age", column_name="Host_age")
+    disease_outcome = fields.Field(attribute="disease_outcome", column_name="Host_disease_outcome")
+    dob = DateField(
+        widget=widgets.DateWidget(format="%d/%m/%y"),
+        attribute="dob",
+        column_name="Host_DOB (DD/MM/YY)",
+    )
+
+    class Meta:
+        model = Host
+        # FIXME
+        import_id_fields = ('description', 'location' )
+
 class HostAdmin(ImportExportModelAdmin):
+    resource_class = HostResource
     list_display = (
         "description",
         "location",

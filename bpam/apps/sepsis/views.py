@@ -37,3 +37,11 @@ class BPAProjectViewSet(viewsets.ModelViewSet):
     """
     queryset = BPAProject.objects.all()
     serializer_class = serializers.BPAProjectSerializer
+
+
+class HostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Sepsis Hosts to be viewed or edited.
+    """
+    queryset = Host.objects.all()
+    serializer_class = serializers.HostSerializer
