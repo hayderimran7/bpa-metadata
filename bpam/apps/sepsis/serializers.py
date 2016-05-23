@@ -14,15 +14,15 @@ from .models import (
     SampleTrack,
 )
 
-class HostSerializer(serializers.HyperlinkedModelSerializer):
+class HostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Host
 
-class BPAProjectSerializer(serializers.HyperlinkedModelSerializer):
+class BPAProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = BPAProject
 
-class BPAUniqueIDSerializer(serializers.HyperlinkedModelSerializer):
+class BPAUniqueIDSerializer(serializers.ModelSerializer):
     project = BPAProjectSerializer()
 
     class Meta:
@@ -30,8 +30,10 @@ class BPAUniqueIDSerializer(serializers.HyperlinkedModelSerializer):
 
 class SepsisSampleSerializer(serializers.HyperlinkedModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
+    host = HostSerializer()
 
     class Meta:
         model = SepsisSample
-        exclude = ("bpa_id", )
+        extra_kwargs = {'url': {'view_name': "sepsissample-detail"}}
+
 
