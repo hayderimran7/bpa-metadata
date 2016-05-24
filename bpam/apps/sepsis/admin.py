@@ -69,7 +69,6 @@ class DateField(fields.Field):
         except ValueError:
             return None
 
- 
 class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
 
@@ -234,6 +233,7 @@ class HostAdmin(ImportExportModelAdmin):
         "description",
         "sex",
     )
+
 
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)

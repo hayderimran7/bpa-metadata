@@ -14,11 +14,11 @@ from .models import (
     SampleTrack,
 )
 
-class HostSerializer(serializers.ModelSerializer):
+class HostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Host
 
-class BPAProjectSerializer(serializers.ModelSerializer):
+class BPAProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BPAProject
 
@@ -27,6 +27,7 @@ class BPAUniqueIDSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BPAUniqueID
+        lookup_field = "bpa_id"
 
 class SepsisSampleSerializer(serializers.HyperlinkedModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
@@ -34,6 +35,5 @@ class SepsisSampleSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SepsisSample
-        extra_kwargs = {'url': {'view_name': "sepsissample-detail"}}
 
 

@@ -30,6 +30,7 @@ class BPAIDViewSet(viewsets.ModelViewSet):
     """
     queryset = BPAUniqueID.objects.all()
     serializer_class = serializers.BPAUniqueIDSerializer
+    lookup_field = "bpa_id"
 
 class BPAProjectViewSet(viewsets.ModelViewSet):
     """
