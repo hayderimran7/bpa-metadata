@@ -17,6 +17,34 @@ from .models import (
 
 import serializers
 
+class TranscriptomicsFileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for Sepsis Transcriptomic Sequences
+    """
+    queryset = TranscriptomicsFile.objects.all()
+    serializer_class = serializers.TranscriptomicsFileSerializer
+
+class GenomicsFileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for Sepsis Genomics Sequences
+    """
+    queryset = GenomicsFile.objects.all()
+    serializer_class = serializers.GenomicsFileSerializer
+
+class ProteomicsFileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for Sepsis Proteomics Sequences
+    """
+    queryset = ProteomicsFile.objects.all()
+    serializer_class = serializers.ProteomicsFileSerializer
+
+class SepsisSampleTrackViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows the tracking of sepsis samples
+    """
+    queryset = SampleTrack.objects.all()
+    serializer_class = serializers.SampleTrackSerializer
+
 class SepsisSampleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Sepsis Samples to be viewed or edited.

@@ -215,8 +215,7 @@ class HostResource(resources.ModelResource):
 
     class Meta:
         model = Host
-        # FIXME
-        import_id_fields = ('description', 'location' )
+        import_id_fields = ('description', 'location', 'sex', 'age', 'disease_outcome', 'dob' )
 
 class HostAdmin(ImportExportModelAdmin):
     resource_class = HostResource

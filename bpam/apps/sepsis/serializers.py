@@ -14,6 +14,22 @@ from .models import (
     SampleTrack,
 )
 
+class ProteomicsFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProteomicsFile
+
+class GenomicsFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GenomicsFile
+
+class TranscriptomicsFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TranscriptomicsFile
+
+class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SampleTrack
+
 class HostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Host
