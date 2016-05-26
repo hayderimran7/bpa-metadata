@@ -198,14 +198,27 @@ class TrackAdmin(ImportExportModelAdmin):
         "dataset_url",
     )
 
+class SexWidget(object):
+    """Sex allowed vocabulary"""
+
+    rendermap = {"M": "Male", "F": "Female" }
+    cleanmap = dict((v, k) for k, v in rendermap.iteritems())
+
+    def clean(self, value):
+        return self.cleanmap.get(value)
+
+    def render(self, value):
+        return self.rendermap.get(value)
+
 
 class HostResource(resources.ModelResource):
     """Maps contextual file to host """
 
+    id = fields.Field(attribute="id", column_name="Host ID") # asuming 1-1 for now FIXME
     description = fields.Field(attribute="description", column_name="Host_description")
     location = fields.Field(attribute="location", column_name="Host_location (state, country)")
-    sex = fields.Field(attribute="sex", column_name="Host_sex (F/M)")
-    age = fields.Field(attribute="age", column_name="Host_age")
+    sex = fields.Field(attribute="sex", column_name="Host_sex (F/M)", widget=SexWidget())
+    age = fields.Field(attribute="age", column_name="Host_age", widget=widgets.IntegerWidget())
     disease_outcome = fields.Field(attribute="disease_outcome", column_name="Host_disease_outcome")
     dob = DateField(
         widget=widgets.DateWidget(format="%d/%m/%y"),
@@ -215,7 +228,7 @@ class HostResource(resources.ModelResource):
 
     class Meta:
         model = Host
-        import_id_fields = ('description', 'location', 'sex', 'age', 'disease_outcome', 'dob' )
+        import_id_fields = ('id', )
 
 class HostAdmin(ImportExportModelAdmin):
     resource_class = HostResource

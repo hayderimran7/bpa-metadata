@@ -37,6 +37,7 @@ def get_host(row):
     """Make a host """
 
     # this code here... ¯\_(ツ)_/¯
+    id = int(row.get("BPA ID", 0)) # 
     description = row.get("Host_description", "")
     location = row.get("Host_location (state, country)", "")
     sex = get_sex(row.get("Host_sex (F/M)", ""))
@@ -45,6 +46,7 @@ def get_host(row):
     disease_outcome = row.get("Host_disease_outcome", None)
 
     host, _ = Host.objects.get_or_create(
+        id=id,
         description=description,
         location=location,
         sex=sex,
