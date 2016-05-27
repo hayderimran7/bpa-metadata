@@ -214,7 +214,7 @@ class SexWidget(object):
 class HostResource(resources.ModelResource):
     """Maps contextual file to host """
 
-    id = fields.Field(attribute="id", column_name="Host ID") # asuming 1-1 for now FIXME
+    strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
     description = fields.Field(attribute="description", column_name="Host_description")
     location = fields.Field(attribute="location", column_name="Host_location (state, country)")
     sex = fields.Field(attribute="sex", column_name="Host_sex (F/M)", widget=SexWidget())
@@ -228,20 +228,22 @@ class HostResource(resources.ModelResource):
 
     class Meta:
         model = Host
-        import_id_fields = ('id', )
+        import_id_fields = ('strain_or_isolate', )
 
 class HostAdmin(ImportExportModelAdmin):
     resource_class = HostResource
     list_display = (
-        "description",
+        "strain_or_isolate",
         "location",
         "sex",
         "age",
         "dob",
+        "description",
         "disease_outcome",
         )
 
     list_filter = (
+        "strain_or_isolate",
         "description",
         "sex",
     )

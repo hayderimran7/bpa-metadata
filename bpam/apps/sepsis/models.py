@@ -15,6 +15,7 @@ class Host(models.Model):
     age = models.IntegerField("Host Age", blank=True, null=True)
     dob = models.DateField("Host Day of Birth", blank=True, null=True, help_text="DD/MM/YY")
     disease_outcome = models.TextField("Host Disease Outcome", blank=True, null=True)
+    strain_or_isolate = models.CharField("Strain Or Isolate", max_length=200, blank=True, null=True, unique=True)
 
     class Meta:
         verbose_name = "Host"
