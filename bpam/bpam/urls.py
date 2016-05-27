@@ -9,8 +9,6 @@ urlpatterns = patterns(
     '',
     # rest api
     url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
-    # SEPSIS
-    url(r'^sepsis/', include('apps.sepsis.urls')),
     # BASE
     url(r'^base/', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/', include('apps.base_metagenomics.urls', namespace='base_metagenomics')),
@@ -29,6 +27,8 @@ urlpatterns = patterns(
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # Barcode
     url(r'^barcode/', include('apps.barcode.urls', namespace='barcode')),
+    # Sepsis
+    url(r'^sepsis/', include('apps.sepsis.urls', namespace='sepsis')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

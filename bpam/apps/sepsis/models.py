@@ -21,7 +21,7 @@ class Host(models.Model):
         verbose_name = "Host"
 
     def __unicode__(self):
-        return "{} {} {} {}".format(self.description, self.location, self.sex, self.age)
+        return "{} {}".format(self.strain_or_isolate, self.location)
 
 
 class Method(models.Model):
@@ -169,3 +169,4 @@ class SampleTrack(models.Model):
 
     class Meta:
         verbose_name = "Sample Tracking Information"
+        verbose_name_plural = "Sample Tracking"

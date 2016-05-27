@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+{%load staticfiles %} 
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Sepsis" "sepsis:index" %}
+{% endblock %}
+{% block title %}Sepsis{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="well">
+        <div class="row">
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'sepsis/sepsis.png' %}" alt="SEPSIS">
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+
+                <h2> Sepsis </h2>
+                For more information please visit:
+                <a href="http://www.bioplatforms.com/">
+                    http://www.bioplatforms.com/
+                </a>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'sepsis:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:genomicsfiles' %}">Genomics Sequence Files <span class="badge">{{ genomics_file_count }}</span> </a>
+                    <a class="list-group-item" 
+                       href="https://downloads.bioplatforms.com/bpa/sepsis/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item" 
+                       href="{% url 'sepsis:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

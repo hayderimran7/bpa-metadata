@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework import viewsets
 
+from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
 from .models import (
     Host,
@@ -16,6 +18,41 @@ from .models import (
 )
 
 import serializers
+
+class SepsisView(TemplateView):
+    template_name = 'sepsis/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SepsisView, self).get_context_data(**kwargs)
+        context['sample_count'] = SepsisSample.objects.count()
+        context['genomics_file_count'] = GenomicsFile.objects.count()
+        return context
+
+class SampleListView(ListView):
+    model = SepsisSample
+    context_object_name = 'samples'
+    template_name = 'sepsis/sample_list.html'
+
+class GenomicsFileListView(ListView):
+    model = GenomicsFile
+    context_object_name = 'sequencefiles'
+    template_name = 'sepsis/genomics_file_list.html'
+
+class SampleDetailView(DetailView):
+    model = SepsisSample
+    context_object_name = 'sample'
+    template_name = 'sepsis/sample_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SampleDetailView, self).get_context_data(**kwargs)
+        context['sequencefiles'] = GenomicsFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        context['mirrors'] = BPAMirror.objects.all()
+
+        return context
+
+
+class ContactsView(TemplateView):
+    template_name = 'sepsis/contacts.html'
 
 class TranscriptomicsFileViewSet(viewsets.ModelViewSet):
     """

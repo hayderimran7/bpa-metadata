@@ -243,7 +243,7 @@ class HostAdmin(ImportExportModelAdmin):
         )
 
     list_filter = (
-        "strain_or_isolate",
+        "location",
         "description",
         "sex",
     )
