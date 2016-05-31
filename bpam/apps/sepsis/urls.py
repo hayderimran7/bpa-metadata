@@ -8,9 +8,7 @@ router.register(r"hosts", views.HostViewSet)
 router.register(r"project", views.BPAProjectViewSet)
 router.register(r"bpa_ids", views.BPAIDViewSet)
 router.register(r"track", views.SepsisSampleTrackViewSet)
-router.register(r"proteomic_files", views.ProteomicsFileViewSet)
-router.register(r"genomic_files", views.GenomicsFileViewSet)
-router.register(r"transcriptomic_files", views.TranscriptomicsFileViewSet)
+router.register(r"genomic_miseq_files", views.GenomicsMiseqFileViewSet)
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
@@ -31,7 +29,7 @@ urlpatterns = [
         view=views.SampleDetailView.as_view(),
         name='sample'),
     url(
-        regex=r'^genomicsfiles',
-        view=views.GenomicsFileListView.as_view(),
-        name='genomicsfiles'),
+        regex=r'^genomicsmiseqfiles',
+        view=views.GenomicsMiseqFileListView.as_view(),
+        name='genomics_miseq_files'),
 ]

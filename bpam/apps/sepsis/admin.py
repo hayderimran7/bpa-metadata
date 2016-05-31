@@ -9,10 +9,12 @@ from import_export import resources, fields, widgets
 from dateutil.parser import parse as date_parser
 import ingest
 
+from . import genomics_miseq_admin
+
 from .models import (
     Host,
     GenomicsMethod,
-    GenomicsFile,
+    GenomicsMiseqFile,
     ProteomicsMethod,
     ProteomicsFile,
     TranscriptomicsMethod,
@@ -248,12 +250,11 @@ class HostAdmin(ImportExportModelAdmin):
         "sex",
     )
 
-
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
 admin.site.register(GenomicsMethod)
-admin.site.register(GenomicsFile)
+admin.site.register(GenomicsMiseqFile, genomics_miseq_admin.FileAdmin)
 admin.site.register(ProteomicsMethod)
 admin.site.register(ProteomicsFile)
 admin.site.register(TranscriptomicsMethod)

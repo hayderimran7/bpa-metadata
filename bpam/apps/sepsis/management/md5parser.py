@@ -5,7 +5,7 @@ import re
 MISEQ_FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
     (?P<extraction>\d)_
-    (?P<libary>PE|MP)_
+    (?P<library>PE|MP)_
     (?P<size>\d*bp)_
     SEP_
     (?P<vendor>AGRF|UNSW)_
@@ -28,7 +28,6 @@ class MD5ParsedLine(object):
         self.__parse_line()
         self.md5 = None
         self.filename = None
-
         self.__parse_line()
 
     def is_ok(self):

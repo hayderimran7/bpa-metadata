@@ -7,27 +7,10 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0005_auto_20160427_1509'),
+        ('common', '0006_auto_20160523_1340'),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='GenomicsFile',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('index_number', models.IntegerField(null=True, verbose_name='Index', blank=True)),
-                ('lane_number', models.IntegerField(null=True, verbose_name='Lane', blank=True)),
-                ('read_number', models.IntegerField(null=True, verbose_name='Read', blank=True)),
-                ('date_received_from_sequencing_facility', models.DateField(null=True, blank=True)),
-                ('filename', models.CharField(max_length=300, null=True, verbose_name='File Name', blank=True)),
-                ('md5', models.CharField(max_length=32, null=True, verbose_name='MD5 Checksum', blank=True)),
-                ('analysed', models.NullBooleanField(default=False)),
-                ('note', models.TextField(blank=True)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
         migrations.CreateModel(
             name='GenomicsMethod',
             fields=[
@@ -49,6 +32,33 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='GenomicsMiseqFile',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('index_number', models.IntegerField(null=True, verbose_name='Index', blank=True)),
+                ('lane_number', models.IntegerField(null=True, verbose_name='Lane', blank=True)),
+                ('read_number', models.IntegerField(null=True, verbose_name='Read', blank=True)),
+                ('date_received_from_sequencing_facility', models.DateField(null=True, blank=True)),
+                ('filename', models.CharField(max_length=300, null=True, verbose_name='File Name', blank=True)),
+                ('md5', models.CharField(max_length=32, null=True, verbose_name='MD5 Checksum', blank=True)),
+                ('analysed', models.NullBooleanField(default=False)),
+                ('note', models.TextField(blank=True)),
+                ('extraction', models.IntegerField(default=1, verbose_name=b'Extraction')),
+                ('vendor', models.CharField(default=1, max_length=100, verbose_name=b'Vendor')),
+                ('library', models.CharField(help_text=b'MP or PE', max_length=20, verbose_name=b'Library')),
+                ('size', models.CharField(default=1, max_length=100, verbose_name=b'Extraction Size')),
+                ('plate', models.CharField(max_length=6, verbose_name=b'Plate')),
+                ('index', models.CharField(max_length=20, verbose_name=b'Index')),
+                ('runsamplenum', models.CharField(max_length=20, verbose_name=b'Sample Run Number')),
+                ('lane', models.IntegerField(verbose_name=b'Lane')),
+                ('read', models.CharField(max_length=3, verbose_name=b'Read')),
+                ('method', models.ForeignKey(related_name='sepsis_genomicsmiseqfile_genomicsfile', to='sepsis.GenomicsMethod', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
             name='Host',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -58,6 +68,7 @@ class Migration(migrations.Migration):
                 ('age', models.IntegerField(null=True, verbose_name=b'Host Age', blank=True)),
                 ('dob', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Host Day of Birth', blank=True)),
                 ('disease_outcome', models.TextField(null=True, verbose_name=b'Host Disease Outcome', blank=True)),
+                ('strain_or_isolate', models.CharField(max_length=200, unique=True, null=True, verbose_name=b'Strain Or Isolate', blank=True)),
             ],
             options={
                 'verbose_name': 'Host',
@@ -100,22 +111,45 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='SampleTrack',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('given_to', models.CharField(help_text=b'Sample was delivered to', max_length=200, null=True, verbose_name=b'Given To', blank=True)),
+                ('allocation_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Allocation Date', blank=True)),
+                ('work_order', models.CharField(max_length=50, null=True, verbose_name=b'Work Order', blank=True)),
+                ('replicate', models.IntegerField(null=True, verbose_name=b'Replicate', blank=True)),
+                ('omics', models.CharField(max_length=50, null=True, verbose_name=b'Omics Type', blank=True)),
+                ('analytical_platform', models.CharField(max_length=100, null=True, verbose_name=b'Analytical Platform', blank=True)),
+                ('data_generated', models.BooleanField(default=False, verbose_name=b'Data Generated')),
+                ('sample_submission_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Sample Submission Date', blank=True)),
+                ('contextual_data_submission_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Contextual Data Submission Date', blank=True)),
+                ('archive_ingestion_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Archive Ingestion Date', blank=True)),
+                ('curation_url', models.URLField(null=True, verbose_name=b'Curation URL', blank=True)),
+                ('dataset_url', models.URLField(null=True, verbose_name=b'Dataset URL', blank=True)),
+                ('facility', models.ForeignKey(blank=True, to='common.Facility', null=True)),
+            ],
+            options={
+                'verbose_name': 'Sample Tracking Information',
+                'verbose_name_plural': 'Sample Tracking',
+            },
+        ),
+        migrations.CreateModel(
             name='SepsisSample',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('taxon_or_organism', models.TextField(max_length=200, null=True, verbose_name=b'Taxon or Organism', blank=True)),
-                ('strain_or_isolate', models.TextField(max_length=200, null=True, verbose_name=b'Strain Or Isolate', blank=True)),
-                ('strain_description', models.TextField(max_length=300, null=True, verbose_name=b'Strain Description', blank=True)),
+                ('taxon_or_organism', models.CharField(max_length=200, null=True, verbose_name=b'Taxon or Organism', blank=True)),
+                ('strain_or_isolate', models.CharField(max_length=200, null=True, verbose_name=b'Strain Or Isolate', blank=True)),
+                ('strain_description', models.CharField(max_length=300, null=True, verbose_name=b'Strain Description', blank=True)),
                 ('gram_stain', models.CharField(max_length=3, verbose_name=b'Gram Staining', choices=[(b'POS', b'Positive'), (b'NEG', b'Negative')])),
-                ('serovar', models.CharField(max_length=30, null=True, verbose_name=b'Serovar', blank=True)),
+                ('serovar', models.CharField(max_length=100, null=True, verbose_name=b'Serovar', blank=True)),
                 ('key_virulence_genes', models.CharField(max_length=100, null=True, verbose_name=b'Key Virulence Genes', blank=True)),
                 ('isolation_source', models.CharField(max_length=100, null=True, verbose_name=b'Isolation Source', blank=True)),
                 ('publication_reference', models.CharField(max_length=200, null=True, verbose_name=b'Publication Reference', blank=True)),
                 ('contact_researcher', models.CharField(max_length=200, null=True, verbose_name=b'Contact Researcher', blank=True)),
-                ('collection_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Collection Date', blank=True)),
+                ('culture_collection_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Collection Date', blank=True)),
                 ('culture_collection_id', models.CharField(max_length=100, null=True, verbose_name=b'Culture Collection ID', blank=True)),
                 ('bpa_id', models.OneToOneField(verbose_name=b'BPA ID', to='common.BPAUniqueID')),
-                ('host', models.ForeignKey(related_name='sepsis_sepsissample_sample', blank=True, to='sepsis.Host', null=True)),
+                ('host', models.ForeignKey(related_name='samples', blank=True, to='sepsis.Host', null=True)),
             ],
             options={
                 'verbose_name': 'Sepsis Sample',
@@ -155,7 +189,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transcriptomicsfile',
             name='method',
-            field=models.ForeignKey(related_name='sepsis_transcriptomicsfile_transcriptomicsfile', to='sepsis.TranscriptomicsMethod'),
+            field=models.ForeignKey(related_name='sepsis_transcriptomicsfile_transcriptomicsfile', to='sepsis.TranscriptomicsMethod', null=True),
         ),
         migrations.AddField(
             model_name='transcriptomicsfile',
@@ -168,9 +202,14 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(related_name='sepsis_transcriptomicsfile_related', to='common.URLVerification', null=True),
         ),
         migrations.AddField(
+            model_name='sampletrack',
+            name='sample',
+            field=models.ForeignKey(related_name='sepsis_sampletrack_track', to='sepsis.SepsisSample'),
+        ),
+        migrations.AddField(
             model_name='proteomicsfile',
             name='method',
-            field=models.ForeignKey(related_name='sepsis_proteomicsfile_proteomicsfile', to='sepsis.ProteomicsMethod'),
+            field=models.ForeignKey(related_name='sepsis_proteomicsfile_proteomicsfile', to='sepsis.ProteomicsMethod', null=True),
         ),
         migrations.AddField(
             model_name='proteomicsfile',
@@ -183,18 +222,13 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(related_name='sepsis_proteomicsfile_related', to='common.URLVerification', null=True),
         ),
         migrations.AddField(
-            model_name='genomicsfile',
-            name='method',
-            field=models.ForeignKey(related_name='sepsis_genomicsfile_genomicsfile', to='sepsis.GenomicsMethod'),
-        ),
-        migrations.AddField(
-            model_name='genomicsfile',
+            model_name='genomicsmiseqfile',
             name='sample',
             field=models.ForeignKey(to='sepsis.SepsisSample'),
         ),
         migrations.AddField(
-            model_name='genomicsfile',
+            model_name='genomicsmiseqfile',
             name='url_verification',
-            field=models.ForeignKey(related_name='sepsis_genomicsfile_related', to='common.URLVerification', null=True),
+            field=models.ForeignKey(related_name='sepsis_genomicsmiseqfile_related', to='common.URLVerification', null=True),
         ),
     ]

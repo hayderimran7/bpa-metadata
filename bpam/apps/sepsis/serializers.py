@@ -5,26 +5,16 @@ from apps.common.admin import SequenceFileAdmin, BPAUniqueID, BPAProject
 from .models import (
     Host,
     GenomicsMethod,
-    GenomicsFile,
+    GenomicsMiseqFile,
     ProteomicsMethod,
-    ProteomicsFile,
     TranscriptomicsMethod,
-    TranscriptomicsFile,
     SepsisSample,
     SampleTrack,
 )
 
-class ProteomicsFileSerializer(serializers.HyperlinkedModelSerializer):
+class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ProteomicsFile
-
-class GenomicsFileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = GenomicsFile
-
-class TranscriptomicsFileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = TranscriptomicsFile
+        model = GenomicsMiseqFile
 
 class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

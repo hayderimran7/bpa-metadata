@@ -134,9 +134,24 @@ class GenomicsFile(SepsisSequenceFile):
         GenomicsMethod,
         related_name="%(app_label)s_%(class)s_genomicsfile",
         null=True)
+    extraction = models.IntegerField("Extraction", default=1)
+    vendor = models.CharField("Vendor", max_length=100, default=1)
+
+    class Meta:
+        abstract = True
+
+class GenomicsMiseqFile(GenomicsFile):
+    """Genomics Miseq"""
+
+    library = models.CharField("Library", max_length=20, help_text="MP or PE")
+    size = models.CharField("Extraction Size", max_length=100, default=1)
+    plate = models.CharField("Plate", max_length=6)
+    index = models.CharField("Index", max_length=20)
+    runsamplenum = models.CharField("Sample Run Number", max_length=20)
+    read = models.CharField("Read", max_length=3)
 
     def __unicode__(self):
-        return u"{}".format(self.filename)
+        return u"Genomics Miseq {}".format(self.filename)
 
 class TranscriptomicsFile(SepsisSequenceFile):
     """Sequence file from the transcriptomics analysis process"""
@@ -163,9 +178,10 @@ class SampleTrack(models.Model):
     analytical_platform = models.CharField("Analytical Platform", max_length=100, blank=True, null=True)
     facility = models.ForeignKey(Facility, blank=True, null=True)
 
+    data_generated = models.BooleanField("Data Generated", default=False)
     sample_submission_date = models.DateField("Sample Submission Date", blank=True, null=True, help_text="DD/MM/YY")
     contextual_data_submission_date = models.DateField("Contextual Data Submission Date", blank=True, null=True, help_text="DD/MM/YY")
-    data_generated = models.BooleanField("Data generated", default=False)
+
     archive_ingestion_date = models.DateField("Archive Ingestion Date", blank=True, null=True, help_text="DD/MM/YY")
     curation_url = models.URLField("Curation URL", blank=True, null=True)
     dataset_url = models.URLField("Dataset URL", blank=True, null=True)

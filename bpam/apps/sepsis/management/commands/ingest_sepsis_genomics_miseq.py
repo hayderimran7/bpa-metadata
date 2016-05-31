@@ -11,7 +11,7 @@ from libs import ingest_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 
-from ...models import GenomicsFile, SepsisSample
+from ...models import GenomicsMiseqFile, SepsisSample
 from .. import md5parser
 
 from libs.logger_utils import get_logger
@@ -138,11 +138,19 @@ def add_md5(md5_lines):
             continue
 
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
+        lane=int(md5_line.md5data.get('lane')[1:])
 
-        f, _ = GenomicsFile.objects.get_or_create(
+        f, _ = GenomicsMiseqFile.objects.get_or_create(
+            note="Ingested using management command",
             sample=sample,
-            #read_number=md5_line.md5data.get('read'),
-            #lane=md5_line.md5data.get('lane'),
+            library=md5_line.md5data.get('library'),
+            vendor=md5_line.md5data.get('vendor'),
+            size=md5_line.md5data.get('size'),
+            plate=md5_line.md5data.get('plate'),
+            runsamplenum=md5_line.md5data.get('runsamplenum'),
+            index=md5_line.md5data.get('index'),
+            lane_number=lane,
+            read=md5_line.md5data.get('read'),
             filename=md5_line.filename,
             md5=md5_line.md5)
 

@@ -8,7 +8,7 @@ from apps.common.admin import BPAUniqueID, BPAProject
 from .models import (
     Host,
     GenomicsMethod,
-    GenomicsFile,
+    GenomicsMiseqFile,
     ProteomicsMethod,
     ProteomicsFile,
     TranscriptomicsMethod,
@@ -33,8 +33,8 @@ class SampleListView(ListView):
     context_object_name = 'samples'
     template_name = 'sepsis/sample_list.html'
 
-class GenomicsFileListView(ListView):
-    model = GenomicsFile
+class GenomicsMiseqFileListView(ListView):
+    model = GenomicsMiseqFile
     context_object_name = 'sequencefiles'
     template_name = 'sepsis/genomics_file_list.html'
 
@@ -54,26 +54,14 @@ class SampleDetailView(DetailView):
 class ContactsView(TemplateView):
     template_name = 'sepsis/contacts.html'
 
-class TranscriptomicsFileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint for Sepsis Transcriptomic Sequences
-    """
-    queryset = TranscriptomicsFile.objects.all()
-    serializer_class = serializers.TranscriptomicsFileSerializer
 
-class GenomicsFileViewSet(viewsets.ModelViewSet):
+class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for Sepsis Genomics Sequences
+    API endpoint for Sepsis Genomics miseq Sequences
     """
-    queryset = GenomicsFile.objects.all()
-    serializer_class = serializers.GenomicsFileSerializer
+    queryset = GenomicsMiseqFile.objects.all()
+    serializer_class = serializers.GenomicsMiseqFileSerializer
 
-class ProteomicsFileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint for Sepsis Proteomics Sequences
-    """
-    queryset = ProteomicsFile.objects.all()
-    serializer_class = serializers.ProteomicsFileSerializer
 
 class SepsisSampleTrackViewSet(viewsets.ModelViewSet):
     """
