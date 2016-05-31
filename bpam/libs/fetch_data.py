@@ -21,6 +21,7 @@ project_name_passwd_map = {
     "base": "BPA_BASE_DOWNLOADS_PASSWORD",
     "users": "BPA_USERS_DOWNLOADS_PASSWORD",
     "gbr": "BPA_GBR_DOWNLOADS_PASSWORD",
+    "sepsis": "BPA_SEPSIS_DOWNLOADS_PASSWORD",
 }
 
 def get_password(project_name=None):
@@ -87,7 +88,5 @@ class Fetcher():
             if metadata_filename.endswith(".xlsx") or \
                     metadata_filename.endswith(".txt") or \
                     metadata_filename.endswith(".csv") or \
-                    metadata_filename.endswith(".zip") or \
-                    metadata_filename.endswith(".gz") or \
                     metadata_filename.endswith(".md5"):
                 self.fetch(metadata_filename)

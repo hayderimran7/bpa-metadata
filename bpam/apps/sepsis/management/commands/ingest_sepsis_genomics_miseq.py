@@ -1,42 +1,29 @@
 # -*- coding: utf-8 -*-
 
+
+from django.db.utils import DataError
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-
+from unipath import Path
 from apps.common.models import Facility
-from apps.gbr.models import GBRSample
-from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
-from django.db.utils import DataError
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
-from libs.logger_utils import get_logger
-from unipath import Path
 
+from ...models import GenomicsFile, SepsisSample
+from .. import md5parser
+
+from libs.logger_utils import get_logger
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
 
-METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/sepsis/genomics/miseq/"
+# TODO get mirror urls from DB
+METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/genomics/miseq/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/genomics/miseq")
-
-MISEQ_FILENAME_PATTERN = """
-    (?P<id>\d{4,6})_
-    (?P<extraction>\d)_
-    (?P<libary>PE|MP)_
-    (?P<size>\d*bp)_
-    SEP_
-    (?P<vendor>AGRF|UNSW)_
-    (?P<plate>\w{5})_
-    (?P<index>[G|A|T|C|-]*)_
-    (?P<runsamplenum>\S\d*)_
-    (?P<lane>L\d{3})_
-    (?P<read>[R|I][1|2])\.fastq\.gz
-"""
-miseq_filename_pattern = re.compile(MISEQ_FILENAME_PATTERN, re.VERBOSE)
 
 
 def _get_index(entry):
@@ -140,82 +127,22 @@ def get_metadata(file_name):
 
     return wrapper.get_all()
 
-
-class MD5ParsedLine(object):
-    # 26faa5838656dbd82d33dbd277fbe1bc  25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I1.fastq.gz
-    # 6d0f632a121671463f8eb496c5ddeac3  25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I2.fastq.gz
-
-
-    def __init__(self, line):
-        self._line = line
-        self._ok = False
-        self.__parse_line()
-        self.md5 = None
-
-    def is_ok(self):
-        return self._ok
-
-    def __parse_line(self):
-        """ unpack the md5 line """
-        self.md5, self.filename = self._line.split()
-        match = self.miseq_filename_pattern(self.filename)
-        if match:
-            self.md5data = match.groupdict()
-            self.ok = True
-
-    def repr(self):
-        print(self.ok, self.md5data)
-
-def parse_md5_file(md5_file):
-    """ Parse md5 file """
-    data = []
-    with open(md5_file) as f:
-        for line in f.read().splitlines():
-            line = line.strip()
-            if line == "":
-                continue
-
-            parsed_line = MD5ParsedLine(line)
-            if parsed_line.is_ok():
-                data.append(parsed_line)
-
-    return data
-
-
-def get_sequencing_metadata(bpa_id, md5_line):
-    """
-    Populates the amplicon sequencing metadata object from the import md5 line
-    """
-
-    metadata, _ = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=md5_line.amplicon)
-    metadata.sequencing_facility = Facility.objects.add(md5_line.vendor)
-    metadata.index = md5_line.index
-    metadata.flow_cell_id = md5_line.flowcell
-    metadata.save()
-
-    return metadata
-
-
 def add_md5(md5_lines):
-    """
-    Add md5 data
-    """
+    """ Add md5 data """
 
     for md5_line in md5_lines:
-        bpa_idx = md5_line.bpa_id
+        bpa_idx = md5_line.md5data.get('id')
         bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
 
         if bpa_id is None:
             continue
 
-        sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
-        metadata = get_sequencing_metadata(bpa_id, md5_line)
+        sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
 
-        f, _ = AmpliconSequenceFile.objects.get_or_create(
+        f, _ = GenomicsFile.objects.get_or_create(
             sample=sample,
-            metadata=metadata,
-            read_number=md5_line.read,
-            lane_number=md5_line.lane,
+            #read_number=md5_line.md5data.get('read'),
+            #lane=md5_line.md5data.get('lane'),
             filename=md5_line.filename,
             md5=md5_line.md5)
 
@@ -229,7 +156,8 @@ def ingest_md5():
     logger.info("Ingesting Sepsis md5 file information from {0}".format(DATA_DIR))
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info("Processing Sepsis Genomic md5 file {0}".format(md5_file))
-        data = parse_md5_file(md5_file)
+        data = md5parser.parse_md5_file(md5parser.miseq_filename_pattern, md5_file)
+        print(data)
         add_md5(data)
 
 class Command(BaseCommand):
@@ -242,5 +170,4 @@ class Command(BaseCommand):
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
-        do_metadata()
         ingest_md5()

@@ -119,7 +119,10 @@ class SepsisSequenceFile(SequenceFile):
 class ProteomicsFile(SepsisSequenceFile):
     """Sequence file from the proteomics analysis process"""
 
-    method = models.ForeignKey(ProteomicsMethod, related_name="%(app_label)s_%(class)s_proteomicsfile")
+    method = models.ForeignKey(
+        ProteomicsMethod,
+        related_name="%(app_label)s_%(class)s_proteomicsfile",
+        null=True)
 
     def __unicode__(self):
         return u"{}".format(self.filename)
@@ -127,7 +130,10 @@ class ProteomicsFile(SepsisSequenceFile):
 class GenomicsFile(SepsisSequenceFile):
     """Sequence file from the genomics analysis process"""
 
-    method = models.ForeignKey(GenomicsMethod, related_name="%(app_label)s_%(class)s_genomicsfile")
+    method = models.ForeignKey(
+        GenomicsMethod,
+        related_name="%(app_label)s_%(class)s_genomicsfile",
+        null=True)
 
     def __unicode__(self):
         return u"{}".format(self.filename)
@@ -135,7 +141,10 @@ class GenomicsFile(SepsisSequenceFile):
 class TranscriptomicsFile(SepsisSequenceFile):
     """Sequence file from the transcriptomics analysis process"""
 
-    method = models.ForeignKey(TranscriptomicsMethod, related_name="%(app_label)s_%(class)s_transcriptomicsfile")
+    method = models.ForeignKey(
+        TranscriptomicsMethod,
+        related_name="%(app_label)s_%(class)s_transcriptomicsfile",
+        null=True)
 
     def __unicode__(self):
         return u"{}".format(self.filename)
