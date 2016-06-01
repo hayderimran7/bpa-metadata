@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from apps.common.admin import SequenceFileAdmin, BPAUniqueID, BPAProject
+
+from apps.common.models import BPAProject, BPAUniqueID, URLVerification
+from apps.common.admin import SequenceFileAdmin
+
 from .models import (
     Host,
     GenomicsMethod,
@@ -12,19 +15,15 @@ from .models import (
     SampleTrack,
 )
 
-class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
+class URLVerificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GenomicsMiseqFile
+        model = URLVerification
 
-class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = SampleTrack
-
-class HostSerializer(serializers.HyperlinkedModelSerializer):
+class HostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Host
 
-class BPAProjectSerializer(serializers.HyperlinkedModelSerializer):
+class BPAProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = BPAProject
 
@@ -35,11 +34,26 @@ class BPAUniqueIDSerializer(serializers.ModelSerializer):
         model = BPAUniqueID
         lookup_field = "bpa_id"
 
-class SepsisSampleSerializer(serializers.HyperlinkedModelSerializer):
+class SepsisSampleSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
     host = HostSerializer()
 
     class Meta:
         model = SepsisSample
 
+class GenomicsMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GenomicsMethod
 
+class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
+    sample = SepsisSampleSerializer()
+    method = GenomicsMethodSerializer()
+    url_verification = URLVerificationSerializer()
+
+    class Meta:
+        model = GenomicsMiseqFile
+
+class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
+    sample = SepsisSampleSerializer()
+    class Meta:
+        model = SampleTrack

@@ -16,16 +16,16 @@ class FileForm(forms.ModelForm):
             'date_received_from_sequencing_facility': SuitDateWidget,
             'filename': forms.TextInput(
                 attrs={'class': 'input-medium',
-                        'style': 'width:50%'}),
+                       'style': 'width:50%'}),
             'md5': forms.TextInput(
                 attrs={'class': 'input-medium',
-                        'style': 'width:50%'}),
+                       'style': 'width:50%'}),
             'sample': LinkedSelect(
                 attrs={'class': 'input-medium',
-                        'style': 'width:40%'}),
+                       'style': 'width:40%'}),
             'note': AutosizedTextarea(
                 attrs={'class': 'input-large',
-                        'style': 'width:95%'})
+                       'style': 'width:95%'})
         }
 
 class FileAdmin(admin.ModelAdmin):
@@ -69,6 +69,6 @@ class FileAdmin(admin.ModelAdmin):
     get_sample_id.short_description = 'BPA ID'
     get_sample_id.admin_order_field = 'sample__bpa_id'
 
-    list_display = ('filename', 'get_sample_id', )
-    search_fields = ('sample__bpa_id__bpa_id', )
-    list_filter = ('sample__bpa_id', 'date_received_from_sequencing_facility',)
+    list_display = ('filename', 'vendor', 'sample', )
+    search_fields = ('filename', 'vendor', ) # the search field widget
+    list_filter = ('sample__bpa_id', 'date_received_from_sequencing_facility', 'vendor', )
