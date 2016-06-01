@@ -14,40 +14,34 @@ class FileForm(forms.ModelForm):
         model = GenomicsMiseqFile
         widgets = {
             'date_received_from_sequencing_facility': SuitDateWidget,
-            'filename': forms.TextInput(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'md5': forms.TextInput(
-                attrs={'class': 'input-medium',
-                       'style': 'width:50%'}),
-            'sample': LinkedSelect(
-                attrs={'class': 'input-medium',
-                       'style': 'width:40%'}),
-            'note': AutosizedTextarea(
-                attrs={'class': 'input-large',
-                       'style': 'width:95%'})
+            'md5': forms.TextInput(attrs={'class': 'input-medium'}),
+            'filename': forms.TextInput(attrs={'class': 'input-medium', 'style': 'width:50%'}),
+            'sample': LinkedSelect(attrs={'class': 'input-medium', 'style': 'width:40%'}),
+            'method': LinkedSelect(attrs={'class': 'input-medium', 'style': 'width:40%'}),
+            'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})
         }
 
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(ImportExportModelAdmin):
     form = FileForm
 
     fieldsets = [
         ('Sequence File',
          {'fields': (
              'filename',
-             'md5',
              'sample',
-             'lane_number',
-             'index_number',
-             'analysed',
-             'vendor',
              'date_received_from_sequencing_facility',
+             'extraction',
              'library',
              'size',
+             'vendor',
              'plate',
              'index',
              'runsamplenum',
+             'lane_number',
              'read',
+             'method',
+             'md5',
+             'analysed',
              'note',
              ),
          }),

@@ -7,7 +7,7 @@ from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
 from .models import (
     Host,
-    GenomicsMethod,
+    MiseqGenomicsMethod,
     GenomicsMiseqFile,
     ProteomicsMethod,
     ProteomicsFile,

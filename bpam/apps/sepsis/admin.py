@@ -13,7 +13,7 @@ from . import genomics_miseq_admin
 
 from .models import (
     Host,
-    GenomicsMethod,
+    MiseqGenomicsMethod,
     GenomicsMiseqFile,
     ProteomicsMethod,
     ProteomicsFile,
@@ -21,6 +21,7 @@ from .models import (
     TranscriptomicsFile,
     SepsisSample,
     SampleTrack,
+    GrowthMethod,
 )
 
 # BPA_sample_ID	Gram_staining_(positive_or_negative)
@@ -250,12 +251,24 @@ class HostAdmin(ImportExportModelAdmin):
         "sex",
     )
 
+class GrowthAdmin(ImportExportModelAdmin):
+    list_display = (
+        "growth_condition_temperature",
+        "growth_condition_time",
+        "growth_condition_media",
+        "note",
+        )
+
+    list_filter = list_display
+
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(SepsisSample, SepsisSampleAdmin)
-admin.site.register(GenomicsMethod)
+admin.site.register(MiseqGenomicsMethod)
 admin.site.register(GenomicsMiseqFile, genomics_miseq_admin.FileAdmin)
 admin.site.register(ProteomicsMethod)
 admin.site.register(ProteomicsFile)
 admin.site.register(TranscriptomicsMethod)
 admin.site.register(TranscriptomicsFile)
+
+admin.site.register(GrowthMethod, GrowthAdmin)

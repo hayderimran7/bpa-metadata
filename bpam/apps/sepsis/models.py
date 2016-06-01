@@ -24,7 +24,7 @@ class Host(models.Model):
         return "{} {}".format(self.strain_or_isolate, self.location)
 
 
-class Method(models.Model):
+class GrowthMethod(models.Model):
     """Sample preparation method metadata"""
 
     note = models.TextField("Note", max_length=200, blank=True, null=True)
@@ -34,14 +34,33 @@ class Method(models.Model):
 
     class Meta:
         verbose_name = "Growth Method"
-        abstract = True
 
     def __unicode__(self):
         return u"{} {} {}".format(self.growth_condition_media, self.growth_condition_temperature, self.growth_condition_time)
 
 
-class GenomicsMethod(Method):
+class MiseqGenomicsMethod(models.Model):
     """Genomics Metadata"""
+
+    # Genomics method data from excell spreadsheet
+    # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	AnalysisSoftwareVersion
+
+    library_construction_protocol = models.CharField("Library Construction Protocol", max_length=100, blank=True, null=True)
+    insert_size_range = models.CharField("Insert Size Range", max_length=20, blank=True, null=True)
+    sequencer = models.CharField("Sequencer", max_length=100, blank=True, null=True)
+    analysis_software_version = models.CharField("Analysis Software Version", max_length=20, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Miseq Genomics Method"
+
+    def __unicode__(self):
+        return u"{} {} {}".format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
+
+class PacBioGenomicsMethod(models.Model):
+    """PacBio Genomics Metadata"""
+
+    # Genomics method data from excell spreadsheet
+    # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	Run ID	SMRT Cell ID	Cell Postion	RS version
 
     library_construction_protocol = models.CharField("Library Construction Protocol", max_length=100, blank=True, null=True)
     insert_size_range = models.CharField("Insert Size Range", max_length=20, blank=True, null=True)
@@ -52,13 +71,12 @@ class GenomicsMethod(Method):
     rs_version = models.CharField("RS Version", max_length=20, blank=True, null=True)
 
     class Meta:
-        verbose_name = "Genomics Method"
+        verbose_name = "PacBio Genomics Method"
 
     def __unicode__(self):
         return u"{} {} {}".format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
 
-
-class ProteomicsMethod(Method):
+class ProteomicsMethod(models.Model):
     """Proteomics Metadata"""
 
     sample_fractionation = models.IntegerField("Sample Fractionation", blank=True, null=True)
@@ -72,9 +90,14 @@ class ProteomicsMethod(Method):
         verbose_name = "Proteomics Method"
 
     def __unicode__(self):
-        return u"{} {} {}".format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
+        return u"{} {} {}".format(
+            self.sample_fractionation,
+            self.lc_column_type,
+            self.mass_spectrometer
+            )
+
 # TODO
-class TranscriptomicsMethod(Method):
+class TranscriptomicsMethod(models.Model):
     """Transcriptomics Metadata"""
     pass
 
@@ -83,8 +106,27 @@ class TranscriptomicsMethod(Method):
 class SepsisSample(models.Model):
     """ Sepsis Sample """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, verbose_name="BPA ID")
-    host = models.ForeignKey(Host, blank=True, null=True, related_name="samples")
+    bpa_id = models.OneToOneField(
+        BPAUniqueID,
+        verbose_name="BPA ID",
+        help_text="Bioplatforms Australia Sample ID"
+    )
+
+    host = models.ForeignKey(
+        Host,
+        blank=True,
+        null=True,
+        related_name="samples",
+        help_text="Sample donor host"
+        )
+
+    growt_method = models.ForeignKey(
+        GrowthMethod,
+        blank=True,
+        null=True,
+        related_name="samples",
+        help_text="Sample Growth Method"
+    )
 
     taxon_or_organism = models.CharField("Taxon or Organism", max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField("Strain Or Isolate", max_length=200, blank=True, null=True)
@@ -119,21 +161,12 @@ class SepsisSequenceFile(SequenceFile):
 class ProteomicsFile(SepsisSequenceFile):
     """Sequence file from the proteomics analysis process"""
 
-    method = models.ForeignKey(
-        ProteomicsMethod,
-        related_name="%(app_label)s_%(class)s_proteomicsfile",
-        null=True)
-
     def __unicode__(self):
         return u"{}".format(self.filename)
 
 class GenomicsFile(SepsisSequenceFile):
     """Sequence file from the genomics analysis process"""
 
-    method = models.ForeignKey(
-        GenomicsMethod,
-        related_name="%(app_label)s_%(class)s_genomicsfile",
-        null=True)
     extraction = models.IntegerField("Extraction", default=1)
     vendor = models.CharField("Vendor", max_length=100, default=1)
 
@@ -143,6 +176,13 @@ class GenomicsFile(SepsisSequenceFile):
 class GenomicsMiseqFile(GenomicsFile):
     """Genomics Miseq"""
 
+    method = models.ForeignKey(
+        MiseqGenomicsMethod,
+        null=True,
+        related_name="%(app_label)s_%(class)s_files",
+        help_text="Genomics Method"
+        )
+
     library = models.CharField("Library", max_length=20, help_text="MP or PE")
     size = models.CharField("Extraction Size", max_length=100, default=1)
     plate = models.CharField("Plate", max_length=6)
@@ -150,16 +190,14 @@ class GenomicsMiseqFile(GenomicsFile):
     runsamplenum = models.CharField("Sample Run Number", max_length=20)
     read = models.CharField("Read", max_length=3)
 
+    def get_path_parts(self):
+        return (self.project_name, 'genomics/miseq')
+
     def __unicode__(self):
         return u"Genomics Miseq {}".format(self.filename)
 
 class TranscriptomicsFile(SepsisSequenceFile):
     """Sequence file from the transcriptomics analysis process"""
-
-    method = models.ForeignKey(
-        TranscriptomicsMethod,
-        related_name="%(app_label)s_%(class)s_transcriptomicsfile",
-        null=True)
 
     def __unicode__(self):
         return u"{}".format(self.filename)

@@ -7,7 +7,7 @@ from apps.common.admin import SequenceFileAdmin
 
 from .models import (
     Host,
-    GenomicsMethod,
+    MiseqGenomicsMethod,
     GenomicsMiseqFile,
     ProteomicsMethod,
     TranscriptomicsMethod,
@@ -41,13 +41,13 @@ class SepsisSampleSerializer(serializers.ModelSerializer):
     class Meta:
         model = SepsisSample
 
-class GenomicsMethodSerializer(serializers.ModelSerializer):
+class MiseqGenomicsMethodSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GenomicsMethod
+        model = MiseqGenomicsMethod
 
 class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
     sample = SepsisSampleSerializer()
-    method = GenomicsMethodSerializer()
+    method = MiseqGenomicsMethodSerializer()
     url_verification = URLVerificationSerializer()
 
     class Meta:

@@ -1,19 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from dateutil.parser import parse as date_parser
-
-from apps.common.admin import SequenceFileAdmin, BPAUniqueID, BPAProject
-from .models import (
-    Host,
-    GenomicsMethod,
-    GenomicsFile,
-    ProteomicsMethod,
-    ProteomicsFile,
-    TranscriptomicsMethod,
-    TranscriptomicsFile,
-    SepsisSample,
-    SampleTrack,
-)
+from apps.common.models import BPAUniqueID, BPAProject
+from apps.common.admin import SequenceFileAdmin
+from .models import Host
 
 def get_date(date):
     """Tries to make a python date"""
