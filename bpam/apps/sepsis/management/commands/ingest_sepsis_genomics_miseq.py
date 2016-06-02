@@ -102,7 +102,7 @@ def add_md5(md5_lines):
             library=md5_line.md5data.get('library'),
             vendor=md5_line.md5data.get('vendor'),
             size=md5_line.md5data.get('size'),
-            plate=md5_line.md5data.get('plate'),
+            flow_cell_id=md5_line.md5data.get('flow_cell_id'),
             runsamplenum=md5_line.md5data.get('runsamplenum'),
             index=md5_line.md5data.get('index'),
             lane_number=lane,

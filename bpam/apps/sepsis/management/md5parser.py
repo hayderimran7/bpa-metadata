@@ -9,7 +9,7 @@ MISEQ_FILENAME_PATTERN = """
     (?P<size>\d*bp)_
     SEP_
     (?P<vendor>AGRF|UNSW)_
-    (?P<plate>\w{5})_
+    (?P<flow_cell_id>\w{5})_
     (?P<index>[G|A|T|C|-]*)_
     (?P<runsamplenum>\S\d*)_
     (?P<lane>L\d{3})_

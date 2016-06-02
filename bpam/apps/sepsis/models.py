@@ -99,7 +99,19 @@ class ProteomicsMethod(models.Model):
 # TODO
 class TranscriptomicsMethod(models.Model):
     """Transcriptomics Metadata"""
-    pass
+
+    # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	CASAVA version
+    
+    library_construction_protocol = models.CharField("Library Construction Protocol", max_length=100, blank=True, null=True)
+    insert_size_range = models.CharField("Insert Size Range", max_length=20, blank=True, null=True)
+    sequencer = models.CharField("Sequencer", max_length=100, blank=True, null=True)
+    casava_version = models.CharField("CASAVA Version", max_length=20, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Transcriptomics Method"
+
+    def __unicode__(self):
+        return u"{} {} {}".format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
 
 
 # Little point in expanding the common Sample Type
@@ -185,7 +197,7 @@ class GenomicsMiseqFile(GenomicsFile):
 
     library = models.CharField("Library", max_length=20, help_text="MP or PE")
     size = models.CharField("Extraction Size", max_length=100, default=1)
-    plate = models.CharField("Plate", max_length=6)
+    flow_cell_id = models.CharField("Flow Cell ID", max_length=6)
     index = models.CharField("Index", max_length=20)
     runsamplenum = models.CharField("Sample Run Number", max_length=20)
     read = models.CharField("Read", max_length=3)

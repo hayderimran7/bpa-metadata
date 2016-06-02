@@ -36,7 +36,7 @@ usage() {
     echo ""
     echo "Usage:"
     echo " ./develop.sh (baseimage|buildimage|devimage|releasetarball|prodimage)"
-    echo " ./develop.sh (dev|dev_build)"
+    echo " ./develop.sh (dev|build_dev)"
     echo " ./develop.sh (start_prod|prod_build)"
     echo " ./develop.sh (runtests|lettuce|selenium)"
     echo " ./develop.sh (start_test_stack|start_seleniumhub|start_seleniumtests|start_prodseleniumtests)"

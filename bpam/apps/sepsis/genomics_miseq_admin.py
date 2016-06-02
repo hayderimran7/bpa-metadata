@@ -34,7 +34,7 @@ class FileAdmin(ImportExportModelAdmin):
              'library',
              'size',
              'vendor',
-             'plate',
+             'flow_cell_id',
              'index',
              'runsamplenum',
              'lane_number',
