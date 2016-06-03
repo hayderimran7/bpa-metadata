@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django import forms
+from django.utils.html import format_html
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget, EnclosedInput
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
@@ -14,7 +15,7 @@ class FileForm(forms.ModelForm):
         model = GenomicsMiseqFile
         widgets = {
             'date_received_from_sequencing_facility': SuitDateWidget,
-            'md5': forms.TextInput(attrs={'class': 'input-medium'}),
+            'md5': forms.TextInput(attrs={'class': 'input-large', 'style':'font-family: monospace'}),
             'filename': forms.TextInput(attrs={'class': 'input-medium', 'style': 'width:50%'}),
             'sample': LinkedSelect(attrs={'class': 'input-medium', 'style': 'width:40%'}),
             'method': LinkedSelect(attrs={'class': 'input-medium', 'style': 'width:40%'}),
@@ -29,7 +30,6 @@ class FileAdmin(ImportExportModelAdmin):
          {'fields': (
              'filename',
              'sample',
-             'date_received_from_sequencing_facility',
              'extraction',
              'library',
              'size',
@@ -38,31 +38,26 @@ class FileAdmin(ImportExportModelAdmin):
              'index',
              'runsamplenum',
              'lane_number',
-             'read',
+             'read',)
+         }
+        ),
+        ('Metadata',
+         {'fields': (
+             'date_received_from_sequencing_facility',
              'method',
              'md5',
              'analysed',
-             'note',
-             ),
-         }),
+             'note',)
+         }
+        ),
     ]
 
-    def download_field(self, obj):
-        if obj.link_ok():
-            return '<a href="%s">%s</a>' % (obj.url, obj.filename)
-        else:
-            return '<a style="color:grey">%s</a>' % obj.filename
+    def monospace_md5(obj):
+        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
+    monospace_md5.short_description = "MD5 Checksum"
 
-    download_field.allow_tags = True
-    download_field.short_description = 'Filename'
+    list_display = ('filename', monospace_md5, 'sample', 'extraction', 'library', 'index', 'vendor',)
+    list_display_links = ('filename', )
+    search_fields = list_display # the search field widget
+    list_filter = ('sample', 'library', 'index', 'date_received_from_sequencing_facility', 'vendor', )
 
-    # Sample ID
-    def get_sample_id(self, obj):
-        return obj.sample.bpa_id
-
-    get_sample_id.short_description = 'BPA ID'
-    get_sample_id.admin_order_field = 'sample__bpa_id'
-
-    list_display = ('filename', 'vendor', 'sample', )
-    search_fields = ('filename', 'vendor', ) # the search field widget
-    list_filter = ('sample__bpa_id', 'date_received_from_sequencing_facility', 'vendor', )
