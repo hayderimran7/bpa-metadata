@@ -42,11 +42,12 @@ def add_sepsis_id_data(data):
             sample.contact_researcher = entry.given_to
             sample.save()
 
-        #if method:
-        #    files = GenomicsMiseqFile.objects.filter(sample__bpa_id=bpa_id)
-        #    for f in files:
-        #        f.method = method
-        #        f.save()
+        if sample:
+            track, _ = SampleTrack.objects.get_or_create(sample=sample)
+            track.given_to = entry.given_to
+            track.allocation_date = entry.allocation_date
+            track.save()
+
 
 def ingest_ids():
     def is_metadata(path):
@@ -90,7 +91,7 @@ def get_ids(file_name):
         ("sample_number", "NUMBER", None),
         ("bpa_id", "BPA ID", strip_id),
         ("given_to", "Given to", None),
-        ("allocation_date", "Date allocated", None),
+        ("allocation_date", "Date allocated", ingest_utils.get_date),
         ("taxon_or_organism", "Taxon_OR_organism", None),
         ("strain_or_isolate", "Strain_OR_isolate", None),
         ("serovar", "Serovar", None),

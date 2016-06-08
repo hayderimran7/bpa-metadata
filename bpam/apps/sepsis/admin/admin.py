@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from apps.common.admin import BPAProject
-from apps.common.admin import BPAUniqueID
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
-import ingest
+
+# import export fields
+from commonfields import DateField
+from sample import SepsisSampleField
 
 from ..models import (Host,
                       MiseqGenomicsMethod,
@@ -17,58 +18,6 @@ from ..models import (Host,
                       SepsisSample,
                       SampleTrack,
                       GrowthMethod, )
-
-from sample import SepsisSampleField
-
-# BPA_sample_ID	Gram_staining_(positive_or_negative)
-# Taxon_OR_organism
-# Strain_OR_isolate
-# Serovar
-# Key_virulence_genes
-# Strain_description
-# Isolation_source
-# Publication_reference
-# Contact_researcher
-# #Growth_condition_time
-# #Growth_condition_temperature
-# #Growth_condition_media
-# #Experimental_replicate
-# #Analytical_facility
-# #Analytical_platform
-# # Experimental_sample_preparation_method
-# Culture_collection_ID (alternative name[s])
-# Culture_collection_date (DD/MM/YY)
-# Host_location (state, country)
-# Host_age
-# Host_DOB (DD/MM/YY)
-# Host_sex (F/M)
-# Host_disease_outcome
-# Isolation_source
-# Host_description
-
-
-class BPAIDField(fields.Field):
-    def __init__(self, *args, **kwargs):
-        super(BPAIDField, self).__init__(*args, **kwargs)
-
-    def clean(self, data):
-        return ingest.get_bpa_id(data[self.column_name])
-
-
-class DateField(fields.Field):
-    """
-    This field automatically parses a number of known date formats and returns
-    the standard python date
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(DateField, self).__init__(*args, **kwargs)
-
-    def clean(self, data):
-        try:
-            return ingest.get_date(data[self.column_name])
-        except ValueError:
-            return None
 
 
 class SampleTrackResource(resources.ModelResource):

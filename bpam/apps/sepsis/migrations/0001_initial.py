@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('vendor', models.CharField(default=1, max_length=100, verbose_name=b'Vendor')),
                 ('library', models.CharField(help_text=b'MP or PE', max_length=20, verbose_name=b'Library')),
                 ('size', models.CharField(default=1, max_length=100, verbose_name=b'Extraction Size')),
-                ('plate', models.CharField(max_length=6, verbose_name=b'Plate')),
+                ('flow_cell_id', models.CharField(max_length=6, verbose_name=b'Flow Cell ID')),
                 ('index', models.CharField(max_length=20, verbose_name=b'Index')),
                 ('runsamplenum', models.CharField(max_length=20, verbose_name=b'Sample Run Number')),
                 ('read', models.CharField(max_length=3, verbose_name=b'Read')),
@@ -165,8 +165,9 @@ class Migration(migrations.Migration):
                 ('culture_collection_date', models.DateField(help_text=b'DD/MM/YY', null=True, verbose_name=b'Collection Date', blank=True)),
                 ('culture_collection_id', models.CharField(max_length=100, null=True, verbose_name=b'Culture Collection ID', blank=True)),
                 ('bpa_id', models.OneToOneField(verbose_name=b'BPA ID', to='common.BPAUniqueID', help_text=b'Bioplatforms Australia Sample ID')),
-                ('growt_method', models.ForeignKey(related_name='samples', blank=True, to='sepsis.GrowthMethod', help_text=b'Sample Growth Method', null=True)),
+                ('growth_method', models.ForeignKey(related_name='samples', blank=True, to='sepsis.GrowthMethod', help_text=b'Sample Growth Method', null=True)),
                 ('host', models.ForeignKey(related_name='samples', blank=True, to='sepsis.Host', help_text=b'Sample donor host', null=True)),
+                ('sample_track', models.OneToOneField(related_name='sample', null=True, blank=True, to='sepsis.SampleTrack', help_text=b'Sample Tracking')),
             ],
             options={
                 'verbose_name': 'Sepsis Sample',
@@ -195,12 +196,14 @@ class Migration(migrations.Migration):
             name='TranscriptomicsMethod',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('library_construction_protocol', models.CharField(max_length=100, null=True, verbose_name=b'Library Construction Protocol', blank=True)),
+                ('insert_size_range', models.CharField(max_length=20, null=True, verbose_name=b'Insert Size Range', blank=True)),
+                ('sequencer', models.CharField(max_length=100, null=True, verbose_name=b'Sequencer', blank=True)),
+                ('casava_version', models.CharField(max_length=20, null=True, verbose_name=b'CASAVA Version', blank=True)),
             ],
-        ),
-        migrations.AddField(
-            model_name='sampletrack',
-            name='sample',
-            field=models.ForeignKey(related_name='sepsis_sampletrack_track', to='sepsis.SepsisSample'),
+            options={
+                'verbose_name': 'Transcriptomics Method',
+            },
         ),
         migrations.AddField(
             model_name='proteomicsfile',
