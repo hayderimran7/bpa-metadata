@@ -132,7 +132,7 @@ class SepsisSample(models.Model):
         help_text="Sample donor host"
         )
 
-    growt_method = models.ForeignKey(
+    growth_method = models.ForeignKey(
         GrowthMethod,
         blank=True,
         null=True,

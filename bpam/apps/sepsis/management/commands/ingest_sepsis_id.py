@@ -34,11 +34,12 @@ def add_sepsis_id_data(data):
             continue
 
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
+        # just fill in everything available from this spreadsheet
         if sample:
             sample.taxon_or_organism = entry.taxon_or_organism
             sample.strain_or_isolate = entry.strain_or_isolate
-            sample.strain_description = 'undescribed'
             sample.serovar = entry.serovar
+            sample.contact_researcher = entry.given_to
             sample.save()
 
         #if method:
@@ -80,10 +81,14 @@ def get_ids(file_name):
     # Archive ID
 	# Archive Ingestion Date
 
+    def strip_id(bpa_id):
+        if bpa_id and bpa_id is not "":
+            return bpa_id.split('/')[1]
+        return None
 
     field_spec = [
         ("sample_number", "NUMBER", None),
-        ("bpa_id", "BPA ID", lambda s:s.replace('/', '.')),
+        ("bpa_id", "BPA ID", strip_id),
         ("given_to", "Given to", None),
         ("allocation_date", "Date allocated", None),
         ("taxon_or_organism", "Taxon_OR_organism", None),
