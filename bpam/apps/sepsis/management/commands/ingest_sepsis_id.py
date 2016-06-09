@@ -40,13 +40,15 @@ def add_sepsis_id_data(data):
             sample.strain_or_isolate = entry.strain_or_isolate
             sample.serovar = entry.serovar
             sample.contact_researcher = entry.given_to
-            sample.save()
 
-        if sample:
-            track, _ = SampleTrack.objects.get_or_create(sample=sample)
+            # the tracking data
+            track, _ = SampleTrack.objects.get_or_create(bpa_id=bpa_id)
             track.given_to = entry.given_to
             track.allocation_date = entry.allocation_date
             track.save()
+
+            sample.sample_track = track
+            sample.save()
 
 
 def ingest_ids():

@@ -212,6 +212,10 @@ class TranscriptomicsMethod(models.Model):
 class SampleTrack(models.Model):
     """ Track the Sepsis Sample """
 
+    bpa_id = models.OneToOneField(BPAUniqueID,
+                                  null=True,
+                                  verbose_name="BPA ID",
+                                  help_text="Bioplatforms Australia Sample ID")
     given_to = models.CharField("Given To",
                                 max_length=200,
                                 blank=True,
@@ -254,10 +258,7 @@ class SampleTrack(models.Model):
     dataset_url = models.URLField("Dataset URL", blank=True, null=True)
 
     def __unicode__(self):
-        try:
-            return u"{}".format(self.sample)
-        except SepsisSample.DoesNotExist:
-            return u"Sepsis Sample Track"
+        return u"Sample {}".format(self.bpa_id)
 
     class Meta:
         verbose_name = "Sample Tracking Information"
