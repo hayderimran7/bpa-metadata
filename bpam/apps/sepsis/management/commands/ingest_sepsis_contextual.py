@@ -140,7 +140,7 @@ def get_data(file_name):
         ("publication_reference", "Publication_reference", None),
         ("contact_researcher", "Contact_researcher", None),
         ("growth_condition_time", "Growth_condition_time", None),
-        ("growth_condition_temperature", "Growth_condition_temperature", None),
+        ("growth_condition_temperature", "Growth_condition_temperature", ingest_utils.get_clean_number),
         ("growth_condition_media", "Growth_condition_media", None),
         ("experimental_replicate", "Experimental_replicate", None),
         ("analytical_facility", "Analytical_facility", None),
