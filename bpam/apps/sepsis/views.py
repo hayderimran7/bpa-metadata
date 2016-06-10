@@ -25,7 +25,7 @@ class SepsisView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SepsisView, self).get_context_data(**kwargs)
         context['sample_count'] = SepsisSample.objects.count()
-        context['genomics_file_count'] = GenomicsFile.objects.count()
+        context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
         return context
 
 class SampleListView(ListView):

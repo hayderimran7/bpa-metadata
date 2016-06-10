@@ -22,25 +22,31 @@
         <thead>
             <tr>
                 <th>BPA ID</th>
-                <th>Name</th>
-                <th>Organism</th>
-                <th>Dataset</th>
-                <th>DNA/RNA Source</th>
-                <th>Library</th>
-                <th>Library Construction</th>
-                <th>Protocol</th>
+                <th>Taxon Or Organism</th>
+                <th>Strain Or Isolate</th>
+                <th>Gram Staining</th>
+                <th>Serovar</th>
+                <th>Strain Description</th>
+                <th>Key Virulence Genes</th>
+                <th>Isolation Source</th>
+                <th>Publication Reference</th>
+                <th>Contact Researcher</th>
+                <th>Collection Date</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>BPA ID</th>
-                <th>Name</th>
-                <th>Organism</th>
-                <th>Dataset</th>
-                <th>DNA/RNA Source</th>
-                <th>Library</th>
-                <th>Library Construction</th>
-                <th>Protocol</th>
+                <th>Taxon Or Organism</th>
+                <th>Strain Or Isolate</th>
+                <th>Gram Staining</th>
+                <th>Serovar</th>
+                <th>Strain Description</th>
+                <th>Key Virulence Genes</th>
+                <th>Isolation Source</th>
+                <th>Publication Reference</th>
+                <th>Contact Researcher</th>
+                <th>Collection Date</th>
             </tr>
         </tfoot>
         <tbody>
@@ -49,13 +55,16 @@
                 <td>
                     <a href="{% url 'sepsis:sample' sample.pk %}">{{ sample.bpa_id }}</a>
                 </td>
-                <td>{{ sample.name }}</td>
-                <td>{{ sample.organism }}</td>
-                <td>{{ sample.dataset }}</td>
-                <td>{{ sample.dna_source.description }}</td>
-                <td>{{ sample.protocol.base_pairs_string }}</td>
-                <td>{{ sample.protocol.library_construction_protocol }}</td>
-                <td>{{ sample.dna_extraction_protocol }}</td>
+                <td>{{ sample.taxon_or_organism }}</td>
+                <td>{{ sample.strain_or_isolate }}</td>
+                <td>{{ sample.gram_stain }}</td>
+                <td>{{ sample.serovar }}</td>
+                <td>{{ sample.strain_description }}</td>
+                <td>{{ sample.key_virulence_genes }}</td>
+                <td>{{ sample.isolation_source }}</td>
+                <td>{{ sample.publication_reference }}</td>
+                <td>{{ sample.contact_researcher }}</td>
+                <td>{{ sample.culture_collection_date }}</td>
             </tr>
             {% endfor %}
         </tbody>

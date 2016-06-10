@@ -29,6 +29,8 @@ def add_data(data):
     """ pack data into the DB """
 
     for entry in data:
+        print(entry.host_dob)
+        if entry.bpa_id is "": continue
         bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id,
                                                  PROJECT_ID,
                                                  PROJECT_DESCRIPTION,
@@ -44,6 +46,7 @@ def add_data(data):
         if sample:
             sample.taxon_or_organism = entry.taxon_or_organism
             sample.strain_or_isolate = entry.strain_or_isolate
+            sample.strain_description = entry.strain_description
             sample.serovar = entry.serovar
             sample.key_virulence_genes = entry.key_virulence_genes
             sample.gram_stain = entry.gram_stain
@@ -64,7 +67,7 @@ def add_data(data):
                 sex=entry.host_sex,
                 age=entry.host_age,
                 dob=entry.host_dob,
-                disease_outcome=entry.disease_outcome,
+                disease_outcome=entry.host_disease_outcome,
                 strain_or_isolate=entry.strain_or_isolate, )
             sample.host = host
 
@@ -122,25 +125,44 @@ def get_data(file_name):
     def get_gram_stain(val):
         if val and val is not "":
             val = val.lower()
-            if val.find("positive") != -1:
-                return "POS"
-            if val.find("negative") != -1:
-                return "NEG"
+            if "positive" in val: return "POS"
+            elif "negative" in val: return "NEG"
+        return None
 
+    def get_sex(val):
+        """
+        Returns 'M' if string contains 'male', F is string contains 'female', None otherwise
+        """
+        if val and val is not "":
+            val = val.lower()
+            # note the order, I'm not even sorry
+            if "female" in val:
+                return "F"
+            if "male" in val:
+                return "M"
+        return None
+
+    def get_strain_or_isolate(val):
+        if val and val is not "":
+            # convert floats to str
+            if isinstance(val, float):
+                val = int(val)
+            return str(val)
         return None
 
     field_spec = [
         ("bpa_id", "BPA_sample_ID", strip_id),
         ("gram_stain", "Gram_staining_(positive_or_negative)", get_gram_stain),
         ("taxon_or_organism", "Taxon_OR_organism", None),
-        ("strain_or_isolate", "Strain_OR_isolate", None),
+        ("strain_or_isolate", "Strain_OR_isolate", get_strain_or_isolate),
         ("serovar", "Serovar", None),
         ("key_virulence_genes", "Key_virulence_genes", None),
         ("strain_description", "Strain_description", None),
         ("publication_reference", "Publication_reference", None),
         ("contact_researcher", "Contact_researcher", None),
         ("growth_condition_time", "Growth_condition_time", None),
-        ("growth_condition_temperature", "Growth_condition_temperature", ingest_utils.get_clean_number),
+        ("growth_condition_temperature", "Growth_condition_temperature",
+         ingest_utils.get_clean_number),
         ("growth_condition_media", "Growth_condition_media", None),
         ("experimental_replicate", "Experimental_replicate", None),
         ("analytical_facility", "Analytical_facility", None),
@@ -152,9 +174,9 @@ def get_data(file_name):
         ("culture_collection_date", "Culture_collection_date (DD/MM/YY)",
          ingest_utils.get_date),
         ("host_location", "Host_location (state, country)", None),
-        ("host_age", "Host_age", None),
+        ("host_age", "Host_age", ingest_utils.get_int),
         ("host_dob", "Host_DOB (DD/MM/YY)", ingest_utils.get_date),
-        ("host_sex", "Host_sex (F/M)", None),
+        ("host_sex", "Host_sex (F/M)", get_sex),
         ("host_disease_outcome", "Host_disease_outcome", None),
         ("isolation_source", "Isolation_source", None),
         ("host_description", "Host_description", None),

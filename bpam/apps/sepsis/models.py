@@ -48,16 +48,16 @@ class Host(models.Model):
 class GrowthMethod(models.Model):
     """Sample preparation method metadata"""
 
-    note = models.TextField("Note", max_length=200, blank=True, null=True)
+    note = models.TextField("Note", max_length=500, blank=True, null=True)
     growth_condition_temperature = models.IntegerField(
         "Growth condition temperature",
         blank=True,
         null=True,
         help_text="Degrees Centigrade")
-    growth_condition_time = models.IntegerField("Growth condition time",
-                                                blank=True,
-                                                null=True,
-                                                help_text="Hours")
+    growth_condition_time = models.CharField("Growth condition time",
+                                             max_length=500,
+                                             blank=True,
+                                             null=True, )
     growth_condition_media = models.CharField("Growth condition media",
                                               max_length=200,
                                               blank=True,
@@ -87,9 +87,10 @@ class MiseqGenomicsMethod(models.Model):
                                          max_length=20,
                                          blank=True,
                                          null=True)
-    sequencer = models.CharField(
-        "Sequencer", max_length=100,
-        blank=True, null=True)
+    sequencer = models.CharField("Sequencer",
+                                 max_length=100,
+                                 blank=True,
+                                 null=True)
     analysis_software_version = models.CharField("Analysis Software Version",
                                                  max_length=20,
                                                  blank=True,
@@ -118,22 +119,26 @@ class PacBioGenomicsMethod(models.Model):
                                          max_length=20,
                                          blank=True,
                                          null=True)
-    sequencer = models.CharField(
-        "Sequencer", max_length=100,
-        blank=True, null=True)
+    sequencer = models.CharField("Sequencer",
+                                 max_length=100,
+                                 blank=True,
+                                 null=True)
     sequencer_run_id = models.CharField("Sequencer run ID",
                                         max_length=20,
                                         blank=True,
                                         null=True)
-    smrt_cell_id = models.CharField(
-        "SMRT Cell ID", max_length=60,
-        blank=True, null=True)
-    cell_position = models.CharField(
-        "Cell Position", max_length=60,
-        blank=True, null=True)
-    rs_version = models.CharField(
-        "RS Version", max_length=20,
-        blank=True, null=True)
+    smrt_cell_id = models.CharField("SMRT Cell ID",
+                                    max_length=60,
+                                    blank=True,
+                                    null=True)
+    cell_position = models.CharField("Cell Position",
+                                     max_length=60,
+                                     blank=True,
+                                     null=True)
+    rs_version = models.CharField("RS Version",
+                                  max_length=20,
+                                  blank=True,
+                                  null=True)
 
     class Meta:
         verbose_name = "PacBio Genomics Method"
@@ -193,9 +198,10 @@ class TranscriptomicsMethod(models.Model):
                                          max_length=20,
                                          blank=True,
                                          null=True)
-    sequencer = models.CharField(
-        "Sequencer", max_length=100,
-        blank=True, null=True)
+    sequencer = models.CharField("Sequencer",
+                                 max_length=100,
+                                 blank=True,
+                                 null=True)
     casava_version = models.CharField("CASAVA Version",
                                       max_length=20,
                                       blank=True,
@@ -226,13 +232,15 @@ class SampleTrack(models.Model):
                                        null=True,
                                        help_text="DD/MM/YY")
 
-    work_order = models.CharField(
-        "Work Order", max_length=50,
-        blank=True, null=True)
+    work_order = models.CharField("Work Order",
+                                  max_length=50,
+                                  blank=True,
+                                  null=True)
     replicate = models.IntegerField("Replicate", blank=True, null=True)
-    omics = models.CharField(
-        "Omics Type", max_length=50,
-        blank=True, null=True)
+    omics = models.CharField("Omics Type",
+                             max_length=50,
+                             blank=True,
+                             null=True)
     analytical_platform = models.CharField("Analytical Platform",
                                            max_length=100,
                                            blank=True,
@@ -264,6 +272,7 @@ class SampleTrack(models.Model):
         verbose_name = "Sample Tracking Information"
         verbose_name_plural = "Sample Tracking"
 
+
 # Little point in expanding the common Sample Type
 class SepsisSample(models.Model):
     """ Sepsis Sample """
@@ -285,10 +294,10 @@ class SepsisSample(models.Model):
                                       help_text="Sample Growth Method")
 
     sample_track = models.OneToOneField(SampleTrack,
-                                      blank=True,
-                                      null=True,
-                                      related_name="sample",
-                                      help_text="Sample Tracking")
+                                        blank=True,
+                                        null=True,
+                                        related_name="sample",
+                                        help_text="Sample Tracking")
 
     taxon_or_organism = models.CharField("Taxon or Organism",
                                          max_length=200,
@@ -306,9 +315,10 @@ class SepsisSample(models.Model):
                                   max_length=3,
                                   choices=(("POS", "Positive"),
                                            ("NEG", "Negative")))
-    serovar = models.CharField(
-        "Serovar", max_length=100,
-        blank=True, null=True)
+    serovar = models.CharField("Serovar",
+                               max_length=100,
+                               blank=True,
+                               null=True)
     key_virulence_genes = models.CharField("Key Virulence Genes",
                                            max_length=100,
                                            blank=True,
@@ -400,5 +410,3 @@ class TranscriptomicsFile(SepsisSequenceFile):
 
     def __unicode__(self):
         return u"{}".format(self.filename)
-
-
