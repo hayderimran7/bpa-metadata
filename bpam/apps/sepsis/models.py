@@ -403,6 +403,26 @@ class GenomicsMiseqFile(GenomicsFile):
     def __unicode__(self):
         return u"Genomics Miseq {}".format(self.filename)
 
+class GenomicsPacBioFile(GenomicsFile):
+    """Genomics PacBio"""
+
+    method = models.ForeignKey(PacBioGenomicsMethod,
+                               null=True,
+                               related_name="%(app_label)s_%(class)s_files",
+                               help_text="PacBio Genomics Method")
+
+    library = models.CharField("Library", max_length=20, help_text="MP or PE")
+    size = models.CharField("Extraction Size", max_length=100, default=1)
+    flow_cell_id = models.CharField("Flow Cell ID", max_length=6)
+    index = models.CharField("Index", max_length=20)
+    runsamplenum = models.CharField("Sample Run Number", max_length=20)
+    read = models.CharField("Read", max_length=3)
+
+    def get_path_parts(self):
+        return (self.project_name, 'genomics/pacbio')
+
+    def __unicode__(self):
+        return u"Genomics Miseq {}".format(self.filename)
 
 class TranscriptomicsFile(SepsisSequenceFile):
     """Sequence file from the transcriptomics analysis process"""

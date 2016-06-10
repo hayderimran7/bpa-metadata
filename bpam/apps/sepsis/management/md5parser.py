@@ -2,6 +2,22 @@
 
 import re
 
+# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.bax.h5.gz
+# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fasta.gz
+# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fastq.gz
+PACBIO_FILENAME_PATTERN = """
+    (?P<id>\d{4,6})_
+    SEP_
+    (?P<vendor>AGRF|UNSW)_
+    PAC_
+    (?P<run_id>m\d{6}_\d{6})_
+    (?P<machine_data>\S*)_
+    (?P<data_type>\S*)
+"""
+pacbio_filename_pattern = re.compile(PACBIO_FILENAME_PATTERN, re.VERBOSE)
+
+# 25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I1.fastq.gz
+# 25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I2.fastq.gz
 MISEQ_FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
     (?P<extraction>\d)_
@@ -18,9 +34,6 @@ MISEQ_FILENAME_PATTERN = """
 miseq_filename_pattern = re.compile(MISEQ_FILENAME_PATTERN, re.VERBOSE)
 
 class MD5ParsedLine(object):
-    # 26faa5838656dbd82d33dbd277fbe1bc  25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I1.fastq.gz
-    # 6d0f632a121671463f8eb496c5ddeac3  25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I2.fastq.gz
-
     def __init__(self, pattern, line):
         self.pattern = pattern
         self._line = line
