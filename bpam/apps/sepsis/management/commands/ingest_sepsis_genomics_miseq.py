@@ -121,13 +121,26 @@ def ingest_md5():
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info("Processing Sepsis Genomic md5 file {0}".format(md5_file))
         data = md5parser.parse_md5_file(md5parser.miseq_filename_pattern, md5_file)
-        print(data)
         add_md5(data)
 
 class Command(BaseCommand):
     help = 'Ingest Sepsis Genomics miseq metadata'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--delete',
+            action='store_true',
+            dest='delete',
+            default=False,
+            help='Delete all contextual data',
+        )
+
     def handle(self, *args, **options):
+
+        if options['delete']:
+            logger.info("Deleting all Miseq Files")
+            GenomicsMiseqFile.objects.all().delete()
+
         password = get_password('sepsis')
         # fetch the new data formats
         fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))

@@ -20,6 +20,7 @@ PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
 
 # TODO get mirror urls from DB
+
 METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/projectdata/"
 SEPSIS_ID_FILE = "sepsis_contextual.xlsx"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/projectdata")
@@ -29,7 +30,6 @@ def add_data(data):
     """ pack data into the DB """
 
     for entry in data:
-        print(entry.host_dob)
         if entry.bpa_id is "": continue
         bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id,
                                                  PROJECT_ID,
@@ -79,8 +79,7 @@ def ingest_data():
         if path.isfile() and path.ext == ".xlsx":
             return True
 
-    logger.info("Ingesting Sepsis BPA COntextual metadata from {0}".format(
-        DATA_DIR))
+    logger.info("Ingesting Sepsis BPA Contextual metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info("Processing Sepsis BPA Contextual file {0}".format(
             metadata_file))
@@ -196,9 +195,22 @@ def get_data(file_name):
 class Command(BaseCommand):
     help = 'Ingest Sepsis Project metadata'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--delete',
+            action='store_true',
+            dest='delete',
+            default=False,
+            help='Delete all contextual data',
+        )
+
     def handle(self, *args, **options):
+
+        if options['delete']:
+            Host.objects.all().delete()
+            GrowthMethod.objects.all().delete()
+
         password = get_password('sepsis')
-        # fetch the new data formats
         fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))
         fetcher.clean()
         fetcher.fetch(SEPSIS_ID_FILE)  # TODO pass file arg

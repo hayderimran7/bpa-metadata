@@ -13,42 +13,50 @@
 
 {% block content %}
 <div class="panel panel-info">
-    <table id="info" class="table table-striped">
-        <tbody>
-        <tr>
-            <td> Sample Name</td>
-            <td> {{ sample.name }}</td>
-        </tr>
-        <tr>
-            <td> Data set</td>
-            <td> {{ sample.dataset }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Coverage</td>
-            <td> {{ sample.requested_sequence_coverage|default:"" }}</td>
-        </tr>
-        <tr>
-            <td> Sequence Date</td>
-            <td> {{ sample.date_sequenced|default:"" }}</td>
-        </tr>
-        <tr>
-            <td> Requested Read Length</td>
-            <td> {{ sample.requested_read_length|default:"" }}</td>
-        </tr>
-        <tr>
-            <td> Sequencing Facility</td>
-            <td> {{ sample.sequencing_facility.name|default:"" }}</td>
-        </tr>
-        <tr>
-            <td> Contact Scientist</td>
-            <td> {{ sample.contact_scientist|default:"" }}</td>
-        </tr>
-        <tr>
-            <td> Notes</td>
-            <td> {{ sample.comments_by_facility }} {{ sample.sequencing_notes }}</td>
-        </tr>
-        </tbody>
-    </table>
+  <table id="info" class="table table-striped">
+    <tbody>
+      <tr>
+        <td> Taxon Or Organism</td>
+        <td> {{ sample.taxon_or_organism }}</td>
+      </tr>
+      <tr>
+        <td> Strain Or Isolate </td>
+        <td> {{ sample.strain_or_isolate|default:"" }}</td>
+      </tr>
+      <tr>
+        <td> Gram Staining</td>
+        <td> {{ sample.gram_stain|default:"" }}</td>
+      </tr>
+      <tr>
+        <td>Serovar</td>
+        <td> {{ sample.serovar}}</td>
+      </tr>
+      <tr>
+        <td>Strain Description</td>
+        <td> {{ sample.strain_description}}</td>
+      </tr>
+      <tr>
+        <td>Key Virulence Genes</td>
+        <td> {{ sample.key_virulence_genes}}</td>
+      </tr>
+      <tr>
+        <td>Isolation Source</td>
+        <td> {{ sample.isolation_source }}</td>
+      </tr>
+      <tr>
+        <td>Publication Reference</td>
+        <td> {{ sample.publication_reference }}</td>
+      </tr>
+      <tr>
+        <td>Contact Researcher</td>
+        <td> {{ sample.contact_researcher }}</td>
+      </tr>
+      <tr>
+        <td>Culture Collection Date</td>
+        <td> {{ sample.culture_collection_date|default:"" }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 {% include "sequencefilelist.html" %}

@@ -45,7 +45,7 @@ class SampleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
-        context['sequencefiles'] = GenomicsFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        context['sequencefiles'] = GenomicsMiseqFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
         context['mirrors'] = BPAMirror.objects.all()
 
         return context

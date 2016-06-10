@@ -67,9 +67,7 @@ class GrowthMethod(models.Model):
         verbose_name = "Growth Method"
 
     def __unicode__(self):
-        return u"{} {} {}".format(self.growth_condition_media,
-                                  self.growth_condition_temperature,
-                                  self.growth_condition_time)
+        return u"{} {}".format(self.growth_condition_media, self.growth_condition_temperature, )
 
 
 class MiseqGenomicsMethod(models.Model):
@@ -279,6 +277,7 @@ class SepsisSample(models.Model):
 
     bpa_id = models.OneToOneField(BPAUniqueID,
                                   verbose_name="BPA ID",
+                                  primary_key=True,
                                   help_text="Bioplatforms Australia Sample ID")
 
     host = models.ForeignKey(Host,

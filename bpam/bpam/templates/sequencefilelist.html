@@ -2,87 +2,87 @@
 
 {% if sequencefiles %}
 <div class="panel panel-success">
-    <div class="panel-heading">
-        <div class="panel-title">
-            {{ sequencefiles|length }} Related Sequence files available for BPA Sample ID {{ sample.bpa_id }}
-        </div>
+  <div class="panel-heading">
+    <div class="panel-title">
+      {{ sequencefiles|length }} Related Sequence files available for BPA Sample ID {{ sample.bpa_id }}
     </div>
+  </div>
 </div>
 
 <div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        {% for mirror in mirrors %}
-        <li role="presentation" {% if forloop.first %}class="active"{% endif %}><a href="#filetable{{forloop.counter}}" aria-controls="home" role="tab" data-toggle="tab">Sequence Files (Mirror {{forloop.counter}})</a></li>
-        {% endfor %}
-        {% for mirror in mirrors %}
-        <li role="presentation"><a href="#urllist{{forloop.counter}}" aria-controls="profile" role="tab" data-toggle="tab">URL List (Mirror {{forloop.counter}})</a></li>
-        {% endfor %}
-    </ul>
+  <ul class="nav nav-tabs" role="tablist">
+    {% for mirror in mirrors %}
+    <li role="presentation" {% if forloop.first %}class="active"{% endif %}><a href="#filetable{{forloop.counter}}" aria-controls="home" role="tab" data-toggle="tab">Sequence Files (Mirror {{forloop.counter}})</a></li>
+    {% endfor %}
+    {% for mirror in mirrors %}
+    <li role="presentation"><a href="#urllist{{forloop.counter}}" aria-controls="profile" role="tab" data-toggle="tab">URL List (Mirror {{forloop.counter}})</a></li>
+    {% endfor %}
+  </ul>
 
-    <div class="tab-content">
-        {% for mirror in mirrors %}
-        <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="filetable{{forloop.counter}}">
-            <div class="panel-body">
-                <table id="sequence-list" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Filename</th>
-                            <th>MD5</th>
-                            <th>Run Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for sfile in sequencefiles %}
-                        <tr>
-                            <td>
-                                {% if sfile.url_verification.status_ok %}
-                                <span title="Last checked {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-download"></span>
-                                <a href="{% sample_url mirror sfile %}">{{ sfile.filename }}</a>
-                                {% else %}
-                                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-flag"></span>
-                                {{ sfile.filename }}
-                                {% endif %}
-                            </td>
-                            <td class="md5">{{ sfile.md5 }}</td>
-                            <td>{{ sfile.run|default_if_none:"" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% endfor %}
-
-        {% for mirror in mirrors %}
-        <div role="tabpanel" class="tab-pane" id="urllist{{forloop.counter}}">
-            <div class="panel-heading">
-                You can use the URL list below with tools like <code>wget</code> or <code>curl</code> to fetch only the listed sequence files from the archive.
-            </div>
-
-            <div class="panel-body">
-                <p>
-                <samp>
-                    {% for sfile in sequencefiles %}
-                    {% sample_url mirror sfile %}<br/>
-                    {% endfor %}
-                </p>
-                </samp>
-            </div>
-        </div>
-        {% endfor %}
+  <div class="tab-content">
+    {% for mirror in mirrors %}
+    <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="filetable{{forloop.counter}}">
+      <div class="panel-body">
+        <table id="sequence-list" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>MD5</th>
+              <th>Run Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sfile in sequencefiles %}
+            <tr>
+              <td>
+                {% if sfile.url_verification.status_ok %}
+                <span title="Last checked {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-download"></span>
+                <a href="{% sample_url mirror sfile %}">{{ sfile.filename }}</a>
+                {% else %}
+                <span title="Error {{ sfile.url_verification.status_note }} at {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-flag"></span>
+                {{ sfile.filename }}
+                {% endif %}
+              </td>
+              <td class="md5">{{ sfile.md5 }}</td>
+              <td>{{ sfile.run|default_if_none:"" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+    {% endfor %}
+
+    {% for mirror in mirrors %}
+    <div role="tabpanel" class="tab-pane" id="urllist{{forloop.counter}}">
+      <div class="panel-heading">
+        You can use the URL list below with tools like <code>wget</code> or <code>curl</code> to fetch only the listed sequence files from the archive.
+      </div>
+
+      <div class="panel-body">
+        <p>
+          <samp>
+            {% for sfile in sequencefiles %}
+            {% sample_url mirror sfile %}<br/>
+            {% endfor %}
+        </p>
+        </samp>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $(function () {
-            $("#sequence-list").tablesorter();
-        });
-    });
+  $(document).ready(function () {
+  $(function () {
+  $("#sequence-list").tablesorter();
+  });
+  });
 </script>
 
 {% else %}
 <div class="alert alert-warning">
-    No Sequence Files currently available for {{ sample.bpa_id }}
+  No Sequence Files currently available for {{ sample.bpa_id }}
 </div>
 {% endif %}

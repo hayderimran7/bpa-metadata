@@ -116,16 +116,6 @@ class HostAdmin(ImportExportModelAdmin):
                    "description",
                    "sex", )
 
-
-class GrowthAdmin(ImportExportModelAdmin):
-    list_display = ("growth_condition_temperature",
-                    "growth_condition_time",
-                    "growth_condition_media",
-                    "note", )
-
-    list_filter = list_display
-
-
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(MiseqGenomicsMethod)
@@ -133,4 +123,3 @@ admin.site.register(ProteomicsMethod)
 admin.site.register(ProteomicsFile)
 admin.site.register(TranscriptomicsMethod)
 admin.site.register(TranscriptomicsFile)
-admin.site.register(GrowthMethod, GrowthAdmin)
