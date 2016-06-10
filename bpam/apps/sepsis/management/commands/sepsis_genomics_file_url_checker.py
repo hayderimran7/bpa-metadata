@@ -21,6 +21,7 @@ logger = get_logger(__name__)
 
 SLEEP_TIME = settings.DOWNLOADS_CHECKER_SLEEP  # time to rest between checks
 
+
 def process_object(sleep_time, session, model, attr_name, url_fn):
     problems = []
     for obj in model.objects.all():
@@ -58,12 +59,17 @@ def process_object(sleep_time, session, model, attr_name, url_fn):
 def check(sleep_time):
     logger.info('Checking Sepsis Files')
     session = requests.Session()
-    session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
+    session.auth = (settings.DOWNLOADS_CHECKER_USER,
+                    settings.DOWNLOADS_CHECKER_PASS)
 
     try:
-        process_object(sleep_time, session, GenomicsPacBioFile, 'url_verification', lambda obj: obj.get_url())
+        process_object(sleep_time, session, GenomicsPacBioFile,
+                       'url_verification', lambda obj: obj.get_url())
+        process_object(sleep_time, session, GenomicsMiseqFile,
+                       'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError as e:
         logger.error(e)
+
 
 class Command(BaseCommand):
     help = 'URL Validator'

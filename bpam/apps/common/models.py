@@ -23,7 +23,12 @@ class BPAMirror(models.Model):
     @classmethod
     def primary(cls):
         "Returns the lowest order (primary) mirror"
-        return cls.objects.all()[0]
+        mirrors = cls.objects.all()
+        if len(mirrors) > 0:
+            return mirrors[0]
+        else:
+            print("Please set the mirrors")
+            return None
 
 
 class BPAProject(models.Model):
@@ -34,7 +39,10 @@ class BPAProject(models.Model):
 
     key = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=200)
-    description = models.CharField('Description', max_length=2000, blank=True, help_text='BPA Project description')
+    description = models.CharField('Description',
+                                   max_length=2000,
+                                   blank=True,
+                                   help_text='BPA Project description')
     note = models.TextField(blank=True)
 
     class Meta:
@@ -51,8 +59,18 @@ class BPAUniqueID(models.Model):
     Each sample should be issued a Unique ID by BPA
     """
 
-    bpa_id = models.CharField('BPA ID', max_length=200, blank=False, primary_key=True, unique=True, help_text='Unique BPA ID')
-    sra_id = models.CharField('SRA ID', max_length=12, blank=True, null=True, unique=True, help_text='SRA ID')
+    bpa_id = models.CharField('BPA ID',
+                              max_length=200,
+                              blank=False,
+                              primary_key=True,
+                              unique=True,
+                              help_text='Unique BPA ID')
+    sra_id = models.CharField('SRA ID',
+                              max_length=12,
+                              blank=True,
+                              null=True,
+                              unique=True,
+                              help_text='SRA ID')
     project = models.ForeignKey(BPAProject, related_name='bpa_ids')
     note = models.TextField(blank=True)
 
@@ -90,7 +108,10 @@ class Facility(models.Model):
                   '': 'Unknown',
                   'Unknown': 'Unknown'}
 
-    name = models.CharField('Facility Name', max_length=100, help_text='Facility short name', unique=True)
+    name = models.CharField('Facility Name',
+                            max_length=100,
+                            help_text='Facility short name',
+                            unique=True)
     note = models.TextField(blank=True)
     objects = FacilityManager()
 
@@ -120,7 +141,8 @@ class Organism(models.Model):
     genus = models.CharField(max_length=100, blank=True)
     species = models.CharField(max_length=100, blank=True)
 
-    ncbi_classification = models.URLField('NCBI Organismal Classification', blank=True)
+    ncbi_classification = models.URLField('NCBI Organismal Classification',
+                                          blank=True)
     note = models.TextField(blank=True)
 
     class Meta:
@@ -151,7 +173,9 @@ class DNASource(models.Model):
 class Sequencer(models.Model):
     """ The Sequencer """
 
-    name = models.CharField(max_length=100, primary_key=True, help_text='The sequencer name')
+    name = models.CharField(max_length=100,
+                            primary_key=True,
+                            help_text='The sequencer name')
     description = models.TextField(blank=True)
 
     class Meta:
@@ -160,12 +184,17 @@ class Sequencer(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Protocol(models.Model):
     """ Protocol """
 
-    LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'), ('MP', 'Mate Pair'), ('UN', 'Unknown'))
+    LIB_TYPES = (('PE', 'Paired End'), ('SE', 'Single End'),
+                 ('MP', 'Mate Pair'), ('UN', 'Unknown'))
     library_type = models.CharField('Type', max_length=2, choices=LIB_TYPES)
-    library_construction = models.CharField('Construction', max_length=200, blank=True, null=True)
+    library_construction = models.CharField('Construction',
+                                            max_length=200,
+                                            blank=True,
+                                            null=True)
     base_pairs = models.IntegerField('Base Pairs', blank=True, null=True)
     library_construction_protocol = models.TextField('Construction Protocol')
     note = models.TextField(blank=True)
@@ -174,11 +203,13 @@ class Protocol(models.Model):
         abstract = True
         verbose_name = 'Protocol'
         verbose_name_plural = 'Protocol'
-        unique_together = ('library_type', 'base_pairs', 'library_construction_protocol')
+        unique_together = ('library_type', 'base_pairs',
+                           'library_construction_protocol')
 
     def __unicode__(self):
-        return u'Size:{0}, Type:{1}, Protocol:{2}'.format(self.base_pairs, self.library_type,
-                                                          self.library_construction_protocol)
+        return u'Size:{0}, Type:{1}, Protocol:{2}'.format(
+            self.base_pairs, self.library_type,
+            self.library_construction_protocol)
 
     def set_base_pairs(self, val):
         if val.find("bp") > -1:
@@ -190,15 +221,32 @@ class Protocol(models.Model):
 class Sample(models.Model):
     """ The common base Sample """
 
-    bpa_id = models.OneToOneField(BPAUniqueID, primary_key=True, verbose_name='BPA ID')
-    contact_scientist = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="%(app_label)s_%(class)s_sample")
-    dna_source = models.ForeignKey(DNASource, blank=True, null=True, verbose_name='DNA Source', related_name="%(app_label)s_%(class)s_sample")
+    bpa_id = models.OneToOneField(BPAUniqueID,
+                                  primary_key=True,
+                                  verbose_name='BPA ID')
+    contact_scientist = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        related_name="%(app_label)s_%(class)s_sample")
+    dna_source = models.ForeignKey(
+        DNASource,
+        blank=True,
+        null=True,
+        verbose_name='DNA Source',
+        related_name="%(app_label)s_%(class)s_sample")
 
     name = models.CharField('Sample Name', max_length=200)
-    dna_extraction_protocol = models.TextField('DNA Extraction Protocol', blank=True, null=True)
+    dna_extraction_protocol = models.TextField('DNA Extraction Protocol',
+                                               blank=True,
+                                               null=True)
     requested_sequence_coverage = models.CharField(max_length=50, blank=True)
-    collection_date = models.DateField('Collection Date', blank=True, null=True)
-    date_sent_to_sequencing_facility = models.DateField('Date sent to sequencing facility', blank=True, null=True)
+    collection_date = models.DateField('Collection Date',
+                                       blank=True,
+                                       null=True)
+    date_sent_to_sequencing_facility = models.DateField(
+        'Date sent to sequencing facility',
+        blank=True, null=True)
 
     note = models.TextField('Note', blank=True, null=True)
 
@@ -216,8 +264,12 @@ class Run(models.Model):
     This run is abstract and needs to be extended in the client application with the specific sample, at least.
     """
 
-    DNA_extraction_protocol = models.CharField('DNA Extraction Protocol', max_length=200, blank=True)
-    passage_number = models.IntegerField('Passage Number', blank=True, null=True)
+    DNA_extraction_protocol = models.CharField('DNA Extraction Protocol',
+                                               max_length=200,
+                                               blank=True)
+    passage_number = models.IntegerField('Passage Number',
+                                         blank=True,
+                                         null=True)
 
     # facilities
     sequencing_facility = models.ForeignKey(Facility,
@@ -225,11 +277,12 @@ class Run(models.Model):
                                             related_name='+',
                                             blank=True,
                                             null=True)
-    whole_genome_sequencing_facility = models.ForeignKey(Facility,
-                                                         verbose_name='Whole Genome',
-                                                         related_name='+',
-                                                         blank=True,
-                                                         null=True)
+    whole_genome_sequencing_facility = models.ForeignKey(
+        Facility,
+        verbose_name='Whole Genome',
+        related_name='+',
+        blank=True,
+        null=True)
     array_analysis_facility = models.ForeignKey(Facility,
                                                 verbose_name='Array Analysis',
                                                 related_name='+',
@@ -269,13 +322,23 @@ class SequenceFile(models.Model):
     lane_number = models.IntegerField('Lane Number', blank=True, null=True)
     read_number = models.IntegerField('Read Number', blank=True, null=True)
 
-    date_received_from_sequencing_facility = models.DateField(blank=True, null=True)
-    filename = models.CharField('File Name', max_length=300, blank=True, null=True)
-    md5 = models.CharField('MD5 Checksum', max_length=32, blank=True, null=True)
+    date_received_from_sequencing_facility = models.DateField(blank=True,
+                                                              null=True)
+    filename = models.CharField('File Name',
+                                max_length=300,
+                                blank=True,
+                                null=True)
+    md5 = models.CharField('MD5 Checksum',
+                           max_length=32,
+                           blank=True,
+                           null=True)
     analysed = models.NullBooleanField(default=False)
     note = models.TextField(blank=True)
 
-    url_verification = models.ForeignKey(URLVerification, null=True, related_name="%(app_label)s_%(class)s_related")
+    url_verification = models.ForeignKey(
+        URLVerification,
+        null=True,
+        related_name="%(app_label)s_%(class)s_related")
 
     class Meta:
         abstract = True
@@ -301,8 +364,7 @@ class SequenceFile(models.Model):
             mirror = BPAMirror.primary()
 
         return uj(mirror.base_url, "%s/%s" % (
-            '/'.join(uq(t) for t in self.get_path_parts()),
-            uq(self.filename)))
+            '/'.join(uq(t) for t in self.get_path_parts()), uq(self.filename)))
 
     url = property(get_url)
 
