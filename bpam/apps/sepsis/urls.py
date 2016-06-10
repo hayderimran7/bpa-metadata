@@ -9,6 +9,7 @@ router.register(r"project", views.BPAProjectViewSet)
 router.register(r"bpa_ids", views.BPAIDViewSet)
 router.register(r"track", views.SepsisSampleTrackViewSet)
 router.register(r"genomic_miseq_files", views.GenomicsMiseqFileViewSet)
+router.register(r"genomic_pacbio_files", views.GenomicsPacBioFileViewSet)
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
@@ -32,4 +33,8 @@ urlpatterns = [
         regex=r'^genomicsmiseqfiles',
         view=views.GenomicsMiseqFileListView.as_view(),
         name='genomics_miseq_files'),
+    url(
+        regex=r'^genomicspacbiofiles',
+        view=views.GenomicsPacBioFileListView.as_view(),
+        name='genomics_pacbio_files'),
 ]

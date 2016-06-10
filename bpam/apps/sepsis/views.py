@@ -9,6 +9,7 @@ from .models import (
     Host,
     MiseqGenomicsMethod,
     GenomicsMiseqFile,
+    GenomicsPacBioFile,
     ProteomicsMethod,
     ProteomicsFile,
     TranscriptomicsMethod,
@@ -26,6 +27,7 @@ class SepsisView(TemplateView):
         context = super(SepsisView, self).get_context_data(**kwargs)
         context['sample_count'] = SepsisSample.objects.count()
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
+        context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
         return context
 
 class SampleListView(ListView):
@@ -37,6 +39,11 @@ class GenomicsMiseqFileListView(ListView):
     model = GenomicsMiseqFile
     context_object_name = 'sequencefiles'
     template_name = 'sepsis/genomics_file_list.html'
+
+class GenomicsPacBioFileListView(ListView):
+    model = GenomicsPacBioFile
+    context_object_name = 'sequencefiles'
+    template_name = 'sepsis/genomics_pacbio_file_list.html'
 
 class SampleDetailView(DetailView):
     model = SepsisSample
@@ -62,6 +69,12 @@ class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
     queryset = GenomicsMiseqFile.objects.all()
     serializer_class = serializers.GenomicsMiseqFileSerializer
 
+class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for Sepsis Genomics pacbio Sequences
+    """
+    queryset = GenomicsPacBioFile.objects.all()
+    serializer_class = serializers.GenomicsPacBioFileSerializer
 
 class SepsisSampleTrackViewSet(viewsets.ModelViewSet):
     """

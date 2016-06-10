@@ -9,6 +9,8 @@ from .models import (
     Host,
     MiseqGenomicsMethod,
     GenomicsMiseqFile,
+    PacBioGenomicsMethod,
+    GenomicsPacBioFile,
     ProteomicsMethod,
     TranscriptomicsMethod,
     SepsisSample,
@@ -45,6 +47,10 @@ class MiseqGenomicsMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = MiseqGenomicsMethod
 
+class PacBioGenomicsMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PacBioGenomicsMethod
+
 class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
     sample = SepsisSampleSerializer()
     method = MiseqGenomicsMethodSerializer()
@@ -52,6 +58,14 @@ class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = GenomicsMiseqFile
+
+class GenomicsPacBioFileSerializer(serializers.HyperlinkedModelSerializer):
+    sample = SepsisSampleSerializer()
+    method = PacBioGenomicsMethodSerializer()
+    url_verification = URLVerificationSerializer()
+
+    class Meta:
+        model = GenomicsPacBioFile
 
 class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
     sample = SepsisSampleSerializer()

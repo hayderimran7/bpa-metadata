@@ -10,6 +10,7 @@ from sample import SepsisSampleField
 
 from ..models import (Host,
                       MiseqGenomicsMethod,
+                      PacBioGenomicsMethod,
                       GenomicsMiseqFile,
                       ProteomicsMethod,
                       ProteomicsFile,
@@ -119,6 +120,7 @@ class HostAdmin(ImportExportModelAdmin):
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)
 admin.site.register(MiseqGenomicsMethod)
+admin.site.register(PacBioGenomicsMethod)
 admin.site.register(ProteomicsMethod)
 admin.site.register(ProteomicsFile)
 admin.site.register(TranscriptomicsMethod)
