@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.db.utils import DataError
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
 from unipath import Path
-from apps.common.models import Facility
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 
@@ -20,9 +17,9 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
 
-# TODO get mirror urls from DB
-METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/genomics/pacbio/"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/genomics/pacbio")
+METADATA_PATH = "/sepsis/genomics/pacbio/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
+
 
 def add_method_data(data):
     """ Add method data to files """
@@ -45,6 +42,7 @@ def add_method_data(data):
             for f in files:
                 f.method = method
                 f.save()
+
 
 def do_metadata():
     def is_metadata(path):
@@ -87,6 +85,7 @@ def get_metadata(file_name):
 
     return wrapper.get_all()
 
+
 def add_md5(md5_lines):
     """ Unpack md5 data to database """
 
@@ -102,16 +101,16 @@ def add_md5(md5_lines):
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
 
         # add files
-        f, _ = GenomicsPacBioFile.objects.get_or_create(
-            note="Ingested using management command",
-            sample=sample,
-            vendor=md5_line.md5data.get('vendor'),
-            filename=md5_line.filename,
-            md5=md5_line.md5)
+        f, _ = GenomicsPacBioFile.objects.get_or_create(note="Ingested using management command",
+                                                        sample=sample,
+                                                        vendor=md5_line.md5data.get('vendor'),
+                                                        filename=md5_line.filename,
+                                                        md5=md5_line.md5)
 
 
 def ingest_md5():
     """ Ingest the md5 files """
+
     def is_md5file(path):
         if path.isfile() and path.ext == ".md5":
             return True
@@ -122,27 +121,26 @@ def ingest_md5():
         data = md5parser.parse_md5_file(md5parser.pacbio_filename_pattern, md5_file)
         add_md5(data)
 
-class Command(BaseCommand):
+
+class Command(management_command.BPACommand):
     help = 'Ingest Sepsis Genomics PacBio metadata'
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            '--delete',
-            action='store_true',
-            dest='delete',
-            default=False,
-            help='Delete all contextual data',
-        )
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
 
     def handle(self, *args, **options):
 
         if options['delete']:
             logger.info("Deleting all PacBio Files")
-            GenomicsMiseqFile.objects.all().delete()
+            GenomicsPacBioFile.objects.all().delete()
 
-        password = get_password('sepsis')
         # fetch the new data formats
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
         ingest_md5()

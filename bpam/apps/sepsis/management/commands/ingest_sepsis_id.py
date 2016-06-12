@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.db.utils import DataError
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
 from unipath import Path
-from apps.common.models import Facility
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 
@@ -19,10 +16,10 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
 
-# TODO get mirror urls from DB
-METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/projectdata/"
-SEPSIS_ID_FILE= "sepsis_id.xlsx"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/projectdata")
+SEPSIS_ID_FILE = "sepsis_id.xlsx"
+METADATA_PATH = "sepsis/projectdata"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
+
 
 def add_sepsis_id_data(data):
     """ pack the sepsis ID's into the DB """
@@ -70,19 +67,19 @@ def get_ids(file_name):
     # BPA ID
     # Given to
     # Date allocated
-	# Taxon_OR_organism
-	# Strain_OR_isolate
-	# Serovar
-	# Work order #
+    # Taxon_OR_organism
+    # Strain_OR_isolate
+    # Serovar
+    # Work order #
     # Replicate
     # Omics
     # Analytical platform
     # Facility
-	# Sample Submission Date
-	# Contextual Data Submission Date
-	# Data generated
+    # Sample Submission Date
+    # Contextual Data Submission Date
+    # Data generated
     # Archive ID
-	# Archive Ingestion Date
+    # Archive Ingestion Date
 
     def strip_id(bpa_id):
         if bpa_id and bpa_id is not "":
@@ -119,13 +116,11 @@ def get_ids(file_name):
     return wrapper.get_all()
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest Sepsis Project metadata'
 
     def handle(self, *args, **options):
-        password = get_password('sepsis')
-        # fetch the new data formats
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
-        fetcher.fetch(SEPSIS_ID_FILE) # TODO pass file arg 
+        fetcher.fetch(SEPSIS_ID_FILE)
         ingest_ids()
