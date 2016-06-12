@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
-METADATA_PATH = "/sepsis/genomics/miseq/"
+METADATA_PATH = "sepsis/genomics/miseq/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
