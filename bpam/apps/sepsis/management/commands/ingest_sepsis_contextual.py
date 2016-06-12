@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.db.utils import DataError
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
 from unipath import Path
-from apps.common.models import Facility
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 
@@ -19,26 +16,20 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
 
-# TODO get mirror urls from DB
-
-METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/projectdata/"
 SEPSIS_ID_FILE = "sepsis_contextual.xlsx"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/projectdata")
+METADATA_PATH = "sepsis/projectdata"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def add_data(data):
     """ pack data into the DB """
 
     for entry in data:
-        if entry.bpa_id is "": continue
-        bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id,
-                                                 PROJECT_ID,
-                                                 PROJECT_DESCRIPTION,
-                                                 add_prefix=True)
+        if entry.bpa_id is "":
+            continue
+        bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
         if not bpa_id:
-            logger.info(
-                "Non BPA encountered when I expected one {}, skipping".format(
-                    report))
+            logger.info("Non BPA encountered when I expected one {}, skipping".format(report))
             continue
 
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
@@ -61,14 +52,13 @@ def add_data(data):
                 growth_condition_media=entry.growth_condition_media, )
             sample.growth = growth
 
-            host, _ = Host.objects.get_or_create(
-                description=entry.host_description,
-                location=entry.host_location,
-                sex=entry.host_sex,
-                age=entry.host_age,
-                dob=entry.host_dob,
-                disease_outcome=entry.host_disease_outcome,
-                strain_or_isolate=entry.strain_or_isolate, )
+            host, _ = Host.objects.get_or_create(description=entry.host_description,
+                                                 location=entry.host_location,
+                                                 sex=entry.host_sex,
+                                                 age=entry.host_age,
+                                                 dob=entry.host_dob,
+                                                 disease_outcome=entry.host_disease_outcome,
+                                                 strain_or_isolate=entry.strain_or_isolate, )
             sample.host = host
 
             sample.save()
@@ -81,8 +71,7 @@ def ingest_data():
 
     logger.info("Ingesting Sepsis BPA Contextual metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
-        logger.info("Processing Sepsis BPA Contextual file {0}".format(
-            metadata_file))
+        logger.info("Processing Sepsis BPA Contextual file {0}".format(metadata_file))
         data = list(get_data(metadata_file))
         add_data(data)
 
@@ -160,18 +149,14 @@ def get_data(file_name):
         ("publication_reference", "Publication_reference", None),
         ("contact_researcher", "Contact_researcher", None),
         ("growth_condition_time", "Growth_condition_time", None),
-        ("growth_condition_temperature", "Growth_condition_temperature",
-         ingest_utils.get_clean_number),
+        ("growth_condition_temperature", "Growth_condition_temperature", ingest_utils.get_clean_number),
         ("growth_condition_media", "Growth_condition_media", None),
         ("experimental_replicate", "Experimental_replicate", None),
         ("analytical_facility", "Analytical_facility", None),
         ("analytical_platform", "Analytical_platform", None),
-        ("experimental_sample_preparation_method",
-         "Experimental_sample_preparation_method", None),
-        ("culture_collection_id",
-         "Culture_collection_ID (alternative name[s])", None),
-        ("culture_collection_date", "Culture_collection_date (DD/MM/YY)",
-         ingest_utils.get_date),
+        ("experimental_sample_preparation_method", "Experimental_sample_preparation_method", None),
+        ("culture_collection_id", "Culture_collection_ID (alternative name[s])", None),
+        ("culture_collection_date", "Culture_collection_date (DD/MM/YY)", ingest_utils.get_date),
         ("host_location", "Host_location (state, country)", None),
         ("host_age", "Host_age", ingest_utils.get_int),
         ("host_dob", "Host_DOB (DD/MM/YY)", ingest_utils.get_date),
@@ -192,26 +177,25 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest Sepsis Project metadata'
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            '--delete',
-            action='store_true',
-            dest='delete',
-            default=False,
-            help='Delete all contextual data',
-        )
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
 
     def handle(self, *args, **options):
 
         if options['delete']:
+            logger.info("Deleting all Hosts")
             Host.objects.all().delete()
             GrowthMethod.objects.all().delete()
 
-        password = get_password('sepsis')
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
-        fetcher.fetch(SEPSIS_ID_FILE)  # TODO pass file arg
+        fetcher.fetch(SEPSIS_ID_FILE)
         ingest_data()
