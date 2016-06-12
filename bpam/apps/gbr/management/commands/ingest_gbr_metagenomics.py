@@ -7,6 +7,7 @@ from apps.common.models import DNASource, Facility, Sequencer
 from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
+from libs import management_command
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
 from libs.fetch_data import Fetcher, get_password
@@ -19,13 +20,13 @@ PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
 # the old google doc format
-OLD_METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/old_format_metadata/"  # the folder
+OLD_METADATA_PATH = "gbr/old_format_metadata/"
 OLD_METADATA_FILE = "current.xlsx"
-OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/old_format")
+OLD_DATA_DIR = Path(ingest_utils.METADATA_ROOT, OLD_METADATA_PATH)
 
 # the newer format
-METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/metadata/metagenomics/"  # this is where the new metadata is kept
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/metagenomics/")
+METADATA_PATH = "gbr/metadata/metagenomics/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def get_bpa_id(entry):
@@ -37,7 +38,8 @@ def get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, "GBR", note="Great Barrier Reef Sample")
     if bpa_id is None:
-        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row, report))
+        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -101,13 +103,9 @@ def ingest_samples(samples):
         """
         collection_date = ingest_utils.get_date(entry.collection_date)
         # sample collector
-        collector = user_helper.get_user(
-            entry.collector_name,
-            entry.contact_email,
-            (PROJECT_DESCRIPTION, ))
-        collection_event, created = CollectionEvent.objects.get_or_create(
-            collection_date=collection_date,
-            collector=collector)
+        collector = user_helper.get_user(entry.collector_name, entry.contact_email, (PROJECT_DESCRIPTION, ))
+        collection_event, created = CollectionEvent.objects.get_or_create(collection_date=collection_date,
+                                                                          collector=collector)
 
         collection_event.site = get_collection_site(entry)
         collection_event.water_temp = ingest_utils.get_clean_number(entry.water_temp)
@@ -145,10 +143,9 @@ def ingest_samples(samples):
         library_type = get_library_type(entry.library)
         library_construction_protocol = entry.library_construction_protocol.replace(",", "").capitalize()
 
-        protocol, _ = GBRProtocol.objects.get_or_create(
-            base_pairs_string=base_pairs_string,
-            library_type=library_type,
-            library_construction_protocol=library_construction_protocol)
+        protocol, _ = GBRProtocol.objects.get_or_create(base_pairs_string=base_pairs_string,
+                                                        library_type=library_type,
+                                                        library_construction_protocol=library_construction_protocol)
 
         return protocol
 
@@ -162,13 +159,11 @@ def ingest_samples(samples):
             logger.warning("BPA ID {0} does not look like a real ID, ignoring".format(bpa_id))
             return
 
-        gbr_sample, created = GBRSample.objects.get_or_create(
-            bpa_id=bpa_id,
-            defaults={
-                "organism": get_organism(e.species),
-                "collection_event": get_collection_event(e)
-            }
-        )
+        gbr_sample, created = GBRSample.objects.get_or_create(bpa_id=bpa_id,
+                                                              defaults={
+                                                                  "organism": get_organism(e.species),
+                                                                  "collection_event": get_collection_event(e)
+                                                              })
 
         gbr_sample.protocol = get_protocol(e)
         gbr_sample.name = e.sample_description
@@ -177,16 +172,12 @@ def ingest_samples(samples):
         gbr_sample.dna_extraction_protocol = e.dna_extraction_protocol
 
         # scientist
-        gbr_sample.contact_scientist = user_helper.get_user(
-            e.contact_scientist,
-            e.contact_email,
-            (PROJECT_DESCRIPTION, e.contact_affiliation))
+        gbr_sample.contact_scientist = user_helper.get_user(e.contact_scientist, e.contact_email,
+                                                            (PROJECT_DESCRIPTION, e.contact_affiliation))
 
         # bio informatician
         gbr_sample.contact_bioinformatician_name = user_helper.get_user(
-            e.contact_bioinformatician_name,
-            e.contact_bioinformatician_email,
-            (PROJECT_DESCRIPTION,))
+            e.contact_bioinformatician_name, e.contact_bioinformatician_email, (PROJECT_DESCRIPTION, ))
 
         gbr_sample.sequencing_notes = e.sequencing_notes
         gbr_sample.dna_rna_concentration = ingest_utils.get_clean_float(e.dna_rna_concentration)
@@ -255,12 +246,11 @@ def get_gbr_sample_data_old_format(file_name):
         ("date_data_sent", "Date data sent/transferred", None),
     ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name="Sample Metadata",
-        header_length=1,
-        column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec,
+                           file_name,
+                           sheet_name="Sample Metadata",
+                           header_length=1,
+                           column_name_row_index=0)
     return wrapper.get_all()
 
 
@@ -283,14 +273,10 @@ def get_gbr_sample_data(file_name):
         ("sequencer", "Sequencer", None),
         ("run_number", "Run number", None),
         ("flow_cell_id", "Run #:Flow Cell ID", None),
-        ("lane_number", "Lane number", None)]
+        ("lane_number", "Lane number", None)
+    ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name="Sheet1",
-        header_length=3,
-        column_name_row_index=1)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name="Sheet1", header_length=3, column_name_row_index=1)
     return wrapper.get_all()
 
 
@@ -373,10 +359,9 @@ def ingest_runs(sample_data):
         flow_cell_id = entry.flow_cell_id.strip()
         bpa_id = get_bpa_id(entry)
         run_number = get_run_number(entry)
-        gbr_run, created = GBRRun.objects.get_or_create(
-            flow_cell_id=flow_cell_id,
-            run_number=run_number,
-            sample=get_sample(bpa_id))
+        gbr_run, created = GBRRun.objects.get_or_create(flow_cell_id=flow_cell_id,
+                                                        run_number=run_number,
+                                                        sample=get_sample(bpa_id))
 
         gbr_run.flow_cell_id = flow_cell_id
         gbr_run.run_number = run_number
@@ -456,7 +441,6 @@ def ingest():
 
 
 class MD5ParsedLine(object):
-
     def __init__(self, line):
         self._line = line
 
@@ -582,17 +566,29 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {} CASCADE".format(CollectionSite._meta.db_table))
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest Great Barrier Reef Metagenomics'
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all data', )
+
     def handle(self, *args, **options):
+        if options['delete']:
+            logger.info("Truncating GBR Amplicon data")
+            truncate()
+
         password = get_password('gbr')
         # fetch the old data file
-        fetcher = Fetcher(OLD_DATA_DIR, OLD_METADATA_URL, auth=("bpa", password)) 
+        fetcher = Fetcher(OLD_DATA_DIR, self.get_base_url(options) + OLD_METADATA_PATH, auth=("bpa", password))
         fetcher.fetch(OLD_METADATA_FILE)
 
         # fetch the new data formats
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("bpa", password))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 

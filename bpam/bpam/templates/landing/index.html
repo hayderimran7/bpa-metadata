@@ -66,10 +66,8 @@
               <img class src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
             </a>
             <h1>Bioplatforms Australia Metadata</h1>
-            
             <h3>Welcome to Bioplatforms Australia's project metadata portal.</h3>
             <hr>
-            
           </div>
 
           <div class="row">
@@ -79,6 +77,7 @@
                 <div class="caption">
                   <h3>Great Barrier Reef</h3>
                   <h6>Image courtesy of Gary Cranitch</h6>
+                    <h4><span class="badge">{{ gbr_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -87,6 +86,7 @@
                 <img class="img-responsive img-rounded" src="{% static 'base/base.png' %}" alt="BASE">
                 <div class="caption">
                   <h3>Biome of Australian Soil Environments</h3>
+                    <h4><span class="badge">{{ base_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -95,7 +95,8 @@
               <a class="thumbnail" href="{% url 'melanoma:index' %}">
                 <img class="img-responsive img-rounded" src="{% static 'melanoma/melanoma.png' %}" alt="Melanoma">
                 <div class="caption">
-                  <h3>Melanoma</h3>
+                    <h3>Melanoma</h3>
+                    <h4><span class="badge">{{ melanoma_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -109,6 +110,7 @@
                 <div class="caption">
                   <h3>Wheat Pathogens Transcript</h3>
                   <h6>Wheat head blight image: Friday Obanor, CSIRO Plant Industry</h6>
+                    <h4><span class="badge">{{ wheat_pathogens_transcript_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -118,6 +120,7 @@
                 <div class="caption">
                   <h3>Wheat Pathogens Genomes</h3>
                   <h6>Image of Stagonospora Nodorum infected wheat: European Journal of Plant Pathology (2006) 114:275–282</h6>
+                    <h4><span class="badge">{{ wheat_pathogens_genome_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -128,6 +131,7 @@
                 <img class="img-responsive img-rounded" src="{% static 'wheat_cultivars/wheat.png' %}" alt="Wheat Cultivars">
                 <div class="caption">
                   <h3>Wheat Cultivars</h3>
+                    <h4><span class="badge">{{ wheat_cultivars_sample_count }}</span></h4>
                 </div>
               </a>
             </div>
@@ -149,6 +153,7 @@
                      src="{% static 'sepsis/sepsis.png' %}" alt="Sepsis">
                 <div class="caption">
                   <h3>Sepsis</h3>
+                    <h4><span class="badge">{{ sepsis_sample_count }}</span></h4>
                 </div>
               </a>
             </div>

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-
 from apps.common.models import Facility
 from apps.gbr.models import GBRSample
 from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
 from django.db.utils import DataError
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 from libs.logger_utils import get_logger
@@ -20,8 +18,8 @@ BPA_ID = "102.100.100"
 PROJECT_ID = "GBR"
 PROJECT_DESCRIPTION = "Great Barrier Reef"
 
-METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/gbr/metadata/amplicons/"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "gbr/metadata/amplicons/")
+METADATA_PATH = "gbr/metadata/amplicons/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def fix_dilution(val):
@@ -41,7 +39,7 @@ def fix_pcr(pcr):
     """
     val = pcr.strip()
     if val not in ("P", "F", ""):
-        logger.error("PCR value [{0}] is neither F, P or "", setting to X".format(pcr.encode("utf8")))
+        logger.error("PCR value [{0}] is neither F, P or " ", setting to X".format(pcr.encode("utf8")))
         val = "X"
     return val
 
@@ -147,7 +145,6 @@ def get_metadata(file_name):
 
 
 class MD5ParsedLine(object):
-
     def __init__(self, line):
         self._line = line
         self._ok = False
@@ -235,13 +232,12 @@ def add_md5(md5_lines):
         sample, _ = GBRSample.objects.get_or_create(bpa_id=bpa_id)
         metadata = get_sequencing_metadata(bpa_id, md5_line)
 
-        f, _ = AmpliconSequenceFile.objects.get_or_create(
-            sample=sample,
-            metadata=metadata,
-            read_number=md5_line.read,
-            lane_number=md5_line.lane,
-            filename=md5_line.filename,
-            md5=md5_line.md5)
+        f, _ = AmpliconSequenceFile.objects.get_or_create(sample=sample,
+                                                          metadata=metadata,
+                                                          read_number=md5_line.read,
+                                                          lane_number=md5_line.lane,
+                                                          filename=md5_line.filename,
+                                                          md5=md5_line.md5)
 
 
 def ingest_md5():
@@ -261,9 +257,7 @@ def ingest_md5():
 
 
 def truncate():
-    """
-    Truncate Amplicon DB tables
-    """
+    """ Truncate Amplicon DB tables """
     from django.db import connection
 
     cursor = connection.cursor()
@@ -271,16 +265,25 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest Great Barrier Reef Amplicons'
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
+
     def handle(self, *args, **options):
-        password = get_password('gbr')
-        # fetch the new data formats
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("bpa", password))
+        if options['delete']:
+            logger.info("Truncating GBR Amplicon data")
+            truncate()
+
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("bpa", get_password('gbr')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
-        # truncate()
 
         do_metadata()
         ingest_md5()
