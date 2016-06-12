@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 Ingests BASE Amplicon metadata from server into database.
 """
@@ -11,16 +10,16 @@ from libs.excel_wrapper import ExcelWrapper
 from libs import ingest_utils
 from libs import bpa_id_utils
 from libs import logger_utils
+from libs import management_command
 from libs.fetch_data import Fetcher, get_password
 from apps.common.models import Facility
 from apps.base_amplicon.models import AmpliconSequencingMetadata, AmpliconSequenceFile, AmpliconRun
 from apps.base.models import BASESample
 
-
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/base/tracking/amplicons/"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "base/amplicon_metadata/")
+METADATA_PATH = "base/tracking/amplicons/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 BPA_ID = "102.100.100."
 BASE_DESCRIPTION = "BASE"
@@ -42,7 +41,7 @@ def fix_pcr(pcr):
 
     val = pcr.encode('utf-8').strip()
     if val not in ("P", "F", ""):
-        logger.error("PCR value [{}] is neither F, P or "", setting to X".format(val))
+        logger.error("PCR value [{}] is neither F, P or " ", setting to X".format(val))
         val = "X"
     return val
 
@@ -84,13 +83,12 @@ def get_data(file_name):
 
 
 def _get_bpa_id(entry):
-    """
-    Get or make BPA ID
-    """
+    """ Get or make BPA ID """
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, "BASE", "BASE")
     if bpa_id is None:
-        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row, report))
+        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -235,9 +233,7 @@ def parse_md5_file(md5_file):
 
 
 def add_md5(data):
-    """
-    Add md5 data
-    """
+    """ Add md5 data """
 
     def get_base_sample(bpa_idx):
         try:
@@ -265,9 +261,7 @@ def add_md5(data):
         extraction_id = file_data["extraction_id"]
         target = file_data["target"]
         try:
-            metadata = AmpliconSequencingMetadata.objects.get(
-                target=target,
-                sample_extraction_id=extraction_id)
+            metadata = AmpliconSequencingMetadata.objects.get(target=target, sample_extraction_id=extraction_id)
             # sequencing faciliy dropped from metadata
             metadata.sequencing_facility = Facility.objects.get_or_create(name=file_data["vendor"])[0]
             metadata.save()
@@ -285,9 +279,7 @@ def add_md5(data):
 
 
 def do_md5():
-    """
-    Ingest the md5 files
-    """
+    """ Ingest the md5 files """
 
     def is_md5file(path):
         if path.isfile() and path.ext == ".md5" or path.ext == ".txt":
@@ -301,9 +293,7 @@ def do_md5():
 
 
 def truncate():
-    """
-    Truncate Amplicon DB tables
-    """
+    """ Truncate Amplicon DB tables """
     from django.db import connection
 
     cursor = connection.cursor()
@@ -312,16 +302,26 @@ def truncate():
     cursor.execute("TRUNCATE TABLE {0} CASCADE".format(AmpliconSequenceFile._meta.db_table))
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest BASE Amplicon Metadata'
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
+
     def handle(self, *args, **options):
-        password = get_password('base')
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("base", password))
+        if options['delete']:
+            logger.info("Deleting all BASE Amplicons")
+            truncate()
+
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("base", get_password('base')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
-        truncate()
         # find all the spreadsheets in the data directory and ingest them
         do_metadata()
         do_md5()
