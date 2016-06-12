@@ -11,30 +11,24 @@
 import os
 
 from unipath import Path
-from django.core.management.base import BaseCommand, CommandError
 from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
+from libs import management_command
 
 from apps.common.models import Facility
-from apps.base_metagenomics.models import (
-    MetagenomicsSample,
-    MetagenomicsSequenceFile,
-    MetagenomicsRun,
-    Extraction,
-    MetagenomicsProtocol
-)
-
+from apps.base_metagenomics.models import (MetagenomicsSample, MetagenomicsSequenceFile, MetagenomicsRun, Extraction,
+                                           MetagenomicsProtocol)
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/tracking/metagenomics/'
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/metagenomics_metadata/')
-
 BPA_ID = "102.100.100."
 BASE_DESCRIPTION = 'BASE'
+
+METADATA_PATH = 'base/tracking/metagenomics/'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def _get_bpa_id(entry):
@@ -44,13 +38,13 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.sample_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
 
 class MetadataHandler(object):
-
     def get_data(self, file_name):
         """
         The data sets is relatively small, so make a in-memory copy to simplify some operations.
@@ -74,14 +68,9 @@ class MetadataHandler(object):
                       ('insert_size_range', 'Insert size range', None),
                       ('library_construction_protocol', 'Library construction protocol', None),
                       ('sequencer', 'Sequencer', None),
-                      ('casava_version', 'CASAVA version', None),
-                      ]
+                      ('casava_version', 'CASAVA version', None), ]
 
-        wrapper = ExcelWrapper(field_spec,
-                               file_name,
-                               sheet_name='Sheet1',
-                               header_length=3,
-                               column_name_row_index=1)
+        wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet1', header_length=3, column_name_row_index=1)
 
         return wrapper.get_all()
 
@@ -158,7 +147,6 @@ def truncate():
 
 
 class MD5handler(object):
-
     @staticmethod
     def add(entries):
         """
@@ -186,9 +174,8 @@ class MD5handler(object):
             return None
 
         def get_extraction(bpa_id, extraction_id):
-            extraction, created = Extraction.objects.get_or_create(
-                sample=get_metagenomics_sample(entry['bpa_id']),
-                extraction_id=entry['extraction_id'])
+            extraction, created = Extraction.objects.get_or_create(sample=get_metagenomics_sample(entry['bpa_id']),
+                                                                   extraction_id=entry['extraction_id'])
             if created:
                 extraction.note = 'Not mentioned in metadata, inferred from md5 data'
                 extraction.save()
@@ -256,7 +243,8 @@ class MD5handler(object):
                     bpa_id, extraction_id, library, insert_size, _, facility, flowcell, index, lane, read = parts
                     run = 1
                 else:
-                    logger.error('Ignoring line {} from {} with missing data [{} not 10 or 11]'.format(filename, md5_file, len(parts)))
+                    logger.error('Ignoring line {} from {} with missing data [{} not 10 or 11]'.format(
+                        filename, md5_file, len(parts)))
                     continue
 
                 md5_entry['filename'] = filename
@@ -276,9 +264,7 @@ class MD5handler(object):
 
     @staticmethod
     def do():
-        """
-        Ingest the md5 files
-        """
+        """ Ingest the md5 files """
 
         def is_md5file(path):
             if path.isfile() and path.ext == '.md5' or path.ext == '.txt':
@@ -292,13 +278,12 @@ class MD5handler(object):
             MD5handler.add(md5_entries)
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest BASE Metagenomic metadata'
 
     def handle(self, *args, **options):
-        password = get_password('base')
         # get all current metadata, this includes md5 and xlsx metadata files
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=('base', get_password('base')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
@@ -308,4 +293,3 @@ class Command(BaseCommand):
         mdh.do()
 
         MD5handler.do()
-

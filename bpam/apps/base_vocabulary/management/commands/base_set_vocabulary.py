@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from libs.logger_utils import get_logger
 from apps.base_vocabulary.contextual_controlled_vocabularies import *
 from apps.base_vocabulary.models import *
@@ -16,23 +16,27 @@ def _texture():
     for texture, description in SoilColourVocabulary:
         SoilTexture.objects.get_or_create(texture=texture, description=description)
 
+
 def _drainage():
     """Set Drainage Classification"""
     logger.info(_drainage.__doc__)
     for drainage, description in DrainageClassificationVocabulary:
         DrainageClassification.objects.get_or_create(drainage=drainage, description=description)
 
+
 def _soilcolour():
     """Set Soil Colour Vocabulary """
     logger.info(_soilcolour.__doc__)
     for colour, code in SoilColourVocabulary:
-        SoilColour.objects.get_or_create(colour=colour, code=code)        
+        SoilColour.objects.get_or_create(colour=colour, code=code)
+
 
 def _tillage():
     """Set Tillage Classification Vocabulary """
     logger.info(_tillage.__doc__)
     for tillage, description in TillageClassificationVocabulary:
         TillageType.objects.get_or_create(tillage=tillage, description=description)
+
 
 def _aus_soil():
     """ Australian Soil Classification """
@@ -43,6 +47,7 @@ def _aus_soil():
         soil.note = note
         soil.save()
 
+
 def _fao_soil():
     """ FAO Soil Classification """
     logger.info(_fao_soil.__doc__)
@@ -51,14 +56,16 @@ def _fao_soil():
         soil, _ = FAOSoilClassification.objects.get_or_create(classification=classification)
         soil.note = note
         soil.save()
-        
+
+
 def _profileposition():
     """Set Profile Position Vocabulary """
-    
+
     logger.info(_profileposition.__doc__)
     for position, note in ProfilePositionVocabulary:
         logger.info(position)
         ProfilePosition.objects.get_or_create(position=position)
+
 
 def _broad_vegetation_type():
     """Set Broadvegetation Type Vocabulary """
@@ -78,13 +85,15 @@ def _ecozone():
         zone, _ = GeneralEcologicalZone.objects.get_or_create(description=description)
         zone.note = note
         zone.save()
-        
+
+
 def _horizon():
     """Set Horizon Classification Vocabulary """
     logger.info(_horizon.__doc__)
     for c, description in HorizonClassificationVocabulary:
         logger.info(description)
         HorizonClassification.objects.get_or_create(horizon=c, description=description)
+
 
 def _landuse():
     """ Land Use vocabulary """
@@ -100,6 +109,7 @@ def _landuse():
             for u3 in u2[1]:
                 logger.info('Adding %s', u3)
                 LandUse.objects.get_or_create(order=0, description=u3, parent=parent_u2)
+
 
 class Command(BaseCommand):
     help = 'Ingest BASE Land Use'

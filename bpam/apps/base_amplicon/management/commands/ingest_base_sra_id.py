@@ -1,19 +1,19 @@
-
 # -*- coding: utf-8 -*-
 
 import csv
-import sys
 
-from libs import ingest_utils, user_helper, logger_utils
+from libs import ingest_utils
+from libs import logger_utils
 from libs.fetch_data import Fetcher, get_password
+from libs import management_command
 from apps.common.models import BPAUniqueID
 from unipath import Path
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
-SAMPLE_ID_FILE = 'Biosample_accessions.csv'  # the file
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'biosample_id/')
+METADATA_PATH = 'base/metadata/'
+SAMPLE_ID_FILE = 'Biosample_accessions.csv'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def get_data(_file):
@@ -40,8 +40,12 @@ def ingest_ids(ids_file):
             logger.error(e)
 
 
-def run():
-    password = get_password('base')
-    fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-    fetcher.fetch(SAMPLE_ID_FILE)
-    ingest_ids(DATA_DIR + SAMPLE_ID_FILE)
+class Command(management_command.BPACommand):
+    help = 'Ingest BASE SRA IDs'
+
+    def handle(self, *args, **options):
+
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("base", get_password('base')))
+        fetcher.clean()
+        fetcher.fetch(SAMPLE_ID_FILE)
+        ingest_ids(DATA_DIR + SAMPLE_ID_FILE)

@@ -1,33 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from unipath import Path
-from django.core.management.base import BaseCommand, CommandError
 from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import logger_utils
-from apps.base_contextual.models import (
-    HorizonClassification,
-    LandUse,
-    GeneralEcologicalZone,
-    BroadVegetationType,
-    AustralianSoilClassification,
-    FAOSoilClassification,
-    ProfilePosition,
-    SoilColour,
-    TillageType,
-    CollectionSite,
-    SampleContext,
-    ChemicalAnalysis
-)
-
+from libs import management_command
+from apps.base_contextual.models import (HorizonClassification, LandUse, GeneralEcologicalZone, BroadVegetationType,
+                                         AustralianSoilClassification, FAOSoilClassification, ProfilePosition,
+                                         SoilColour, TillageType, CollectionSite, SampleContext, ChemicalAnalysis)
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
-CONTEXTUAL_DATA = 'contextual-latest.xlsx'  # the file
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/contextual_metadata/')
+METADATA_PATH = 'base/metadata'
+CONTEXTUAL_DATA_FILE = 'contextual-latest.xlsx'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 BPA_ID_PREFIX = "102.100.100"
 BASE_DESCRIPTION = 'BASE'
@@ -161,14 +149,9 @@ def get_data(file_name):
                   ('total_nitrogen', 'Total Nitrogen', get_float_or_sentinal),
                   ('total_carbon', 'Total Carbon', get_float_or_sentinal),
                   ('methodological_notes', 'Methodological notes', None),
-                  ('other_comments', 'Other comments', None),
-                  ]
+                  ('other_comments', 'Other comments', None), ]
 
-    wrapper = ExcelWrapper(field_spec,
-                           file_name,
-                           sheet_name='Sample_info',
-                           header_length=1,
-                           column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sample_info', header_length=1, column_name_row_index=0)
 
     return wrapper.get_all()
 
@@ -217,8 +200,8 @@ def get_australian_soil_classification(entry):
     try:
         return AustralianSoilClassification.objects.get(classification__iexact=classifcation_str)
     except AustralianSoilClassification.DoesNotExist:
-        logger.warning(
-            'Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        logger.warning('Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str,
+                                                                                                entry.row))
         return None
 
 
@@ -414,14 +397,26 @@ def truncate():
     cursor.execute('TRUNCATE TABLE "{0}" CASCADE'.format(ChemicalAnalysis._meta.db_table))
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest BASE Contextual Data'
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
+
     def handle(self, *args, **options):
-        password = get_password('base')
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+
+        if options['delete']:
+            logger.info("Truncating Contextual data")
+            truncate()
+
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=('base', get_password('base')))
         fetcher.clean()
-        fetcher.fetch(CONTEXTUAL_DATA)
+        fetcher.fetch(CONTEXTUAL_DATA_FILE)
 
         truncate()
         do_metadata()

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from django.core.management.base import BaseCommand, CommandError
 from contracts import contract
 from unipath import Path
 from libs.fetch_data import Fetcher, get_password
@@ -10,14 +9,14 @@ from libs.logger_utils import get_logger
 from libs import bpa_id_utils
 from libs import user_helper
 from libs import ingest_utils
+from libs import management_command
 from apps.base_454.models import Sample454
-
 
 logger = get_logger(__name__)
 
-METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/metadata/'  # the folder
-BASE_454 = 'BASE_454.xlsx'  # the file
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/454_metadata/')
+METADATA_PATH = 'base/metadata/'
+BASE_454_FILE = 'BASE_454.xlsx'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 BPA_ID = "102.100.100"
 PROJECT_DESCRIPTION = 'BASE'
@@ -31,7 +30,8 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -208,12 +208,24 @@ def do_metadata():
         logger.info('Processing BASE Contextual Data file {0}'.format(metadata_file))
         ingest(metadata_file)
 
-class Command(BaseCommand):
+
+class Command(management_command.BPACommand):
     help = 'Ingest BASE 454 Data'
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all BASE 454 data', )
+
     def handle(self, *args, **options):
-        password = get_password('base')
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
-        fetcher.fetch(BASE_454)
+        if options['delete']:
+            logger.info("Deleting all 454 data")
+            truncate()
+
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=('base', get_password('base')))
+        fetcher.fetch(BASE_454_FILE)
         truncate()
         do_metadata()
