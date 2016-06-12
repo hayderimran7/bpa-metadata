@@ -8,6 +8,7 @@ import sys
 import glob
 import requests
 from bs4 import BeautifulSoup
+from distutils.dir_util import mkpath
 import logger_utils
 
 import requests.packages.urllib3
@@ -59,7 +60,6 @@ class Fetcher():
 
     def _ensure_target_folder_exists(self):
         if not os.path.exists(self.target_folder):
-            from distutils.dir_util import mkpath
 
             mkpath(self.target_folder)
 
@@ -81,7 +81,7 @@ class Fetcher():
                     f.write(chunk)
                     f.flush()
 
-    def fetch_metadata_from_folder(self):
+    def fetch_metadata_from_folder(self, fetch_gz=False):
         """ downloads metadata from archive """
 
         logger.info("Fetching folder from {}".format(self.metadata_source_url))
@@ -92,4 +92,7 @@ class Fetcher():
                     metadata_filename.endswith(".txt") or \
                     metadata_filename.endswith(".csv") or \
                     metadata_filename.endswith(".md5"):
+                self.fetch(metadata_filename)
+
+            if fetch_gz is True and metadata_filename.endswith(".gz"):
                 self.fetch(metadata_filename)

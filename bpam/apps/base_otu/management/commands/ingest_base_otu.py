@@ -10,6 +10,7 @@ from unipath import Path
 from libs import logger_utils
 from libs import bpa_id_utils
 from libs import ingest_utils
+from libs import management_command
 from libs.fetch_data import Fetcher, get_password
 from apps.base_otu.models import OperationalTaxonomicUnit, SampleOTU
 from apps.base.models import BASESample
@@ -19,8 +20,8 @@ BPA_PREFIX = '102.100.100.'
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_URL = 'https://downloads-qcif.bioplatforms.com/bpa/base/amplicons/otu/all'
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, 'base/otu/')
+METADATA_PATH = 'base/amplicons/otu/all'
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 # This is the flavours of ID names
 OTU_ID_FLAVOURS = ('OTUID', 'OTUId', 'OTUId##', 'otuid', 'OTU_Id')
@@ -50,8 +51,7 @@ def ingest_taxonomy(file_name):
                   ('order', 'order', strip_count),
                   ('family', 'family', strip_count),
                   ('genus', 'genus', strip_count),
-                  ('species', 'species', strip_count),
-                  ]
+                  ('species', 'species', strip_count), ]
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
@@ -72,18 +72,14 @@ def ingest_taxonomy(file_name):
             else:
                 return "unclassified"
 
-        otu_list.append(
-            OperationalTaxonomicUnit(
-                name=e.otu_id,
-                kingdom=e.kingdom,
-                phylum=e.phylum,
-                otu_class=e.otu_class,
-                order=e.order,
-                family=e.family,
-                genus=e.genus,
-                species=get_species()
-            )
-        )
+        otu_list.append(OperationalTaxonomicUnit(name=e.otu_id,
+                                                 kingdom=e.kingdom,
+                                                 phylum=e.phylum,
+                                                 otu_class=e.otu_class,
+                                                 order=e.order,
+                                                 family=e.family,
+                                                 genus=e.genus,
+                                                 species=get_species()))
 
     logger.info('Bulk creating {0} OTUs'.format(len(otu_list)))
     OperationalTaxonomicUnit.objects.bulk_create(otu_list)
@@ -154,7 +150,6 @@ class BPAIDLookup(object):
 
 
 class ProgressReporter(object):
-
     def __init__(self, file_name):
         self.file_name = file_name
         self.total_len = self.file_len(file_name)
@@ -282,14 +277,13 @@ def do_otu_matrix():
         ingest_otu_matrix(matrix_file)
 
 
-class Command(BaseCommand):
+class Command(management_command.BPACommand):
     help = 'Ingest BASE OTU Data'
 
     def handle(self, *args, **options):
-        password = get_password('base')
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=('base', password))
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=('base', get_password('base')))
         fetcher.clean()
-        fetcher.fetch_metadata_from_folder()
+        fetcher.fetch_metadata_from_folder(fetch_gz=True)
         truncate()
 
         do_taxonomies()
