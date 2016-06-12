@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 Utility functions to fetch data from web server
 """
@@ -24,11 +23,13 @@ project_name_passwd_map = {
     "sepsis": "BPA_SEPSIS_DOWNLOADS_PASSWORD",
 }
 
+
 def get_password(project_name=None):
     """Get downloads password for project from environment """
 
     def complain_and_quit():
-        logger.error("Please set shell variable {} to current BPA {} project password".format(password_env, project_name))
+        logger.error("Please set shell variable {} to current BPA {} project password".format(password_env,
+                                                                                              project_name))
         sys.exit()
 
     password_env = project_name_passwd_map.get(project_name, None)
@@ -44,6 +45,7 @@ def get_password(project_name=None):
         complain_and_quit()
 
     return password
+
 
 class Fetcher():
     """ facilitates fetching data from webserver """
@@ -82,6 +84,7 @@ class Fetcher():
     def fetch_metadata_from_folder(self):
         """ downloads metadata from archive """
 
+        logger.info("Fetching folder from {}".format(self.metadata_source_url))
         response = requests.get(self.metadata_source_url, stream=True, auth=self.auth, verify=False)
         for link in BeautifulSoup(response.content).find_all("a"):
             metadata_filename = link.get("href")

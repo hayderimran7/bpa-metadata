@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 from django.core.management.base import BaseCommand
 from unipath import Path
 from libs import bpa_id_utils
@@ -10,15 +10,15 @@ from libs.logger_utils import get_logger
 from ...models import GenomicsMiseqFile, SepsisSample, MiseqGenomicsMethod
 from .. import md5parser
 
+from apps.common.models import BPAMirror
+
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
 PROJECT_ID = "Sepsis"
 PROJECT_DESCRIPTION = "Sepsis"
-
-# TODO get mirror urls from DB
-METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/genomics/miseq/"
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/genomics/miseq")
+METADATA_PATH = "/sepsis/genomics/miseq/"
+DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
 def add_method_data(data):
@@ -127,21 +127,37 @@ class Command(BaseCommand):
     help = 'Ingest Sepsis Genomics miseq metadata'
 
     def add_arguments(self, parser):
+        mirrors = [str(mirror.name) for mirror in BPAMirror.objects.all()]
         parser.add_argument('--delete',
                             action='store_true',
                             dest='delete',
                             default=False,
                             help='Delete all contextual data', )
 
+        parser.add_argument('--mirror',
+                            action='store',
+                            dest='mirror',
+                            help='Use specified Mirror, pick one from {}'.format(mirrors), )
+
     def handle(self, *args, **options):
+
+        mirror_base_url = BPAMirror.primary().base_url
 
         if options['delete']:
             logger.info("Deleting all Miseq Files")
             GenomicsMiseqFile.objects.all().delete()
+        if options['mirror']:
+            try:
+                mirror = BPAMirror.objects.get(name=options['mirror'])
+            except BPAMirror.DoesNotExist:
+                logger.error('mirror {} specified does not exist'.format(options['mirror']))
+                sys.exit()
 
-        password = get_password('sepsis')
-        # fetch the new data formats
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("sepsis", password))
+            mirror_base_url = mirror.base_url
+            logger.info('Using mirror {} base url: {}'.format(mirror.name, mirror.base_url))
+
+        metadata_url = "{}".format(mirror_base_url)
+        fetcher = Fetcher(DATA_DIR, metadata_url, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
         ingest_md5()
