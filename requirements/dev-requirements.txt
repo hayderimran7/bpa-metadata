@@ -6,3 +6,4 @@ flake8
 pygments
 pygraphviz
 pydot2
+yapf

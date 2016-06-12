@@ -2,20 +2,19 @@
 
 import time
 import sys
-from pprint import pprint
 
+from datetime import datetime
 import django
 from django.core.management.base import BaseCommand
 import requests
+from pprint import pprint
 from apps.common.models import URLVerification
 from libs.logger_utils import get_logger
 from django.conf import settings
-from datetime import datetime
-
-import requests.packages.urllib3
-requests.packages.urllib3.disable_warnings()
 
 from ...models import GenomicsPacBioFile, GenomicsMiseqFile
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 logger = get_logger(__name__)
 

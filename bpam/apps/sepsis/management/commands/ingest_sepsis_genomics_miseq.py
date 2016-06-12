@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.db.utils import DataError
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
+from django.core.management.base import BaseCommand
 from unipath import Path
-from apps.common.models import Facility
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
-
+from libs.logger_utils import get_logger
 from ...models import GenomicsMiseqFile, SepsisSample, MiseqGenomicsMethod
 from .. import md5parser
 
-from libs.logger_utils import get_logger
 logger = get_logger(__name__)
 
 BPA_ID = "102.100.100"
@@ -23,6 +19,7 @@ PROJECT_DESCRIPTION = "Sepsis"
 # TODO get mirror urls from DB
 METADATA_URL = "https://downloads-mu.bioplatforms.com/bpa/sepsis/genomics/miseq/"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, "sepsis/metadata/genomics/miseq")
+
 
 def add_method_data(data):
     """ Add method data to files """
@@ -45,6 +42,7 @@ def add_method_data(data):
             for f in files:
                 f.method = method
                 f.save()
+
 
 def do_metadata():
     def is_metadata(path):
@@ -79,6 +77,7 @@ def get_metadata(file_name):
 
     return wrapper.get_all()
 
+
 def add_md5(md5_lines):
     """ Unpack md5 data to database """
 
@@ -92,27 +91,27 @@ def add_md5(md5_lines):
 
         # add samples
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
-        lane=int(md5_line.md5data.get('lane')[1:])
+        lane = int(md5_line.md5data.get('lane')[1:])
 
         # add files
-        f, _ = GenomicsMiseqFile.objects.get_or_create(
-            note="Ingested using management command",
-            sample=sample,
-            extraction=md5_line.md5data.get('extraction'),
-            library=md5_line.md5data.get('library'),
-            vendor=md5_line.md5data.get('vendor'),
-            size=md5_line.md5data.get('size'),
-            flow_cell_id=md5_line.md5data.get('flow_cell_id'),
-            runsamplenum=md5_line.md5data.get('runsamplenum'),
-            index=md5_line.md5data.get('index'),
-            lane_number=lane,
-            read=md5_line.md5data.get('read'),
-            filename=md5_line.filename,
-            md5=md5_line.md5)
+        f, _ = GenomicsMiseqFile.objects.get_or_create(note="Ingested using management command",
+                                                       sample=sample,
+                                                       extraction=md5_line.md5data.get('extraction'),
+                                                       library=md5_line.md5data.get('library'),
+                                                       vendor=md5_line.md5data.get('vendor'),
+                                                       size=md5_line.md5data.get('size'),
+                                                       flow_cell_id=md5_line.md5data.get('flow_cell_id'),
+                                                       runsamplenum=md5_line.md5data.get('runsamplenum'),
+                                                       index=md5_line.md5data.get('index'),
+                                                       lane_number=lane,
+                                                       read=md5_line.md5data.get('read'),
+                                                       filename=md5_line.filename,
+                                                       md5=md5_line.md5)
 
 
 def ingest_md5():
     """ Ingest the md5 files """
+
     def is_md5file(path):
         if path.isfile() and path.ext == ".md5":
             return True
@@ -123,17 +122,16 @@ def ingest_md5():
         data = md5parser.parse_md5_file(md5parser.miseq_filename_pattern, md5_file)
         add_md5(data)
 
+
 class Command(BaseCommand):
     help = 'Ingest Sepsis Genomics miseq metadata'
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            '--delete',
-            action='store_true',
-            dest='delete',
-            default=False,
-            help='Delete all contextual data',
-        )
+        parser.add_argument('--delete',
+                            action='store_true',
+                            dest='delete',
+                            default=False,
+                            help='Delete all contextual data', )
 
     def handle(self, *args, **options):
 
