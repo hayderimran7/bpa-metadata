@@ -18,9 +18,7 @@ WEBAPP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # a directory that will be writable by the webserver, for storing various files...
 WRITABLE_DIRECTORY = env.get("writable_directory", "/tmp")
 
-TEMPLATE_DIRS = (
-    os.path.join(WEBAPP_ROOT, 'bpam', 'templates'),
-)
+TEMPLATE_DIRS = (os.path.join(WEBAPP_ROOT, 'bpam', 'templates'), )
 
 SECRET_KEY = env.get("secret_key", "change-it")
 
@@ -40,9 +38,7 @@ SECURE_BROWSER_XSS_FILTER = env.get("secure_browser_xss_filter", PRODUCTION)
 SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
 
-ADMINS = [
-    ("alert", env.get("alert_email", "root@localhost"))
-]
+ADMINS = [("alert", env.get("alert_email", "root@localhost"))]
 MANAGERS = ADMINS
 
 # mailgun email
@@ -73,9 +69,9 @@ DATABASES = {
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly', ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend', ),
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size',
 }
@@ -110,20 +106,18 @@ LEAFLET_CONFIG = {
     'TILES': [
         ('MapQuest Open Aerial',
          'http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png',
-         {'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'},
-         ),
+         {'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'}, ),
         ('ESRI',
          'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-         {'attribution': '&copy; i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'},
-         ),
+         {'attribution':
+          '&copy; i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          }, ),
         ('OSM B&W',
          'http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png',
-         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'},
-         ),
+         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'}, ),
         ('Thunderforest',
          'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
-         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'},
-         ),
+         {'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributers'}, ),
     ],
     'MINIMAP': True,
     'RESET_VIEW': False
@@ -132,64 +126,66 @@ LEAFLET_CONFIG = {
 SUIT_CONFIG = {
     'SHOW_REQUIRED_ASTERISK': True,
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
-    'MENU': (
-        {'app': 'common', 'label': 'Common', },
-        {'app': 'melanoma', 'label': 'Melanoma',
-         'models': ('melanomasample',
-                    'melanomasequencefile',
-                    'array',
-                    'melanomaprotocol',
-                    'melanomarun',
-                    'tumorstage')},
-        # GBR
-        {'app': 'gbr', 'label': 'Great Barrier Reef',
-         'models': ('gbrsample',
-                    'gbrsequencefile',
-                    'collectionsite',
-                    'collectionevent',
-                    'gbrrun',
-                    'gbrprotocol',)},
-        '-',
-        # barcode
-        {'app': 'barcode', 'label': 'Barcode',
-         'models': ('sheet',)},
-        '-',
-        # Wheat Pathogens Genome
-        {'app': 'wheat_pathogens', 'label': 'Wheat Pathogens Genome',
-         'models': ('pathogensample',
-                    'pathogensequencefile',
-                    'pathogenrun',
-                    'pathogenprotocol')},
-        # Wheat Pathogens Transcript
-        {'app': 'wheat_pathogens_transcript', 'label': 'Wheat Pathogens Transcript',
-         'models': ('wheatpathogentranscriptsample',
-                    'wheatpathogentranscriptsequencefile',
-                    'wheatpathogentranscriptrun',
-                    'wheatpathogentranscriptprotocol')},
-        # Wheat Cultivars
-        {'app': 'wheat_cultivars', 'label': 'Wheat Cultivars',
-         'models': ('cultivarsample',
-                    'cultivarsequencefile',
-                    'cultivarrun',
-                    'cultivarprotocol')},
-        '-',
-        # Base
-        {'app': 'base_metagenomics', 'label': 'BASE Metagenomics',
-         'models': ('metagenomicssample',
-                    'metagenomicssequencefile',
-                    'metagenomicsrun')},
-        {'app': 'base_amplicon', 'label': 'BASE Amplicons',
-         'models': ('ampliconsequencingmetadata',
-                    'ampliconsequencefile', )},
-        {'app': 'base_vocabulary', 'label': 'BASE Vocabulary', },
-        {'app': 'base_contextual', 'label': 'BASE Contextual', },
-        {'app': 'base_otu', 'label': 'BASE OTU', },
-        {'app': 'base_454', 'label': 'BASE 454', },
-        {'app': 'sepsis', 'label': 'Sepsis', },
-        '-',
-        {'app': 'bpaauth', 'label': 'Users', 'icon': 'icon-user', 'models': ('bpaauth.bpauser', 'auth.group')},
-        # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
-)
+    'MENU':
+    ({'app': 'common',
+      'label': 'Common', },
+     {'app': 'melanoma',
+      'label': 'Melanoma',
+      'models': ('melanomasample', 'melanomasequencefile', 'array', 'melanomaprotocol', 'melanomarun', 'tumorstage')},
+     # GBR
+     {'app': 'gbr',
+      'label': 'Great Barrier Reef',
+      'models': ('gbrsample',
+                 'gbrsequencefile',
+                 'collectionsite',
+                 'collectionevent',
+                 'gbrrun',
+                 'gbrprotocol', )},
+     '-',
+     # barcode
+     {'app': 'barcode',
+      'label': 'Barcode',
+      'models': ('sheet', )},
+     '-',
+     # Wheat Pathogens Genome
+     {'app': 'wheat_pathogens',
+      'label': 'Wheat Pathogens Genome',
+      'models': ('pathogensample', 'pathogensequencefile', 'pathogenrun', 'pathogenprotocol')},
+     # Wheat Pathogens Transcript
+     {'app': 'wheat_pathogens_transcript',
+      'label': 'Wheat Pathogens Transcript',
+      'models': ('wheatpathogentranscriptsample', 'wheatpathogentranscriptsequencefile', 'wheatpathogentranscriptrun',
+                 'wheatpathogentranscriptprotocol')},
+     # Wheat Cultivars
+     {'app': 'wheat_cultivars',
+      'label': 'Wheat Cultivars',
+      'models': ('cultivarsample', 'cultivarsequencefile', 'cultivarrun', 'cultivarprotocol')},
+     '-',
+     # Base
+     {'app': 'base_metagenomics',
+      'label': 'BASE Metagenomics',
+      'models': ('metagenomicssample', 'metagenomicssequencefile', 'metagenomicsrun')},
+     {'app': 'base_amplicon',
+      'label': 'BASE Amplicons',
+      'models': ('ampliconsequencingmetadata',
+                 'ampliconsequencefile', )},
+     {'app': 'base_vocabulary',
+      'label': 'BASE Vocabulary', },
+     {'app': 'base_contextual',
+      'label': 'BASE Contextual', },
+     {'app': 'base_otu',
+      'label': 'BASE OTU', },
+     {'app': 'base_454',
+      'label': 'BASE 454', },
+     {'app': 'sepsis',
+      'label': 'Sepsis', },
+     '-',
+     {'app': 'bpaauth',
+      'label': 'Users',
+      'icon': 'icon-user',
+      'models': ('bpaauth.bpauser', 'auth.group')},
+     # {'label': 'Users', 'url': 'bpaauth.bpauser', 'icon': 'icon-user'},
+     )
 }
 
 SITE_ID = 1
@@ -206,87 +202,75 @@ MEDIA_URL = ''
 STATIC_ROOT = env.get('static_root', os.path.join(WEBAPP_ROOT, 'static'))
 STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 
-
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
+STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder',
+                       'django.contrib.staticfiles.finders.AppDirectoriesFinder', )
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    'admin_tools.template_loaders.Loader',
-)
+TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    'admin_tools.template_loaders.Loader', )
 
-MIDDLEWARE_CLASSES = (
-    'djangosecure.middleware.SecurityMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    # 'django.middleware.doc.XViewMiddleware',
-)
+MIDDLEWARE_CLASSES = ('djangosecure.middleware.SecurityMiddleware',
+                      'django.middleware.common.CommonMiddleware',
+                      'django.contrib.sessions.middleware.SessionMiddleware',
+                      'django.middleware.csrf.CsrfViewMiddleware',
+                      'django.contrib.auth.middleware.AuthenticationMiddleware',
+                      'django.contrib.messages.middleware.MessageMiddleware',
+                      'django.middleware.locale.LocaleMiddleware',
+                      # 'django.middleware.doc.XViewMiddleware',
+                      )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.static',
-)
+TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.request',
+                               'django.contrib.auth.context_processors.auth',
+                               'django.core.context_processors.static', )
 
 ROOT_URLCONF = 'bpam.urls'
 
-INSTALLED_APPS = (
-    'bpam',
-    'suit',
-    'crispy_forms',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_extensions',
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    # 'django.contrib.gis',
-    'localflavor',
-    'mptt',
-    'apps.bpaauth',
-    'apps.common',
-    # base suit
-    'apps.base',
-    'apps.base_metagenomics',
-    'apps.base_vocabulary',
-    'apps.base_contextual',
-    'apps.base_amplicon',
-    'apps.base_otu',
-    'apps.base_454',
-    # wheat suit
-    'apps.wheat_pathogens',
-    'apps.wheat_pathogens_transcript',
-    'apps.wheat_cultivars',
-    'apps.melanoma',
-    'apps.gbr',
-    'apps.gbr_amplicon',
-    'apps.barcode',
-    'apps.sepsis',
-    'tinymce',
-    'bootstrap3',
-    'django_bootstrap_breadcrumbs',
-    'rest_framework',
-    'rest_framework_swagger',
-    'explorer',
-    'leaflet',
-    'djangosecure',
-    'import_export',
-)
-
+INSTALLED_APPS = ('bpam',
+                  'suit',
+                  'crispy_forms',
+                  'django.contrib.auth',
+                  'django.contrib.contenttypes',
+                  'django.contrib.sessions',
+                  'django.contrib.sites',
+                  'django.contrib.messages',
+                  'django.contrib.staticfiles',
+                  'django_extensions',
+                  'django.contrib.admin',
+                  'django.contrib.admindocs',
+                  # 'django.contrib.gis',
+                  'localflavor',
+                  'mptt',
+                  'apps.bpaauth',
+                  'apps.common',
+                  # base suit
+                  'apps.base',
+                  'apps.base_metagenomics',
+                  'apps.base_vocabulary',
+                  'apps.base_contextual',
+                  'apps.base_amplicon',
+                  'apps.base_otu',
+                  'apps.base_454',
+                  # wheat suit
+                  'apps.wheat_pathogens',
+                  'apps.wheat_pathogens_transcript',
+                  'apps.wheat_cultivars',
+                  'apps.melanoma',
+                  'apps.gbr',
+                  'apps.gbr_amplicon',
+                  'apps.barcode',
+                  'apps.sepsis',
+                  'tinymce',
+                  'bootstrap3',
+                  'django_bootstrap_breadcrumbs',
+                  'rest_framework',
+                  'rest_framework_swagger',
+                  'explorer',
+                  'leaflet',
+                  'djangosecure',
+                  'import_export', )
 
 # #
 # # LOGGING
@@ -301,94 +285,100 @@ os.path.exists(LOG_DIRECTORY), "No log directory, please create one: %s" % LOG_D
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': 'bpam [%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
+            'format': '[%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
         },
         'db': {
-            'format': 'bpam [%(duration)s:%(sql)s:%(params)s] %(message)s'
+            'format': '[%(duration)s:%(sql)s:%(params)s] %(message)s'
         },
         'simple': {
-            'format': 'bpam %(levelname)s %(message)s'
+            'format': '%(levelname)s %(message)s'
         },
     },
     'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
     },
     'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
-        },
         'console': {
             'level': 'DEBUG',
+            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'errorfile': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIRECTORY, 'error.log'),
-            'when': 'midnight',
-            'formatter': 'verbose'
+        'shell': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
         },
-        'registryfile': {
-            'class': 'logging.handlers.TimedRotatingFileHandler',
+        'file': {
+            'level': 'INFO',
+            'class': 'ccg_django_utils.loghandlers.ParentPathFileHandler',
             'filename': os.path.join(LOG_DIRECTORY, 'registry.log'),
-            'when': 'midnight',
-            'formatter': 'verbose'
-        },
-        'db_logfile': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIRECTORY, 'registry_db.log'),
-            'when': 'midnight',
-            'formatter': 'db'
-        },
-         'access_logfile': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIRECTORY, 'access.log'),
             'when': 'midnight',
             'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
-            'filters': [],
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose',
             'include_html': True
-        }
-    },
-    'root': {
-        'handlers': ['console', 'errorfile', 'mail_admins'],
-        'level': 'ERROR',
+        },
+        'null': {
+            'class': 'django.utils.log.NullHandler',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'INFO',
+            'handlers': ['console', 'file'],
         },
-        'registry_log': {
-            'handlers': ['registryfile', 'console'],
-            'level': 'DEBUG',
-            'propagate': False,
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
         },
-        # The following logger used by django useraudit
         'django.security': {
-            'handlers': ['access_logfile', 'console'],
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['mail_admins'],
+            'level': 'CRITICAL',
+            'propagate': True,
+        },
+        'bpam': {
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
-        }
+        },
+        'libs': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'bpam.bpam.management.commands': {
+            'handlers': ['shell'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'py.warnings': {
+            'handlers': ['console'],
+        },
     }
 }
-
 
 if env.get("DEBUG_TOOLBAR", False):
     INSTALLED_APPS += ('debug_toolbar', )
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
-    INTERNAL_IPS = ('127.0.0.1', '172.16.2.189',)  # explicitly set this for your environment
+    INTERNAL_IPS = ('127.0.0.1',
+                    '172.16.2.189', )  # explicitly set this for your environment
 
 # downloads URL
 DEFAULT_PAGINATION = 50
@@ -433,5 +423,3 @@ DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'ch3ck3r')
 DOWNLOADS_CHECKER_SLEEP = env.get('downloads_checker_sleep', 0.0)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-
