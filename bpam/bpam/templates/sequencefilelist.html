@@ -28,7 +28,7 @@
             <tr>
               <th>Filename</th>
               <th>MD5</th>
-              <th>Run Description</th>
+              {% if not disable_run %} <th>Run Description</th> {% endif  %}
             </tr>
           </thead>
           <tbody>
@@ -44,7 +44,7 @@
                 {% endif %}
               </td>
               <td class="md5">{{ sfile.md5 }}</td>
-              <td>{{ sfile.run|default_if_none:"" }}</td>
+              {% if not disable_run %} <td>{{ sfile.run|default_if_none:"" }}</td> {% endif %}
             </tr>
             {% endfor %}
           </tbody>
