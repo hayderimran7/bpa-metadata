@@ -35,16 +35,24 @@
 
               Membership of the consortium includes:
               <ul>
-                <li> University of Queensland </li>
-                <li> University of Melbourne </li>
-                <li> Monash University </li>
-                <li> The Peter Doherty Institute for Infection and Immunity </li>
-                <li> Microbiological Diagnostic Unit Public Health Laboratory </li>
-                <li> University of Sydney </li>
-                <li> University of Technology Sydney </li>
-                <li> University of Adelaide </li>
-                <li> Bioplatforms Australia </li>
-                <li> Research Data Services </li>
+                <li> <a href="http://www.agrf.org.au/">  Australian Genome Research Facility </a> </li>
+                <li> <a href="http://www.proteome.org.au/"> Australian Proteome Analysis Facility </a> </li>
+                <li> <a href="http://www.bio21.unimelb.edu.au/metabolomics-australia"> Bio21 Metabolomics </a> </li>
+                <li> <a href="http://http://www.bioplatforms.com/"> Bioplatforms Australia </a> </li>
+                <li> <a href="https://ccg.murdoch.edu.au"> Centre for Comparative Genomics </a></li>
+                <li> <a href="https://www.embl-abr.org.au/"> EMBL-ABR </a></li>
+                <li> <a href="http://www.mduphl.unimelb.edu.au/"> Microbiological Diagnostic Unit Public Health Laboratory</a> </li>
+                <li> <a href="https://platforms.monash.edu/proteomics/"> Monash Biomedical Proteomics Facility </a></li>
+                <li> <a href="http://www.monash.edu/"> Monash University </a></li>
+                <li> <a href="https://www.ramaciotti.unsw.edu.au/"> Ramaciotti Centre for Genomics </a></li>
+                <li> <a href="https://www.rds.edu.au/"> Research Data Services </a></li>
+                <li> <a href="http://www.systemsbiology.org.au/"> Systems Biology Initiative </a></li>
+                <li> <a href="http://www.doherty.edu.au/"> The Peter Doherty Institute for Infection and Immunity </a></li>
+                <li> <a href="https://www.adelaide.edu.au/"> University of Adelaide </a></li>
+                <li> <a href="http://www.unimelb.edu.au/"> University of Melbourne </a></li>
+                <li> <a href="https://www.uq.edu.au/"> University of Queensland </a></li>
+                <li> <a href="https://sydney.edu.au/"> University of Sydney </a></li>
+                <li> <a href="http://www.uts.edu.au/"> University of Technology Sydney </a></li>
               </ul>
 
               For more information please visit:
@@ -56,8 +64,12 @@
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'sepsis:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'sepsis:genomics_miseq_files' %}">Genomic Miseq Files <span class="badge">{{ genomics_miseq_file_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'sepsis:genomics_pacbio_files' %}">Genomic PacBio Files <span class="badge">{{ genomics_pacbio_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:genomics_miseq_files' %}">Genomics Miseq Sequence <span class="badge">{{ genomics_miseq_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:genomics_pacbio_files' %}">Genomics PacBio Sequence <span class="badge">{{ genomics_pacbio_file_count }}</span> </a>
+                    <a class="list-group-item" href="">Transcriptomics HiSeq Sequence <span class="badge">{{ transcriptomics_hiseq_file_count }}</span> </a>
+                    <a class="list-group-item" href="">Proteomics LC-MS analysis <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
+                    <a class="list-group-item" href="">Proteomics SWATH-MS analysis <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
+                    <a class="list-group-item" href="">Metabolomics LC-MS polar analysis <span class="badge">{{ metabolomics_analysis_file_count }}</span> </a>
                     <a class="list-group-item" 
                        href="https://downloads.bioplatforms.com/bpa/sepsis/">
                         <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
