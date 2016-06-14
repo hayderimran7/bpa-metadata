@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Sepsis" "sepsis:index" %}
+{% breadcrumb "Consortium Participants" "base:consortium" %}
+{% endblock %}
+
+
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="well">
+                <h4>
+                    The Sepsis Project is a collaborative initiative undertaken by
+                    Bioplatforms Australia in partnership with the Australian research
+                    community. The current list of partners includes:
+                </h4>
+            </div>
+            <div class="list-group">
+                <a class="list-group-item" href="http://www.agrf.org.au/">  Australian Genome Research Facility </a>
+                <a class="list-group-item" href="http://www.proteome.org.au/"> Australian Proteome Analysis Facility </a>
+                <a class="list-group-item" href="http://www.bio21.unimelb.edu.au/metabolomics-australia"> Bio21 Metabolomics </a>
+                <a class="list-group-item" href="http://http://www.bioplatforms.com/"> Bioplatforms Australia </a>
+                <a class="list-group-item" href="https://ccg.murdoch.edu.au"> Centre for Comparative Genomics </a>
+                <a class="list-group-item" href="https://www.embl-abr.org.au/"> EMBL-ABR </a>
+                <a class="list-group-item" href="http://www.mduphl.unimelb.edu.au/"> Microbiological Diagnostic Unit Public Health Laboratory</a>
+                <a class="list-group-item" href="https://platforms.monash.edu/proteomics/"> Monash Biomedical Proteomics Facility </a>
+                <a class="list-group-item" href="http://www.monash.edu/"> Monash University </a>
+                <a class="list-group-item" href="https://www.ramaciotti.unsw.edu.au/"> Ramaciotti Centre for Genomics </a>
+                <a class="list-group-item" href="https://www.rds.edu.au/"> Research Data Services </a>
+                <a class="list-group-item" href="http://www.systemsbiology.org.au/"> Systems Biology Initiative </a>
+                <a class="list-group-item" href="http://www.doherty.edu.au/"> The Peter Doherty Institute for Infection and Immunity </a>
+                <a class="list-group-item" href="https://www.adelaide.edu.au/"> University of Adelaide </a>
+                <a class="list-group-item" href="http://www.unimelb.edu.au/"> University of Melbourne </a>
+                <a class="list-group-item" href="https://www.uq.edu.au/"> University of Queensland </a>
+                <a class="list-group-item" href="https://sydney.edu.au/"> University of Sydney </a>
+                <a class="list-group-item" href="http://www.uts.edu.au/"> University of Technology Sydney </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

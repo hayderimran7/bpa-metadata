@@ -69,6 +69,10 @@ class ContactsView(TemplateView):
     template_name = 'sepsis/contacts.html'
 
 
+class ConsortiumView(TemplateView):
+    template_name = 'sepsis/consortium.html'
+
+
 class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
     """
     API endpoint for Sepsis Genomics miseq Sequences

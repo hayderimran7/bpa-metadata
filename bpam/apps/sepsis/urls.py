@@ -37,4 +37,8 @@ urlpatterns = [
         regex=r'^genomicspacbiofiles',
         view=views.GenomicsPacBioFileListView.as_view(),
         name='genomics_pacbio_files'),
+    url(
+        regex=r'^consortium$',
+        view=views.ConsortiumView.as_view(),
+        name='consortium'),
 ]
