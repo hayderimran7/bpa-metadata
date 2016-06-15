@@ -57,7 +57,8 @@ ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
 DATABASES = {
     'default': {
-        'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        # 'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': env.get("dbname", "webapp"),
         'USER': env.get("dbuser", "webapp"),
         'PASSWORD': env.get("dbpass", "webapp"),
@@ -247,6 +248,7 @@ INSTALLED_APPS = ('bpam',
                   'django.contrib.sites',
                   'django.contrib.messages',
                   'django.contrib.staticfiles',
+                  'django.contrib.gis',
                   'django_extensions',
                   'django.contrib.admin',
                   'django.contrib.admindocs',
