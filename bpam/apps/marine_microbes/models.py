@@ -61,7 +61,7 @@ class SampleStateTrack(models.Model):
         return "{}".format(self.extraction_id)
 
 
-class ContextualOpenWater(MarineCommonContextual):
+class OpenWaterContextual(MarineCommonContextual):
     sample_type = "Open Water"
     # Host Species
     host_species = models.TextField("Host Species", null=True, blank=True)
@@ -197,7 +197,7 @@ class ContextualOpenWater(MarineCommonContextual):
         return "{} Open Water Data".format(self.bpa_id)
 
 
-class ContextualPelagic(MarineCommonContextual):
+class PelagicContextual(MarineCommonContextual):
     """ Pelagic """
 
     sample_type = "Pelagic"

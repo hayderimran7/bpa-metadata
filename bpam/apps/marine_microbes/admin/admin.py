@@ -14,17 +14,17 @@ from apps.common.admin import (DateField,
                                CommonTransferLogResource,
                                CommonTransferLogAdmin, )
 
-from .models import (Amplicon,
-                     Metagenomic,
-                     TransferLog,
-                     SampleStateTrack,
-                     ContextualPelagic,
-                     ContextualOpenWater,
-                     SeaWeedContextual,
-                     SeaGrassContextual,
-                     CoralContextual,
-                     SedimentContextual,
-                     SpongeContextual, )
+from ..models import (Amplicon,
+                      Metagenomic,
+                      TransferLog,
+                      SampleStateTrack,
+                      PelagicContextual,
+                      OpenWaterContextual,
+                      SeaWeedContextual,
+                      SeaGrassContextual,
+                      CoralContextual,
+                      SedimentContextual,
+                      SpongeContextual, )
 
 
 class TransferLogResource(CommonTransferLogResource):
@@ -138,7 +138,7 @@ class ContextualPelagicResource(CommonWaterResource):
     flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
 
     class Meta:
-        model = ContextualPelagic
+        model = PelagicContextual
         import_id_fields = ('bpa_id', )
         export_order = ('bpa_id',
                         'sample_site_name',
@@ -279,7 +279,7 @@ class ContextualOpenWaterResource(CommonWaterResource):
     zea = fields.Field(attribute="zea", column_name="ZEA [mg/m3]")
 
     class Meta:
-        model = ContextualOpenWater
+        model = OpenWaterContextual
         import_id_fields = ('bpa_id', )
 
         export_order = ('bpa_id',
@@ -499,8 +499,8 @@ admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
-admin.site.register(ContextualPelagic, ContextualPelagicAdmin)
-admin.site.register(ContextualOpenWater, ContextualOpenWaterAdmin)
+admin.site.register(PelagicContextual, ContextualPelagicAdmin)
+admin.site.register(OpenWaterContextual, ContextualOpenWaterAdmin)
 
 admin.site.register(SeaWeedContextual, SeaWeedAdmin)
 admin.site.register(SeaGrassContextual, SeaGrassAdmin)
