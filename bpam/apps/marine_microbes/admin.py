@@ -4,15 +4,15 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
-from app.common.models import Site
+from apps.common.models import Site
 
-from app.common.admin import (DateField,
-                              CommonAmpliconResource,
-                              CommonAmpliconAdmin,
-                              CommonMetagenomicResource,
-                              CommonMetagenomicAdmin,
-                              CommonTransferLogResource,
-                              CommonTransferLogAdmin, )
+from apps.common.admin import (DateField,
+                               CommonAmpliconResource,
+                               CommonAmpliconAdmin,
+                               CommonMetagenomicResource,
+                               CommonMetagenomicAdmin,
+                               CommonTransferLogResource,
+                               CommonTransferLogAdmin, )
 
 from .models import (Amplicon,
                      Metagenomic,
@@ -20,11 +20,11 @@ from .models import (Amplicon,
                      SampleStateTrack,
                      ContextualPelagic,
                      ContextualOpenWater,
-                     SeaWeed,
-                     SeaGrass,
-                     Coral,
-                     Sediment,
-                     Sponge, )
+                     SeaWeedContextual,
+                     SeaGrassContextual,
+                     CoralContextual,
+                     SedimentContextual,
+                     SpongeContextual, )
 
 
 class TransferLogResource(CommonTransferLogResource):
@@ -462,17 +462,17 @@ class CommonResource(MarineResource):
 
 class CoralResource(CommonResource):
     class Meta(CommonResource.Meta):
-        model = Coral
+        model = CoralContextual
 
 
 class SeaGrassResource(CommonResource):
     class Meta(CommonResource.Meta):
-        model = SeaGrass
+        model = SeaGrassContextual
 
 
 class SeaWeedResource(CommonResource):
     class Meta(CommonResource.Meta):
-        model = SeaWeed
+        model = SeaWeedContextual
 
 
 class SedimentAdmin(CommonAdmin):
@@ -502,8 +502,8 @@ admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
 admin.site.register(ContextualPelagic, ContextualPelagicAdmin)
 admin.site.register(ContextualOpenWater, ContextualOpenWaterAdmin)
 
-admin.site.register(SeaWeed, SeaWeedAdmin)
-admin.site.register(SeaGrass, SeaGrassAdmin)
-admin.site.register(Coral, CoralAdmin)
-admin.site.register(Sediment, SedimentAdmin)
-admin.site.register(Sponge, SpongeAdmin)
+admin.site.register(SeaWeedContextual, SeaWeedAdmin)
+admin.site.register(SeaGrassContextual, SeaGrassAdmin)
+admin.site.register(CoralContextual, CoralAdmin)
+admin.site.register(SedimentContextual, SedimentAdmin)
+admin.site.register(SpongeContextual, SpongeAdmin)

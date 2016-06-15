@@ -9,7 +9,7 @@ from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
-from .models import (Facility, Amplicon, Metagenomic, TransferLog, Site, BPAProject, BPAUniqueID, Facility, Organism,
+from .models import (Amplicon, Metagenomic, TransferLog, Site, BPAProject, BPAUniqueID, Facility, Organism,
                      SequenceFile, DNASource, Sequencer, Sample)
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
@@ -25,9 +25,23 @@ class FacilityWidget(widgets.ForeignKeyWidget):
         return facility
 
 
-@admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'note')
+    class Form(forms.ModelForm):
+        class Meta:
+            fields = "__all__"
+            model = Facility
+            widgets = {
+                'project': LinkedSelect,
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'})
+            }
+
+    form = Form
+    fields = ('name', 'note')
+    list_display = ('name', )
+
+
+admin.site.register(Facility, FacilityAdmin)
 
 
 class DateField(fields.Field):
@@ -313,25 +327,6 @@ class BPAUniqueIDAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
-
-
-class FacilityAdmin(admin.ModelAdmin):
-    class Form(forms.ModelForm):
-        class Meta:
-            fields = "__all__"
-            model = Facility
-            widgets = {
-                'project': LinkedSelect,
-                'note': AutosizedTextarea(attrs={'class': 'input-large',
-                                                 'style': 'width:95%'})
-            }
-
-    form = Form
-    fields = ('name', 'note')
-    list_display = ('name', )
-
-
-admin.site.register(Facility, FacilityAdmin)
 
 
 class OrganismAdmin(admin.ModelAdmin):
