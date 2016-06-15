@@ -1,0 +1,34 @@
+[
+    {
+        "model": "common.facility",
+        "pk": "AGRF",
+        "fields": {
+            "description": "Australian Genomics Research Group",
+            "note": "Australian Genomics Research Group"
+        }
+    },
+    {
+        "model": "common.facility",
+        "pk": "UNSW",
+        "fields": {
+            "description": "Ramaciotti",
+            "note": "Ramaciotti Centre for Genomics"
+        }
+    },
+    {
+        "model": "common.facility",
+        "pk": "ANU",
+        "fields": {
+            "description": "ANU",
+            "note": "Australian National University"
+        }
+    },
+    {
+        "model": "common.facility",
+        "pk": "UNKNOWN",
+        "fields": {
+            "description": "UNKNOWN",
+            "note": "UNKNOWN"
+        }
+    }
+]
