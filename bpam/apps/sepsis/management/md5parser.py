@@ -33,6 +33,7 @@ MISEQ_FILENAME_PATTERN = """
 """
 miseq_filename_pattern = re.compile(MISEQ_FILENAME_PATTERN, re.VERBOSE)
 
+
 class MD5ParsedLine(object):
     def __init__(self, pattern, line):
         self.pattern = pattern
@@ -56,6 +57,7 @@ class MD5ParsedLine(object):
 
     def __str__(self):
         return "{} {}".format(self.filename, self.md5)
+
 
 def parse_md5_file(pattern, md5_file):
     """ Parse md5 file """

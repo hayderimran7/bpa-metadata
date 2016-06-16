@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-"""
-Parses md5 file
-"""
+""" Parses md5 file """
 
 import os
 import logger_utils
