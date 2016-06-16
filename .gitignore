@@ -16,7 +16,6 @@ virt_bpam
 bpam.egg-info/
 *.komodoproject
 build-number.txt
-setup.cfg
 *.rpm
 .idea/workspace.xml
 .idea/tasks.xml
