@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from apps.common.models import (TransferLog,
-                                Amplicon,
-                                Metagenomic,
-                                Site, )
+from apps.common.models import TransferLog, Amplicon, Metagenomic, Site
+
+
+class TransferLog(TransferLog):
+    pass
+
+
+class Metagenomic(Metagenomic):
+    pass
+
+
+class Amplicon(Amplicon):
+    pass
 
 
 class MarineCommonContextual(models.Model):
@@ -31,20 +40,7 @@ class MarineCommonContextual(models.Model):
         return "{} {}".format(self.bpa_id, self.sample_type)
 
 
-class TransferLog(TransferLog):
-    pass
-
-
-class Metagenomic(Metagenomic):
-    pass
-
-
-class Amplicon(Amplicon):
-    pass
-
-
 class SampleStateTrack(models.Model):
-
     extraction_id = models.CharField('Sample Extraction ID', max_length=100, primary_key=True)
     quality_check_preformed = models.BooleanField("Quality Checked", default=False)
     metagenomics_data_generated = models.BooleanField("Metagenomics Data Generated", default=False)
