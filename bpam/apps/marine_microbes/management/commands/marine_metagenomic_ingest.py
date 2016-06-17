@@ -3,18 +3,38 @@
 Ingests Marine Microbe Metagenomic metadata from archive into database.
 """
 
+import re
 from unipath import Path
 
 from libs import ingest_utils
 from libs import management_command
+from libs import bpa_id_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
+from libs.parse_md5 import parse_md5_file
 from apps.common.models import Facility
 
 from ...models import Metagenomic
+from ...models import MMSample
+from ...models import MetagenomiSequenceFile
 
 METADATA_PATH = "marine_microbes/metagenomics"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
+
+# 21649_1_PE_680bp_MM_AGRF_H3VJJBCXX_TAGGCATG_L001_R1.fastq.gz
+FILENAME_PATTERN = """
+    (?P<id>\d{4,6})_
+    (?P<extraction>\d)_
+    (?P<library>PE|MP)_
+    (?P<size>\d*bp)_
+    MM_
+    (?P<vendor>AGRF|UNSW)_
+    (?P<flowcell>\w{9})_
+    (?P<index>[G|A|T|C|-]*)_
+    (?P<lane>L\d{3})_
+    (?P<read>R[1|2])\.fastq\.gz
+"""
+filename_pattern = re.compile(FILENAME_PATTERN, re.VERBOSE)
 
 
 class Command(management_command.BPACommand):
@@ -71,7 +91,7 @@ class Command(management_command.BPACommand):
                                                             facility=self._get_facility(entry),
                                                             metadata_filename=entry.file_name)
 
-    def _do_metadata(self):
+    def _ingest_metadata(self):
         def is_metadata(path):
             if path.isfile() and path.ext == ".xlsx":
                 return True
@@ -82,19 +102,75 @@ class Command(management_command.BPACommand):
             samples = list(self._get_data(metadata_file))
             self._add_samples(samples)
 
+    def add_md5(self, md5_lines):
+        """ Unpack md5 data to database """
+
+        for md5_line in md5_lines:
+            # add bpa id
+            bpa_idx = md5_line.md5data.get('id')
+            bpa_id, report = bpa_id_utils.get_bpa_id(bpa_idx, "marine_microbes", "Marine Microbes", add_prefix=True)
+
+            if bpa_id is None:
+                self.log_warn(report)
+                continue
+
+            # add samples
+            sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
+            lane = int(md5_line.md5data.get('lane')[1:])
+
+            # add files
+            f, _ = MetagenomiSequenceFile.objects.get_or_create(note="Ingested using management command",
+                                                                sample=sample,
+                                                                extraction=md5_line.md5data.get('extraction'),
+                                                                library=md5_line.md5data.get('library'),
+                                                                vendor=md5_line.md5data.get('vendor'),
+                                                                size=md5_line.md5data.get('size'),
+                                                                flow_cell_id=md5_line.md5data.get('flowcell'),
+                                                                index=md5_line.md5data.get('index'),
+                                                                lane_number=lane,
+                                                                read=md5_line.md5data.get('read'),
+                                                                filename=md5_line.filename,
+                                                                md5=md5_line.md5)
+
+    def _ingest_md5(self):
+        """ Ingest the md5 files """
+
+        def is_md5file(path):
+            if path.isfile() and path.ext == ".md5":
+                return True
+
+        self.log_info("Ingesting Marine Microbes md5 file information from {0}".format(DATA_DIR))
+        for md5_file in DATA_DIR.walk(filter=is_md5file):
+            self.log_info("Processing Marine Microbes md5 file {0}".format(md5_file))
+            data = parse_md5_file(filename_pattern, md5_file)
+            self.add_md5(data)
+
+    def truncate(self):
+        from django.db import connection
+
+        cursor = connection.cursor()
+        cursor.execute("TRUNCATE TABLE {} CASCADE".format(MetagenomiSequenceFile._meta.db_table))
+
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
         parser.add_argument('--delete',
                             action='store_true',
                             dest='delete',
                             default=False,
-                            help='Delete all contextual data', )
+                            help='Delete all data', )
 
     def handle(self, *args, **options):
+
+        if options['delete']:
+            self.log_info("Truncating MM Metagenomic Files data")
+            self.truncate()
 
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
         # find all the spreadsheets in the data directory and ingest them
-        self._do_metadata()
+        self._ingest_metadata()
+
+        # find all the md5 files in the data directory and make metagenomic sequence file objects
+        self._ingest_md5()

@@ -1,7 +1,46 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from apps.common.models import TransferLog, Amplicon, Metagenomic, Site
+from apps.common.models import TransferLog
+from apps.common.models import Amplicon
+from apps.common.models import Metagenomic
+from apps.common.models import Site
+from apps.common.models import SequenceFile
+from apps.common.models import BPAUniqueID
+
+
+class MMSample(models.Model):
+    """ A Marine Microbes Sample """
+
+    bpa_id = models.OneToOneField(BPAUniqueID,
+                                  verbose_name="BPA ID",
+                                  primary_key=True,
+                                  help_text="Bioplatforms Australia Sample ID")
+
+    def __unicode__(self):
+        return "Marine Microbes sample {}".format(self.bpa_id)
+
+    class Meta:
+        verbose_name = "Sepsis Sample"
+
+
+class MetagenomiSequenceFile(SequenceFile):
+
+    project_name = 'marine_microbes'
+    extraction = models.IntegerField("Extraction", default=1)
+    vendor = models.CharField("Vendor", max_length=100, default="UNKNOWN")
+    sample = models.ForeignKey(MMSample)
+    library = models.CharField("Library", max_length=20, help_text="MP or PE")
+    size = models.CharField("Extraction Size", max_length=100, default=1)
+    flow_cell_id = models.CharField("Flow Cell ID", max_length=9)
+    index = models.CharField("Index", max_length=20)
+    read = models.CharField("Read", max_length=3)
+
+    def get_path_parts(self):
+        return ('marine_microbes', 'metagenomics')
+
+    class Meta:
+        verbose_name_plural = "Metagenomics Sequence Files"
 
 
 class TransferLog(TransferLog):
