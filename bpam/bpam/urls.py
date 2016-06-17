@@ -19,6 +19,9 @@ urlpatterns = patterns(
     url(r'^base/454/', include('apps.base_454.urls', namespace='base_454')),
     url(r'^base/vocabulary/', include('apps.base_vocabulary.urls',
                                       namespace='base_vocabulary')),
+    #  Marine Microbes
+    url(r'^marine_microbes/',
+        include('apps.marine_microbes.urls', namespace='marine_microbes')),
     # Great Barrier reef
     url(r'^gbr/', include('apps.gbr.urls', namespace='gbr')),
     url(r'^gbr/amplicon/', include('apps.gbr_amplicon.urls', namespace='gbr_amplicon')),

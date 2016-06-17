@@ -24,7 +24,7 @@ class MMSample(models.Model):
         verbose_name = "Sepsis Sample"
 
 
-class MetagenomiSequenceFile(SequenceFile):
+class MetagenomicSequenceFile(SequenceFile):
 
     project_name = 'marine_microbes'
     extraction = models.IntegerField("Extraction", default=1)

@@ -16,7 +16,7 @@ from apps.common.models import Facility
 
 from ...models import Metagenomic
 from ...models import MMSample
-from ...models import MetagenomiSequenceFile
+from ...models import MetagenomicSequenceFile
 
 METADATA_PATH = "marine_microbes/metagenomics"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
@@ -119,18 +119,18 @@ class Command(management_command.BPACommand):
             lane = int(md5_line.md5data.get('lane')[1:])
 
             # add files
-            f, _ = MetagenomiSequenceFile.objects.get_or_create(note="Ingested using management command",
-                                                                sample=sample,
-                                                                extraction=md5_line.md5data.get('extraction'),
-                                                                library=md5_line.md5data.get('library'),
-                                                                vendor=md5_line.md5data.get('vendor'),
-                                                                size=md5_line.md5data.get('size'),
-                                                                flow_cell_id=md5_line.md5data.get('flowcell'),
-                                                                index=md5_line.md5data.get('index'),
-                                                                lane_number=lane,
-                                                                read=md5_line.md5data.get('read'),
-                                                                filename=md5_line.filename,
-                                                                md5=md5_line.md5)
+            f, _ = MetagenomicSequenceFile.objects.get_or_create(note="Ingested using management command",
+                                                                 sample=sample,
+                                                                 extraction=md5_line.md5data.get('extraction'),
+                                                                 library=md5_line.md5data.get('library'),
+                                                                 vendor=md5_line.md5data.get('vendor'),
+                                                                 size=md5_line.md5data.get('size'),
+                                                                 flow_cell_id=md5_line.md5data.get('flowcell'),
+                                                                 index=md5_line.md5data.get('index'),
+                                                                 lane_number=lane,
+                                                                 read=md5_line.md5data.get('read'),
+                                                                 filename=md5_line.filename,
+                                                                 md5=md5_line.md5)
 
     def _ingest_md5(self):
         """ Ingest the md5 files """
@@ -149,7 +149,7 @@ class Command(management_command.BPACommand):
         from django.db import connection
 
         cursor = connection.cursor()
-        cursor.execute("TRUNCATE TABLE {} CASCADE".format(MetagenomiSequenceFile._meta.db_table))
+        cursor.execute("TRUNCATE TABLE {} CASCADE".format(MetagenomicSequenceFile._meta.db_table))
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)

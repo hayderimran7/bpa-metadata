@@ -182,7 +182,8 @@ SUIT_CONFIG = {
      # Marine Microbes
      {'app': 'marine_microbes',
       'label': 'Marine Microbes',
-      'models': ('metagenomic',
+      'models': ('metagenomicsequencefile',
+                 'metagenomic',
                  'amplicon',
                  'transferlog',
                  'samplestatetrack',

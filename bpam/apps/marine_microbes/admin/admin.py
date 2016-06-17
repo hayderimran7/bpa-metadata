@@ -7,7 +7,11 @@ from import_export.admin import ImportExportModelAdmin
 from apps.common.models import Site
 
 from apps.common.admin import DateField
-from apps.common.admin import CommonAmpliconResource, CommonMetagenomicResource, CommonMetagenomicAdmin, CommonTransferLogResource, CommonTransferLogAdmin
+from apps.common.admin import CommonAmpliconResource
+from apps.common.admin import CommonMetagenomicResource
+from apps.common.admin import CommonMetagenomicAdmin
+from apps.common.admin import CommonTransferLogResource
+from apps.common.admin import CommonTransferLogAdmin
 from apps.common.admin import CommonAmpliconAdmin
 
 from ..models import Amplicon
