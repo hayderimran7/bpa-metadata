@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Sepsis Sample Detail {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Sepsis" "sepsis:index" %}
+{% breadcrumb "Samples" "sepsis:samples" %}
+{% breadcrumb sample.bpa_id "sepsis:sample" sample.bpa_id %}
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-info">
+  <table id="info" class="table table-striped">
+    <tbody>
+      <tr>
+        <td> Taxon Or Organism</td>
+        <td> {{ sample.taxon_or_organism }}</td>
+      </tr>
+      <tr>
+        <td> Strain Or Isolate </td>
+        <td> {{ sample.strain_or_isolate|default:"" }}</td>
+      </tr>
+      <tr>
+        <td> Gram Staining</td>
+        <td> {{ sample.gram_stain|default:"" }}</td>
+      </tr>
+      <tr>
+        <td>Serovar</td>
+        <td> {{ sample.serovar}}</td>
+      </tr>
+      <tr>
+        <td>Strain Description</td>
+        <td> {{ sample.strain_description}}</td>
+      </tr>
+      <tr>
+        <td>Key Virulence Genes</td>
+        <td> {{ sample.key_virulence_genes}}</td>
+      </tr>
+      <tr>
+        <td>Isolation Source</td>
+        <td> {{ sample.isolation_source }}</td>
+      </tr>
+      <tr>
+        <td>Publication Reference</td>
+        <td> {{ sample.publication_reference }}</td>
+      </tr>
+      <tr>
+        <td>Contact Researcher</td>
+        <td> {{ sample.contact_researcher }}</td>
+      </tr>
+      <tr>
+        <td>Culture Collection Date</td>
+        <td> {{ sample.culture_collection_date|default:"" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% include "sequencefilelist.html" %}
+
+{% endblock %}

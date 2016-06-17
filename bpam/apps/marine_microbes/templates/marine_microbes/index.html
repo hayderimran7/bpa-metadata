@@ -1,0 +1,62 @@
+{% extends "base.html" %} 
+{%load staticfiles %} 
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% endblock %}
+{% block title %}Marine Microbes{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="well">
+        <div class="row">
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'marine_microbes/marine_microbes.png' %}" alt="MM">
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+
+                <h2>Marine Microbes</h2>
+                <p>
+                    The Marine Microbes project will establish how Australia’s marine microbial communities
+                    change over time in various locations and environments. The consortium of researchers will
+                    investigate the microbial communities of seawater, sediment, sponges and sea grass
+                    utilising the extensive capability of Australia’s Integrated Marine Observing System
+                    (IMOS).
+                </p>
+
+                For more information please visit:
+                <a href="http://www.bioplatforms.com/marine-microbes">
+                    http://www.bioplatforms.com/marine-microbes/
+                </a>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'marine_microbes:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">Metagenomic Sequences <span class="badge">{{ metagenomic_sequence_file_count }}</span> </a>
+                    <a class="list-group-item"
+                       href="https://downloads.bioplatforms.com/bpa/marine_microbes/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item"
+                       href="{% url 'marine_microbes:consortium' %}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        Consortium Participants
+                    </a>
+                    <a class="list-group-item"
+                       href="{% url 'marine_microbes:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
