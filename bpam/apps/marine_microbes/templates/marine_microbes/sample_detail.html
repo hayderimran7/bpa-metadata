@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Sepsis Sample Detail {% endblock %}
+{% block title %}Marine Microbes Sample Detail {% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
-{% breadcrumb "Sepsis" "sepsis:index" %}
-{% breadcrumb "Samples" "sepsis:samples" %}
-{% breadcrumb sample.bpa_id "sepsis:sample" sample.bpa_id %}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Samples" "marine_microbes:samples" %}
+{% breadcrumb sample.bpa_id "marine_microbes:sample" sample.bpa_id %}
 {% endblock %}
 
 {% block content %}
@@ -16,44 +16,20 @@
   <table id="info" class="table table-striped">
     <tbody>
       <tr>
-        <td> Taxon Or Organism</td>
-        <td> {{ sample.taxon_or_organism }}</td>
+        <td> Sample Type</td>
+        <td> {{ sample.sample_type|default:"" }}</td>
       </tr>
       <tr>
-        <td> Strain Or Isolate </td>
-        <td> {{ sample.strain_or_isolate|default:"" }}</td>
+        <td> Site </td>
+        <td> {{ sample.site|default:"" }}</td>
       </tr>
       <tr>
-        <td> Gram Staining</td>
-        <td> {{ sample.gram_stain|default:"" }}</td>
+        <td> Sample Depth</td>
+        <td> {{ sample.sample_depth|default:"" }}</td>
       </tr>
       <tr>
-        <td>Serovar</td>
-        <td> {{ sample.serovar}}</td>
-      </tr>
-      <tr>
-        <td>Strain Description</td>
-        <td> {{ sample.strain_description}}</td>
-      </tr>
-      <tr>
-        <td>Key Virulence Genes</td>
-        <td> {{ sample.key_virulence_genes}}</td>
-      </tr>
-      <tr>
-        <td>Isolation Source</td>
-        <td> {{ sample.isolation_source }}</td>
-      </tr>
-      <tr>
-        <td>Publication Reference</td>
-        <td> {{ sample.publication_reference }}</td>
-      </tr>
-      <tr>
-        <td>Contact Researcher</td>
-        <td> {{ sample.contact_researcher }}</td>
-      </tr>
-      <tr>
-        <td>Culture Collection Date</td>
-        <td> {{ sample.culture_collection_date|default:"" }}</td>
+        <td>Collection Date</td>
+        <td> {{ sample.collection_date}}</td>
       </tr>
     </tbody>
   </table>

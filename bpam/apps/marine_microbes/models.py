@@ -12,10 +12,31 @@ from apps.common.models import BPAUniqueID
 class MMSample(models.Model):
     """ A Marine Microbes Sample """
 
+    OPEN_WATER = "OW"
+    COASTAL_WATER = "CW"
+    SEDIMENT = "SE"
+    SEAGRASS = "SG"
+    SEAWEED = "SW"
+    CORAL = "CO"
+    SPONGE = "SP"
+    SAMPLE_CHOICES = (
+        ("Open Water", OPEN_WATER),
+        ("Coastal Water", COASTAL_WATER),
+        ("Sediment", SEDIMENT),
+        ("Seagrass", SEAGRASS),
+        ("Seaweed", SEAWEED),
+        ("Coral", CORAL),
+        ("Sponge", SPONGE),
+    )  # yapf: disable
+
     bpa_id = models.OneToOneField(BPAUniqueID,
                                   verbose_name="BPA ID",
                                   primary_key=True,
                                   help_text="Bioplatforms Australia Sample ID")
+    sample_type = models.CharField("Sample Type", choices=SAMPLE_CHOICES, max_length=2, null=True, blank=True)
+    site = models.ForeignKey(Site, null=True)
+    depth = models.IntegerField("Depth", null=True, blank=True)
+    collection_date = models.DateTimeField("Sample Collection Date", null=True, blank=True)
 
     def __unicode__(self):
         return "Marine Microbes sample {}".format(self.bpa_id)

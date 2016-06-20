@@ -5,8 +5,8 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
-{% breadcrumb "Sepsis" "sepsis:index" %}
-{% breadcrumb "Genomic Miseq Sequence Files" "sepsis:genomics_miseq_files" %}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Metagenomic Sequence Files" "marine_microbes:metagenomicis_file_list" %}
 {% endblock %}
 
 {% block content %}
@@ -58,7 +58,7 @@
   </table>
 </div>
 {% else %}
-<h3> No Sepsis Genomic Sequence Data is currently available </h3>
+<h3> No Marine Microbe Sequence Data is currently available </h3>
 {% endif %}
 
 {% endblock %}
