@@ -17,7 +17,7 @@
     <tbody>
       <tr>
         <td> Sample Type</td>
-        <td> {{ sample.sample_type|default:"" }}</td>
+        <td> {{ sample.get_sample_type_display|default:"" }}</td>
       </tr>
       <tr>
         <td> Site </td>

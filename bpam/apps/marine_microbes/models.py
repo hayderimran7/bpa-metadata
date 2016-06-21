@@ -20,13 +20,13 @@ class MMSample(models.Model):
     CORAL = "CO"
     SPONGE = "SP"
     SAMPLE_CHOICES = (
-        ("Pelagic/Open Water", PELAGIC),
-        ("Coastal Water", COASTAL_WATER),
-        ("Sediment", SEDIMENT),
-        ("Seagrass", SEAGRASS),
-        ("Seaweed", SEAWEED),
-        ("Coral", CORAL),
-        ("Sponge", SPONGE),
+        (PELAGIC, "Pelagic/Open Water"),
+        (COASTAL_WATER, "Coastal Water"),
+        (SEDIMENT, "Sediment"),
+        (SEAGRASS, "Seagrass"),
+        (SEAWEED, "Seaweed"),
+        (CORAL, "Coral"),
+        (SPONGE, "Sponge"),
     )  # yapf: disable
 
     bpa_id = models.OneToOneField(BPAUniqueID,
