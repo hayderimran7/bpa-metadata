@@ -36,31 +36,9 @@ def add_pelagic_data(data):
         sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
         # just fill in everything available from this spreadsheet
         if sample:
-            sample.taxon_or_organism = entry.taxon_or_organism
-            sample.strain_or_isolate = entry.strain_or_isolate
-            sample.strain_description = entry.strain_description
-            sample.serovar = entry.serovar
-            sample.key_virulence_genes = entry.key_virulence_genes
-            sample.gram_stain = entry.gram_stain
-            sample.isolation_source = entry.isolation_source
-            sample.publication_reference = entry.publication_reference
-            sample.contact_researcher = entry.contact_researcher
-            sample.culture_collection_date = entry.culture_collection_date
-
-            site, _ = GrowthMethod.objects.get_or_create(
-                growth_condition_time=entry.growth_condition_time,
-                growth_condition_temperature=entry.growth_condition_temperature,
-                growth_condition_media=entry.growth_condition_media, )
-            sample.growth = growth
-
-            host, _ = Host.objects.get_or_create(description=entry.host_description,
-                                                 location=entry.host_location,
-                                                 sex=entry.host_sex,
-                                                 age=entry.host_age,
-                                                 dob=entry.host_dob,
-                                                 disease_outcome=entry.host_disease_outcome,
-                                                 strain_or_isolate=entry.strain_or_isolate, )
-            sample.host = host
+            sample.sample_type = MMSample.PELAGIC
+            sample.site, _ = Site.get_or_create(entry.lat, entry.lon, entry.site_description)
+            sample.depth = entry.depth
 
             sample.save()
 
@@ -157,7 +135,7 @@ def get_pelagic_data(file_name):
         ("long", "long (decimal degrees)", None),
         ("depth", "Depth (m)", None),
         ("notes", "Notes", None),
-        ("location_description", "Location description", None),
+        ("site_description", "Location description", None),
     ]
 
     wrapper = ExcelWrapper(field_spec,
@@ -185,8 +163,7 @@ class Command(management_command.BPACommand):
 
         if options['delete']:
             logger.info("Deleting all Hosts")
-            Host.objects.all().delete()
-            GrowthMethod.objects.all().delete()
+            MMSample.objects.all().delete()
 
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
         fetcher.clean()
