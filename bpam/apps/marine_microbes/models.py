@@ -12,7 +12,7 @@ from apps.common.models import BPAUniqueID
 class MMSample(models.Model):
     """ A Marine Microbes Sample """
 
-    OPEN_WATER = "OW"
+    PELAGIC = "PL"
     COASTAL_WATER = "CW"
     SEDIMENT = "SE"
     SEAGRASS = "SG"
@@ -20,7 +20,7 @@ class MMSample(models.Model):
     CORAL = "CO"
     SPONGE = "SP"
     SAMPLE_CHOICES = (
-        ("Open Water", OPEN_WATER),
+        ("Pelagic/Open Water", PELAGIC),
         ("Coastal Water", COASTAL_WATER),
         ("Sediment", SEDIMENT),
         ("Seagrass", SEAGRASS),

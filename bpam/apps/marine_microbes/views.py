@@ -14,7 +14,7 @@ class MMView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MMView, self).get_context_data(**kwargs)
         context['sample_count'] = MMSample.objects.count()
-        context['genomics_file_count'] = MetagenomicSequenceFile.objects.count()
+        context['metagenomics_file_count'] = MetagenomicSequenceFile.objects.count()
         return context
 
 
