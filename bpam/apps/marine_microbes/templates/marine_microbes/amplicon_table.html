@@ -1,0 +1,87 @@
+
+<div class="container-fluid">
+
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>SRA biosample accession</th>
+                <th>Sample Extraction ID</th>
+                <th>Name</th>
+                <th class="filter-select filter-exact" amplicon-placeholder="Facility">Facility</th>
+                <th>Run Number</th>
+                <th class="filter-select filter-exact" amplicon-placeholder="Amplicon">Amplicon</th>
+                <th>Index</th>
+                <th>PCR 1:10</th>
+                <th>PCR 1:100</th>
+                <th>Neat PCR</th>
+                <th>Dilution</th>
+                <th>Analysis Software Version</th>
+                <th>Reads</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>SRA biosample accession</th>
+                <th>Sample Extraction ID</th>
+                <th>Name</th>
+                <th>Facility</th>
+                <th>Run Number</th>
+                <th>Amplicon</th>
+                <th>Index</th>
+                <th>PCR 1:10</th>
+                <th>PCR 1:100</th>
+                <th>Neat PCR</th>
+                <th>Dilution</th>
+                <th>Analysis Software Version</th>
+                <th>Reads</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for amplicon in amplicon_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'marine_microbes:sample' amplicon.sample.bpa_id %}">{{ amplicon.sample.bpa_id }}</a>
+                </td>
+                <td>{{ amplicon.sample.bpa_id.sra_id |default:"" }}</td>
+                <td>{{ amplicon.sample_extraction_id }}</td>
+                <td>{{ amplicon.name |default:"" }}</td>
+                <td>{{ amplicon.vendor }}</td>
+                <td>{{ amplicon.sequencing_run_number |default:"" }}</td>
+                <td>{{ amplicon.amplicon }}</td>
+                <td>{{ amplicon.index }}</td>
+                <td>
+                    {% if amplicon.passed_pcr_1_to_10 %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {%if amplicon.passed_pcr_1_to_100 %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if amplicon.passed_pcr_neat %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>{{ amplicon.dilution }}</td>
+                <td>{{ amplicon.analysis_software_version }}</td>
+                <td>{{ amplicon.reads }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

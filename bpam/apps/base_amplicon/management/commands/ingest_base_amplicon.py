@@ -3,7 +3,6 @@
 Ingests BASE Amplicon metadata from server into database.
 """
 
-from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import DataError
 from unipath import Path
 from libs.excel_wrapper import ExcelWrapper
@@ -108,9 +107,8 @@ def _get_index(entry):
 
 
 def add_samples(data):
-    """
-    Add sequence files
-    """
+    """ Add sequence files """
+
     for entry in data:
         bpa_id = _get_bpa_id(entry)
         if not bpa_id:

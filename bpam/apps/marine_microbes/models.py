@@ -42,20 +42,45 @@ class MMSample(models.Model):
         return "Marine Microbes sample {}".format(self.bpa_id)
 
     class Meta:
-        verbose_name = "Sepsis Sample"
+        verbose_name = "Marine Microbes Sample"
+
+
+class AmpliconSequenceFile(SequenceFile):
+    CHOICES = (
+        ("16S", "16S"),
+        ("ITS", "ITS"),
+        ("18S", "18S"),
+        ("A16S", "A16S")
+    ) # yapf: disable
+
+    sample = models.ForeignKey(MMSample, null=True)
+    extraction = models.IntegerField("Sample Extraction ID", blank=True, null=True)
+    amplicon = models.CharField("Amplicon", max_length=4, choices=CHOICES)
+    vendor = models.CharField("Vendor", max_length=100, default="UNKNOWN")
+    index = models.CharField("Index", max_length=50, blank=True, null=True)
+    flow_cell = models.CharField("Flow Cell", max_length=9, blank=True, null=True)
+    runsamplenum = models.CharField("Run Sample Number", max_length=9, blank=True, null=True)
+    read = models.CharField("Read", max_length=2, blank=True, null=True)
+
+    def __unicode__(self):
+        return u"{0}:{1}".format(self.bpa_id, self.amplicon)
+
+    class Meta:
+        verbose_name_plural = "Amplicon Sequencing Metadata"
 
 
 class MetagenomicSequenceFile(SequenceFile):
+    """ Metagenomics """
 
     project_name = 'marine_microbes'
     extraction = models.IntegerField("Extraction", default=1)
     vendor = models.CharField("Vendor", max_length=100, default="UNKNOWN")
-    sample = models.ForeignKey(MMSample)
+    sample = models.ForeignKey(MMSample, null=True)
     library = models.CharField("Library", max_length=20, help_text="MP or PE")
     size = models.CharField("Extraction Size", max_length=100, default=1)
-    flow_cell_id = models.CharField("Flow Cell ID", max_length=9)
-    index = models.CharField("Index", max_length=20)
-    read = models.CharField("Read", max_length=3)
+    flow_cell = models.CharField("Flow Cell", max_length=9, blank=True, null=True)
+    index = models.CharField("Index", max_length=20, blank=True, null=True)
+    read = models.CharField("Read", max_length=3, blank=True, null=True)
 
     def get_path_parts(self):
         return ('marine_microbes', 'metagenomics')

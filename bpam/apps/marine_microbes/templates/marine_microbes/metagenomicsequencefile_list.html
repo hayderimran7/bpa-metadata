@@ -22,6 +22,8 @@
       <tr>
         <th>BPA ID</th>
         <th>Sample Type</th>
+        <th>Vendor</th>
+        <th>Index</th>
         <th>Filename</th>
         <th>MD5</th>
       </tr>
@@ -30,6 +32,8 @@
       <tr>
         <th>BPA ID</th>
         <th>Sample Type</th>
+        <th>Vendor</th>
+        <th>Index</th>
         <th>Filename</th>
         <th>MD5</th>
       </tr>
@@ -38,7 +42,9 @@
       {% for sfile in sequencefiles %}
       <tr>
         <td> <a href="{% url 'marine_microbes:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
-        <td>{{ sfile.sample.sample_type }}</td>
+        <td>{{ sfile.sample.get_sample_type_display }}</td>
+        <td>{{ sfile.vendor }}</td>
+        <td>{{ sfile.index }}</td>
         <td>
           {% if sfile.url_verification.status_ok %}
           <span title="Last checked {{ sfile.url_verification.checked_at }}" class="glyphicon glyphicon-download"></span>

@@ -38,6 +38,7 @@
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'marine_microbes:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">Metagenomic Sequences <span class="badge">{{ metagenomics_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicon_index' %}">Amplicon Sequences <span class="badge">{{ amplicon_count }}</span> </a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/marine_microbes/">
                         <span class="glyphicon glyphicon-download" aria-hidden="true"></span>

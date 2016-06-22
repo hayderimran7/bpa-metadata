@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Marine Microbes Amplicon Metadata {% endblock %}
+
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Amplicons" "marine_microbes:amplicon_index" %}
+{% with "marine_microbes:amplicons_"|add:amplicon as amplicon_url %}
+{% breadcrumb amplicon amplicon_url %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+{% if amplicon_list %}
+{% include "marine_microbes/amplicon_table.html" %}
+
+{% else %}
+<h3> No Amplicon data is currently available </h3>
+{% endif %}
+
+{% endblock %}

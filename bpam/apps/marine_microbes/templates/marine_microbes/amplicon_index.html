@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Marine Microbes Amplicons{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Amplicons" "marine_microbes:amplicon_index" %}
+{% endblock %}
+
+
+<div class="container-fluid">
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <img class="img-responsive img-rounded" src="{% static 'marine_microbes/marine_microbes.png' %}" alt="Marine Microbes">
+            </div>
+
+            <div class="col-sm-8 col-md-8">
+                <h2>
+                    All <a href="{% url 'marine_microbes:index' %}">Marine Microbe</a> Amplicons
+                </h2>
+
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_all' %}">All Amplicons <span class="badge">{{ all_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_ITS' %}">ITS <span class="badge">{{ ITS_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_16S' %}">16S <span class="badge">{{ 16S_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_A16S' %}">A16S <span class="badge">{{ A16S_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_18S' %}">18S <span class="badge">{{ 18S_size }}</span> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

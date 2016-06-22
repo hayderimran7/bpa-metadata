@@ -7,7 +7,7 @@
 {% breadcrumb "Samples" "sepsis:samples" %}
 {% endblock %}
 
-{% block title %}Sepsis Samples {% endblock %}
+{% block title %}Marine Microbe Samples {% endblock %}
 
 {% block content %}
 
@@ -38,10 +38,10 @@
                 <td>
                     <a href="{% url 'marine_microbes:sample' sample.pk %}">{{ sample.bpa_id }}</a>
                 </td>
-                <td>{{ sample.get_sample_type_display }}</td>
-                <td>{{ sample.site }}</td>
-                <td>{{ sample.collection_date }}</td>
-                <td>{{ sample.depth }}</td>
+                <td>{{ sample.get_sample_type_display|default:"" }}</td>
+                <td>{{ sample.site|default:""}}</td>
+                <td>{{ sample.collection_date |default:"" }}</td>
+                <td>{{ sample.depth |default:"" }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -87,9 +87,9 @@ class Command(management_command.BPACommand):
         """ Add sequence files """
 
         for entry in data:
-            amplicon, _ = Metagenomic.objects.get_or_create(extraction_id=entry.sample_extraction_id,
-                                                            facility=self._get_facility(entry),
-                                                            metadata_filename=entry.file_name)
+            Metagenomic.objects.get_or_create(extraction_id=entry.sample_extraction_id,
+                                              facility=self._get_facility(entry),
+                                              metadata_filename=entry.file_name)
 
     def _ingest_metadata(self):
         def is_metadata(path):
@@ -119,18 +119,18 @@ class Command(management_command.BPACommand):
             lane = int(md5_line.md5data.get('lane')[1:])
 
             # add files
-            f, _ = MetagenomicSequenceFile.objects.get_or_create(note="Ingested using management command",
-                                                                 sample=sample,
-                                                                 extraction=md5_line.md5data.get('extraction'),
-                                                                 library=md5_line.md5data.get('library'),
-                                                                 vendor=md5_line.md5data.get('vendor'),
-                                                                 size=md5_line.md5data.get('size'),
-                                                                 flow_cell_id=md5_line.md5data.get('flowcell'),
-                                                                 index=md5_line.md5data.get('index'),
-                                                                 lane_number=lane,
-                                                                 read=md5_line.md5data.get('read'),
-                                                                 filename=md5_line.filename,
-                                                                 md5=md5_line.md5)
+            MetagenomicSequenceFile.objects.get_or_create(note="Ingested using management command",
+                                                          sample=sample,
+                                                          extraction=md5_line.md5data.get('extraction'),
+                                                          library=md5_line.md5data.get('library'),
+                                                          vendor=md5_line.md5data.get('vendor'),
+                                                          size=md5_line.md5data.get('size'),
+                                                          flow_cell=md5_line.md5data.get('flowcell'),
+                                                          index=md5_line.md5data.get('index'),
+                                                          lane_number=lane,
+                                                          read=md5_line.md5data.get('read'),
+                                                          filename=md5_line.filename,
+                                                          md5=md5_line.md5)
 
     def _ingest_md5(self):
         """ Ingest the md5 files """
