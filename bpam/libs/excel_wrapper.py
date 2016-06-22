@@ -1,5 +1,4 @@
 # _*_ coding: utf-8 _*_
-
 """
 Tool to manage the import of rows from Excel workbooks.
 
@@ -18,7 +17,6 @@ from collections import namedtuple
 
 import xlrd
 import logger_utils
-
 
 logger = logger_utils.get_logger(__name__)
 
@@ -61,9 +59,11 @@ class ExcelWrapper(object):
                  sheet_name,
                  header_length,
                  column_name_row_index=0,
+                 ignore_date=False,
                  formatting_info=False,
                  pick_first_sheet=False):
 
+        self.ignore_date = ignore_date  # ignore xlrd's attempt at date conversion
         self.file_name = file_name
         self.sheet_name = sheet_name
         self.header_length = header_length
@@ -81,9 +81,8 @@ class ExcelWrapper(object):
         self.name_to_func_map = self.set_name_to_func_map()
 
     def _set_field_names(self):
-        """
-        sets field name list
-        """
+        """ sets field name list """
+
         names = []
         for attribute, _, _ in self.field_spec:
             if attribute in names:
@@ -92,9 +91,7 @@ class ExcelWrapper(object):
         return names
 
     def set_name_to_column_map(self):
-        """
-        maps the named field to the actual column in the spreadsheet
-        """
+        """ maps the named field to the actual column in the spreadsheet """
 
         def should_complain(c, option_count):
             """
@@ -140,9 +137,8 @@ class ExcelWrapper(object):
         return cmap
 
     def set_name_to_func_map(self):
-        """
-        Map the spec fields to their corresponding functions
-        """
+        """ Map the spec fields to their corresponding functions """
+
         function_map = {}
         for attribute, _, func in self.field_spec:
             function_map[attribute] = func
@@ -161,21 +157,24 @@ class ExcelWrapper(object):
             return s
 
     def _get_rows(self):
-        """
-        Yields sequence of cells
-        """
+        """ Yields sequence of cells """
         for row_idx in xrange(self.header_length, self.sheet.nrows):
             yield self.sheet.row(row_idx)
 
-    def get_date(self, i, cell):
-        """
-        the cell contains a float and pious hope, get a date, if you dare.
-        """
+    def get_date_time(self, i, cell):
+        """ the cell contains a float and pious hope, get a date, if you dare. """
+
         val = cell.value
         try:
-            val = datetime.datetime(*xlrd.xldate_as_tuple(val, self.get_date_mode()))
+            date_time_tup = xlrd.xldate_as_tuple(val, self.get_date_mode())
+            # well ok...
+            if date_time_tup[0] == 0 and date_time_tup[1] == 0 and date_time_tup[2] == 0:
+                val = datetime.time(*date_time_tup[3:])
+            else:
+                val = datetime.datetime(*date_time_tup)
         except ValueError, e:
             logger.warning("Error '{0}' column:{1}, val: {2} cannot be converted to a date".format(e, i, val))
+            print("bi")
             # OK so its not really a date, maybe something can be done with the float
             # This functionality is not currently implemented in the xlrd library
             # xf_index = cell.xf_index
@@ -188,15 +187,15 @@ class ExcelWrapper(object):
         return val
 
     def get_all(self, typname='DataRow'):
-        """
-        Returns all rows for the sheet as named tuples.
-        """
+        """ Returns all rows for the sheet as named tuples. """
+
         # row is added so we know where in the spreadsheet this came from
         typ = namedtuple(typname, ['row', 'file_name'] + [n for n in self.field_names])
 
         for idx, row in enumerate(self._get_rows()):
             row_count = idx + self.header_length + 1
-            tpl = [row_count, os.path.basename(self.file_name)]  # The original row pos in sheet, + 1 as excell row indexing start at 1
+            tpl = [row_count, os.path.basename(self.file_name)
+                   ]  # The original row pos in sheet, + 1 as excell row indexing start at 1
             for name in self.field_names:
                 i = self.name_to_column_map[name]
                 # i is None if the column specified was not found, in that case,
@@ -208,11 +207,12 @@ class ExcelWrapper(object):
                 cell = row[i]
                 ctype = cell.ctype
                 val = cell.value
-                if ctype == xlrd.XL_CELL_DATE:
-                    val = self.get_date(i, cell)
+                # convert dates to python dates
+                if not self.ignore_date and ctype == xlrd.XL_CELL_DATE:
+                    val = self.get_date_time(i, cell)
                 if ctype == xlrd.XL_CELL_TEXT:
                     val = val.strip()
-
+                # apply func
                 if func is not None:
                     val = func(val)
                 tpl.append(val)

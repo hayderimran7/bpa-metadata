@@ -18,14 +18,11 @@ logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
 
 # list of chars to delete
-remove_letters_map = dict(
-    (ord(char), None) for char in string.punctuation + string.ascii_letters)
+remove_letters_map = dict((ord(char), None) for char in string.punctuation + string.ascii_letters)
 
 
 def get_clean_number(val, default=None, debug=False):
-    """
-    Try to clean up numbers
-    """
+    """ Try to clean up numbers """
 
     if debug:
         print val
@@ -47,9 +44,7 @@ def get_clean_number(val, default=None, debug=False):
 
 
 def get_int(val, default=None):
-    """
-    get a int from a string containing other alpha characters
-    """
+    """ get a int from a string containing other alpha characters """
 
     if isinstance(val, int):
         return val
@@ -71,14 +66,10 @@ def get_clean_float(val, default=None, stringconvert=True):
         try:
             return float(var)
         except ValueError:
-            logger.warning(
-                "ValueError Value '{0}' not floatable, returning default '{1}'".format(
-                    var, default))
+            logger.warning("ValueError Value '{0}' not floatable, returning default '{1}'".format(var, default))
             return default
         except TypeError:
-            logger.warning(
-                "TypeError Value '{0}' not floatable, returning default '{1}'".format(
-                    var, default))
+            logger.warning("TypeError Value '{0}' not floatable, returning default '{1}'".format(var, default))
             return default
 
     # if its a float, its probably ok
@@ -104,9 +95,7 @@ def get_clean_float(val, default=None, stringconvert=True):
 
 
 def strip_all(reader):
-    """
-    Scrub extra whitespace from values in the reader dicts as read from the csv files
-    """
+    """ Scrub extra whitespace from values in the reader dicts as read from the csv files """
 
     entries = []
     for entry in reader:
@@ -144,14 +133,10 @@ def get_date(dt):
 
 
 def pretty_print_namedtuple(named_tuple):
-    """
-    pretty prints the namedtuple
-    """
+    """ pretty prints the namedtuple """
 
     def json_serial(obj):
-        """
-        JSON serializer for objects not serializable by default json code
-        """
+        """ JSON serializer for objects not serializable by default json code """
 
         if isinstance(obj, date):
             serial = obj.isoformat()
@@ -161,9 +146,7 @@ def pretty_print_namedtuple(named_tuple):
 
 
 class TestGetCleanFloat(unittest.TestCase):
-    """
-    get_clean_float tester
-    """
+    """ get_clean_float tester """
 
     def setUp(self):
         self.floats = (12131.5345, 22.444, 33.0)

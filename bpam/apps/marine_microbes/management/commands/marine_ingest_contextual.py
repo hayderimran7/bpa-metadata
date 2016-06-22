@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from unipath import Path
+from datetime import datetime
 from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import management_command
@@ -39,6 +40,7 @@ def add_pelagic_data(data):
             sample.sample_type = MMSample.PELAGIC
             sample.site = Site.get_or_create(entry.lat, entry.lon, entry.site_description)
             sample.depth = entry.depth
+            sample.collection_date = datetime.combine(entry.date_sampled, entry.time_sampled)
 
             sample.save()
 
@@ -129,7 +131,7 @@ def get_pelagic_data(file_name):
 
     field_spec = [
         ("bpa_id", "BPA_ID", lambda s: str(int(s))),
-        ("date_sampled", "Date sampled (Y-M-D)", ingest_utils.get_date),
+        ("date_sampled", "Date sampled (Y-M-D)", None),
         ("time_sampled", "Time sampled (hh:mm)", None),
         ("lat", "lat (decimal degrees)", None),
         ("lon", "long (decimal degrees)", None),
