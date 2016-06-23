@@ -12,7 +12,6 @@
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
                 <th>Sample Extraction ID</th>
-                <th>Name</th>
                 <th class="filter-select filter-exact" amplicon-placeholder="Facility">Facility</th>
                 <th>Run Number</th>
                 <th class="filter-select filter-exact" amplicon-placeholder="Amplicon">Amplicon</th>
@@ -30,7 +29,6 @@
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
                 <th>Sample Extraction ID</th>
-                <th>Name</th>
                 <th>Facility</th>
                 <th>Run Number</th>
                 <th>Amplicon</th>
@@ -51,7 +49,6 @@
                 </td>
                 <td>{{ amplicon.sample.bpa_id.sra_id |default:"" }}</td>
                 <td>{{ amplicon.sample_extraction_id }}</td>
-                <td>{{ amplicon.name |default:"" }}</td>
                 <td>{{ amplicon.vendor }}</td>
                 <td>{{ amplicon.sequencing_run_number |default:"" }}</td>
                 <td>{{ amplicon.amplicon }}</td>

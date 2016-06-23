@@ -53,6 +53,9 @@ class AmpliconSequenceFile(SequenceFile):
         ("A16S", "A16S")
     ) # yapf: disable
 
+    PASS_OR_FAIL = (('P', 'Pass'), ('F', 'Fail'))
+    DILUTIONS = (('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat'))
+
     sample = models.ForeignKey(MMSample, null=True)
     extraction = models.IntegerField("Sample Extraction ID", blank=True, null=True)
     amplicon = models.CharField("Amplicon", max_length=4, choices=CHOICES)
@@ -61,6 +64,22 @@ class AmpliconSequenceFile(SequenceFile):
     flow_cell = models.CharField("Flow Cell", max_length=9, blank=True, null=True)
     runsamplenum = models.CharField("Run Sample Number", max_length=9, blank=True, null=True)
     read = models.CharField("Read", max_length=2, blank=True, null=True)
+
+    pcr_1_to_10 = models.CharField('PCR 1:10', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    pcr_1_to_100 = models.CharField('PCR 1:100', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    pcr_neat = models.CharField('Neat PCR', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
+    dilution = models.CharField('Dilution Used', max_length=5, blank=True, null=True, choices=DILUTIONS)
+
+    analysis_software_version = models.CharField('Analysis Software Version', max_length=100, blank=True, null=True)
+
+    def passed_pcr_1_to_10(self):
+        return self.pcr_1_to_10 == 'P'
+
+    def passed_pcr_1_to_100(self):
+        return self.pcr_1_to_100 == 'P'
+
+    def passed_pcr_neat(self):
+        return self.pcr_neat == 'P'
 
     def __unicode__(self):
         return u"{0}:{1}".format(self.bpa_id, self.amplicon)

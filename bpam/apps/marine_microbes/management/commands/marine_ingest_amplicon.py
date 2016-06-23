@@ -18,9 +18,6 @@ from ...models import Metagenomic
 from ...models import MMSample
 from ...models import AmpliconSequenceFile
 
-METADATA_PATH = "marine_microbes/amplicons/a16s"  # FIXME expand
-DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
-
 # 21878_1_A16S_UNSW_GGACTCCT-TATCCTCT_AP3JE_S17_L001_R1.fastq.gz
 FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
@@ -39,12 +36,36 @@ filename_pattern = re.compile(FILENAME_PATTERN, re.VERBOSE)
 class Command(management_command.BPACommand):
     help = 'Ingest Marine Microbes Amplicon'
 
+    def fix_dilution(self, val):
+        """
+        Some source xcell files ship with the dilution column type as time.
+        xlrd advertises support for format strings but not implemented.
+        So stuff it.
+        """
+        if isinstance(val, float):
+            return u"1:10"  # yea, that"s how we roll...
+        return val
+
+    def fix_pcr(self, pcr):
+        """ Check pcr value """
+
+        val = pcr.encode('utf-8').strip()
+        if val not in ("P", "F", ""):
+            self.log_error("PCR value [{}] is neither F, P or " ", setting to X".format(val))
+            val = "X"
+        return val
+
     def _get_data(self, file_name):
         """ The data sets is relatively small, so make a in-memory copy to simplify some operations. """
 
         field_spec = [
-            ("sample_extraction_id", "Sample extraction ID", None),
-            ("sequencing_facility", "Sequencing facility", None),
+            ("bpa_id", "MM sample unique ID", lambda s: s.replace("/", ".")),
+            ("pcr_1_to_10", "1:10 PCR, P=pass, F=fail", self.fix_pcr),
+            ("pcr_1_to_100", "1:100 PCR, P=pass, F=fail", self.fix_pcr),
+            ("pcr_neat", "neat PCR, P=pass, F=fail", self.fix_pcr),
+            ("dilution", "Dilution used", self.fix_dilution),
+            ("amplicon", "Target", None),
+            ("analysis_software_version", "AnalysisSoftwareVersion", None),
         ]
 
         wrapper = ExcelWrapper(field_spec,
@@ -57,46 +78,30 @@ class Command(management_command.BPACommand):
 
         return wrapper.get_all()
 
-    def _get_facility_name_from_filename(self, filename):
-        """ If facility is not noted in spreadsheet, get it from the filename """
-
-        if filename is None:
-            self.log_warn("Filename not set")
-            return "UNKNOWN"
-
-        parts = filename.split('_')
-        if len(parts) >= 2:
-            return parts[2]  # the vendor should be at [2] Marine Microbes_metagenomics_AGRF_H32M7BCXX_metadata.xlsx
-        else:
-            self.log_warn("Filename {} mallformed".format(filename))
-            return "UNKNOWN"
-
-    def _get_facility(self, entry):
-        name = entry.sequencing_facility
-        if name is None:
-            name = self._get_facility_name_from_filename(entry.file_name)
-
-        name = name.strip()
-        if name == "":
-            name = "UNKNOWN"
-        facility, _ = Facility.objects.get_or_create(name=name)
-        return facility
-
     def _add_samples(self, data):
-        """ Add sequence files """
+        """ Add amplicon sequence files """
 
         for entry in data:
-            amplicon, _ = Metagenomic.objects.get_or_create(extraction_id=entry.sample_extraction_id,
-                                                            facility=self._get_facility(entry),
-                                                            metadata_filename=entry.file_name)
+            bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, "marine_microbes", "Marine Microbes")
 
-    def _ingest_metadata(self):
+            if bpa_id is None:
+                self.log_warn("Metadata file {} row {} warning {}".format(entry.file_name, entry.row, report))
+                continue
+
+            # create MM sample for the entry found in the xcell metadata spreadsheet
+            sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
+            for amplicon_file in AmpliconSequenceFile.objects.filter(sample=sample, amplicon=entry.amplicon):
+                amplicon_file.dilution = entry.dilution
+                amplicon_file.pcr_1_to_10 = entry.pcr_1_to_10
+                amplicon_file.save()
+
+    def _ingest_metadata(self, data_dir):
         def is_metadata(path):
             if path.isfile() and path.ext == ".xlsx":
                 return True
 
-        self.log_info("Ingesting Marine Microbes Metagenomic metadata from {0}".format(DATA_DIR))
-        for metadata_file in DATA_DIR.walk(filter=is_metadata):
+        self.log_info("Ingesting Marine Microbes Metagenomic metadata from {0}".format(data_dir))
+        for metadata_file in data_dir.walk(filter=is_metadata):
             self.log_info("Processing Marine Microbes  Metadata file {0}".format(metadata_file))
             samples = list(self._get_data(metadata_file))
             self._add_samples(samples)
@@ -121,6 +126,7 @@ class Command(management_command.BPACommand):
             AmpliconSequenceFile.objects.get_or_create(note="Ingested using management command",
                                                        sample=sample,
                                                        extraction=md5_line.md5data.get('extraction'),
+                                                       amplicon=md5_line.md5data.get('amplicon'),
                                                        vendor=md5_line.md5data.get('vendor'),
                                                        flow_cell=md5_line.md5data.get('flowcell'),
                                                        index=md5_line.md5data.get('index'),
@@ -129,15 +135,15 @@ class Command(management_command.BPACommand):
                                                        filename=md5_line.filename,
                                                        md5=md5_line.md5)
 
-    def _ingest_md5(self):
+    def _ingest_md5(self, data_dir):
         """ Ingest the md5 files """
 
         def is_md5file(path):
             if path.isfile() and path.ext == ".md5":
                 return True
 
-        self.log_info("Ingesting Marine Microbes md5 file information from {0}".format(DATA_DIR))
-        for md5_file in DATA_DIR.walk(filter=is_md5file):
+        self.log_info("Ingesting Marine Microbes md5 file information from {0}".format(data_dir))
+        for md5_file in data_dir.walk(filter=is_md5file):
             self.log_info("Processing Marine Microbes md5 file {0}".format(md5_file))
             data = parse_md5_file(filename_pattern, md5_file)
             self.add_md5(data)
@@ -146,7 +152,8 @@ class Command(management_command.BPACommand):
         from django.db import connection
 
         cursor = connection.cursor()
-        cursor.execute("TRUNCATE TABLE {} CASCADE".format(MetagenomicSequenceFile._meta.db_table))
+        cursor.execute("TRUNCATE TABLE {} CASCADE".format(AmpliconSequenceFile._meta.db_table))
+        # cursor.execute("TRUNCATE TABLE {} CASCADE".format(MMSample._meta.db_table))
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
@@ -162,12 +169,18 @@ class Command(management_command.BPACommand):
             self.log_info("Truncating MM Amplicon Files data")
             self.truncate()
 
-        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
-        fetcher.clean()
-        fetcher.fetch_metadata_from_folder()
+        for amplicon in ("a16s", "16s", "18s", "its"):
+            self.log_info("Ingesting amplicon {}".format(amplicon))
+            metadata_path = "marine_microbes/amplicons/{}".format(amplicon)
+            data_dir = Path(ingest_utils.METADATA_ROOT, metadata_path)
+            fetcher = Fetcher(data_dir, self.get_base_url(options) + metadata_path)
+            fetcher.clean()
+            fetcher.fetch_metadata_from_folder()
 
-        # find all the spreadsheets in the data directory and ingest them
-        # self._ingest_metadata() # TODO
+            # find all the md5 files in the data directory and make MM samples
+            # as well as the amplicon sequence file's associated with them
+            self._ingest_md5(data_dir)
 
-        # find all the md5 files in the data directory and make amplicon sequence file objects
-        self._ingest_md5()
+            # find all the spreadsheets in the data directory and update the
+            # amplicon files with the extra metadata
+            self._ingest_metadata(data_dir)
