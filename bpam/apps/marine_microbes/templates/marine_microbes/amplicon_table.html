@@ -11,9 +11,7 @@
             <tr>
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
-                <th>Sample Extraction ID</th>
                 <th class="filter-select filter-exact" amplicon-placeholder="Facility">Facility</th>
-                <th>Run Number</th>
                 <th class="filter-select filter-exact" amplicon-placeholder="Amplicon">Amplicon</th>
                 <th>Index</th>
                 <th>PCR 1:10</th>
@@ -28,9 +26,7 @@
             <tr>
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
-                <th>Sample Extraction ID</th>
                 <th>Facility</th>
-                <th>Run Number</th>
                 <th>Amplicon</th>
                 <th>Index</th>
                 <th>PCR 1:10</th>
@@ -48,9 +44,7 @@
                     <a href="{% url 'marine_microbes:sample' amplicon.sample.bpa_id %}">{{ amplicon.sample.bpa_id }}</a>
                 </td>
                 <td>{{ amplicon.sample.bpa_id.sra_id |default:"" }}</td>
-                <td>{{ amplicon.sample_extraction_id }}</td>
                 <td>{{ amplicon.vendor }}</td>
-                <td>{{ amplicon.sequencing_run_number |default:"" }}</td>
                 <td>{{ amplicon.amplicon }}</td>
                 <td>{{ amplicon.index }}</td>
                 <td>
@@ -74,9 +68,9 @@
                     <span class="glyphicon glyphicon-remove"></span>
                     {% endif %}
                 </td>
-                <td>{{ amplicon.dilution }}</td>
-                <td>{{ amplicon.analysis_software_version }}</td>
-                <td>{{ amplicon.reads }}</td>
+                <td>{{ amplicon.dilution|default:"" }}</td>
+                <td>{{ amplicon.analysis_software_version|default:"" }}</td>
+                <td>{{ amplicon.number_of_reads|default:"" }}</td>
             </tr>
             {% endfor %}
         </tbody>

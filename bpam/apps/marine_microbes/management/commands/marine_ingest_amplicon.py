@@ -12,9 +12,7 @@ from libs import bpa_id_utils
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 from libs.parse_md5 import parse_md5_file
-from apps.common.models import Facility
 
-from ...models import Metagenomic
 from ...models import MMSample
 from ...models import AmpliconSequenceFile
 
@@ -65,6 +63,7 @@ class Command(management_command.BPACommand):
             ("pcr_neat", "neat PCR, P=pass, F=fail", self.fix_pcr),
             ("dilution", "Dilution used", self.fix_dilution),
             ("amplicon", "Target", None),
+            ("number_of_reads", "# of reads", None),
             ("analysis_software_version", "AnalysisSoftwareVersion", None),
         ]
 
@@ -93,6 +92,10 @@ class Command(management_command.BPACommand):
             for amplicon_file in AmpliconSequenceFile.objects.filter(sample=sample, amplicon=entry.amplicon):
                 amplicon_file.dilution = entry.dilution
                 amplicon_file.pcr_1_to_10 = entry.pcr_1_to_10
+                amplicon_file.pcr_1_to_100 = entry.pcr_1_to_100
+                amplicon_file.pcr_neat = entry.pcr_neat
+                amplicon_file.analysis_software_version = entry.analysis_software_version
+                amplicon_file.number_of_reads = entry.number_of_reads
                 amplicon_file.save()
 
     def _ingest_metadata(self, data_dir):

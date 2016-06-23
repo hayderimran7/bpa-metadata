@@ -70,6 +70,7 @@ class AmpliconSequenceFile(SequenceFile):
     pcr_neat = models.CharField('Neat PCR', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
     dilution = models.CharField('Dilution Used', max_length=5, blank=True, null=True, choices=DILUTIONS)
 
+    number_of_reads = models.IntegerField("Number of Reads", blank=True, null=True)
     analysis_software_version = models.CharField('Analysis Software Version', max_length=100, blank=True, null=True)
 
     def passed_pcr_1_to_10(self):
@@ -83,6 +84,9 @@ class AmpliconSequenceFile(SequenceFile):
 
     def __unicode__(self):
         return u"{0}:{1}".format(self.bpa_id, self.amplicon)
+
+    def get_path_parts(self):
+        return ('marine_microbes', 'amplicons/{}'.format(self.amplicon).lower())
 
     class Meta:
         verbose_name_plural = "Amplicon Sequencing Metadata"
