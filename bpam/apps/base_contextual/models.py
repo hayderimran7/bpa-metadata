@@ -11,9 +11,7 @@ from apps.base_vocabulary.models import LandUse, HorizonClassification, GeneralE
 
 
 class CollectionSite(DebugNote):
-    """
-    Collection Site Information
-    """
+    """ Collection Site Information """
 
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
@@ -27,7 +25,8 @@ class CollectionSite(DebugNote):
     # controlled vocabularies
     current_land_use = models.ForeignKey(LandUse, related_name='current', null=True, verbose_name=_('Current Land Use'))
     broad_land_use = models.ForeignKey(LandUse, related_name='broad', null=True, verbose_name=_('Broad Land Use'))
-    general_ecological_zone = models.ForeignKey(GeneralEcologicalZone, null=True,
+    general_ecological_zone = models.ForeignKey(GeneralEcologicalZone,
+                                                null=True,
                                                 verbose_name=_('General Ecological Zone'))
     vegetation_type = models.ForeignKey(BroadVegetationType, null=True, verbose_name=_('Vegetation Type'))
     soil_type_australian_classification = models.ForeignKey(AustralianSoilClassification,
@@ -37,18 +36,20 @@ class CollectionSite(DebugNote):
                                                      verbose_name=_('FAO Soil Type Classification'),
                                                      null=True)
 
-    vegetation_total_cover = models.CharField(_('Vegetation Total Cover'), max_length=200,
-                                              blank=True)  # free text in column
+    vegetation_total_cover = models.CharField(
+        _('Vegetation Total Cover'), max_length=200, blank=True)  # free text in column
     vegetation_dominant_trees = models.CharField(_('Vegetation Dominant Trees'), max_length=1000, blank=True)
 
     slope = models.CharField(max_length=20, blank=True)
-    slope_aspect = models.CharField(_('Slope Aspect'),
-                                    max_length=100,
-                                    blank=True,
-                                    help_text=_(u'Direction or degrees; e.g., NW or 315°'))
+    slope_aspect = models.CharField(
+        _('Slope Aspect'),
+        max_length=100,
+        blank=True,
+        help_text=_(u'Direction or degrees; e.g., NW or 315°'))
 
     profile_position = models.ForeignKey(ProfilePosition, verbose_name=_('Profile Position'), null=True)
-    drainage_classification = models.ForeignKey(DrainageClassification, verbose_name=_('Drainage Classification'),
+    drainage_classification = models.ForeignKey(DrainageClassification,
+                                                verbose_name=_('Drainage Classification'),
                                                 null=True)
 
     # some history for this site
@@ -57,7 +58,9 @@ class CollectionSite(DebugNote):
     fire_history = models.CharField(_('Fire History'), max_length=500, blank=True)
     fire_intensity = models.CharField(_('Fire Intensity'), max_length=500, blank=True)
     # land use
-    date_since_change_in_land_use = models.CharField(_('Date Since Land Use Change'), max_length=100, blank=True, null=True)
+    date_since_change_in_land_use = models.CharField(
+        _('Date Since Land Use Change'), max_length=100,
+        blank=True, null=True)
     immediate_previous_land_use = models.ForeignKey(LandUse, related_name='previous', blank=True, null=True)
 
     crop_rotation_1 = models.TextField(_('Crop rotation 1 year ago'), blank=True, null=True)
@@ -85,14 +88,17 @@ class CollectionSite(DebugNote):
         return Point(self.lon, self.lat, srid=4326)
 
     def __unicode__(self):
-        return u','.join(str(s) for s in (self.location_name, self.lat, self.lon,) if s)
+        return u','.join(str(s) for s in (self.location_name,
+                                          self.lat,
+                                          self.lon, ) if s)
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in CollectionSite._meta.fields]
 
     class Meta:
         verbose_name_plural = _("Collection Sites")
-        unique_together = ('lat', 'lon',)
+        unique_together = ('lat',
+                           'lon', )
 
 
 class ChemicalAnalysis(models.Model):
@@ -181,11 +187,7 @@ class SampleContext(DebugNote):
         return u",".join(desc)
 
     def __unicode__(self):
-        return u"{0} {1}".format(
-            self.bpa_id,
-            self.horizon_classification1,
-            self.horizon_classification2,
-            self.depth)
+        return u"{0} {1}".format(self.bpa_id, self.horizon_classification1, self.horizon_classification2, self.depth)
 
     def get_fields(self):
         return [(field.name, field.value_to_string(self)) for field in SampleContext._meta.fields]
