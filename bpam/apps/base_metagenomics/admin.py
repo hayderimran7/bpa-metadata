@@ -3,12 +3,9 @@ from django import forms
 from suit.widgets import LinkedSelect, AutosizedTextarea, SuitDateWidget
 
 from apps.common.admin import SequenceFileAdmin
-from models import (
-    MetagenomicsSequenceFile,
-    MetagenomicsSample,
-    MetagenomicsRun,
-)
-
+from models import (MetagenomicsSequenceFile,
+                    MetagenomicsSample,
+                    MetagenomicsRun, )
 
 admin.site.register(MetagenomicsSequenceFile, SequenceFileAdmin)
 
@@ -30,19 +27,15 @@ class SampleAdmin(admin.ModelAdmin):
             fields = "__all__"
             model = MetagenomicsSample
             widgets = {
-                'bpa_id': LinkedSelect(
-                    attrs={'class': 'input-medium',
-                           'style': 'width:50%'}),
-                'name': forms.TextInput(
-                    attrs={'class': 'input-medium',
-                           'style': 'width:50%'}),
+                'bpa_id': LinkedSelect(attrs={'class': 'input-medium',
+                                              'style': 'width:50%'}),
+                'name': forms.TextInput(attrs={'class': 'input-medium',
+                                               'style': 'width:50%'}),
                 'sequencing_facility': LinkedSelect,
-                'note': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
-                'debug_note': AutosizedTextarea(
-                    attrs={'class': 'input-large',
-                           'style': 'width:95%'}),
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                       'style': 'width:95%'}),
                 'date_sent_to_sequencing_facility': SuitDateWidget
             }
 
@@ -58,34 +51,28 @@ class SampleAdmin(admin.ModelAdmin):
 
     inlines = (SequenceFileInline, )
 
-    suit_form_tabs = (
-        ('id', 'Sample ID and Sequence Files'),
-        ('management', 'Management'),
-        ('contacts', 'Contacts'),
-        ('notes', 'Notes')
-    )
+    suit_form_tabs = (('id', 'Sample ID and Sequence Files'), ('management', 'Management'), ('contacts', 'Contacts'),
+                      ('notes', 'Notes'))
 
     fieldsets = [
         (None,  # 'Sample Identification',
-         {'classes': ('suit-tab suit-tab-id',),
+         {'classes': ('suit-tab suit-tab-id', ),
           'description': 'Sample Identification Detail',
           'fields': ('bpa_id',
-                     'name',)}),
+                     'name', )}),
         (None,  # 'Sample Management',
-         {'classes': ('suit-tab suit-tab-management',),
+         {'classes': ('suit-tab suit-tab-management', ),
           'description': 'Sample Management Detail',
-          'fields': (
-              'requested_sequence_coverage',
-              'date_sent_to_sequencing_facility', )}),
+          'fields': ('requested_sequence_coverage',
+                     'date_sent_to_sequencing_facility', )}),
         (None,  # 'Contacts',
-         {'classes': ('suit-tab suit-tab-contacts',),
+         {'classes': ('suit-tab suit-tab-contacts', ),
           'description': 'Contacts associated with this sample',
-          'fields': ('contact_scientist',)}),
+          'fields': ('contact_scientist', )}),
         (None,  # 'Notes',
-         {'classes': ('suit-tab suit-tab-notes',),
+         {'classes': ('suit-tab suit-tab-notes', ),
           'description': 'Motes',
-          'fields': ('note',
-                     'debug_note')}),
+          'fields': ('note', 'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
@@ -111,17 +98,18 @@ class MetagenomicsRunAdmin(admin.ModelAdmin):
 
     form = RunForm
     fieldsets = [
-        ('Sample',
-         {'fields': ('sample',)}),
+        ('Sample', {'fields': ('sample', )}),
         ('Sequencing Facilities',
          {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
-        ('Sequencing',
-         {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
+        ('Sequencing', {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
 
-    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
+    list_display = ('sample',
+                    'sequencer',
+                    'flow_cell_id',
+                    'run_number', )
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility',)
+    list_filter = ('sequencing_facility', )
 
 
 admin.site.register(MetagenomicsRun, MetagenomicsRunAdmin)

@@ -13,32 +13,20 @@ router.register(r"genomic_pacbio_files", views.GenomicsPacBioFileViewSet)
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
-    url(
-        regex=r'^$',
-        view=views.SepsisView.as_view(),
-        name='index'),
-    url(
-        regex=r'^contacts$',
-        view=views.ContactsView.as_view(),
+    url(regex=r'^$', view=views.SepsisView.as_view(), name='index'),
+    url(regex=r'^contacts$', view=views.ContactsView.as_view(),
         name='contacts'),
-    url(
-        regex=r'^samples',
-        view=views.SampleListView.as_view(),
+    url(regex=r'^samples', view=views.SampleListView.as_view(),
         name='samples'),
-    url(
-        regex=r'^sample/(?P<pk>.*)/$',
+    url(regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
         name='sample'),
-    url(
-        regex=r'^genomicsmiseqfiles',
+    url(regex=r'^genomicsmiseqfiles',
         view=views.GenomicsMiseqFileListView.as_view(),
         name='genomics_miseq_files'),
-    url(
-        regex=r'^genomicspacbiofiles',
+    url(regex=r'^genomicspacbiofiles',
         view=views.GenomicsPacBioFileListView.as_view(),
         name='genomics_pacbio_files'),
-    url(
-        regex=r'^consortium$',
-        view=views.ConsortiumView.as_view(),
+    url(regex=r'^consortium$', view=views.ConsortiumView.as_view(),
         name='consortium'),
 ]

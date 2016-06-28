@@ -12,9 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='sampletrack',
-            name='bpa_id',
-            field=models.OneToOneField(null=True, to='common.BPAUniqueID', help_text=b'Bioplatforms Australia Sample ID', verbose_name=b'BPA ID'),
-        ),
+        migrations.AddField(model_name='sampletrack',
+                            name='bpa_id',
+                            field=models.OneToOneField(null=True,
+                                                       to='common.BPAUniqueID',
+                                                       help_text=b'Bioplatforms Australia Sample ID',
+                                                       verbose_name=b'BPA ID'), ),
     ]

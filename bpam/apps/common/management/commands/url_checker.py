@@ -94,7 +94,8 @@ def check_wheat_pathogens_transcript(sleep_time):
     logger.info('Checking Wheat Pathogens Transcript')
     session = requests.Session()
     try:
-        process_object(sleep_time, session, WheatPathogenTranscriptSequenceFile, 'url_verification', lambda obj: obj.get_url())
+        process_object(sleep_time, session, WheatPathogenTranscriptSequenceFile, 'url_verification',
+                       lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError as e:
         logger.error(e)
 

@@ -64,44 +64,29 @@ class BASESearchForm(forms.Form):
         ("exc_sodium", "Exc. Sodium (meq/100g)"),
         ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
         ("total_nitrogen", "Total Nitrogen"),
-        ("total_carbon", "Total Carbon")], required=False)
+        ("total_carbon", "Total Carbon")
+    ],
+                                     required=False)
 
     search_value = forms.CharField(max_length=100, required=False)
 
     search_range = forms.ChoiceField(choices=[
-        ("", "----"),
-        ("lat", "Latitude"),
-        ("lon", "Longitude"),
-        ("depth", "Soil Depth"),
-        ("elevation", "Elevation (m)"),
-        ("texture", "Texture"),
-        ("gravel", "Gravel (%) - ( >2.0 mm)"),
-        ("course_sand", "Course Sand (%) (200-2000 µm)"),
-        ("fine_sand", "Fine Sand (%) - (20-200 µm)"),
-        ("sand", "Sand (%)"),
-        ("silt", "Silt (%) (2-20 µm)"),
-        ("clay", "Clay (%) (<2 µm)"),
-        ("ammonium_nitrogen", "Ammonium Nitrogen (mg/Kg)"),
-        ("nitrate_nitrogen", "Nitrate Nitrogen (mg/Kg)"),
-        ("phosphorus_colwell", "Phosphorus Colwell (mg/Kg)"),
-        ("potassium_colwell", "Potassium Colwell (mg/Kg)"),
-        ("sulphur_colwell", "Sulphur (mg/Kg)"),
-        ("organic_carbon", "Organic Carbon (%)"),
-        ("conductivity", "Conductivity (dS/m)"),
-        ("cacl2_ph", "pH Level (CaCl2) (pH)"),
-        ("h20_ph", "pH Level (H2O) (pH)"),
-        ("dtpa_copper", "DTPA Copper (mg/Kg)"),
-        ("dtpa_iron", "DTPA Iron (mg/Kg)"),
-        ("dtpa_manganese", "DTPA Manganese (mg/Kg)"),
-        ("dtpa_zinc", "DTPA Zinc (mg/Kg)"),
-        ("exc_aluminium", "Exc. Aluminium (meq/100g)"),
-        ("exc_calcium", "Exc. Calcium (meq/100g)"),
-        ("exc_magnesium", "Exc. Magnesium (meq/100g)"),
-        ("exc_potassium", "Exc. Potassium (meq/100g)"),
-        ("exc_sodium", "Exc. Sodium (meq/100g)"),
-        ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
-        ("total_nitrogen", "Total Nitrogen"),
-        ("total_carbon", "Total Carbon")], required=False)
+        ("", "----"), ("lat", "Latitude"), ("lon", "Longitude"), ("depth", "Soil Depth"),
+        ("elevation", "Elevation (m)"), ("texture", "Texture"), ("gravel", "Gravel (%) - ( >2.0 mm)"),
+        ("course_sand", "Course Sand (%) (200-2000 µm)"), ("fine_sand", "Fine Sand (%) - (20-200 µm)"),
+        ("sand", "Sand (%)"), ("silt", "Silt (%) (2-20 µm)"), ("clay", "Clay (%) (<2 µm)"),
+        ("ammonium_nitrogen", "Ammonium Nitrogen (mg/Kg)"), ("nitrate_nitrogen", "Nitrate Nitrogen (mg/Kg)"),
+        ("phosphorus_colwell", "Phosphorus Colwell (mg/Kg)"), ("potassium_colwell", "Potassium Colwell (mg/Kg)"),
+        ("sulphur_colwell", "Sulphur (mg/Kg)"), ("organic_carbon", "Organic Carbon (%)"),
+        ("conductivity", "Conductivity (dS/m)"), ("cacl2_ph", "pH Level (CaCl2) (pH)"),
+        ("h20_ph", "pH Level (H2O) (pH)"), ("dtpa_copper", "DTPA Copper (mg/Kg)"), ("dtpa_iron", "DTPA Iron (mg/Kg)"),
+        ("dtpa_manganese", "DTPA Manganese (mg/Kg)"), ("dtpa_zinc", "DTPA Zinc (mg/Kg)"),
+        ("exc_aluminium", "Exc. Aluminium (meq/100g)"), ("exc_calcium", "Exc. Calcium (meq/100g)"),
+        ("exc_magnesium", "Exc. Magnesium (meq/100g)"), ("exc_potassium", "Exc. Potassium (meq/100g)"),
+        ("exc_sodium", "Exc. Sodium (meq/100g)"), ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
+        ("total_nitrogen", "Total Nitrogen"), ("total_carbon", "Total Carbon")
+    ],
+                                     required=False)
 
     search_range_min = forms.DecimalField(required=False)
     search_range_max = forms.DecimalField(required=False)
@@ -137,8 +122,8 @@ class BASESearchForm(forms.Form):
                 raise forms.ValidationError("Enter both a min and max for range search")
 
     def _check_type(self, field, value):
-        non_numeric = [pair[0] for pair in
-                       set(self.fields["search_field"].choices) - set(self.fields["search_range"].choices)]
+        non_numeric = [pair[0]
+                       for pair in set(self.fields["search_field"].choices) - set(self.fields["search_range"].choices)]
         non_numeric.remove("moisture")
         non_numeric.remove("date_sampled")
 
@@ -174,12 +159,11 @@ class RequestAccessForm(forms.Form):
     from_email = forms.EmailField(label="Your email address", required=True)
     name = forms.CharField(label="Your name", required=True)
     affiliation = forms.CharField(label="Affiliation", required=True)
-    message = forms.CharField(
-        label="Request to Bioplatforms Australia",
-        initial="Please provide a brief outline of interest in the BASE project sequence data",
-        widget=forms.Textarea,
-        required=True,
-        max_length=1000)
+    message = forms.CharField(label="Request to Bioplatforms Australia",
+                              initial="Please provide a brief outline of interest in the BASE project sequence data",
+                              widget=forms.Textarea,
+                              required=True,
+                              max_length=1000)
 
     def __init__(self, *args, **kwargs):
         super(RequestAccessForm, self).__init__(*args, **kwargs)

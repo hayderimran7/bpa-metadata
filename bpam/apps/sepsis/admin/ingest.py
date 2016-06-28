@@ -55,6 +55,5 @@ def get_bpa_id(bpaid):
 
     bpaid = bpaid.replace("/", ".")
     project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid,
-                                                  project=project)
+    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
     return bpa_id

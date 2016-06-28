@@ -7,6 +7,7 @@ import logger_utils
 logger = logger_utils.get_logger(__name__)
 BPA_PREFIX = "102.100.100."
 
+
 class MD5ParsedLine(object):
     def __init__(self, pattern, line):
         self.pattern = pattern
@@ -45,6 +46,7 @@ def parse_md5_file(pattern, md5_file):
             if parsed_line.is_ok():
                 data.append(parsed_line)
     return data
+
 
 def get_base_metagenomics_data(md5_file):
     """

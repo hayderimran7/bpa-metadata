@@ -37,6 +37,7 @@ from commonfields import DateField, BPAIDField
 # Isolation_source
 # Host_description
 
+
 class SepsisSampleField(fields.Field):
     def __init__(self, *args, **kwargs):
         super(SepsisSampleField, self).__init__(*args, **kwargs)
@@ -45,8 +46,7 @@ class SepsisSampleField(fields.Field):
         bpaid = data[self.column_name]
         bpaid = bpaid.replace("/", ".")
         project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid,
-                                                      project=project)
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
         return sample
 
@@ -55,28 +55,19 @@ class SepsisSampleResource(resources.ModelResource):
     """Import Export Resource mappings"""
 
     bpa_id = BPAIDField(attribute="bpa_id", column_name="BPA ID")
-    taxon_or_organism = fields.Field(attribute="taxon_or_organism",
-                                     column_name="Taxon_OR_organism")
-    strain_or_isolate = fields.Field(attribute="strain_or_isolate",
-                                     column_name="Strain_OR_isolate")
+    taxon_or_organism = fields.Field(attribute="taxon_or_organism", column_name="Taxon_OR_organism")
+    strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
     serovar = fields.Field(attribute="serovar", column_name="Serovar")
-    key_virulence_genes = fields.Field(attribute="key_virulence_genes",
-                                       column_name="Key_virulence_genes")
-    strain_description = fields.Field(attribute="strain_description",
-                                      column_name="Strain_description")
-    isolation_source = fields.Field(attribute="isolation_source",
-                                    column_name="Isolation_source")
-    publication_reference = fields.Field(attribute="publication_reference",
-                                         column_name="Publication_reference")
-    contact_researcher = fields.Field(attribute="contact_researcher",
-                                      column_name="Contact_researcher")
-    culture_collection_id = fields.Field(
-        attribute="culture_collection_id",
-        column_name="Culture_collection_ID (alternative name[s])")
-    culture_collection_date = DateField(
-        widget=widgets.DateWidget(format="%d/%m/%y"),
-        attribute="culture_collection_date",
-        column_name="Culture_collection_date (DD/MM/YY)", )
+    key_virulence_genes = fields.Field(attribute="key_virulence_genes", column_name="Key_virulence_genes")
+    strain_description = fields.Field(attribute="strain_description", column_name="Strain_description")
+    isolation_source = fields.Field(attribute="isolation_source", column_name="Isolation_source")
+    publication_reference = fields.Field(attribute="publication_reference", column_name="Publication_reference")
+    contact_researcher = fields.Field(attribute="contact_researcher", column_name="Contact_researcher")
+    culture_collection_id = fields.Field(attribute="culture_collection_id",
+                                         column_name="Culture_collection_ID (alternative name[s])")
+    culture_collection_date = DateField(widget=widgets.DateWidget(format="%d/%m/%y"),
+                                        attribute="culture_collection_date",
+                                        column_name="Culture_collection_date (DD/MM/YY)", )
 
     # TODO
     # growth_condition_time =

@@ -73,7 +73,8 @@ class AbstractSearchableListView(ListView, FormMixin):
         allow_empty = self.get_allow_empty()
         self.context_object_name = self.get_search_items_name()
         if not allow_empty and len(self.object_list) == 0:
-            raise Http404("Empty list and '{class_name}.allow_empty' is False.".format(class_name=self.__class__.__name__))
+            raise Http404("Empty list and '{class_name}.allow_empty' is False.".format(
+                class_name=self.__class__.__name__))
 
         context = self.get_context_data(object_list=self.object_list, search_form=self.form)
         return self.render_to_response(context)
@@ -322,9 +323,7 @@ class StandardisedVocabularyLookUpView(View):
         return response
 
     def _get_code_field(self, model, field):
-        exceptions_table = {
-            "SoilColour": "code",
-        }
+        exceptions_table = {"SoilColour": "code", }
         return exceptions_table.get(model.__name__, field)
 
     def _get_standardised_vocab(self, search_field):
@@ -356,8 +355,8 @@ class TaxonomyLookUpView(View):
                 next_lower_level_index = levels.index(level) + 1
                 next_lower_level = levels[next_lower_level_index]
 
-                otus = OperationalTaxonomicUnit.objects.filter(**filter_expression).order_by(
-                    next_lower_level).distinct()
+                otus = OperationalTaxonomicUnit.objects.filter(**
+                                                               filter_expression).order_by(next_lower_level).distinct()
                 next_lower_level_values = set([getattr(otu, next_lower_level) for otu in otus])
                 options = [{"value": x, "text": x} for x in next_lower_level_values if x != ""]
         json.dump(options, response)
@@ -432,11 +431,8 @@ class SearchExportView(View):
                                    genus=genus,
                                    species=species)
 
-        otu_bacteria_data, otu_eukaryotes_data, otu_fungi_data, otu_archea_data = otu_exporter.export(ids,
-                                                                                                      otu_bacteria_csv,
-                                                                                                      otu_eukaryotes_csv,
-                                                                                                      otu_fungi_csv,
-                                                                                                      otu_archea_csv)
+        otu_bacteria_data, otu_eukaryotes_data, otu_fungi_data, otu_archea_data = otu_exporter.export(
+            ids, otu_bacteria_csv, otu_eukaryotes_csv, otu_fungi_csv, otu_archea_csv)
 
         if otu_bacteria_data:
             zf.writestr('bacteria.csv', otu_bacteria_data.read())

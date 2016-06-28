@@ -1,19 +1,9 @@
 from rest_framework import generics
 from django.views.generic import TemplateView
 
-from .models import (
-    LandUse,
-    SoilTexture,
-    SoilColour,
-    GeneralEcologicalZone,
-    BroadVegetationType,
-    TillageType,
-    HorizonClassification,
-    AustralianSoilClassification,
-    FAOSoilClassification,
-    DrainageClassification,
-    ProfilePosition
-)
+from .models import (LandUse, SoilTexture, SoilColour, GeneralEcologicalZone, BroadVegetationType, TillageType,
+                     HorizonClassification, AustralianSoilClassification, FAOSoilClassification, DrainageClassification,
+                     ProfilePosition)
 
 import serializers
 

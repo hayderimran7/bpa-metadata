@@ -1,18 +1,8 @@
 from rest_framework import serializers
 
-from .models import (
-    LandUse,
-    SoilTexture,
-    SoilColour,
-    GeneralEcologicalZone,
-    BroadVegetationType,
-    TillageType,
-    HorizonClassification,
-    AustralianSoilClassification,
-    FAOSoilClassification,
-    DrainageClassification,
-    ProfilePosition
-)
+from .models import (LandUse, SoilTexture, SoilColour, GeneralEcologicalZone, BroadVegetationType, TillageType,
+                     HorizonClassification, AustralianSoilClassification, FAOSoilClassification, DrainageClassification,
+                     ProfilePosition)
 
 
 class LandUseSerializer(serializers.ModelSerializer):
@@ -78,4 +68,4 @@ class DrainageClassificationSerializer(serializers.HyperlinkedModelSerializer):
 class ProfilePositionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProfilePosition
-        fields = ('position',)
+        fields = ('position', )

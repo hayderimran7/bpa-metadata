@@ -80,20 +80,12 @@ class SexWidget(object):
 class HostResource(resources.ModelResource):
     """Maps contextual file to host """
 
-    strain_or_isolate = fields.Field(attribute="strain_or_isolate",
-                                     column_name="Strain_OR_isolate")
-    description = fields.Field(attribute="description",
-                               column_name="Host_description")
-    location = fields.Field(attribute="location",
-                            column_name="Host_location (state, country)")
-    sex = fields.Field(attribute="sex",
-                       column_name="Host_sex (F/M)",
-                       widget=SexWidget())
-    age = fields.Field(attribute="age",
-                       column_name="Host_age",
-                       widget=widgets.IntegerWidget())
-    disease_outcome = fields.Field(attribute="disease_outcome",
-                                   column_name="Host_disease_outcome")
+    strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
+    description = fields.Field(attribute="description", column_name="Host_description")
+    location = fields.Field(attribute="location", column_name="Host_location (state, country)")
+    sex = fields.Field(attribute="sex", column_name="Host_sex (F/M)", widget=SexWidget())
+    age = fields.Field(attribute="age", column_name="Host_age", widget=widgets.IntegerWidget())
+    disease_outcome = fields.Field(attribute="disease_outcome", column_name="Host_disease_outcome")
     dob = DateField(widget=widgets.DateWidget(format="%d/%m/%y"),
                     attribute="dob",
                     column_name="Host_DOB (DD/MM/YY)", )
@@ -116,6 +108,7 @@ class HostAdmin(ImportExportModelAdmin):
     list_filter = ("location",
                    "description",
                    "sex", )
+
 
 admin.site.register(Host, HostAdmin)
 admin.site.register(SampleTrack, TrackAdmin)

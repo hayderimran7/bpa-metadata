@@ -3,18 +3,12 @@
 import os
 from django.core.management.base import BaseCommand, CommandError
 from apps.common.models import DNASource, Sequencer, Facility
-from apps.wheat_pathogens.models import (
-    Organism,
-    PathogenSample,
-    PathogenProtocol,
-    PathogenRun,
-    PathogenSequenceFile)
+from apps.wheat_pathogens.models import (Organism, PathogenSample, PathogenProtocol, PathogenRun, PathogenSequenceFile)
 from libs import ingest_utils, user_helper, bpa_id_utils
 from libs.logger_utils import get_logger
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 from unipath import Path
-
 
 logger = get_logger(__name__)
 
@@ -31,7 +25,8 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, "WHEAT_PATHOGEN", "Wheat Pathogens")
     if bpa_id is None:
-        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row, report))
+        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -99,10 +94,7 @@ def ingest_samples(samples):
         pathogen_sample.library_id = e.library_id
 
         # scientist
-        pathogen_sample.contact_scientist = user_helper.get_user(
-            e.contact_scientist,
-            "",
-            (DESCRIPTION, ""))
+        pathogen_sample.contact_scientist = user_helper.get_user(e.contact_scientist, "", (DESCRIPTION, ""))
 
         # collection
         pathogen_sample.collection_date = ingest_utils.get_date(e.collection_date)
@@ -171,11 +163,10 @@ def ingest_runs(sample_data):
             logger.error("Pathogen sample with BPA ID {0} does not exist".format(bpa_id))
             return
 
-        pathogen_run, created = PathogenRun.objects.get_or_create(
-            flow_cell_id=flow_cell_id,
-            run_number=run_number,
-            sample=pathogen_sample,
-            sequencer=get_sequencer(entry.sequencer))
+        pathogen_run, created = PathogenRun.objects.get_or_create(flow_cell_id=flow_cell_id,
+                                                                  run_number=run_number,
+                                                                  sample=pathogen_sample,
+                                                                  sequencer=get_sequencer(entry.sequencer))
 
         # always update
         pathogen_run.flow_cell_id = flow_cell_id
@@ -267,15 +258,9 @@ def get_pathogen_sample_data(file_name):
                   ("genbank_project", "GenBank Project", None),
                   ("locus_tag", "Locus tag", None),
                   ("genome_analysis", "Genome-Analysis", None),
-                  ("metdata_file", "Metadata file", None)
-                  ]
+                  ("metdata_file", "Metadata file", None)]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name="Metadata",
-        header_length=1,
-        column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name="Metadata", header_length=1, column_name_row_index=0)
     return wrapper.get_all()
 
 

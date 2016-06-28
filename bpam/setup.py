@@ -2,6 +2,7 @@ import os.path
 
 from setuptools import setup, find_packages
 
+
 def get_data_files():
     """
     Dictionary of data files
@@ -22,15 +23,13 @@ packages = [p.replace(".", "/") for p in sorted(find_packages())]
 package_scripts = ["manage.py"]
 package_data = get_data_files()
 
-setup(
-    name='bpam',
-    version='4.0.7',
-    description="BPA Metadata Management",
-    author='Centre for Comparative Genomics',
-    author_email='web@ccg.murdoch.edu.au',
-    packages=packages,
-    package_data=package_data,
-    include_package_data=True,
-    zip_safe=False,
-    scripts=package_scripts,
-)
+setup(name='bpam',
+      version='4.0.7',
+      description="BPA Metadata Management",
+      author='Centre for Comparative Genomics',
+      author_email='web@ccg.murdoch.edu.au',
+      packages=packages,
+      package_data=package_data,
+      include_package_data=True,
+      zip_safe=False,
+      scripts=package_scripts, )

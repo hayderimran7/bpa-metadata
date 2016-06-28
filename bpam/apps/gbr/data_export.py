@@ -5,29 +5,27 @@ from .models import GBRSample
 from .models import GBRSequenceFile
 
 # samples
-sample_values = (
-    "bpa_id",
-    "name",
-    "dna_source__description",
-    "organism__genus",
-    "organism__species",
-    "dataset",
-    "dna_extraction_protocol",
-    "requested_read_length",
-    "sequencing_facility__name",
-    "collection_event__site__site_name",
-    "collection_event__site__lat",
-    "collection_event__site__lon",
-    "collection_event__collection_date",
-    "collection_event__water_temp",
-    "collection_event__water_ph",
-    "collection_event__depth",
-    "collection_event__note",
-    "sequencing_notes",
-    "collection_event__collector__first_name",
-    "collection_event__collector__last_name",
-    "collection_event__collector__email",
-)
+sample_values = ("bpa_id",
+                 "name",
+                 "dna_source__description",
+                 "organism__genus",
+                 "organism__species",
+                 "dataset",
+                 "dna_extraction_protocol",
+                 "requested_read_length",
+                 "sequencing_facility__name",
+                 "collection_event__site__site_name",
+                 "collection_event__site__lat",
+                 "collection_event__site__lon",
+                 "collection_event__collection_date",
+                 "collection_event__water_temp",
+                 "collection_event__water_ph",
+                 "collection_event__depth",
+                 "collection_event__note",
+                 "sequencing_notes",
+                 "collection_event__collector__first_name",
+                 "collection_event__collector__last_name",
+                 "collection_event__collector__email", )
 
 sample_headers = {
     "name": "Sample Name",
@@ -53,7 +51,6 @@ def get_samples(response):
     qs = GBRSample.objects.values(*sample_values)
     return djqscsv.render_to_csv_response(qs, field_header_map=sample_headers)
 
-
 # metagenomic sequence files
 sequence_file_headers = {
     "sample__organism__genus": "Genus",
@@ -65,17 +62,15 @@ sequence_file_headers = {
     "sample__name": "Sample Name",
 }
 
-sequence_file_values = (
-    "filename",
-    "md5",
-    "sample__organism__genus",
-    "sample__organism__species",
-    "sample__collection_event__site__site_name",
-    "sample__collection_event__site__lat",
-    "sample__collection_event__site__lon",
-    "sample__collection_event__collection_date",
-    "sample__name",
-)
+sequence_file_values = ("filename",
+                        "md5",
+                        "sample__organism__genus",
+                        "sample__organism__species",
+                        "sample__collection_event__site__site_name",
+                        "sample__collection_event__site__lat",
+                        "sample__collection_event__site__lon",
+                        "sample__collection_event__collection_date",
+                        "sample__name", )
 
 
 def get_sequencefiles(response):

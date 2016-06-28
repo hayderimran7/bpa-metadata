@@ -6,7 +6,6 @@ from datetime import date
 from apps.common.models import BPAUniqueID, BPAProject
 import logger_utils
 
-
 BPA_ID = "102.100.100"
 INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
 
@@ -56,11 +55,7 @@ def get_bpa_id(bpa_idx, project_key, project_name, add_prefix=False, note=INGEST
         return None, validator.valid_report
 
     project = get_project(project_key, project_name)
-    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx,
-                                                        defaults={
-                                                            'project': project,
-                                                            'note': note
-                                                        })
+    bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, defaults={'project': project, 'note': note})
     return bpa_id, "OK"
 
 

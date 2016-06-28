@@ -3,14 +3,7 @@ import string
 
 from django.test import TestCase
 from model_mommy import mommy
-from ..models import (
-    TumorStage,
-    Array,
-    MelanomaSample,
-    MelanomaRun,
-    MelanomaProtocol,
-    MelanomaSequenceFile
-)
+from ..models import (TumorStage, Array, MelanomaSample, MelanomaRun, MelanomaProtocol, MelanomaSequenceFile)
 
 
 def random_string(length=10):

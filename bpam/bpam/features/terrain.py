@@ -7,10 +7,8 @@ import steps
 def set_browser():
     desired_capabilities = webdriver.DesiredCapabilities.FIREFOX
 
-    world.browser = webdriver.Remote(
-        desired_capabilities=desired_capabilities,
-        command_executor="http://hub:4444/wd/hub"
-    )
+    world.browser = webdriver.Remote(desired_capabilities=desired_capabilities,
+                                     command_executor="http://hub:4444/wd/hub")
 
 
 @before.all

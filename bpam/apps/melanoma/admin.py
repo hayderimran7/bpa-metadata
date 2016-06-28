@@ -8,8 +8,7 @@ from models import (TumorStage,
                     MelanomaSample,
                     MelanomaRun,
                     MelanomaSequenceFile,
-                    MelanomaProtocol,
-                    )
+                    MelanomaProtocol, )
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -19,7 +18,8 @@ class SampleAdmin(admin.ModelAdmin):
             model = MelanomaSample
             widgets = {
                 'bpa_id': LinkedSelect(attrs={'class': 'input-medium'}),
-                'name': forms.TextInput(attrs={'class': 'input-medium', 'style': 'width:50%'}),
+                'name': forms.TextInput(attrs={'class': 'input-medium',
+                                               'style': 'width:50%'}),
                 'organism': LinkedSelect,
                 'dna_source': LinkedSelect,
                 'tumor_stage': LinkedSelect,
@@ -34,43 +34,28 @@ class SampleAdmin(admin.ModelAdmin):
     form = SampleForm
     radio_fields = {'gender': admin.HORIZONTAL}
 
-    suit_form_tabs = (
-        ('id', 'Sample ID and Sequence Files'),
-        ('dna', 'DNA Source'),
-        ('management', 'Sample Management',),
-        ('notes', 'Source Data Note')
-    )
+    suit_form_tabs = (('id', 'Sample ID and Sequence Files'), ('dna', 'DNA Source'), ('management',
+                                                                                      'Sample Management', ),
+                      ('notes', 'Source Data Note'))
 
     fieldsets = [
-        ('Sample Identification',
-         {'classes': ('suit-tab suit-tab-id',),
-          'fields': (
-              ('bpa_id',
-               'name'))}),
-        ('DNA Source',
-         {'classes': ('suit-tab suit-tab-dna',),
-          'fields': (
-              'organism',
-              'dna_source',
-              'dna_extraction_protocol',
-              'gender',
-              'tumor_stage',
-              'histological_subtype')}),
-        ('Sample Management',
-         {'classes': ('suit-tab suit-tab-management',),
-          'fields': (
-              'requested_sequence_coverage',
-              'date_sent_to_sequencing_facility',
-              'contact_scientist',
-              'note')}),
-        ('Source Data Note',
-         {'classes': ('suit-tab suit-tab-notes',),
-          'fields': ('debug_note',)}),
+        ('Sample Identification', {'classes': ('suit-tab suit-tab-id', ),
+                                   'fields': (('bpa_id', 'name'))}),
+        ('DNA Source', {'classes': ('suit-tab suit-tab-dna', ),
+                        'fields': ('organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage',
+                                   'histological_subtype')}),
+        ('Sample Management', {'classes': ('suit-tab suit-tab-management', ),
+                               'fields': ('requested_sequence_coverage', 'date_sent_to_sequencing_facility',
+                                          'contact_scientist', 'note')}),
+        ('Source Data Note', {'classes': ('suit-tab suit-tab-notes', ),
+                              'fields': ('debug_note', )}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')
     search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description')
-    list_filter = ('dna_source', 'gender', 'requested_sequence_coverage',)
+    list_filter = ('dna_source',
+                   'gender',
+                   'requested_sequence_coverage', )
 
 
 admin.site.register(MelanomaSample, SampleAdmin)
@@ -81,9 +66,7 @@ class ArrayAdmin(admin.ModelAdmin):
         class Meta:
             fields = "__all__"
             model = Array
-            widgets = {
-                'bpa_id': LinkedSelect
-            }
+            widgets = {'bpa_id': LinkedSelect}
 
     form = ArrayForm
     radio_fields = {'gender': admin.HORIZONTAL}
@@ -110,9 +93,12 @@ class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
     radio_fields = {'library_type': admin.HORIZONTAL}
     fields = ('library_type', 'base_pairs', 'library_construction_protocol', 'note')
-    search_fields = (
-        'library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id', 'run__sample__name')
-    list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
+    search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id',
+                     'run__sample__name')
+    list_display = ('run',
+                    'library_type',
+                    'base_pairs',
+                    'library_construction_protocol', )
     list_filter = ('library_type', 'base_pairs')
 
 
@@ -142,8 +128,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 
     form = RunForm
     fieldsets = [
-        ('Sample',
-         {'fields': ('sample',)}),
+        ('Sample', {'fields': ('sample', )}),
         ('Sequencing Facilities',
          {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
         ('Sequencing',
@@ -152,7 +137,7 @@ class MelanomaRunAdmin(admin.ModelAdmin):
 
     list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number', 'passage_number')
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
-    list_filter = ('sequencing_facility',)
+    list_filter = ('sequencing_facility', )
 
 
 admin.site.register(MelanomaRun, MelanomaRunAdmin)
@@ -163,12 +148,10 @@ class TumorStageAdmin(admin.ModelAdmin):
         class Meta:
             fields = "__all__"
             model = TumorStage
-            widgets = {
-                'note': AutosizedTextarea(attrs={'class': 'input-large',
-                                                 'style': 'width:95%'})
-            }
+            widgets = {'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})}
 
     form = Form
+
 
 admin.site.register(TumorStage, TumorStageAdmin)
 admin.site.register(MelanomaSequenceFile, SequenceFileAdmin)

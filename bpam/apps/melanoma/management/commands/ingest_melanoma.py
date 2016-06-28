@@ -4,17 +4,10 @@ from django.core.management.base import BaseCommand
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 from apps.common.models import DNASource, Facility, Sequencer
-from apps.melanoma.models import (
-    TumorStage,
-    MelanomaSample,
-    Organism,
-    MelanomaProtocol,
-    Array,
-    MelanomaRun,
-    MelanomaSequenceFile)
+from apps.melanoma.models import (TumorStage, MelanomaSample, Organism, MelanomaProtocol, Array, MelanomaRun,
+                                  MelanomaSequenceFile)
 from libs import ingest_utils, user_helper, bpa_id_utils, logger_utils
 from unipath import Path
-
 
 MELANOMA_SEQUENCER = "Illumina Hi Seq 2000"
 
@@ -32,7 +25,8 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, 'MELANOMA', 'Melanoma', 'ID Created by Melanoma Ingestor')
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -140,15 +134,13 @@ def ingest_arrays(arrays):
         bpa_id = _get_bpa_id(e)
         if bpa_id is None:
             return
-        Array.objects.get_or_create(
-            bpa_id=bpa_id,
-            batch_number=int(e.batch_no),
-            mia_id=e.mia_id,
-            array_id=e.array_id,
-            call_rate=float(e.call_rate),
-            gender=get_gender(e.gender),
-            well_id=e.well_id
-        )
+        Array.objects.get_or_create(bpa_id=bpa_id,
+                                    batch_number=int(e.batch_no),
+                                    mia_id=e.mia_id,
+                                    array_id=e.array_id,
+                                    call_rate=float(e.call_rate),
+                                    gender=get_gender(e.gender),
+                                    well_id=e.well_id)
 
 
 def strip_path(fname):
@@ -189,15 +181,13 @@ def get_melanoma_sample_data(file_name):
                   ('flow_cell_id', 'Run #:Flow Cell ID', None),
                   ('lane_number', 'Lane number', None),
                   ('sequence_filename', 'Sequence file names - supplied by sequencing facility', strip_path),
-                  ('md5_checksum', 'MD5 checksum', None),
-                  ]
+                  ('md5_checksum', 'MD5 checksum', None), ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name='Melanoma_study_metadata',
-        header_length=1,
-        column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec,
+                           file_name,
+                           sheet_name='Melanoma_study_metadata',
+                           header_length=1,
+                           column_name_row_index=0)
     return wrapper.get_all()
 
 
@@ -216,12 +206,7 @@ def get_array_data(file_name):
         ('gender', 'Gender', None),
     ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name='Array data',
-        header_length=1,
-        column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Array data', header_length=1, column_name_row_index=0)
     return wrapper.get_all()
 
 
@@ -349,7 +334,7 @@ def ingest(spreadsheet_file):
     ingest_samples(sample_data)
     ingest_arrays(list(get_array_data(spreadsheet_file)))
     ingest_runs(sample_data)
-    
+
 
 class Command(BaseCommand):
     help = 'Ingest Melanoma'

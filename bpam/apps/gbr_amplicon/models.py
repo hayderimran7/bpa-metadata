@@ -22,8 +22,9 @@ class AmpliconSequencingMetadata(DebugNote):
                                             blank=True,
                                             null=True)
 
-    target = models.CharField(_('Type'), max_length=4,
-                              choices=(('16S', '16S'), ('ITS', 'ITS'), ('18S', '18S'), ('A16S', 'A16S')))
+    target = models.CharField(
+        _('Type'), max_length=4,
+        choices=(('16S', '16S'), ('ITS', 'ITS'), ('18S', '18S'), ('A16S', 'A16S')))
 
     index = models.CharField(_('Index'), max_length=50, blank=True, null=True)
 
@@ -31,8 +32,12 @@ class AmpliconSequencingMetadata(DebugNote):
     pcr_1_to_10 = models.CharField(_('PCR 1:10'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
     pcr_1_to_100 = models.CharField(_('PCR 1:100'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
     pcr_neat = models.CharField(_('Neat PCR'), max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
-    dilution = models.CharField(_('Dilution Used'), max_length=5, blank=True, null=True,
-                                choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
+    dilution = models.CharField(
+        _('Dilution Used'),
+        max_length=5,
+        blank=True,
+        null=True,
+        choices=(('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat')))
     sequencing_run_number = models.CharField(_('Sequencing run number'), max_length=40, blank=True, null=True)
     flow_cell_id = models.CharField(_('Flow Cell ID'), max_length=5, blank=True, null=True)
     reads = models.IntegerField(_('Number of Reads'), blank=True, null=True)
@@ -55,7 +60,7 @@ class AmpliconSequencingMetadata(DebugNote):
 
     class Meta:
         verbose_name_plural = _('Amplicon Sequencing Metadata')
-        unique_together = (('bpa_id', 'target'),)
+        unique_together = (('bpa_id', 'target'), )
 
 
 class AmpliconSequenceFile(SequenceFile):

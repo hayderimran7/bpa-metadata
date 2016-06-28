@@ -3,15 +3,9 @@ from model_mommy import mommy
 
 from apps.base.search import Searcher
 
-from apps.base_otu.models import (
-    SampleOTU,
-    OperationalTaxonomicUnit)
+from apps.base_otu.models import (SampleOTU, OperationalTaxonomicUnit)
 
-from apps.base_contextual.models import (
-    BPAUniqueID,
-    CollectionSite,
-    ChemicalAnalysis,
-    SampleContext)
+from apps.base_contextual.models import (BPAUniqueID, CollectionSite, ChemicalAnalysis, SampleContext)
 
 from apps.base_metagenomics.models import MetagenomicsSample
 
@@ -61,8 +55,10 @@ class SearchTestCase(TestCase):
         bpa_id = getattr(self, bpa_id_name)
         setattr(self, "collection_site" + str(name), mommy.make(CollectionSite, elevation=elevation))
         site = getattr(self, "collection_site" + str(name))
-        setattr(self, "chemical_analysis" + str(name),
-                mommy.make(ChemicalAnalysis, bpa_id=bpa_id, boron_hot_cacl2=boron_hot_cacl2))
+        setattr(
+            self,
+            "chemical_analysis" + str(name),
+            mommy.make(ChemicalAnalysis, bpa_id=bpa_id, boron_hot_cacl2=boron_hot_cacl2))
         setattr(self, "sample_context" + str(name), mommy.make(SampleContext, bpa_id=bpa_id, site=site))
         setattr(self, "metagenomics_sample" + str(name), mommy.make(MetagenomicsSample, bpa_id=bpa_id))
         if otu:

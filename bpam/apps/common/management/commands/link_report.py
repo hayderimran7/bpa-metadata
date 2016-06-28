@@ -9,7 +9,6 @@ from apps.melanoma.models import MelanomaSequenceFile
 
 logger = get_logger(__name__)
 
-
 MISSING_REPORT_NAME = 'missing_melanoma.xlsx'
 
 

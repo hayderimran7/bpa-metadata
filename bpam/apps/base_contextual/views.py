@@ -66,13 +66,9 @@ class SampleContextListView(ListView):
     model = SampleContext
     context_object_name = 'sample_contexts'
     template_name = 'base_contextual/sample_context_list.html'
-    queryset = SampleContext.objects.select_related('bpa_id',
-                                                    'horizon_classification1',
-                                                    'horizon_classification2',
-                                                    'site__current_land_use',
-                                                    'site__general_ecological_zone',
-                                                    'site__vegetation_type',
-                                                    'site__soil_type_australian_classification')
+    queryset = SampleContext.objects.select_related(
+        'bpa_id', 'horizon_classification1', 'horizon_classification2', 'site__current_land_use',
+        'site__general_ecological_zone', 'site__vegetation_type', 'site__soil_type_australian_classification')
     # paginate_by = settings.DEFAULT_PAGINATION
 
 

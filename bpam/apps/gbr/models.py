@@ -16,7 +16,8 @@ class CollectionSite(models.Model):
 
     class Meta:
         verbose_name_plural = _('Coral Collection Sites')
-        unique_together = ('lat', 'lon',)
+        unique_together = ('lat',
+                           'lon', )
 
     def __unicode__(self):
         return u'{0} {1}, {2}'.format(self.site_name, self.lat, self.lon)
@@ -77,7 +78,9 @@ class GBRSample(Sample, DebugNote):
     sequencing_data_eta = models.DateField(_('Sequence ETA'), blank=True, null=True)
     date_sequenced = models.DateField(_('Date Sequenced'), blank=True, null=True)
     requested_read_length = models.IntegerField(_('Requested Read Length'), blank=True, null=True)
-    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+    contact_bioinformatician = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                                 blank=True,
+                                                 null=True,
                                                  related_name='bioinformatician',
                                                  verbose_name=_('Contact Bioinformatician'))
 

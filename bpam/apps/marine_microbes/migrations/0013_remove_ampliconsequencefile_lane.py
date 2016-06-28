@@ -6,13 +6,9 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marine_microbes', '0012_auto_20160622_1328'),
-    ]
+    dependencies = [('marine_microbes', '0012_auto_20160622_1328'), ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='ampliconsequencefile',
-            name='lane',
-        ),
+        migrations.RemoveField(model_name='ampliconsequencefile',
+                               name='lane', ),
     ]

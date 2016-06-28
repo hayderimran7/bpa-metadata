@@ -53,8 +53,7 @@ class FileAdmin(ImportExportModelAdmin):
     ]
 
     def monospace_md5(obj):
-        return format_html('<span style="font-family: monospace;">{}</span>',
-                           obj.md5)
+        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
 
     monospace_md5.short_description = "MD5 Checksum"
 

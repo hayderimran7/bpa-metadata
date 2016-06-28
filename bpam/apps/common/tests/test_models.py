@@ -8,12 +8,7 @@ from ..models import BPAProject
 from ..models import BPAUniqueID
 from ..models import Organism
 
-
-project_recipe = Recipe(
-    BPAProject,
-    name=seq('bpa_project'),
-    note='NOTE'
-)
+project_recipe = Recipe(BPAProject, name=seq('bpa_project'), note='NOTE')
 
 
 def random_string(length=10):

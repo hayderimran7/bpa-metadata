@@ -3,11 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from apps.common.models import BPAMirror
 
-from .models import (
-    Extraction,
-    MetagenomicsSample,
-    MetagenomicsSequenceFile,
-    MetagenomicsRun)
+from .models import (Extraction, MetagenomicsSample, MetagenomicsSequenceFile, MetagenomicsRun)
 
 import sequence_file_csv_export
 

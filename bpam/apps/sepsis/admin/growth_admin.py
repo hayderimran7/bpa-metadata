@@ -10,6 +10,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from ..models import GrowthMethod
 
+
 class Form(forms.ModelForm):
     class Meta:
         fields = "__all__"
@@ -38,5 +39,6 @@ class Admin(ImportExportModelAdmin):
 
     fields = list_display
     list_filter = list_display
+
 
 admin.site.register(GrowthMethod, Admin)

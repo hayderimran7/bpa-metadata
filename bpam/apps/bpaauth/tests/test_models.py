@@ -4,16 +4,14 @@ from model_mommy.recipe import Recipe, seq
 
 from ..models import BPAUser
 
-user_recipe = Recipe(
-    BPAUser,
-    username=seq('bpauser'),
-    project='BPA TEST Project',
-    organisation='TEST Organisation',
-    telephone=seq('99999999_'),
-    interest='TEST Interest',
-    lab='TESTLAB',
-    note='NOTE'
-)
+user_recipe = Recipe(BPAUser,
+                     username=seq('bpauser'),
+                     project='BPA TEST Project',
+                     organisation='TEST Organisation',
+                     telephone=seq('99999999_'),
+                     interest='TEST Interest',
+                     lab='TESTLAB',
+                     note='NOTE')
 
 
 class BPAUserTests(TestCase):

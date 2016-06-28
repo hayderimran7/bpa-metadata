@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 
 import logger_utils
 
-
 logger = logger_utils.get_logger(__name__)
 
 

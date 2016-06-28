@@ -15,18 +15,8 @@ field_header_map = {
     'md5': 'MD5'
 }
 
-values = (
-    'sample_id',
-    'extraction__extraction_id',
-    'run__sequencing_facility__name',
-    'protocol__library_type',
-    'protocol__base_pairs',
-    'run__flow_cell_id',
-    'index',
-    'lane_number',
-    'filename',
-    'md5'
-)
+values = ('sample_id', 'extraction__extraction_id', 'run__sequencing_facility__name', 'protocol__library_type',
+          'protocol__base_pairs', 'run__flow_cell_id', 'index', 'lane_number', 'filename', 'md5')
 
 
 def get_csv():

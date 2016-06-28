@@ -1,19 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from apps.common.models import (
-    Protocol,
-    Sample,
-    Run,
-    BPAUniqueID,
-    SequenceFile,
-    Organism,
-    DebugNote
-)
+from apps.common.models import (Protocol, Sample, Run, BPAUniqueID, SequenceFile, Organism, DebugNote)
 
-GENDERS = (('M', 'Male'),
-           ('F', 'Female'),
-           ('U', 'Unknown'))
+GENDERS = (('M', 'Male'), ('F', 'Female'), ('U', 'Unknown'))
 
 
 class TumorStage(models.Model):

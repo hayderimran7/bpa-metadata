@@ -6,13 +6,9 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marine_microbes', '0006_auto_20160617_1552'),
-    ]
+    dependencies = [('marine_microbes', '0006_auto_20160617_1552'), ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='metagenomisequencefile',
-            name='runsamplenum',
-        ),
+        migrations.RemoveField(model_name='metagenomisequencefile',
+                               name='runsamplenum', ),
     ]

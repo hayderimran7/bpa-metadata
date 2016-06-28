@@ -10,7 +10,6 @@ from apps.base_metagenomics.models import MetagenomicsSample
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 
-
 logger = logging.getLogger("rainbow")
 
 
@@ -68,9 +67,7 @@ class Searcher(object):
     SEARCH_TYPE_RANGE = "RANGE"
     SEARCH_TYPE_FIELD = "FIELD"
     UNSET = "----"
-    SEARCH_TABLE2 = {
-
-    }
+    SEARCH_TABLE2 = {}
     SEARCH_TABLE = {
         SampleContext: {
             "date_sampled": "site__date_sampled",
@@ -93,7 +90,6 @@ class Searcher(object):
             "fire_intensity": "site__fire_intensity",
             "environment_event": "site__environment_event",
         },
-
         ChemicalAnalysis: {
             "moisture": SearchStrategy(ChemicalAnalysis),
             "colour": SearchStrategy(ChemicalAnalysis, search_path="colour__code"),
@@ -126,7 +122,6 @@ class Searcher(object):
             "total_nitrogen": SearchStrategy(ChemicalAnalysis),
             "total_carbon": SearchStrategy(ChemicalAnalysis),
         }
-
     }
 
     def __init__(self, parameters):
@@ -246,7 +241,7 @@ class Searcher(object):
 
                 links.append({"amplicon_type": amplicon_type,
                               "amplicon_link": reverse(detail_view_map[AmpliconSequencingMetadata],
-                                                       args=(amplicon.pk,))})
+                                                       args=(amplicon.pk, ))})
 
             return links
 

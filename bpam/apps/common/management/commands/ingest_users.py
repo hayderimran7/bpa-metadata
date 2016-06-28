@@ -24,7 +24,7 @@ def get_data(users_file):
 
 def filter_contacts(contact):
     """ If for some reason the contact line is unsuitable, filter it out. """
-    
+
     username = user_helper.make_username(contact)
     if not username:
         return True

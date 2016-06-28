@@ -8,10 +8,7 @@ class OperationalTaxonomicUnit(models.Model):
     """
 
     name = models.CharField(max_length=30)
-    KINGDOMS = (('Bacteria', 'Bacteria'),
-                ('Archaea', 'Archaea'),
-                ('Eukaryota', 'Eukaryota'),
-                ('Fungi', 'Fungi'))
+    KINGDOMS = (('Bacteria', 'Bacteria'), ('Archaea', 'Archaea'), ('Eukaryota', 'Eukaryota'), ('Fungi', 'Fungi'))
 
     kingdom = models.CharField(_('Kingdom'), max_length=100, db_index=True, choices=KINGDOMS)
     phylum = models.CharField(_('Phylum'), max_length=100, db_index=True, default='undefined')
@@ -23,7 +20,8 @@ class OperationalTaxonomicUnit(models.Model):
 
     class Meta:
         verbose_name_plural = _("OTU")
-        unique_together = ('kingdom', 'name',)
+        unique_together = ('kingdom',
+                           'name', )
 
     def __unicode__(self):
         return u"{0}:{1}".format(self.kingdom, self.name)

@@ -15,20 +15,20 @@ class Sample454(DebugNote):
     dna_storage_nunc_tube = models.CharField(_("Nunc Tube"), max_length=12, blank=True, null=True, default="")
     dna_storage_nunc_well_location = models.CharField(_("Well Location"), max_length=30, blank=True, null=True)
     agrf_batch_number = models.CharField(_("AGRF Batch Number"), max_length=15, blank=True, null=True)
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, verbose_name=_("Submitter"), )
+    submitter = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                  blank=True,
+                                  null=True,
+                                  verbose_name=_("Submitter"), )
     date_received = models.DateField(blank=True, null=True)
 
     # AGRF Adelaide extraction
     adelaide_extraction_sample_weight = models.CharField(
-        _("Extraction Sample Weight (mg)"),
-        max_length=30,
-        blank=True,
-        null=True)  # another abused "integer" field
+        _("Extraction Sample Weight (mg)"), max_length=30,
+        blank=True, null=True)  # another abused "integer" field
     adelaide_fluorimetry = models.FloatField(_("Fluorimetry ng/uL gDNA"), blank=True, null=True)
     adelaide_pcr_inhibition = models.CharField(
         _("PCR Inhibition (neat plus spike) 16S (V3-V8)"),
-        max_length=2,
-        choices=RESULT)
+        max_length=2, choices=RESULT)
     adelaide_pcr1 = models.CharField(_("PCR1 (neat) 16S (V3-V8)"), max_length=2, choices=RESULT)
     adelaide_pcr2 = models.CharField(_("PCR2 (1:100) 16S (V3-V8)"), max_length=2, choices=RESULT)
     adelaide_date_shipped_to_agrf_454 = models.DateField(_("DNA shipped to AGRF (454)"), blank=True, null=True)

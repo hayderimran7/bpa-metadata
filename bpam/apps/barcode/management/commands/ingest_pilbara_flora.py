@@ -76,7 +76,6 @@ class SheetAdder(object):
     """ Add the sheet data """
 
     def add_sheets(self, sheets):
-
         def is_alien(val):
             val = val.strip().upper()
             if val == "Y":
@@ -129,9 +128,7 @@ class SheetAdder(object):
                     voucher_id=ingest_utils.get_int(sheet["VoucherID"]),
                     voucher_site=sheet["Voucher Site"],
                     type_status=sheet["Type Status"],
-
-                    note=sheet["Other Notes"]
-                )
+                    note=sheet["Other Notes"])
             except IntegrityError as e:
                 logger.error("Sheet {} is duplicated".format(sheet["Sheet Number"]))
                 logger.error("{}".format(e.message))

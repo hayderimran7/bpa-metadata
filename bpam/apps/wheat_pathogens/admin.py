@@ -27,8 +27,11 @@ class ProtocolAdmin(admin.ModelAdmin):
     fields = ('run', 'library_type', 'base_pairs', 'library_construction_protocol', 'note')
     search_fields = ('library_type', 'library_construction_protocol', 'note', 'run__sample__bpa_id__bpa_id',
                      'run__sample__name')
-    list_display = ('run', 'library_type', 'base_pairs', 'library_construction_protocol',)
-    list_filter = ('library_type',)
+    list_display = ('run',
+                    'library_type',
+                    'base_pairs',
+                    'library_construction_protocol', )
+    list_filter = ('library_type', )
 
 
 class RunAdmin(admin.ModelAdmin):
@@ -55,15 +58,16 @@ class RunAdmin(admin.ModelAdmin):
     inlines = (ProtocolInline, )
 
     fieldsets = [
-        ('Sample',
-         {'fields': ('sample',)}),
+        ('Sample', {'fields': ('sample', )}),
         ('Sequencing Facilities',
          {'fields': ('sequencing_facility', 'array_analysis_facility', 'whole_genome_sequencing_facility')}),
-        ('Sequencing',
-         {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
+        ('Sequencing', {'fields': ('sequencer', 'run_number', 'flow_cell_id', 'DNA_extraction_protocol')}),
     ]
 
-    list_display = ('sample', 'sequencer', 'flow_cell_id', 'run_number',)
+    list_display = ('sample',
+                    'sequencer',
+                    'flow_cell_id',
+                    'run_number', )
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name', 'flow_cell_id', 'run_number')
     list_filter = ('run_number', )
 
@@ -85,7 +89,9 @@ class SampleAdmin(admin.ModelAdmin):
         form = SequenceFileInlineForm
         suit_classes = 'suit-tab suit-tab-id'
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
+        fields = ('filename',
+                  'md5',
+                  'date_received_from_sequencing_facility', )
         extra = 0
 
     inlines = (SequenceFileInline, )
@@ -102,57 +108,45 @@ class SampleAdmin(admin.ModelAdmin):
                 'contact_scientist': LinkedSelect,
                 'collection_date': SuitDateWidget,
                 'contact_bioinformatician': LinkedSelect,
-                'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'collection_location': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'}),
-                'debug_note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})
+                'note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                 'style': 'width:95%'}),
+                'collection_location': AutosizedTextarea(attrs={'class': 'input-large',
+                                                                'style': 'width:95%'}),
+                'debug_note': AutosizedTextarea(attrs={'class': 'input-large',
+                                                       'style': 'width:95%'})
             }
 
     form = SampleForm
-    suit_form_tabs = (
-        ('id', 'Sample ID and Sequence Files'),
-        ('dna', 'DNA/RNA'),
-        ('collection', 'Collection'),
-        ('contacts', 'Contacts'),
-        ('notes', 'Notes')
-    )
+    suit_form_tabs = (('id', 'Sample ID and Sequence Files'), ('dna', 'DNA/RNA'), ('collection', 'Collection'),
+                      ('contacts', 'Contacts'), ('notes', 'Notes'))
 
     fieldsets = [
         (None,  # 'Sample Identification',
-         {'classes': ('suit-tab suit-tab-id',),
-          'fields': (
-              'bpa_id',
-              'name',
-              'sample_label',
-              'original_source_host_species',
-              'wheat_pathogenicity')}),
+         {'classes': ('suit-tab suit-tab-id', ),
+          'fields': ('bpa_id', 'name', 'sample_label', 'original_source_host_species', 'wheat_pathogenicity')}),
         (None,  # 'DNA/RNA Source',
-         {'classes': ('suit-tab suit-tab-dna',),
-          'fields': (
-              'organism',
-              'official_variety_name',
-              'dna_source',
-              'dna_extraction_protocol',)}),
+         {'classes': ('suit-tab suit-tab-dna', ),
+          'fields': ('organism',
+                     'official_variety_name',
+                     'dna_source',
+                     'dna_extraction_protocol', )}),
         (None,  # 'Collection',
-         {'classes': ('suit-tab suit-tab-collection',),
-          'fields': (
-              'collection_location',
-              'collection_date',)}),
+         {'classes': ('suit-tab suit-tab-collection', ),
+          'fields': ('collection_location',
+                     'collection_date', )}),
         (None,  # 'Contacts',
-         {'classes': ('suit-tab suit-tab-contacts',),
-          'fields': ('contact_scientist',)}),
+         {'classes': ('suit-tab suit-tab-contacts', ),
+          'fields': ('contact_scientist', )}),
         (None,  # 'Notes',
-         {'classes': ('suit-tab suit-tab-notes',),
-          'fields': (
-              'note',
-              'debug_note',)}),
-
+         {'classes': ('suit-tab suit-tab-notes', ),
+          'fields': ('note',
+                     'debug_note', )}),
     ]
 
-    list_display = (
-        'bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',
-        'original_source_host_species')
-    search_fields = (
-        'bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name', 'wheat_pathogenicity')
+    list_display = ('bpa_id', 'name', 'official_variety_name', 'dna_source', 'dna_extraction_protocol',
+                    'original_source_host_species')
+    search_fields = ('bpa_id__bpa_id', 'name', 'tumor_stage__description', 'official_variety_name',
+                     'wheat_pathogenicity')
     list_filter = ('dna_source', 'original_source_host_species')
 
 

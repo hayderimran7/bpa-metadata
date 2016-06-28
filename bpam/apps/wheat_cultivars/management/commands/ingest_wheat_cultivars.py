@@ -31,7 +31,8 @@ def get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -67,7 +68,8 @@ def get_run_lookup():
 
     for run in run_data:
         key = run.bpa_id + run.flowcell + run.library + run.library_construction
-        runt = Run(run.run_number, run.casava_version, run.library_construction_protocol, run.library_range, run.sequencer)
+        runt = Run(run.run_number, run.casava_version, run.library_construction_protocol, run.library_range,
+                   run.sequencer)
         run_lookup[key] = runt
     return run_lookup
 
@@ -252,7 +254,10 @@ def add_md5(md5_lines, run_data):
             continue
 
         key = md5_line.bpa_id + md5_line.flowcell + md5_line.lib_type + md5_line.lib_size
-        run = run_data.get(key, Run(run_number=-1, casava_version="-", lib_cons_proto="-", lib_range="-", sequencer="-"))
+        run = run_data.get(
+            key, Run(run_number=-1, casava_version="-",
+                     lib_cons_proto="-",
+                     lib_range="-", sequencer="-"))
         protocol = Protocol()
         protocol.library_type = md5_line.lib_type
         protocol.set_base_pairs(md5_line.lib_size)
@@ -292,14 +297,9 @@ def get_run_data(file_name):
                   ('run_number', 'Run number', ingest_utils.get_clean_number),
                   ('flowcell', 'Flow Cell ID', None),
                   ('index', 'Index', None),
-                  ('casava_version', 'CASAVA version', None),
-                  ]
+                  ('casava_version', 'CASAVA version', None), ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name='Metadata',
-        header_length=1)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Metadata', header_length=1)
     return wrapper.get_all()
 
 
@@ -328,11 +328,7 @@ def get_cultivar_sample_characteristics(file_name):
         ("url", "Link", None),
     ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name="Characteristics",
-        header_length=1)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name="Characteristics", header_length=1)
     return wrapper.get_all()
 
 

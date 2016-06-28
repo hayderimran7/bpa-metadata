@@ -14,7 +14,6 @@ logger = logging.getLogger("rainbow")
 
 
 class CSVExporter(object):
-
     def __init__(self, model):
         self.model = model
         self.one_object_per_id = True
@@ -107,7 +106,6 @@ class CSVExporter(object):
 
 
 class OTUExporter(CSVExporter):
-
     def __init__(self, kingdom, phylum, otu_class, order, family, genus, species):
 
         super(OTUExporter, self).__init__(SampleOTU)
@@ -145,8 +143,7 @@ class OTUExporter(CSVExporter):
                 ["otu.order", "Order"],
                 ["otu.family", "Family"],
                 ["otu.genus", "Genus"],
-                ["otu.species", "Species"],
-                ]
+                ["otu.species", "Species"], ]
 
     def export(self, ids, file_obj_bacteria, file_obj_eukaryotes, file_obj_fungi, file_obj_archea):
         writer_bacteria = csv.writer(file_obj_bacteria)

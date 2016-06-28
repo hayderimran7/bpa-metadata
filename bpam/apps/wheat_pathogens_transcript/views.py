@@ -1,10 +1,7 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.common.models import BPAMirror
-from .models import (
-    WheatPathogenTranscriptSample,
-    WheatPathogenTranscriptSequenceFile
-)
+from .models import (WheatPathogenTranscriptSample, WheatPathogenTranscriptSequenceFile)
 
 
 class IndexView(TemplateView):

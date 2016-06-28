@@ -9,7 +9,6 @@ from .models import CultivarSequenceFile
 
 
 class ProtocolForm(forms.ModelForm):
-
     class Meta:
         fields = "__all__"
         model = Protocol
@@ -24,13 +23,16 @@ class ProtocolAdmin(admin.ModelAdmin):
     form = ProtocolForm
     radio_fields = {'library_type': admin.HORIZONTAL}
     fields = ('library_type', 'base_pairs', 'library_construction_protocol', 'note')
-    search_fields = ('library_type', 'library_construction_protocol', 'note',)
-    list_display = ('library_type', 'base_pairs', 'library_construction_protocol',)
-    list_filter = ('library_type',)
+    search_fields = ('library_type',
+                     'library_construction_protocol',
+                     'note', )
+    list_display = ('library_type',
+                    'base_pairs',
+                    'library_construction_protocol', )
+    list_filter = ('library_type', )
 
 
 class SequenceFileInlineForm(forms.ModelForm):
-
     class Meta:
         fields = "__all__"
         model = CultivarSequenceFile
@@ -42,9 +44,7 @@ class SequenceFileInlineForm(forms.ModelForm):
 
 
 class SampleAdmin(admin.ModelAdmin):
-
     class SampleForm(forms.ModelForm):
-
         class Meta:
             fields = "__all__"
             model = CultivarSample
@@ -68,47 +68,45 @@ class SampleAdmin(admin.ModelAdmin):
         form = SequenceFileInlineForm
         suit_classes = 'suit-tab suit-tab-id'
         sortable = 'filename'
-        fields = ('filename', 'md5', 'date_received_from_sequencing_facility',)
+        fields = ('filename',
+                  'md5',
+                  'date_received_from_sequencing_facility', )
         extra = 0
 
     inlines = (SequenceFileInline, )
 
-    suit_form_tabs = (
-        ('id', 'Sample ID and Sequence Files'),
-        ('dna', 'DNA'),
-        ('notes', 'Source Data Note')
-    )
+    suit_form_tabs = (('id', 'Sample ID and Sequence Files'), ('dna', 'DNA'), ('notes', 'Source Data Note'))
 
     fieldsets = [
         (None,  # 'Sample Identification',
-         {'classes': ('suit-tab suit-tab-id',),
-          'fields': (
-              'bpa_id',
-              'name',
-              'cultivar_code',
-              'extract_name',
-              'casava_version',)}),
+         {'classes': ('suit-tab suit-tab-id', ),
+          'fields': ('bpa_id',
+                     'name',
+                     'cultivar_code',
+                     'extract_name',
+                     'casava_version', )}),
         (None,  # 'DNA/RNA Source',
-         {'classes': ('suit-tab suit-tab-dna',),
-          'fields': (
-              'dna_extraction_protocol',
-              'protocol_reference',)}),
+         {'classes': ('suit-tab suit-tab-dna', ),
+          'fields': ('dna_extraction_protocol',
+                     'protocol_reference', )}),
         (None,  # 'Notes',
-         {'classes': ('suit-tab suit-tab-notes',),
-          'fields': (
-              'note',
-              'debug_note')}),
+         {'classes': ('suit-tab suit-tab-notes', ),
+          'fields': ('note', 'debug_note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_extraction_protocol')
-    search_fields = ('bpa_id__bpa_id', 'cultivar_code', 'name', )
-    list_filter = ('cultivar_code',)
+    search_fields = ('bpa_id__bpa_id',
+                     'cultivar_code',
+                     'name', )
+    list_filter = ('cultivar_code', )
 
 
 class CultivarsSequenceFileAdmin(SequenceFileAdmin):
     search_fields = ('sample__bpa_id__bpa_id', 'sample__name')
-    list_display = ('get_sample_id', 'download_field', 'get_sample_name',)
-    list_filter = SequenceFileAdmin.list_filter + ('sample__cultivar_code',)
+    list_display = ('get_sample_id',
+                    'download_field',
+                    'get_sample_name', )
+    list_filter = SequenceFileAdmin.list_filter + ('sample__cultivar_code', )
 
 
 admin.site.register(CultivarSample, SampleAdmin)

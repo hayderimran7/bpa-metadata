@@ -3,6 +3,7 @@
 from import_export import fields
 import ingest
 
+
 class DateField(fields.Field):
     """
     This field automatically parses a number of known date formats and returns

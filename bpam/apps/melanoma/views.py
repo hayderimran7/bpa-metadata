@@ -18,8 +18,9 @@ class IndexView(TemplateView):
 class SequenceFileListView(ListView):
     model = MelanomaSequenceFile
     context_object_name = 'sequencefiles'
-    queryset = MelanomaSequenceFile.objects.select_related(
-        'sample', 'run', 'sample__bpa_id', 'run__sample', 'url_verification')
+    queryset = MelanomaSequenceFile.objects.select_related('sample', 'run', 'sample__bpa_id', 'run__sample',
+                                                           'url_verification')
+
     # paginate_by = settings.DEFAULT_PAGINATION
 
     def get_context_data(self, **kwargs):
@@ -72,11 +73,8 @@ def search_view(request, term):
 
     # searches restricted to logged-in users go here
     if request.user.is_authenticated:
-        add_search_results(
-            MelanomaSequenceFile.objects.filter(sample__bpa_id__bpa_id__endswith='/' + term))
-        add_search_results(
-            MelanomaSequenceFile.objects.filter(sample__name__icontains=term)
-        )
+        add_search_results(MelanomaSequenceFile.objects.filter(sample__bpa_id__bpa_id__endswith='/' + term))
+        add_search_results(MelanomaSequenceFile.objects.filter(sample__name__icontains=term))
 
     data['nresults'] += len(data['melanoma_object_list'])
     return render(request, 'melanoma/search_results.html', data)

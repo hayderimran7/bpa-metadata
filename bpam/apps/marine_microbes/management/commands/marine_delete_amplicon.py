@@ -5,11 +5,10 @@ from django.conf import settings
 
 from ...models import Amplicon
 
+
 class Command(BaseCommand):
     help = 'Deletes all Marine Microbes Amplicons'
 
     def handle(self, *args, **options):
         count, _ = Amplicon.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS(
-            'Successfully deleted {} Marine Microbe  Amplicons'.format(count))
-            )
+        self.stdout.write(self.style.SUCCESS('Successfully deleted {} Marine Microbe  Amplicons'.format(count)))

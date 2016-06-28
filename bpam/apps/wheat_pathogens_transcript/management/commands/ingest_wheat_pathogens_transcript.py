@@ -3,12 +3,10 @@ import os
 from django.core.management.base import BaseCommand, CommandError
 from apps.common.models import DNASource, Sequencer
 
-from apps.wheat_pathogens_transcript.models import (
-    WheatPathogenTranscriptSample,
-    WheatPathogenTranscriptProtocol,
-    WheatPathogenTranscriptRun,
-    WheatPathogenTranscriptSequenceFile,
-)
+from apps.wheat_pathogens_transcript.models import (WheatPathogenTranscriptSample,
+                                                    WheatPathogenTranscriptProtocol,
+                                                    WheatPathogenTranscriptRun,
+                                                    WheatPathogenTranscriptSequenceFile, )
 
 from libs import ingest_utils, user_helper, bpa_id_utils
 from libs.logger_utils import get_logger
@@ -36,7 +34,8 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION)
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row, report))
+        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
+                                                                                      report))
         return None
     return bpa_id
 
@@ -62,10 +61,7 @@ def ingest_samples(samples):
         pathogen_sample.name = e.sample_name
         pathogen_sample.project = e.project
         pathogen_sample.index = e.index_sequence
-        pathogen_sample.contact_scientist = user_helper.get_user(
-            e.contact_name,
-            e.email,
-            (DESCRIPTION, e.institution))
+        pathogen_sample.contact_scientist = user_helper.get_user(e.contact_name, e.email, (DESCRIPTION, e.institution))
 
         pathogen_sample.dna_source = get_dna_source(e.rna_source)
         pathogen_sample.institution = e.institution
@@ -204,43 +200,38 @@ def get_pathogen_sample_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
-                  ('submission_document', 'Submission document', None),
-                  ('sample_number', 'Sample Number', None),
-                  ('sample_name', 'Sample name (supplied by researcher)', None),
-                  ('project', 'Project', None),
-                  ('index_sequence', 'Index', None),
-                  ('library', 'Library', None),
-                  ('library_construction', 'Library Construction (insert size bp)', None),
-                  ('library_construction_protocol', 'Library construction protocol', None),
-                  ('sequencer', 'Sequencer', None),
-                  ('run_number', 'Run number', ingest_utils.get_clean_number),
-                  ('flow_cell_id', 'Run #:Flow Cell ID', None),
-                  ('lane_number', 'Lane number', ingest_utils.get_clean_number),
-                  ('sequence_filename', 'File name', None),
-                  ('md5_checksum', 'MD5 checksum', None),
-                  ('contact_name', 'Name', None),
-                  ('email', 'Email', None),
-                  ('institution', 'Institution / Organisation', None),
-                  ('species', 'Organism / Species', None),
-                  ('sample_type', 'Sample type', None),
-                  ('rna_source', 'Part of organism RNA/RNA extracted from', None),
-                  ('extraction_method', 'Extraction method', None),
-                  ('growth_protocol',
-                   'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)',
-                   None),
-                  ('treatment_protocol', 'Treatment protocol (i.e. route of administration of pathogen)', None),
-                  ('experimental_design',
-                   'Further Information on experimental design (i.e. time points and biological replicates)', None),
-                  ('additional_information', 'Additional Information.', None),
-                  ]
+    field_spec = [
+        ('bpa_id', 'Unique ID', lambda s: s.replace('/', '.')),
+        ('submission_document', 'Submission document', None),
+        ('sample_number', 'Sample Number', None),
+        ('sample_name', 'Sample name (supplied by researcher)', None),
+        ('project', 'Project', None),
+        ('index_sequence', 'Index', None),
+        ('library', 'Library', None),
+        ('library_construction', 'Library Construction (insert size bp)', None),
+        ('library_construction_protocol', 'Library construction protocol', None),
+        ('sequencer', 'Sequencer', None),
+        ('run_number', 'Run number', ingest_utils.get_clean_number),
+        ('flow_cell_id', 'Run #:Flow Cell ID', None),
+        ('lane_number', 'Lane number', ingest_utils.get_clean_number),
+        ('sequence_filename', 'File name', None),
+        ('md5_checksum', 'MD5 checksum', None),
+        ('contact_name', 'Name', None),
+        ('email', 'Email', None),
+        ('institution', 'Institution / Organisation', None),
+        ('species', 'Organism / Species', None),
+        ('sample_type', 'Sample type', None),
+        ('rna_source', 'Part of organism RNA/RNA extracted from', None),
+        ('extraction_method', 'Extraction method', None),
+        ('growth_protocol',
+         'Growth protocol of fungus and/or plant (medium, soil, water regimen, light/day, fertilisers etc)', None),
+        ('treatment_protocol', 'Treatment protocol (i.e. route of administration of pathogen)', None),
+        ('experimental_design',
+         'Further Information on experimental design (i.e. time points and biological replicates)', None),
+        ('additional_information', 'Additional Information.', None),
+    ]
 
-    wrapper = ExcelWrapper(
-        field_spec,
-        file_name,
-        sheet_name='Sheet2',
-        header_length=2,
-        column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sheet2', header_length=2, column_name_row_index=0)
     return wrapper.get_all()
 
 
