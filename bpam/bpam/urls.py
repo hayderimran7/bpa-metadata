@@ -37,6 +37,7 @@ urlpatterns = patterns(
     url(r'^melanoma/', include('apps.melanoma.urls', namespace='melanoma')),
     # Barcode
     url(r'^barcode/', include('apps.barcode.urls', namespace='barcode')),
+    url(r'^stemcell/', include('apps.stemcell.urls', namespace='stemcell')),
     # Sepsis
     url(r'^sepsis/', include('apps.sepsis.urls', namespace='sepsis')),
     # System

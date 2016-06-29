@@ -1,0 +1,54 @@
+{% extends "base.html" %} 
+{%load staticfiles %} 
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Stem Cells" "stemcell:index" %}
+{% endblock %}
+{% block title %}Stem Cells{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="well">
+        <div class="row">
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <img class="img-responsive img-rounded" src="{% static 'stemcell/stemcell.png' %}" alt="Stemcell">
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+
+                <h2>Stem Cells</h2>
+                <p>
+                    Stem cells allow us to study fundamental processes in tissue growth, development, aging and disease. The next
+                    waves of medicine will build on personalised therapies for drug treatments that require an understanding of
+                    drug-genetic-tissue interactions. Stem cell programs that can direct the differentiation of cells lead to the
+                    assembly of mini-organs in a dish that are already in use for disease screening in Australia, and around the
+                    world.
+                </p>
+
+                <a href="http://www.bioplatforms.com/stem-cells/">
+                    http://www.bioplatforms.com/stem-cells/
+                </a>
+            </div>
+
+            <div class="col-sm-5 col-md-5 col-lg-3">
+                <div class="list-group">
+                    <a class="list-group-item" 
+                       href="https://downloads.bioplatforms.com/bpa/stemcell/">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        Archive
+                    </a>
+                    <a class="list-group-item" 
+                       href="{% url 'stemcell:contacts' %}">
+                        <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
+                        Contacts
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Stem Cell" "stemcell:index" %}
+{% breadcrumb "Contacts" "stemcell:contacts" %}
+
+{% endblock %}
+{% block title %}Stem Cells{% endblock %}
+{% block content %}
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-sm-2">
+            <address>
+                <strong> Dr. Anna Fitzgerald </strong><br>
+                Project Manager <br>
+                Bioplatforms Australia Ltd<br>
+                Level 4, Bldg F7B, Research Park Drive<br>
+                Macquarie University, NSW, 2109, Australia<br>
+                Phone: +612 9850 1174 <br>
+                Mobile: +612 451 374 641<br>
+                Fax: +612 9850 6200<br>
+                <a href="mailto:afitzgerald@bioplatforms.com"> afitzgerald@bioplatforms.com</a><br>
+                <a href="http://www.bioplatforms.com">www.bioplatforms.com</a>
+            </address>
+        </div>
+        <div class="col-sm-2">
+            <address>
+                <strong> Christine Wells </strong><br>
+                Bioplatforms Australia Ltd<br>
+                Phone: +617 3346 3835 <br>
+                <a href="mailto:c.wells@uq.edu.au"> c.wells@uq.edu.au </a><br>
+            </address>
+        </div>
+        <div class="col-sm-2">
+            <address>
+                <strong>Ellen van Dam</strong><br> 
+                Operations Manager<br>
+                Bioplatforms Australia Ltd<br>
+                Level 4, Bldg F7B, Research Park Drive<br>
+                Macquarie University, NSW, 2109, Australia<br>
+                Phone: +612 9850 6247<br>
+                Mobile: +61 405 438 228<br>
+                Fax: +612 9850 6200 <br>
+                <a href="mailto:evandam@bioplatforms.com"> evandam@bioplatforms.com</a><br>
+                <a href="http://www.bioplatforms.com">www.bioplatforms.com</a>
+            </address>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
