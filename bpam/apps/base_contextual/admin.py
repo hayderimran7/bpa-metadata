@@ -191,7 +191,7 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
                 'nitrate_nitrogen': EnclosedInput(append='mg/Kg'),
                 'phosphorus_colwell': EnclosedInput(append='mg/Kg'),
                 'potassium_colwell': EnclosedInput(append='mg/Kg'),
-                'sulphur_colwell': EnclosedInput(append='mg/Kg'),
+                'sulphur': EnclosedInput(append='mg/Kg'),
                 'organic_carbon': EnclosedInput(append='%'),
                 'conductivity': EnclosedInput(append='dS/m'),
                 'cacl2_ph': EnclosedInput(append='pH'),
@@ -228,10 +228,10 @@ class ChemicalAnalysisAdmin(admin.ModelAdmin):
         (None,  # chemical
          {'classes': ('suit-tab suit-tab-chemical', ),
           'description': 'Chemical Analysis',
-          'fields': ('ammonium_nitrogen', 'nitrate_nitrogen', 'phosphorus_colwell', 'potassium_colwell',
-                     'sulphur_colwell', 'organic_carbon', 'conductivity', 'cacl2_ph', 'h20_ph', 'dtpa_copper',
-                     'dtpa_iron', 'dtpa_manganese', 'dtpa_zinc', 'exc_aluminium', 'exc_calcium', 'exc_magnesium',
-                     'exc_potassium', 'exc_sodium', 'boron_hot_cacl2', 'total_nitrogen', 'total_carbon')})
+          'fields': ('ammonium_nitrogen', 'nitrate_nitrogen', 'phosphorus_colwell', 'potassium_colwell', 'sulphur',
+                     'organic_carbon', 'conductivity', 'cacl2_ph', 'h20_ph', 'dtpa_copper', 'dtpa_iron',
+                     'dtpa_manganese', 'dtpa_zinc', 'exc_aluminium', 'exc_calcium', 'exc_magnesium', 'exc_potassium',
+                     'exc_sodium', 'boron_hot_cacl2', 'total_nitrogen', 'total_carbon')})
     ]
 
     list_display = ('bpa_id',
