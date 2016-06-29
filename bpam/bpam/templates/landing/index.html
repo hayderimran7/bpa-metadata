@@ -44,7 +44,7 @@
              border: 1px !important;
          }
          .fixed-table-container {
-             border:0px !important;
+             border:1px !important;
          }
         </style>
     </head>
@@ -59,7 +59,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Bioplatforms Australia Metadata</a>
+                    <a class="navbar-brand" href="#">Bioplatforms Australia Metadata Portal</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -77,241 +77,241 @@
                 </div>
             </div>
 
-                <div class="landing_header">
-                    <a href="http://www.bioplatforms.com">
-                        <img class src="{% static 'bpa-logos/BPA-logo-clear.png' %}" alt="BPA Logo"/>
-                    </a>
-                    <h1>Bioplatforms Australia Metadata Portal</h1>
-                </div>
+            <div class="landing_header">
+                <a href="http://www.bioplatforms.com">
+                    <img class src="{% static 'bpa-logos/BioplatformsAustralia.png' %}" alt="BPA Logo"/>
+                </a>
+            </div>
 
-                <table class="table">
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'base:index' %}">
-                                <img class="resized img-rounded" src="{% static 'base/base.png' %}" alt="BASE">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'base:index' %}">
-                                <h3>Biome of Australian Soil Environments</h3>
-                            </a>
-                            <p>
+
+            <table class="table">
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'base:index' %}">
+                            <img class="resized img-rounded" src="{% static 'base/base.png' %}" alt="BASE">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'base:index' %}">
+                            <h3>Biome of Australian Soil Environments</h3>
+                        </a>
+                        <p>
                             The Biome of Australia Soil Environments (BASE) is a collaborative project to
                             create a public resource containing microbial genome information from a range of
                             Australian soil environments.
-                            </p>
-                            <a href="http://www.bioplatforms.com/soil-biodiversity/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/base/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ base_sample_count }}</span>
-                        </td>
+                        </p>
+                        <a href="http://www.bioplatforms.com/soil-biodiversity/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/base/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ base_sample_count }}</span>
+                    </td>
 
-                    </tr>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'marine_microbes:index' %}">
-                                <img class="resized img-rounded" src="{% static 'marine_microbes/marine_microbes.png' %}" alt="MM">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'marine_microbes:index' %}">
-                                <h3>Marine Microbes</h3>
-                            </a>
-                            <p>
-                                The Marine Microbes project will establish how Australia’s marine microbial
-                                communities change over time in various locations and environments.
-                            </p>
-                            <a href="http://www.bioplatforms.com/marine-microbes/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/marine_microbes/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ marine_microbes_sample_count }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'sepsis:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'sepsis/sepsis.png' %}" alt="Sepsis">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'sepsis:index' %}">
-                                <h3>Sepsis</h3>
-                            </a>
-                            <p>
-                                The Sepsis Framework Initiative aims to develop a framework dataset that will enable identification of core
-                                targets common to antibiotic-resistant sepsis pathogens.
-                            </p>
-                            <a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ sepsis_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'marine_microbes:index' %}">
+                            <img class="resized img-rounded" src="{% static 'marine_microbes/marine_microbes.png' %}" alt="MM">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'marine_microbes:index' %}">
+                            <h3>Marine Microbes</h3>
+                        </a>
+                        <p>
+                            The Marine Microbes project will establish how Australia’s marine microbial
+                            communities change over time in various locations and environments.
+                        </p>
+                        <a href="http://www.bioplatforms.com/marine-microbes/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/marine_microbes/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ marine_microbes_sample_count }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'sepsis:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'sepsis/sepsis.png' %}" alt="Sepsis">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'sepsis:index' %}">
+                            <h3>Sepsis</h3>
+                        </a>
+                        <p>
+                            The Sepsis Framework Initiative aims to develop a framework dataset that will enable identification of core
+                            targets common to antibiotic-resistant sepsis pathogens.
+                        </p>
+                        <a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ sepsis_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'gbr:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'gbr/coral.png' %}" alt="GBR">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'gbr:index' %}">
-                                <h3>Great Barrier Reef</h3>
-                            </a>
-                            <p>
-                                The Sea-quence Project is generating core genetic data for corals from the
-                                Great Barrier Reef and Red Sea to ultimately help guide reef management
-                                practices.
-                            </p>
-                            <a href="http://www.bioplatforms.com/great-barrier-reef"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/gbr/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ gbr_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'gbr:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'gbr/coral.png' %}" alt="GBR">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'gbr:index' %}">
+                            <h3>Great Barrier Reef</h3>
+                        </a>
+                        <p>
+                            The Sea-quence Project is generating core genetic data for corals from the
+                            Great Barrier Reef and Red Sea to ultimately help guide reef management
+                            practices.
+                        </p>
+                        <a href="http://www.bioplatforms.com/great-barrier-reef"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/gbr/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ gbr_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'melanoma:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'melanoma/melanoma.png' %}" alt="Melanoma">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'melanoma:index' %}">
-                                <h3>Melanoma</h3>
-                            </a>
-                            <p>
-                                The Melanoma Genomics Project aims to whole genome sequence approximately 500 melanoma patients.
-                            </p>
-                            <a href="http://www.bioplatforms.com/melanoma"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/melanoma/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ melanoma_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'melanoma:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'melanoma/melanoma.png' %}" alt="Melanoma">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'melanoma:index' %}">
+                            <h3>Melanoma</h3>
+                        </a>
+                        <p>
+                            The Melanoma Genomics Project aims to whole genome sequence approximately 500 melanoma patients.
+                        </p>
+                        <a href="http://www.bioplatforms.com/melanoma"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/melanoma/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ melanoma_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'wheat_pathogens_transcript:index' %}">
-                                <img
-                                    class="resized  img-rounded"
-                                    src="{% static 'wheat_pathogens_transcript/fusarium_head_blight_infected_ear.png' %}"
-                                    alt="Wheat Pathogens Transcript">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'wheat_pathogens_transcript:index' %}">
-                                <h3>Wheat Pathogens Transcript</h3>
-                            </a>
-                            <p>
-                                This dataset contains transcript sequence data from 8 different fungal pathogen species of wheat.
-                            </p>
-                            <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens_transcript/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ wheat_pathogens_transcript_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'wheat_pathogens_transcript:index' %}">
+                            <img
+                                class="resized  img-rounded"
+                                src="{% static 'wheat_pathogens_transcript/fusarium_head_blight_infected_ear.png' %}"
+                                alt="Wheat Pathogens Transcript">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'wheat_pathogens_transcript:index' %}">
+                            <h3>Wheat Pathogens Transcript</h3>
+                        </a>
+                        <p>
+                            This dataset contains transcript sequence data from 8 different fungal pathogen species of wheat.
+                        </p>
+                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens_transcript/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ wheat_pathogens_transcript_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'wheat_pathogens:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}" alt="Wheat Pathogens">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'wheat_pathogens:index' %}">
-                                <h3>Wheat Pathogens Genomes</h3>
-                            </a>
-                            <p>
-                                This dataset contains the genomic sequence from 10 fungal and 2 bacterial pathogen species. Among the
-                                pathogens sequenced are the causal agents of stripe rust, stem rust, tan spot, glume blotch, septoria leaf
-                                blotch, bare patch and crown rot/head blight.
-                            </p>
-                            <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ wheat_pathogens_genome_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'wheat_pathogens:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'wheat_pathogens/stagonospora_nodorum.png' %}" alt="Wheat Pathogens">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'wheat_pathogens:index' %}">
+                            <h3>Wheat Pathogens Genomes</h3>
+                        </a>
+                        <p>
+                            This dataset contains the genomic sequence from 10 fungal and 2 bacterial pathogen species. Among the
+                            pathogens sequenced are the causal agents of stripe rust, stem rust, tan spot, glume blotch, septoria leaf
+                            blotch, bare patch and crown rot/head blight.
+                        </p>
+                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ wheat_pathogens_genome_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'wheat_cultivars:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'wheat_cultivars/wheat.png' %}" alt="Wheat Cultivars">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'wheat_cultivars:index' %}">
-                                <h3>Wheat Cultivars</h3>
-                            </a>
-                            <p>
-                                This dataset contains genomic sequence information from 16 wheat varieties of
-                                importance to Australia selected and prioritised by the major stakeholders of
-                                the Australian grains research community based on availability of mapping
-                                populations and genetic diversity.
-                            </p>
-                            <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_cultivars/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                            <span class="badge">{{ wheat_cultivars_sample_count }}</span>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'wheat_cultivars:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'wheat_cultivars/wheat.png' %}" alt="Wheat Cultivars">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'wheat_cultivars:index' %}">
+                            <h3>Wheat Cultivars</h3>
+                        </a>
+                        <p>
+                            This dataset contains genomic sequence information from 16 wheat varieties of
+                            importance to Australia selected and prioritised by the major stakeholders of
+                            the Australian grains research community based on availability of mapping
+                            populations and genetic diversity.
+                        </p>
+                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_cultivars/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <span class="badge">{{ wheat_cultivars_sample_count }}</span>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'barcode:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'barcode/barcode.png' %}" alt="Barcode">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'barcode:index' %}">
-                                <h3>Barcode</h3>
-                            </a>
-                            <p>
-                                With DNA barcoding, we can vastly accelerate this rate of biodiversity
-                                discovery and conservation as well as generate significant scientific and
-                                economic benefits for the mining, fisheries and forestry industries.
-                            </p>
-                            <a href="http://www.bioplatforms.com/barcode"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/barcode/"> <span class="glyphicon glyphicon-download"></span> </a>
-                            <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'barcode:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'barcode/barcode.png' %}" alt="Barcode">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'barcode:index' %}">
+                            <h3>Barcode</h3>
+                        </a>
+                        <p>
+                            With DNA barcoding, we can vastly accelerate this rate of biodiversity
+                            discovery and conservation as well as generate significant scientific and
+                            economic benefits for the mining, fisheries and forestry industries.
+                        </p>
+                        <a href="http://www.bioplatforms.com/barcode"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/barcode/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                    </td>
+                </tr>
 
-                    <tr>
-                        <td class="right">
-                            <a href="{% url 'stemcell:index' %}">
-                                <img class="resized  img-rounded" src="{% static 'stemcell/stemcell.png' %}" alt="Stemcell">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'stemcell:index' %}">
-                                <h3>Stem Cells</h3>
-                            </a>
-                            <p>
-                                Stem cells allow us to study fundamental processes in tissue growth,
-                                development, aging and disease.
-                            </p>
-                            <a href="http://www.bioplatforms.com/stem-cells"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                            <a href="https://downloads-qcif.bioplatforms.com/bpa/stemcell/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'stemcell:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'stemcell/stemcell.png' %}" alt="Stemcell">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'stemcell:index' %}">
+                            <h3>Stem Cells</h3>
+                        </a>
+                        <p>
+                            Stem cells allow us to study fundamental processes in tissue growth,
+                            development, aging and disease.
+                        </p>
+                        <a href="http://www.bioplatforms.com/stem-cells"> <span class="glyphicon glyphicon-info-sign"></span> </a>
+                        <a href="https://downloads-qcif.bioplatforms.com/bpa/stemcell/"> <span class="glyphicon glyphicon-download"></span> </a>
+                    </td>
+                </tr>
 
 
-                </table>
+            </table>
+        </div>
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted credit">
+                    &copy; Bioplatforms Australia, bpa-metadata {% bpam_version %}.
+                    <a href="https://ccg.murdoch.edu.au/"> Centre for Comparative Genomics, Murdoch University, Western Australia.</a>
+                    GNU Affero General Public License<a href="https://github.com/muccg/bpa-metadata"> Source</a>
+                </p>
             </div>
-
-            <div id="footer">
-                <div class="container">
-                    <p class="text-muted credit">
-                        &copy; Bioplatforms Australia, bpa-metadata {% bpam_version %}.
-                        <a href="https://ccg.murdoch.edu.au/"> Centre for Comparative Genomics, Murdoch University, Western Australia.</a>
-                        GNU Affero General Public License<a href="https://github.com/muccg/bpa-metadata"> Source</a>
-                    </p>
-                </div>
-            </div>
+        </div>
 
 
         <script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
