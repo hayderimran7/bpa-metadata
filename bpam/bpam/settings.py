@@ -443,3 +443,9 @@ DOWNLOADS_CHECKER_PASS = env.get('downloads_checker_pass', 'ch3ck3r')
 DOWNLOADS_CHECKER_SLEEP = env.get('downloads_checker_sleep', 0.0)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# sql explorer
+EXPLORER_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
+EXPLORER_TASKS_ENABLED = True
+EXPLORER_TOKEN_AUTH_ENABLED = True
+EXPLORER_TOKEN = env.get('EXPLORER_TOKEN', "EXPLOREIT")
