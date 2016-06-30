@@ -49,8 +49,8 @@ class Facility(models.Model):
         return u'{0}'.format(self.name)
 
 
-class Site(models.Model):
-    """ A site """
+class SampleSite(models.Model):
+    """ A sample site """
 
     # Site name
     name = models.TextField("Location Description", blank=False, unique=True)
@@ -88,8 +88,9 @@ class Site(models.Model):
         return '{} ({:.4f} {:.4f})'.format(self.name, self.point.x, self.point.y)
 
     class Meta:
-        verbose_name = "Sample Site"
-        verbose_name_plural = "Sample Sites"
+        abstract = True
+        verbose_name = "Sample Collection Site"
+        verbose_name_plural = "Sample Collection Sites"
 
 
 class DataSet(models.Model):

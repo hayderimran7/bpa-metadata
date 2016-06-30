@@ -4,8 +4,6 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
-from apps.common.models import Site
-
 from apps.common.admin import DateField
 from apps.common.admin import CommonAmpliconResource
 from apps.common.admin import CommonMetagenomicResource
@@ -20,6 +18,7 @@ from ..models import OpenWaterContextual
 from ..models import PelagicContextual
 from ..models import SampleStateTrack
 from ..models import TransferLog
+from ..models import MMSite
 
 
 class TransferLogResource(CommonTransferLogResource):
@@ -82,7 +81,7 @@ class CommonWaterResource(resources.ModelResource):
     site = fields.Field(readonly=True,
                         attribute="site",
                         column_name="Sample Site",
-                        widget=widgets.ForeignKeyWidget(Site, 'name'))
+                        widget=widgets.ForeignKeyWidget(MMSite, 'name'))
 
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
@@ -94,7 +93,7 @@ class CommonWaterResource(resources.ModelResource):
     def before_save_instance(self, instance, dry_run):
         """ set the site """
 
-        site = Site.get_or_create(instance.lat, instance.lon, instance.sample_site_name)
+        site = MMSite.get_or_create(instance.lat, instance.lon, instance.sample_site_name)
         instance.site = site
 
     def dehydrate_lat(self, resource):

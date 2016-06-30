@@ -9,8 +9,18 @@ from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
-from .models import (Amplicon, Metagenomic, TransferLog, Site, BPAProject, BPAUniqueID, Facility, Organism,
-                     SequenceFile, DNASource, Sequencer, Sample)
+from .models import Amplicon
+from .models import Metagenomic
+from .models import TransferLog
+from .models import BPAProject
+from .models import BPAUniqueID
+from .models import Facility
+from .models import Organism
+from .models import SequenceFile
+from .models import DNASource
+from .models import Sequencer
+from .models import Sample
+from .models import SampleSite
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
 
@@ -157,9 +167,9 @@ class CommonDataSetAdmin(ImportExportModelAdmin):
 
 
 # Site
-class SiteResource(resources.ModelResource):
+class SampleSiteResource(resources.ModelResource):
     """
-    Maps sites file to object. Sites file does not come with WKT strings
+    Maps sample sites file to object. Sites file does not come with WKT strings
     it ships with lat/lon columns
     """
 
@@ -181,7 +191,7 @@ class SiteResource(resources.ModelResource):
         return site.point.y
 
     class Meta:
-        model = Site
+        model = SampleSite  # override
         import_id_fields = ('name', )
         export_order = ('name',
                         'lat',
@@ -190,8 +200,8 @@ class SiteResource(resources.ModelResource):
                         'point', )
 
 
-class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
-    resource_class = SiteResource
+class SampleSiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
+    resource_class = SampleSiteResource  # override
     default_zoom = 4
     center = Point((134.0, -26.0), srid=4326)
     center.transform(3857)
@@ -204,9 +214,6 @@ class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmi
 
     list_filter = ('name', )
     search_fields = ('name', )
-
-
-admin.site.register(Site, SiteAdmin)
 
 
 class SampleAdmin(admin.ModelAdmin):

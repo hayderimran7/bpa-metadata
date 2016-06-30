@@ -7,6 +7,7 @@ from apps.common.models import BPAMirror
 from .models import MMSample
 from .models import MetagenomicSequenceFile
 from .models import AmpliconSequenceFile
+from .models import CollectionSite
 
 
 class AmpliconIndexView(TemplateView):
@@ -19,7 +20,14 @@ class AmpliconIndexView(TemplateView):
         context['ITS_size'] = AmpliconSequenceFile.objects.filter(amplicon='ITS').count()
         context['A16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='A16S').count()
         context['all_size'] = AmpliconSequenceFile.objects.count()
+        context['collection_sites_count'] = CollectionSite.objects.count()
         return context
+
+
+class CollectionSiteListView(ListView):
+    model = CollectionSite
+    context_object_name = 'sites'
+    template_name = 'marine_microbes/collection_site_list.html'
 
 
 class AmpliconListView(ListView):

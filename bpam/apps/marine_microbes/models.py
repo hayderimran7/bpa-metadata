@@ -4,9 +4,14 @@ from django.db import models
 from apps.common.models import TransferLog
 from apps.common.models import Amplicon
 from apps.common.models import Metagenomic
-from apps.common.models import Site
+from apps.common.models import SampleSite
 from apps.common.models import SequenceFile
 from apps.common.models import BPAUniqueID
+
+
+class MMSite(SampleSite):
+    def __str__(self):
+        return 'Marine Sample Site {} ({:.4f} {:.4f})'.format(self.name, self.point.x, self.point.y)
 
 
 class MMSample(models.Model):
@@ -34,7 +39,7 @@ class MMSample(models.Model):
                                   primary_key=True,
                                   help_text="Bioplatforms Australia Sample ID")
     sample_type = models.CharField("Sample Type", choices=SAMPLE_CHOICES, max_length=2, null=True, blank=True)
-    site = models.ForeignKey(Site, null=True)
+    site = models.ForeignKey(MMSite, null=True)
     depth = models.IntegerField("Depth", null=True, blank=True)
     collection_date = models.DateTimeField("Sample Collection Date", null=True, blank=True)
 
@@ -139,7 +144,7 @@ class MarineCommonContextual(models.Model):
     #  Notes
     note = models.TextField("Note", null=True, blank=True)
     #  Sample site
-    site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True)
+    site = models.ForeignKey(MMSite, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         abstract = True
