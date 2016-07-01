@@ -40,7 +40,7 @@ class FileAdmin(ImportExportModelAdmin):
                                       'library',
                                       'size',
                                       'vendor',
-                                      'flow_cell_id',
+                                      'flow_cell',
                                       'index',
                                       'lane_number',
                                       'read', )}),

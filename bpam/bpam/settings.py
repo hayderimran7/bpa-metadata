@@ -187,6 +187,7 @@ SUIT_CONFIG = {
                  'amplicon',
                  'transferlog',
                  'samplestatetrack',
+                 'mmsite',
                  'pelagiccontextual',
                  'openwatercontextual',
                  'seaweedcontextual',

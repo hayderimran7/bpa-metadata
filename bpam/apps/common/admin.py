@@ -9,9 +9,6 @@ from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
-from .models import Amplicon
-from .models import Metagenomic
-from .models import TransferLog
 from .models import BPAProject
 from .models import BPAUniqueID
 from .models import Facility
