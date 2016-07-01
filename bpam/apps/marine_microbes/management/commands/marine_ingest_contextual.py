@@ -8,8 +8,8 @@ from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 
-from apps.common.models import Site
 from ...models import MMSample
+from ...models import MMSite
 
 from libs.logger_utils import get_logger
 logger = get_logger(__name__)
@@ -38,7 +38,7 @@ def add_pelagic_data(data):
         # just fill in everything available from this spreadsheet
         if sample:
             sample.sample_type = MMSample.PELAGIC
-            sample.site = Site.get_or_create(entry.lat, entry.lon, entry.site_description)
+            sample.site = MMSite.get_or_create(entry.lat, entry.lon, entry.site_description)
             sample.depth = entry.depth
             sample.collection_date = datetime.combine(entry.date_sampled, entry.time_sampled)
 
