@@ -69,7 +69,7 @@ function selenium_defaults {
 
 function _django_migrate {
     echo "running migrate"
-    django-admin.py migrate  --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 }
 
 
@@ -94,7 +94,6 @@ function ingest_base() {
 
 # Great Barrier Reef
 function ingest_gbr() {
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py ingest_gbr_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
     django-admin.py ingest_gbr_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
 }
@@ -116,6 +115,7 @@ function make_migrations() {
     django-admin.py makemigrations wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE}
     django-admin.py makemigrations barcode --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py makemigrations marine_microbes --traceback --settings=${DJANGO_SETTINGS_MODULE}
 }
 
 
@@ -161,12 +161,6 @@ if [ "$1" = 'ingest_base' ]; then
     exit $?
 fi
 
-# set superuser
-if [ "$1" = 'superuser' ]; then
-    echo "Setting superuser (admin)"
-    exec django-admin.py  createsuperuser --email="admin@ccg.com"
-fi
-
 # security by django checksecure
 if [ "$1" = 'checksecure' ]; then
     echo "[Run] Running Django checksecure"
@@ -196,9 +190,9 @@ if [ "$1" = 'runserver' ]; then
      _django_collectstatic
 
      # some one off bpa goop
-     django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
+     #django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
 
-     _django_migrate
+     #_django_migrate
 
     echo "running runserver ..."
     exec django-admin.py ${RUNSERVER_OPTS}
