@@ -24,34 +24,34 @@
                 <h2> Biome of Australian Soil Environments </h2>
 
                 <p>
-                The Biome of Australia Soil Environments (BASE) is a
-                collaborative project to create a public resource containing
-                microbial genome information from a range of Australian soil
-                environments.
+                    The Biome of Australia Soil Environments (BASE) is a
+                    collaborative project to create a public resource containing
+                    microbial genome information from a range of Australian soil
+                    environments.
                 </p>
 
                 <p>
-                Soil along with historical, physical and chemical contextual information
-                (including photos) has been collected from 600+ diverse sites around Australia
-                including Christmas Island and the Australian Antarctic Territory.
+                    Soil along with historical, physical and chemical contextual information
+                    (including photos) has been collected from 600+ diverse sites around Australia
+                    including Christmas Island and the Australian Antarctic Territory.
                 </p>
 
                 <p>
-                DNA is extracted from all samples using a standardised protocol (PowerSoil, MO
-                BIO) and amplicon analysis undertaken using the Illumina MiSeq platform for
-                bacterial 16S, fungal ITS and eukaryotic 18S targets. 
+                    DNA is extracted from all samples using a standardised protocol (PowerSoil, MO
+                    BIO) and amplicon analysis undertaken using the Illumina MiSeq platform for
+                    bacterial 16S, fungal ITS and eukaryotic 18S targets. 
                 </p>
 
                 <p>
-                OTU data has been generated through standardised pipelines for each target and
-                is available through this repository.
+                    OTU data has been generated through standardised pipelines for each target and
+                    is available through this repository.
                 </p>
 
                 <p>
-                For more information please visit:
-                <a href="http://www.bioplatforms.com/soil-biodiversity/">
-                    http://www.bioplatforms.com/soil-biodiversity
-                </a>
+                    For more information please visit:
+                    <a href="http://www.bioplatforms.com/soil-biodiversity/">
+                        http://www.bioplatforms.com/soil-biodiversity
+                    </a>
                 </p>
 
             </div>
@@ -101,16 +101,16 @@
                     </a>
 
                     <a class="list-group-item"
-                       data-container="body" 
-                       data-toggle="tooltip" 
+                       data-container="body"
+                       data-toggle="tooltip"
                        data-placement="right"
                        title="View methodological metadata pertaining to the sequencing of each sample and amplicon and link to sequencing data for each sample"
                        href="{% url 'base_amplicon:index' %}">Amplicons <span class="badge">{{ amplicon_count }}</span>
                     </a>
 
                     <a class="list-group-item"
-                       data-container="body" 
-                       data-toggle="tooltip" 
+                       data-container="body"
+                       data-toggle="tooltip"
                        data-placement="right"
                        title="View methodological metadata pertaining to the sequencing of shotgun metagenomics for each sample and link to sequencing data for each sample"
                        href="{% url 'base_metagenomics:metagenomics' %}">Metagenomics <span class="badge">{{ metagenomics_count }}</span>
@@ -118,7 +118,7 @@
 
                     <a class="list-group-item"
                        data-container="body"
-                       data-toggle="tooltip" 
+                       data-toggle="tooltip"
                        data-placement="right"
                        title="Full OTU tables, OTU taxonomy and equences representing OTU’s (fasta), soil sample collection and sequencing methods"
                        href="{% url 'base:information' %}">OTU’s, Methods and other information
@@ -127,7 +127,7 @@
                     <a class="list-group-item"
                        data-container="body"
                        data-toggle="tooltip"
-                       data-placement="right" 
+                       data-placement="right"
                        title="Link to data collected during initial project phase, prior to migration to illumina"
                        href="{% url 'base_454:454samples' %}">454 <span class="badge">{{ 454_count }}</span>
                     </a>
@@ -135,17 +135,16 @@
                     <a class="list-group-item" href="{% url 'base:requestaccess' %}">Request data download access </a>
                     <a class="list-group-item" href="{% url 'base:acknowledgement' %}"> Acknowledgements </a>
 
-                    <a class="list-group-item" 
+                    <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/base/">
                         <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                        Archive
+                        Downloads
                     </a>
-                    <a class="list-group-item" 
+                    <a class="list-group-item"
                        href="{% url 'base:contacts' %}">
                         <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span>
                         Contacts
                     </a>
-                    
                 </div>
 
             </div>
@@ -154,8 +153,8 @@
 </div>
 
 <script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+ $(function () {
+     $('[data-toggle="tooltip"]').tooltip()
+ })
 </script>
 {% endblock %}
