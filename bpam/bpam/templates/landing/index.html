@@ -100,10 +100,12 @@
                             create a public resource containing microbial genome information from a range of
                             Australian soil environments.
                         </p>
-                        <a href="http://www.bioplatforms.com/soil-biodiversity/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/base/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ base_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li> <a href="http://www.bioplatforms.com/soil-biodiversity/"> <span class="glyphicon glyphicon-info-sign"></span> </a> </li>
+                            <li> <a href="https://downloads-qcif.bioplatforms.com/bpa/base/"> <span class="glyphicon glyphicon-download"></span> </a> </li>
+                            <li> <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a> </li>
+                            <li> <a href="{% url 'base:index' %}"> <span class="badge"> {{ base_sample_count }} </span></a> </li>
+                        </ul>
                     </td>
 
                 </tr>
@@ -122,10 +124,12 @@
                             The Marine Microbes project will establish how Australia’s marine microbial
                             communities change over time in various locations and environments.
                         </p>
-                        <a href="http://www.bioplatforms.com/marine-microbes/"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/marine_microbes/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ marine_microbes_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/marine-microbes/"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/marine_microbes/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'marine_microbes:index' %}""><span class="badge">{{ marine_microbes_sample_count }}</span></a></li>
+                        </ul>
                     </td>
                 </tr>
                 <tr>
@@ -142,10 +146,12 @@
                             The Sepsis Framework Initiative aims to develop a framework dataset that will enable identification of core
                             targets common to antibiotic-resistant sepsis pathogens.
                         </p>
-                        <a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ sepsis_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'sepsis:index' %}"><span class="badge">{{ sepsis_sample_count }}</span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -164,10 +170,12 @@
                             Great Barrier Reef and Red Sea to ultimately help guide reef management
                             practices.
                         </p>
-                        <a href="http://www.bioplatforms.com/great-barrier-reef"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/gbr/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ gbr_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/great-barrier-reef"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/gbr/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'gbr:index' %}"><span class="badge">{{ gbr_sample_count }}</span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -184,10 +192,12 @@
                         <p>
                             The Melanoma Genomics Project aims to whole genome sequence approximately 500 melanoma patients.
                         </p>
-                        <a href="http://www.bioplatforms.com/melanoma"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/melanoma/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ melanoma_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/melanoma"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/melanoma/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'melanoma:index' %}"><span class="badge">{{ melanoma_sample_count }}</span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -207,10 +217,12 @@
                         <p>
                             This dataset contains transcript sequence data from 8 different fungal pathogen species of wheat.
                         </p>
-                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens_transcript/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ wheat_pathogens_transcript_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens_transcript/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'wheat_pathogens_transcript:index' %}"><span class="badge">{{ wheat_pathogens_transcript_sample_count }}</span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -229,10 +241,12 @@
                             pathogens sequenced are the causal agents of stripe rust, stem rust, tan spot, glume blotch, septoria leaf
                             blotch, bare patch and crown rot/head blight.
                         </p>
-                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ wheat_pathogens_genome_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'wheat_pathogens:index' %}"><span class="badge"> {{ wheat_pathogens_genome_sample_count }} </span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -252,10 +266,12 @@
                             the Australian grains research community based on availability of mapping
                             populations and genetic diversity.
                         </p>
-                        <a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_cultivars/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
-                        <span class="badge">{{ wheat_cultivars_sample_count }}</span>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_cultivars/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'wheat_cultivars:index' %}"/><span class="badge"> {{ wheat_cultivars_sample_count }} </span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -274,9 +290,11 @@
                             discovery and conservation as well as generate significant scientific and
                             economic benefits for the mining, fisheries and forestry industries.
                         </p>
-                        <a href="http://www.bioplatforms.com/barcode"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/barcode/"> <span class="glyphicon glyphicon-download"></span> </a>
-                        <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a><br>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/barcode"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/barcode/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                        </ul>
                     </td>
                 </tr>
 
@@ -294,8 +312,10 @@
                             Stem cells allow us to study fundamental processes in tissue growth,
                             development, aging and disease.
                         </p>
-                        <a href="http://www.bioplatforms.com/stem-cells"> <span class="glyphicon glyphicon-info-sign"></span> </a>
-                        <a href="https://downloads-qcif.bioplatforms.com/bpa/stemcell/"> <span class="glyphicon glyphicon-download"></span> </a>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/stem-cells"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/stemcell/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                        </ul>
                     </td>
                 </tr>
 
