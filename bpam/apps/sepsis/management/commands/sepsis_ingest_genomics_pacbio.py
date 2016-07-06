@@ -35,7 +35,6 @@ def add_method_data(data):
         args.pop('bpa_id', None)
         args.pop('file_name', None)
         args.pop('row', None)
-        print(args)
         method, _ = PacBioGenomicsMethod.objects.get_or_create(**args)
         if method:
             files = GenomicsPacBioFile.objects.filter(sample__bpa_id=bpa_id)

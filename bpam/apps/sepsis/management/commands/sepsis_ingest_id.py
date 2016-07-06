@@ -117,7 +117,7 @@ def get_ids(file_name):
 
 
 class Command(management_command.BPACommand):
-    help = 'Ingest Sepsis Project metadata'
+    help = 'Ingest Sepsis Project tracking data'
 
     def handle(self, *args, **options):
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
