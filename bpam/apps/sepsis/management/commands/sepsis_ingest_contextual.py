@@ -27,6 +27,9 @@ def add_data(data):
     for entry in data:
         if entry.bpa_id is "":
             continue
+        if entry.strain_or_isolate is None:
+            continue
+
         bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
         if not bpa_id:
             logger.info("Non BPA encountered when I expected one {}, skipping".format(report))
@@ -194,6 +197,7 @@ class Command(management_command.BPACommand):
             logger.info("Deleting all Hosts")
             Host.objects.all().delete()
             GrowthMethod.objects.all().delete()
+            SepsisSample.objects.all().delete()
 
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
