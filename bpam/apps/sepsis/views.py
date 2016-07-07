@@ -36,6 +36,12 @@ class SampleListView(ListView):
     context_object_name = 'samples'
     template_name = 'sepsis/sample_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(SampleListView, self).get_context_data(**kwargs)
+        context['samples'] = SepsisSample.objects.exclude(strain_or_isolate__isnull=True).exclude(
+            strain_or_isolate__exact='')
+        return context
+
 
 class GenomicsMiseqFileListView(ListView):
     model = GenomicsMiseqFile
