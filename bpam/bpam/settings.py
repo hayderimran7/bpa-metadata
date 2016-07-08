@@ -125,6 +125,7 @@ LEAFLET_CONFIG = {
 }
 
 SUIT_CONFIG = {
+    'LIST_PER_PAGE': 50,
     'SHOW_REQUIRED_ASTERISK': True,
     'ADMIN_NAME': 'Bioplatforms Australia Metadata',
     'MENU':
