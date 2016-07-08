@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-4" id="sitelist-container">
             <div class="panel-heading">
-                <h3 class="unstacked">GBR Collection Sites </h3>
+                <h3 class="unstacked">Marine Microbe Collection Sites </h3>
             </div>
             <table id="sitelist" class="ccgslimtable" width="100%">
                 <thead>
@@ -34,7 +34,7 @@
                     {% for site in sites %}
                     <tr>
                         <td class="name">
-                            <a href="{% url 'gbr:site' site.pk %}">{{ site.get_name }}</a>
+                            <a href="{% url 'marine_microbes:site' site.pk %}">{{ site.get_name }}</a>
                         </td>
                         <td class="lat">{{ site.lat }}</td>
                         <td class="lng">{{ site.lon }}</td>

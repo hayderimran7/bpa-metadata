@@ -230,8 +230,8 @@ class SampleAdmin(admin.ModelAdmin):
         ('Sample Identification', {'fields': (('bpa_id', 'name'))}),
         ('DNA Source', {'fields': ('organism', 'dna_source', 'dna_extraction_protocol', 'gender', 'tumor_stage',
                                    'histological_subtype')}),
-        ('Sample Management', {'fields': ('requested_sequence_coverage', 'date_sent_to_sequencing_facility',
-                                          'contact_scientist', 'note')}),
+        ('Sample Management',
+         {'fields': ('requested_sequence_coverage', 'date_sent_to_sequencing_facility', 'contact_scientist', 'note')}),
     ]
 
     list_display = ('bpa_id', 'name', 'dna_source', 'dna_extraction_protocol', 'tumor_stage')

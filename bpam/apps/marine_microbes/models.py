@@ -88,7 +88,7 @@ class AmpliconSequenceFile(SequenceFile):
         return self.pcr_neat == 'P'
 
     def __unicode__(self):
-        return u"{0}:{1}".format(self.bpa_id, self.amplicon)
+        return u"{0}:{1}".format(self.sample, self.amplicon)
 
     def get_path_parts(self):
         return ('marine_microbes', 'amplicons/{}'.format(self.amplicon).lower())

@@ -5,14 +5,11 @@ from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
 from apps.common.admin import DateField
-from apps.common.admin import CommonAmpliconResource
 from apps.common.admin import CommonMetagenomicResource
 from apps.common.admin import CommonMetagenomicAdmin
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
-from apps.common.admin import CommonAmpliconAdmin
 
-from ..models import Amplicon
 from ..models import Metagenomic
 from ..models import OpenWaterContextual
 from ..models import PelagicContextual
@@ -28,15 +25,6 @@ class TransferLogResource(CommonTransferLogResource):
 
 class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
-
-
-class AmpliconResource(CommonAmpliconResource):
-    class Meta(CommonAmpliconResource.Meta):
-        model = Amplicon
-
-
-class AmpliconAdmin(CommonAmpliconAdmin):
-    resource_class = AmpliconResource
 
 
 class MetagenomicResource(CommonMetagenomicResource):
@@ -409,7 +397,6 @@ class ContextualOpenWaterAdmin(CommonAdmin):
                  }), )
 
 
-admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)

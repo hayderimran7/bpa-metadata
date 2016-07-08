@@ -197,7 +197,7 @@ class Command(management_command.BPACommand):
             logger.info("Deleting all Hosts")
             Host.objects.all().delete()
             GrowthMethod.objects.all().delete()
-            SepsisSample.objects.all().delete()
+            SepsisSample.objects.all()
 
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("sepsis", get_password('sepsis')))
         fetcher.clean()
