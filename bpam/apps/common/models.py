@@ -63,7 +63,7 @@ class SampleSite(models.Model):
     def _get_point(cls, lon, lat):
         lat = float(lat)
         lon = float(lon)
-        point = Point((lat, lon), settings.GIS_SOURCE_RID)
+        point = Point((lat, lon), srid=settings.GIS_SOURCE_RID)
         point.transform(settings.GIS_TARGET_RID)
         return point
 
