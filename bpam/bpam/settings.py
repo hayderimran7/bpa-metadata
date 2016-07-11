@@ -100,6 +100,12 @@ SHORT_DATE_FORMAT = "d/m/Y"
 AUTH_USER_MODEL = 'bpaauth.BPAUser'
 
 # used by maps when plotting sample location
+GIS_SOURCE_RID = 4326
+GIS_TARGET_RID = 3857
+GIS_CENTER = (134.0, -26.0)
+GIS_ZOOM = 1 
+GIS_OPENLAYERS_URL = "https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"
+
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-25.27, 133.775),
     'DEFAULT_ZOOM': 4,

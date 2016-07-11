@@ -9,6 +9,7 @@ from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
+from django.conf import settings
 from .models import BPAProject
 from .models import BPAUniqueID
 from .models import Facility
@@ -199,15 +200,16 @@ class SampleSiteResource(resources.ModelResource):
 
 class SampleSiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SampleSiteResource  # override
-    default_zoom = 4
-    center = Point((134.0, -26.0), srid=4326)
-    center.transform(3857)
+    openlayers_url = settings.GIS_OPENLAYERS_URL
+    default_zoom = settings.GIS_ZOOM
+    center = Point(settings.GIS_CENTER, srid=settings.GIS_SOURCE_RID)
+    center.transform(settings.GIS_TARGET_RID)
     default_lon = center.x
     default_lat = center.y
 
     list_display = ('name', 'point_description', 'note')
 
-    fields = ('point', 'name', 'note')
+    fields = ('point', 'name', 'note', )
 
     list_filter = ('name', )
     search_fields = ('name', )

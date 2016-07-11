@@ -60,19 +60,21 @@ class SampleSite(models.Model):
     note = models.TextField("Note", null=True, blank=True)
 
     @classmethod
-    def create(cls, lat, lon, site_name):
+    def _get_point(cls, lon, lat):
         lat = float(lat)
         lon = float(lon)
-        point = Point(lat, lon)
-        site = cls(name=site_name, point=point)
+        point = Point((lat, lon), settings.GIS_SOURCE_RID)
+        point.transform(settings.GIS_TARGET_RID)
+        return point
+
+    @classmethod
+    def create(cls, lat, lon, site_name):
+        site = cls(name=site_name, point=cls._get_point(lat, lon))
         return site
 
     @classmethod
     def get_or_create(cls, lat, lon, site_name):
-        lat = float(lat)
-        lon = float(lon)
-        point = Point(lat, lon)
-        site, _ = cls.objects.get_or_create(name=site_name, point=point)
+        site, _ = cls.objects.get_or_create(name=site_name, point=cls._get_point(lat, lon))
         return site
 
     def point_description(self):

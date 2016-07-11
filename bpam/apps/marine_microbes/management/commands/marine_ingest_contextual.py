@@ -39,6 +39,8 @@ def add_pelagic_data(data):
         if sample:
             sample.sample_type = MMSample.PELAGIC
             sample.site = MMSite.get_or_create(entry.lat, entry.lon, entry.site_description)
+            sample.site.note = "Contextual Ingest"
+            sample.site.save()
             sample.depth = entry.depth
             sample.collection_date = datetime.combine(entry.date_sampled, entry.time_sampled)
 
@@ -164,8 +166,8 @@ class Command(management_command.BPACommand):
     def handle(self, *args, **options):
 
         if options['delete']:
-            self.log_info("Deleting all Hosts")
-            MMSample.objects.all().delete()
+            self.log_info("Deleting all Sites")
+            MMSite.objects.all().delete()
 
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
         fetcher.clean()
