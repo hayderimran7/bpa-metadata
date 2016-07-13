@@ -1,5 +1,7 @@
 #!/bin/bash
 
+INGEST_LOG_FILE=/data/ingest.log
+MIGRATE_LOG_FILE=/data/migrate.log
 
 # wait for a given host:port to become available
 #
@@ -69,7 +71,7 @@ function selenium_defaults {
 
 function _django_migrate {
     echo "running migrate"
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
 }
 
 
@@ -81,41 +83,21 @@ function _django_collectstatic {
 
 # BASE
 function ingest_base() {
-    django-admin.py set_vocabulary--settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_sra_id--traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_base_otu --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py set_vocabulary --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_sra_id--traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py base_ingest_otu --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 }
 
 
 # Great Barrier Reef
 function ingest_gbr() {
-    django-admin.py ingest_gbr_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_gbr_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-}
-
-
-function make_migrations() {
-    django-admin.py makemigrations bpaauth --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations common --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base_otu --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations base_454 --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations melanoma --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations gbr --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations gbr_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations wheat_pathogens --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations barcode --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    django-admin.py makemigrations marine_microbes --traceback --settings=${DJANGO_SETTINGS_MODULE}
+    django-admin.py gbr_ingest_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py gbr_ingest_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 }
 
 
@@ -129,24 +111,24 @@ wait_for_services
 if [ "$1" = 'nuclear' ]; then
     django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
     make_migrations
-    exec django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    exec django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 fi
 
 # ingest all bpa project data
 if [ "$1" = 'ingest_all' ]; then
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 
-    django-admin.py ingest_bpa_projects --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_melanoma --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_wheat_pathogens --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_wheat_pathogens_transcript --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
-    django-admin.py ingest_wheat_cultivars --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    django-admin.py ingest_bpa_projects --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py melanoma_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py wheat_pathogens_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py wheat_pathogens_transcript_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
+    django-admin.py wheat_cultivars_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 
     ingest_gbr
     ingest_base
 
     # links
-    exec django-admin.py url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/ingest.log
+    exec django-admin.py url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
 fi
 
 # ingest gbr
@@ -192,14 +174,14 @@ if [ "$1" = 'runserver' ]; then
      # some one off bpa goop
      #django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
 
-     #_django_migrate
+     _django_migrate
 
     echo "running runserver ..."
     exec django-admin.py ${RUNSERVER_OPTS}
 fi
 
 # runtests entrypoint
-if [ "$1" = 'runtests' ]; then 
+if [ "$1" = 'runtests' ]; then
     echo "[Run] Starting tests"
     exec django-admin.py test --traceback
 fi
