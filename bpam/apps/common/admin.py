@@ -201,7 +201,8 @@ class SampleSiteResource(resources.ModelResource):
 class SampleSiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SampleSiteResource  # override
     openlayers_url = settings.GIS_OPENLAYERS_URL
-    default_zoom = settings.GIS_ZOOM
+    # default_zoom = settings.GIS_ZOOM
+    point_zoom = settings.GIS_POINT_ZOOM
     center = Point(settings.GIS_CENTER, srid=settings.GIS_SOURCE_RID)
     center.transform(settings.GIS_TARGET_RID)
     default_lon = center.x

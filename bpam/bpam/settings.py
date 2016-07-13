@@ -103,7 +103,7 @@ AUTH_USER_MODEL = 'bpaauth.BPAUser'
 GIS_SOURCE_RID = 4326
 GIS_TARGET_RID = 3857
 GIS_CENTER = (134.0, -26.0)
-GIS_ZOOM = 1 
+GIS_POINT_ZOOM = 12
 GIS_OPENLAYERS_URL = "https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"
 
 LEAFLET_CONFIG = {
