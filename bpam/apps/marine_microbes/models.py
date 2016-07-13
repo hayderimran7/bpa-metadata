@@ -2,8 +2,6 @@
 
 from django.db import models
 from apps.common.models import TransferLog
-from apps.common.models import Amplicon
-from apps.common.models import Metagenomic
 from apps.common.models import SampleSite
 from apps.common.models import SequenceFile
 from apps.common.models import BPAUniqueID
@@ -118,14 +116,6 @@ class MetagenomicSequenceFile(SequenceFile):
 
 
 class TransferLog(TransferLog):
-    pass
-
-
-class Metagenomic(Metagenomic):
-    pass
-
-
-class Amplicon(Amplicon):
     pass
 
 

@@ -375,57 +375,6 @@ class URLVerification(models.Model):
     status_note = models.TextField()
 
 
-# FIXME remove these that were used in the old tracker, they were associated with Marine Microbes mostly
-class Amplicon(models.Model):
-    """ Amplicon """
-
-    TYPES = (('16S', '16S'), ('ITS', 'ITS'), ('18S', '18S'), ('A16S', 'A16S'))  # is this useful ?
-
-    extraction_id = models.CharField('Sample Extraction ID', max_length=100, blank=True, null=True)
-
-    facility = models.ForeignKey(Facility,
-                                 related_name='%(app_label)s_%(class)s_facility',
-                                 verbose_name='Sequencing Facility',
-                                 blank=True,
-                                 null=True)
-
-    target = models.CharField('Type', max_length=4, choices=TYPES)
-
-    metadata_filename = models.CharField('Metadata Filename', max_length=100)
-
-    comments = models.TextField('Comments', blank=True, null=True)
-
-    def __str__(self):
-        return u'{0}:{1}:{2}'.format(self.extraction_id, self.facility, self.target)
-
-    class Meta:
-        abstract = True
-        verbose_name_plural = 'Amplicon Sequences'
-
-
-class Metagenomic(models.Model):
-    """ Metagenomic  """
-
-    extraction_id = models.CharField('Sample Extraction ID', max_length=100, blank=True, null=True)
-
-    facility = models.ForeignKey(Facility,
-                                 related_name='%(app_label)s_%(class)s_facility',
-                                 verbose_name='Sequencing Facility',
-                                 blank=True,
-                                 null=True)
-
-    metadata_filename = models.CharField('Metadata Filename', max_length=100)
-
-    comments = models.TextField('Comments', blank=True, null=True)
-
-    def __str__(self):
-        return u'{0}:{1}'.format(self.extraction_id, self.facility)
-
-    class Meta:
-        abstract = True
-        verbose_name_plural = 'Metagenomic Sequences'
-
-
 class SequenceFile(models.Model):
     """ A sequence file resulting from a sequence run """
 

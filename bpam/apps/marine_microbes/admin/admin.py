@@ -5,12 +5,9 @@ from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
 from apps.common.admin import DateField
-from apps.common.admin import CommonMetagenomicResource
-from apps.common.admin import CommonMetagenomicAdmin
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
 
-from ..models import Metagenomic
 from ..models import OpenWaterContextual
 from ..models import PelagicContextual
 from ..models import SampleStateTrack
@@ -25,15 +22,6 @@ class TransferLogResource(CommonTransferLogResource):
 
 class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
-
-
-class MetagenomicResource(CommonMetagenomicResource):
-    class Meta(CommonMetagenomicResource.Meta):
-        model = Metagenomic
-
-
-class MetagenomicAdmin(CommonMetagenomicAdmin):
-    resource_class = MetagenomicResource
 
 
 class SampleStateTrackAdmin(ImportExportModelAdmin):
@@ -397,7 +385,6 @@ class ContextualOpenWaterAdmin(CommonAdmin):
                  }), )
 
 
-admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
 admin.site.register(PelagicContextual, ContextualPelagicAdmin)

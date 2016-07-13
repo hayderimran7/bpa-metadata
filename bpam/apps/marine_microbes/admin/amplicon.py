@@ -8,20 +8,7 @@ from suit.widgets import LinkedSelect
 from suit.widgets import SuitDateWidget
 from import_export.admin import ImportExportModelAdmin
 
-from apps.common.admin import CommonAmpliconAdmin
-from apps.common.admin import CommonAmpliconResource
-
-from ..models import Amplicon
 from ..models import AmpliconSequenceFile
-
-
-class AmpliconResource(CommonAmpliconResource):
-    class Meta(CommonAmpliconResource.Meta):
-        model = Amplicon
-
-
-class AmpliconAdmin(CommonAmpliconAdmin):
-    resource_class = AmpliconResource
 
 
 class FileForm(forms.ModelForm):
@@ -95,5 +82,4 @@ class FileAdmin(ImportExportModelAdmin):
                    'vendor', )
 
 
-admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(AmpliconSequenceFile, FileAdmin)
