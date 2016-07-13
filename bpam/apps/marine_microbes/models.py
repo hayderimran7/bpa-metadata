@@ -94,7 +94,7 @@ class AmpliconSequenceFile(SequenceFile):
         return ('marine_microbes', 'amplicons/{}'.format(self.amplicon).lower())
 
     class Meta:
-        verbose_name_plural = "Amplicon Sequencing Metadata"
+        verbose_name_plural = "Amplicon Sequence Files"
 
 
 class MetagenomicSequenceFile(SequenceFile):
