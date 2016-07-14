@@ -191,7 +191,7 @@ SUIT_CONFIG = {
                  'transferlog',
                  'samplestatetrack',
                  'mmsite',
-                 'pelagiccontextual',
+                 'coastalcontextual',
                  'openwatercontextual',
                  'seaweedcontextual',
                  'seagrasscontextual',

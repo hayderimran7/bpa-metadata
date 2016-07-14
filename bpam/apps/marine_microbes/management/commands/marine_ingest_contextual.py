@@ -23,7 +23,7 @@ METADATA_PATH = "marine_microbes/metadata"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
-def add_pelagic_data(data):
+def add_coastal_data(data):
     """ pack data into the DB """
 
     for entry in data:
@@ -37,7 +37,7 @@ def add_pelagic_data(data):
         sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
         # just fill in everything available from this spreadsheet
         if sample:
-            sample.sample_type = MMSample.PELAGIC
+            sample.sample_type = MMSample.COASTAL
             sample.site = MMSite.get_or_create(entry.lat, entry.lon, entry.site_description)
             sample.site.note = "Contextual Ingest"
             sample.site.save()
@@ -55,11 +55,11 @@ def ingest_data():
     logger.info("Ingesting Sepsis BPA Contextual metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info("Processing Sepsis BPA Contextual file {0}".format(metadata_file))
-        add_pelagic_data(list(get_pelagic_data(metadata_file)))
+        add_coastal_data(list(get_coastal_data(metadata_file)))
 
 
-def get_pelagic_data(file_name):
-    """ Parse fields from the metadata spreadsheet pelagic sheet"""
+def get_coastal_data(file_name):
+    """ Parse fields from the metadata spreadsheet coastal sheet"""
 
     # {{{
     # BPA_ID
@@ -144,7 +144,7 @@ def get_pelagic_data(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name="Pelagic",
+                           sheet_name="Coastal",
                            header_length=1,
                            column_name_row_index=0,
                            formatting_info=True)
