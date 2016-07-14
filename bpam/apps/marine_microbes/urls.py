@@ -37,4 +37,9 @@ urlpatterns = [
     url(regex=r'^amplicon/(?P<pk>.*)/$',
         view=views.AmpliconDetailView.as_view(),
         name='amplicon_detail'),
+    url(regex=r'^sites/(?P<pk>\d+)/$',
+        view=views.CollectionSiteDetailView.as_view(),
+        name='collectionsitedetail'),
+    url(regex=r'^sites', view=views.CollectionSiteListView.as_view(),
+        name='collectionsites'),
 ]

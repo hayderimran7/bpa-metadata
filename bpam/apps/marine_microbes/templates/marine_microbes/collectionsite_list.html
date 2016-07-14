@@ -1,0 +1,54 @@
+{% extends "common/geographic_map.html" %}
+{% load leaflet_tags %}
+
+{% block title %}Marine Microbes Collection Sites {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Collection Sites" "marine_microbes:collectionsites" %}
+{% endblock %}
+
+{% block content %}
+{% if sites %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            {% leaflet_map "site_map" callback="BPAM.map_init_list" %}
+        </div>
+        <div class="col-md-4" id="sitelist-container">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Collection Sites</h3>
+                </div>
+                <table id="sitelist" class="ccgslimtable">
+                    <thead>
+                        <tr>
+                            <th class="name">Location Name</th>
+                            <th class="lat">Latitude</th>
+                            <th class="lng">Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for site in sites %}
+                        <tr>
+                            <td class="name">
+                                <a href="{% url 'marine_microbes:collectionsitedetail' site.pk %}">{{ site.name }}</a>
+                            </td>
+                            <td class="lat">{{ site.lat }}</td>
+                            <td class="lng">{{ site.lon }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<h3> No Marine Microbe collection sites are currently available</h3>
+{% endif %}
+
+{% endblock %}

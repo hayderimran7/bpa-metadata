@@ -1,0 +1,30 @@
+{% extends "common/geographic_map.html" %}
+{% load leaflet_tags %}
+{% block title %}BASE Contextual Site Detail {% endblock %}
+
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "base:index" %}
+{% breadcrumb "Collection Sites" "marine_microbes:collectionsites" %}
+{% breadcrumb  collectionsite.get_name "" %}
+{% endblock %}
+
+<script type="text/javascript">
+    var collectionsite = [{{ collectionsite.lat }}, {{ collectionsite.lon }}] ;
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            {% leaflet_map "site_map" callback="BPAM.map_init_detail" %}
+        </div>
+
+        <div class="col-md-4" id="sitelist-container">
+            {% include  "marine_microbes/collectionsite_detail_table.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

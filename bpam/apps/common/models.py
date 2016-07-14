@@ -80,11 +80,18 @@ class SampleSite(models.Model):
     def point_description(self):
         return '{:.4f} {:.4f}'.format(self.point.x, self.point.y)
 
-    def get_lat(self):
+    @property
+    def lat(self):
+        return self.point.y
+
+    @property
+    def lon(self):
         return self.point.x
 
-    def get_lon(self):
-        return self.point.y
+    def get_name(self):
+        if self.name:
+            return u"{} ({:4.4f}, {:4.4f})".format(self.location_name, self.lat, self.lon)
+        return u"{:4.4f}, {:4.4f}".format(self.lat, self.lon)
 
     def __str__(self):
         return '{} ({:.4f} {:.4f})'.format(self.name, self.point.x, self.point.y)
