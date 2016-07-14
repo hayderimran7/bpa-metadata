@@ -161,7 +161,7 @@ class SampleStateTrack(models.Model):
 
 
 class OpenWaterContextual(MarineCommonContextual):
-    sample_type = "Open Water"
+    sample_type = "Pelagic/Open Water"
     # Host Species
     host_species = models.TextField("Host Species", null=True, blank=True)
     # pH Level (H2O) (pH)
@@ -296,10 +296,10 @@ class OpenWaterContextual(MarineCommonContextual):
         return "{} Open Water Data".format(self.bpa_id)
 
 
-class PelagicContextual(MarineCommonContextual):
-    """ Pelagic """
+class CoastalContextual(MarineCommonContextual):
+    """ Coastal sample contextual data"""
 
-    sample_type = "Pelagic"
+    sample_type = "Coastal"
 
     # Host Species
     host_species = models.TextField("Host Species", null=True, blank=True)
@@ -339,11 +339,11 @@ class PelagicContextual(MarineCommonContextual):
     flux = models.IntegerField("Light intensity (lux)", null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Pelagic Contextual Data'
+        verbose_name = 'Coastal Contextual Data'
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "{} Pelagic Contextual Data".format(self.bpa_id)
+        return "{} Coastal Contextual Data".format(self.bpa_id)
 
 
 class CoralWeedGrassCommonContextual(MarineCommonContextual):

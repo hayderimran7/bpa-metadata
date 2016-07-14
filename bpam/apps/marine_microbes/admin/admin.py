@@ -9,7 +9,7 @@ from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
 
 from ..models import OpenWaterContextual
-from ..models import PelagicContextual
+from ..models import CoastalContextual
 from ..models import SampleStateTrack
 from ..models import TransferLog
 from ..models import MMSite
@@ -85,7 +85,7 @@ class CommonWaterResource(resources.ModelResource):
             return resource.site.name
 
 
-class ContextualPelagicResource(CommonWaterResource):
+class ContextualCoastalResource(CommonWaterResource):
 
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
     ph = fields.Field(attribute="ph", column_name="pH Level H20")
@@ -108,7 +108,7 @@ class ContextualPelagicResource(CommonWaterResource):
     flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
 
     class Meta:
-        model = PelagicContextual
+        model = CoastalContextual
         import_id_fields = ('bpa_id', )
         export_order = ('bpa_id',
                         'sample_site_name',
@@ -138,8 +138,8 @@ class ContextualPelagicResource(CommonWaterResource):
                         'flux', )
 
 
-class ContextualPelagicAdmin(CommonAdmin):
-    resource_class = ContextualPelagicResource
+class ContextualCoastalAdmin(CommonAdmin):
+    resource_class = ContextualCoastalResource
 
     _required = ('bpa_id',
                  'date_sampled',
@@ -387,5 +387,5 @@ class ContextualOpenWaterAdmin(CommonAdmin):
 
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
-admin.site.register(PelagicContextual, ContextualPelagicAdmin)
+admin.site.register(CoastalContextual, ContextualCoastalAdmin)
 admin.site.register(OpenWaterContextual, ContextualOpenWaterAdmin)
