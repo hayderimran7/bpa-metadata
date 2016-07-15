@@ -20,14 +20,7 @@ class AmpliconIndexView(TemplateView):
         context['ITS_size'] = AmpliconSequenceFile.objects.filter(amplicon='ITS').count()
         context['A16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='A16S').count()
         context['all_size'] = AmpliconSequenceFile.objects.count()
-        context['collection_sites_count'] = MMSite.objects.count()
         return context
-
-
-class MMSiteListView(ListView):
-    model = MMSite
-    context_object_name = 'sites'
-    template_name = 'marine_microbes/collection_site_list.html'
 
 
 class AmpliconListView(ListView):
@@ -93,6 +86,7 @@ class MMView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MMView, self).get_context_data(**kwargs)
         context['sample_count'] = MMSample.objects.count()
+        context['collection_site_count'] = MMSite.objects.count()
         context['metagenomics_file_count'] = MetagenomicSequenceFile.objects.count()
         context['amplicon_count'] = AmpliconSequenceFile.objects.count()
         return context
@@ -132,3 +126,20 @@ class ContactsView(TemplateView):
 
 class ConsortiumView(TemplateView):
     template_name = 'marine_microbes/consortium.html'
+
+
+class CollectionSiteListView(ListView):
+    model = MMSite
+    template_name = 'marine_microbes/collectionsite_list.html'
+    context_object_name = 'sites'
+
+
+class CollectionSiteDetailView(DetailView):
+    model = MMSite
+    template_name = 'marine_microbes/collectionsite_detail.html'
+    context_object_name = 'collectionsite'
+
+    def get_context_data(self, **kwargs):
+        context = super(CollectionSiteDetailView, self).get_context_data(**kwargs)
+        context['samples'] = MMSample.objects.filter(site=self.get_object())
+        return context

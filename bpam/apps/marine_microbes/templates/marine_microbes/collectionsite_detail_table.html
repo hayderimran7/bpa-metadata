@@ -1,0 +1,39 @@
+
+<div id="sitelist-container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="unstacked">Marine Microbes Collection Site
+                <a href="{% url 'marine_microbes:collectionsitedetail' collectionsite.pk %}">
+                    {{ collectionsite.get_name }}</a>
+                </a>
+            </h3>
+        </div>
+
+        <table id="collectionsite" class="table">
+            <tbody>
+                <tr>
+                    <td><b>Samples  <span class="badge">{{ samples | length }}</span> </b></td>
+                    <td>
+                        {% for sample in samples %}
+                        <a href="{% url 'marine_microbes:sample' sample.bpa_id.bpa_id %}">
+                            {{ sample.bpa_id.get_short_name }}
+                        </a>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Latitude</b></td>
+                    <td>{{ collectionsite.lat }}</td>
+                </tr>
+                <tr>
+                    <td><b>Longitude</b></td>
+                    <td>{{ collectionsite.lon }}</td>
+                </tr>
+                <tr>
+                    <td><b>Comments</b></td>
+                    <td>{{ collectionsite.comments|default:"" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
