@@ -23,7 +23,7 @@ METADATA_PATH = "marine_microbes/metadata"
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
-def add_coastal_data(data):
+def add_coastal_data(data, cmd):
     """ pack data into the DB """
 
     for entry in data:
@@ -31,7 +31,7 @@ def add_coastal_data(data):
             continue
         bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
         if not bpa_id:
-            logger.info("Non BPA encountered when I expected one {}, skipping".format(report))
+            cmd.log_info("Non BPA encountered when I expected one {}, skipping".format(report))
             continue
 
         sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
@@ -45,21 +45,46 @@ def add_coastal_data(data):
             sample.collection_date = datetime.combine(entry.date_sampled, entry.time_sampled)
 
             sample.save()
+            cmd.log_info("Added site {}".format(sample.site.name))
 
+def add_pelagic_data(data, cmd):
+    """ pack data into the DB """
 
-def ingest_data():
+    for entry in data:
+        if entry.bpa_id is "":
+            continue
+        bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, PROJECT_DESCRIPTION, add_prefix=True)
+        if not bpa_id:
+            cmd.log_info("Non BPA encountered when I expected one {}, skipping".format(report))
+            continue
+
+        sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
+        # just fill in everything available from this spreadsheet
+        if sample:
+            sample.sample_type = MMSample.PELAGIC
+            sample.site = MMSite.get_or_create(entry.lat, entry.lon, entry.site_description)
+            sample.site.note = "Contextual Ingest"
+            sample.site.save()
+            sample.depth = entry.depth
+            sample.collection_date = datetime.combine(entry.date_sampled, entry.time_sampled)
+
+            sample.save()
+            cmd.log_info("Added site {}".format(sample.site.name))
+
+def ingest_data(cmd):
     def is_metadata(path):
         if path.isfile() and path.ext == ".xlsx":
             return True
 
     logger.info("Ingesting Sepsis BPA Contextual metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
-        logger.info("Processing Sepsis BPA Contextual file {0}".format(metadata_file))
-        add_coastal_data(list(get_coastal_data(metadata_file)))
+        cmd.log_info("Processing Sepsis BPA Contextual file {0}".format(metadata_file))
+        add_coastal_data(list(get_coastal_data(metadata_file)), cmd)
+        add_pelagic_data(list(get_pelagic_data(metadata_file)), cmd)
 
 
-def get_coastal_data(file_name):
-    """ Parse fields from the metadata spreadsheet coastal sheet"""
+def get_pelagic_data(file_name):
+    """ Parse fields from the metadata spreadsheet Pelagic sheet"""
 
     # {{{
     # BPA_ID
@@ -144,6 +169,30 @@ def get_coastal_data(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
+                           sheet_name="Pelagic",
+                           header_length=1,
+                           column_name_row_index=0,
+                           formatting_info=True)
+
+    return wrapper.get_all()
+
+
+def get_coastal_data(file_name):
+    """ Parse fields from the metadata spreadsheet coastal sheet"""
+
+    field_spec = [
+        ("bpa_id", "BPA_ID", lambda s: str(int(s))),
+        ("date_sampled", "Date sampled (Y-M-D)", None),
+        ("time_sampled", "Time sampled (hh:mm)", None),
+        ("lat", "lat (decimal degrees)", None),
+        ("lon", "long (decimal degrees)", None),
+        ("depth", "Depth (m)", None),
+        ("notes", "Notes", None),
+        ("site_description", "Location description", None),
+    ]
+
+    wrapper = ExcelWrapper(field_spec,
+                           file_name,
                            sheet_name="Coastal",
                            header_length=1,
                            column_name_row_index=0,
@@ -172,4 +221,4 @@ class Command(management_command.BPACommand):
         fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
         fetcher.clean()
         fetcher.fetch(MM_CONTEXTUAL)
-        ingest_data()
+        ingest_data(self)
