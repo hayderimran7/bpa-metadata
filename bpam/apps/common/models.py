@@ -90,7 +90,7 @@ class SampleSite(models.Model):
 
     def get_name(self):
         if self.name:
-            return u"{} ({:4.4f}, {:4.4f})".format(self.location_name, self.lat, self.lon)
+            return u"{} ({:4.4f}, {:4.4f})".format(self.name, self.lat, self.lon)
         return u"{:4.4f}, {:4.4f}".format(self.lat, self.lon)
 
     def __str__(self):

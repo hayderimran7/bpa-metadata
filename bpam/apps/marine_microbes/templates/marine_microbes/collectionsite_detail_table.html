@@ -12,18 +12,14 @@
         <table id="collectionsite" class="table">
             <tbody>
                 <tr>
-                    <td><b>Samples</b></td>
+                    <td><b>Samples  <span class="badge">{{ samples | length }}</span> </b></td>
                     <td>
                         {% for sample in samples %}
-                        <a href="{% url 'marine_microbes:sampledetail' sample.bpa_id %}">
+                        <a href="{% url 'marine_microbes:sample' sample.bpa_id.bpa_id %}">
                             {{ sample.bpa_id.get_short_name }}
                         </a>
                         {% endfor %}
                     </td>
-                </tr>
-                <tr>
-                    <td><b>Last Sample Date</b></td>
-                    <td>{{ collectionsite.date_sampled|default:"" }}</td>
                 </tr>
                 <tr>
                     <td><b>Latitude</b></td>

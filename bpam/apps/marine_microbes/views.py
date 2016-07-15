@@ -137,6 +137,7 @@ class CollectionSiteListView(ListView):
 class CollectionSiteDetailView(DetailView):
     model = MMSite
     template_name = 'marine_microbes/collectionsite_detail.html'
+    context_object_name = 'collectionsite'
 
     def get_context_data(self, **kwargs):
         context = super(CollectionSiteDetailView, self).get_context_data(**kwargs)

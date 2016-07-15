@@ -14,7 +14,6 @@ from libs.fetch_data import Fetcher
 from libs.parse_md5 import parse_md5_file
 from apps.common.models import Facility
 
-from ...models import Metagenomic
 from ...models import MMSample
 from ...models import MetagenomicSequenceFile
 
@@ -83,13 +82,18 @@ class Command(management_command.BPACommand):
         facility, _ = Facility.objects.get_or_create(name=name)
         return facility
 
-    def _add_samples(self, data):
-        """ Add sequence files """
+    def _add_metadata(self, data):
+        """ Add metadata so samples from metadata spreadsheets """
 
         for entry in data:
-            Metagenomic.objects.get_or_create(extraction_id=entry.sample_extraction_id,
-                                              facility=self._get_facility(entry),
-                                              metadata_filename=entry.file_name)
+            bpa_id, report = bpa_id_utils.get_bpa_id(entry.sample_extraction_id, "marine_microbes", "Marine Microbes", add_prefix=True)
+
+            if bpa_id is None:
+                self.log_warn(report)
+                continue
+
+            sample, _ = MMSample.objects.get_or_create(bpa_id=bpa_id)
+            # TODO add metadata
 
     def _ingest_metadata(self):
         def is_metadata(path):
@@ -99,8 +103,8 @@ class Command(management_command.BPACommand):
         self.log_info("Ingesting Marine Microbes Metagenomic metadata from {0}".format(DATA_DIR))
         for metadata_file in DATA_DIR.walk(filter=is_metadata):
             self.log_info("Processing Marine Microbes  Metadata file {0}".format(metadata_file))
-            samples = list(self._get_data(metadata_file))
-            self._add_samples(samples)
+            metadata = list(self._get_data(metadata_file))
+            self._add_metadata(metadata)
 
     def add_md5(self, md5_lines):
         """ Unpack md5 data to database """
