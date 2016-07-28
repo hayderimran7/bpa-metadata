@@ -191,12 +191,12 @@ class SepsisSample(models.Model):
     strain_or_isolate = models.CharField("Strain Or Isolate", max_length=200, blank=True, null=True)
     strain_description = models.CharField("Strain Description", max_length=300, blank=True, null=True)
     gram_stain = models.CharField("Gram Staining", max_length=3, choices=(("POS", "Positive"), ("NEG", "Negative")))
-    serovar = models.CharField("Serovar", max_length=100, blank=True, null=True)
-    key_virulence_genes = models.CharField("Key Virulence Genes", max_length=100, blank=True, null=True)
-    isolation_source = models.CharField("Isolation Source", max_length=100, blank=True, null=True)
+    serovar = models.CharField("Serovar", max_length=500, blank=True, null=True)
+    key_virulence_genes = models.CharField("Key Virulence Genes", max_length=500, blank=True, null=True)
+    isolation_source = models.CharField("Isolation Source", max_length=500, blank=True, null=True)
     publication_reference = models.CharField("Publication Reference", max_length=200, blank=True, null=True)
     contact_researcher = models.CharField("Contact Researcher", max_length=200, blank=True, null=True)
-    culture_collection_date = models.DateField("Collection Date", blank=True, null=True, help_text="DD/MM/YY")
+    culture_collection_date = models.DateField("Collection Date", blank=True, null=True, help_text="YYYY-MM-DD")
     culture_collection_id = models.CharField("Culture Collection ID", max_length=100, blank=True, null=True)
 
     def __unicode__(self):
