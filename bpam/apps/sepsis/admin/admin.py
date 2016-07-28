@@ -11,14 +11,12 @@ from sample import SepsisSampleField
 from ..models import (Host,
                       MiseqGenomicsMethod,
                       PacBioGenomicsMethod,
-                      GenomicsMiseqFile,
                       ProteomicsMethod,
                       ProteomicsFile,
                       TranscriptomicsMethod,
                       TranscriptomicsFile,
                       SepsisSample,
-                      SampleTrack,
-                      GrowthMethod, )
+                      SampleTrack, )
 
 
 class SampleTrackResource(resources.ModelResource):

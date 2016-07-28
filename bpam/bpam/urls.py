@@ -39,7 +39,7 @@ urlpatterns = patterns(
     url(r'^barcode/', include('apps.barcode.urls', namespace='barcode')),
     url(r'^stemcell/', include('apps.stemcell.urls', namespace='stemcell')),
     # Sepsis
-    url(r'^sepsis/', include('apps.sepsis.urls', namespace='sepsis')),
+    url(r'^antibiotic_resistant_pathogens/', include('apps.sepsis.urls', namespace='sepsis')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

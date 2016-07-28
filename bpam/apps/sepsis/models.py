@@ -69,7 +69,7 @@ class PacBioGenomicsMethod(models.Model):
     """PacBio Genomics Metadata"""
 
     # Genomics method data from excell spreadsheet
-    # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	Run ID	SMRT Cell ID	Cell Postion	RS version
+    # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	Run ID	SMRT Cell ID	Cell Position	RS version
 
     library_construction_protocol = models.CharField("Library Construction Protocol",
                                                      max_length=100,
