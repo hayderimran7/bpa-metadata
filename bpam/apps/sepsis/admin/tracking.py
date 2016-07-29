@@ -32,27 +32,27 @@ class SampleTrackResource(resources.ModelResource):
 class TrackAdmin(ImportExportModelAdmin):
     resource_class = SampleTrackResource
     date_hierarchy = 'allocation_date'
-    list_display = ("sample",
-                    "replicate",
-                    "given_to",
-                    "allocation_date",
-                    "work_order",
-                    "omics",
-                    "analytical_platform",
-                    "facility",
-                    "sample_submission_date",
-                    "contextual_data_submission_date",
-                    "data_generated",
-                    "archive_ingestion_date",
-                    "dataset_url",
-                    "curation_url", )
+    list_display = ('bpa_id',
+                    'replicate',
+                    'given_to',
+                    'allocation_date',
+                    'work_order',
+                    'omics',
+                    'analytical_platform',
+                    'facility',
+                    'sample_submission_date',
+                    'contextual_data_submission_date',
+                    'data_generated',
+                    'archive_ingestion_date',
+                    'dataset_url',
+                    'curation_url', )
 
-    list_filter = ("sample",
-                   "facility",
-                   "replicate",
-                   "data_generated",
-                   "given_to",
-                   "dataset_url", )
+    list_filter = ('bpa_id',
+                   'facility',
+                   'replicate',
+                   'data_generated',
+                   'given_to',
+                   'dataset_url', )
 
 
 admin.site.register(SampleTrack, TrackAdmin)

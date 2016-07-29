@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Antibiotic Resistant Pathogens" "sepsis:index" %}
+{% breadcrumb "Samples Tracking" "sepsis:samples" %}
+{% endblock %}
+
+{% block title %}Sepsis Sample Tracking {% endblock %}
+
+{% block content %}
+
+{% if sampletracks %}
+
+<div class="container-fluid">
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Replicate</th>
+                <th>Given To</th>
+                <th>Allocation Date</th>
+                <th>Work Order</th>
+                <th>Omics</th>
+                <th>Analytical Platform</th>
+                <th>Facility</th>
+                <th>Sample Submission Date</th>
+                <th>Contextual Data Submission Date</th>
+                <th>Data Generated</th>
+                <th>Archive Ingestion Date</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>BPA ID</th>
+                <th>Replicate</th>
+                <th>Given To</th>
+                <th>Allocation Date</th>
+                <th>Work Order</th>
+                <th>Omics</th>
+                <th>Analytical Platform</th>
+                <th>Facility</th>
+                <th>Sample Submission Date</th>
+                <th>Contextual Data Submission Date</th>
+                <th>Data Generated</th>
+                <th>Archive Ingestion Date</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for track in sampletracks %}
+            <tr>
+                <td>{{ track.bpa_id }}</td>
+                <td>{{ track.replicate | default:"" }}</td>
+                <td>{{ track.given_to | default:""}}</td>
+                <td>{{ track.allocation_date | default:""}}</td>
+                <td>{{ track.work_order | default:""}}</td>
+                <td>{{ track.omics | default:""}}</td>
+                <td>{{ track.analytical_platform | default:""}}</td>
+                <td>{{ track.facility | default:""}}</td>
+                <td>{{ track.sample_submission_date | default:""}}</td>
+                <td>{{ track.contextual_data_submission_date | default:""}}</td>
+                <td>
+                    {% if track.data_generated %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% endif %}
+                </td>
+                <td>{{ track.archive_ingestion_date  | default:""}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <h3> No Sepsis Sample Data is currently available </h3>
+    {% endif %}
+</div>
+{% endblock %}

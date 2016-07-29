@@ -181,6 +181,7 @@ class SepsisSample(models.Model):
                                       related_name="samples",
                                       help_text="Sample Growth Method")
 
+    # FIXME
     sample_track = models.OneToOneField(SampleTrack,
                                         blank=True,
                                         null=True,
@@ -200,7 +201,7 @@ class SepsisSample(models.Model):
     culture_collection_id = models.CharField("Culture Collection ID", max_length=100, blank=True, null=True)
 
     def __unicode__(self):
-        return ",".join([e for e in (self.bpa_id.bpa_id, self.taxon_or_organism, self.strain_or_isolate) if e])
+        return " ".join([e for e in (self.bpa_id.get_short_name(), self.taxon_or_organism, self.strain_or_isolate) if e])
 
     class Meta:
         verbose_name = "Sepsis Sample"

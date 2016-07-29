@@ -28,6 +28,7 @@ class SepsisView(TemplateView):
         context['sample_count'] = SepsisSample.objects.count()
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
         context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
+        context['track_count'] = SampleTrack.objects.count()
         return context
 
 
@@ -42,6 +43,15 @@ class SampleListView(ListView):
             strain_or_isolate__exact='')
         return context
 
+class TrackListView(ListView):
+    model = SampleTrack
+    context_object_name = 'sampletracks'
+    template_name = 'sepsis/track_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TrackListView, self).get_context_data(**kwargs)
+        context['sampletracks'] = SampleTrack.objects.all()
+        return context
 
 class GenomicsMiseqFileListView(ListView):
     model = GenomicsMiseqFile
