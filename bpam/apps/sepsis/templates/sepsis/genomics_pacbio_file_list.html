@@ -39,7 +39,7 @@
     <tbody>
       {% for sfile in sequencefiles %}
       <tr>
-        <td> <a href="{% url 'sepsis:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id }}</a> </td>
+        <td> <a href="{% url 'sepsis:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id.get_short_name }}</a> </td>
         <td>{{ sfile.sample.taxon_or_organism }}</td>
         <td>{{ sfile.sample.strain_or_isolate }}</td>
         <td>

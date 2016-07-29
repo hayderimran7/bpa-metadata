@@ -216,7 +216,7 @@ class BPAUniqueID(models.Model):
         verbose_name_plural = "BPA Unique ID's"
 
     def __unicode__(self):
-        return self.get_short_name()
+        return self.bpa_id
 
     def get_short_name(self):
         """ Strips the common BPA prefix """

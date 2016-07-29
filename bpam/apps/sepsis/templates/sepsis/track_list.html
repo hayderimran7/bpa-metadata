@@ -54,7 +54,7 @@
         <tbody>
             {% for track in sampletracks %}
             <tr>
-                <td>{{ track.bpa_id }}</td>
+                <td>{{ track.bpa_id.get_short_name }}</td>
                 <td>{{ track.replicate | default:"" }}</td>
                 <td>{{ track.given_to | default:""}}</td>
                 <td>{{ track.allocation_date | default:""}}</td>

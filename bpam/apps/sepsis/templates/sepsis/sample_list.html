@@ -53,7 +53,7 @@
             {% for sample in samples %}
             <tr>
                 <td>
-                    <a href="{% url 'sepsis:sample' sample.pk %}">{{ sample.bpa_id }}</a>
+                    <a href="{% url 'sepsis:sample' sample.pk %}">{{ sample.bpa_id.get_short_name }}</a>
                 </td>
                 <td>{{ sample.taxon_or_organism }}</td>
                 <td>{{ sample.strain_or_isolate }}</td>
