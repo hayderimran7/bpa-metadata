@@ -31,7 +31,7 @@ python-dateutil==2.5.3
 python-memcached>=1.57,<2.0
 pytz==2016.4
 rainbow_logging_handler==2.2.2
-requests==2.10.0
+requests==2.11.0
 six==1.10.0
 sqlparse>=0.1.19,<1.0
 django-tinymce==2.3.0
