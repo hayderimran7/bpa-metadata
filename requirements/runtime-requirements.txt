@@ -35,7 +35,7 @@ requests==2.11.0
 six==1.10.0
 sqlparse>=0.1.19,<1.0
 django-tinymce==2.3.0
-uwsgi==2.0.12
+uwsgi==2.0.13
 uwsgitop==0.9
 xlrd==0.9.4
 xlwt==1.0.0
@@ -43,4 +43,3 @@ xlsxwriter==0.9.2
 celery==3.1
 django-celery==3.1
 tinys3==0.1.11
-
