@@ -13,6 +13,12 @@ cache:
     file: docker-compose-common.yml
     service: cache
 
+nginx:
+  extends:
+    file: docker-compose-common.yml
+    service: nginx
+  links:
+    - uwsgi
 
 runserver:
   extends:
@@ -33,3 +39,14 @@ runserver:
     - db
     - cache
 
+ 
+uwsgi:
+  extends:
+    file: docker-compose-common.yml
+    service: uwsgi
+  volumes_from:
+    - datadev
+  links:
+    - db
+    - cache
+    - runserver:web
