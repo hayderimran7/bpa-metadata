@@ -17,7 +17,7 @@ cache:
   image: memcached:1.4
 
 nginx:
-  image: muccg/nginx-uwsgi:1.9
+  image: muccg/nginx-uwsgi:1.10
   ports:
     - "8443:443"
     - "8080:80"
