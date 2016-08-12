@@ -38,7 +38,7 @@ SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
 SECURE_SSL_HOST = env.get("secure_ssl_host", False)
 SECURE_REDIRECT_EXEMPT = env.getlist("secure_redirect_exempt", [])
-
+X_FRAME_OPTIONS = "DENY"
 ADMINS = [("alert", env.get("alert_email", "root@localhost"))]
 MANAGERS = ADMINS
 
