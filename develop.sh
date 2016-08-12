@@ -74,7 +74,6 @@ echo ''
 info "$0 $@"
 docker_options
 git_tag
-docker_warm_cache
 
 case $ACTION in
 pythonlint)
@@ -135,6 +134,9 @@ start_seleniumtests)
     ;;
 start_prodseleniumtests)
     start_prodseleniumtests
+    ;;
+docker_warm_cache)
+    docker_warm_cache
     ;;
 ci_docker_login)
     ci_docker_login
