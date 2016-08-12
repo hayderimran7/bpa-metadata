@@ -37,18 +37,23 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.get("secure_content_type_nosniff", PRODUCTION)
 SECURE_BROWSER_XSS_FILTER = env.get("secure_browser_xss_filter", PRODUCTION)
 SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
+SECURE_SSL_HOST = env.get("secure_ssl_host", False)
+SECURE_REDIRECT_EXEMPT = env.getlist("secure_redirect_exempt", [])
 
 ADMINS = [("alert", env.get("alert_email", "root@localhost"))]
 MANAGERS = ADMINS
 
-# mailgun email
+# anymail email
 DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
-# default to mailgun, but if the API key is not set, fall back to console
-EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django_mailgun.MailgunBackend')
-MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY', '')
-MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME', '')
 EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Metadata] ')
 SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+# default to anymail/mailgun, but if the API key is not set, fall back to console
+EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'anymail.backends.mailgun.MailgunBackend')
+ANYMAIL = {
+    "MAILGUN_API_KEY": env.get('DJANGO_MAILGUN_API_KEY', ''),
+    "MAILGUN_SENDER_DOMAIN": env.get('DJANGO_MAILGUN_SERVER_NAME', '')
+}
+
 
 # list of emails to send BASE access requests to
 BASE_REQUEST_LIST = env.getlist('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgapps.com.au'])
@@ -293,7 +298,9 @@ INSTALLED_APPS = ('bpam',
                   'rest_framework_swagger',
                   'explorer',
                   'leaflet',
-                  'import_export', )
+                  'import_export', 
+                  'anymail',
+                  )
 
 # #
 # # LOGGING

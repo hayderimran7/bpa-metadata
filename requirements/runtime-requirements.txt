@@ -5,6 +5,7 @@ Werkzeug==0.11.9
 beautifulsoup4
 boto==2.40.0
 ccg-django-utils==0.4.2
+django-anymail[mailgun]==0.4.2
 django-admin-tools==0.7.2
 django-bootstrap3==7.0.1
 django-crispy-forms==1.6.0
@@ -12,7 +13,6 @@ django-extensions==1.6.6
 django-filter==0.12.0
 django-leaflet==0.18.0
 django-localflavor==1.2
-django-mailgun==0.9.1
 django-mptt==0.8.4
 django-queryset-csv==0.3.3
 django-sql-explorer==1.0.0
