@@ -90,7 +90,7 @@ wait_for_services
 # security by django checksecure
 if [ "$1" = 'checksecure' ]; then
     echo "[Run] Running Django checksecure"
-    exec django-admin.py checksecure --traceback 2>&1 | tee /data/checksecure.log
+    exec django-admin.py check --deploy --traceback 2>&1 | tee /data/checksecure.log
 fi
 
 # uwsgi entrypoint
