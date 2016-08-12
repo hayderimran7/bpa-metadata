@@ -11,6 +11,7 @@ ENV WRITABLE_DIRECTORY /data/scratch
 ENV MEDIA_ROOT /data/static/media
 ENV LOG_DIRECTORY /data/log
 ENV DJANGO_SETTINGS_MODULE bpam.settings
+ENV PIP_NO_CACHE_DIR "off"
 
 RUN env | sort
 
