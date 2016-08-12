@@ -43,8 +43,8 @@ usage() {
     echo " ./develop.sh (ci_docker_staging|docker_staging_lettuce)"
     echo " ./develop.sh (ci_docker_login)"
     echo ""
-    echo "Example, start dev with no proxy and rebuild everything:"
-    echo "SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ./develop.sh dev_rebuild"
+    echo "Example, start dev with no proxy and build everything:"
+    echo "SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ./develop.sh dev_build"
     echo ""
     exit 1
 }
