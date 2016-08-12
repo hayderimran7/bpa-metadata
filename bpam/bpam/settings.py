@@ -234,14 +234,13 @@ TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
                     'admin_tools.template_loaders.Loader', )
 
-MIDDLEWARE_CLASSES = ('djangosecure.middleware.SecurityMiddleware',
+MIDDLEWARE_CLASSES = ('django.middleware.security.SecurityMiddleware',
                       'django.middleware.common.CommonMiddleware',
                       'django.contrib.sessions.middleware.SessionMiddleware',
                       'django.middleware.csrf.CsrfViewMiddleware',
                       'django.contrib.auth.middleware.AuthenticationMiddleware',
                       'django.contrib.messages.middleware.MessageMiddleware',
                       'django.middleware.locale.LocaleMiddleware',
-                      # 'django.middleware.doc.XViewMiddleware',
                       )
 
 TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.request',
@@ -294,7 +293,6 @@ INSTALLED_APPS = ('bpam',
                   'rest_framework_swagger',
                   'explorer',
                   'leaflet',
-                  'djangosecure',
                   'import_export', )
 
 # #
