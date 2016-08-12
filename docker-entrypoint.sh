@@ -137,7 +137,7 @@ if [ "$1" = 'lettuce' ]; then
 fi
 
 # prepare a tarball of build
-if [ "$1" = 'tarball' ]; then
+if [ "$1" = 'releasetarball' ]; then
     echo "[Run] Preparing a tarball of build"
 
     cd /app
