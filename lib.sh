@@ -268,9 +268,9 @@ create_prod_image() {
     info "Building ${PROJECT_NAME} ${GIT_TAG}"
     set -x
     docker-compose -f docker-compose-build.yml build prod
+    docker tag ${DOCKER_IMAGE}:${GIT_TAG} ${DOCKER_IMAGE}:${GIT_TAG}-${DATE}
     set +x
     success "$(docker images | grep ${DOCKER_IMAGE} | grep ${GIT_TAG} | sed 's/  */ /g')"
-    docker tag ${DOCKER_IMAGE}:${GIT_TAG} ${DOCKER_IMAGE}:${GIT_TAG}-${DATE}
     success 'create prod image'
 }
 
@@ -319,8 +319,10 @@ publish_docker_image() {
     fi
 
     if [ ${DOCKER_USE_HUB} = "1" ]; then
+        set -x
         docker push ${DOCKER_IMAGE}:${GIT_TAG}
         docker push ${DOCKER_IMAGE}:${GIT_TAG}-${DATE}
+        set +x
         success "pushed ${tag}"
     else
         info "docker push of ${GIT_TAG} disabled by config"
