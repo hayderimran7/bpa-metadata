@@ -15,7 +15,6 @@ django-localflavor==1.2
 django-mailgun==0.9.1
 django-mptt==0.8.4
 django-queryset-csv==0.3.3
-django-secure==1.0.1
 django-sql-explorer==1.0.0
 django_bootstrap_breadcrumbs==0.7.3
 django_compressor==2.0
