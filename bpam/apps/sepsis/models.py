@@ -15,9 +15,9 @@ class Host(models.Model):
     disease_outcome = models.TextField('Host Disease Outcome', blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True, unique=True)
 
-    host_associated = models.CharField('Host Associated', max_length=200, blank=True, null=True)
-    host_health_state = models.CharField('Host Health State', max_length=200, blank=True, null=True)
-    host_disease_status = models.CharField('Host Disease Status', max_length=200, blank=True, null=True)
+    associated = models.CharField('Host Associated', max_length=200, blank=True, null=True)
+    health_state = models.CharField('Host Health State', max_length=200, blank=True, null=True)
+    disease_status = models.CharField('Host Disease Status', max_length=200, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Host'

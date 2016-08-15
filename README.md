@@ -4,7 +4,7 @@ BPA Metadata is a web portal into Bioplatforms Australia's genomics sequencing d
 archive. It aims to aggregate all relevant meta and sequence data into a coherent data 
 navigation system.
 
-## Development
+# Development
 Ensure a late version of both docker and docker-compose are available in your environment.
 
 bpa-metada is available as a fully contained Dockerized stack. The dockerised stack are used for both production
@@ -13,7 +13,7 @@ and development. Appropiate configuration files are available depending on usage
 Note that for data ingestion to work you need passwords to the hosted data, these are available from BPA on request.
 Set passwords in your environment, these will be passed to the container.
 
-### Quick Setup
+## Quick Setup
 
 * [Install docker and compose](https://docs.docker.com/compose/install/)
 * git clone https://github.com/muccg/bpa-metadata.git
@@ -34,6 +34,10 @@ muccg/bpametadata-dev       0.0.0.0:9000-9001->9000-9001/tcp, 8000/tcp, 0.0.0.0:
 muccg/bpametadata-dev       9000-9001/tcp, 0.0.0.0:8000->8000/tcp, 9100-9101/tcp                           bpametadata_runserver_1
 ```
 
+Setup mirror config
+```
+docker exec -it bpametadata_runserver_1 /app/docker-entrypoint.sh django-admin set_mirrors
+```
 
 To execute the ingestion scripts run `docker exec -it bpametadata_runserver_1 /app/docker-entrypoint.sh django-admin`, be sure
 to have the relevant variables below available in the environment. 
