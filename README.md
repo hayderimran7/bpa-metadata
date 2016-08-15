@@ -13,16 +13,6 @@ and development. Appropiate configuration files are available depending on usage
 Note that for data ingestion to work you need passwords to the hosted data, these are available from BPA on request.
 Set passwords in your environment, these will be passed to the container.
 
-```
-WARNING: The DJANGO_MAILGUN_API_KEY variable is not set. Defaulting to a blank string.
-WARNING: The BASE_REQUEST_LIST variable is not set. Defaulting to a blank string.
-WARNING: The BPA_MELANOMA_DOWNLOADS_PASSWORD variable is not set. Defaulting to a blank string.
-WARNING: The BPA_BASE_DOWNLOADS_PASSWORD variable is not set. Defaulting to a blank string.
-WARNING: The BPA_USERS_DOWNLOADS_PASSWORD variable is not set. Defaulting to a blank string.
-WARNING: The BPA_GBR_DOWNLOADS_PASSWORD variable is not set. Defaulting to a blank string.
-WARNING: The BPA_SEPSIS_DOWNLOADS_PASSWORD variable is not set. Defaulting to a blank string.
-```
-
 ### Quick Setup
 
 * [Install docker and compose](https://docs.docker.com/compose/install/)
@@ -32,7 +22,33 @@ WARNING: The BPA_SEPSIS_DOWNLOADS_PASSWORD variable is not set. Defaulting to a 
 `develop.sh dev` will spin up the stack. See `./develop.sh usage` for some utility methods, which typically are simple 
 wrappers arround docker and docker-compose.
 
-To execute the ingestion scripts run `docker exec -it 
+docker-compose will fire up the stack like below:
+```
+docker ps -f name="bpam*"
+
+IMAGE                       PORTS                                                                          NAMES
+muccg/nginx-uwsgi:1.10      0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp                                    bpametadata_nginx_1
+mdillon/postgis:9.5         0.0.0.0:32944->5432/tcp                                                        bpametadata_db_1
+memcached:1.4               11211/tcp                                                                      bpametadata_cache_1
+muccg/bpametadata-dev       0.0.0.0:9000-9001->9000-9001/tcp, 8000/tcp, 0.0.0.0:9100-9101->9100-9101/tcp   bpametadata_uwsgi_1
+muccg/bpametadata-dev       9000-9001/tcp, 0.0.0.0:8000->8000/tcp, 9100-9101/tcp                           bpametadata_runserver_1
+```
+
+
+To execute the ingestion scripts run `docker exec -it bpametadata_runserver_1 /app/docker-entrypoint.sh django-admin`, be sure
+to have the relevant variables below available in the environment. 
+
+```
+DJANGO_MAILGUN_API_KEY
+BASE_REQUEST_LIST
+BPA_MELANOMA_DOWNLOADS_PASSWORD
+BPA_BASE_DOWNLOADS_PASSWORD
+BPA_USERS_DOWNLOADS_PASSWORD
+BPA_GBR_DOWNLOADS_PASSWORD
+BPA_SEPSIS_DOWNLOADS_PASSWORD
+```
+
+
 
 ```bash
 ./develop.sh
