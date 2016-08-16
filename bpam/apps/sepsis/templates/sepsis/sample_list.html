@@ -32,6 +32,16 @@
                 <th>Publication Reference</th>
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
+                <th>Culture Collection ID</th>
+                <th>Study Title</th>
+                <th>Investigation Type</th>
+                <th>Project Name</th>
+                <th>Sample Title</th>
+                <th>Ploidy</th>
+                <th>Number of Replicants</th>
+                <th>Estimated Size</th>
+                <th>Propagation</th>
+                <th>Collected By</th>
             </tr>
         </thead>
         <tfoot>
@@ -47,6 +57,16 @@
                 <th>Publication Reference</th>
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
+                <th>Culture Collection ID</th>
+                <th>Study Title</th>
+                <th>Investigation Type</th>
+                <th>Project Name</th>
+                <th>Sample Title</th>
+                <th>Ploidy</th>
+                <th>Number of Replicants</th>
+                <th>Estimated Size</th>
+                <th>Propagation</th>
+                <th>Collected By</th>
             </tr>
         </tfoot>
         <tbody>
@@ -65,6 +85,16 @@
                 <td>{{ sample.publication_reference }}</td>
                 <td>{{ sample.contact_researcher }}</td>
                 <td>{{ sample.culture_collection_date }}</td>
+                <td>{{ sample.culture_collection_id|default:"" }}</td>
+                <td>{{ sample.study_title|default:"" }}</td>
+                <td>{{ sample.investigation_type|default:"" }}</td>
+                <td>{{ sample.project_name|default:"" }}</td>
+                <td>{{ sample.sample_title|default:"" }}</td>
+                <td>{{ sample.ploidy|default:"" }}</td>
+                <td>{{ sample.num_replicons|default:"" }}</td>
+                <td>{{ sample.estimated_size|default:"" }}</td>
+                <td>{{ sample.propagation|default:"" }}</td>
+                <td>{{ sample.collected_by|default:"" }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -54,7 +54,7 @@ def add_data(data):
             sample.project_name = entry.project_name
             sample.title = entry.sample_title
             sample.ploidy = entry.ploidy
-            sample.number_of_replicons = entry.number_of_replicons
+            sample.num_replicons = entry.num_replicons
             sample.estimated_size = entry.estimated_size
             sample.propagation = entry.propagation
             sample.isolate_growth_condition = entry.isolate_growth_condition
@@ -200,7 +200,7 @@ def get_data(file_name):
         ('project_name', 'Project_name', None),
         ('sample_title', 'Sample title', None),
         ('ploidy', 'ploidy', None),
-        ('number_of_replicons', 'num_replicons', None),
+        ('num_replicons', 'num_replicons', None),
         ('estimated_size', 'estimated_size', None),
         ('propagation', 'propagation', None),
         ('isolate_growth_condition', 'isol_growth_condt', None),
