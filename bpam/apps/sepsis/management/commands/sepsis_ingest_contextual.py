@@ -37,6 +37,7 @@ def add_data(data):
 
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
         # just fill in everything available from this spreadsheet
+        # updating using **entry would have been better, maybe
         if sample:
             sample.taxon_or_organism = entry.taxon_or_organism
             sample.strain_or_isolate = entry.strain_or_isolate
