@@ -163,6 +163,9 @@ selenium)
 set_mirrors)
     docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin set_mirrors
     ;;
+set_ckan)
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin set_ckan
+    ;;
 shell)
     docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
     ;;

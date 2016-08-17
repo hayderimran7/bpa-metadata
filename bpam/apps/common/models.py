@@ -176,6 +176,30 @@ class BPAMirror(models.Model):
             return None
 
 
+class CKANServer(models.Model):
+    """a CKAN installation that we use to retrieve object data"""
+
+    name = models.CharField(max_length=30, primary_key=True)
+    base_url = models.URLField(max_length=200)
+    order = models.IntegerField(unique=True)
+
+    def __repr__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['order']
+
+    @classmethod
+    def primary(cls):
+        "Returns the lowest order (primary) mirror"
+        servers = cls.objects.all()
+        if len(servers) > 0:
+            return servers[0]
+        else:
+            print("Please set the CKAN servers")
+            return None
+
+
 class BPAProject(models.Model):
     """
     The BPA project

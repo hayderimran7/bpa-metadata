@@ -10,7 +10,6 @@
     {% endblock %}
 
     <title>{% block title %}{% endblock %} | BioPlatforms Australia Metadata</title>
-    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
     {% load static from staticfiles %}
     {% load commontags %}
 
@@ -26,97 +25,26 @@
 
     {% bootstrap_css %}
 
+    <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.css"/>
+    <script>
+      var bpam_config = {
+        'bpam_base': '{% url "landing_page" %}',
+        'ckan_base': '{% ckan_server_url %}'
+      };
+    </script>
     <script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'bpam/common.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'bpam/bpam.css' %}"/>
+    <script src="{% static 'bpam/bpam.js' %}"></script>
     <script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
-
-    <script>
-      $(document).ready(function() {
-        var ccg_full_setup = {
-            colReorder: true,
-            stateSave: true,
-            processing: true,
-            pageLength: 100,
-            buttons: [
-                'colvis', 'copy', 'csv','excel', 'print'
-            ],
-            fixedHeader: true,
-        };
-        var ft = $('.ccgtable').DataTable(ccg_full_setup);
-        ft.buttons().container().appendTo( $('.bootstrap_buttons'), ft.table().container() );
-        $('.ccgtable').addClass('table-striped table-bordered table-condensed');
-
-        var ccg_slim_setup = {
-            colReorder: true,
-            stateSave: true,
-            paging: false,
-            pageLength: 100,
-        };
-        var slimtable = $('.ccgslimtable').DataTable(ccg_slim_setup);
-        $('.ccgslimtable').addClass('table-striped table-bordered table-condensed');
-
-        // $('.ccgslimtable').on('search.dt', L.map._resize);
-
-      });
-    </script>
-
     {% block extra_head %}
     {% endblock %}
-
-    <style>
-      /* Sticky footer styles */
-      html,
-      body {
-        height: 100%;
-        /* The html and body elements cannot have any padding or margin. */
-      }
-
-      /* Wrapper for page content to push down footer */
-      #wrap {
-        min-height: 100%;
-        height: auto;
-        /* Negative indent footer by its height */
-        margin: 0 auto -60px;
-        /* Pad bottom by footer height */
-        padding: 0 0 60px;
-      }
-
-      /* Set the fixed height of the footer here */
-      #footer {
-        height: 60px;
-        background-color: #f5f5f5;
-      }
-
-      /* Custom page CSS */
-      /* Not required for template or sticky footer method. */
-
-      .container {
-        width: auto;
-          #max-width: 680px;
-        padding: 0 15px;
-      }
-
-      .container .credit {
-        margin: 20px 0;
-      }
-
-      .md5 {
-        font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
-      }
-
-      #popover-target label {
-        margin: 0 5px;
-        display: block;
-      }
-      #popover-target input {
-        margin-right: 5px;
-      }
-    </style>
 
   </head>
   <body>
@@ -153,6 +81,8 @@
           </div>
         </div>
       </div>
+
+      <div class="hide container" id="error-bar"></div>
 
       <div class="content-div">
         {% block content %}{% endblock %}

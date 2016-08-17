@@ -12,13 +12,12 @@
 {% block content %}
 
 <div class="container-fluid">
-    {% if samples %}
     <div class="alert alert-info" role="alert">
         To sort by multiple columns, press and hold the Shift key.
         <div class="bootstrap_buttons"></div>
     </div>
 
-    <table class="ccgtable" width="100%">
+    <table class="apitable" width="100%">
         <thead>
             <tr>
                 <th>BPA ID</th>
@@ -52,31 +51,12 @@
             </tr>
         </tfoot>
         <tbody>
-            {% for sample in samples %}
-            <tr>
-                <td>
-                    <a href="{% url 'wheat_pathogens:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-                </td>
-                <td>{{ sample.name }}</td>
-                <td>{{ sample.official_variety_name }}</td>
-                <td>{{ sample.organism.kingdom }}</td>
-                <td>{{ sample.organism.phylum }}</td>
-                <td>{{ sample.organism.species }}</td>
-                <td>{{ sample.original_source_host_species }}</td>
-                <td>{{ sample.collection_location }}</td>
-                <td>{{ sample.wheat_pathogenicity }}</td>
-                <td>{{ sample.contact_scientist }}</td>
-                <td>{{ sample.dna_source.description }}</td>
-                <td>{{ sample.dna_extraction_protocol }}</td>
-            </tr>
-            {% endfor %}
         </tbody>
     </table>
-
-    {% else %}
-    <h3> No Wheat Pathogen Data is currently available </h3>
-    {% endif %}
-
 </div>
+
+<script>
+wheat_pathogen_samples_setup();
+</script>
 
 {% endblock %}

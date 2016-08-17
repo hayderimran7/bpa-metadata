@@ -5,7 +5,6 @@ from apps.sepsis.models import SepsisSample
 from apps.gbr.models import GBRSample
 from apps.base.models import BASESample
 from apps.wheat_cultivars.models import CultivarSample
-from apps.wheat_pathogens.models import PathogenSample as WheatPathogenSample
 from apps.wheat_pathogens_transcript.models import WheatPathogenTranscriptSample
 from apps.marine_microbes.models import MMSample
 
@@ -21,7 +20,6 @@ class LandingView(TemplateView):
         context['base_sample_count'] = BASESample.objects.count()
         context['marine_microbes_sample_count'] = MMSample.objects.count()
         context['wheat_cultivars_sample_count'] = CultivarSample.objects.count()
-        context['wheat_pathogens_genome_sample_count'] = WheatPathogenSample.objects.count()
         context['wheat_pathogens_transcript_sample_count'] = WheatPathogenTranscriptSample.objects.count()
 
         return context

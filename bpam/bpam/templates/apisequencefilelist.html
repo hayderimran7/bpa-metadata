@@ -1,0 +1,48 @@
+{% load commontags %}
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <span class="resource_count"></span> Related Sequence files available for BPA Sample ID <span class="sample_id"></span>.
+    </div>
+  </div>
+</div>
+
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#filetable" aria-controls="home" role="tab" data-toggle="tab">Sequence Files</a></li>
+    <li role="presentation"><a href="#urllist" aria-controls="profile" role="tab" data-toggle="tab">URL List</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="filetable">
+      <div class="panel-body">
+        <table id="api-sequence-list" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>MD5</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="urllist">
+      <div class="panel-heading">
+        You can use the URL list below with tools like <code>wget</code> or <code>curl</code> to fetch only the listed sequence files from the archive.
+      </div>
+
+      <div class="panel-body">
+        <pre class="download_links">
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  set_sample_resources();
+</script>
