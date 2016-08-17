@@ -17,6 +17,7 @@ from collections import namedtuple
 
 import xlrd
 import logger_utils
+import pprint
 
 logger = logger_utils.get_logger(__name__)
 
@@ -106,7 +107,8 @@ class ExcelWrapper(object):
                 col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             except ValueError:
                 if complain:
-                    logger.error('column name {0} not found'.format(column_name))
+                    logger.error('column name [{}] not found'.format(column_name))
+                    logger.error(pprint.pprint(self.sheet.row_values(self.column_name_row_index)))
             return col_index
 
         cmap = {}

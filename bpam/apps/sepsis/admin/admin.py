@@ -50,7 +50,7 @@ class HostResource(resources.ModelResource):
 class HostAdmin(ImportExportModelAdmin):
     # FIXME
     # resource_class = HostResource # Input sheet is split into 2 models, disable until we know
-    # how to do that 
+    # how to do that
     list_display = ('strain_or_isolate',
                     'location',
                     'sex',
