@@ -17,7 +17,6 @@ from collections import namedtuple
 
 import xlrd
 import logger_utils
-import pprint
 
 logger = logger_utils.get_logger(__name__)
 
@@ -108,7 +107,6 @@ class ExcelWrapper(object):
             except ValueError:
                 if complain:
                     logger.error('column name [{}] not found'.format(column_name))
-                    logger.error(pprint.pprint(self.sheet.row_values(self.column_name_row_index)))
             return col_index
 
         cmap = {}
@@ -176,7 +174,6 @@ class ExcelWrapper(object):
                 val = datetime.datetime(*date_time_tup)
         except ValueError, e:
             logger.warning("Error '{0}' column:{1}, val: {2} cannot be converted to a date".format(e, i, val))
-            print("bi")
             # OK so its not really a date, maybe something can be done with the float
             # This functionality is not currently implemented in the xlrd library
             # xf_index = cell.xf_index
