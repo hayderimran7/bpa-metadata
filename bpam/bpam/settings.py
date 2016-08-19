@@ -2,6 +2,7 @@
 # Django settings for bpa metadata project.
 
 import os
+import sys
 
 from ccg_django_utils.conf import EnvConfig
 
@@ -298,7 +299,7 @@ INSTALLED_APPS = ('bpam',
                   'rest_framework_swagger',
                   'explorer',
                   'leaflet',
-                  'import_export', 
+                  'import_export',
                   'anymail',
                   )
 
@@ -345,7 +346,13 @@ LOGGING = {
         'shell': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'verbose'
+        },
+        'rainbow': {
+            'level': 'DEBUG',
+            'class': 'rainbow_logging_handler.RainbowLoggingHandler',
+            'formatter': 'verbose',
+            'stream': sys.stderr
         },
         'file': {
             'level': 'INFO',
@@ -394,7 +401,12 @@ LOGGING = {
             'propagate': False,
         },
         'bpam.bpam.management.commands': {
-            'handlers': ['shell'],
+            'handlers': ['rainbow'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'apps': {
+            'handlers': ['rainbow'],
             'level': 'DEBUG',
             'propagate': False,
         },
