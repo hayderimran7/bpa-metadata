@@ -110,9 +110,9 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
     date_hierarchy = 'culture_collection_date'
 
     list_display = ('bpa_id',
+                    'gram_stain',
                     'taxon_or_organism',
                     'strain_or_isolate',
-                    'gram_stain',
                     'serovar',
                     'strain_description',
                     'key_virulence_genes',
@@ -153,12 +153,6 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
               'estimated_size',
               'propagation',
               'collected_by', )
-
-
-
-
-
-
 
 
 admin.site.register(SepsisSample, SepsisSampleAdmin)

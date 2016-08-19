@@ -18,7 +18,7 @@ django-queryset-csv==0.3.3
 django-sql-explorer==1.0.0
 django_bootstrap_breadcrumbs==0.7.3
 django_compressor==2.0
-djangorestframework==3.3.3
+djangorestframework==3.4.4
 django-rest-swagger==0.3.7
 django-import-export==0.4.5
 markdown==2.6.6
