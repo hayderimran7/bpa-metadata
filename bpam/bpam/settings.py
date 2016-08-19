@@ -322,10 +322,14 @@ LOGGING = {
             'format': '[%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
         },
         'db': {
-            'format': '[%(duration)s:%(sql)s:%(params)s] %(message)s'
+            'format': '[%(duration)s:%(sql)s:%(params)s %(filename)s %(lineno)s %(funcName)s] %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
+        },
+        'color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '[%(log_color)s%(levelname)-8s] %(filename)s:%(lineno)s %(funcName)s() %(message)s',
         },
     },
     'filters': {
@@ -350,9 +354,8 @@ LOGGING = {
         },
         'rainbow': {
             'level': 'DEBUG',
-            'class': 'rainbow_logging_handler.RainbowLoggingHandler',
-            'formatter': 'verbose',
-            'stream': sys.stderr
+            'class': 'colorlog.StreamHandler',
+            'formatter': 'color'
         },
         'file': {
             'level': 'INFO',
@@ -396,7 +399,7 @@ LOGGING = {
             'propagate': False,
         },
         'libs': {
-            'handlers': ['console', 'file'],
+            'handlers': ['rainbow', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
