@@ -1,4 +1,5 @@
 import string
+import re
 import unittest
 import os
 import json
@@ -12,7 +13,7 @@ from django.utils.encoding import smart_text
 # where to cache downloaded metadata
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'metadata')
 
-INGEST_NOTE = "Ingested from Source Document on {0}\n".format(date.today())
+INGEST_NOTE = 'Ingested from Source Document on {0}\n'.format(date.today())
 
 logger = logger_utils.get_logger(__name__)
 env = EnvConfig()
@@ -22,13 +23,14 @@ remove_letters_map = dict((ord(char), None) for char in string.punctuation + str
 
 
 def get_clean_number(val, default=None, debug=False):
-    """ Try to clean up numbers """
+    ''' Try to clean up numbers '''
 
     if debug:
-        print val
+        logger.debug('Value: {!r}'.format(val))
 
-    if val in (None, ""):
+    if val in (None, ''):
         return default
+
 
     if isinstance(val, int):
         return val
@@ -36,40 +38,53 @@ def get_clean_number(val, default=None, debug=False):
     if isinstance(val, float):
         return val
 
-    # remove_letters_map = dict((ord(char), None) for char in string.letters)
+    numbers_only = re.compile(r'[^\d.]+')
+    parsed_val = numbers_only.sub('', val)
+    if parsed_val == '':
+        return default
+
     try:
-        return int(val.translate(remove_letters_map))
-    except ValueError:
+        return int(parsed_val)
+    except ValueError as e:
+        logger.warning('{!r}'.format(e))
         return default
 
 
 def get_int(val, default=None):
-    """ get a int from a string containing other alpha characters """
+    ''' get a int from a string containing other alpha characters '''
+
+    if val is None:
+        return default
 
     if isinstance(val, int):
         return val
 
+    clean_number = get_clean_number(val, default)
+    if clean_number is None:
+        return default
+
     try:
-        return int(get_clean_number(val, default))
-    except TypeError:
+        return int(clean_number)
+    except TypeError as e:
+        logger.warning('{!r}'.format(e))
         return default
 
 
 def get_clean_float(val, default=None, stringconvert=True):
-    """
+    '''
     Try to hammer an arb value into a float.
     If stringconvert is true (the default behaviour), try to convert the string to a float,
     if not, return the given default value
-    """
+    '''
 
     def to_float(var):
         try:
             return float(var)
-        except ValueError:
-            logger.warning("ValueError Value '{0}' not floatable, returning default '{1}'".format(var, default))
+        except ValueError as e:
+            logger.warning('Value {0} not floatable, returning default {1}: {2!r}'.format(var, default, e))
             return default
-        except TypeError:
-            logger.warning("TypeError Value '{0}' not floatable, returning default '{1}'".format(var, default))
+        except TypeError as e:
+            logger.warning('Value {0} not floatable, returning default {1}: {2!r}'.format(var, default, e))
             return default
 
     # if its a float, its probably ok
@@ -95,7 +110,7 @@ def get_clean_float(val, default=None, stringconvert=True):
 
 
 def strip_all(reader):
-    """ Scrub extra whitespace from values in the reader dicts as read from the csv files """
+    ''' Scrub extra whitespace from values in the reader dicts as read from the csv files '''
 
     entries = []
     for entry in reader:
@@ -108,10 +123,13 @@ def strip_all(reader):
 
 
 def get_date(dt):
-    """
+    '''
     When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
     if it wasn't, it may still be a valid date string.
-    """
+
+    >>> get_date('12-10-1973')
+
+    '''
     if dt is None:
         return None
 
@@ -123,20 +141,20 @@ def get_date(dt):
         try:
             return date_parser(dt)
 
-        except TypeError, e:
-            logger.error("Date parsing error " + str(e))
+        except TypeError as e:
+            logger.error('Error parsing date [{}] error: {!r}'.format(dt, e))
             return None
-        except ValueError, e:
-            logger.error("Date parsing error " + str(e))
+        except ValueError as e:
+            logger.error('Error parsing date [{}]: {!r}'.format(dt, e))
             return None
     return None
 
 
 def pretty_print_namedtuple(named_tuple):
-    """ pretty prints the namedtuple """
+    ''' pretty prints the namedtuple '''
 
     def json_serial(obj):
-        """ JSON serializer for objects not serializable by default json code """
+        ''' JSON serializer for objects not serializable by default json code '''
 
         if isinstance(obj, date):
             serial = obj.isoformat()
@@ -145,25 +163,8 @@ def pretty_print_namedtuple(named_tuple):
     return json.dumps(named_tuple._asdict(), indent=4, default=json_serial)
 
 
-class TestGetCleanFloat(unittest.TestCase):
-    """ get_clean_float tester """
-
-    def setUp(self):
-        self.floats = (12131.5345, 22.444, 33.0)
-
-    def test_get_clean_float(self):
-        for f in self.floats:
-            self.assertTrue(f == get_clean_float(f))
-
-    def test_xxx(self):
-        self.assertTrue(get_clean_float('', 'XXX') == 'XXX')
-
-    def test_none(self):
-        self.assertTrue(get_clean_float('') is None)
-
-    def test_int(self):
-        self.assertTrue(get_clean_float(123) == 123)
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
 
-if __name__ == '__main__':
-    unittest.main()
