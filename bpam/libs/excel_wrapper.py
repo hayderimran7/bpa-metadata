@@ -106,7 +106,7 @@ class ExcelWrapper(object):
                 col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
             except ValueError:
                 if complain:
-                    logger.error('column name {0} not found'.format(column_name))
+                    logger.error('column name [{}] not found'.format(column_name))
             return col_index
 
         cmap = {}
@@ -174,7 +174,6 @@ class ExcelWrapper(object):
                 val = datetime.datetime(*date_time_tup)
         except ValueError, e:
             logger.warning("Error '{0}' column:{1}, val: {2} cannot be converted to a date".format(e, i, val))
-            print("bi")
             # OK so its not really a date, maybe something can be done with the float
             # This functionality is not currently implemented in the xlrd library
             # xf_index = cell.xf_index

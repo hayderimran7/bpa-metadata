@@ -44,30 +44,30 @@ class SepsisSampleField(fields.Field):
 
     def clean(self, data):
         bpaid = data[self.column_name]
-        bpaid = bpaid.replace("/", ".")
-        project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
+        bpaid = bpaid.replace('/', '.')
+        project, _ = BPAProject.objects.get_or_create(key='SEPSIS')
         bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         sample, _ = SepsisSample.objects.get_or_create(bpa_id=bpa_id)
         return sample
 
 
 class SepsisSampleResource(resources.ModelResource):
-    """Import Export Resource mappings"""
+    '''Import Export Resource mappings'''
 
-    bpa_id = BPAIDField(attribute="bpa_id", column_name="BPA ID")
-    taxon_or_organism = fields.Field(attribute="taxon_or_organism", column_name="Taxon_OR_organism")
-    strain_or_isolate = fields.Field(attribute="strain_or_isolate", column_name="Strain_OR_isolate")
-    serovar = fields.Field(attribute="serovar", column_name="Serovar")
-    key_virulence_genes = fields.Field(attribute="key_virulence_genes", column_name="Key_virulence_genes")
-    strain_description = fields.Field(attribute="strain_description", column_name="Strain_description")
-    isolation_source = fields.Field(attribute="isolation_source", column_name="Isolation_source")
-    publication_reference = fields.Field(attribute="publication_reference", column_name="Publication_reference")
-    contact_researcher = fields.Field(attribute="contact_researcher", column_name="Contact_researcher")
-    culture_collection_id = fields.Field(attribute="culture_collection_id",
-                                         column_name="Culture_collection_ID (alternative name[s])")
-    culture_collection_date = DateField(widget=widgets.DateWidget(format="%d/%m/%y"),
-                                        attribute="culture_collection_date",
-                                        column_name="Culture_collection_date (DD/MM/YY)", )
+    bpa_id = BPAIDField(attribute='bpa_id', column_name='BPA ID')
+    taxon_or_organism = fields.Field(attribute='taxon_or_organism', column_name='Taxon_OR_organism')
+    strain_or_isolate = fields.Field(attribute='strain_or_isolate', column_name='Strain_OR_isolate')
+    serovar = fields.Field(attribute='serovar', column_name='Serovar')
+    key_virulence_genes = fields.Field(attribute='key_virulence_genes', column_name='Key_virulence_genes')
+    strain_description = fields.Field(attribute='strain_description', column_name='Strain_description')
+    isolation_source = fields.Field(attribute='isolation_source', column_name='Isolation_source')
+    publication_reference = fields.Field(attribute='publication_reference', column_name='Publication_reference')
+    contact_researcher = fields.Field(attribute='contact_researcher', column_name='Contact_researcher')
+    culture_collection_id = fields.Field(attribute='culture_collection_id',
+                                         column_name='Culture_collection_ID (alternative name[s])')
+    culture_collection_date = DateField(widget=widgets.DateWidget(format='%d/%m/%y'),
+                                        attribute='culture_collection_date',
+                                        column_name='Culture_collection_date (DD/MM/YY)', )
 
     # TODO
     # growth_condition_time =
@@ -81,7 +81,7 @@ class SepsisSampleResource(resources.ModelResource):
     def init_instance(self, row):
         obj = self._meta.model()
         obj.host = ingest.get_host(row)
-        obj.bpa_id = ingest.get_bpa_id(row.get("BPA ID"))
+        obj.bpa_id = ingest.get_bpa_id(row.get('BPA ID'))
         return obj
 
     class Meta:
@@ -91,7 +91,7 @@ class SepsisSampleResource(resources.ModelResource):
 
 class SampleForm(forms.ModelForm):
     class Meta:
-        fields = "__all__"
+        fields = '__all__'
         model = SepsisSample
         widgets = {
             'date_received_from_sequencing_facility': SuitDateWidget,
@@ -109,41 +109,50 @@ class SepsisSampleAdmin(ImportExportModelAdmin):
 
     date_hierarchy = 'culture_collection_date'
 
-    list_display = ("bpa_id",
-                    "taxon_or_organism",
-                    "strain_or_isolate",
-                    "gram_stain",
-                    "serovar",
-                    "strain_description",
-                    "key_virulence_genes",
-                    "isolation_source",
-                    "publication_reference",
-                    "contact_researcher",
-                    "culture_collection_id",
-                    "culture_collection_date", )
+    list_display = ('bpa_id',
+                    'gram_stain',
+                    'taxon_or_organism',
+                    'strain_or_isolate',
+                    'serovar',
+                    'strain_description',
+                    'key_virulence_genes',
+                    'isolation_source',
+                    'publication_reference',
+                    'contact_researcher',
+                    'culture_collection_id',
+                    'culture_collection_date', )
 
-    list_filter = ("bpa_id__bpa_id",
-                   "taxon_or_organism",
-                   "strain_or_isolate",
-                   "gram_stain",
-                   "serovar",
-                   "key_virulence_genes", )
+    list_filter = ('bpa_id__bpa_id',
+                   'taxon_or_organism',
+                   'strain_or_isolate',
+                   'gram_stain',
+                   'serovar',
+                   'key_virulence_genes', )
 
-    fields = ("bpa_id",
-              "growth_method",
-              "host",
-              "sample_track",
-              "taxon_or_organism",
-              "strain_or_isolate",
-              "gram_stain",
-              "serovar",
-              "strain_description",
-              "key_virulence_genes",
-              "isolation_source",
-              "publication_reference",
-              "contact_researcher",
-              "culture_collection_id",
-              "culture_collection_date", )
+    fields = ('bpa_id',
+              'growth_method',
+              'host',
+              'sample_track',
+              'taxon_or_organism',
+              'strain_or_isolate',
+              'gram_stain',
+              'serovar',
+              'strain_description',
+              'key_virulence_genes',
+              'isolation_source',
+              'publication_reference',
+              'contact_researcher',
+              'culture_collection_id',
+              'culture_collection_date',
+              'study_title',
+              'investigation_type',
+              'project_name',
+              'sample_title',
+              'ploidy',
+              'num_replicons',
+              'estimated_size',
+              'propagation',
+              'collected_by', )
 
 
 admin.site.register(SepsisSample, SepsisSampleAdmin)

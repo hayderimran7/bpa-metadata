@@ -81,72 +81,16 @@ function _django_collectstatic {
 }
 
 
-# BASE
-function ingest_base() {
-    django-admin.py set_vocabulary --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_454 --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_landuse --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_contextual --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_amplicon --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_sra_id--traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py base_ingest_otu --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-}
-
-
-# Great Barrier Reef
-function ingest_gbr() {
-    django-admin.py gbr_ingest_metagenomics --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py gbr_ingest_amplicons --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-}
-
-
 trap exit SIGHUP SIGINT SIGTERM
 defaults
 env | grep -iv PASS | sort
 wait_for_services
 
 
-# reset database and perform all migrations
-if [ "$1" = 'nuclear' ]; then
-    django-admin.py reset_db --router=default --traceback --settings=${DJANGO_SETTINGS_MODULE}
-    make_migrations
-    exec django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-fi
-
-# ingest all bpa project data
-if [ "$1" = 'ingest_all' ]; then
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-
-    django-admin.py ingest_bpa_projects --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py melanoma_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py wheat_pathogens_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py wheat_pathogens_transcript_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-    django-admin.py wheat_cultivars_ingest --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-
-    ingest_gbr
-    ingest_base
-
-    # links
-    exec django-admin.py url_checker --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${INGEST_LOG_FILE}
-fi
-
-# ingest gbr
-if [ "$1" = 'ingest_gbr' ]; then
-    ingest_gbr
-    exit $?
-fi
-
-# ingest base
-if [ "$1" = 'ingest_base' ]; then
-    ingest_base
-    exit $?
-fi
-
 # security by django checksecure
 if [ "$1" = 'checksecure' ]; then
     echo "[Run] Running Django checksecure"
-    exec django-admin.py checksecure --traceback 2>&1 | tee /data/checksecure.log
+    exec django-admin.py check --deploy --traceback 2>&1 | tee /data/checksecure.log
 fi
 
 # uwsgi entrypoint
@@ -193,7 +137,7 @@ if [ "$1" = 'lettuce' ]; then
 fi
 
 # prepare a tarball of build
-if [ "$1" = 'tarball' ]; then
+if [ "$1" = 'releasetarball' ]; then
     echo "[Run] Preparing a tarball of build"
 
     cd /app
@@ -214,7 +158,7 @@ if [ "$1" = 'tarball' ]; then
     exec tar -cpzf ${PROJECT_NAME}-${GIT_TAG}.tar.gz ${DEPS}
 fi
 
-echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser|nuclear|ingest]"
+echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser"
 echo "[RUN]: Many management commands are available from django-admin.py "
 echo "[RUN]: e.g by running /app/docker-entrypoint.sh django-admin.py url_checker from a docker exec session"
 echo "[RUN]: $@"

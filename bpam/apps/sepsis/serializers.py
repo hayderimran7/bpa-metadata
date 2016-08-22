@@ -79,7 +79,8 @@ class GenomicsPacBioFileSerializer(serializers.HyperlinkedModelSerializer):
         model = GenomicsPacBioFile
 
 
-class SampleTrackSerializer(serializers.HyperlinkedModelSerializer):
+class SampleTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
     sample = SepsisSampleSerializer()
 
     class Meta:

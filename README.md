@@ -4,88 +4,97 @@ BPA Metadata is a web portal into Bioplatforms Australia's genomics sequencing d
 archive. It aims to aggregate all relevant meta and sequence data into a coherent data 
 navigation system.
 
-## Development
-bpa-metada is available as a fully contained Dockerized stack. 
+# Development
+Ensure a late version of both docker and docker-compose are available in your environment.
 
-For development, or to use the bpa-metadata archive as a 'offline' [1] contained local tool that uses 
-its own local DB.
+bpa-metada is available as a fully contained Dockerized stack. The dockerised stack are used for both production
+and development. Appropiate configuration files are available depending on usage.
 
-### Quick Setup
+Note that for data ingestion to work you need passwords to the hosted data, these are available from BPA on request.
+Set passwords in your environment, these will be passed to the container.
+
+## Quick Setup
 
 * [Install docker and compose](https://docs.docker.com/compose/install/)
 * git clone https://github.com/muccg/bpa-metadata.git
-* `./develop.sh dev`
-* `./develop.sh ingest_all`
+* `./develop.sh dev_build`
 
 `develop.sh dev` will spin up the stack. See `./develop.sh usage` for some utility methods, which typically are simple 
-wrappers arround docker:
+wrappers arround docker and docker-compose.
+
+docker-compose will fire up the stack like below:
+```
+docker ps -f name="bpam*"
+
+IMAGE                       PORTS                                                                          NAMES
+muccg/nginx-uwsgi:1.10      0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp                                    bpametadata_nginx_1
+mdillon/postgis:9.5         0.0.0.0:32944->5432/tcp                                                        bpametadata_db_1
+memcached:1.4               11211/tcp                                                                      bpametadata_cache_1
+muccg/bpametadata-dev       0.0.0.0:9000-9001->9000-9001/tcp, 8000/tcp, 0.0.0.0:9100-9101->9100-9101/tcp   bpametadata_uwsgi_1
+muccg/bpametadata-dev       9000-9001/tcp, 0.0.0.0:8000->8000/tcp, 9100-9101/tcp                           bpametadata_runserver_1
+```
+
+Setup mirror config
+```
+docker exec -it bpametadata_runserver_1 /app/docker-entrypoint.sh django-admin set_mirrors
+```
+
+To execute the ingestion scripts run `docker exec -it bpametadata_runserver_1 /app/docker-entrypoint.sh django-admin`, be sure
+to have the relevant variables below available in the environment. 
+
+```
+DJANGO_MAILGUN_API_KEY
+BASE_REQUEST_LIST
+BPA_MELANOMA_DOWNLOADS_PASSWORD
+BPA_BASE_DOWNLOADS_PASSWORD
+BPA_USERS_DOWNLOADS_PASSWORD
+BPA_GBR_DOWNLOADS_PASSWORD
+BPA_SEPSIS_DOWNLOADS_PASSWORD
+```
+
+
 
 ```bash
-./develop.sh                         next_release 
+./develop.sh
 
   [ INFO ] ./develop.sh 
-  [ INFO ] make virtualenv
-  [  OK  ] docker-compose version 1.5.2, build 7240ff3
   [  OK  ] Docker ip 172.17.0.1
   [ INFO ] http proxy
   [  OK  ] Proxy http://172.17.0.1:3128
+  [  OK  ] HTTP proxy http://172.17.0.1:3128
   [ INFO ] pip proxy
   [  OK  ] Pip index url http://172.17.0.1:3141/root/pypi/+simple/
-  [ INFO ] Environment set as:
-  [ INFO ] DOCKER_PULL                 1
-  [ INFO ] DOCKER_NO_CACHE             0
-  [ INFO ] DOCKER_BUILD_PROXY          --build-arg http_proxy
-  [ INFO ] DOCKER_USE_HUB              0
-  [ INFO ] DOCKER_IMAGE                muccg/bpametadata
-  [ INFO ] SET_HTTP_PROXY              1
-  [ INFO ] DJANGO_MAILGUN_API_KEY      NOTSET
-  [ INFO ] DJANGO_MAILGUN_SERVER_NAME  mg.ccgapps.com.au
-  Wrapper script to call common tools while developing bpametadata
+  [ INFO ] git tag
+  [ INFO ] Ignoring tags, not on master branch
+  [  OK  ] git tag: next_release
 
-  Environment:
-  Pull during docker build   DOCKER_PULL                 1
-  No cache during build      DOCKER_NO_CACHE             0
-  Use proxy during builds    DOCKER_BUILD_PROXY          --build-arg http_proxy
-  Push/pull from docker hub  DOCKER_USE_HUB              0
-  Release docker image       DOCKER_IMAGE                muccg/bpametadata
-  Use a http proxy           SET_HTTP_PROXY              1
-  Use a pip proxy            SET_PIP_PROXY               1
-  Use mailgun to send mail   DJANGO_MAILGUN_API_KEY      NOTSET
-  Use mailgun to send mail   DJANGO_MAILGUN_SERVER_NAME  ccgmg.com.au
+Environment:
+ Pull during build              DOCKER_PULL                 1 
+ No cache during build          DOCKER_NO_CACHE             0 
+ Use proxy during builds        DOCKER_BUILD_PROXY          --build-arg http_proxy
+ Push/pull from docker hub      DOCKER_USE_HUB              0
+ Release docker image           DOCKER_IMAGE                muccg/bpametadata
+ Use a http proxy               SET_HTTP_PROXY              1
+ Use a pip proxy                SET_PIP_PROXY               1
 
-  Usage: develop.sh options
+Usage:
+ ./develop.sh (baseimage|buildimage|devimage|releasetarball|prodimage)
+ ./develop.sh (dev|dev_build)
+ ./develop.sh (start_prod|prod_build)
+ ./develop.sh (runtests|lettuce|selenium)
+ ./develop.sh (start_test_stack|start_seleniumhub|start_seleniumtests|start_prodseleniumtests)
+ ./develop.sh (pythonlint|jslint)
+ ./develop.sh (ci_docker_staging|docker_staging_lettuce)
+ ./develop.sh (ci_docker_login)
 
-  OPTIONS:
-  dev            Pull up stack and start developing
-  dev_build      Build dev stack images
-  prod_build     Build production image from current tag or branch
-  baseimage      Build base image
-  buildimage     Build build image
-  devimage       Build dev image
-  releaseimage   Build release image
-  releasetarball Produce release tarball artifact
-  shell          Create and shell into a new web image, used for db checking with Django env available
-  superuser      Create Django superuser
-  runscript      Run one of the available scripts
-  checksecure    Run security check
-  up             Spins up docker development stack
-  rm             Remove all containers
-  pythonlint     Run python lint
-  unit_tests     Run unit tests
-  usage          Print this usage
-  help           Print this usage
+Example, start dev with no proxy and rebuild everything:
+SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ./develop.sh dev_rebuild
 
-
-  Example, start dev with no proxy and rebuild everything:
-  SET_PIP_PROXY=0 SET_HTTP_PROXY=0 develop.sh dev_rebuild
-  develop.sh dev_build
-  develop.sh dev
 
 ```
 
 ## Sites
-- *Production* https://downloads.bioplatforms.com/metadata/
-- *Staging* https://staging.ccgapps.com.au/bpa-metadata/
+- *Production* https://downloads.bioplatforms.com
 
 ## Licence
 BPA Metadata is released under the GNU Affero GPL. See source for a licence copy.

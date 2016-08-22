@@ -2,6 +2,7 @@
 # Django settings for bpa metadata project.
 
 import os
+import sys
 
 from ccg_django_utils.conf import EnvConfig
 
@@ -32,23 +33,27 @@ TEMPLATE_DEBUG = DEBUG
 
 # django-secure
 SECURE_SSL_REDIRECT = env.get("secure_ssl_redirect", PRODUCTION)
-SECURE_FRAME_DENY = env.get("secure_frame_deny", PRODUCTION)
 SECURE_CONTENT_TYPE_NOSNIFF = env.get("secure_content_type_nosniff", PRODUCTION)
 SECURE_BROWSER_XSS_FILTER = env.get("secure_browser_xss_filter", PRODUCTION)
 SECURE_HSTS_SECONDS = env.get("secure_hsts_seconds", 10)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get("secure_hsts_include_subdomains", PRODUCTION)
-
+SECURE_SSL_HOST = env.get("secure_ssl_host", False)
+SECURE_REDIRECT_EXEMPT = env.getlist("secure_redirect_exempt", [])
+X_FRAME_OPTIONS = env.get("x_frame_options", 'DENY')
 ADMINS = [("alert", env.get("alert_email", "root@localhost"))]
 MANAGERS = ADMINS
 
-# mailgun email
+# anymail email
 DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
-# default to mailgun, but if the API key is not set, fall back to console
-EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django_mailgun.MailgunBackend')
-MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY', '')
-MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME', '')
 EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Metadata] ')
 SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+# default to anymail/mailgun, but if the API key is not set, fall back to console
+EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'anymail.backends.mailgun.MailgunBackend')
+ANYMAIL = {
+    "MAILGUN_API_KEY": env.get('DJANGO_MAILGUN_API_KEY', ''),
+    "MAILGUN_SENDER_DOMAIN": env.get('DJANGO_MAILGUN_SERVER_NAME', '')
+}
+
 
 # list of emails to send BASE access requests to
 BASE_REQUEST_LIST = env.getlist('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgapps.com.au'])
@@ -234,14 +239,14 @@ TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
                     'admin_tools.template_loaders.Loader', )
 
-MIDDLEWARE_CLASSES = ('djangosecure.middleware.SecurityMiddleware',
+MIDDLEWARE_CLASSES = ('django.middleware.security.SecurityMiddleware',
+                      'django.middleware.clickjacking.XFrameOptionsMiddleware',
                       'django.middleware.common.CommonMiddleware',
                       'django.contrib.sessions.middleware.SessionMiddleware',
                       'django.middleware.csrf.CsrfViewMiddleware',
                       'django.contrib.auth.middleware.AuthenticationMiddleware',
                       'django.contrib.messages.middleware.MessageMiddleware',
                       'django.middleware.locale.LocaleMiddleware',
-                      # 'django.middleware.doc.XViewMiddleware',
                       )
 
 TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.request',
@@ -294,8 +299,9 @@ INSTALLED_APPS = ('bpam',
                   'rest_framework_swagger',
                   'explorer',
                   'leaflet',
-                  'djangosecure',
-                  'import_export', )
+                  'import_export',
+                  'anymail',
+                  )
 
 # #
 # # LOGGING
@@ -316,10 +322,14 @@ LOGGING = {
             'format': '[%(levelname)s:%(asctime)s:%(filename)s:%(lineno)s:%(funcName)s] %(message)s'
         },
         'db': {
-            'format': '[%(duration)s:%(sql)s:%(params)s] %(message)s'
+            'format': '[%(duration)s:%(sql)s:%(params)s %(filename)s %(lineno)s %(funcName)s] %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
+        },
+        'color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '[%(log_color)s%(levelname)-8s] %(filename)s:%(lineno)s %(funcName)s() %(message)s',
         },
     },
     'filters': {
@@ -340,7 +350,12 @@ LOGGING = {
         'shell': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'verbose'
+        },
+        'rainbow': {
+            'level': 'DEBUG',
+            'class': 'colorlog.StreamHandler',
+            'formatter': 'color'
         },
         'file': {
             'level': 'INFO',
@@ -384,12 +399,17 @@ LOGGING = {
             'propagate': False,
         },
         'libs': {
-            'handlers': ['console', 'file'],
+            'handlers': ['rainbow', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'bpam.bpam.management.commands': {
-            'handlers': ['shell'],
+            'handlers': ['rainbow'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'apps': {
+            'handlers': ['rainbow'],
             'level': 'DEBUG',
             'propagate': False,
         },
