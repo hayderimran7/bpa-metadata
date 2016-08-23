@@ -7,7 +7,6 @@ import json
 import logger_utils
 from datetime import date
 from dateutil.parser import parse as date_parser
-from ccg_django_utils.conf import EnvConfig
 from django.utils.encoding import smart_text
 
 # where to cache downloaded metadata
@@ -16,14 +15,28 @@ METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'metadata')
 INGEST_NOTE = 'Ingested from Source Document on {0}\n'.format(date.today())
 
 logger = logger_utils.get_logger(__name__)
-env = EnvConfig()
 
 # list of chars to delete
 remove_letters_map = dict((ord(char), None) for char in string.punctuation + string.ascii_letters)
 
 
 def get_clean_number(val, default=None, debug=False):
-    ''' Try to clean up numbers '''
+    '''
+    Note this will only return ints
+    Try to clean up numbers
+    >>> get_clean_number(42)
+    42
+    >>> get_clean_number('42')
+    42
+    >>> get_clean_number('42.0002')
+    42
+    >>> get_clean_number('42.10002')
+    42
+    >>> get_clean_number(-42)
+    -42
+    >>> get_clean_number(+4)
+    4
+    '''
 
     if debug:
         logger.debug('Value: {!r}'.format(val))
@@ -37,10 +50,11 @@ def get_clean_number(val, default=None, debug=False):
 
     if isinstance(val, float):
         return val
-
-    numbers_only = re.compile(r'[^\d.]+')
-    parsed_val = numbers_only.sub('', val)
-    if parsed_val == '':
+    float_pattern = re.compile(r'\d+')
+    match = float_pattern.search(val)
+    if match:
+        parsed_val = match.group(0)
+    else:
         return default
 
     try:
@@ -75,6 +89,16 @@ def get_clean_float(val, default=None, stringconvert=True):
     Try to hammer an arb value into a float.
     If stringconvert is true (the default behaviour), try to convert the string to a float,
     if not, return the given default value
+
+    >>> get_clean_float(0.01)
+    0.01
+    >>> get_clean_float('0.01')
+    0.01
+    >>> get_clean_float('42.42')
+    42.42
+    >>> get_clean_float('')
+    >>> get_clean_float('0')
+    0.0
     '''
 
     def to_float(var):
@@ -104,7 +128,7 @@ def get_clean_float(val, default=None, stringconvert=True):
         return default
 
     if stringconvert:
-        return to_float(filter(lambda x: x.isdigit(), val))
+        return to_float(filter(lambda x: x.isdigit() or x in (',', '.'), val))
     else:
         return default
 
@@ -128,6 +152,11 @@ def get_date(dt):
     if it wasn't, it may still be a valid date string.
 
     >>> get_date('12-10-1973')
+    datetime.datetime(1973, 12, 10, 0, 0)
+    >>> get_date('12/10/1973')
+    datetime.datetime(1973, 12, 10, 0, 0)
+    >>> get_date('1973-10-12')
+    datetime.datetime(1973, 10, 12, 0, 0)
 
     '''
     if dt is None:
@@ -166,5 +195,4 @@ def pretty_print_namedtuple(named_tuple):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
 
