@@ -53,15 +53,15 @@ docker_staging_lettuce() {
 # lint using flake8
 python_lint() {
     info "python lint"
-    docker-compose -f docker-compose-build.yml run lint flake8 rdrf --exclude=migrations,selenium_test --ignore=E501 --count
+    docker-compose -f docker-compose-build.yml run lint flake8 bpam --exclude=migrations,selenium_test --ignore=E501 --count
     success "python lint"
 }
 
 # lint js, assumes closure compiler
 js_lint() {
     info "js lint"
-    JSFILES=`ls rdrf/rdrf/static/js/*.js | grep -v "\.min\."`
-    EXCLUDES='-x rdrf/rdrf/static/js/gallery.js,rdrf/rdrf/static/js/ie_select.js,rdrf/rdrf/static/js/jquery.bootgrid.js,rdrf/rdrf/static/js/nv.d3.js'
+    JSFILES=`ls bpam/bpam/static/js/*.js | grep -v "\.min\."`
+    EXCLUDES='-x bpam/bpam/static/js/gallery.js,bpam/bpam/static/js/ie_select.js,bpam/bpam/static/js/jquery.bootgrid.js,bpam/bpam/static/js/nv.d3.js'
     for JS in $JSFILES
     do
         docker-compose -f docker-compose-build.yml run lint gjslint ${EXCLUDES} --disable 0131 --max_line_length 100 --nojsdoc $JS
