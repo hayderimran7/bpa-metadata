@@ -1,5 +1,5 @@
 # _*_ coding: utf-8 _*_
-"""
+'''
 Tool to manage the import of rows from Excel workbooks.
 
 Pass a filename, a sheet_name, a mapping (fieldspec)
@@ -9,7 +9,7 @@ functions associated with each column type that must be used to massage the data
 It returns a iterator providing named tuples, each tuple contains key/value pairs, the keys
 being the fist column of the fieldspec, the value are found in the column specisied in the second fieldspec field
 as mangled by the provided method.
-"""
+'''
 
 import os
 import datetime
@@ -30,6 +30,9 @@ class ColumnNotFoundException(Exception):
     def __str__(self):
         return 'Column [{0}] not found'.format(self.column_name)
 
+    def __repr__(self):
+        return '{}({})'.format(type(self).__name__, self.column_name)
+
 
 def _stringify(s):
     if isinstance(s, str):
@@ -41,7 +44,7 @@ def _stringify(s):
 
 
 class ExcelWrapper(object):
-    """
+    '''
     Parse a excel file and yields namedtuples.
     fieldspec specifies the columns  to be read in, and the name
     of the attribute to map them to on the new type
@@ -51,7 +54,7 @@ class ExcelWrapper(object):
     sheet_name: sheet in workbook
     header_length: first number of lines to ignore
     column_name_row_index: row in which column names are found, typically 0
-    """
+    '''
 
     def __init__(self,
                  field_spec,
@@ -81,7 +84,7 @@ class ExcelWrapper(object):
         self.name_to_func_map = self.set_name_to_func_map()
 
     def _set_field_names(self):
-        """ sets field name list """
+        ''' sets field name list '''
 
         names = []
         for attribute, _, _ in self.field_spec:
@@ -91,13 +94,13 @@ class ExcelWrapper(object):
         return names
 
     def set_name_to_column_map(self):
-        """ maps the named field to the actual column in the spreadsheet """
+        ''' maps the named field to the actual column in the spreadsheet '''
 
         def should_complain(c, option_count):
-            """
+            '''
             If the last option in a tuple of column name options is tried, complain if nothing was found,
             but not before.
-            """
+            '''
             return c + 1 == option_count
 
         def find_column(column_name, complain=True):
@@ -131,13 +134,13 @@ class ExcelWrapper(object):
                 # futile quest, they have won, I give up. If a column is not
                 # found, throw your arms in the air and continue, hope that
                 # something later on does not break.
-                logger.warning("Column {} not found in {} ".format(column_name, self.file_name))
+                logger.warning('Column {} not found in {} '.format(column_name, self.file_name))
                 cmap[attribute] = None
 
         return cmap
 
     def set_name_to_func_map(self):
-        """ Map the spec fields to their corresponding functions """
+        ''' Map the spec fields to their corresponding functions '''
 
         function_map = {}
         for attribute, _, func in self.field_spec:
@@ -152,17 +155,17 @@ class ExcelWrapper(object):
         try:
             date_val = float(s)
             tpl = xlrd.xldate_as_tuple(date_val, self.workbook.datemode)
-            return datetime.datetime(*tpl).strftime("%d/%m/%Y")
+            return datetime.datetime(*tpl).strftime('%d/%m/%Y')
         except ValueError:
             return s
 
     def _get_rows(self):
-        """ Yields sequence of cells """
+        ''' Yields sequence of cells '''
         for row_idx in xrange(self.header_length, self.sheet.nrows):
             yield self.sheet.row(row_idx)
 
     def get_date_time(self, i, cell):
-        """ the cell contains a float and pious hope, get a date, if you dare. """
+        ''' the cell contains a float and pious hope, get a date, if you dare. '''
 
         val = cell.value
         try:
@@ -172,8 +175,8 @@ class ExcelWrapper(object):
                 val = datetime.time(*date_time_tup[3:])
             else:
                 val = datetime.datetime(*date_time_tup)
-        except ValueError, e:
-            logger.warning("Error '{0}' column:{1}, val: {2} cannot be converted to a date".format(e, i, val))
+        except ValueError as e:
+            logger.warning('Error [{0:!r}] column:{1}, val: {2} cannot be converted to a date'.format(e, i, val))
             # OK so its not really a date, maybe something can be done with the float
             # This functionality is not currently implemented in the xlrd library
             # xf_index = cell.xf_index
@@ -181,12 +184,12 @@ class ExcelWrapper(object):
             # xf = self.workbook.xf_list[xf_index] # gets an XF object
             #     format_key = xf.format_key
             #     format = self.workbook.format_map[format_key] # gets a Format object
-            #     format_str = format.format_str # this is the "number format string"
+            #     format_str = format.format_str # this is the 'number format string'
             #     print format_str
         return val
 
     def get_all(self, typname='DataRow'):
-        """ Returns all rows for the sheet as named tuples. """
+        ''' Returns all rows for the sheet as named tuples. '''
 
         # row is added so we know where in the spreadsheet this came from
         typ = namedtuple(typname, ['row', 'file_name'] + [n for n in self.field_names])

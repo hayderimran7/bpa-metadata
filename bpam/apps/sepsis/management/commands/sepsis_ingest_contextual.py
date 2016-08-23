@@ -190,7 +190,7 @@ def get_data(file_name):
         ('culture_collection_date', 'Culture_collection_date (YYYY-MM-DD)', ingest_utils.get_date),
         ('host_location', 'Host_location (state, country)', None),
         ('host_age', 'Host_age', ingest_utils.get_int),
-        ('host_dob', 'Host_DOB (YYYY-MM-DD)', ingest_utils.get_date),
+        ('host_dob', 'Host_DOB (DD/MM/YY)', ingest_utils.get_date),
         ('host_sex', 'Host_sex (F/M)', get_sex),
         ('host_disease_outcome', 'Host_disease_outcome', None),
         ('isolation_source', 'Isolation_source', None),

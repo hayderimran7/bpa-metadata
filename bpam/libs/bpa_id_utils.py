@@ -6,16 +6,16 @@ from datetime import date
 from apps.common.models import BPAUniqueID, BPAProject
 import logger_utils
 
-BPA_ID = "102.100.100"
-INGEST_NOTE = "Ingested from GoogleDocs on {0}".format(date.today())
+BPA_ID = '102.100.100'
+INGEST_NOTE = 'Ingested from GoogleDocs on {0}'.format(date.today())
 
 logger = logger_utils.get_logger(__name__)
 
 
 def ingest_bpa_ids(data, project_key, project_name):
-    """
+    '''
     The BPA ID's are unique
-    """
+    '''
 
     id_set = set()
     for e in data:
@@ -41,11 +41,11 @@ def get_project(key, name):
 
 
 def get_bpa_id(bpa_idx, project_key, project_name, add_prefix=False, note=INGEST_NOTE):
-    """
+    '''
     Get a BPA ID, if it does not exist, make it
     It also creates the necessary project.
     :rtype : bpa_id
-    """
+    '''
 
     if add_prefix is True and bpa_idx is not None:
         bpa_idx = BPA_ID + '.' + bpa_idx
@@ -56,23 +56,35 @@ def get_bpa_id(bpa_idx, project_key, project_name, add_prefix=False, note=INGEST
 
     project = get_project(project_key, project_name)
     bpa_id, created = BPAUniqueID.objects.get_or_create(bpa_id=bpa_idx, defaults={'project': project, 'note': note})
-    return bpa_id, "OK"
+    return bpa_id, 'OK'
 
 
 def add_id_set(id_set, project_key, project_name):
-    """
+    '''
     Add the id's in the given set
-    """
+    '''
     for bpa_id in id_set:
         get_bpa_id(bpa_id, project_key, project_name)
 
 
 class BPAIdValidator(object):
-    """
+    '''
     Given a BPA ID string, check validity.
-    """
+    >>> validator = BPAIdValidator('102.100.100.666')
+    >>> print(validator)
+    BPAIdValidator('102.100.100.666')
+    >>> validator.is_valid()
+    True
+    >>> validator.get_id()
+    '102.100.100.666'
+    >>> validator = BPAIdValidator('nope')
+    >>> validator.is_valid()
+    False
+    >>> validator.valid_report
+    'No [102.100.100] identifying the string as a BPA ID'
+    '''
 
-    RE_ID = re.compile(r"^102\.100\.100\.\d*", re.MULTILINE)
+    RE_ID = re.compile(r'^102\.100\.100\.\d*', re.MULTILINE)
 
     def __init__(self, bpa_id):
         self.valid_report = None
@@ -82,10 +94,14 @@ class BPAIdValidator(object):
         else:
             self.bpa_id = None
 
+    def __repr__(self):
+        _classname = type(self).__name__
+        return "{}('{}')".format(_classname, self.bpa_id)
+
     def get_id(self):
-        """
+        '''
         Return validated ID
-        """
+        '''
         return self.bpa_id
 
     def is_valid(self):
@@ -94,9 +110,9 @@ class BPAIdValidator(object):
         return self.valid
 
     def is_valid_bpa_id(self):
-        """
+        '''
         Determines if id is a valid BPA ID
-        """
+        '''
 
         if self.bpa_id is None:
             self.valid_report = 'BPA ID is None'
@@ -109,7 +125,7 @@ class BPAIdValidator(object):
 
         # no BPA prefix
         elif self.bpa_id.find(BPA_ID) == -1:
-            self.valid_report = 'No "{0}" identifying the string as a BPA ID'.format(BPA_ID)
+            self.valid_report = 'No [{0}] identifying the string as a BPA ID'.format(BPA_ID)
             self.valid = False
 
         elif self.RE_ID.match(self.bpa_id) is None:
@@ -119,3 +135,9 @@ class BPAIdValidator(object):
         # this function has failed to find a reason why this can't be a BPA ID....
         else:
             self.valid = True
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+

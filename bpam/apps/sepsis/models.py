@@ -76,15 +76,15 @@ class PacBioGenomicsMethod(models.Model):
     # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	Run ID	SMRT Cell ID	Cell Position	RS version
 
     library_construction_protocol = models.CharField('Library Construction Protocol',
-                                                     max_length=100,
+                                                     max_length=500,
                                                      blank=True,
                                                      null=True)
-    insert_size_range = models.CharField('Insert Size Range', max_length=20, blank=True, null=True)
-    sequencer = models.CharField('Sequencer', max_length=100, blank=True, null=True)
-    sequencer_run_id = models.CharField('Sequencer run ID', max_length=20, blank=True, null=True)
+    insert_size_range = models.CharField('Insert Size Range', max_length=40, blank=True, null=True)
+    sequencer = models.CharField('Sequencer', max_length=200, blank=True, null=True)
+    sequencer_run_id = models.CharField('Sequencer run ID', max_length=100, blank=True, null=True)
     smrt_cell_id = models.CharField('SMRT Cell ID', max_length=60, blank=True, null=True)
     cell_position = models.CharField('Cell Position', max_length=60, blank=True, null=True)
-    rs_version = models.CharField('RS Version', max_length=20, blank=True, null=True)
+    rs_version = models.CharField('RS Version', max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = 'PacBio Genomics Method'
