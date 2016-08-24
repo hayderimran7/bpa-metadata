@@ -19,7 +19,7 @@ router.register(r"track_deeplc", views.DeepLCMSTrackViewSet)
 router.register(r"track_swath", views.SWATHMSTrackViewSet)
 
 urlpatterns = [
-    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v2/', include(router.urls)),
     url(regex=r'^$', view=views.SepsisView.as_view(), name='index'),
     url(regex=r'^contacts$', view=views.ContactsView.as_view(),
         name='contacts'),
