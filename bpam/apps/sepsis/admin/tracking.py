@@ -4,11 +4,13 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
 
+from apps.common.models import BPAProject, BPAUniqueID
+
 # import export fields
 from commonfields import DateField
 from sample import SepsisSampleField
 
-from ..models import SampleTrack
+from ..models import PacBioTrack, MiSeqTrack
 from ..models import SepsisSample
 
 # 5 digit BPA ID
@@ -28,6 +30,7 @@ from ..models import SepsisSample
 # Archive ID
 # Archive Ingestion Date
 
+BPA_ID = '102.100.100'
 track_data = ('bpa_id',
               'taxon_or_organism',
               'strain_or_isolate',
@@ -55,11 +58,21 @@ class TrackBooleanField(fields.Field):
             return True
         return False
 
+class BPAField(fields.Field):
+    def __init__(self, *args, **kwargs):
+        super(BPAField, self).__init__(*args, **kwargs)
+
+    def clean(self, data):
+        bpaid = data[self.column_name]
+        bpaid = '{}.{}'.format(BPA_ID, bpaid)
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid)
+        return bpa_id
 
 class SampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
 
-    bpa_id = fields.Field(attribute='bpa_id', column_name='5 digit BPA ID')
+    # bpa_id = fields.Field(attribute='bpa_id', column_name='5 digit BPA ID')
+    bpa_id = BPAField(attribute='bpa_id', column_name='5 digit BPA ID')
     taxon_or_organism = fields.Field(attribute='taxon_or_organism', column_name='Taxon_OR_organism')
     strain_or_isolate = fields.Field(attribute='strain_or_isolate', column_name='Strain_OR_isolate')
     serovar = fields.Field(attribute='serovar', column_name='Serovar')
@@ -80,14 +93,28 @@ class SampleTrackResource(resources.ModelResource):
     class Meta:
         import_id_fields = ('bpa_id', )
         export_order = track_data
-        model = SampleTrack
 
+class PacBioSampleTrackResource(SampleTrackResource):
 
-class TrackAdmin(ImportExportModelAdmin):
-    resource_class = SampleTrackResource
+    class Meta(SampleTrackResource.Meta):
+        model = PacBioTrack
+
+class MiSeqSampleTrackResource(SampleTrackResource):
+
+    class Meta(SampleTrackResource.Meta):
+        model = MiSeqTrack
+
+class CommonTrackAdmin(ImportExportModelAdmin):
     date_hierarchy = 'sample_submission_date'
     list_display = track_data
     list_filter = ('bpa_id', 'taxon_or_organism', 'strain_or_isolate', 'omics')
 
+class PacBioTrackAdmin(CommonTrackAdmin):
+    resource_class = PacBioSampleTrackResource
 
-admin.site.register(SampleTrack, TrackAdmin)
+class MiSeqTrackAdmin(CommonTrackAdmin):
+    resource_class = MiSeqSampleTrackResource
+
+
+admin.site.register(PacBioTrack, PacBioTrackAdmin)
+admin.site.register(MiSeqTrack, MiSeqTrackAdmin)

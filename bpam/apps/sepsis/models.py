@@ -136,29 +136,29 @@ class TranscriptomicsMethod(models.Model):
 class SampleTrack(models.Model):
     ''' Track the Sepsis Sample '''
 
-   # 5 digit BPA ID
-   # Taxon_OR_organism
-   # Strain_OR_isolate
-   # Serovar
-   # Growth Media
-   # Replicate
-   # Omics
-   # Analytical platform
-   # Facility
-   # Work order
-   # Contextual Data Submission Date
-   # Sample submission FIXME, no need for flag if date is set, date is flag
-   # Sample submission date
-   # Data generated
-   # Archive ID
-   # Archive Ingestion Date
+    # 5 digit BPA ID
+    # Taxon_OR_organism
+    # Strain_OR_isolate
+    # Serovar
+    # Growth Media
+    # Replicate
+    # Omics
+    # Analytical platform
+    # Facility
+    # Work order
+    # Contextual Data Submission Date
+    # Sample submission FIXME, no need for flag if date is set, date is flag
+    # Sample submission date
+    # Data generated
+    # Archive ID
+    # Archive Ingestion Date
 
-    #bpa_id = models.ForeignKey(BPAUniqueID,
-    #                           null=True,
-    #                           verbose_name='BPA ID',
-    #                           help_text='Bioplatforms Australia Sample ID')
+    bpa_id = models.ForeignKey(BPAUniqueID,
+                               null=True,
+                               verbose_name='BPA ID',
+                               help_text='Bioplatforms Australia Sample ID')
 
-    bpa_id = models.CharField('BPA ID', max_length=6)
+    #bpa_id = models.CharField('BPA ID', max_length=6)
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
     serovar = models.CharField('Serovar', max_length=500, blank=True, null=True)
@@ -180,9 +180,19 @@ class SampleTrack(models.Model):
         return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)
 
     class Meta:
+        abstract = True
         verbose_name = 'Sample Tracking Information'
         verbose_name_plural = 'Sample Tracking'
 
+class PacBioTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'PacBio Tracking Information'
+        verbose_name_plural = verbose_name
+
+class MiSeqTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'MiSeq Tracking Information'
+        verbose_name_plural = verbose_name
 
 # Little point in expanding the common Sample Type
 class SepsisSample(models.Model):
@@ -202,11 +212,11 @@ class SepsisSample(models.Model):
                                       help_text='Sample Growth Method')
 
     # FIXME
-    sample_track = models.OneToOneField(SampleTrack,
-                                        blank=True,
-                                        null=True,
-                                        related_name='sample',
-                                        help_text='Sample Tracking')
+    #sample_track = models.OneToOneField(SampleTrack,
+    #                                    blank=True,
+    #                                    null=True,
+    #                                    related_name='sample',
+    #                                    help_text='Sample Tracking')
 
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)

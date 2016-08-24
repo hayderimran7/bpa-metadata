@@ -15,7 +15,7 @@ from .models import (Host,
                      TranscriptomicsMethod,
                      TranscriptomicsFile,
                      SepsisSample,
-                     SampleTrack, )
+                     PacBioTrack, )
 
 import serializers
 
@@ -28,7 +28,7 @@ class SepsisView(TemplateView):
         context['sample_count'] = SepsisSample.objects.count()
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
         context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
-        context['track_count'] = SampleTrack.objects.count()
+        context['track_count'] = PacBioTrack.objects.count()
         return context
 
 
@@ -44,13 +44,12 @@ class SampleListView(ListView):
         return context
 
 class TrackListView(ListView):
-    model = SampleTrack
     context_object_name = 'sampletracks'
     template_name = 'sepsis/track_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(TrackListView, self).get_context_data(**kwargs)
-        context['sampletracks'] = SampleTrack.objects.all()
+        context['sampletracks'] = PacBioTrack.objects.all()
         return context
 
 class GenomicsMiseqFileListView(ListView):
@@ -90,57 +89,57 @@ class ConsortiumView(TemplateView):
 
 
 class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint for Sepsis Genomics miseq Sequences
-    """
+    '''
     queryset = GenomicsMiseqFile.objects.all()
     serializer_class = serializers.GenomicsMiseqFileSerializer
 
 
 class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint for Sepsis Genomics pacbio Sequences
-    """
+    '''
     queryset = GenomicsPacBioFile.objects.all()
     serializer_class = serializers.GenomicsPacBioFileSerializer
 
 
 class SepsisSampleTrackViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint that allows the tracking of sepsis samples
-    """
-    queryset = SampleTrack.objects.all()
+    '''
+    queryset = PacBioTrack.objects.all()
     serializer_class = serializers.SampleTrackSerializer
 
 
 class SepsisSampleViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint that allows Sepsis Samples to be viewed or edited.
-    """
+    '''
     queryset = SepsisSample.objects.all()
     serializer_class = serializers.SepsisSampleSerializer
 
 
 class BPAIDViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint that allows BPA ID's to be viewed or edited.
-    """
+    '''
     queryset = BPAUniqueID.objects.all()
     serializer_class = serializers.BPAUniqueIDSerializer
-    lookup_field = "bpa_id"
+    lookup_field = 'bpa_id'
 
 
 class BPAProjectViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint that allows BPA projects to be viewed or edited.
-    """
+    '''
     queryset = BPAProject.objects.all()
     serializer_class = serializers.BPAProjectSerializer
 
 
 class HostViewSet(viewsets.ModelViewSet):
-    """
+    '''
     API endpoint that allows Sepsis Hosts to be viewed or edited.
-    """
+    '''
     queryset = Host.objects.all()
     serializer_class = serializers.HostSerializer
