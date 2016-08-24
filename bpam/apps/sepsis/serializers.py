@@ -12,7 +12,13 @@ from .models import (Host,
                      ProteomicsMethod,
                      TranscriptomicsMethod,
                      SepsisSample,
-                     SampleTrack, )
+                     PacBioTrack,
+                     MiSeqTrack,
+                     RNAHiSeqTrack,
+                     MetabolomicsTrack,
+                     DeepLCMSTrack,
+                     SWATHMSTrack,
+                     )
 
 
 class URLVerificationSerializer(serializers.ModelSerializer):
@@ -78,10 +84,39 @@ class GenomicsPacBioFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GenomicsPacBioFile
 
-
-class SampleTrackSerializer(serializers.ModelSerializer):
+# Tracking API
+class PacBioTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
-    sample = SepsisSampleSerializer()
 
     class Meta:
-        model = SampleTrack
+        model = PacBioTrack
+
+class MiSeqTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
+
+    class Meta:
+        model = MiSeqTrack
+
+class RNAHiSeqTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
+
+    class Meta:
+        model = RNAHiSeqTrack
+
+class MetabolomicsTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
+
+    class Meta:
+        model = MetabolomicsTrack
+
+class DeepLCMSTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
+
+    class Meta:
+        model = DeepLCMSTrack
+
+class SWATHMSTrackSerializer(serializers.ModelSerializer):
+    bpa_id = BPAUniqueIDSerializer()
+
+    class Meta:
+        model = SWATHMSTrack

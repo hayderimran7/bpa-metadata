@@ -7,12 +7,19 @@ router.register(r"sepsis_samples", views.SepsisSampleViewSet)
 router.register(r"hosts", views.HostViewSet)
 router.register(r"project", views.BPAProjectViewSet)
 router.register(r"bpa_ids", views.BPAIDViewSet)
-router.register(r"track", views.SepsisSampleTrackViewSet)
+router.register(r"track_genomics", views.GenomicsMiseqFileViewSet)
 router.register(r"genomic_miseq_files", views.GenomicsMiseqFileViewSet)
 router.register(r"genomic_pacbio_files", views.GenomicsPacBioFileViewSet)
 
+router.register(r"track_pacbio", views.PacBioTrackViewSet)
+router.register(r"track_miseq", views.MiSeqTrackViewSet)
+router.register(r"track_rna_hiseq", views.RNAHiSeqTrackViewSet)
+router.register(r"track_metabolomics", views.MetabolomicsTrackViewSet)
+router.register(r"track_deeplc", views.DeepLCMSTrackViewSet)
+router.register(r"track_swath", views.SWATHMSTrackViewSet)
+
 urlpatterns = [
-    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v2/', include(router.urls)),
     url(regex=r'^$', view=views.SepsisView.as_view(), name='index'),
     url(regex=r'^contacts$', view=views.ContactsView.as_view(),
         name='contacts'),
