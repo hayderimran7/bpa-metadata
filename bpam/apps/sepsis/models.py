@@ -183,31 +183,37 @@ class SampleTrack(models.Model):
         abstract = True
 
 class PacBioTrack(SampleTrack):
+    track_type = 'PacBio'
     class Meta:
         verbose_name = 'Track PacBio'
         verbose_name_plural = verbose_name
 
 class MiSeqTrack(SampleTrack):
+    track_type = 'MiSeq'
     class Meta:
         verbose_name = 'Track MiSeq'
         verbose_name_plural = verbose_name
 
 class RNAHiSeqTrack(SampleTrack):
+    track_type = 'RNA (HiSeq)'
     class Meta:
         verbose_name = 'Track RNA (HiSeq)'
         verbose_name_plural = verbose_name
 
 class MetabolomicsTrack(SampleTrack):
+    track_type = 'Metabolomics'
     class Meta:
         verbose_name = 'Track Metabolomics'
         verbose_name_plural = verbose_name
 
 class DeepLCMSTrack(SampleTrack):
+    track_type = 'Deep LC-MS (Monash)'
     class Meta:
         verbose_name = 'Track Deep LC-MS (Monash)'
         verbose_name_plural = verbose_name
 
 class SWATHMSTrack(SampleTrack):
+    track_type = 'SWATH-MS (APAF)'
     class Meta:
         verbose_name = 'Track SWATH-MS (APAF)'
         verbose_name_plural = verbose_name

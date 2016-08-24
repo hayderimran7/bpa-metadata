@@ -143,3 +143,29 @@ class MetabolomicsTrackAdmin(CommonTrackAdmin):
     resource_class = MetabolomicsSampleTrackResource
 
 admin.site.register(MetabolomicsTrack, MetabolomicsTrackAdmin)
+
+
+# DeepLCMS
+class DeepLCMSSampleTrackResource(CommonSampleTrackResource):
+
+    class Meta(CommonSampleTrackResource.Meta):
+        model = DeepLCMSTrack
+
+class DeepLCMSTrackAdmin(CommonTrackAdmin):
+    resource_class = DeepLCMSSampleTrackResource
+
+admin.site.register(DeepLCMSTrack, DeepLCMSTrackAdmin)
+
+
+# SWATHMSTrack
+class SWATHMSSampleTrackResource(CommonSampleTrackResource):
+
+    class Meta(CommonSampleTrackResource.Meta):
+        model = SWATHMSTrack
+
+class SWATHMSMSTrackAdmin(CommonTrackAdmin):
+    resource_class = SWATHMSSampleTrackResource
+
+admin.site.register(SWATHMSTrack, SWATHMSMSTrackAdmin)
+
+

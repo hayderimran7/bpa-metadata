@@ -15,10 +15,17 @@ from .models import (Host,
                      TranscriptomicsMethod,
                      TranscriptomicsFile,
                      SepsisSample,
-                     PacBioTrack, )
+                     PacBioTrack,
+                     MiSeqTrack,
+                     RNAHiSeqTrack,
+                     MetabolomicsTrack,
+                     DeepLCMSTrack,
+                     SWATHMSTrack,
+                     )
 
 import serializers
 
+tracks = (PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack)
 
 class SepsisView(TemplateView):
     template_name = 'sepsis/index.html'
@@ -28,7 +35,7 @@ class SepsisView(TemplateView):
         context['sample_count'] = SepsisSample.objects.count()
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
         context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
-        context['track_count'] = PacBioTrack.objects.count()
+        context['track_count'] = sum(t.objects.count() for t in tracks)
         return context
 
 
@@ -46,10 +53,11 @@ class SampleListView(ListView):
 class TrackListView(ListView):
     context_object_name = 'sampletracks'
     template_name = 'sepsis/track_list.html'
+    queryset = list(chain(*(t.objects.all() for t in tracks)))
 
     def get_context_data(self, **kwargs):
         context = super(TrackListView, self).get_context_data(**kwargs)
-        context['sampletracks'] = PacBioTrack.objects.all()
+        context['sampletracks'] = self.queryset
         return context
 
 class GenomicsMiseqFileListView(ListView):
