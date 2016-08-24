@@ -171,10 +171,10 @@ class SampleTrack(models.Model):
     work_order = models.CharField('Work Order', max_length=50, blank=True, null=True)
     contextual_data_submission_date = models.DateField('Contextual Data Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
     sample_submission_date = models.DateField('Sample Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
-    data_generated = models.BooleanField('Data Generated', default=False)
+    data_generated = models.NullBooleanField('Data Generated', default=False)
     archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='YYYY-MM-DD')
     curation_url = models.URLField('Curation URL', blank=True, null=True)
-    dataset_url = models.URLField('Dataset URL', blank=True, null=True)
+    dataset_url = models.URLField('Download URL', blank=True, null=True)
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)

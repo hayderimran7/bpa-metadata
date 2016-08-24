@@ -35,6 +35,7 @@
                 <th>Sample Submission Date</th>
                 <th>Data generated</th>
                 <th>Archive Ingestion Date</th>
+                <th>Download</th>
             </tr>
         </thead>
         <tfoot>
@@ -53,13 +54,14 @@
                 <th>Sample Submission Date</th>
                 <th>Data generated</th>
                 <th>Archive Ingestion Date</th>
+                <th>Download</th>
 
             </tr>
         </tfoot>
         <tbody>
             {% for track in sampletracks %}
             <tr>
-                <td>{{ track.bpa_id.get_short_name }}</td>
+                <td>{{ track.bpa_id }}</td>
                 <td>{{ track.taxon_or_organism | default:"" }}</td>
                 <td>{{ track.strain_or_isolate | default:""}}</td>
                 <td>{{ track.serovar | default:""}}</td>
@@ -79,6 +81,7 @@
                     {% endif %}
                 </td>
                 <td>{{ track.archive_ingestion_date | default:""}}</td>
+                <td>{{ track.dataset_url | default:""}}</td>
             </tr>
             {% endfor %}
         </tbody>
