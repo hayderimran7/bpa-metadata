@@ -25,6 +25,7 @@ from .models import (Host,
 
 import serializers
 
+# a list of sepsis sample track types
 tracks = (PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack)
 
 class SepsisView(TemplateView):
@@ -112,13 +113,48 @@ class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.GenomicsPacBioFileSerializer
 
 
-class SepsisSampleTrackViewSet(viewsets.ModelViewSet):
+class PacBioTrackViewSet(viewsets.ModelViewSet):
     '''
-    API endpoint that allows the tracking of sepsis samples
+    API endpoint that allows the tracking of PacBio
     '''
     queryset = PacBioTrack.objects.all()
-    serializer_class = serializers.SampleTrackSerializer
+    serializer_class = serializers.PacBioTrackSerializer
 
+class MiSeqTrackViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the tracking of MiSeq
+    '''
+    queryset = MiSeqTrack.objects.all()
+    serializer_class = serializers.MiSeqTrackSerializer
+
+
+class RNAHiSeqTrackViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the tracking of RNAHiSeq
+    '''
+    queryset = RNAHiSeqTrack.objects.all()
+    serializer_class = serializers.RNAHiSeqTrackSerializer
+
+class MetabolomicsTrackViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the tracking of Metabolomics
+    '''
+    queryset = MetabolomicsTrack.objects.all()
+    serializer_class = serializers.MetabolomicsTrackSerializer
+
+class DeepLCMSTrackViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the tracking of Deep LC-MS
+    '''
+    queryset = DeepLCMSTrack.objects.all()
+    serializer_class = serializers.DeepLCMSTrackSerializer
+
+class SWATHMSTrackViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint that allows the tracking of SWAT HMST
+    '''
+    queryset = SWATHMSTrack.objects.all()
+    serializer_class = serializers.SWATHMSTrackSerializer
 
 class SepsisSampleViewSet(viewsets.ModelViewSet):
     '''
