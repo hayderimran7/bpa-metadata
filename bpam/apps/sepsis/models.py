@@ -181,17 +181,35 @@ class SampleTrack(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = 'Sample Tracking Information'
-        verbose_name_plural = 'Sample Tracking'
 
 class PacBioTrack(SampleTrack):
     class Meta:
-        verbose_name = 'PacBio Tracking Information'
+        verbose_name = 'Track PacBio'
         verbose_name_plural = verbose_name
 
 class MiSeqTrack(SampleTrack):
     class Meta:
-        verbose_name = 'MiSeq Tracking Information'
+        verbose_name = 'Track MiSeq'
+        verbose_name_plural = verbose_name
+
+class RNAHiSeqTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'Track RNA (HiSeq)'
+        verbose_name_plural = verbose_name
+
+class MetabolomicsTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'Track Metabolomics'
+        verbose_name_plural = verbose_name
+
+class DeepLCMSTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'Track Deep LC-MS (Monash)'
+        verbose_name_plural = verbose_name
+
+class SWATHMSTrack(SampleTrack):
+    class Meta:
+        verbose_name = 'Track SWATH-MS (APAF)'
         verbose_name_plural = verbose_name
 
 # Little point in expanding the common Sample Type

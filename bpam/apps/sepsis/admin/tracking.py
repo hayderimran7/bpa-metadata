@@ -10,7 +10,7 @@ from apps.common.models import BPAProject, BPAUniqueID
 from commonfields import DateField
 from sample import SepsisSampleField
 
-from ..models import PacBioTrack, MiSeqTrack
+from ..models import PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack
 from ..models import SepsisSample
 
 # 5 digit BPA ID
@@ -68,7 +68,7 @@ class BPAField(fields.Field):
         bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid)
         return bpa_id
 
-class SampleTrackResource(resources.ModelResource):
+class CommonSampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
 
     # bpa_id = fields.Field(attribute='bpa_id', column_name='5 digit BPA ID')
@@ -94,27 +94,52 @@ class SampleTrackResource(resources.ModelResource):
         import_id_fields = ('bpa_id', )
         export_order = track_data
 
-class PacBioSampleTrackResource(SampleTrackResource):
-
-    class Meta(SampleTrackResource.Meta):
-        model = PacBioTrack
-
-class MiSeqSampleTrackResource(SampleTrackResource):
-
-    class Meta(SampleTrackResource.Meta):
-        model = MiSeqTrack
-
 class CommonTrackAdmin(ImportExportModelAdmin):
     date_hierarchy = 'sample_submission_date'
     list_display = track_data
     list_filter = ('bpa_id', 'taxon_or_organism', 'strain_or_isolate', 'omics')
 
+# PacBio
+class PacBioSampleTrackResource(CommonSampleTrackResource):
+    class Meta(CommonSampleTrackResource.Meta):
+        model = PacBioTrack
+
 class PacBioTrackAdmin(CommonTrackAdmin):
     resource_class = PacBioSampleTrackResource
+
+admin.site.register(PacBioTrack, PacBioTrackAdmin)
+
+# MiSeq
+class MiSeqSampleTrackResource(CommonSampleTrackResource):
+
+    class Meta(CommonSampleTrackResource.Meta):
+        model = MiSeqTrack
 
 class MiSeqTrackAdmin(CommonTrackAdmin):
     resource_class = MiSeqSampleTrackResource
 
-
-admin.site.register(PacBioTrack, PacBioTrackAdmin)
 admin.site.register(MiSeqTrack, MiSeqTrackAdmin)
+
+
+# RNAHiSeq
+class RNAHiSeqSampleTrackResource(CommonSampleTrackResource):
+
+    class Meta(CommonSampleTrackResource.Meta):
+        model = RNAHiSeqTrack
+
+class RNAHiSeqTrackAdmin(CommonTrackAdmin):
+    resource_class = RNAHiSeqSampleTrackResource
+
+admin.site.register(RNAHiSeqTrack, RNAHiSeqTrackAdmin)
+
+
+# Metabolomics
+class MetabolomicsSampleTrackResource(CommonSampleTrackResource):
+
+    class Meta(CommonSampleTrackResource.Meta):
+        model = MetabolomicsTrack
+
+class MetabolomicsTrackAdmin(CommonTrackAdmin):
+    resource_class = MetabolomicsSampleTrackResource
+
+admin.site.register(MetabolomicsTrack, MetabolomicsTrackAdmin)
