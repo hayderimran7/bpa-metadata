@@ -136,37 +136,87 @@ class TranscriptomicsMethod(models.Model):
 class SampleTrack(models.Model):
     ''' Track the Sepsis Sample '''
 
-    bpa_id = models.OneToOneField(BPAUniqueID,
-                                  null=True,
-                                  verbose_name='BPA ID',
-                                  help_text='Bioplatforms Australia Sample ID')
-    given_to = models.CharField('Given To', max_length=200, blank=True, null=True, help_text='Sample was delivered to')
-    allocation_date = models.DateField('Allocation Date', blank=True, null=True, help_text='DD/MM/YY')
+    # 5 digit BPA ID
+    # Taxon_OR_organism
+    # Strain_OR_isolate
+    # Serovar
+    # Growth Media
+    # Replicate
+    # Omics
+    # Analytical platform
+    # Facility
+    # Work order
+    # Contextual Data Submission Date
+    # Sample submission FIXME, no need for flag if date is set, date is flag
+    # Sample submission date
+    # Data generated
+    # Archive ID
+    # Archive Ingestion Date
 
-    work_order = models.CharField('Work Order', max_length=50, blank=True, null=True)
+    bpa_id = models.ForeignKey(BPAUniqueID,
+                               null=True,
+                               verbose_name='BPA ID',
+                               help_text='Bioplatforms Australia Sample ID')
+
+    #bpa_id = models.CharField('BPA ID', max_length=6)
+    taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
+    strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
+    serovar = models.CharField('Serovar', max_length=500, blank=True, null=True)
+    growth_media = models.CharField('Growth Media', max_length=500, blank=True, null=True)
     replicate = models.IntegerField('Replicate', blank=True, null=True)
     omics = models.CharField('Omics Type', max_length=50, blank=True, null=True)
     analytical_platform = models.CharField('Analytical Platform', max_length=100, blank=True, null=True)
-    facility = models.ForeignKey(Facility, blank=True, null=True)
-
-    data_generated = models.BooleanField('Data Generated', default=False)
-    sample_submission_date = models.DateField('Sample Submission Date', blank=True, null=True, help_text='DD/MM/YY')
-    contextual_data_submission_date = models.DateField('Contextual Data Submission Date',
-                                                       blank=True,
-                                                       null=True,
-                                                       help_text='DD/MM/YY')
-
-    archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='DD/MM/YY')
+    # facility = models.ForeignKey(Facility, blank=True, null=True)
+    facility = models.CharField('Facility', max_length=100, blank=True, null=True)
+    work_order = models.CharField('Work Order', max_length=50, blank=True, null=True)
+    contextual_data_submission_date = models.DateField('Contextual Data Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
+    sample_submission_date = models.DateField('Sample Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
+    data_generated = models.NullBooleanField('Data Generated', default=False)
+    archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='YYYY-MM-DD')
     curation_url = models.URLField('Curation URL', blank=True, null=True)
-    dataset_url = models.URLField('Dataset URL', blank=True, null=True)
+    dataset_url = models.URLField('Download URL', blank=True, null=True)
 
     def __unicode__(self):
-        return u'Sample {}'.format(self.bpa_id)
+        return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)
 
     class Meta:
-        verbose_name = 'Sample Tracking Information'
-        verbose_name_plural = 'Sample Tracking'
+        abstract = True
 
+class PacBioTrack(SampleTrack):
+    track_type = 'PacBio'
+    class Meta:
+        verbose_name = 'Track PacBio'
+        verbose_name_plural = verbose_name
+
+class MiSeqTrack(SampleTrack):
+    track_type = 'MiSeq'
+    class Meta:
+        verbose_name = 'Track MiSeq'
+        verbose_name_plural = verbose_name
+
+class RNAHiSeqTrack(SampleTrack):
+    track_type = 'RNA (HiSeq)'
+    class Meta:
+        verbose_name = 'Track RNA (HiSeq)'
+        verbose_name_plural = verbose_name
+
+class MetabolomicsTrack(SampleTrack):
+    track_type = 'Metabolomics'
+    class Meta:
+        verbose_name = 'Track Metabolomics'
+        verbose_name_plural = verbose_name
+
+class DeepLCMSTrack(SampleTrack):
+    track_type = 'Deep LC-MS (Monash)'
+    class Meta:
+        verbose_name = 'Track Deep LC-MS (Monash)'
+        verbose_name_plural = verbose_name
+
+class SWATHMSTrack(SampleTrack):
+    track_type = 'SWATH-MS (APAF)'
+    class Meta:
+        verbose_name = 'Track SWATH-MS (APAF)'
+        verbose_name_plural = verbose_name
 
 # Little point in expanding the common Sample Type
 class SepsisSample(models.Model):
@@ -186,11 +236,11 @@ class SepsisSample(models.Model):
                                       help_text='Sample Growth Method')
 
     # FIXME
-    sample_track = models.OneToOneField(SampleTrack,
-                                        blank=True,
-                                        null=True,
-                                        related_name='sample',
-                                        help_text='Sample Tracking')
+    #sample_track = models.OneToOneField(SampleTrack,
+    #                                    blank=True,
+    #                                    null=True,
+    #                                    related_name='sample',
+    #                                    help_text='Sample Tracking')
 
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
