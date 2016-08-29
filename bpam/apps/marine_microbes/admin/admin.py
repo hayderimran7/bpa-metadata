@@ -2,11 +2,11 @@
 
 from django.contrib import admin
 from import_export import resources, fields, widgets
-from import_export.admin import ImportExportModelAdmin
 
 from apps.common.admin import DateField
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
+from apps.common.admin import BPAImportExportModelAdmin
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
@@ -24,7 +24,7 @@ class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
 
 
-class SampleStateTrackAdmin(ImportExportModelAdmin):
+class SampleStateTrackAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'quality_check_preformed', 'metagenomics_data_generated',
                     'amplicon_16s_data_generated', 'amplicon_18s_data_generated', 'amplicon_ITS_data_generated',
                     'minimum_contextual_data_received', 'full_contextual_data_received')
@@ -34,7 +34,7 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
                    'full_contextual_data_received')
 
 
-class CommonAdmin(ImportExportModelAdmin):
+class CommonAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'date_sampled'
 
     list_display = ('bpa_id',

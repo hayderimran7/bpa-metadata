@@ -5,6 +5,7 @@ from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
 from dateutil.parser import parse as date_parser
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.gis.geos import Point
+from django.http import HttpResponse
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
@@ -21,6 +22,26 @@ from .models import Sample
 from .models import SampleSite
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
+
+
+class BPAImportExportModelAdmin(ImportExportModelAdmin):
+    """
+    Customised ImportExportModelAdmin class to be used everywhere in the project.
+    """
+
+    ENCODINGS = ('utf-8', 'latin1')
+
+    # The default class tries only to decode files using 'utf-8' and returns an error
+    # if that fails.
+    # Our method changes the default behaviour to try all the ENCODINGS defined above
+    def import_action(self, request, *args, **kwargs):
+        for encoding in self.ENCODINGS:
+            self.from_encoding = encoding
+            response = super(BPAImportExportModelAdmin, self).import_action(request, *args, **kwargs)
+            if not (type(response) is HttpResponse and 'wrong encoding' in response.content):
+                break
+
+        return response
 
 
 class FacilityWidget(widgets.ForeignKeyWidget):
@@ -79,7 +100,7 @@ class CommonAmpliconResource(resources.ModelResource):
         export_order = ('extraction_id', 'target', 'facility', 'metadata_filename', 'comments')
 
 
-class CommonAmpliconAdmin(ImportExportModelAdmin):
+class CommonAmpliconAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'target', 'metadata_filename', 'comments')
     list_filter = ('facility',
                    'target', )
@@ -98,7 +119,7 @@ class CommonMetagenomicResource(resources.ModelResource):
         export_order = ('extraction_id', 'facility', 'metadata_filename', 'comments')
 
 
-class CommonMetagenomicAdmin(ImportExportModelAdmin):
+class CommonMetagenomicAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'metadata_filename', 'comments')
     list_filter = ('facility', )
     search_fields = ('extraction_id', 'facility__name', 'comments')
@@ -122,7 +143,7 @@ class CommonTransferLogResource(resources.ModelResource):
         import_id_fields = ('folder_name', )
 
 
-class CommonTransferLogAdmin(ImportExportModelAdmin):
+class CommonTransferLogAdmin(BPAImportExportModelAdmin):
     def show_downloads_url(self, obj):
         try:
             short = obj.downloads_url.split("/")[-2]
@@ -154,7 +175,7 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
                      'transfer_to_archive_date', 'notes', 'ticket_url', 'downloads_url')
 
 
-class CommonDataSetAdmin(ImportExportModelAdmin):
+class CommonDataSetAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'transfer_to_archive_date'
 
     list_display = ('name', 'facility', 'transfer_to_archive_date', 'ticket_url', 'downloads_url', 'note')
@@ -198,7 +219,7 @@ class SampleSiteResource(resources.ModelResource):
                         'point', )
 
 
-class SampleSiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
+class SampleSiteAdmin(BPAImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SampleSiteResource  # override
     openlayers_url = settings.GIS_OPENLAYERS_URL
     # default_zoom = settings.GIS_ZOOM

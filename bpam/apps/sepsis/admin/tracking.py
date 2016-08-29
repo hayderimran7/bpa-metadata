@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
 
+from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.models import BPAProject, BPAUniqueID
 
 # import export fields
@@ -94,7 +94,7 @@ class CommonSampleTrackResource(resources.ModelResource):
         import_id_fields = ('bpa_id', )
         export_order = track_data
 
-class CommonTrackAdmin(ImportExportModelAdmin):
+class CommonTrackAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'sample_submission_date'
     list_display = track_data
     list_filter = ('bpa_id', 'taxon_or_organism', 'strain_or_isolate', 'omics')

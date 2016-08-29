@@ -2,8 +2,8 @@
 
 from django.contrib import admin
 from import_export import resources, fields, widgets
-from import_export.admin import ImportExportModelAdmin
 
+from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
@@ -13,7 +13,7 @@ from ..models import SpongeContextual
 from ..models import SedimentContextual
 
 
-class CommonAdmin(ImportExportModelAdmin):
+class CommonAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'date_sampled'
 
     list_display = ('bpa_id',
