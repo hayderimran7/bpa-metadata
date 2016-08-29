@@ -19,6 +19,8 @@ class Host(models.Model):
     health_state = models.CharField('Host Health State', max_length=200, blank=True, null=True)
     disease_status = models.CharField('Host Disease Status', max_length=200, blank=True, null=True)
 
+    last_modified = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = 'Host'
 
@@ -39,6 +41,8 @@ class GrowthMethod(models.Model):
                                              blank=True,
                                              null=True, )
     growth_condition_media = models.CharField('Growth condition media', max_length=200, blank=True, null=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Growth Method'
@@ -61,6 +65,8 @@ class MiseqGenomicsMethod(models.Model):
     insert_size_range = models.CharField('Insert Size Range', max_length=20, blank=True, null=True)
     sequencer = models.CharField('Sequencer', max_length=100, blank=True, null=True)
     analysis_software_version = models.CharField('Analysis Software Version', max_length=20, blank=True, null=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Miseq Genomics Method'
@@ -86,6 +92,8 @@ class PacBioGenomicsMethod(models.Model):
     cell_position = models.CharField('Cell Position', max_length=60, blank=True, null=True)
     rs_version = models.CharField('RS Version', max_length=100, blank=True, null=True)
 
+    last_modified = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = 'PacBio Genomics Method'
 
@@ -106,6 +114,8 @@ class ProteomicsMethod(models.Model):
     mass_spectrometer = models.CharField('Mass Spectrometer', max_length=100, blank=True, null=True)
     aquisition_mode = models.CharField('Acquisition Mode / fragmentation', max_length=100, blank=True, null=True)
 
+    last_modified = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = 'Proteomics Method'
 
@@ -125,6 +135,8 @@ class TranscriptomicsMethod(models.Model):
     insert_size_range = models.CharField('Insert Size Range', max_length=20, blank=True, null=True)
     sequencer = models.CharField('Sequencer', max_length=100, blank=True, null=True)
     casava_version = models.CharField('CASAVA Version', max_length=20, blank=True, null=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Transcriptomics Method'
@@ -175,6 +187,8 @@ class SampleTrack(models.Model):
     archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='YYYY-MM-DD')
     curation_url = models.URLField('Curation URL', blank=True, null=True)
     dataset_url = models.URLField('Download URL', blank=True, null=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)
@@ -267,6 +281,7 @@ class SepsisSample(models.Model):
     propagation =  models.CharField('Propagation', max_length=200, blank=True, null=True)
     collected_by = models.CharField('Collected By', max_length=200, blank=True, null=True)
 
+    last_modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return ' '.join([e for e in (self.bpa_id.get_short_name(), self.taxon_or_organism, self.strain_or_isolate) if e])
@@ -280,6 +295,8 @@ class SepsisSequenceFile(SequenceFile):
 
     project_name = 'sepsis'
     sample = models.ForeignKey(SepsisSample, related_name='%(app_label)s_%(class)s_files')
+
+    last_modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u'{}'.format(self.filename)
