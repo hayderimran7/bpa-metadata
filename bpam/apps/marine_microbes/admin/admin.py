@@ -6,13 +6,16 @@ from import_export import resources, fields, widgets
 from apps.common.admin import DateField
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
-from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isinteger, istime, isshorttime, isdecimal
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
 from ..models import SampleStateTrack
 from ..models import TransferLog
 from ..models import MMSite
+
+
+DEGREES = u'°'
 
 
 class TransferLogResource(CommonTransferLogResource):
@@ -46,7 +49,39 @@ class CommonAdmin(BPAImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class CommonWaterResource(BPAModelResource):
+class MarineMicrobesModelResource(BPAModelResource):
+
+    def transform_row(self, row):
+        transformations = super(MarineMicrobesModelResource, self).transform_row(row)
+
+        # 102.100.100/34956 -> 34956
+        if '/' in row.get('BPA_ID', ''):
+            bpa_id = row.get('BPA_ID').split('/')[-1]
+            if isinteger(bpa_id):
+                transformations['BPA_ID'] = bpa_id
+
+        # accepts time both with ('%H:%M') and without seconds ('%H:%M:%S')
+        time_sampled = row.get('Time Sampled', '')
+        if isshorttime(time_sampled):
+            if istime('%s:00' % time_sampled):
+                transformations['Time Sampled'] = '%s:00' % time_sampled
+
+        # removes possible DEGREES character from Longitude
+        if row.get('Longitude', '').rstrip().endswith(DEGREES):
+            transformations['Longitude'] = row.get('Longitude').rstrip().rstrip(DEGREES)
+
+        # removes possible DEGREES character from Latitude
+        if row.get('Latitude', '').rstrip().endswith(DEGREES):
+            transformations['Latitude'] = row.get('Latitude').rstrip().rstrip(DEGREES)
+
+        # removes string elments like 'NA'
+        if not isdecimal(row.get('Depth (m)', '')):
+            transformations['Depth (m)'] = ''
+
+        return transformations
+
+
+class CommonWaterResource(MarineMicrobesModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 

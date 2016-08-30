@@ -2,7 +2,7 @@
 from django.contrib import admin
 from import_export import resources, fields, widgets
 
-from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isdecimal, isshorttime, istime
+from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
@@ -11,6 +11,8 @@ from ..models import SeaGrassContextual
 from ..models import SeaWeedContextual
 from ..models import SpongeContextual
 from ..models import SedimentContextual
+
+from .admin import MarineMicrobesModelResource
 
 
 class CommonAdmin(BPAImportExportModelAdmin):
@@ -25,7 +27,7 @@ class CommonAdmin(BPAImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class MarineResource(BPAModelResource):
+class MarineResource(MarineMicrobesModelResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
@@ -51,15 +53,6 @@ class MarineResource(BPAModelResource):
 
     class Meta:
         import_id_fields = ('bpa_id', )
-
-    def transform_row(self, row):
-        transformations = super(MarineResource, self).transform_row(row)
-
-        # removes string elments like 'NA'
-        if not isdecimal(row.get('Depth (m)', '')):
-            transformations['Depth (m)'] = ''
-
-        return transformations
 
     def before_save_instance(self, instance, *args, **kwargs):
         site = MMSite.get_or_create(instance.lat, instance.lon, instance.location_description)
