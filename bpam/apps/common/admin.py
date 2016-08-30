@@ -44,6 +44,33 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
         return response
 
 
+class BPAModelResource(resources.ModelResource):
+
+    def transform_row(self, row):
+        transformations = {}
+
+        # This looks like a common enough problem to leave it in the base class
+        if '/' in row.get('BPA_ID', ''):
+            bpa_id = row.get('BPA_ID').split('/')[-1]
+            if bpa_id.isdigit():
+                transformations['BPA_ID'] = bpa_id
+
+        return transformations
+
+    def maybe_transform_row(self, row):
+        transformations = self.transform_row(row)
+
+        if len(transformations) > 0:
+            new_row = row.copy()
+            new_row.update(transformations)
+            return new_row
+        return row
+
+    def import_row(self, row, *args, **kwargs):
+        new_row = self.maybe_transform_row(row)
+        return super(BPAModelResource, self).import_row(new_row, *args, **kwargs)
+
+
 class FacilityWidget(widgets.ForeignKeyWidget):
     def __init__(self):
         self.model = Facility

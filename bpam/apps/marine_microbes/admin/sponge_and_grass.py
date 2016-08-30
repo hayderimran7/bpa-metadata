@@ -3,10 +3,11 @@
 from django.contrib import admin
 from import_export import resources, fields, widgets
 
-from apps.common.admin import BPAImportExportModelAdmin
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
+from ..models import MMSite
 from ..models import SeaGrassContextual
 from ..models import SeaWeedContextual
 from ..models import SpongeContextual
@@ -25,7 +26,7 @@ class CommonAdmin(BPAImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class MarineResource(resources.ModelResource):
+class MarineResource(BPAModelResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
@@ -37,7 +38,14 @@ class MarineResource(resources.ModelResource):
 
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
-    depth = fields.Field(attribute="depth", column_name="Depth (m)")
+
+    # ignore during import
+    site = fields.Field(readonly=True,
+                        attribute="site",
+                        column_name="Sample Site",
+                        widget=widgets.ForeignKeyWidget(MMSite, 'name'))
+
+    depth = fields.Field(attribute="depth", column_name="Depth (m)", widget=widgets.DecimalWidget())
     location_description = fields.Field(attribute="location_description", column_name="Location Description")
     note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
@@ -45,20 +53,32 @@ class MarineResource(resources.ModelResource):
     class Meta:
         import_id_fields = ('bpa_id', )
 
+    def transform_row(self, row):
+        transformations = super(MarineResource, self).transform_row(row)
+
+        if not row.get('Depth (m)', '').isdecimal():
+            transformations['Depth (m)'] = ''
+
+        return transformations
+
+    def before_save_instance(self, instance, *args, **kwargs):
+        site = MMSite.get_or_create(instance.lat, instance.lon, instance.location_description)
+        instance.site = site
+
 
 class SpongeResource(MarineResource):
 
     host_state = fields.Field(attribute="host_state", column_name="host state (free text field)")
-    host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)")
+    host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)", widget=widgets.DecimalWidget())
 
 
 class CommonResource(MarineResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
-    pam = fields.Field(attribute="pam", column_name="Pulse amplitude modulated (PAM)")
-    fluoro = fields.Field(attribute="fluoro", column_name="Fluorometer Measurement")
+    pam = fields.Field(attribute="pam", column_name="Pulse amplitude modulated (PAM)", widget=widgets.DecimalWidget())
+    fluoro = fields.Field(attribute="fluoro", column_name="Fluorometer Measurement", widget=widgets.DecimalWidget())
     host_state = fields.Field(attribute="host_state", column_name="Host State")
-    host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance")
+    host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance", widget=widgets.DecimalWidget())
 
 
 class CoralResource(CommonResource):

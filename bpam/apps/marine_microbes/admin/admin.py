@@ -6,7 +6,7 @@ from import_export import resources, fields, widgets
 from apps.common.admin import DateField
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
-from apps.common.admin import BPAImportExportModelAdmin
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
@@ -46,7 +46,7 @@ class CommonAdmin(BPAImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class CommonWaterResource(resources.ModelResource):
+class CommonWaterResource(BPAModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 
@@ -68,17 +68,16 @@ class CommonWaterResource(resources.ModelResource):
 
     def before_save_instance(self, instance, dry_run):
         """ set the site """
-
         site = MMSite.get_or_create(instance.lat, instance.lon, instance.sample_site_name)
         instance.site = site
 
     def dehydrate_lat(self, resource):
         if resource.site:
-            return resource.site.get_lat()
+            return resource.site.lat
 
     def dehydrate_lon(self, resource):
         if resource.site:
-            return resource.site.get_lon()
+            return resource.site.lon
 
     def dehydrate_sample_site_name(self, resource):
         if resource.site:
@@ -88,24 +87,24 @@ class CommonWaterResource(resources.ModelResource):
 class ContextualCoastalResource(CommonWaterResource):
 
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
-    ph = fields.Field(attribute="ph", column_name="pH Level H20")
-    oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab")
-    oxygen_ctd = fields.Field(attribute="oxygen_ctd", column_name="Oxygen (ml/L) CDT")
-    nitrate = fields.Field(attribute="nitrate", column_name="Nitrate/Nitrite (μmol/L)")
-    phosphate = fields.Field(attribute="phosphate", column_name="Phosphate (μmol/L)")
-    ammonium = fields.Field(attribute="ammonium", column_name="Ammonium (μmol/L)")
-    co2_total = fields.Field(attribute="co2_total", column_name="Total CO2 (μmol/kg)")
-    alkalinity_total = fields.Field(attribute="alkalinity_total", column_name="Total alkalinity (μmol/kg)")
-    temperature = fields.Field(attribute="temperature", column_name="Temperature [ITS-90, deg C]")
-    conductivity = fields.Field(attribute="conductivity", column_name="Conductivity [S/m]")
-    turbitity = fields.Field(attribute="turbitity", column_name="Turbidity (Upoly 0, WET Labs FLNTURT)")
-    salinity = fields.Field(attribute="salinity", column_name="Salinity [PSU] Laboratory")
+    ph = fields.Field(attribute="ph", column_name="pH Level H20", widget=widgets.IntegerWidget())
+    oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab", widget=widgets.IntegerWidget())
+    oxygen_ctd = fields.Field(attribute="oxygen_ctd", column_name="Oxygen (ml/L) CDT", widget=widgets.IntegerWidget())
+    nitrate = fields.Field(attribute="nitrate", column_name="Nitrate/Nitrite (μmol/L)", widget=widgets.IntegerWidget())
+    phosphate = fields.Field(attribute="phosphate", column_name="Phosphate (μmol/L)", widget=widgets.IntegerWidget())
+    ammonium = fields.Field(attribute="ammonium", column_name="Ammonium (μmol/L)", widget=widgets.IntegerWidget())
+    co2_total = fields.Field(attribute="co2_total", column_name="Total CO2 (μmol/kg)", widget=widgets.IntegerWidget())
+    alkalinity_total = fields.Field(attribute="alkalinity_total", column_name="Total alkalinity (μmol/kg)", widget=widgets.IntegerWidget())
+    temperature = fields.Field(attribute="temperature", column_name="Temperature [ITS-90, deg C]", widget=widgets.IntegerWidget())
+    conductivity = fields.Field(attribute="conductivity", column_name="Conductivity [S/m]", widget=widgets.IntegerWidget())
+    turbitity = fields.Field(attribute="turbitity", column_name="Turbidity (Upoly 0, WET Labs FLNTURT)", widget=widgets.IntegerWidget())
+    salinity = fields.Field(attribute="salinity", column_name="Salinity [PSU] Laboratory", widget=widgets.IntegerWidget())
     microbial_abandance = fields.Field(attribute="microbial_abundance",
-                                       column_name="Microbial abundance (cells per ml)")
-    chlorophyl = fields.Field(attribute="chlorophyl", column_name="Chlorophyll a (μg/L)")
-    carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon")
-    inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon")
-    flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
+                                      column_name="Microbial abundance (cells per ml)", widget=widgets.IntegerWidget())
+    chlorophyl = fields.Field(attribute="chlorophyl", column_name="Chlorophyll a (μg/L)", widget=widgets.IntegerWidget())
+    carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon", widget=widgets.IntegerWidget())
+    inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon", widget=widgets.IntegerWidget())
+    flux = fields.Field(attribute="flux", column_name="Light intensity (lux)", widget=widgets.IntegerWidget())
 
     class Meta:
         model = CoastalContextual
