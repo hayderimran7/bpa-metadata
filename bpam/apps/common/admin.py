@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from functools import partial
 from django.contrib import admin
 from django import forms
@@ -23,6 +24,8 @@ from .models import Sample
 from .models import SampleSite
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
+
+DEGREES = u'°'
 
 
 class BPAImportExportModelAdmin(ImportExportModelAdmin):
@@ -50,11 +53,28 @@ class BPAModelResource(resources.ModelResource):
     def transform_row(self, row):
         transformations = {}
 
-        # This looks like a common enough problem to leave it in the base class
+        # These look like common enough problems to have them in the base class
+
+        # 102.100.100/34956 -> 34956
         if '/' in row.get('BPA_ID', ''):
             bpa_id = row.get('BPA_ID').split('/')[-1]
             if isinteger(bpa_id):
                 transformations['BPA_ID'] = bpa_id
+
+        # accepts time both with ('%H:%M') and without seconds ('%H:%M:%S')
+        time_sampled = row.get('Time Sampled', '')
+        if isshorttime(time_sampled):
+            if istime('%s:00' % time_sampled):
+                transformations['Time Sampled'] = '%s:00' % time_sampled
+
+        # removes possible DEGREES character from Longitude
+        if row.get('Longitude', '').rstrip().endswith(DEGREES):
+            transformations['Longitude'] = row.get('Longitude').rstrip().rstrip(DEGREES)
+
+        # removes possible DEGREES character from Latitude
+        if row.get('Latitude', '').rstrip().endswith(DEGREES):
+            transformations['Latitude'] = row.get('Latitude').rstrip().rstrip(DEGREES)
+
 
         return transformations
 
@@ -430,7 +450,8 @@ def can_widget_clean_value(widget, value):
 
 isinteger = partial(can_widget_clean_value, widgets.IntegerWidget())
 isdecimal = partial(can_widget_clean_value, widgets.DecimalWidget())
-
+istime = partial(can_widget_clean_value, widgets.TimeWidget())
+isshorttime = partial(can_widget_clean_value, widgets.TimeWidget(format="%H:%M"))
 
 admin.site.register(DNASource, DNASourceFormAdmin)
 admin.site.register(Sequencer)

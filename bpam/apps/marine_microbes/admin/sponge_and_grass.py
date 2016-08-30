@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from django.contrib import admin
 from import_export import resources, fields, widgets
 
-from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isdecimal
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isdecimal, isshorttime, istime
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
@@ -32,7 +31,7 @@ class MarineResource(BPAModelResource):
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
 
-    time_sampled = fields.Field(widget=widgets.TimeWidget(format="%H:%M"),
+    time_sampled = fields.Field(widget=widgets.TimeWidget(format="%H:%M:%S"),
                                 attribute="time_sampled",
                                 column_name="Time Sampled")
 
@@ -56,6 +55,7 @@ class MarineResource(BPAModelResource):
     def transform_row(self, row):
         transformations = super(MarineResource, self).transform_row(row)
 
+        # removes string elments like 'NA'
         if not isdecimal(row.get('Depth (m)', '')):
             transformations['Depth (m)'] = ''
 
@@ -70,6 +70,9 @@ class SpongeResource(MarineResource):
 
     host_state = fields.Field(attribute="host_state", column_name="host state (free text field)")
     host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)", widget=widgets.DecimalWidget())
+
+    class Meta:
+        model = SpongeContextual
 
 
 class CommonResource(MarineResource):
@@ -114,11 +117,14 @@ class SeaGrassAdmin(CommonAdmin):
 
 class SedimentResource(MarineResource):
 
-    carbon = fields.Field(attribute="carbon", column_name="% total carbon")
-    sediment = fields.Field(attribute="sediment", column_name="% fine sediment")
-    nitrogen = fields.Field(attribute="nitrogen", column_name="% total nitrogen")
-    phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous")
-    sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)")
+    carbon = fields.Field(attribute="carbon", column_name="% total carbon", widget=widgets.DecimalWidget())
+    sediment = fields.Field(attribute="sediment", column_name="% fine sediment", widget=widgets.DecimalWidget())
+    nitrogen = fields.Field(attribute="nitrogen", column_name="% total nitrogen", widget=widgets.DecimalWidget())
+    phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous", widget=widgets.DecimalWidget())
+    sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)", widget=widgets.DecimalWidget())
+
+    class Meta(MarineResource.Meta):
+        model = SedimentContextual
 
 
 class SedimentAdmin(CommonAdmin):
