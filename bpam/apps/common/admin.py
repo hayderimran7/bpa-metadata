@@ -1,3 +1,4 @@
+from functools import partial
 from django.contrib import admin
 from django import forms
 from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
@@ -52,7 +53,7 @@ class BPAModelResource(resources.ModelResource):
         # This looks like a common enough problem to leave it in the base class
         if '/' in row.get('BPA_ID', ''):
             bpa_id = row.get('BPA_ID').split('/')[-1]
-            if bpa_id.isdigit():
+            if isinteger(bpa_id):
                 transformations['BPA_ID'] = bpa_id
 
         return transformations
@@ -417,6 +418,18 @@ class DNASourceFormAdmin(admin.ModelAdmin):
             }
 
     form = DNASourceForm
+
+
+def can_widget_clean_value(widget, value):
+    try:
+        widget.clean(value)
+    except:
+        return False
+    return True
+
+
+isinteger = partial(can_widget_clean_value, widgets.IntegerWidget())
+isdecimal = partial(can_widget_clean_value, widgets.DecimalWidget())
 
 
 admin.site.register(DNASource, DNASourceFormAdmin)

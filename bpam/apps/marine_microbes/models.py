@@ -38,7 +38,7 @@ class MMSample(models.Model):
                                   help_text="Bioplatforms Australia Sample ID")
     sample_type = models.CharField("Sample Type", choices=SAMPLE_CHOICES, max_length=2, null=True, blank=True)
     site = models.ForeignKey(MMSite, null=True)
-    depth = models.IntegerField("Depth", null=True, blank=True)
+    depth = models.DecimalField("Depth", null=True, blank=True, max_digits=12, decimal_places=2)
     collection_date = models.DateTimeField("Sample Collection Date", null=True, blank=True)
 
     def __unicode__(self):
@@ -130,7 +130,7 @@ class MarineCommonContextual(models.Model):
     #  Time sampled (hh:mm)
     time_sampled = models.TimeField("Time Sampled", null=True, blank=True)
     #  Depth (m)
-    depth = models.IntegerField('Depth (m)', null=True, blank=True)
+    depth = models.DecimalField('Depth (m)', null=True, blank=True, max_digits=12, decimal_places=2)
     #  Notes
     note = models.TextField("Note", null=True, blank=True)
     #  Sample site
@@ -201,7 +201,7 @@ class OpenWaterContextual(MarineCommonContextual):
     #  Organic Fraction [mg/L]
     organic_fraction = models.IntegerField("Organic Fraction [mg/L]", null=True, blank=True)
     #  Secchi Depth (m)
-    secchi_depth = models.IntegerField("Secchi Depth (m)", null=True, blank=True)
+    secchi_depth = models.DecimalField("Secchi Depth (m)", null=True, blank=True, max_digits=12, decimal_places=2)
     #  Biomass (mg/m3)
     biomass = models.IntegerField("Biomass (mg/m3)", null=True, blank=True)
     #  ALLO [mg/m3]

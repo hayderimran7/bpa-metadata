@@ -3,7 +3,7 @@
 from django.contrib import admin
 from import_export import resources, fields, widgets
 
-from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isdecimal
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
@@ -56,7 +56,7 @@ class MarineResource(BPAModelResource):
     def transform_row(self, row):
         transformations = super(MarineResource, self).transform_row(row)
 
-        if not row.get('Depth (m)', '').isdecimal():
+        if not isdecimal(row.get('Depth (m)', '')):
             transformations['Depth (m)'] = ''
 
         return transformations
