@@ -53,7 +53,7 @@ class SampleSite(models.Model):
     """ A sample site """
 
     # Site name
-    name = models.TextField("Location Description", blank=False, unique=True)
+    name = models.TextField("Location Description", blank=False)
     # position
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
     # Notes
@@ -98,6 +98,7 @@ class SampleSite(models.Model):
 
     class Meta:
         abstract = True
+        unique_together = ('name', 'point')
         verbose_name = "Sample Collection Site"
         verbose_name_plural = "Sample Collection Sites"
 
