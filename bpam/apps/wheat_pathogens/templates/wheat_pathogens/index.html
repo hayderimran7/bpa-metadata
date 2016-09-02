@@ -58,12 +58,12 @@
                     <a class="list-group-item"
                        href="{% url 'wheat_pathogens:samples' %}">
                        Samples
-                       <span class="badge">{{ sample_size }}</span>
+                       <span class="badge" id="package_count"></span>
                     </a>
                     <a class="list-group-item"
                        href="{% url 'wheat_pathogens:sequencefiles' %}">
                        Sequence Files
-                       <span class="badge">{{ sequence_file_size }}</span>
+                       <span class="badge" id="resource_count"></span>
                     </a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/wheat_pathogens/">
@@ -80,5 +80,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    set_counts('wheat-pathogens');
+</script>
 
 {% endblock %}

@@ -9,44 +9,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8"/>
         {% bootstrap_css %}
+        {% bootstrap_javascript jquery=True %}
+        <link rel="stylesheet" type="text/css" href="{% static 'bpam/common.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'bpam/landing.css' %}"/>
+        <script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.js"></script>
+        <script>
+        var bpam_config = {
+            'bpam_base': '{% url "landing_page" %}',
+            'ckan_base': '{% ckan_server_url %}'
+        };
+        </script>
+        <script src="{% static 'bpam/bpam.js' %}"></script>
 
-        <style>
-         .resized {
-             width: 120px;
-             height: 120px;
-         }
-         .content-div {
-             padding-left: 1em;
-             padding-right: 1em;
-         }
-
-         .landing_header img {
-             float: left;
-         }
-
-         .landing_header h1 {
-             position: relative;
-             top: 18px;
-             left: 10px;
-         }
-         .landing_header h3 {
-             position: relative;
-             top: 10px;
-             left: 10px;
-         }
-         td .glyphicon {
-             font-size: 1.5em;
-         }
-         .table {
-             border-bottom:0px !important;
-         }
-         .table th, .table td {
-             border: 1px !important;
-         }
-         .fixed-table-container {
-             border:1px !important;
-         }
-        </style>
     </head>
 
     <body>
@@ -83,6 +57,7 @@
                 </a>
             </div>
 
+            <div class="hide" id="error-bar"></div>
 
             <table class="table">
                 <tr>
@@ -246,7 +221,7 @@
                             <li><a href="http://www.bioplatforms.com/wheat-datasets"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
                             <li><a href="https://downloads-qcif.bioplatforms.com/bpa/wheat_pathogens/"> <span class="glyphicon glyphicon-download"></span> </a></li>
                             <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
-                            <li><a href="{% url 'wheat_pathogens:index' %}"><span class="badge"> {{ wheat_pathogens_genome_sample_count }} </span></a></li>
+                            <li><a href="{% url 'wheat_pathogens:index' %}"><span class="badge" id="wheat_pathogens_genome_sample_count"></span></a></li>
                         </ul>
                     </td>
                 </tr>
@@ -336,6 +311,10 @@
 
 
         <script type="text/javascript" src="https://ccgmurdoch.atlassian.net/s/d541a7672a8b04491854d503577f632d-T/en_US3tf2xo/65000/26/1.4.25/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=75770ea9"></script>
+
+        <script>
+            landing_setup();
+        </script>
 
     </body>
 </html>

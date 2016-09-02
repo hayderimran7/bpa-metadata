@@ -1,5 +1,6 @@
 from django import template
 from django.conf import settings
+from ..models import CKANServer
 
 register = template.Library()
 
@@ -12,3 +13,8 @@ def bpam_version():
 @register.simple_tag
 def sample_url(mirror, sample):
     return sample.get_url(mirror)
+
+
+@register.simple_tag
+def ckan_server_url():
+    return CKANServer.primary().base_url

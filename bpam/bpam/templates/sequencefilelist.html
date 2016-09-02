@@ -1,6 +1,5 @@
 {% load commontags %}
 
-{% if sequencefiles %}
 <div class="panel panel-success">
   <div class="panel-heading">
     <div class="panel-title">
@@ -72,17 +71,3 @@
     {% endfor %}
   </div>
 </div>
-
-<script>
-  $(document).ready(function () {
-  $(function () {
-  $("#sequence-list").tablesorter();
-  });
-  });
-</script>
-
-{% else %}
-<div class="alert alert-warning">
-  No Sequence Files currently available for {{ sample.bpa_id }}
-</div>
-{% endif %}
