@@ -52,7 +52,6 @@ class SampleListView(ListView):
         return context
 
 class TrackListView(ListView):
-    context_object_name = 'sampletracks'
     template_name = 'sepsis/track_list.html'
     queryset = list(chain(*(t.objects.all() for t in tracks)))
 
