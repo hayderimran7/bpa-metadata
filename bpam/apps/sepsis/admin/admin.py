@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
 
 # import export fields
 from commonfields import DateField
+
+from apps.common.admin import BPAImportExportModelAdmin
 
 from ..models import (Host,
                       MiseqGenomicsMethod,
@@ -47,7 +48,7 @@ class HostResource(resources.ModelResource):
         import_id_fields = ('strain_or_isolate', )
 
 
-class HostAdmin(ImportExportModelAdmin):
+class HostAdmin(BPAImportExportModelAdmin):
     # FIXME
     # resource_class = HostResource # Input sheet is split into 2 models, disable until we know
     # how to do that

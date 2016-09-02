@@ -6,7 +6,8 @@ from django.utils.html import format_html
 from suit.widgets import AutosizedTextarea
 from suit.widgets import LinkedSelect
 from suit.widgets import SuitDateWidget
-from import_export.admin import ImportExportModelAdmin
+
+from apps.common.admin import BPAImportExportModelAdmin
 
 from ..models import GenomicsPacBioFile
 
@@ -30,7 +31,7 @@ class FileForm(forms.ModelForm):
         }
 
 
-class FileAdmin(ImportExportModelAdmin):
+class FileAdmin(BPAImportExportModelAdmin):
     form = FileForm
 
     fieldsets = [

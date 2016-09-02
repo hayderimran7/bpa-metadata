@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import logging
+from functools import partial
 from django.contrib import admin
 from django import forms
 from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
@@ -5,6 +8,7 @@ from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
 from dateutil.parser import parse as date_parser
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.gis.geos import Point
+from django.http import HttpResponse
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
@@ -21,6 +25,54 @@ from .models import Sample
 from .models import SampleSite
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
+
+
+logger = logging.getLogger(__name__)
+
+
+class BPAImportExportModelAdmin(ImportExportModelAdmin):
+    """
+    Customised ImportExportModelAdmin class to be used everywhere in the project.
+    """
+
+    ENCODINGS = ('utf-8', 'latin1')
+
+    # The default class tries only to decode files using 'utf-8' and returns an error
+    # if that fails.
+    # Our method changes the default behaviour to try all the ENCODINGS defined above
+    def import_action(self, request, *args, **kwargs):
+        for encoding in self.ENCODINGS:
+            self.from_encoding = encoding
+            response = super(BPAImportExportModelAdmin, self).import_action(request, *args, **kwargs)
+            if not (type(response) is HttpResponse and 'wrong encoding' in response.content):
+                break
+
+        return response
+
+
+class BPAModelResource(resources.ModelResource):
+
+    def transform_row(self, row):
+        transformations = {}
+        # Override and add your transformations here
+        return transformations
+
+    def maybe_transform_row(self, row):
+        transformations = self.transform_row(row)
+
+        if len(transformations) > 0:
+            logger.info('Transforming row')
+            new_row = row.copy()
+            # log the column headers in the order of the row (OrderedDict)
+            for name in filter(lambda x: x in transformations, row):
+                logger.info("'%s': '%s' -> '%s'", name, row.get(name), transformations.get(name))
+            new_row.update(transformations)
+            return new_row
+        return row
+
+    def import_row(self, row, *args, **kwargs):
+        new_row = self.maybe_transform_row(row)
+        return super(BPAModelResource, self).import_row(new_row, *args, **kwargs)
 
 
 class FacilityWidget(widgets.ForeignKeyWidget):
@@ -79,7 +131,7 @@ class CommonAmpliconResource(resources.ModelResource):
         export_order = ('extraction_id', 'target', 'facility', 'metadata_filename', 'comments')
 
 
-class CommonAmpliconAdmin(ImportExportModelAdmin):
+class CommonAmpliconAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'target', 'metadata_filename', 'comments')
     list_filter = ('facility',
                    'target', )
@@ -98,7 +150,7 @@ class CommonMetagenomicResource(resources.ModelResource):
         export_order = ('extraction_id', 'facility', 'metadata_filename', 'comments')
 
 
-class CommonMetagenomicAdmin(ImportExportModelAdmin):
+class CommonMetagenomicAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'metadata_filename', 'comments')
     list_filter = ('facility', )
     search_fields = ('extraction_id', 'facility__name', 'comments')
@@ -122,7 +174,7 @@ class CommonTransferLogResource(resources.ModelResource):
         import_id_fields = ('folder_name', )
 
 
-class CommonTransferLogAdmin(ImportExportModelAdmin):
+class CommonTransferLogAdmin(BPAImportExportModelAdmin):
     def show_downloads_url(self, obj):
         try:
             short = obj.downloads_url.split("/")[-2]
@@ -154,7 +206,7 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
                      'transfer_to_archive_date', 'notes', 'ticket_url', 'downloads_url')
 
 
-class CommonDataSetAdmin(ImportExportModelAdmin):
+class CommonDataSetAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'transfer_to_archive_date'
 
     list_display = ('name', 'facility', 'transfer_to_archive_date', 'ticket_url', 'downloads_url', 'note')
@@ -198,7 +250,7 @@ class SampleSiteResource(resources.ModelResource):
                         'point', )
 
 
-class SampleSiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
+class SampleSiteAdmin(BPAImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SampleSiteResource  # override
     openlayers_url = settings.GIS_OPENLAYERS_URL
     # default_zoom = settings.GIS_ZOOM
@@ -370,6 +422,19 @@ class DNASourceFormAdmin(admin.ModelAdmin):
 
     form = DNASourceForm
 
+
+def can_widget_clean_value(widget, value):
+    try:
+        widget.clean(value)
+    except:
+        return False
+    return True
+
+
+isinteger = partial(can_widget_clean_value, widgets.IntegerWidget())
+isdecimal = partial(can_widget_clean_value, widgets.DecimalWidget())
+istime = partial(can_widget_clean_value, widgets.TimeWidget())
+isshorttime = partial(can_widget_clean_value, widgets.TimeWidget(format="%H:%M"))
 
 admin.site.register(DNASource, DNASourceFormAdmin)
 admin.site.register(Sequencer)

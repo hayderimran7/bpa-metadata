@@ -2,17 +2,20 @@
 
 from django.contrib import admin
 from import_export import resources, fields, widgets
-from import_export.admin import ImportExportModelAdmin
 
 from apps.common.admin import DateField
 from apps.common.admin import CommonTransferLogResource
 from apps.common.admin import CommonTransferLogAdmin
+from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isinteger, istime, isshorttime, isdecimal
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
 from ..models import SampleStateTrack
 from ..models import TransferLog
 from ..models import MMSite
+
+
+DEGREES = u'°'
 
 
 class TransferLogResource(CommonTransferLogResource):
@@ -24,7 +27,7 @@ class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
 
 
-class SampleStateTrackAdmin(ImportExportModelAdmin):
+class SampleStateTrackAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'quality_check_preformed', 'metagenomics_data_generated',
                     'amplicon_16s_data_generated', 'amplicon_18s_data_generated', 'amplicon_ITS_data_generated',
                     'minimum_contextual_data_received', 'full_contextual_data_received')
@@ -34,7 +37,7 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
                    'full_contextual_data_received')
 
 
-class CommonAdmin(ImportExportModelAdmin):
+class CommonAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'date_sampled'
 
     list_display = ('bpa_id',
@@ -46,7 +49,44 @@ class CommonAdmin(ImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class CommonWaterResource(resources.ModelResource):
+class MarineMicrobesModelResource(BPAModelResource):
+
+    def transform_row(self, row):
+        transformations = super(MarineMicrobesModelResource, self).transform_row(row)
+
+        # 102.100.100/34956 -> 34956
+        if isinstance(row.get('BPA_ID'), basestring):
+            if '/' in row.get('BPA_ID', ''):
+                bpa_id = row.get('BPA_ID').split('/')[-1]
+                if isinteger(bpa_id):
+                    transformations['BPA_ID'] = bpa_id
+
+        # accepts time both with ('%H:%M') and without seconds ('%H:%M:%S')
+        if isinstance(row.get('Time Sampled'), basestring):
+            time_sampled = row.get('Time Sampled', '')
+            if isshorttime(time_sampled):
+                if istime('%s:00' % time_sampled):
+                    transformations['Time Sampled'] = '%s:00' % time_sampled
+
+        # removes possible DEGREES character from Longitude
+        if isinstance(row.get('Longitude'), basestring):
+            if row.get('Longitude', '').rstrip().endswith(DEGREES):
+                transformations['Longitude'] = row.get('Longitude').rstrip().rstrip(DEGREES)
+
+        # removes possible DEGREES character from Latitude
+        if isinstance(row.get('Latitude'), basestring):
+            if row.get('Latitude', '').rstrip().endswith(DEGREES):
+                transformations['Latitude'] = row.get('Latitude').rstrip().rstrip(DEGREES)
+
+        # removes string elments like 'NA'
+        if isinstance(row.get('Depth (m)'), basestring):
+            if not isdecimal(row.get('Depth (m)', '')):
+                transformations['Depth (m)'] = ''
+
+        return transformations
+
+
+class CommonWaterResource(MarineMicrobesModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 
@@ -68,17 +108,16 @@ class CommonWaterResource(resources.ModelResource):
 
     def before_save_instance(self, instance, dry_run):
         """ set the site """
-
         site = MMSite.get_or_create(instance.lat, instance.lon, instance.sample_site_name)
         instance.site = site
 
     def dehydrate_lat(self, resource):
         if resource.site:
-            return resource.site.get_lat()
+            return resource.site.lat
 
     def dehydrate_lon(self, resource):
         if resource.site:
-            return resource.site.get_lon()
+            return resource.site.lon
 
     def dehydrate_sample_site_name(self, resource):
         if resource.site:
@@ -88,24 +127,24 @@ class CommonWaterResource(resources.ModelResource):
 class ContextualCoastalResource(CommonWaterResource):
 
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
-    ph = fields.Field(attribute="ph", column_name="pH Level H20")
-    oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab")
-    oxygen_ctd = fields.Field(attribute="oxygen_ctd", column_name="Oxygen (ml/L) CDT")
-    nitrate = fields.Field(attribute="nitrate", column_name="Nitrate/Nitrite (μmol/L)")
-    phosphate = fields.Field(attribute="phosphate", column_name="Phosphate (μmol/L)")
-    ammonium = fields.Field(attribute="ammonium", column_name="Ammonium (μmol/L)")
-    co2_total = fields.Field(attribute="co2_total", column_name="Total CO2 (μmol/kg)")
-    alkalinity_total = fields.Field(attribute="alkalinity_total", column_name="Total alkalinity (μmol/kg)")
-    temperature = fields.Field(attribute="temperature", column_name="Temperature [ITS-90, deg C]")
-    conductivity = fields.Field(attribute="conductivity", column_name="Conductivity [S/m]")
-    turbitity = fields.Field(attribute="turbitity", column_name="Turbidity (Upoly 0, WET Labs FLNTURT)")
-    salinity = fields.Field(attribute="salinity", column_name="Salinity [PSU] Laboratory")
+    ph = fields.Field(attribute="ph", column_name="pH Level H20", widget=widgets.IntegerWidget())
+    oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab", widget=widgets.IntegerWidget())
+    oxygen_ctd = fields.Field(attribute="oxygen_ctd", column_name="Oxygen (ml/L) CDT", widget=widgets.IntegerWidget())
+    nitrate = fields.Field(attribute="nitrate", column_name="Nitrate/Nitrite (μmol/L)", widget=widgets.IntegerWidget())
+    phosphate = fields.Field(attribute="phosphate", column_name="Phosphate (μmol/L)", widget=widgets.IntegerWidget())
+    ammonium = fields.Field(attribute="ammonium", column_name="Ammonium (μmol/L)", widget=widgets.IntegerWidget())
+    co2_total = fields.Field(attribute="co2_total", column_name="Total CO2 (μmol/kg)", widget=widgets.IntegerWidget())
+    alkalinity_total = fields.Field(attribute="alkalinity_total", column_name="Total alkalinity (μmol/kg)", widget=widgets.IntegerWidget())
+    temperature = fields.Field(attribute="temperature", column_name="Temperature [ITS-90, deg C]", widget=widgets.IntegerWidget())
+    conductivity = fields.Field(attribute="conductivity", column_name="Conductivity [S/m]", widget=widgets.IntegerWidget())
+    turbitity = fields.Field(attribute="turbitity", column_name="Turbidity (Upoly 0, WET Labs FLNTURT)", widget=widgets.IntegerWidget())
+    salinity = fields.Field(attribute="salinity", column_name="Salinity [PSU] Laboratory", widget=widgets.IntegerWidget())
     microbial_abandance = fields.Field(attribute="microbial_abundance",
-                                       column_name="Microbial abundance (cells per ml)")
-    chlorophyl = fields.Field(attribute="chlorophyl", column_name="Chlorophyll a (μg/L)")
-    carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon")
-    inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon")
-    flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
+                                      column_name="Microbial abundance (cells per ml)", widget=widgets.IntegerWidget())
+    chlorophyl = fields.Field(attribute="chlorophyl", column_name="Chlorophyll a (μg/L)", widget=widgets.IntegerWidget())
+    carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon", widget=widgets.IntegerWidget())
+    inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon", widget=widgets.IntegerWidget())
+    flux = fields.Field(attribute="flux", column_name="Light intensity (lux)", widget=widgets.IntegerWidget())
 
     class Meta:
         model = CoastalContextual

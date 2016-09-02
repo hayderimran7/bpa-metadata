@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-
 from django.contrib import admin
 from import_export import resources, fields, widgets
-from import_export.admin import ImportExportModelAdmin
 
+from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.admin import DateField
 
 from ..models import CoralContextual
+from ..models import MMSite
 from ..models import SeaGrassContextual
 from ..models import SeaWeedContextual
 from ..models import SpongeContextual
 from ..models import SedimentContextual
 
+from .admin import MarineMicrobesModelResource
 
-class CommonAdmin(ImportExportModelAdmin):
+
+class CommonAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'date_sampled'
 
     list_display = ('bpa_id',
@@ -25,19 +27,26 @@ class CommonAdmin(ImportExportModelAdmin):
     list_filter = ('site__name', 'date_sampled', 'depth')
 
 
-class MarineResource(resources.ModelResource):
+class MarineResource(MarineMicrobesModelResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
 
-    time_sampled = fields.Field(widget=widgets.TimeWidget(format="%H:%M"),
+    time_sampled = fields.Field(widget=widgets.TimeWidget(format="%H:%M:%S"),
                                 attribute="time_sampled",
                                 column_name="Time Sampled")
 
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
-    depth = fields.Field(attribute="depth", column_name="Depth (m)")
+
+    # ignore during import
+    site = fields.Field(readonly=True,
+                        attribute="site",
+                        column_name="Sample Site",
+                        widget=widgets.ForeignKeyWidget(MMSite, 'name'))
+
+    depth = fields.Field(attribute="depth", column_name="Depth (m)", widget=widgets.DecimalWidget())
     location_description = fields.Field(attribute="location_description", column_name="Location Description")
     note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
@@ -45,20 +54,27 @@ class MarineResource(resources.ModelResource):
     class Meta:
         import_id_fields = ('bpa_id', )
 
+    def before_save_instance(self, instance, *args, **kwargs):
+        site = MMSite.get_or_create(instance.lat, instance.lon, instance.location_description)
+        instance.site = site
+
 
 class SpongeResource(MarineResource):
 
     host_state = fields.Field(attribute="host_state", column_name="host state (free text field)")
-    host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)")
+    host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)", widget=widgets.DecimalWidget())
+
+    class Meta:
+        model = SpongeContextual
 
 
 class CommonResource(MarineResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
-    pam = fields.Field(attribute="pam", column_name="Pulse amplitude modulated (PAM)")
-    fluoro = fields.Field(attribute="fluoro", column_name="Fluorometer Measurement")
+    pam = fields.Field(attribute="pam", column_name="Pulse amplitude modulated (PAM)", widget=widgets.DecimalWidget())
+    fluoro = fields.Field(attribute="fluoro", column_name="Fluorometer Measurement", widget=widgets.DecimalWidget())
     host_state = fields.Field(attribute="host_state", column_name="Host State")
-    host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance")
+    host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance", widget=widgets.DecimalWidget())
 
 
 class CoralResource(CommonResource):
@@ -94,11 +110,14 @@ class SeaGrassAdmin(CommonAdmin):
 
 class SedimentResource(MarineResource):
 
-    carbon = fields.Field(attribute="carbon", column_name="% total carbon")
-    sediment = fields.Field(attribute="sediment", column_name="% fine sediment")
-    nitrogen = fields.Field(attribute="nitrogen", column_name="% total nitrogen")
-    phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous")
-    sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)")
+    carbon = fields.Field(attribute="carbon", column_name="% total carbon", widget=widgets.DecimalWidget())
+    sediment = fields.Field(attribute="sediment", column_name="% fine sediment", widget=widgets.DecimalWidget())
+    nitrogen = fields.Field(attribute="nitrogen", column_name="% total nitrogen", widget=widgets.DecimalWidget())
+    phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous", widget=widgets.DecimalWidget())
+    sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)", widget=widgets.DecimalWidget())
+
+    class Meta(MarineResource.Meta):
+        model = SedimentContextual
 
 
 class SedimentAdmin(CommonAdmin):

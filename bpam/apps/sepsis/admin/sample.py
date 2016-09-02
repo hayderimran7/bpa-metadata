@@ -4,10 +4,11 @@ from django.contrib import admin
 from django import forms
 from suit.widgets import AutosizedTextarea
 from suit.widgets import SuitDateWidget
-from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields, widgets
 
 from apps.common.admin import BPAUniqueID
+from apps.common.admin import BPAImportExportModelAdmin
+
 from ..models import SepsisSample
 from commonfields import DateField, BPAIDField
 
@@ -103,7 +104,7 @@ class SampleForm(forms.ModelForm):
         }
 
 
-class SepsisSampleAdmin(ImportExportModelAdmin):
+class SepsisSampleAdmin(BPAImportExportModelAdmin):
     form = SampleForm
     resource_class = SepsisSampleResource
 
