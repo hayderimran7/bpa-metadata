@@ -21,13 +21,11 @@ build-number.txt
 .idea/tasks.xml
 .coverage
 htmlcov/
-bpam/static/
 syntax:regexp
 \.idea
 syntax:glob
 metadata/
 users/
-bpam/bpam/static/
 bpam/.ropeproject/
 .ropeproject/
 data/
