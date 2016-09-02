@@ -1,0 +1,6 @@
+#error-bar {
+    clear: both;
+    padding: 5px;
+    background-color: #ffffe0;
+    border: 1px solid black;
+}
