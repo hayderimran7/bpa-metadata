@@ -63,7 +63,7 @@
         <tbody>
             {% for track in sampletracks %}
             <tr>
-                <td>{{ track.bpa_id }}</td>
+                <td>{{ track.bpa_id.get_short_name }}</td>
                 <td>{{ track.taxon_or_organism | default:"" }}</td>
                 <td>{{ track.strain_or_isolate | default:""}}</td>
                 <td>{{ track.track_type }}</td>
