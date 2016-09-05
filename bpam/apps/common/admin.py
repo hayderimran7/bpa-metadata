@@ -35,11 +35,11 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
     Customised ImportExportModelAdmin class to be used everywhere in the project.
     """
 
-    ENCODINGS = ('utf-8', 'latin1')
-
     # The default class tries only to decode files using 'utf-8' and returns an error
     # if that fails.
-    # Our method changes the default behaviour to try all the ENCODINGS defined above
+    # Our class changes the default behaviour to try all the ENCODINGS defined below
+    ENCODINGS = ('utf-8', 'latin1', 'windows-1252')
+
     def import_action(self, request, *args, **kwargs):
         for encoding in self.ENCODINGS:
             self.from_encoding = encoding
@@ -48,6 +48,17 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
                 break
 
         return response
+
+    def process_import(self, *args, **kwargs):
+        last_error = None
+        for encoding in self.ENCODINGS:
+            self.from_encoding = encoding
+            try:
+                response = super(BPAImportExportModelAdmin, self).process_import(*args, **kwargs)
+                return response
+            except UnicodeDecodeError, e:
+                last_error = e
+        raise last_error
 
 
 class BPAModelResource(resources.ModelResource):
