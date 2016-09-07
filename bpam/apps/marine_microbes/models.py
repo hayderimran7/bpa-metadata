@@ -419,7 +419,7 @@ class SpongeContextual(MarineCommonContextual):
     #  host state (free text field)
     host_state = models.TextField("Host State")
     #  host abundance (individuals per m2)
-    host_abundance = models.DecimalField("Host Abundance", max_digits=9, decimal_places=6)
+    host_abundance = models.DecimalField("Host Abundance", null=True, blank=True, max_digits=9, decimal_places=6)
 
     class Meta(MarineCommonContextual.Meta):
         verbose_name = "Sponge Contextual Data"
