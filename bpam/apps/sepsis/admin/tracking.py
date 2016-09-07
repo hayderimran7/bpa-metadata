@@ -78,7 +78,7 @@ class CommonSampleTrackResource(resources.ModelResource):
     strain_or_isolate = fields.Field(attribute='strain_or_isolate', column_name='Strain_OR_isolate')
     serovar = fields.Field(attribute='serovar', column_name='Serovar')
     growth_media = fields.Field(attribute='growth_media', column_name='Growth Media')
-    replicate = fields.Field(attribute='replicate', widget=widgets.BooleanWidget(), column_name='Replicate')
+    replicate = fields.Field(attribute='replicate', widget=widgets.IntegerWidget(), column_name='Replicate')
     omics = fields.Field(attribute='omics', column_name='Omics')
 
     analytical_platform = fields.Field(attribute='analytical_platform', column_name='Analytical platform')
