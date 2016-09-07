@@ -39,6 +39,7 @@ uwsgitop==0.9
 xlrd==0.9.4
 xlwt==1.0.0
 xlsxwriter==0.9.2
+openpyxl==2.3.5
 celery==3.1
 django-celery==3.1
 tinys3==0.1.11
