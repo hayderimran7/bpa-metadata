@@ -6,16 +6,11 @@
 **Implemented enhancements:**
 
 - Shorten BPA ID on track views to only show last bit [\#37](https://github.com/muccg/bpa-metadata/issues/37)
-- Automatic changelog. [\#36](https://github.com/muccg/bpa-metadata/pull/36) ([aahunter](https://github.com/aahunter))
 
 **Fixed bugs:**
 
 - Marine microbes Sponge Contextual import fails with IntegrityError [\#39](https://github.com/muccg/bpa-metadata/issues/39)
 - Marine microbes Open Water Contextual import fails with ValueError [\#38](https://github.com/muccg/bpa-metadata/issues/38)
-
-**Merged pull requests:**
-
-- Fixes further Marine Microbes import issues [\#40](https://github.com/muccg/bpa-metadata/pull/40) ([sztamas](https://github.com/sztamas))
 
 ## [4.0.29](https://github.com/muccg/bpa-metadata/tree/4.0.29) (2016-09-06)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.28...4.0.29)
@@ -50,12 +45,6 @@
 - All resources in the sepsis API should have a last\_modified field [\#28](https://github.com/muccg/bpa-metadata/issues/28)
 - move wheat-pathogens to use CKAN as backend [\#25](https://github.com/muccg/bpa-metadata/issues/25)
 
-**Merged pull requests:**
-
-- Marine microbes import fixes [\#32](https://github.com/muccg/bpa-metadata/pull/32) ([sztamas](https://github.com/sztamas))
-- Issue \#28: All resources in the sepsis API should have a last\_modified [\#29](https://github.com/muccg/bpa-metadata/pull/29) ([sztamas](https://github.com/sztamas))
-- use CKAN as backend for wheat-pathogens \(fixes \#25\) [\#26](https://github.com/muccg/bpa-metadata/pull/26) ([grahame](https://github.com/grahame))
-
 ## [4.0.24](https://github.com/muccg/bpa-metadata/tree/4.0.24) (2016-08-22)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.23...4.0.24)
 
@@ -66,10 +55,6 @@
 **Closed issues:**
 
 - django-secure is deprecated [\#22](https://github.com/muccg/bpa-metadata/issues/22)
-
-**Merged pull requests:**
-
-- Adds a Jenkins file [\#24](https://github.com/muccg/bpa-metadata/pull/24) ([aahunter](https://github.com/aahunter))
 
 ## [4.0.23](https://github.com/muccg/bpa-metadata/tree/4.0.23) (2016-07-29)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.25...4.0.23)
@@ -202,10 +187,6 @@
 
 ## [3.0.14](https://github.com/muccg/bpa-metadata/tree/3.0.14) (2016-05-09)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/3.0.13...3.0.14)
-
-**Merged pull requests:**
-
-- Revised docker prod image [\#1](https://github.com/muccg/bpa-metadata/pull/1) ([aahunter](https://github.com/aahunter))
 
 ## [3.0.13](https://github.com/muccg/bpa-metadata/tree/3.0.13) (2016-05-06)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/3.0.12...3.0.13)
