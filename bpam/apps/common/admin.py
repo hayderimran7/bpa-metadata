@@ -11,6 +11,7 @@ from django.contrib.gis.geos import Point
 from django.http import HttpResponse
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
+from import_export.formats import base_formats
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
 from django.conf import settings
@@ -39,6 +40,12 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
     # if that fails.
     # Our class changes the default behaviour to try all the ENCODINGS defined below
     ENCODINGS = ('utf-8', 'latin1', 'windows-1252')
+
+    IMPORT_FORMATS = (base_formats.CSV, base_formats.XLS, base_formats.XLSX)
+
+    def get_import_formats(self):
+        return filter(lambda f: f in self.IMPORT_FORMATS,
+                super(BPAImportExportModelAdmin, self).get_import_formats())
 
     def import_action(self, request, *args, **kwargs):
         for encoding in self.ENCODINGS:
