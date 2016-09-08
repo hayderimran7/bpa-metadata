@@ -1,5 +1,21 @@
 # Change Log
 
+## [4.0.31](https://github.com/muccg/bpa-metadata/tree/4.0.31) (2016-09-08)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.30...4.0.31)
+
+**Implemented enhancements:**
+
+- Sepsis: Link to sample on track public track page. [\#46](https://github.com/muccg/bpa-metadata/issues/46)
+- Add support to import .xslx \(newer Excel format\) files [\#45](https://github.com/muccg/bpa-metadata/issues/45)
+
+**Fixed bugs:**
+
+- Sepsis: replicate should be a number from 1 -10 [\#44](https://github.com/muccg/bpa-metadata/issues/44)
+
+**Closed issues:**
+
+- Sepsis Track RNA \(HiSeq\) import some of the columns remain empty. [\#43](https://github.com/muccg/bpa-metadata/issues/43)
+
 ## [4.0.30](https://github.com/muccg/bpa-metadata/tree/4.0.30) (2016-09-07)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.29...4.0.30)
 
