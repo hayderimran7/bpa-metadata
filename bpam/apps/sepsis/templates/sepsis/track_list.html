@@ -63,7 +63,9 @@
         <tbody>
             {% for track in sampletracks %}
             <tr>
-                <td>{{ track.bpa_id.get_short_name }}</td>
+                <td>
+                    <a href="{% url 'sepsis:sample' track.bpa_id %}">{{ track.bpa_id.get_short_name }}</a>
+                </td>
                 <td>{{ track.taxon_or_organism | default:"" }}</td>
                 <td>{{ track.strain_or_isolate | default:""}}</td>
                 <td>{{ track.track_type }}</td>
