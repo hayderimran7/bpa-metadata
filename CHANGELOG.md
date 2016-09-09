@@ -1,5 +1,16 @@
 # Change Log
 
+## [4.0.32](https://github.com/muccg/bpa-metadata/tree/4.0.32) (2016-09-09)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.31...4.0.32)
+
+**Implemented enhancements:**
+
+- Remove unused import formats [\#48](https://github.com/muccg/bpa-metadata/issues/48)
+
+**Fixed bugs:**
+
+- MM consortium page issue [\#50](https://github.com/muccg/bpa-metadata/issues/50)
+
 ## [4.0.31](https://github.com/muccg/bpa-metadata/tree/4.0.31) (2016-09-08)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.30...4.0.31)
 
