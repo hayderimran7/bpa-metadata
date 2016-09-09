@@ -65,8 +65,9 @@ class BPAField(fields.Field):
     def clean(self, data):
         bpaid = data[self.column_name]
         bpaid = '{}.{}'.format(BPA_ID, bpaid)
-        project, _ = BPAProject.objects.get_or_create(name='SEPSIS')
-        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+        # project, _ = BPAProject.objects.get_or_create(name='SEPSIS')
+        # bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid)
         return bpa_id
 
 class CommonSampleTrackResource(resources.ModelResource):
