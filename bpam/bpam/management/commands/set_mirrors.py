@@ -6,10 +6,6 @@ SITES = [
         'name': 'QCIF',
         'base_url': 'https://downloads-qcif.bioplatforms.com/bpa/'
     },
-    {
-        'name': 'MU',
-        'base_url': 'https://downloads-mu.bioplatforms.com/bpa/'
-    },
 ]
 
 
