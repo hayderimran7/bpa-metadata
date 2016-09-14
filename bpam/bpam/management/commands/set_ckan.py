@@ -4,7 +4,7 @@ from apps.common.models import CKANServer
 SITES = [
     {
         'name': 'bpa-aws1',
-        'base_url': 'https://data.bioplatforms.com/app/'
+        'base_url': 'https://data.bioplatforms.com/'
     },
 ]
 

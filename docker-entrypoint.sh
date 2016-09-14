@@ -74,6 +74,13 @@ function _django_migrate {
     django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
 }
 
+function _django_bpam_setup {
+    echo "running set_mirrors"
+    django-admin.py set_mirrors --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
+    echo "running set_ckan"
+    django-admin.py set_ckan --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
+}
+
 
 function _django_collectstatic {
     echo "running collectstatic"
@@ -102,6 +109,7 @@ if [ "$1" = 'uwsgi' ]; then
 
      _django_collectstatic
      _django_migrate
+     _django_bpam_setup
 
     exec uwsgi --die-on-term --ini ${UWSGI_OPTS}
 fi
@@ -119,6 +127,7 @@ if [ "$1" = 'runserver' ]; then
      #django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
 
      _django_migrate
+     _django_bpam_setup
 
     echo "running runserver ..."
     exec django-admin.py ${RUNSERVER_OPTS}
