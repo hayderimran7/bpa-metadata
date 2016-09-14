@@ -1,5 +1,16 @@
 # Change Log
 
+## [4.0.33](https://github.com/muccg/bpa-metadata/tree/4.0.33) (2016-09-14)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.32...4.0.33)
+
+**Implemented enhancements:**
+
+- Remove links to Mirror at MU [\#59](https://github.com/muccg/bpa-metadata/issues/59)
+
+**Fixed bugs:**
+
+- set CKAN and mirror information at container start [\#54](https://github.com/muccg/bpa-metadata/issues/54)
+
 ## [4.0.32](https://github.com/muccg/bpa-metadata/tree/4.0.32) (2016-09-09)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.31...4.0.32)
 
