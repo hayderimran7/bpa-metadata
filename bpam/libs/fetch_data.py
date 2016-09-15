@@ -22,6 +22,7 @@ project_name_passwd_map = {
     'users': 'BPA_USERS_DOWNLOADS_PASSWORD',
     'gbr': 'BPA_GBR_DOWNLOADS_PASSWORD',
     'sepsis': 'BPA_SEPSIS_DOWNLOADS_PASSWORD',
+    'marine': 'BPA_MM_DOWNLOADS_PASSWORD',
 }
 
 

@@ -3,6 +3,8 @@
 Ingests Marine Microbe Metagenomic amplicon metadata from archive into database.
 """
 
+from __future__ import print_function
+
 import re
 from unipath import Path
 
@@ -10,7 +12,7 @@ from libs import ingest_utils
 from libs import management_command
 from libs import bpa_id_utils
 from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from libs.parse_md5 import parse_md5_file
 
 from ...models import MMSample
@@ -176,7 +178,7 @@ class Command(management_command.BPACommand):
             self.log_info("Ingesting amplicon {}".format(amplicon))
             metadata_path = "marine_microbes/amplicons/{}".format(amplicon)
             data_dir = Path(ingest_utils.METADATA_ROOT, metadata_path)
-            fetcher = Fetcher(data_dir, self.get_base_url(options) + metadata_path)
+            fetcher = Fetcher(data_dir, self.get_base_url(options) + metadata_path, auth=("marine", get_password('marine')))
             fetcher.clean()
             fetcher.fetch_metadata_from_folder()
 

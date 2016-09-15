@@ -6,7 +6,7 @@ from libs import bpa_id_utils
 from libs import ingest_utils
 from libs import management_command
 from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 
 from ...models import MMSample
 from ...models import MMSite
@@ -47,6 +47,7 @@ def add_coastal_data(data, cmd):
             sample.save()
             cmd.log_info("Added site {}".format(sample.site.name))
 
+
 def add_pelagic_data(data, cmd):
     """ pack data into the DB """
 
@@ -70,6 +71,7 @@ def add_pelagic_data(data, cmd):
 
             sample.save()
             cmd.log_info("Added site {}".format(sample.site.name))
+
 
 def ingest_data(cmd):
     def is_metadata(path):
@@ -213,12 +215,10 @@ class Command(management_command.BPACommand):
                             help='Delete all contextual data', )
 
     def handle(self, *args, **options):
-
         if options['delete']:
             self.log_info("Deleting all Sites")
-            MMSite.objects.all().delete()
 
-        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("marine", get_password('marine')))
         fetcher.clean()
         fetcher.fetch(MM_CONTEXTUAL)
         ingest_data(self)

@@ -10,7 +10,7 @@ from libs import ingest_utils
 from libs import management_command
 from libs import bpa_id_utils
 from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from libs.fetch_data import Fetcher, get_password
 from libs.parse_md5 import parse_md5_file
 from apps.common.models import Facility
 
@@ -169,7 +169,7 @@ class Command(management_command.BPACommand):
             self.log_info("Truncating MM Metagenomic Files data")
             self.truncate()
 
-        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH)
+        fetcher = Fetcher(DATA_DIR, self.get_base_url(options) + METADATA_PATH, auth=("marine", get_password('marine')))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
