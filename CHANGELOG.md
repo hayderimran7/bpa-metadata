@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.0.34](https://github.com/muccg/bpa-metadata/tree/4.0.34) (2016-09-15)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.33...4.0.34)
+
+**Closed issues:**
+
+- marine-microbes ingest failing, HTTP access denied [\#62](https://github.com/muccg/bpa-metadata/issues/62)
+
 ## [4.0.33](https://github.com/muccg/bpa-metadata/tree/4.0.33) (2016-09-14)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.32...4.0.33)
 
