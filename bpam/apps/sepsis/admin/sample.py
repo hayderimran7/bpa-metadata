@@ -133,7 +133,6 @@ class SepsisSampleAdmin(BPAImportExportModelAdmin):
     fields = ('bpa_id',
               'growth_method',
               'host',
-              'sample_track',
               'taxon_or_organism',
               'strain_or_isolate',
               'gram_stain',
