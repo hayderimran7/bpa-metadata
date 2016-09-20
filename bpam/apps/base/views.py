@@ -14,7 +14,7 @@ from django.views.generic.edit import FormMixin
 from django.views.generic.list import ListView
 from django.http import HttpResponse
 from django.views.generic.base import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from django.core.mail import BadHeaderError, send_mail
 
@@ -376,7 +376,13 @@ class RequestAccessView(TemplateView):
     request_template_name = 'base/request_access.html'
     success_template_name = 'base/success.html'
     form_class = RequestAccessForm
-    email_template = "Name: {0}\n Affiliation: {1}\n {2}"
+    email_template = """\
+Name: {0}
+Affiliation: {1}
+
+Request details:
+{2}
+"""
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -391,7 +397,7 @@ class RequestAccessView(TemplateView):
             message = form.cleaned_data['message']
             email = self.email_template.format(name, affiliation, message)
             try:
-                send_mail("BASE Access Request", message, settings.DEFAULT_FROM_EMAIL, settings.BASE_REQUEST_LIST)
+                send_mail("BASE Access Request", email, settings.DEFAULT_FROM_EMAIL, settings.BASE_REQUEST_LIST)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
 
