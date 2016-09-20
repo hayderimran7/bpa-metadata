@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/muccg/bpa-metadata/tree/HEAD)
-
-[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.34...HEAD)
+## [4.0.35](https://github.com/muccg/bpa-metadata/tree/4.0.35) (2016-09-20)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.34...4.0.35)
 
 **Fixed bugs:**
 
