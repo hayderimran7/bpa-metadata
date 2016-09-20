@@ -75,7 +75,18 @@ class FileAdmin(BPAImportExportModelAdmin):
                     'index', )
 
     list_display_links = ('filename', )
-    search_fields = list_display  # the search field widget
+    search_fields = ('filename',
+                    'md5',
+                    'sample__bpa_id__bpa_id',
+                    'extraction',
+                    'amplicon',
+                    'vendor',
+                    'read',
+                    'pcr_1_to_10',
+                    'pcr_1_to_100',
+                    'pcr_neat',
+                    'dilution',
+                    'index', )
     list_filter = ('sample',
                    'amplicon',
                    'index',
