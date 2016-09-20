@@ -391,7 +391,7 @@ class RequestAccessView(TemplateView):
             message = form.cleaned_data['message']
             email = self.email_template.format(name, affiliation, message)
             try:
-                send_mail("BASE Access Request", message, from_email, settings.BASE_REQUEST_LIST)
+                send_mail("BASE Access Request", message, settings.DEFAULT_FROM_EMAIL, settings.BASE_REQUEST_LIST)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
 
