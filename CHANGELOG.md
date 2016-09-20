@@ -1,5 +1,16 @@
 # Change Log
 
+## [Unreleased](https://github.com/muccg/bpa-metadata/tree/HEAD)
+
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.34...HEAD)
+
+**Fixed bugs:**
+
+- BASE requests email template not applied [\#65](https://github.com/muccg/bpa-metadata/issues/65)
+- Error generated when sending BASE access requests email [\#64](https://github.com/muccg/bpa-metadata/issues/64)
+- MM and Sepsis: searching miseq and pacbio data in admin produces error [\#63](https://github.com/muccg/bpa-metadata/issues/63)
+- Attempting to add Sepsis Sample in admin produces an error [\#57](https://github.com/muccg/bpa-metadata/issues/57)
+
 ## [4.0.34](https://github.com/muccg/bpa-metadata/tree/4.0.34) (2016-09-15)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.33...4.0.34)
 
