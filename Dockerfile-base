@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libproj-dev \
   libpq5 \
   libxml2 \
+  mime-support \
   postgresql-client \
   postgresql-9.4-postgis-2.1 \
   postgresql-9.4-postgis-scripts \
