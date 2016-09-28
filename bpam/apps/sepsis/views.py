@@ -7,13 +7,8 @@ from rest_framework import viewsets
 from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
 from .models import (Host,
-                     MiseqGenomicsMethod,
                      GenomicsMiseqFile,
                      GenomicsPacBioFile,
-                     ProteomicsMethod,
-                     ProteomicsFile,
-                     TranscriptomicsMethod,
-                     TranscriptomicsFile,
                      SepsisSample,
                      PacBioTrack,
                      MiSeqTrack,
@@ -27,6 +22,7 @@ import serializers
 
 # a list of sepsis sample track types
 tracks = (PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack)
+
 
 class SepsisView(TemplateView):
     template_name = 'sepsis/index.html'
@@ -51,14 +47,27 @@ class SampleListView(ListView):
             strain_or_isolate__exact='')
         return context
 
+
 class TrackListView(ListView):
     template_name = 'sepsis/track_list.html'
-    queryset = list(chain(*(t.objects.all() for t in tracks)))
+
+    def get_queryset(self):
+        return chain(*(t.objects.all() for t in tracks))
 
     def get_context_data(self, **kwargs):
         context = super(TrackListView, self).get_context_data(**kwargs)
-        context['sampletracks'] = self.queryset
+        context['sampletracks'] = self.get_queryset()
         return context
+
+
+class TrackOverview(TemplateView):
+    template_name = 'sepsis/track_overview.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TrackOverview, self).get_context_data(**kwargs)
+        
+        return context
+
 
 class GenomicsMiseqFileListView(ListView):
     model = GenomicsMiseqFile
@@ -119,6 +128,7 @@ class PacBioTrackViewSet(viewsets.ModelViewSet):
     queryset = PacBioTrack.objects.all()
     serializer_class = serializers.PacBioTrackSerializer
 
+
 class MiSeqTrackViewSet(viewsets.ModelViewSet):
     '''
     API endpoint that allows the tracking of MiSeq
@@ -134,12 +144,14 @@ class RNAHiSeqTrackViewSet(viewsets.ModelViewSet):
     queryset = RNAHiSeqTrack.objects.all()
     serializer_class = serializers.RNAHiSeqTrackSerializer
 
+
 class MetabolomicsTrackViewSet(viewsets.ModelViewSet):
     '''
     API endpoint that allows the tracking of Metabolomics
     '''
     queryset = MetabolomicsTrack.objects.all()
     serializer_class = serializers.MetabolomicsTrackSerializer
+
 
 class DeepLCMSTrackViewSet(viewsets.ModelViewSet):
     '''
@@ -148,12 +160,14 @@ class DeepLCMSTrackViewSet(viewsets.ModelViewSet):
     queryset = DeepLCMSTrack.objects.all()
     serializer_class = serializers.DeepLCMSTrackSerializer
 
+
 class SWATHMSTrackViewSet(viewsets.ModelViewSet):
     '''
     API endpoint that allows the tracking of SWAT HMST
     '''
     queryset = SWATHMSTrack.objects.all()
     serializer_class = serializers.SWATHMSTrackSerializer
+
 
 class SepsisSampleViewSet(viewsets.ModelViewSet):
     '''
