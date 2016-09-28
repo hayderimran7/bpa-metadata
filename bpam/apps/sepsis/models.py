@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from apps.common.models import SequenceFile, BPAUniqueID, Facility
+from apps.common.models import SequenceFile, BPAUniqueID
 
 
 class Host(models.Model):
@@ -73,6 +73,27 @@ class MiseqGenomicsMethod(models.Model):
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
+
+
+class HiseqGenomicsMethod(models.Model):
+    '''Genomics Metadata'''
+
+    # Genomics method data from Excel spreadsheet
+    # Antibiotic Resistant Pathogen sample unique ID	Sample (MGR code)	Sample I.D	Library construction protocol	Barcode tag	Sequencer	CASAVA version
+
+    library_construction_protocol = models.CharField('Library Construction Protocol',
+                                                     max_length=100,
+                                                     blank=True,
+                                                     null=True)
+    sequencer = models.CharField('Sequencer', max_length=100, blank=True, null=True)
+    casava_version = models.CharField('CASAVA Version', max_length=20, blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Hiseq Genomics Method'
+
+    def __unicode__(self):
+        return u'{} {}'.format(self.library_construction_protocol, self.sequencer)
 
 
 class PacBioGenomicsMethod(models.Model):
@@ -170,7 +191,7 @@ class SampleTrack(models.Model):
                                verbose_name='BPA ID',
                                help_text='Bioplatforms Australia Sample ID')
 
-    #bpa_id = models.CharField('BPA ID', max_length=6)
+    # bpa_id = models.CharField('BPA ID', max_length=6)
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
     serovar = models.CharField('Serovar', max_length=500, blank=True, null=True)
@@ -196,43 +217,57 @@ class SampleTrack(models.Model):
     class Meta:
         abstract = True
 
+
 class PacBioTrack(SampleTrack):
     track_type = 'PacBio'
+
     class Meta:
         verbose_name = 'Track PacBio'
         verbose_name_plural = verbose_name
 
+
 class MiSeqTrack(SampleTrack):
     track_type = 'MiSeq'
+
     class Meta:
         verbose_name = 'Track MiSeq'
         verbose_name_plural = verbose_name
 
+
 class RNAHiSeqTrack(SampleTrack):
     track_type = 'RNA (HiSeq)'
+
     class Meta:
         verbose_name = 'Track RNA (HiSeq)'
         verbose_name_plural = verbose_name
 
+
 class MetabolomicsTrack(SampleTrack):
     track_type = 'Metabolomics'
+
     class Meta:
         verbose_name = 'Track Metabolomics'
         verbose_name_plural = verbose_name
 
+
 class DeepLCMSTrack(SampleTrack):
     track_type = 'Deep LC-MS (Monash)'
+
     class Meta:
         verbose_name = 'Track Deep LC-MS (Monash)'
         verbose_name_plural = verbose_name
 
+
 class SWATHMSTrack(SampleTrack):
     track_type = 'SWATH-MS (APAF)'
+
     class Meta:
         verbose_name = 'Track SWATH-MS (APAF)'
         verbose_name_plural = verbose_name
 
 # Little point in expanding the common Sample Type
+
+
 class SepsisSample(models.Model):
     ''' Sepsis Sample '''
 
@@ -250,7 +285,7 @@ class SepsisSample(models.Model):
                                       help_text='Sample Growth Method')
 
     # FIXME
-    #sample_track = models.OneToOneField(SampleTrack,
+    # sample_track = models.OneToOneField(SampleTrack,
     #                                    blank=True,
     #                                    null=True,
     #                                    related_name='sample',
@@ -275,10 +310,10 @@ class SepsisSample(models.Model):
     investigation_type = models.CharField('Investigation Type', max_length=200, blank=True, null=True)
     project_name = models.CharField('Project Name', max_length=200, blank=True, null=True)
     sample_title = models.CharField('Sample Title', max_length=200, blank=True, null=True)
-    ploidy  = models.CharField('Ploidy', max_length=200, blank=True, null=True) # FIXME, what is ploidy ?
-    num_replicons  = models.CharField('Number of Replicons', max_length=200, blank=True, null=True)
-    estimated_size  = models.CharField('Estimated Size', max_length=200, blank=True, null=True)
-    propagation =  models.CharField('Propagation', max_length=200, blank=True, null=True)
+    ploidy = models.CharField('Ploidy', max_length=200, blank=True, null=True)  # FIXME, what is ploidy ?
+    num_replicons = models.CharField('Number of Replicons', max_length=200, blank=True, null=True)
+    estimated_size = models.CharField('Estimated Size', max_length=200, blank=True, null=True)
+    propagation = models.CharField('Propagation', max_length=200, blank=True, null=True)
     collected_by = models.CharField('Collected By', max_length=200, blank=True, null=True)
 
     last_modified = models.DateTimeField(auto_now=True)
@@ -328,7 +363,7 @@ class GenomicsMiseqFile(GenomicsFile):
     method = models.ForeignKey(MiseqGenomicsMethod,
                                null=True,
                                related_name='%(app_label)s_%(class)s_files',
-                               help_text='Genomics Method')
+                               help_text='MiSeq Genomics Method')
 
     library = models.CharField('Library', max_length=20, help_text='MP or PE')
     size = models.CharField('Extraction Size', max_length=100, default=1)
@@ -342,6 +377,27 @@ class GenomicsMiseqFile(GenomicsFile):
 
     def __unicode__(self):
         return u'Genomics Miseq {}'.format(self.filename)
+
+
+class GenomicsHiseqFile(GenomicsFile):
+    '''Genomics Hiseq'''
+
+    method = models.ForeignKey(HiseqGenomicsMethod,
+                               null=True,
+                               related_name='%(app_label)s_%(class)s_files',
+                               help_text='HiSeq Genomics Method')
+
+    library = models.CharField('Library', max_length=20, help_text='MP or PE')
+    size = models.CharField('Extraction Size', max_length=100, default=1)
+    flow_cell_id = models.CharField('Flow Cell ID', max_length=9)
+    index = models.CharField('Index', max_length=20)
+    read = models.CharField('Read', max_length=3)
+
+    def get_path_parts(self):
+        return (self.project_name, 'genomics/hiseq')
+
+    def __unicode__(self):
+        return u'Genomics Hiseq {}'.format(self.filename)
 
 
 class GenomicsPacBioFile(GenomicsFile):
@@ -363,7 +419,7 @@ class GenomicsPacBioFile(GenomicsFile):
         return (self.project_name, 'genomics/pacbio')
 
     def __unicode__(self):
-        return u'Genomics Miseq {}'.format(self.filename)
+        return u'Genomics PacBio {}'.format(self.filename)
 
 
 class TranscriptomicsFile(SepsisSequenceFile):

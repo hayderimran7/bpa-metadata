@@ -8,6 +8,7 @@ from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
 from .models import (Host,
                      GenomicsMiseqFile,
+                     GenomicsHiseqFile,
                      GenomicsPacBioFile,
                      SepsisSample,
                      PacBioTrack,
@@ -31,6 +32,7 @@ class SepsisView(TemplateView):
         context = super(SepsisView, self).get_context_data(**kwargs)
         context['sample_count'] = SepsisSample.objects.count()
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
+        context['genomics_hiseq_file_count'] = GenomicsHiseqFile.objects.count()
         context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
         context['track_count'] = sum(t.objects.count() for t in tracks)
         return context
@@ -65,12 +67,17 @@ class TrackOverview(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrackOverview, self).get_context_data(**kwargs)
-        
         return context
 
 
 class GenomicsMiseqFileListView(ListView):
     model = GenomicsMiseqFile
+    context_object_name = 'sequencefiles'
+    template_name = 'sepsis/genomics_file_list.html'
+
+
+class GenomicsHiseqFileListView(ListView):
+    model = GenomicsHiseqFile
     context_object_name = 'sequencefiles'
     template_name = 'sepsis/genomics_file_list.html'
 
@@ -89,8 +96,9 @@ class SampleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SampleDetailView, self).get_context_data(**kwargs)
         miseqset = GenomicsMiseqFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
+        hiseqset = GenomicsHiseqFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
         pacbioset = GenomicsPacBioFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
-        context['sequencefiles'] = list(chain(miseqset, pacbioset))
+        context['sequencefiles'] = list(chain(miseqset, hiseqset, pacbioset))
         context['mirrors'] = BPAMirror.objects.all()
         context['disable_run'] = True
 
@@ -111,6 +119,14 @@ class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
     '''
     queryset = GenomicsMiseqFile.objects.all()
     serializer_class = serializers.GenomicsMiseqFileSerializer
+
+
+class GenomicsHiseqFileViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint for Sepsis Genomics miseq Sequences
+    '''
+    queryset = GenomicsHiseqFile.objects.all()
+    serializer_class = serializers.GenomicsHiseqFileSerializer
 
 
 class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):

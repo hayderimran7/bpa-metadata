@@ -115,7 +115,7 @@ def ingest_md5():
     logger.info("Ingesting Sepsis md5 file information from {0}".format(DATA_DIR))
     for md5_file in DATA_DIR.walk(filter=is_md5file):
         logger.info("Processing Sepsis Genomic md5 file {0}".format(md5_file))
-        data = md5parser.parse_md5_file(md5parser.miseq_filename_pattern, md5_file)
+        data = md5parser.parse_md5_file(md5parser.miseq_filename_re, md5_file)
         add_md5(data)
 
 
