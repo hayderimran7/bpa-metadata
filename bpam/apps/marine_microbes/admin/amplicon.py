@@ -13,6 +13,7 @@ from ..models import AmpliconSequenceFile
 
 
 class FileForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = AmpliconSequenceFile
@@ -29,6 +30,11 @@ class FileForm(forms.ModelForm):
             'note': AutosizedTextarea(attrs={'class': 'input-large',
                                              'style': 'width:95%'})
         }
+
+
+def monospace_md5(obj):
+    return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
+monospace_md5.short_description = "MD5 Check sum"
 
 
 class FileAdmin(BPAImportExportModelAdmin):
@@ -54,12 +60,7 @@ class FileAdmin(BPAImportExportModelAdmin):
                                  'md5',
                                  'analysed',
                                  'note', )}),
-    ] # yapf: disable
-
-    def monospace_md5(obj):
-        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
-
-    monospace_md5.short_description = "MD5 Check sum"
+    ]
 
     list_display = ('filename',
                     monospace_md5,
@@ -76,17 +77,17 @@ class FileAdmin(BPAImportExportModelAdmin):
 
     list_display_links = ('filename', )
     search_fields = ('filename',
-                    'md5',
-                    'sample__bpa_id__bpa_id',
-                    'extraction',
-                    'amplicon',
-                    'vendor',
-                    'read',
-                    'pcr_1_to_10',
-                    'pcr_1_to_100',
-                    'pcr_neat',
-                    'dilution',
-                    'index', )
+                     'md5',
+                     'sample__bpa_id__bpa_id',
+                     'extraction',
+                     'amplicon',
+                     'vendor',
+                     'read',
+                     'pcr_1_to_10',
+                     'pcr_1_to_100',
+                     'pcr_neat',
+                     'dilution',
+                     'index', )
     list_filter = ('sample',
                    'amplicon',
                    'index',

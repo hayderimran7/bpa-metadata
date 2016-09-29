@@ -13,6 +13,7 @@ from ..models import GenomicsMiseqFile
 
 
 class FileForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = GenomicsMiseqFile
@@ -29,6 +30,11 @@ class FileForm(forms.ModelForm):
             'note': AutosizedTextarea(attrs={'class': 'input-large',
                                              'style': 'width:95%'})
         }
+
+
+def monospace_md5(obj):
+    return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
+monospace_md5.short_description = "MD5 Checksum"
 
 
 class FileAdmin(BPAImportExportModelAdmin):
@@ -53,11 +59,6 @@ class FileAdmin(BPAImportExportModelAdmin):
                                  'note', )}),
     ]
 
-    def monospace_md5(obj):
-        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
-
-    monospace_md5.short_description = "MD5 Checksum"
-
     list_display = ('filename',
                     monospace_md5,
                     'sample',
@@ -67,12 +68,12 @@ class FileAdmin(BPAImportExportModelAdmin):
                     'vendor', )
     list_display_links = ('filename', )
     search_fields = ('filename',
-                    'md5',
-                    'sample__bpa_id__bpa_id',
-                    'extraction',
-                    'library',
-                    'index',
-                    'vendor', )
+                     'md5',
+                     'sample__bpa_id__bpa_id',
+                     'extraction',
+                     'library',
+                     'index',
+                     'vendor', )
     list_filter = ('sample',
                    'library',
                    'index',

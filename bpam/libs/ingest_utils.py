@@ -1,6 +1,5 @@
 import string
 import re
-import unittest
 import os
 import json
 
@@ -43,7 +42,6 @@ def get_clean_number(val, default=None, debug=False):
 
     if val in (None, ''):
         return default
-
 
     if isinstance(val, int):
         return val
@@ -195,4 +193,3 @@ def pretty_print_namedtuple(named_tuple):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

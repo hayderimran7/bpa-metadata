@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from import_export import resources, fields, widgets
+from import_export import fields, widgets
 
 from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.admin import DateField
@@ -78,11 +78,13 @@ class CommonResource(MarineResource):
 
 
 class CoralResource(CommonResource):
+
     class Meta(CommonResource.Meta):
         model = CoralContextual
 
 
 class SeaGrassResource(CommonResource):
+
     class Meta(CommonResource.Meta):
         model = SeaGrassContextual
 
@@ -96,6 +98,7 @@ class CoralAdmin(CommonAdmin):
 
 
 class SeaWeedResource(CommonResource):
+
     class Meta(CommonResource.Meta):
         model = SeaWeedContextual
 

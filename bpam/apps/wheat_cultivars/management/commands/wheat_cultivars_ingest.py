@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from apps.wheat_cultivars.models import Organism, Protocol, CultivarSample, CultivarSequenceFile
 from libs import ingest_utils
 from libs import bpa_id_utils

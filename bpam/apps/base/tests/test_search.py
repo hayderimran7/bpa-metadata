@@ -49,7 +49,7 @@ class SearchBuilder(object):
 
 
 class SearchTestCase(TestCase):
-    def _setUpSample(self, name, elevation, boron_hot_cacl2, otu=None):
+    def _setup_sample(self, name, elevation, boron_hot_cacl2, otu=None):
         bpa_id_name = "bpa_id" + str(name)
         setattr(self, bpa_id_name, mommy.make(BPAUniqueID, bpa_id=str(name)))
         bpa_id = getattr(self, bpa_id_name)
@@ -103,13 +103,13 @@ class SearchTestCase(TestCase):
         otu3.save()
 
         # sample 1
-        self._setUpSample("A", 100, 23.67, otu1)
+        self._setup_sample("A", 100, 23.67, otu1)
         # sample 2
-        self._setUpSample("B", 100, 67.0, otu2)
+        self._setup_sample("B", 100, 67.0, otu2)
         # sample 3
-        self._setUpSample("C", 200, 24.67)
+        self._setup_sample("C", 200, 24.67)
         # sample 4
-        self._setUpSample("D", 1000, -56.90, otu3)
+        self._setup_sample("D", 1000, -56.90, otu3)
 
     def test_simple_single_search(self):
         b = SearchBuilder()

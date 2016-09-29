@@ -2,10 +2,7 @@
 
 from django.contrib import admin
 from django import forms
-from django.utils.html import format_html
 from suit.widgets import AutosizedTextarea
-from suit.widgets import LinkedSelect
-from suit.widgets import SuitDateWidget
 
 from apps.common.admin import BPAImportExportModelAdmin
 
@@ -13,6 +10,7 @@ from ..models import GrowthMethod
 
 
 class Form(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = GrowthMethod

@@ -5,7 +5,6 @@ import csv
 import gzip
 import time
 
-from django.core.management.base import BaseCommand, CommandError
 from unipath import Path
 from libs import logger_utils
 from libs import bpa_id_utils

@@ -2,7 +2,6 @@
 # Django settings for bpa metadata project.
 
 import os
-import sys
 
 from ccg_django_utils.conf import EnvConfig
 

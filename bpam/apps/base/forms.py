@@ -66,7 +66,7 @@ class BASESearchForm(forms.Form):
         ("total_nitrogen", "Total Nitrogen"),
         ("total_carbon", "Total Carbon")
     ],
-                                     required=False)
+        required=False)
 
     search_value = forms.CharField(max_length=100, required=False)
 
@@ -86,7 +86,7 @@ class BASESearchForm(forms.Form):
         ("exc_sodium", "Exc. Sodium (meq/100g)"), ("boron_hot_cacl2", "Boron Hot CaCl2 (mg/Kg)"),
         ("total_nitrogen", "Total Nitrogen"), ("total_carbon", "Total Carbon")
     ],
-                                     required=False)
+        required=False)
 
     search_range_min = forms.DecimalField(required=False)
     search_range_max = forms.DecimalField(required=False)

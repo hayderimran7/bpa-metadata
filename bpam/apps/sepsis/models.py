@@ -55,7 +55,7 @@ class GrowthMethod(models.Model):
 class MiseqGenomicsMethod(models.Model):
     '''Genomics Metadata'''
 
-    # Genomics method data from excell spreadsheet
+    # Genomics method data from excel spreadsheet
     # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	AnalysisSoftwareVersion
 
     library_construction_protocol = models.CharField('Library Construction Protocol',
@@ -99,7 +99,7 @@ class HiseqGenomicsMethod(models.Model):
 class PacBioGenomicsMethod(models.Model):
     '''PacBio Genomics Metadata'''
 
-    # Genomics method data from excell spreadsheet
+    # Genomics method data from excel spreadsheet
     # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	Run ID	SMRT Cell ID	Cell Position	RS version
 
     library_construction_protocol = models.CharField('Library Construction Protocol',

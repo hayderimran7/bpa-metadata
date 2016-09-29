@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from apps.common.models import DNASource, Sequencer
 
 from apps.wheat_pathogens_transcript.models import (WheatPathogenTranscriptSample,

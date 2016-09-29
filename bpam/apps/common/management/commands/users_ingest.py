@@ -2,7 +2,7 @@
 
 import csv
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from libs import ingest_utils, user_helper, logger_utils
 from libs.fetch_data import Fetcher, get_password
 from apps.bpaauth.models import BPAUser

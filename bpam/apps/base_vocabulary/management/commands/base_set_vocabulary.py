@@ -2,8 +2,29 @@
 
 from django.core.management.base import BaseCommand
 from libs.logger_utils import get_logger
-from apps.base_vocabulary.contextual_controlled_vocabularies import *
-from apps.base_vocabulary.models import *
+from apps.base_vocabulary.contextual_controlled_vocabularies import (
+    AustralianSoilClassificationVocabulary,
+    DrainageClassificationVocabulary,
+    EcologicalZoneVocabulary,
+    FAOSoilClassificationVocabulary,
+    HorizonClassificationVocabulary,
+    LandUseVocabulary,
+    ProfilePositionVocabulary,
+    SoilColourVocabulary,
+    TillageClassificationVocabulary)
+from apps.base_vocabulary.models import (
+    AustralianSoilClassification,
+    BroadVegetationType,
+    DrainageClassification,
+    FAOSoilClassification,
+    GeneralEcologicalZone,
+    HorizonClassification,
+    LandUse,
+    ProfilePosition,
+    SoilColour,
+    SoilTexture,
+    TillageType)
+
 
 # import logging
 # logging.basicConfig(level=logging.INFO)

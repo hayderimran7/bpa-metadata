@@ -45,13 +45,13 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
 
     def get_import_formats(self):
         return filter(lambda f: f in self.IMPORT_FORMATS,
-                super(BPAImportExportModelAdmin, self).get_import_formats())
+                      super(BPAImportExportModelAdmin, self).get_import_formats())
 
     def import_action(self, request, *args, **kwargs):
         for encoding in self.ENCODINGS:
             self.from_encoding = encoding
             response = super(BPAImportExportModelAdmin, self).import_action(request, *args, **kwargs)
-            if not (type(response) is HttpResponse and 'wrong encoding' in response.content):
+            if not (isinstance(response, HttpResponse) and 'wrong encoding' in response.content):
                 break
 
         return response
@@ -63,7 +63,7 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
             try:
                 response = super(BPAImportExportModelAdmin, self).process_import(*args, **kwargs)
                 return response
-            except UnicodeDecodeError, e:
+            except UnicodeDecodeError as e:
                 last_error = e
         raise last_error
 
@@ -94,6 +94,7 @@ class BPAModelResource(resources.ModelResource):
 
 
 class FacilityWidget(widgets.ForeignKeyWidget):
+
     def __init__(self):
         self.model = Facility
         self.field = "name"
@@ -104,7 +105,9 @@ class FacilityWidget(widgets.ForeignKeyWidget):
 
 
 class FacilityAdmin(admin.ModelAdmin):
+
     class Form(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = Facility
@@ -193,6 +196,7 @@ class CommonTransferLogResource(resources.ModelResource):
 
 
 class CommonTransferLogAdmin(BPAImportExportModelAdmin):
+
     def show_downloads_url(self, obj):
         try:
             short = obj.downloads_url.split("/")[-2]
@@ -287,7 +291,9 @@ class SampleSiteAdmin(BPAImportExportModelAdmin, ImportExportActionModelAdmin, O
 
 
 class SampleAdmin(admin.ModelAdmin):
+
     class SampleForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = Sample
@@ -315,7 +321,9 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 class SequenceFileAdmin(admin.ModelAdmin):
+
     class SequenceFileForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = SequenceFile
@@ -372,7 +380,9 @@ class SequenceFileAdmin(admin.ModelAdmin):
 
 
 class BPAProjectAdmin(admin.ModelAdmin):
+
     class BPAProjectForm(forms.ModelForm):
+
         class Meta:
             fields = ('key', 'name', 'description', 'note')
             model = BPAProject
@@ -387,7 +397,9 @@ admin.site.register(BPAProject, BPAProjectAdmin)
 
 
 class BPAUniqueIDAdmin(admin.ModelAdmin):
+
     class BPAIDForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = BPAUniqueID
@@ -407,7 +419,9 @@ admin.site.register(BPAUniqueID, BPAUniqueIDAdmin)
 
 
 class OrganismAdmin(admin.ModelAdmin):
+
     class Form(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = Organism
@@ -427,7 +441,9 @@ admin.site.register(Organism, OrganismAdmin)
 
 
 class DNASourceFormAdmin(admin.ModelAdmin):
+
     class DNASourceForm(forms.ModelForm):
+
         class Meta:
             fields = "__all__"
             model = DNASource
