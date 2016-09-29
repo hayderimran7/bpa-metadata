@@ -1,5 +1,22 @@
 # Change Log
 
+## [4.0.36](https://github.com/muccg/bpa-metadata/tree/4.0.36) (2016-09-29)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.35...4.0.36)
+
+**Implemented enhancements:**
+
+- Support for rsync on download mirror [\#60](https://github.com/muccg/bpa-metadata/issues/60)
+- sepsis: add support for hiseq file metadata [\#73](https://github.com/muccg/bpa-metadata/issues/73)
+
+**Fixed bugs:**
+
+- Lint source code with flake8, fix all errors and warnings [\#75](https://github.com/muccg/bpa-metadata/issues/75)
+- sepsis tracker updates not displayed [\#74](https://github.com/muccg/bpa-metadata/issues/74)
+
+**Closed issues:**
+
+- Changes to sepsis Tracker view [\#68](https://github.com/muccg/bpa-metadata/issues/68)
+
 ## [4.0.35](https://github.com/muccg/bpa-metadata/tree/4.0.35) (2016-09-20)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.34...4.0.35)
 
@@ -37,6 +54,7 @@
 
 **Fixed bugs:**
 
+- add set\_mirror and set\_ckan to docker-entrypoint.sh [\#51](https://github.com/muccg/bpa-metadata/issues/51)
 - MM consortium page issue [\#50](https://github.com/muccg/bpa-metadata/issues/50)
 
 ## [4.0.31](https://github.com/muccg/bpa-metadata/tree/4.0.31) (2016-09-08)
