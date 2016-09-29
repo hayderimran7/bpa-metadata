@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load django_bootstrap_breadcrumbs %}
+{% load staticfiles %}
 {% block breadcrumbs %}
 {{ block.super }}
 {% breadcrumb "Antibiotic Resistant Pathogens" "sepsis:index" %}
@@ -80,9 +81,9 @@
                 <td>{{ track.sample_submission_date | default:""}}</td>
                 <td>
                     {% if track.data_generated %}
-                    <span class="glyphicon glyphicon-ok"></span>
+                    <img src="{% static 'sepsis/icon-yes.gif' %}" alt="Yes" />
                     {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <img src="{% static 'sepsis/icon-no.gif' %}" alt="No" />
                     {% endif %}
                 </td>
                 <td>{{ track.archive_ingestion_date | default:""}}</td>
