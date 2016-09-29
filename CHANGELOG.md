@@ -7,15 +7,12 @@
 
 - Support for rsync on download mirror [\#60](https://github.com/muccg/bpa-metadata/issues/60)
 - sepsis: add support for hiseq file metadata [\#73](https://github.com/muccg/bpa-metadata/issues/73)
+- Changes to sepsis Tracker view [\#68](https://github.com/muccg/bpa-metadata/issues/68)
 
 **Fixed bugs:**
 
 - Lint source code with flake8, fix all errors and warnings [\#75](https://github.com/muccg/bpa-metadata/issues/75)
 - sepsis tracker updates not displayed [\#74](https://github.com/muccg/bpa-metadata/issues/74)
-
-**Closed issues:**
-
-- Changes to sepsis Tracker view [\#68](https://github.com/muccg/bpa-metadata/issues/68)
 
 ## [4.0.35](https://github.com/muccg/bpa-metadata/tree/4.0.35) (2016-09-20)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.34...4.0.35)
