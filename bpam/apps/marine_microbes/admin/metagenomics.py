@@ -13,6 +13,7 @@ from ..models import MetagenomicSequenceFile
 
 
 class FileForm(forms.ModelForm):
+
     class Meta:
         fields = "__all__"
         model = MetagenomicSequenceFile
@@ -31,6 +32,11 @@ class FileForm(forms.ModelForm):
         }
 
 
+def monospace_md5(obj):
+    return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
+monospace_md5.short_description = "MD5 Checksum"
+
+
 class FileAdmin(BPAImportExportModelAdmin):
     form = FileForm
 
@@ -47,16 +53,11 @@ class FileAdmin(BPAImportExportModelAdmin):
                                       'read', )}),
         ('Metadata',
          {'fields': ('date_received_from_sequencing_facility',
-                     #'method',
+                     # 'method',
                      'md5',
                      'analysed',
                      'note', )}),
     ]
-
-    def monospace_md5(obj):
-        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
-
-    monospace_md5.short_description = "MD5 Checksum"
 
     list_display = ('filename',
                     monospace_md5,
@@ -67,12 +68,12 @@ class FileAdmin(BPAImportExportModelAdmin):
                     'vendor', )
     list_display_links = ('filename', )
     search_fields = ('filename',
-                    'md5',
-                    'sample__bpa_id__bpa_id',
-                    'extraction',
-                    'library',
-                    'index',
-                    'vendor', )
+                     'md5',
+                     'sample__bpa_id__bpa_id',
+                     'extraction',
+                     'library',
+                     'index',
+                     'vendor', )
     list_filter = ('sample',
                    'library',
                    'index',

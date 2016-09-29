@@ -8,6 +8,7 @@ from apps.common.models import BPAUniqueID
 
 
 class MMSite(SampleSite):
+
     def __str__(self):
         return 'Marine Sample Site {} ({:.4f} {:.4f})'.format(self.name, self.point.x, self.point.y)
 
@@ -30,7 +31,7 @@ class MMSample(models.Model):
         (SEAWEED, "Seaweed"),
         (CORAL, "Coral"),
         (SPONGE, "Sponge"),
-    )  # yapf: disable
+    )
 
     bpa_id = models.OneToOneField(BPAUniqueID,
                                   verbose_name="BPA ID",
@@ -54,7 +55,7 @@ class AmpliconSequenceFile(SequenceFile):
         ("ITS", "ITS"),
         ("18S", "18S"),
         ("A16S", "A16S")
-    ) # yapf: disable
+    )
 
     PASS_OR_FAIL = (('P', 'Pass'), ('F', 'Fail'))
     DILUTIONS = (('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat'))

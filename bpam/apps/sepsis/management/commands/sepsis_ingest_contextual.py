@@ -123,7 +123,7 @@ def get_data(file_name):
     # Host_description
 
     # Study title
-	# Investigation_type
+    # Investigation_type
     # Project_name
     # Sample title
     # ploidy
@@ -144,8 +144,10 @@ def get_data(file_name):
     def get_gram_stain(val):
         if val and val is not '':
             val = val.lower()
-            if 'positive' in val: return 'POS'
-            elif 'negative' in val: return 'NEG'
+            if 'positive' in val:
+                return 'POS'
+            elif 'negative' in val:
+                return 'NEG'
         return None
 
     def get_sex(val):
@@ -196,7 +198,7 @@ def get_data(file_name):
         ('isolation_source', 'Isolation_source', None),
         ('host_description', 'Host_description', None),
         ('study_title', 'Study title', None),
-	    ('investigation_type', 'Investigation_type', None),
+        ('investigation_type', 'Investigation_type', None),
         ('project_name', 'Project_name', None),
         ('sample_title', 'Sample title', None),
         ('ploidy', 'ploidy', None),

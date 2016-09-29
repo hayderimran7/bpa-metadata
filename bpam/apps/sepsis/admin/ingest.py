@@ -2,7 +2,6 @@
 
 from dateutil.parser import parse as date_parser
 from apps.common.models import BPAUniqueID, BPAProject
-from apps.common.admin import SequenceFileAdmin
 
 from ..models import Host
 

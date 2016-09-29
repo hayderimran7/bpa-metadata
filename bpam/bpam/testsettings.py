@@ -1,4 +1,4 @@
-from settings import *  # nopep8
+from settings import *  # noqa
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-#
 
@@ -18,11 +18,11 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-if 'debug_toolbar' not in INSTALLED_APPS:
-    INSTALLED_APPS += ('debug_toolbar', )
+if 'debug_toolbar' not in INSTALLED_APPS:  # noqa
+    INSTALLED_APPS += ('debug_toolbar', )  # noqa
 INTERNAL_IPS = ('127.0.0.1', )
 
-MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )  # noqa
 
 DATABASES = {
     "default": {

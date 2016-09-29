@@ -2,7 +2,6 @@
 
 import sys
 
-from django.core.management.base import BaseCommand, CommandError
 from apps.common.models import DNASource, Facility, Sequencer
 from apps.gbr.models import CollectionSite, Organism, CollectionEvent, GBRSample, GBRRun, GBRProtocol, GBRSequenceFile
 from libs import ingest_utils, user_helper
@@ -441,6 +440,7 @@ def ingest():
 
 
 class MD5ParsedLine(object):
+
     def __init__(self, line):
         self._line = line
 

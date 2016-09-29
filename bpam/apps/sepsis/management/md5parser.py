@@ -2,9 +2,6 @@
 
 import re
 
-# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.bax.h5.gz
-# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fasta.gz
-# 25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fastq.gz
 PACBIO_FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
     SEP_
@@ -14,10 +11,19 @@ PACBIO_FILENAME_PATTERN = """
     (?P<machine_data>\S*)_
     (?P<data_type>\S*)
 """
-pacbio_filename_pattern = re.compile(PACBIO_FILENAME_PATTERN, re.VERBOSE)
+pacbio_filename_re = re.compile(PACBIO_FILENAME_PATTERN, re.VERBOSE)
 
-# 25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I1.fastq.gz
-# 25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I2.fastq.gz
+
+def test_pacbio():
+    filenames = [
+        '25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.bax.h5.gz',
+        '25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fasta.gz',
+        '25705_SEP_UNSW_PAC_m160304_174004_42272_c100950162550000001823211206101602_s1_p0.1.subreads.fastq.gz',
+    ]
+    for filename in filenames:
+        assert(pacbio_filename_re.match(filename) is not None)
+
+
 MISEQ_FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
     (?P<extraction>\d)_
@@ -31,7 +37,38 @@ MISEQ_FILENAME_PATTERN = """
     (?P<lane>L\d{3})_
     (?P<read>[R|I][1|2])\.fastq\.gz
 """
-miseq_filename_pattern = re.compile(MISEQ_FILENAME_PATTERN, re.VERBOSE)
+miseq_filename_re = re.compile(MISEQ_FILENAME_PATTERN, re.VERBOSE)
+
+
+def test_miseq():
+    filenames = [
+        '25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I1.fastq.gz',
+        '25705_1_PE_700bp_SEP_UNSW_APAFC_TAGCGCTC-GAGCCTTA_S1_L001_I2.fastq.gz',
+    ]
+    for filename in filenames:
+        assert(miseq_filename_re.match(filename) is not None)
+
+HISEQ_FILENAME_PATTERN = """
+    (?P<id>\d{4,6})_
+    (?P<library>PE|MP)_
+    (?P<size>\d*bp)_
+    SEP_
+    (?P<vendor>AGRF|UNSW)_
+    (?P<flow_cell_id>\w{9})_
+    (?P<index>[G|A|T|C|-]*)_
+    (?P<lane>L\d{3})_
+    (?P<read>[R|I][1|2])\.fastq\.gz
+"""
+hiseq_filename_re = re.compile(HISEQ_FILENAME_PATTERN, re.VERBOSE)
+
+
+def test_hiseq():
+    filenames = [
+        '25867_PE_350bp_ARP_AGRF_CA3FUANXX_CTGAAGCT-TAATCTTA_L001_R1.fastq.gz',
+        '25867_PE_350bp_ARP_AGRF_CA3FUANXX_CTGAAGCT-TAATCTTA_L001_R2.fastq.gz',
+    ]
+    for filename in filenames:
+        assert(hiseq_filename_re.match(filename) is not None)
 
 
 class MD5ParsedLine(object):

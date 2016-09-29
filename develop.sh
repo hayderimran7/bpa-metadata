@@ -53,7 +53,7 @@ docker_staging_lettuce() {
 # lint using flake8
 python_lint() {
     info "python lint"
-    docker-compose -f docker-compose-build.yml run lint flake8 bpam --exclude=migrations,selenium_test --ignore=E501 --count
+    docker-compose -f docker-compose-build.yml run lint flake8 bpam --exclude=migrations,selenium_test --ignore=E501,C901 --count
     success "python lint"
 }
 

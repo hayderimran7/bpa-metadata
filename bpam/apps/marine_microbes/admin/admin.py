@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from import_export import resources, fields, widgets
+from import_export import fields, widgets
 
 from apps.common.admin import DateField
 from apps.common.admin import CommonTransferLogResource
@@ -19,6 +19,7 @@ DEGREES = u'°'
 
 
 class TransferLogResource(CommonTransferLogResource):
+
     class Meta(CommonTransferLogResource.Meta):
         model = TransferLog
 
@@ -140,7 +141,7 @@ class ContextualCoastalResource(CommonWaterResource):
     turbitity = fields.Field(attribute="turbitity", column_name="Turbidity (Upoly 0, WET Labs FLNTURT)", widget=widgets.IntegerWidget())
     salinity = fields.Field(attribute="salinity", column_name="Salinity [PSU] Laboratory", widget=widgets.IntegerWidget())
     microbial_abandance = fields.Field(attribute="microbial_abundance",
-                                      column_name="Microbial abundance (cells per ml)", widget=widgets.IntegerWidget())
+                                       column_name="Microbial abundance (cells per ml)", widget=widgets.IntegerWidget())
     chlorophyl = fields.Field(attribute="chlorophyl", column_name="Chlorophyll a (μg/L)", widget=widgets.IntegerWidget())
     carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon", widget=widgets.IntegerWidget())
     inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon", widget=widgets.IntegerWidget())
@@ -209,10 +210,10 @@ class ContextualCoastalAdmin(CommonAdmin):
     fieldsets = ((None, {
         'fields': _required,
     }),
-                 ('Detailed Contextual', {
-                     'classes': ('collapse', ),
-                     'fields': _extra,
-                 }), )
+        ('Detailed Contextual', {
+            'classes': ('collapse', ),
+            'fields': _extra,
+        }), )
 
 
 class ContextualOpenWaterResource(CommonWaterResource):
@@ -411,10 +412,10 @@ class ContextualOpenWaterAdmin(CommonAdmin):
     fieldsets = ((None, {
         'fields': _required,
     }),
-                 ('Detailed Contextual', {
-                     'classes': ('collapse', ),
-                     'fields': _extra,
-                 }), )
+        ('Detailed Contextual', {
+            'classes': ('collapse', ),
+            'fields': _extra,
+        }), )
 
 
 admin.site.register(TransferLog, TransferLogAdmin)

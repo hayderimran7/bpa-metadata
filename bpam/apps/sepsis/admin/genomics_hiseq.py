@@ -9,14 +9,13 @@ from suit.widgets import SuitDateWidget
 
 from apps.common.admin import BPAImportExportModelAdmin
 
-from ..models import AmpliconSequenceFile
+from ..models import GenomicsHiseqFile
 
 
 class FileForm(forms.ModelForm):
-
     class Meta:
         fields = "__all__"
-        model = AmpliconSequenceFile
+        model = GenomicsHiseqFile
         widgets = {
             'date_received_from_sequencing_facility': SuitDateWidget,
             'md5': forms.TextInput(attrs={'class': 'input-large',
@@ -34,7 +33,8 @@ class FileForm(forms.ModelForm):
 
 def monospace_md5(obj):
     return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
-monospace_md5.short_description = "MD5 Check sum"
+
+monospace_md5.short_description = "MD5 Checksum"
 
 
 class FileAdmin(BPAImportExportModelAdmin):
@@ -44,19 +44,15 @@ class FileAdmin(BPAImportExportModelAdmin):
         ('Sequence File', {'fields': ('filename',
                                       'sample',
                                       'extraction',
-                                      'amplicon',
+                                      'library',
+                                      'size',
                                       'vendor',
+                                      'flow_cell_id',
                                       'index',
-                                      'flow_cell',
-                                      'runsamplenum',
-                                      'read',
-                                      'pcr_1_to_10',
-                                      'pcr_1_to_100',
-                                      'pcr_neat',
-                                      'dilution',
-                                      'number_of_reads',
-                                      'analysis_software_version')}),
+                                      'lane_number',
+                                      'read', )}),
         ('Metadata', {'fields': ('date_received_from_sequencing_facility',
+                                 'method',
                                  'md5',
                                  'analysed',
                                  'note', )}),
@@ -65,34 +61,21 @@ class FileAdmin(BPAImportExportModelAdmin):
     list_display = ('filename',
                     monospace_md5,
                     'sample',
-                    'extraction',
-                    'amplicon',
-                    'vendor',
-                    'read',
-                    'pcr_1_to_10',
-                    'pcr_1_to_100',
-                    'pcr_neat',
-                    'dilution',
-                    'index', )
-
+                    'library',
+                    'index',
+                    'vendor', )
     list_display_links = ('filename', )
     search_fields = ('filename',
                      'md5',
                      'sample__bpa_id__bpa_id',
-                     'extraction',
-                     'amplicon',
-                     'vendor',
-                     'read',
-                     'pcr_1_to_10',
-                     'pcr_1_to_100',
-                     'pcr_neat',
-                     'dilution',
-                     'index', )
+                     'library',
+                     'index',
+                     'vendor', )
     list_filter = ('sample',
-                   'amplicon',
+                   'library',
                    'index',
                    'date_received_from_sequencing_facility',
                    'vendor', )
 
 
-admin.site.register(AmpliconSequenceFile, FileAdmin)
+admin.site.register(GenomicsHiseqFile, FileAdmin)

@@ -31,6 +31,12 @@ class FileForm(forms.ModelForm):
         }
 
 
+def monospace_md5(obj):
+    return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
+
+monospace_md5.short_description = "MD5 Checksum"
+
+
 class FileAdmin(BPAImportExportModelAdmin):
     form = FileForm
 
@@ -49,11 +55,6 @@ class FileAdmin(BPAImportExportModelAdmin):
                                  'analysed',
                                  'note', )}),
     ]
-
-    def monospace_md5(obj):
-        return format_html('<span style="font-family: monospace;">{}</span>', obj.md5)
-
-    monospace_md5.short_description = "MD5 Checksum"
 
     list_display = ('filename',
                     monospace_md5,

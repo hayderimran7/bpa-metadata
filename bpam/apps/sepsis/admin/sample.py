@@ -2,15 +2,15 @@
 
 from django.contrib import admin
 from django import forms
-from suit.widgets import AutosizedTextarea
 from suit.widgets import SuitDateWidget
 from import_export import resources, fields, widgets
 
-from apps.common.admin import BPAUniqueID
+from apps.common.admin import BPAUniqueID, BPAProject
 from apps.common.admin import BPAImportExportModelAdmin
 
 from ..models import SepsisSample
 from commonfields import DateField, BPAIDField
+from .ingest import get_host, get_bpa_id
 
 # BPA_sample_ID	Gram_staining_(positive_or_negative)
 # Taxon_OR_organism
@@ -40,6 +40,7 @@ from commonfields import DateField, BPAIDField
 
 
 class SepsisSampleField(fields.Field):
+
     def __init__(self, *args, **kwargs):
         super(SepsisSampleField, self).__init__(*args, **kwargs)
 
@@ -81,8 +82,8 @@ class SepsisSampleResource(resources.ModelResource):
 
     def init_instance(self, row):
         obj = self._meta.model()
-        obj.host = ingest.get_host(row)
-        obj.bpa_id = ingest.get_bpa_id(row.get('BPA ID'))
+        obj.host = get_host(row)
+        obj.bpa_id = get_bpa_id(row.get('BPA ID'))
         return obj
 
     class Meta:
@@ -91,6 +92,7 @@ class SepsisSampleResource(resources.ModelResource):
 
 
 class SampleForm(forms.ModelForm):
+
     class Meta:
         fields = '__all__'
         model = SepsisSample

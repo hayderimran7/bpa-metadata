@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 import csv
 from unipath import Path
@@ -13,7 +13,7 @@ from apps.barcode.models import Sheet
 logger = logger_utils.get_logger(__name__)
 
 
-def UnicodeDictReader(str_data, encoding="utf8", **kwargs):
+def unicode_dict_reader(str_data, encoding="utf8", **kwargs):
     csv_reader = csv.DictReader(str_data, **kwargs)
     keymap = dict((k, k.decode(encoding)) for k in csv_reader.fieldnames)
     for row in csv_reader:
@@ -22,7 +22,7 @@ def UnicodeDictReader(str_data, encoding="utf8", **kwargs):
 
 def get_csv_data(_file):
     with open(_file, "r") as _f:
-        reader = UnicodeDictReader(_f, encoding="cp1252")
+        reader = unicode_dict_reader(_f, encoding="cp1252")
         return ingest_utils.strip_all(reader)
 
 
@@ -54,10 +54,10 @@ class Mapper(object):
     def mapsheets(self):
         """ Map the herbarium sheets to BPA ID's """
 
-        DATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/map/"
-        DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_map/")
+        data_url = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/map/"
+        data_dir = Path(ingest_utils.METADATA_ROOT, "barcode_map/")
 
-        fetcher = Fetcher(DATA_DIR, DATA_URL)
+        fetcher = Fetcher(data_dir, data_url)
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
@@ -65,8 +65,8 @@ class Mapper(object):
             if path.isfile() and path.ext == ".csv":
                 return True
 
-        logger.info("Ingesting herbarium sheet to BPA map data from {0}".format(DATA_DIR))
-        for map_file in DATA_DIR.walk(filter=is_csv):
+        logger.info("Ingesting herbarium sheet to BPA map data from {0}".format(data_dir))
+        for map_file in data_dir.walk(filter=is_csv):
             logger.info("Processing map {0}".format(map_file))
             smap = list(get_csv_data(map_file))
             self.setmap(smap)
@@ -137,10 +137,10 @@ class SheetAdder(object):
     def add(self):
         """ Adds all herbarium sheets """
 
-        METADATA_URL = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/sheets/"
-        DATA_DIR = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
+        metadata_url = "https://downloads-qcif.bioplatforms.com/bpa/barcode/pilbara_flora/sheets/"
+        data_dir = Path(ingest_utils.METADATA_ROOT, "barcode_sheets/")
 
-        fetcher = Fetcher(DATA_DIR, METADATA_URL)
+        fetcher = Fetcher(data_dir, metadata_url)
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
@@ -148,8 +148,8 @@ class SheetAdder(object):
             if path.isfile() and path.ext == ".csv":
                 return True
 
-        logger.info("Ingesting sheet data from {0}".format(DATA_DIR))
-        for sheet_file in DATA_DIR.walk(filter=is_csv):
+        logger.info("Ingesting sheet data from {0}".format(data_dir))
+        for sheet_file in data_dir.walk(filter=is_csv):
             logger.info("Processing barcode sheet {0}".format(sheet_file))
             sheets = list(get_csv_data(sheet_file))
             self.add_sheets(sheets)
