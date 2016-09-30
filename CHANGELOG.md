@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.0.39](https://github.com/muccg/bpa-metadata/tree/4.0.39) (2016-09-30)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.38...4.0.39)
+
+**Implemented enhancements:**
+
+- urlcheck support for transcriptomics hiseq [\#78](https://github.com/muccg/bpa-metadata/issues/78)
+
 ## [4.0.38](https://github.com/muccg/bpa-metadata/tree/4.0.38) (2016-09-30)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.37...4.0.38)
 
