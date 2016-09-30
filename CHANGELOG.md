@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.0.37](https://github.com/muccg/bpa-metadata/tree/4.0.37) (2016-09-30)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.36...4.0.37)
+
+**Fixed bugs:**
+
+- sepsis hiseq data should be in metagenomics [\#76](https://github.com/muccg/bpa-metadata/issues/76)
+
 ## [4.0.36](https://github.com/muccg/bpa-metadata/tree/4.0.36) (2016-09-29)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.35...4.0.36)
 
