@@ -51,7 +51,7 @@ class BPAImportExportModelAdmin(ImportExportModelAdmin):
         for encoding in self.ENCODINGS:
             self.from_encoding = encoding
             response = super(BPAImportExportModelAdmin, self).import_action(request, *args, **kwargs)
-            if not (isinstance(response, HttpResponse) and 'wrong encoding' in response.content):
+            if not (type(response) is HttpResponse and 'wrong encoding' in response.content):
                 break
 
         return response
