@@ -53,7 +53,7 @@ class GrowthMethod(models.Model):
 
 
 class MiseqGenomicsMethod(models.Model):
-    '''Genomics Metadata'''
+    '''Transcriptomics Metadata'''
 
     # Genomics method data from excel spreadsheet
     # Bacterial sample unique ID	Insert size range	Library construction protocol	Sequencer	AnalysisSoftwareVersion
@@ -69,14 +69,14 @@ class MiseqGenomicsMethod(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Miseq Genomics Method'
+        verbose_name = 'Miseq Transcriptomics Method'
 
     def __unicode__(self):
         return u'{} {} {}'.format(self.library_construction_protocol, self.insert_size_range, self.sequencer)
 
 
-class HiseqGenomicsMethod(models.Model):
-    '''Genomics Metadata'''
+class HiseqTranscriptomicsMethod(models.Model):
+    '''Transcriptomics Metadata'''
 
     # Genomics method data from Excel spreadsheet
     # Antibiotic Resistant Pathogen sample unique ID	Sample (MGR code)	Sample I.D	Library construction protocol	Barcode tag	Sequencer	CASAVA version
@@ -90,7 +90,7 @@ class HiseqGenomicsMethod(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Hiseq Genomics Method'
+        verbose_name = 'Hiseq Transcriptomics Method'
 
     def __unicode__(self):
         return u'{} {}'.format(self.library_construction_protocol, self.sequencer)
@@ -379,13 +379,13 @@ class GenomicsMiseqFile(GenomicsFile):
         return u'Genomics Miseq {}'.format(self.filename)
 
 
-class GenomicsHiseqFile(GenomicsFile):
-    '''Genomics Hiseq'''
+class TranscriptomicsHiseqFile(GenomicsFile):
+    '''TranscriptomicsFile Hiseq'''
 
-    method = models.ForeignKey(HiseqGenomicsMethod,
+    method = models.ForeignKey(HiseqTranscriptomicsMethod,
                                null=True,
                                related_name='%(app_label)s_%(class)s_files',
-                               help_text='HiSeq Genomics Method')
+                               help_text='HiSeq Transcriptomics Method')
 
     library = models.CharField('Library', max_length=20, help_text='MP or PE')
     size = models.CharField('Extraction Size', max_length=100, default=1)
@@ -397,7 +397,7 @@ class GenomicsHiseqFile(GenomicsFile):
         return (self.project_name, 'transcriptomics/hiseq')
 
     def __unicode__(self):
-        return u'Genomics Hiseq {}'.format(self.filename)
+        return u'Transcriptomics Hiseq {}'.format(self.filename)
 
 
 class GenomicsPacBioFile(GenomicsFile):

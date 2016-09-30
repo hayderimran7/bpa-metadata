@@ -6,9 +6,9 @@ from apps.common.models import BPAProject, BPAUniqueID, URLVerification
 
 from .models import (Host,
                      MiseqGenomicsMethod,
-                     HiseqGenomicsMethod,
+                     HiseqTranscriptomicsMethod,
                      GenomicsMiseqFile,
-                     GenomicsHiseqFile,
+                     TranscriptomicsHiseqFile,
                      PacBioGenomicsMethod,
                      GenomicsPacBioFile,
                      SepsisSample,
@@ -53,10 +53,10 @@ class MiseqGenomicsMethodSerializer(serializers.ModelSerializer):
         model = MiseqGenomicsMethod
 
 
-class HiseqGenomicsMethodSerializer(serializers.ModelSerializer):
+class HiseqTranscriptomicsMethodSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = HiseqGenomicsMethod
+        model = HiseqTranscriptomicsMethod
 
 
 class PacBioGenomicsMethodSerializer(serializers.ModelSerializer):
@@ -87,13 +87,13 @@ class GenomicsMiseqFileSerializer(serializers.HyperlinkedModelSerializer):
         model = GenomicsMiseqFile
 
 
-class GenomicsHiseqFileSerializer(serializers.HyperlinkedModelSerializer):
+class TranscriptomicsHiseqFileSerializer(serializers.HyperlinkedModelSerializer):
     sample = SepsisSampleSerializer()
-    method = HiseqGenomicsMethodSerializer()
+    method = HiseqTranscriptomicsMethodSerializer()
     url_verification = URLVerificationSerializer()
 
     class Meta:
-        model = GenomicsHiseqFile
+        model = TranscriptomicsHiseqFile
 
 
 class GenomicsPacBioFileSerializer(serializers.HyperlinkedModelSerializer):

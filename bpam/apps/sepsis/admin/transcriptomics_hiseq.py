@@ -9,13 +9,13 @@ from suit.widgets import SuitDateWidget
 
 from apps.common.admin import BPAImportExportModelAdmin
 
-from ..models import GenomicsHiseqFile
+from ..models import TranscriptomicsHiseqFile
 
 
 class FileForm(forms.ModelForm):
     class Meta:
         fields = "__all__"
-        model = GenomicsHiseqFile
+        model = TranscriptomicsHiseqFile
         widgets = {
             'date_received_from_sequencing_facility': SuitDateWidget,
             'md5': forms.TextInput(attrs={'class': 'input-large',
@@ -78,4 +78,4 @@ class FileAdmin(BPAImportExportModelAdmin):
                    'vendor', )
 
 
-admin.site.register(GenomicsHiseqFile, FileAdmin)
+admin.site.register(TranscriptomicsHiseqFile, FileAdmin)

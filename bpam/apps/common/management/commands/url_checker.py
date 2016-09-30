@@ -11,7 +11,6 @@ from apps.common.models import URLVerification
 from apps.melanoma.models import MelanomaSequenceFile
 from apps.gbr.models import GBRSequenceFile
 from apps.wheat_cultivars.models import CultivarSequenceFile
-from apps.wheat_pathogens.models import PathogenSequenceFile
 from apps.wheat_pathogens_transcript.models import WheatPathogenTranscriptSequenceFile
 from apps.base_metagenomics.models import MetagenomicsSequenceFile
 from apps.base_amplicon.models import AmpliconSequenceFile
@@ -81,15 +80,6 @@ def check_wheat_cultivars(sleep_time):
         logger.error(e)
 
 
-def check_wheat_pathogens(sleep_time):
-    logger.info('Checking Wheat Pathogens')
-    session = requests.Session()
-    try:
-        process_object(sleep_time, session, PathogenSequenceFile, 'url_verification', lambda obj: obj.get_url())
-    except django.db.utils.ProgrammingError as e:
-        logger.error(e)
-
-
 def check_wheat_pathogens_transcript(sleep_time):
     logger.info('Checking Wheat Pathogens Transcript')
     session = requests.Session()
@@ -140,7 +130,6 @@ class Command(BaseCommand):
         check_melanoma(SLEEP_TIME)
         check_gbr(SLEEP_TIME)
         check_wheat_cultivars(SLEEP_TIME)
-        check_wheat_pathogens(SLEEP_TIME)
         check_wheat_pathogens_transcript(SLEEP_TIME)
         check_base_metagenomcis(SLEEP_TIME)
         check_base_amplicons(SLEEP_TIME)

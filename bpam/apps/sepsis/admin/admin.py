@@ -10,7 +10,7 @@ from apps.common.admin import BPAImportExportModelAdmin
 
 from ..models import (Host,
                       MiseqGenomicsMethod,
-                      HiseqGenomicsMethod,
+                      HiseqTranscriptomicsMethod,
                       PacBioGenomicsMethod,
                       ProteomicsMethod,
                       ProteomicsFile,
@@ -71,7 +71,7 @@ class HostAdmin(BPAImportExportModelAdmin):
 
 admin.site.register(Host, HostAdmin)
 admin.site.register(MiseqGenomicsMethod)
-admin.site.register(HiseqGenomicsMethod)
+admin.site.register(HiseqTranscriptomicsMethod)
 admin.site.register(PacBioGenomicsMethod)
 admin.site.register(ProteomicsMethod)
 admin.site.register(ProteomicsFile)
