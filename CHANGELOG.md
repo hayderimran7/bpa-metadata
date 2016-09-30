@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.0.38](https://github.com/muccg/bpa-metadata/tree/4.0.38) (2016-09-30)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.37...4.0.38)
+
+**Fixed bugs:**
+
+- rename sepsis Hiseq  models [\#77](https://github.com/muccg/bpa-metadata/issues/77)
+
 ## [4.0.37](https://github.com/muccg/bpa-metadata/tree/4.0.37) (2016-09-30)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.36...4.0.37)
 
