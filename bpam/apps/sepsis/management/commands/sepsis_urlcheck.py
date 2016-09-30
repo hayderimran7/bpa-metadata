@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from libs.logger_utils import get_logger
 
-from ...models import GenomicsPacBioFile, GenomicsMiseqFile
+from ...models import GenomicsPacBioFile, GenomicsMiseqFile, TranscriptomicsHiseqFile
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
 
@@ -60,6 +60,7 @@ def check(sleep_time):
     session.auth = (settings.DOWNLOADS_CHECKER_USER, settings.DOWNLOADS_CHECKER_PASS)
 
     try:
+        process_object(sleep_time, session, TranscriptomicsHiseqFile, 'url_verification', lambda obj: obj.get_url())
         process_object(sleep_time, session, GenomicsPacBioFile, 'url_verification', lambda obj: obj.get_url())
         process_object(sleep_time, session, GenomicsMiseqFile, 'url_verification', lambda obj: obj.get_url())
     except django.db.utils.ProgrammingError as e:
