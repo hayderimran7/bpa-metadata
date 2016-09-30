@@ -394,7 +394,7 @@ class GenomicsHiseqFile(GenomicsFile):
     read = models.CharField('Read', max_length=3)
 
     def get_path_parts(self):
-        return (self.project_name, 'genomics/hiseq')
+        return (self.project_name, 'transcriptomics/hiseq')
 
     def __unicode__(self):
         return u'Genomics Hiseq {}'.format(self.filename)
