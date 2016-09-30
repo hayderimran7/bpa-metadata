@@ -11,20 +11,20 @@ ENV WRITABLE_DIRECTORY /data/scratch
 ENV MEDIA_ROOT /data/static/media
 ENV LOG_DIRECTORY /data/log
 ENV DJANGO_SETTINGS_MODULE bpam.settings
-ENV PIP_NO_CACHE_DIR "off"
 
 RUN env | sort
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  libpcre3 \
+  binutils \
+  gdal-bin \
+  imagemagick \
   libgeos-c1 \
+  libpcre3 \
+  libproj-dev \
   libpq5 \
   libxml2 \
+  mime-support \
   postgresql-client \
-  imagemagick \
-  binutils \
-  libproj-dev \
-  gdal-bin \
   postgresql-9.4-postgis-2.1 \
   postgresql-9.4-postgis-scripts \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
