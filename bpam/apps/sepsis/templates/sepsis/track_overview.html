@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load staticfiles %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Antibiotic Resistant Pathogens" "sepsis:index" %}
+{% breadcrumb "Overview" "sepsis:samples" %}
+{% endblock %}
+
+{% block title %}Antibiotic Resistant Pathogens - Overview - {{ constraint }}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h1>Antibiotic Resistant Pathogens - Overview - {{ constraint }}</h1>
+</div>
+
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+    {% for constraint_name in possible_constraints %}
+    <li role="presentation" {% if constraint == constraint_name %} class="active"{% endif %}><a href="{% url 'sepsis:overview_constraint' constraint_name %}">{{ constraint_name }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="container-fluid">
+
+    <h2>Samples by status</h2>
+
+    <table class="table table-striped">
+        {% for description, slug, sampletracks in state_tracks %}
+        <tr>
+            <td><a href="#{{slug}}">{{ description }}</a></td>
+            <td>{{ sampletracks | length }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>Total tracked samples</td>
+            <th>{{ total_tracks }}</td>
+        </tr>
+    </table>
+</div>
+
+{% for description, slug, sampletracks in state_tracks %}
+<a name="{{ slug }}"></a>
+<div class="container-fluid">
+    <h2>{{ description }}</h2>
+
+    {% if sampletracks %}
+
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="ccgtable" width="100%">
+        <thead>
+            <tr>
+                <th>BPA ID</th>
+                <th>Taxon Or Organism</th>
+                <th>Strain Or Isolate</th>
+                <th>Sequence Type</th>
+                <th>Serovar</th>
+                <th>Growth Media</th>
+                <th>Replicate</th>
+                <th>Omics</th>
+                <th>Analytical Platform</th>
+                <th>Facility</th>
+                <th>Work Order</th>
+                <th>Contextual Data Submission Date</th>
+                <th>Sample Submission Date</th>
+                <th>Data generated</th>
+                <th>Archive Ingestion Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for track in sampletracks %}
+            <tr>
+                <td>
+                    <a href="{% url 'sepsis:sample' track.bpa_id %}">{{ track.bpa_id.get_short_name }}</a>
+                </td>
+                <td>{{ track.taxon_or_organism | default:"" }}</td>
+                <td>{{ track.strain_or_isolate | default:""}}</td>
+                <td>{{ track.track_type }}</td>
+                <td>{{ track.serovar | default:""}}</td>
+                <td>{{ track.growth_media | default:""}}</td>
+                <td>{{ track.replicate | default:""}}</td>
+                <td>{{ track.omics | default:""}}</td>
+                <td>{{ track.analytical_platform | default:""}}</td>
+                <td>{{ track.facility | default:""}}</td>
+                <td>{{ track.work_order | default:""}}</td>
+                <td>{{ track.contextual_data_submission_date | default:""}}</td>
+                <td>{{ track.sample_submission_date | default:""}}</td>
+                <td>
+                    {% if track.data_generated %}
+                    <img src="{% static 'sepsis/icon-yes.gif' %}" alt="Yes" />
+                    {% else %}
+                    <img src="{% static 'sepsis/icon-no.gif' %}" alt="No" />
+                    {% endif %}
+                </td>
+                <td>{{ track.archive_ingestion_date | default:""}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>
+        No tracked samples are in this state.
+    </p>
+    {% endif %}
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

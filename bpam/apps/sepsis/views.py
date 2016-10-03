@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.http import Http404
 from itertools import chain
 from django.views.generic import TemplateView, ListView, DetailView
 from rest_framework import viewsets
@@ -64,9 +65,37 @@ class TrackListView(ListView):
 
 class TrackOverview(TemplateView):
     template_name = 'sepsis/track_overview.html'
+    constraint_queries = {
+        'All': [t.objects.all() for t in tracks],
+        'PacBio': [PacBioTrack.objects.all()],
+        'MiSeq': [MiSeqTrack.objects.all()],
+        'HiSeq': [RNAHiSeqTrack.objects.all()],
+        'Metabolomics': [MetabolomicsTrack.objects.all()],
+        'DeepLCMS': [DeepLCMSTrack.objects.all()],
+        'SWATHMS': [SWATHMSTrack.objects.all()],
+    }
+    # this order goes through to the view
+    state_queries = [
+        ('Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False)),
+        ('Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True)),
+        ('In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True)),
+        ('Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True)),
+    ]
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, constraint=None, **kwargs):
+        if constraint not in TrackOverview.constraint_queries:
+            raise Http404()
+
         context = super(TrackOverview, self).get_context_data(**kwargs)
+        context['possible_constraints'] = list(sorted(TrackOverview.constraint_queries.keys()))
+        context['constraint'] = constraint
+        context['total_tracks'] = sum(len(q) for q in TrackOverview.constraint_queries[constraint])
+        context['state_tracks'] = st = []
+
+        for state, slug, query in TrackOverview.state_queries:
+            querysets = [query(q) for q in TrackOverview.constraint_queries[constraint]]
+            items_in_state = list(chain(*querysets))
+            st.append((state, slug, items_in_state))
         return context
 
 
