@@ -1,5 +1,16 @@
 # Change Log
 
+## [4.1.0](https://github.com/muccg/bpa-metadata/tree/4.1.0) (2016-10-03)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.39...4.1.0)
+
+**Implemented enhancements:**
+
+- tracker: public view of project status for sepsis [\#72](https://github.com/muccg/bpa-metadata/issues/72)
+
+**Fixed bugs:**
+
+- traceback attempting CSV import [\#79](https://github.com/muccg/bpa-metadata/issues/79)
+
 ## [4.0.39](https://github.com/muccg/bpa-metadata/tree/4.0.39) (2016-09-30)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.38...4.0.39)
 
