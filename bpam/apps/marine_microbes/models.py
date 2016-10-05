@@ -52,7 +52,6 @@ class MMSample(models.Model):
 class AmpliconSequenceFile(SequenceFile):
     CHOICES = (
         ("16S", "16S"),
-        ("ITS", "ITS"),
         ("18S", "18S"),
         ("A16S", "A16S")
     )
@@ -150,7 +149,7 @@ class SampleStateTrack(models.Model):
     metagenomics_data_generated = models.BooleanField("Metagenomics Data Generated", default=False)
     amplicon_16s_data_generated = models.BooleanField("Amplicon 16S Data Generated", default=False)
     amplicon_18s_data_generated = models.BooleanField("Amplicon 18S Data Generated", default=False)
-    amplicon_ITS_data_generated = models.BooleanField("Amplicon ITS Data Generated", default=False)
+    amplicon_a16s_data_generated = models.BooleanField("Amplicon A16S Data Generated", default=False)
     minimum_contextual_data_received = models.BooleanField("Minimum Contextual Data Received", default=False)
     full_contextual_data_received = models.BooleanField("Full Contextual Data Received", default=False)
 

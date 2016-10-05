@@ -17,7 +17,6 @@ class AmpliconIndexView(TemplateView):
         context = super(AmpliconIndexView, self).get_context_data(**kwargs)
         context['16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='16S').count()
         context['18S_size'] = AmpliconSequenceFile.objects.filter(amplicon='18S').count()
-        context['ITS_size'] = AmpliconSequenceFile.objects.filter(amplicon='ITS').count()
         context['A16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='A16S').count()
         context['all_size'] = AmpliconSequenceFile.objects.count()
         return context
@@ -48,14 +47,6 @@ class Amplicon18SListView(AmpliconListView):
         context = super(Amplicon18SListView, self).get_context_data(**kwargs)
         context['amplicon'] = '18S'
         context['amplicon_list'] = AmpliconSequenceFile.objects.filter(amplicon='18S')
-        return context
-
-
-class AmpliconITSListView(AmpliconListView):
-    def get_context_data(self, **kwargs):
-        context = super(AmpliconITSListView, self).get_context_data(**kwargs)
-        context['amplicon'] = 'ITS'
-        context['amplicon_list'] = AmpliconSequenceFile.objects.filter(amplicon='ITS')
         return context
 
 
