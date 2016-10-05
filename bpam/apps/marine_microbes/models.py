@@ -96,7 +96,7 @@ class AmpliconSequenceFile(SequenceFile):
 
 
 class MetagenomicSequenceFile(SequenceFile):
-    """ Metagenomics """
+    "Metagenome"
 
     project_name = 'marine_microbes'
     extraction = models.IntegerField("Extraction", default=1)
@@ -112,7 +112,7 @@ class MetagenomicSequenceFile(SequenceFile):
         return ('marine_microbes', 'metagenomics')
 
     class Meta:
-        verbose_name_plural = "Metagenomics Sequence Files"
+        verbose_name_plural = "Metagenome Sequence Files"
 
 
 class TransferLog(TransferLog):
