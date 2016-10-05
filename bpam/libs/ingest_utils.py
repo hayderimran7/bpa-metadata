@@ -166,7 +166,7 @@ def get_date(dt):
         if dt.strip() == '':
             return None
         try:
-            return date_parser(dt)
+            return date_parser(dt, dayfirst=True)
 
         except TypeError as e:
             logger.error('Error parsing date [{}] error: {!r}'.format(dt, e))

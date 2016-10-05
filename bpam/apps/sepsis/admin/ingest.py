@@ -9,7 +9,7 @@ from ..models import Host
 def get_date(date):
     """Tries to make a python date"""
     try:
-        return date_parser(date)
+        return date_parser(date, dayfirst=True)
     except ValueError:
         return None
 

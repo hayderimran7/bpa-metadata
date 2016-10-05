@@ -135,7 +135,7 @@ class DateField(fields.Field):
         super(DateField, self).__init__(*args, **kwargs)
 
     def clean(self, data):
-        return date_parser(data[self.column_name])
+        return date_parser(data[self.column_name], dayfirst=True)
 
 
 # Amplicon
