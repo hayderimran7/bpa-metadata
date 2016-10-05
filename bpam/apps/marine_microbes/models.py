@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from apps.common.models import TransferLog
+from apps.common.models import TransferLog as CommonTransferLog
 from apps.common.models import SampleSite
 from apps.common.models import SequenceFile
 from apps.common.models import BPAUniqueID
@@ -115,7 +115,7 @@ class MetagenomicSequenceFile(SequenceFile):
         verbose_name_plural = "Metagenome Sequence Files"
 
 
-class TransferLog(TransferLog):
+class TransferLog(CommonTransferLog):
     pass
 
 
