@@ -1,5 +1,18 @@
 # Change Log
 
+## [4.1.1](https://github.com/muccg/bpa-metadata/tree/4.1.1) (2016-10-10)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.1.0...4.1.1)
+
+**Implemented enhancements:**
+
+- Add new / rename existing marine microbes datatypes [\#80](https://github.com/muccg/bpa-metadata/issues/80)
+- Marine microbes contextual data updates [\#69](https://github.com/muccg/bpa-metadata/issues/69)
+
+**Fixed bugs:**
+
+- Marine microbes: transfer issues [\#70](https://github.com/muccg/bpa-metadata/issues/70)
+- Degrees symbol in CSV spreadsheet breaks contextual import [\#67](https://github.com/muccg/bpa-metadata/issues/67)
+
 ## [4.1.0](https://github.com/muccg/bpa-metadata/tree/4.1.0) (2016-10-03)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.0.39...4.1.0)
 
