@@ -24,7 +24,7 @@ from collections import namedtuple
 
 from unipath import Path
 from docopt import docopt
-from dateutil.parser import parse as date_parse
+from dateutil.parser import parse as date_parser
 
 
 __author__ = 'ccg'
@@ -43,7 +43,7 @@ def parse_date(str):
     date = None
     err = None
     try:
-        date = date_parse(str)
+        date = date_parser(str, dayfirst=True)
     except ValueError, e:
         err = e
     return date, err

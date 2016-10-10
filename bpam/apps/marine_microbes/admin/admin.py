@@ -30,11 +30,11 @@ class TransferLogAdmin(CommonTransferLogAdmin):
 
 class SampleStateTrackAdmin(BPAImportExportModelAdmin):
     list_display = ('extraction_id', 'quality_check_preformed', 'metagenomics_data_generated',
-                    'amplicon_16s_data_generated', 'amplicon_18s_data_generated', 'amplicon_ITS_data_generated',
+                    'amplicon_16s_data_generated', 'amplicon_18s_data_generated',
                     'minimum_contextual_data_received', 'full_contextual_data_received')
 
     list_filter = ('quality_check_preformed', 'metagenomics_data_generated', 'amplicon_16s_data_generated',
-                   'amplicon_18s_data_generated', 'amplicon_ITS_data_generated', 'minimum_contextual_data_received',
+                   'amplicon_18s_data_generated', 'minimum_contextual_data_received',
                    'full_contextual_data_received')
 
 

@@ -2,6 +2,7 @@
 
 import urlparse
 import urllib
+import re
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
@@ -61,8 +62,15 @@ class SampleSite(models.Model):
 
     @classmethod
     def _get_point(cls, lon, lat):
-        lat = float(lat)
-        lon = float(lon)
+        leading_nums_re = re.compile(r'^\s*(-?[\d.]+)')
+
+        def leading_nums(s):
+            m = leading_nums_re.match(s)
+            if m:
+                return m.groups()[0]
+            return s
+        lat = float(leading_nums(lat))
+        lon = float(leading_nums(lon))
         point = Point((lat, lon), srid=settings.GIS_SOURCE_RID)
         point.transform(settings.GIS_TARGET_RID)
         return point

@@ -22,7 +22,7 @@ from ...models import AmpliconSequenceFile
 FILENAME_PATTERN = """
     (?P<id>\d{4,6})_
     (?P<extraction>\d)_
-    (?P<amplicon>16S|18S|ITS|A16S)_
+    (?P<amplicon>16S|18S|A16S)_
     (?P<vendor>AGRF|UNSW)_
     (?P<index>[G|A|T|C|-]*)_
     (?P<flowcell>\w{5})_
