@@ -38,7 +38,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
-    <script src="https://togetherjs.com/togetherjs-min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'bpam/common.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'bpam/bpam.css' %}"/>
     <script src="{% static 'bpam/bpam.js' %}"></script>
@@ -76,7 +75,6 @@
               {% else %}
               <li><a href="{% url 'django.contrib.auth.views.login' %}">Log in</a></li>
               {% endif %}
-              <li><a id="start-togetherjs" onclick="TogetherJS(this); return false;">Collaborate</a></li>
             </ul>
           </div>
         </div>
