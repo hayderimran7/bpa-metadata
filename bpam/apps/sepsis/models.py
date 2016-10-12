@@ -167,6 +167,13 @@ class TranscriptomicsMethod(models.Model):
 
 
 class SampleTrack(models.Model):
+    
+    _DATA_TYPES = (
+        (1, 'Pre-pilot'),
+        (2, 'Pilot'),
+        (3, 'Main dataset')
+    )
+    
     ''' Track the Sepsis Sample '''
 
     # 5 digit BPA ID
@@ -193,6 +200,7 @@ class SampleTrack(models.Model):
 
     # bpa_id = models.CharField('BPA ID', max_length=6)
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
+    data_type = models.IntegerField('Data Type', choices=_DATA_TYPES, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
     serovar = models.CharField('Serovar', max_length=500, blank=True, null=True)
     growth_media = models.CharField('Growth Media', max_length=500, blank=True, null=True)

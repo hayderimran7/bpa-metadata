@@ -30,6 +30,7 @@ from ..models import PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, 
 
 BPA_ID = '102.100.100'
 track_data = ('bpa_id',
+              'data_type',
               'taxon_or_organism',
               'strain_or_isolate',
               'serovar',

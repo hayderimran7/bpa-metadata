@@ -23,16 +23,15 @@
         <thead>
             <tr>
                 <th>BPA ID</th>
+                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
-                <th>Sequence Type</th>
                 <th>Serovar</th>
                 <th>Growth Media</th>
                 <th>Replicate</th>
                 <th>Omics</th>
                 <th>Analytical Platform</th>
                 <th>Facility</th>
-                <th>Work Order</th>
                 <th>Contextual Data Submission Date</th>
                 <th>Sample Submission Date</th>
                 <th>Data generated</th>
@@ -43,16 +42,15 @@
         <tfoot>
             <tr>
                 <th>BPA ID</th>
+                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
-                <th>Sequence Type</th>
                 <th>Serovar</th>
                 <th>Growth Media</th>
                 <th>Replicate</th>
                 <th>Omics</th>
                 <th>Analytical Platform</th>
                 <th>Facility</th>
-                <th>Work Order</th>
                 <th>Contextual Data Submission Date</th>
                 <th>Sample Submission Date</th>
                 <th>Data generated</th>
@@ -67,16 +65,15 @@
                 <td>
                     <a href="{% url 'sepsis:sample' track.bpa_id %}">{{ track.bpa_id.get_short_name }}</a>
                 </td>
+                <td>{{ track.get_data_type_display }}</td>
                 <td>{{ track.taxon_or_organism | default:"" }}</td>
                 <td>{{ track.strain_or_isolate | default:""}}</td>
-                <td>{{ track.track_type }}</td>
                 <td>{{ track.serovar | default:""}}</td>
                 <td>{{ track.growth_media | default:""}}</td>
                 <td>{{ track.replicate | default:""}}</td>
                 <td>{{ track.omics | default:""}}</td>
                 <td>{{ track.analytical_platform | default:""}}</td>
                 <td>{{ track.facility | default:""}}</td>
-                <td>{{ track.work_order | default:""}}</td>
                 <td>{{ track.contextual_data_submission_date | default:""}}</td>
                 <td>{{ track.sample_submission_date | default:""}}</td>
                 <td>
