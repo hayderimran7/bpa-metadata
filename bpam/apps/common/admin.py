@@ -25,7 +25,7 @@ from .models import Sequencer
 from .models import Sample
 from .models import SampleSite
 
-JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
+TICKET_URL = ""
 
 
 logger = logging.getLogger(__name__)
@@ -187,7 +187,7 @@ class CommonTransferLogResource(resources.ModelResource):
     transfer_to_archive_date = DateField(attribute='transfer_to_archive_date',
                                          column_name='Date of transfer to archive')
     notes = fields.Field(attribute='notes', column_name='Notes')
-    ticket_url = fields.Field(attribute='ticket_url', column_name='CCG JIRA Ticket')
+    ticket_url = fields.Field(attribute='ticket_url', column_name='Ticket URL')
     downloads_url = fields.Field(attribute='downloads_url', column_name='Download')
 
     class Meta:
@@ -208,8 +208,8 @@ class CommonTransferLogAdmin(BPAImportExportModelAdmin):
     show_downloads_url.allow_tags = True
 
     def show_ticket_url(self, obj):
-        jurl = JIRA_URL + obj.ticket_url
-        return format_html("<a href='{jurl}'>{url}</a>", url=obj.ticket_url, jurl=jurl)
+        ticket_url = TICKET_URL + obj.ticket_url
+        return format_html("<a href='{ticket_url}'>{url}</a>", url=obj.ticket_url, ticket_url=ticket_url)
 
     show_ticket_url.short_description = "Ticket URL"
     show_ticket_url.allow_tags = True

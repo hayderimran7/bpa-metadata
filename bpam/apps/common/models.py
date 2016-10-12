@@ -122,7 +122,7 @@ class DataSet(models.Model):
                                  blank=True,
                                  null=True)
 
-    ticket_url = models.URLField('JIRA')
+    ticket_url = models.URLField('Ticket URL')
     downloads_url = models.URLField('Downloads')
     note = models.TextField("Note", blank=True)
 
