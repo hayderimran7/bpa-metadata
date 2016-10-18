@@ -106,7 +106,8 @@ class ExcelWrapper(object):
         def find_column(column_name, complain=True):
             col_index = -1
             try:
-                col_index = self.sheet.row_values(self.column_name_row_index).index(column_name)
+                header = [t.strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
+                col_index = header.index(column_name.strip().lower())
             except ValueError:
                 if complain:
                     logger.error('column name [{}] not found'.format(column_name))
@@ -128,12 +129,6 @@ class ExcelWrapper(object):
             if col_index != -1:
                 cmap[attribute] = col_index
             else:
-                # In previous versions, not finding a particular column was a
-                # breaking offence. But trying to force vendors to be compliant
-                # with the naming spec as published by BPA has proven to be
-                # futile quest, they have won, I give up. If a column is not
-                # found, throw your arms in the air and continue, hope that
-                # something later on does not break.
                 logger.warning('Column {} not found in {} '.format(column_name, self.file_name))
                 cmap[attribute] = None
 
