@@ -142,7 +142,7 @@ class ConsortiumView(TemplateView):
     template_name = 'sepsis/consortium.html'
 
 
-class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
+class GenomicsMiseqFileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint for Sepsis Genomics miseq Sequences
     '''
@@ -150,7 +150,7 @@ class GenomicsMiseqFileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.GenomicsMiseqFileSerializer
 
 
-class TranscriptomicsHiseqFileViewSet(viewsets.ModelViewSet):
+class TranscriptomicsHiseqFileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint for Sepsis Genomics miseq Sequences
     '''
@@ -158,7 +158,7 @@ class TranscriptomicsHiseqFileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TranscriptomicsHiseqFileSerializer
 
 
-class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):
+class GenomicsPacBioFileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint for Sepsis Genomics pacbio Sequences
     '''
@@ -166,7 +166,7 @@ class GenomicsPacBioFileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.GenomicsPacBioFileSerializer
 
 
-class PacBioTrackViewSet(viewsets.ModelViewSet):
+class PacBioTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of PacBio
     '''
@@ -174,7 +174,7 @@ class PacBioTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PacBioTrackSerializer
 
 
-class MiSeqTrackViewSet(viewsets.ModelViewSet):
+class MiSeqTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of MiSeq
     '''
@@ -182,7 +182,7 @@ class MiSeqTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MiSeqTrackSerializer
 
 
-class RNAHiSeqTrackViewSet(viewsets.ModelViewSet):
+class RNAHiSeqTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of RNAHiSeq
     '''
@@ -190,7 +190,7 @@ class RNAHiSeqTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RNAHiSeqTrackSerializer
 
 
-class MetabolomicsTrackViewSet(viewsets.ModelViewSet):
+class MetabolomicsTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of Metabolomics
     '''
@@ -198,7 +198,7 @@ class MetabolomicsTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MetabolomicsTrackSerializer
 
 
-class DeepLCMSTrackViewSet(viewsets.ModelViewSet):
+class DeepLCMSTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of Deep LC-MS
     '''
@@ -206,7 +206,7 @@ class DeepLCMSTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DeepLCMSTrackSerializer
 
 
-class SWATHMSTrackViewSet(viewsets.ModelViewSet):
+class SWATHMSTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of SWAT HMST
     '''
@@ -214,7 +214,7 @@ class SWATHMSTrackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SWATHMSTrackSerializer
 
 
-class SepsisSampleViewSet(viewsets.ModelViewSet):
+class SepsisSampleViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows Sepsis Samples to be viewed or edited.
     '''
@@ -222,7 +222,7 @@ class SepsisSampleViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SepsisSampleSerializer
 
 
-class BPAIDViewSet(viewsets.ModelViewSet):
+class BPAIDViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows BPA ID's to be viewed or edited.
     '''
@@ -231,7 +231,7 @@ class BPAIDViewSet(viewsets.ModelViewSet):
     lookup_field = 'bpa_id'
 
 
-class BPAProjectViewSet(viewsets.ModelViewSet):
+class BPAProjectViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows BPA projects to be viewed or edited.
     '''
@@ -239,7 +239,7 @@ class BPAProjectViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BPAProjectSerializer
 
 
-class HostViewSet(viewsets.ModelViewSet):
+class HostViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows Sepsis Hosts to be viewed or edited.
     '''
