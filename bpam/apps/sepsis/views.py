@@ -2,8 +2,9 @@
 
 from django.http import Http404
 from itertools import chain
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, View
 from rest_framework import viewsets
+from django.http import JsonResponse
 
 from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
@@ -82,9 +83,8 @@ class TrackOverview(TemplateView):
         ('Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True)),
     ]
 
-    def get_context_data(self, constraint=None, **kwargs):
-        if constraint not in TrackOverview.constraint_queries:
-            raise Http404()
+    def get_context_data(self, **kwargs):
+        constraint = 'All'
 
         context = super(TrackOverview, self).get_context_data(**kwargs)
         context['possible_constraints'] = list(sorted(TrackOverview.constraint_queries.keys()))
@@ -97,6 +97,38 @@ class TrackOverview(TemplateView):
             items_in_state = list(chain(*querysets))
             st.append((state, slug, items_in_state))
         return context
+
+
+class TrackOverviewConstraints(View):
+
+    def get(self, request):
+        
+        constraint = [
+            'All',
+            'PacBio',
+            'MiSeq',
+            'HiSeq',
+            'Metabolomics',
+            'DeepLCMS',
+            'SWATHMS'
+        ]
+        
+        status = [
+            { 'Complete': 'complete' },
+            { 'Contextual Data Needed': 'ctdata' },
+            { 'In processing': 'inproc' },
+            { 'Not submitted': 'unsub' }
+        ]
+        
+        tree = []
+        
+        for const in constraint:
+            tree.append({ "id" : const, "parent" : "#", "text" : const})
+            for s in status:
+                for key, value in s.iteritems():
+                    tree.append({ "id": "%s/%s" % (const, value), "parent" : const, "text" : key })
+        
+        return JsonResponse(tree, safe=False)
 
 
 class GenomicsMiseqFileListView(ListView):

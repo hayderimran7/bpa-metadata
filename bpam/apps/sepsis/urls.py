@@ -30,9 +30,15 @@ urlpatterns = [
         name='sample'),
     url(regex=r'^sampletracks', view=views.TrackListView.as_view(),
         name='sampletracks'),
-    url(regex=r'^overview/(?P<constraint>.*)/$',
+
+    url(regex=r'^overview/$',
         view=views.TrackOverview.as_view(),
-        name='overview_constraint'),
+        name='overview'),
+
+    url(regex=r'^overview/data/$',
+        view=views.TrackOverviewConstraints.as_view(),
+        name='overview_constraints'),
+
     url(regex=r'^genomicsmiseqfiles',
         view=views.GenomicsMiseqFileListView.as_view(),
         name='genomics_miseq_files'),
