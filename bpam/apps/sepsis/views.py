@@ -104,7 +104,7 @@ class TrackOverviewConstraints(View):
     def get(self, request):
         
         constraint = [
-            'All',
+            #'All',
             'PacBio',
             'MiSeq',
             'HiSeq',
@@ -129,6 +129,43 @@ class TrackOverviewConstraints(View):
                     tree.append({ "id": "%s/%s" % (const, value), "parent" : const, "text" : key })
         
         return JsonResponse(tree, safe=False)
+
+
+class TrackDetails(View):
+
+    def get(self, request, constrain=None, status=None):
+
+        if not constrain and not status:
+            raise Http404("No constrain or status provided")
+
+        constraint_queries = {
+            #'All': [t.objects.all() for t in tracks],
+            'PacBio': PacBioTrack.objects.all(),
+            'MiSeq': MiSeqTrack.objects.all(),
+            'HiSeq': RNAHiSeqTrack.objects.all(),
+            'Metabolomics': MetabolomicsTrack.objects.all(),
+            'DeepLCMS': DeepLCMSTrack.objects.all(),
+            'SWATHMS': SWATHMSTrack.objects.all(),
+        }
+        # this order goes through to the view
+        state_queries = {
+            'complete': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
+            'ctdata': lambda q: q.filter(contextual_data_submission_date__isnull=True),
+            'inproc': lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True),
+            'unsub': lambda q: q.filter(sample_submission_date__isnull=True),
+        }
+        
+        c = constraint_queries[constrain]
+        query = state_queries[status]
+        result = query(c)
+        
+        from django.core import serializers
+        data = serializers.serialize("json", result)
+        
+        import json
+        
+        return JsonResponse(data, safe=False)
+
 
 
 class GenomicsMiseqFileListView(ListView):
