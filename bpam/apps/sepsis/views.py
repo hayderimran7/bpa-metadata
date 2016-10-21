@@ -2,8 +2,9 @@
 
 from django.http import Http404
 from itertools import chain
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, View
 from rest_framework import viewsets
+from django.http import JsonResponse
 
 from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
@@ -65,38 +66,87 @@ class TrackListView(ListView):
 
 class TrackOverview(TemplateView):
     template_name = 'sepsis/track_overview.html'
-    constraint_queries = {
-        'All': [t.objects.all() for t in tracks],
-        'PacBio': [PacBioTrack.objects.all()],
-        'MiSeq': [MiSeqTrack.objects.all()],
-        'HiSeq': [RNAHiSeqTrack.objects.all()],
-        'Metabolomics': [MetabolomicsTrack.objects.all()],
-        'DeepLCMS': [DeepLCMSTrack.objects.all()],
-        'SWATHMS': [SWATHMSTrack.objects.all()],
-    }
-    # this order goes through to the view
-    state_queries = [
-        ('Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False)),
-        ('Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True)),
-        ('In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True)),
-        ('Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True)),
-    ]
 
-    def get_context_data(self, constraint=None, **kwargs):
-        if constraint not in TrackOverview.constraint_queries:
-            raise Http404()
-
+    def get_context_data(self, **kwargs):
         context = super(TrackOverview, self).get_context_data(**kwargs)
-        context['possible_constraints'] = list(sorted(TrackOverview.constraint_queries.keys()))
-        context['constraint'] = constraint
-        context['total_tracks'] = sum(len(q) for q in TrackOverview.constraint_queries[constraint])
-        context['state_tracks'] = st = []
-
-        for state, slug, query in TrackOverview.state_queries:
-            querysets = [query(q) for q in TrackOverview.constraint_queries[constraint]]
-            items_in_state = list(chain(*querysets))
-            st.append((state, slug, items_in_state))
         return context
+
+
+class TrackOverviewConstraints(View):
+
+    def get(self, request):
+
+        constraint_queries = [
+            ( 'PacBio', lambda: PacBioTrack.objects.all() ),
+            ( 'MiSeq', lambda: MiSeqTrack.objects.all() ),
+            ( 'HiSeq', lambda: RNAHiSeqTrack.objects.all() ),
+            ( 'Metabolomics', lambda: MetabolomicsTrack.objects.all() ),
+            ( 'DeepLCMS', lambda: DeepLCMSTrack.objects.all() ),
+            ( 'SWATHMS', lambda: SWATHMSTrack.objects.all() )
+        ]
+        
+        state_queries = [
+            ( 'Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
+            ( 'Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True) ),
+            ( 'In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True) ),
+            ( 'Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True) ),
+        ]
+
+        tree = []
+        
+        for const, const_query in constraint_queries:
+            const_result = const_query()
+            tree.append({ "id" : const, "parent" : "#", "text" : "%s (%d)" % (const, len(const_result)) })
+            for status, slug, query in state_queries:
+                status_count = len(query(const_result))
+                tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
+        
+        return JsonResponse(tree, safe=False)
+
+
+class TrackDetails(View):
+
+    def get(self, request, constraint=None, status=None):
+
+        if not constraint and not status:
+            raise Http404("No constraint or status provided")
+
+        constraint_queries = {
+            'PacBio': lambda: PacBioTrack.objects.all(),
+            'MiSeq': lambda: MiSeqTrack.objects.all(),
+            'HiSeq': lambda: RNAHiSeqTrack.objects.all(),
+            'Metabolomics': lambda: MetabolomicsTrack.objects.all(),
+            'DeepLCMS': lambda: DeepLCMSTrack.objects.all(),
+            'SWATHMS': lambda: SWATHMSTrack.objects.all(),
+        }
+
+        state_queries = {
+            'complete': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
+            'ctdata': lambda q: q.filter(contextual_data_submission_date__isnull=True),
+            'inproc': lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True),
+            'unsub': lambda q: q.filter(sample_submission_date__isnull=True),
+        }
+        
+        if constraint == "All":
+            assert False
+        
+        constraint_q = constraint_queries[constraint]
+        status_q = state_queries[status]
+        
+        result = status_q(constraint_q())
+        
+        for r in result:
+            r.data_type = r.get_data_type_display()
+        
+        json_data = self.to_json(result)
+        
+        return JsonResponse(json_data, safe=False)
+
+    def to_json(self, raw_data):
+        from django.core import serializers
+        json_data = serializers.serialize("json", raw_data)
+        
+        return json_data
 
 
 class GenomicsMiseqFileListView(ListView):

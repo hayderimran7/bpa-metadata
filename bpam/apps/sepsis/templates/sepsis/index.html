@@ -46,7 +46,7 @@
                     <a class="list-group-item" href="">Proteomics LC-MS analysis <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
                     <a class="list-group-item" href="">Proteomics SWATH-MS analysis <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
                     <a class="list-group-item" href="">Metabolomics LC-MS polar analysis <span class="badge">{{ metabolomics_analysis_file_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'sepsis:overview_constraint' 'All' %}">Project Overview</a>
+                    <a class="list-group-item" href="{% url 'sepsis:overview' %}">Project Overview</a>
                     <a class="list-group-item" href="{% url 'sepsis:sampletracks' %}">Sample Tracking <span class="badge">{{ track_count }}</span> </a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/sepsis/">

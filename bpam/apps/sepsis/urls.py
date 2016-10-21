@@ -30,9 +30,6 @@ urlpatterns = [
         name='sample'),
     url(regex=r'^sampletracks', view=views.TrackListView.as_view(),
         name='sampletracks'),
-    url(regex=r'^overview/(?P<constraint>.*)/$',
-        view=views.TrackOverview.as_view(),
-        name='overview_constraint'),
     url(regex=r'^genomicsmiseqfiles',
         view=views.GenomicsMiseqFileListView.as_view(),
         name='genomics_miseq_files'),
@@ -44,4 +41,20 @@ urlpatterns = [
         name='genomics_pacbio_files'),
     url(regex=r'^consortium$', view=views.ConsortiumView.as_view(),
         name='consortium'),
+    
+    # BEGIN----- Tracker URLs ----------
+    
+    url(regex=r'^overview/$',
+        view=views.TrackOverview.as_view(),
+        name='overview'),
+
+    url(regex=r'^overview/data/$',
+        view=views.TrackOverviewConstraints.as_view(),
+        name='overview_constraints'),
+
+    url(regex=r'^overview/(?P<constraint>.*)/(?P<status>.*)/$',
+        view=views.TrackDetails.as_view(),
+        name='overview_detail'),
+    
+    # END------- Tracker URLs ----------
 ]
