@@ -96,7 +96,7 @@ class TrackOverviewConstraints(View):
         
         for const, const_query in constraint_queries:
             const_result = const_query()
-            tree.append({ "id" : const, "parent" : "#", "text" : const })
+            tree.append({ "id" : const, "parent" : "#", "text" : "%s (%d)" % (const, len(const_result)) })
             for status, slug, query in state_queries:
                 status_count = len(query(const_result))
                 tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
