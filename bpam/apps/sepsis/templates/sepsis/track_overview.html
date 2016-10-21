@@ -9,20 +9,62 @@
 
 <script>
     $(document).ready(function(){
+        
+        var yes_icon = "{% static 'sepsis/icon-yes.gif' %}";
+        var no_icon = "{% static 'sepsis/icon-no.gif' %}";
+        
+        var status = {
+            'complete': 'Complete',
+            'ctdata': 'Contextual Data Needed',
+            'inproc': 'In processing',
+            'unsub': 'Not submitted'
+        };
+        
+        function generated_icon(item) {
+            if (item) {
+                return "<img src='"+ yes_icon +"' alt='Yes' />";
+            } else {
+                return "<img src='"+ no_icon +"' alt='No' />";
+            }
+        }
+        
         $("#tree").on('select_node.jstree', function (e, data) {
             var url = "{% url 'sepsis:overview_detail' 'xxx' 'yyy' %}";
-            
+
             if (data.node.parent != "#") {
                 var params = data.node.id.split("/");
                 var call = url.replace('xxx', params[0]).replace('yyy', params[1]);
+                
+                $("#selected").html(params[0] + " - " + status[params[1]]);
 
                 $.ajax({
                     url: call,
                 }).done(function( data ) {
                     var parsed = jQuery.parseJSON(data);
-                    $("#content").html("<tr><td>" + call + "</td></tr>");
+                    var t = $("#content-table").DataTable();
+                    t.rows().remove().draw();
+                    if(parsed.length > 0) {
+                        $.each(parsed, function(i, data) {
+                            t.row.add([
+                                data.fields.bpa_id,
+                                data.fields.data_type,
+                                data.fields.taxon_or_organism,
+                                data.fields.strain_or_isolate,
+                                data.fields.serovar,
+                                data.fields.growth_media,
+                                data.fields.replicate,
+                                data.fields.omics,
+                                data.fields.analytical_platform,
+                                data.fields.facility,
+                                data.fields.contextual_data_submission_date,
+                                data.fields.sample_submission_date,
+                                generated_icon(data.fields.data_generated),
+                                data.fields.archive_ingestion_date
+                            ]).draw();
+                        });
+                    }
                 });
-            }            
+            }
         }).jstree({
             'core' : {
               'data' : {
@@ -54,13 +96,24 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h3>Antibiotic Resistant Pathogens - Overview - {{ constraint }}</h3>
+    <h3>Antibiotic Resistant Pathogens - Overview</h3>
 </div>
 
 <hr>
 
 <div class="container-fluid">
-    <div class="btn btn-default btn-sm" id="tree-toggle-btn">Hide tree</div>
+    
+    <div class="row">
+        <div class="col-md-2">
+            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
+        </div>
+        <div class="col-md-10">
+            <h4>
+                <div id="selected"></div>
+            </h4>
+        </div>
+    </div>
+
 </div>
 
 <div class="container-fluid">
@@ -72,14 +125,17 @@
     </div>
 
     <div class="col-md-10" id="content-col">
+
         <div class="alert alert-info" role="alert">
             To sort by multiple columns, press and hold the Shift key.
             <div class="bootstrap_buttons"> </div>
         </div>
-        <table class="ccgtable" width="100%">
+
+        <table class="ccgtable" width="100%" id="content-table">
             <thead>
                 <tr>
                     <th>BPA ID</th>
+                    <th>Data Type</th>
                     <th>Taxon Or Organism</th>
                     <th>Strain Or Isolate</th>
                     <th>Serovar</th>

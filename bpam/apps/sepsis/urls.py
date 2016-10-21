@@ -52,7 +52,7 @@ urlpatterns = [
         view=views.TrackOverviewConstraints.as_view(),
         name='overview_constraints'),
 
-    url(regex=r'^overview/(?P<constrain>.*)/(?P<status>.*)/$',
+    url(regex=r'^overview/(?P<constraint>.*)/(?P<status>.*)/$',
         view=views.TrackDetails.as_view(),
         name='overview_detail'),
     

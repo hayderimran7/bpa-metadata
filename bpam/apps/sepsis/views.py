@@ -66,88 +66,60 @@ class TrackListView(ListView):
 
 class TrackOverview(TemplateView):
     template_name = 'sepsis/track_overview.html'
-    constraint_queries = {
-        'All': [t.objects.all() for t in tracks],
-        'PacBio': [PacBioTrack.objects.all()],
-        'MiSeq': [MiSeqTrack.objects.all()],
-        'HiSeq': [RNAHiSeqTrack.objects.all()],
-        'Metabolomics': [MetabolomicsTrack.objects.all()],
-        'DeepLCMS': [DeepLCMSTrack.objects.all()],
-        'SWATHMS': [SWATHMSTrack.objects.all()],
-    }
-    # this order goes through to the view
-    state_queries = [
-        ('Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False)),
-        ('Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True)),
-        ('In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True)),
-        ('Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True)),
-    ]
 
     def get_context_data(self, **kwargs):
-        constraint = 'All'
-
         context = super(TrackOverview, self).get_context_data(**kwargs)
-        context['possible_constraints'] = list(sorted(TrackOverview.constraint_queries.keys()))
-        context['constraint'] = constraint
-        context['total_tracks'] = sum(len(q) for q in TrackOverview.constraint_queries[constraint])
-        context['state_tracks'] = st = []
-
-        for state, slug, query in TrackOverview.state_queries:
-            querysets = [query(q) for q in TrackOverview.constraint_queries[constraint]]
-            items_in_state = list(chain(*querysets))
-            st.append((state, slug, items_in_state))
         return context
 
 
 class TrackOverviewConstraints(View):
 
     def get(self, request):
-        
-        constraint = [
-            #'All',
-            'PacBio',
-            'MiSeq',
-            'HiSeq',
-            'Metabolomics',
-            'DeepLCMS',
-            'SWATHMS'
+
+        constraint_queries = [
+            ( 'PacBio', lambda: PacBioTrack.objects.all() ),
+            ( 'MiSeq', lambda: MiSeqTrack.objects.all() ),
+            ( 'HiSeq', lambda: RNAHiSeqTrack.objects.all() ),
+            ( 'Metabolomics', lambda: MetabolomicsTrack.objects.all() ),
+            ( 'DeepLCMS', lambda: DeepLCMSTrack.objects.all() ),
+            ( 'SWATHMS', lambda: SWATHMSTrack.objects.all() )
         ]
         
-        status = [
-            { 'Complete': 'complete' },
-            { 'Contextual Data Needed': 'ctdata' },
-            { 'In processing': 'inproc' },
-            { 'Not submitted': 'unsub' }
+        state_queries = [
+            ( 'Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
+            ( 'Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True) ),
+            ( 'In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True) ),
+            ( 'Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True) ),
         ]
-        
+
         tree = []
         
-        for const in constraint:
-            tree.append({ "id" : const, "parent" : "#", "text" : const})
-            for s in status:
-                for key, value in s.iteritems():
-                    tree.append({ "id": "%s/%s" % (const, value), "parent" : const, "text" : key })
+        for const, const_query in constraint_queries:
+            const_result = const_query()
+            tree.append({ "id" : const, "parent" : "#", "text" : const })
+            for status, slug, query in state_queries:
+                status_count = len(query(const_result))
+                tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
         
         return JsonResponse(tree, safe=False)
 
 
 class TrackDetails(View):
 
-    def get(self, request, constrain=None, status=None):
+    def get(self, request, constraint=None, status=None):
 
-        if not constrain and not status:
-            raise Http404("No constrain or status provided")
+        if not constraint and not status:
+            raise Http404("No constraint or status provided")
 
         constraint_queries = {
-            #'All': [t.objects.all() for t in tracks],
-            'PacBio': PacBioTrack.objects.all(),
-            'MiSeq': MiSeqTrack.objects.all(),
-            'HiSeq': RNAHiSeqTrack.objects.all(),
-            'Metabolomics': MetabolomicsTrack.objects.all(),
-            'DeepLCMS': DeepLCMSTrack.objects.all(),
-            'SWATHMS': SWATHMSTrack.objects.all(),
+            'PacBio': lambda: PacBioTrack.objects.all(),
+            'MiSeq': lambda: MiSeqTrack.objects.all(),
+            'HiSeq': lambda: RNAHiSeqTrack.objects.all(),
+            'Metabolomics': lambda: MetabolomicsTrack.objects.all(),
+            'DeepLCMS': lambda: DeepLCMSTrack.objects.all(),
+            'SWATHMS': lambda: SWATHMSTrack.objects.all(),
         }
-        # this order goes through to the view
+
         state_queries = {
             'complete': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
             'ctdata': lambda q: q.filter(contextual_data_submission_date__isnull=True),
@@ -155,17 +127,23 @@ class TrackDetails(View):
             'unsub': lambda q: q.filter(sample_submission_date__isnull=True),
         }
         
-        c = constraint_queries[constrain]
-        query = state_queries[status]
-        result = query(c)
+        if constraint == "All":
+            assert False
         
-        from django.core import serializers
-        data = serializers.serialize("json", result)
+        constraint_q = constraint_queries[constraint]
+        status_q = state_queries[status]
         
-        import json
+        result = status_q(constraint_q())
         
-        return JsonResponse(data, safe=False)
+        json_data = self.to_json(result)
+        
+        return JsonResponse(json_data, safe=False)
 
+    def to_json(self, raw_data):
+        from django.core import serializers
+        json_data = serializers.serialize("json", raw_data)
+        
+        return json_data
 
 
 class GenomicsMiseqFileListView(ListView):
