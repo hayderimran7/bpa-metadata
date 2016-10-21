@@ -135,6 +135,9 @@ class TrackDetails(View):
         
         result = status_q(constraint_q())
         
+        for r in result:
+            r.data_type = r.get_data_type_display()
+        
         json_data = self.to_json(result)
         
         return JsonResponse(json_data, safe=False)
