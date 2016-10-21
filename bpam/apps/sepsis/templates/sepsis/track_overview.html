@@ -16,6 +16,7 @@
         
         var yes_icon = "{% static 'sepsis/icon-yes.gif' %}";
         var no_icon = "{% static 'sepsis/icon-no.gif' %}";
+        var sample_url = "{% url 'sepsis:sample' 'xxx' %}";
         
         var status = {
             'complete': 'Complete',
@@ -30,6 +31,10 @@
             } else {
                 return "<img src='"+ no_icon +"' alt='No' />";
             }
+        }
+        
+        function get_url(bpaid) {
+            return "<a href='"+sample_url.replace('xxx', bpaid) + "'>" + bpaid + "</a>";
         }
         
         $("#tree").on('select_node.jstree', function (e, data) {
@@ -50,7 +55,7 @@
                     if(parsed.length > 0) {
                         $.each(parsed, function(i, data) {
                             t.row.add([
-                                data.fields.bpa_id,
+                                get_url(data.fields.bpa_id),
                                 data.fields.data_type,
                                 data.fields.taxon_or_organism,
                                 data.fields.strain_or_isolate,
