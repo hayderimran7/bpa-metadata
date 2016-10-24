@@ -86,8 +86,8 @@ class TrackOverviewConstraints(View):
         ]
         
         state_queries = [
-            ( 'Sample processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True) ),
-            ( 'BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True) ),
+            ( 'Sample processing', 'inproc', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False) ),
+            ( 'BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True) ),
             ( 'BPA QC', 'bpaqc', None),
             ( 'Embargoed', 'embargoed', None ),
             ( 'Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
