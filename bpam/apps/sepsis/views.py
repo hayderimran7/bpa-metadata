@@ -86,10 +86,11 @@ class TrackOverviewConstraints(View):
         ]
         
         state_queries = [
-            ( 'Complete', 'complete', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
-            ( 'Contextual Data Needed', 'ctdata', lambda q: q.filter(contextual_data_submission_date__isnull=True) ),
-            ( 'In processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True) ),
-            ( 'Not submitted', 'unsub', lambda q: q.filter(sample_submission_date__isnull=True) ),
+            ( 'Sample processing', 'inproc', lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True) ),
+            ( 'BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True) ),
+            ( 'BPA QC', 'bpaqc', None),
+            ( 'Embargoed', 'embargoed', None ),
+            ( 'Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
         ]
 
         tree = []
@@ -98,8 +99,11 @@ class TrackOverviewConstraints(View):
             const_result = const_query()
             tree.append({ "id" : const, "parent" : "#", "text" : "%s (%d)" % (const, len(const_result)) })
             for status, slug, query in state_queries:
-                status_count = len(query(const_result))
-                tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
+                if query:
+                    status_count = len(query(const_result))
+                    tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
+                else:
+                    tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, 0) })
         
         return JsonResponse(tree, safe=False)
 
@@ -121,10 +125,11 @@ class TrackDetails(View):
         }
 
         state_queries = {
-            'complete': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
-            'ctdata': lambda q: q.filter(contextual_data_submission_date__isnull=True),
             'inproc': lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True),
-            'unsub': lambda q: q.filter(sample_submission_date__isnull=True),
+            'bpaarchiveingest': lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True),
+            'bpaqc': None,
+            'embargoed': None,
+            'public': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False)
         }
         
         if constraint == "All":
@@ -133,7 +138,9 @@ class TrackDetails(View):
         constraint_q = constraint_queries[constraint]
         status_q = state_queries[status]
         
-        result = status_q(constraint_q())
+        result = []
+        if status_q:
+            result = status_q(constraint_q())
         
         for r in result:
             r.data_type = r.get_data_type_display()

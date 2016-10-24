@@ -19,10 +19,11 @@
         var sample_url = "{% url 'sepsis:sample' 'xxx' %}";
         
         var status = {
-            'complete': 'Complete',
-            'ctdata': 'Contextual Data Needed',
-            'inproc': 'In processing',
-            'unsub': 'Not submitted'
+            'inproc': 'Sample processing',
+            'bpaarchiveingest': 'BPA Archive Ingest',
+            'bpaqc': 'BPA QC',
+            'embargoed': 'Embargoed',
+            'public': 'Public'
         };
         
         function generated_icon(item) {
