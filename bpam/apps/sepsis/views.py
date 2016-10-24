@@ -90,7 +90,7 @@ class TrackOverviewConstraints(View):
             ( 'BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True) ),
             ( 'BPA QC', 'bpaqc', None),
             ( 'Embargoed', 'embargoed', None ),
-            ( 'Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) ),
+            ( 'Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) )
         ]
 
         tree = []
@@ -129,11 +129,9 @@ class TrackDetails(View):
             'bpaarchiveingest': lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True),
             'bpaqc': None,
             'embargoed': None,
-            'public': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False)
+            'public': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
+            'all': lambda q: q.all()
         }
-        
-        if constraint == "All":
-            assert False
         
         constraint_q = constraint_queries[constraint]
         status_q = state_queries[status]
