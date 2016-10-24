@@ -19,10 +19,11 @@
         var sample_url = "{% url 'sepsis:sample' 'xxx' %}";
         
         var status = {
-            'complete': 'Complete',
-            'ctdata': 'Contextual Data Needed',
-            'inproc': 'In processing',
-            'unsub': 'Not submitted'
+            'inproc': 'Sample processing',
+            'bpaarchiveingest': 'BPA Archive Ingest',
+            'bpaqc': 'BPA QC',
+            'embargoed': 'Embargoed',
+            'public': 'Public'
         };
         
         function generated_icon(item) {
@@ -39,41 +40,49 @@
         
         $("#tree").on('select_node.jstree', function (e, data) {
             var url = "{% url 'sepsis:overview_detail' 'xxx' 'yyy' %}";
+            var params = data.node.id.split("/");
+
+            if (data.instance.is_parent(data.node)) {
+                if (!data.instance.is_open(data.node) ) {
+                    data.instance.toggle_node(data.node);
+                }
+            }
 
             if (data.node.parent != "#") {
-                var params = data.node.id.split("/");
                 var call = url.replace('xxx', params[0]).replace('yyy', params[1]);
-                
                 $("#selected").html(params[0] + " - " + status[params[1]]);
-
-                $.ajax({
-                    url: call,
-                }).done(function( data ) {
-                    var parsed = jQuery.parseJSON(data);
-                    var t = $("#content-table").DataTable();
-                    t.rows().remove().draw();
-                    if(parsed.length > 0) {
-                        $.each(parsed, function(i, data) {
-                            t.row.add([
-                                get_url(data.fields.bpa_id),
-                                data.fields.data_type,
-                                data.fields.taxon_or_organism,
-                                data.fields.strain_or_isolate,
-                                data.fields.serovar,
-                                data.fields.growth_media,
-                                data.fields.replicate,
-                                data.fields.omics,
-                                data.fields.analytical_platform,
-                                data.fields.facility,
-                                data.fields.contextual_data_submission_date,
-                                data.fields.sample_submission_date,
-                                generated_icon(data.fields.data_generated),
-                                data.fields.archive_ingestion_date
-                            ]).draw();
-                        });
-                    }
-                });
+            } else {
+                var call = url.replace('xxx', params[0]).replace('yyy', 'all');
+                $("#selected").html(params[0] + " - All");
             }
+            
+            $.ajax({
+                url: call,
+            }).done(function( data ) {
+                var parsed = jQuery.parseJSON(data);
+                var t = $("#content-table").DataTable();
+                t.rows().remove().draw();
+                if(parsed.length > 0) {
+                    $.each(parsed, function(i, data) {
+                        t.row.add([
+                            get_url(data.fields.bpa_id),
+                            data.fields.data_type,
+                            data.fields.taxon_or_organism,
+                            data.fields.strain_or_isolate,
+                            data.fields.serovar,
+                            data.fields.growth_media,
+                            data.fields.replicate,
+                            data.fields.omics,
+                            data.fields.analytical_platform,
+                            data.fields.facility,
+                            data.fields.contextual_data_submission_date,
+                            data.fields.sample_submission_date,
+                            generated_icon(data.fields.data_generated),
+                            data.fields.archive_ingestion_date
+                        ]).draw();
+                    });
+                }
+            });
         }).jstree({
             'core' : {
               'data' : {

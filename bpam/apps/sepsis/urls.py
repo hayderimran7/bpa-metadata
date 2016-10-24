@@ -41,9 +41,9 @@ urlpatterns = [
         name='genomics_pacbio_files'),
     url(regex=r'^consortium$', view=views.ConsortiumView.as_view(),
         name='consortium'),
-    
+
     # BEGIN----- Tracker URLs ----------
-    
+
     url(regex=r'^overview/$',
         view=views.TrackOverview.as_view(),
         name='overview'),
@@ -55,6 +55,6 @@ urlpatterns = [
     url(regex=r'^overview/(?P<constraint>.*)/(?P<status>.*)/$',
         view=views.TrackDetails.as_view(),
         name='overview_detail'),
-    
+
     # END------- Tracker URLs ----------
 ]

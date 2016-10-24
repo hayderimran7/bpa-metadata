@@ -167,13 +167,13 @@ class TranscriptomicsMethod(models.Model):
 
 
 class SampleTrack(models.Model):
-    
+
     _DATA_TYPES = (
         (1, 'Pre-pilot'),
         (2, 'Pilot'),
         (3, 'Main dataset')
     )
-    
+
     ''' Track the Sepsis Sample '''
 
     # 5 digit BPA ID
