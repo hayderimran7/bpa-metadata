@@ -77,34 +77,34 @@ class TrackOverviewConstraints(View):
     def get(self, request):
 
         constraint_queries = [
-            ( 'PacBio', lambda: PacBioTrack.objects.all() ),
-            ( 'MiSeq', lambda: MiSeqTrack.objects.all() ),
-            ( 'HiSeq', lambda: RNAHiSeqTrack.objects.all() ),
-            ( 'Metabolomics', lambda: MetabolomicsTrack.objects.all() ),
-            ( 'DeepLCMS', lambda: DeepLCMSTrack.objects.all() ),
-            ( 'SWATHMS', lambda: SWATHMSTrack.objects.all() )
+            ('PacBio', lambda: PacBioTrack.objects.all()),
+            ('MiSeq', lambda: MiSeqTrack.objects.all()),
+            ('HiSeq', lambda: RNAHiSeqTrack.objects.all()),
+            ('Metabolomics', lambda: MetabolomicsTrack.objects.all()),
+            ('DeepLCMS', lambda: DeepLCMSTrack.objects.all()),
+            ('SWATHMS', lambda: SWATHMSTrack.objects.all())
         ]
-        
+
         state_queries = [
-            ( 'Sample processing', 'inproc', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False) ),
-            ( 'BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True) ),
-            ( 'BPA QC', 'bpaqc', None),
-            ( 'Embargoed', 'embargoed', None ),
-            ( 'Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False) )
+            ('Sample processing', 'inproc', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False)),
+            ('BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True)),
+            ('BPA QC', 'bpaqc', None),
+            ('Embargoed', 'embargoed', None),
+            ('Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False))
         ]
 
         tree = []
-        
+
         for const, const_query in constraint_queries:
             const_result = const_query()
-            tree.append({ "id" : const, "parent" : "#", "text" : "%s (%d)" % (const, len(const_result)) })
+            tree.append({"id": const, "parent": "#", "text": "%s (%d)" % (const, len(const_result))})
             for status, slug, query in state_queries:
                 if query:
                     status_count = len(query(const_result))
-                    tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, status_count) })
+                    tree.append({"id": "%s/%s" % (const, slug), "parent": const, "text": "%s (%d)" % (status, status_count)})
                 else:
-                    tree.append({ "id": "%s/%s" % (const, slug), "parent" : const, "text" : "%s (%d)" % (status, 0) })
-        
+                    tree.append({"id": "%s/%s" % (const, slug), "parent": const, "text": "%s (%d)" % (status, 0)})
+
         return JsonResponse(tree, safe=False)
 
 
@@ -125,32 +125,32 @@ class TrackDetails(View):
         }
 
         state_queries = {
-            'inproc': lambda q: q.filter(sample_submission_date__isnull=False).filter(archive_ingestion_date__isnull=True),
-            'bpaarchiveingest': lambda q: q.filter(data_generated__isnull=False).filter(archive_ingestion_date__isnull=True),
+            'inproc': lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False),
+            'bpaarchiveingest': lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True),
             'bpaqc': None,
             'embargoed': None,
             'public': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
             'all': lambda q: q.all()
         }
-        
+
         constraint_q = constraint_queries[constraint]
         status_q = state_queries[status]
-        
+
         result = []
         if status_q:
             result = status_q(constraint_q())
-        
+
         for r in result:
             r.data_type = r.get_data_type_display()
-        
+
         json_data = self.to_json(result)
-        
+
         return JsonResponse(json_data, safe=False)
 
     def to_json(self, raw_data):
         from django.core import serializers
         json_data = serializers.serialize("json", raw_data)
-        
+
         return json_data
 
 
