@@ -10,9 +10,11 @@ from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isint
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
-from ..models import SampleStateTrack
 from ..models import TransferLog
 from ..models import MMSite
+from ..models import MetagenomicsTrack
+from ..models import Amplicon16STrack
+from ..models import Amplicon18STrack
 
 
 DEGREES = u'°'
@@ -26,16 +28,6 @@ class TransferLogResource(CommonTransferLogResource):
 
 class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
-
-
-class SampleStateTrackAdmin(BPAImportExportModelAdmin):
-    list_display = ('extraction_id', 'quality_check_preformed', 'metagenomics_data_generated',
-                    'amplicon_16s_data_generated', 'amplicon_18s_data_generated',
-                    'minimum_contextual_data_received', 'full_contextual_data_received')
-
-    list_filter = ('quality_check_preformed', 'metagenomics_data_generated', 'amplicon_16s_data_generated',
-                   'amplicon_18s_data_generated', 'minimum_contextual_data_received',
-                   'full_contextual_data_received')
 
 
 class CommonAdmin(BPAImportExportModelAdmin):
@@ -419,6 +411,8 @@ class ContextualOpenWaterAdmin(CommonAdmin):
 
 
 admin.site.register(TransferLog, TransferLogAdmin)
-admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
 admin.site.register(CoastalContextual, ContextualCoastalAdmin)
 admin.site.register(OpenWaterContextual, ContextualOpenWaterAdmin)
+admin.site.register(MetagenomicsTrack)
+admin.site.register(Amplicon16STrack)
+admin.site.register(Amplicon18STrack)

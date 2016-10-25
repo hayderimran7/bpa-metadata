@@ -144,20 +144,66 @@ class MarineCommonContextual(models.Model):
 
 
 class SampleStateTrack(models.Model):
-    extraction_id = models.CharField('Sample Extraction ID', max_length=100, primary_key=True)
-    quality_check_preformed = models.BooleanField("Quality Checked", default=False)
-    metagenomics_data_generated = models.BooleanField("Metagenomics Data Generated", default=False)
-    amplicon_16s_data_generated = models.BooleanField("Amplicon 16S Data Generated", default=False)
-    amplicon_18s_data_generated = models.BooleanField("Amplicon 18S Data Generated", default=False)
-    amplicon_a16s_data_generated = models.BooleanField("Amplicon A16S Data Generated", default=False)
-    minimum_contextual_data_received = models.BooleanField("Minimum Contextual Data Received", default=False)
-    full_contextual_data_received = models.BooleanField("Full Contextual Data Received", default=False)
+
+    _DATA_TYPES = (
+        (1, 'Pre-pilot'),
+        (2, 'Pilot'),
+        (3, 'Main dataset')
+    )
+
+    bpa_id = models.ForeignKey(BPAUniqueID,
+                               null=True,
+                               verbose_name='BPA ID',
+                               help_text='Bioplatforms Australia Sample ID')
+
+    taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
+    data_type = models.IntegerField('Data Type', choices=_DATA_TYPES, blank=True, null=True)
+    strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
+    serovar = models.CharField('Serovar', max_length=500, blank=True, null=True)
+    growth_media = models.CharField('Growth Media', max_length=500, blank=True, null=True)
+    replicate = models.IntegerField('Replicate', blank=True, null=True)
+    omics = models.CharField('Omics Type', max_length=50, blank=True, null=True)
+    analytical_platform = models.CharField('Analytical Platform', max_length=100, blank=True, null=True)
+    facility = models.CharField('Facility', max_length=100, blank=True, null=True)
+    work_order = models.CharField('Work Order', max_length=50, blank=True, null=True)
+    contextual_data_submission_date = models.DateField('Contextual Data Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
+    sample_submission_date = models.DateField('Sample Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
+    data_generated = models.NullBooleanField('Data Generated', default=False)
+    archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='YYYY-MM-DD')
+    curation_url = models.URLField('Curation URL', blank=True, null=True)
+    dataset_url = models.URLField('Download URL', blank=True, null=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)
 
     class Meta:
-        verbose_name = 'Sample State Track Log'
+        abstract = True
 
-    def __str__(self):
-        return "{}".format(self.extraction_id)
+
+class MetagenomicsTrack(SampleStateTrack):
+    track_type = 'Metagenomics'
+
+    class Meta:
+        verbose_name = 'Track Metagenomics'
+        verbose_name_plural = verbose_name
+
+
+class Amplicon16STrack(SampleStateTrack):
+    track_type = 'Amplicon16S'
+
+    class Meta:
+        verbose_name = 'Track Amplicon 16S'
+        verbose_name_plural = verbose_name
+
+
+class Amplicon18STrack(SampleStateTrack):
+    track_type = 'Amplicon18S'
+
+    class Meta:
+        verbose_name = 'Track Amplicon 18S'
+        verbose_name_plural = verbose_name
 
 
 class OpenWaterContextual(MarineCommonContextual):
