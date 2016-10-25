@@ -2,6 +2,7 @@
 
 from django.conf.urls import url
 import views
+import tracker_views
 
 urlpatterns = [
     url(regex=r'^$', view=views.MMView.as_view(), name='index'),
@@ -39,4 +40,20 @@ urlpatterns = [
         name='collectionsitedetail'),
     url(regex=r'^sites', view=views.CollectionSiteListView.as_view(),
         name='collectionsites'),
+
+    # BEGIN----- Tracker URLs ----------
+
+    url(regex=r'^overview/$',
+        view=tracker_views.TrackOverview.as_view(),
+        name='overview'),
+
+    url(regex=r'^overview/data/$',
+        view=tracker_views.TrackOverviewConstraints.as_view(),
+        name='overview_constraints'),
+
+    url(regex=r'^overview/(?P<constraint>.*)/(?P<status>.*)/$',
+        view=tracker_views.TrackDetails.as_view(),
+        name='overview_detail'),
+
+    # END------- Tracker URLs ----------
 ]
