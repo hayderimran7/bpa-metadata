@@ -23,9 +23,10 @@ class TrackOverviewConstraints(View):
         ]
 
         state_queries = [
-            ('Metagenomics', 'metagenomics', None),
-            ('Amplicon 16S', 'amplicon16s', None),
-            ('Amplicon 18S', 'amplicon18s', None)
+            ('Generated', 'generated', None),
+            ('Quality Checked', 'quality', None),
+            ('Minimum Contextual Data Received', 'mindata', None),
+            ('Full Contextual Data Received', 'fulldata', None)
         ]
 
         tree = []
@@ -57,9 +58,10 @@ class TrackDetails(View):
         }
 
         state_queries = {
-            'metagenomics': None,
-            'amplicon16s': None,
-            'amplicon18s': None,
+            'generated': None,
+            'quality': None,
+            'mindata': None,
+            'fulldata': None,
             'all': lambda q: q.all()
         }
 
