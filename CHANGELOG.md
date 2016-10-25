@@ -1,5 +1,21 @@
 # Change Log
 
+## [4.2.0](https://github.com/muccg/bpa-metadata/tree/4.2.0) (2016-10-24)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.1.1...4.2.0)
+
+**Implemented enhancements:**
+
+- API: Make all API endpoints read-only  [\#92](https://github.com/muccg/bpa-metadata/issues/92)
+- Login screen needs attention [\#87](https://github.com/muccg/bpa-metadata/issues/87)
+- remove TogetherJS from django-admin [\#86](https://github.com/muccg/bpa-metadata/issues/86)
+- remove JIRA integration [\#85](https://github.com/muccg/bpa-metadata/issues/85)
+- sepsis overview improvements [\#83](https://github.com/muccg/bpa-metadata/issues/83)
+- sepsis tracker: add field for pilot data [\#82](https://github.com/muccg/bpa-metadata/issues/82)
+
+**Fixed bugs:**
+
+- review use of CDNs [\#27](https://github.com/muccg/bpa-metadata/issues/27)
+
 ## [4.1.1](https://github.com/muccg/bpa-metadata/tree/4.1.1) (2016-10-10)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.1.0...4.1.1)
 
