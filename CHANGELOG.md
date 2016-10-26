@@ -1,5 +1,16 @@
 # Change Log
 
+## [4.3.0](https://github.com/muccg/bpa-metadata/tree/4.3.0) (2016-10-26)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.2.0...4.3.0)
+
+**Implemented enhancements:**
+
+- Marine Microbes: new tracker layout [\#100](https://github.com/muccg/bpa-metadata/issues/100)
+
+**Fixed bugs:**
+
+- Metadata ingest: float data in header causes stack trace [\#103](https://github.com/muccg/bpa-metadata/issues/103)
+
 ## [4.2.0](https://github.com/muccg/bpa-metadata/tree/4.2.0) (2016-10-24)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.1.1...4.2.0)
 
