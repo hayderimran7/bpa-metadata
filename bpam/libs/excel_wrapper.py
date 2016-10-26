@@ -106,7 +106,7 @@ class ExcelWrapper(object):
         def find_column(column_name, complain=True):
             col_index = -1
             try:
-                header = [t.strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
+                header = [str(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
                 col_index = header.index(column_name.strip().lower())
             except ValueError:
                 if complain:
