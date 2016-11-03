@@ -56,6 +56,7 @@ class Fetcher():
         self.target_folder = target_folder
         self.metadata_source_url = metadata_source_url
         self.auth = auth
+        self.filename_url = {}
 
         self._ensure_target_folder_exists()
 
@@ -75,7 +76,9 @@ class Fetcher():
         ''' fetch file from server '''
 
         logger.info('Fetching {0} from {1}'.format(name, self.metadata_source_url))
-        r = requests.get(self.metadata_source_url + '/' + name, stream=True, auth=self.auth, verify=False)
+        url = self.metadata_source_url + '/' + name
+        self.filename_url[name] = url
+        r = requests.get(url, stream=True, auth=self.auth, verify=False)
         with open(self.target_folder + '/' + name, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
@@ -87,13 +90,17 @@ class Fetcher():
 
         logger.info('Fetching folder from {}'.format(self.metadata_source_url))
         response = requests.get(self.metadata_source_url, stream=True, auth=self.auth, verify=False)
+        downloaded = set()
         for link in BeautifulSoup(response.content, 'html.parser').find_all('a'):
             metadata_filename = link.get('href')
+            if metadata_filename in downloaded:
+                continue
             if metadata_filename.endswith('.xlsx') or \
                     metadata_filename.endswith('.txt') or \
                     metadata_filename.endswith('.csv') or \
                     metadata_filename.endswith('.md5'):
                 self.fetch(metadata_filename)
+                downloaded.add(metadata_filename)
 
             if fetch_gz is True and metadata_filename.endswith('.gz'):
                 self.fetch(metadata_filename)

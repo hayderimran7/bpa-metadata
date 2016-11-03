@@ -80,7 +80,8 @@ class ExcelWrapper(object):
             self.sheet = self.workbook.sheet_by_name(self.sheet_name)
 
         self.field_names = self._set_field_names()
-        self.name_to_column_map = self.set_name_to_column_map()
+        self.missing_headers = []
+        self.header, self.name_to_column_map = self.set_name_to_column_map()
         self.name_to_func_map = self.set_name_to_func_map()
 
     def _set_field_names(self):
@@ -96,31 +97,23 @@ class ExcelWrapper(object):
     def set_name_to_column_map(self):
         ''' maps the named field to the actual column in the spreadsheet '''
 
-        def should_complain(c, option_count):
-            '''
-            If the last option in a tuple of column name options is tried, complain if nothing was found,
-            but not before.
-            '''
-            return c + 1 == option_count
+        header = [str(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
 
-        def find_column(column_name, complain=True):
+        def find_column(column_name):
             col_index = -1
             try:
-                header = [str(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
                 col_index = header.index(column_name.strip().lower())
             except ValueError:
-                if complain:
-                    logger.error('column name [{}] not found'.format(column_name))
+                pass
             return col_index
 
         cmap = {}
         for attribute, column_name, _ in self.field_spec:
             col_index = -1
-            # because data vendors cannot get column names right, I have to give a range of alternatives
+            # try a few different ways to match column names
             if type(column_name) == tuple:
-                option_count = len(column_name)
                 for c, _name in enumerate(column_name):
-                    col_index = find_column(_name, should_complain(c, option_count))
+                    col_index = find_column(_name)
                     if col_index != -1:
                         break
             else:
@@ -129,10 +122,11 @@ class ExcelWrapper(object):
             if col_index != -1:
                 cmap[attribute] = col_index
             else:
+                self.missing_headers.append(column_name)
                 logger.warning('Column {} not found in {} '.format(column_name, self.file_name))
                 cmap[attribute] = None
 
-        return cmap
+        return header, cmap
 
     def set_name_to_func_map(self):
         ''' Map the spec fields to their corresponding functions '''

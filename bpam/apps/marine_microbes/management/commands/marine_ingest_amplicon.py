@@ -5,6 +5,7 @@ Ingests Marine Microbe Metagenomic amplicon metadata from archive into database.
 
 from __future__ import print_function
 
+import os
 import re
 from unipath import Path
 
@@ -35,6 +36,11 @@ filename_pattern = re.compile(FILENAME_PATTERN, re.VERBOSE)
 
 class Command(management_command.BPACommand):
     help = 'Ingest Marine Microbes Amplicon'
+
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__(*args, **kwargs)
+        self.problem_xlsx = []
+        self.ok_xlsx = []
 
     def fix_dilution(self, val):
         """
@@ -77,6 +83,10 @@ class Command(management_command.BPACommand):
                                formatting_info=True,
                                pick_first_sheet=True)
 
+        if wrapper.missing_headers:
+            self.problem_xlsx.append((os.path.basename(file_name), wrapper.header + [], [t[1] for t in field_spec], wrapper.missing_headers + []))
+        else:
+            self.ok_xlsx.append(os.path.basename(file_name))
         return wrapper.get_all()
 
     def _add_samples(self, data):
@@ -174,6 +184,7 @@ class Command(management_command.BPACommand):
             self.log_info("Truncating MM Amplicon Files data")
             self.truncate()
 
+        filename_url = {}
         for amplicon in ("a16s", "16s", "18s", "its"):
             self.log_info("Ingesting amplicon {}".format(amplicon))
             metadata_path = "marine_microbes/amplicons/{}".format(amplicon)
@@ -181,6 +192,7 @@ class Command(management_command.BPACommand):
             fetcher = Fetcher(data_dir, self.get_base_url(options) + metadata_path, auth=("marine", get_password('marine')))
             fetcher.clean()
             fetcher.fetch_metadata_from_folder()
+            filename_url.update(fetcher.filename_url)
 
             # find all the md5 files in the data directory and make MM samples
             # as well as the amplicon sequence file's associated with them
@@ -189,3 +201,17 @@ class Command(management_command.BPACommand):
             # find all the spreadsheets in the data directory and update the
             # amplicon files with the extra metadata
             self._ingest_metadata(data_dir)
+
+        # report on problems found during XLSX import
+        print("Spreadsheets read without any issue:")
+        for filename in self.ok_xlsx:
+            print(filename_url[filename])
+            print()
+
+        print("Spreadsheet issues:")
+        for filename, present_header, required_header, missing_headers in sorted(self.problem_xlsx, key=lambda t: filename_url[t[0]]):
+            print("%s:" % filename_url[filename])
+            print("    missing headers: %s" % ' ,'.join(repr(t) for t in missing_headers))
+            print("     header present: %s" % ' ,'.join(repr(t) for t in present_header))
+            print("    header required: %s" % ' ,'.join(repr(t) for t in required_header))
+            print()
