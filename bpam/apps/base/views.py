@@ -377,11 +377,12 @@ class RequestAccessView(TemplateView):
     success_template_name = 'base/success.html'
     form_class = RequestAccessForm
     email_template = """\
-Name: {0}
-Affiliation: {1}
+Name: {}
+Affiliation: {}
+Email address: {}
 
 Request details:
-{2}
+{}
 """
 
     def get(self, request, *args, **kwargs):
@@ -391,17 +392,16 @@ Request details:
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            from_email = form.cleaned_data['from_email']
-            name = form.cleaned_data['name']
-            affiliation = form.cleaned_data['affiliation']
-            message = form.cleaned_data['message']
-            email = self.email_template.format(name, affiliation, message)
+            email = self.email_template.format(
+                form.cleaned_data['name'],
+                form.cleaned_data['affiliation'],
+                form.cleaned_data['from_email'],
+                form.cleaned_data['message'])
             try:
                 send_mail("BASE Access Request", email, settings.DEFAULT_FROM_EMAIL, settings.BASE_REQUEST_LIST)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
 
-            logger.info("Sent BASE Request email from {} {}".format(from_email, message))
             return render(request, self.success_template_name, {'form': form})
         else:
             return render(request, self.request_template_name, {'form': form})
