@@ -292,13 +292,6 @@ class SepsisSample(models.Model):
                                       related_name='samples',
                                       help_text='Sample Growth Method')
 
-    # FIXME
-    # sample_track = models.OneToOneField(SampleTrack,
-    #                                    blank=True,
-    #                                    null=True,
-    #                                    related_name='sample',
-    #                                    help_text='Sample Tracking')
-
     taxon_or_organism = models.CharField('Taxon or Organism', max_length=200, blank=True, null=True)
     strain_or_isolate = models.CharField('Strain Or Isolate', max_length=200, blank=True, null=True)
     strain_description = models.CharField('Strain Description', max_length=300, blank=True, null=True)
