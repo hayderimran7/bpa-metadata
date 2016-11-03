@@ -2,6 +2,7 @@ from django.http import Http404
 from django.views.generic import TemplateView, View
 from django.http import JsonResponse
 from models import MetagenomicsTrack, Amplicon16STrack, Amplicon18STrack
+from collections import OrderedDict
 
 
 class TrackOverview(TemplateView):
@@ -13,28 +14,28 @@ class TrackOverview(TemplateView):
 
 
 class TrackOverviewConstraints(View):
+    constraint_queries = OrderedDict([
+        ('Metagenomics', lambda: MetagenomicsTrack.objects.all()),
+        ('Amplicon 16S', lambda: Amplicon16STrack.objects.all()),
+        ('Amplicon 18S', lambda: Amplicon18STrack.objects.all())
+    ])
+    state_queries = OrderedDict([
+        ('generated', ('Generated', None)),
+        ('quality', ('Quality Checked', None)),
+        ('mindata', ('Minimum Contextual Data Received', None)),
+        ('fulldata', ('Full Contextual Data Received', lambda q: q.all())),
+        ('all', (None, lambda q: q.all()))
+    ])
 
     def get(self, request):
-
-        constraint_queries = [
-            ('Metagenomics', lambda: MetagenomicsTrack.objects.all()),
-            ('Amplicon 16S', lambda: Amplicon16STrack.objects.all()),
-            ('Amplicon 18S', lambda: Amplicon18STrack.objects.all())
-        ]
-
-        state_queries = [
-            ('Generated', 'generated', None),
-            ('Quality Checked', 'quality', None),
-            ('Minimum Contextual Data Received', 'mindata', None),
-            ('Full Contextual Data Received', 'fulldata', None)
-        ]
-
         tree = []
 
-        for const, const_query in constraint_queries:
+        for const, const_query in TrackOverviewConstraints.constraint_queries.items():
             const_result = const_query()
             tree.append({"id": const, "parent": "#", "text": "%s (%d)" % (const, len(const_result))})
-            for status, slug, query in state_queries:
+            for slug, (status, query) in TrackOverviewConstraints.state_queries.items():
+                if status is None:
+                    continue
                 if query:
                     status_count = len(query(const_result))
                     tree.append({"id": "%s/%s" % (const, slug), "parent": const, "text": "%s (%d)" % (status, status_count)})
@@ -51,22 +52,8 @@ class TrackDetails(View):
         if not constraint and not status:
             raise Http404("No constraint or status provided")
 
-        constraint_queries = {
-            'Metagenomics': lambda: MetagenomicsTrack.objects.all(),
-            'Amplicon 16S': lambda: Amplicon16STrack.objects.all(),
-            'Amplicon 18S': lambda: Amplicon18STrack.objects.all()
-        }
-
-        state_queries = {
-            'generated': None,
-            'quality': None,
-            'mindata': None,
-            'fulldata': None,
-            'all': lambda q: q.all()
-        }
-
-        constraint_q = constraint_queries[constraint]
-        status_q = state_queries[status]
+        constraint_q = TrackOverviewConstraints.constraint_queries[constraint]
+        _, status_q = TrackOverviewConstraints.state_queries[status]
 
         result = []
         if status_q:

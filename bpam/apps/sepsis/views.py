@@ -5,6 +5,7 @@ from itertools import chain
 from django.views.generic import TemplateView, ListView, DetailView, View
 from rest_framework import viewsets
 from django.http import JsonResponse
+from collections import OrderedDict
 
 from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
@@ -73,32 +74,33 @@ class TrackOverview(TemplateView):
 
 
 class TrackOverviewConstraints(View):
+    # query definition is shared with TrackDetails
+    constraint_queries = OrderedDict([
+        ('PacBio', lambda: PacBioTrack.objects.all()),
+        ('MiSeq', lambda: MiSeqTrack.objects.all()),
+        ('HiSeq', lambda: RNAHiSeqTrack.objects.all()),
+        ('Metabolomics', lambda: MetabolomicsTrack.objects.all()),
+        ('DeepLCMS', lambda: DeepLCMSTrack.objects.all()),
+        ('SWATHMS', lambda: SWATHMSTrack.objects.all())
+    ])
+    state_queries = OrderedDict([
+        ('inproc', ('Sample processing', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False))),
+        ('bpaarchiveingest', ('BPA Archive Ingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True))),
+        ('bpaqc', ('BPA QC', None)),
+        ('embargoed', ('Embargoed', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False))),
+        ('public', ('Public', None)),
+        ('all', (None, lambda q: q.all())),
+    ])
 
     def get(self, request):
-
-        constraint_queries = [
-            ('PacBio', lambda: PacBioTrack.objects.all()),
-            ('MiSeq', lambda: MiSeqTrack.objects.all()),
-            ('HiSeq', lambda: RNAHiSeqTrack.objects.all()),
-            ('Metabolomics', lambda: MetabolomicsTrack.objects.all()),
-            ('DeepLCMS', lambda: DeepLCMSTrack.objects.all()),
-            ('SWATHMS', lambda: SWATHMSTrack.objects.all())
-        ]
-
-        state_queries = [
-            ('Sample processing', 'inproc', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False)),
-            ('BPA Archive Ingest', 'bpaarchiveingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True)),
-            ('BPA QC', 'bpaqc', None),
-            ('Embargoed', 'embargoed', None),
-            ('Public', 'public', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False))
-        ]
-
         tree = []
 
-        for const, const_query in constraint_queries:
+        for const, const_query in TrackOverviewConstraints.constraint_queries.items():
             const_result = const_query()
             tree.append({"id": const, "parent": "#", "text": "%s (%d)" % (const, len(const_result))})
-            for status, slug, query in state_queries:
+            for slug, (status, query) in TrackOverviewConstraints.state_queries.items():
+                if status is None:
+                    continue
                 if query:
                     status_count = len(query(const_result))
                     tree.append({"id": "%s/%s" % (const, slug), "parent": const, "text": "%s (%d)" % (status, status_count)})
@@ -115,26 +117,8 @@ class TrackDetails(View):
         if not constraint and not status:
             raise Http404("No constraint or status provided")
 
-        constraint_queries = {
-            'PacBio': lambda: PacBioTrack.objects.all(),
-            'MiSeq': lambda: MiSeqTrack.objects.all(),
-            'HiSeq': lambda: RNAHiSeqTrack.objects.all(),
-            'Metabolomics': lambda: MetabolomicsTrack.objects.all(),
-            'DeepLCMS': lambda: DeepLCMSTrack.objects.all(),
-            'SWATHMS': lambda: SWATHMSTrack.objects.all(),
-        }
-
-        state_queries = {
-            'inproc': lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False),
-            'bpaarchiveingest': lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True),
-            'bpaqc': None,
-            'embargoed': None,
-            'public': lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False),
-            'all': lambda q: q.all()
-        }
-
-        constraint_q = constraint_queries[constraint]
-        status_q = state_queries[status]
+        constraint_q = TrackOverviewConstraints.constraint_queries[constraint]
+        _, status_q = TrackOverviewConstraints.state_queries[status]
 
         result = []
         if status_q:
