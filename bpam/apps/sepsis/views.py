@@ -143,17 +143,35 @@ class GenomicsMiseqFileListView(ListView):
     context_object_name = 'sequencefiles'
     template_name = 'sepsis/genomics_file_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(GenomicsMiseqFileListView, self).get_context_data(**kwargs)
+        context['breadcrumb_name'] = 'Genomics Miseq Sequence Files'
+        context['breadcrumb_target'] = 'sepsis:genomics_miseq_files'
+        return context
+
 
 class TranscriptomicsHiseqFileListView(ListView):
     model = TranscriptomicsHiseqFile
     context_object_name = 'sequencefiles'
     template_name = 'sepsis/genomics_file_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(TranscriptomicsHiseqFileListView, self).get_context_data(**kwargs)
+        context['breadcrumb_name'] = 'Transcriptomics Hiseq Sequence Files'
+        context['breadcrumb_target'] = 'sepsis:transcriptomics_hiseq_files'
+        return context
+
 
 class GenomicsPacBioFileListView(ListView):
     model = GenomicsPacBioFile
     context_object_name = 'sequencefiles'
-    template_name = 'sepsis/genomics_pacbio_file_list.html'
+    template_name = 'sepsis/genomics_file_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GenomicsPacBioFileListView, self).get_context_data(**kwargs)
+        context['breadcrumb_name'] = 'Genomics Pacbio Sequence Files'
+        context['breadcrumb_target'] = 'sepsis:genomics_pacbio_files'
+        return context
 
 
 class SampleDetailView(DetailView):
