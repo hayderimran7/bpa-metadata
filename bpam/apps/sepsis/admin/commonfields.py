@@ -15,7 +15,8 @@ class DateField(fields.Field):
 
     def clean(self, data):
         try:
-            return ingest.get_date(data[self.column_name])
+            val = data[self.column_name]
+            return ingest.get_date(val)
         except ValueError:
             return None
 

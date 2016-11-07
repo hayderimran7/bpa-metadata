@@ -4,14 +4,13 @@ import os
 import json
 
 import logger_utils
-from datetime import date
-from dateutil.parser import parse as date_parser
+import datetime
 from django.utils.encoding import smart_text
 
 # where to cache downloaded metadata
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'metadata')
 
-INGEST_NOTE = 'Ingested from Source Document on {0}\n'.format(date.today())
+INGEST_NOTE = 'Ingested from Source Document on {0}\n'.format(datetime.date.today())
 
 logger = logger_utils.get_logger(__name__)
 
@@ -146,34 +145,34 @@ def strip_all(reader):
 
 def get_date(dt):
     '''
-    When reading in the data, and it was set as a date type in the excel sheet it should have been converted.
-    if it wasn't, it may still be a valid date string.
-
-    >>> get_date('12-10-1973')
-    datetime.datetime(1973, 12, 10, 0, 0)
-    >>> get_date('12/10/1973')
-    datetime.datetime(1973, 12, 10, 0, 0)
-    >>> get_date('1973-10-12')
-    datetime.datetime(1973, 10, 12, 0, 0)
-
+    convert `dt` into a datetime.date, returning `dt` if it is already an
+    instance of datetime.date. only two string date formats are supported:
+    YYYY-mm-dd and dd/mm/YYYY. if conversion fails, returns None.
     '''
+
     if dt is None:
         return None
 
-    if isinstance(dt, date):
+    if isinstance(dt, datetime.date):
         return dt
-    if isinstance(dt, basestring):
-        if dt.strip() == '':
-            return None
-        try:
-            return date_parser(dt, dayfirst=True)
 
-        except TypeError as e:
-            logger.error('Error parsing date [{}] error: {!r}'.format(dt, e))
-            return None
-        except ValueError as e:
-            logger.error('Error parsing date [{}]: {!r}'.format(dt, e))
-            return None
+    if not isinstance(dt, basestring):
+        return None
+
+    if dt.strip() == '':
+        return None
+
+    try:
+        return datetime.datetime.strptime(dt, '%Y-%m-%d').date()
+    except ValueError:
+        pass
+
+    try:
+        return datetime.datetime.strptime(dt, '%d/%m/%Y').date()
+    except ValueError:
+        pass
+
+    logger.error('Date `{}` is not in a supported format'.format(dt))
     return None
 
 
@@ -183,7 +182,7 @@ def pretty_print_namedtuple(named_tuple):
     def json_serial(obj):
         ''' JSON serializer for objects not serializable by default json code '''
 
-        if isinstance(obj, date):
+        if isinstance(obj, datetime.date):
             serial = obj.isoformat()
             return serial
 

@@ -1,17 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from dateutil.parser import parse as date_parser
+from libs.ingest_utils import get_date
 from apps.common.models import BPAUniqueID, BPAProject
 
 from ..models import Host
-
-
-def get_date(date):
-    """Tries to make a python date"""
-    try:
-        return date_parser(date, dayfirst=True)
-    except ValueError:
-        return None
 
 
 def get_sex(sex):

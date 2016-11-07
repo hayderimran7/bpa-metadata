@@ -5,7 +5,7 @@ from django.contrib import admin
 from django import forms
 from suit.widgets import AutosizedTextarea, SuitDateWidget, LinkedSelect
 
-from dateutil.parser import parse as date_parser
+from libs.ingest_utils import get_date
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.gis.geos import Point
 from django.http import HttpResponse
@@ -135,7 +135,7 @@ class DateField(fields.Field):
         super(DateField, self).__init__(*args, **kwargs)
 
     def clean(self, data):
-        return date_parser(data[self.column_name], dayfirst=True)
+        return get_date(data[self.column_name])
 
 
 # Amplicon

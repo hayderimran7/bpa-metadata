@@ -24,7 +24,7 @@ from collections import namedtuple
 
 from unipath import Path
 from docopt import docopt
-from dateutil.parser import parse as date_parser
+from libs.ingest_utils import get_date
 
 
 __author__ = 'ccg'
@@ -37,16 +37,10 @@ logger.setLevel(level=logging.INFO)
 
 
 def parse_date(str):
-    """
-    Try to get a valid date from the passed in str
-    """
-    date = None
-    err = None
-    try:
-        date = date_parser(str, dayfirst=True)
-    except ValueError, e:
-        err = e
-    return date, err
+    date = get_date(str)
+    if date is None:
+        return None, 'cannot parse date'
+    return date
 
 
 # maps spreadsheet column name with attribute names, validator and converter functions, if any
