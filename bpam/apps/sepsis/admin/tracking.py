@@ -9,7 +9,7 @@ from apps.common.models import BPAUniqueID
 # import export fields
 from commonfields import DateField
 
-from ..models import PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack
+from ..models import PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack, SampleTrack
 
 # 5 digit BPA ID
 # Taxon_OR_organism
@@ -61,10 +61,6 @@ class TrackBooleanField(fields.Field):
 
 
 class BPAField(fields.Field):
-
-    def __init__(self, *args, **kwargs):
-        super(BPAField, self).__init__(*args, **kwargs)
-
     def clean(self, data):
         bpaid = data[self.column_name]
         bpaid = '{}.{}'.format(BPA_ID, bpaid)
@@ -74,12 +70,25 @@ class BPAField(fields.Field):
         return bpa_id
 
 
+class DataTypeField(fields.Field):
+    def clean(self, data):
+        name = data[self.column_name]
+        matches = [choice_val for (choice_val, choice_name) in SampleTrack._DATA_TYPES if choice_name == name]
+        if len(matches) != 1:
+            raise Exception("Invalid data type: valid values are: %s" % [t[1] for t in SampleTrack._DATA_TYPES])
+        return matches[0]
+
+    def export(self, obj):
+        return getattr(obj, "get_%s_display" % (self.attribute))()
+
+
 class CommonSampleTrackResource(resources.ModelResource):
     """Sample tracking mappings"""
 
     # bpa_id = fields.Field(attribute='bpa_id', column_name='5 digit BPA ID')
     bpa_id = BPAField(attribute='bpa_id', column_name='5 digit BPA ID')
     taxon_or_organism = fields.Field(attribute='taxon_or_organism', column_name='Taxon_OR_organism')
+    data_type = DataTypeField(attribute='data_type', column_name='Data type')
     strain_or_isolate = fields.Field(attribute='strain_or_isolate', column_name='Strain_OR_isolate')
     serovar = fields.Field(attribute='serovar', column_name='Serovar')
     growth_media = fields.Field(attribute='growth_media', column_name='Growth Media')
