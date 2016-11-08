@@ -3,19 +3,19 @@
 ## [4.4.0](https://github.com/muccg/bpa-metadata/tree/4.4.0) (2016-11-07)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.3.0...4.4.0)
 
+**Implemented enhancements:**
+
+- Admin - remove all tracker unrelated links from side menu under ARPI [\#113](https://github.com/muccg/bpa-metadata/issues/113)
+
 **Fixed bugs:**
 
 - BPA MM Project - Metagenome data imports [\#94](https://github.com/muccg/bpa-metadata/issues/94)
+- bpam tracker: date format wrong [\#114](https://github.com/muccg/bpa-metadata/issues/114)
 - ARPI: breadcrumb for transcriptomics hiseq is incorrect [\#111](https://github.com/muccg/bpa-metadata/issues/111)
 - BASE access request: email address not sent in notification [\#109](https://github.com/muccg/bpa-metadata/issues/109)
 - Sepsis: import of data\_type through admin is failing [\#108](https://github.com/muccg/bpa-metadata/issues/108)
 - Sepsis tracker: show data as 'embargoed', not 'public' [\#107](https://github.com/muccg/bpa-metadata/issues/107)
 - Missing miseq metadata from portal [\#88](https://github.com/muccg/bpa-metadata/issues/88)
-
-**Closed issues:**
-
-- bpam tracker: date format wrong [\#114](https://github.com/muccg/bpa-metadata/issues/114)
-- Admin - remove all tracker unrelated links from side menu under ARPI [\#113](https://github.com/muccg/bpa-metadata/issues/113)
 
 ## [4.3.0](https://github.com/muccg/bpa-metadata/tree/4.3.0) (2016-10-26)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.2.0...4.3.0)
