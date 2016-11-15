@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.4.1](https://github.com/muccg/bpa-metadata/tree/4.4.1) (2016-11-15)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.4.0...4.4.1)
+
+**Implemented enhancements:**
+
+- rename sepsis to "Antibiotic Resistant Sepsis Pathogens" [\#115](https://github.com/muccg/bpa-metadata/issues/115)
+
 ## [4.4.0](https://github.com/muccg/bpa-metadata/tree/4.4.0) (2016-11-07)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.3.0...4.4.0)
 
