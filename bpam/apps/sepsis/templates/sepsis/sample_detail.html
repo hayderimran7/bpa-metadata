@@ -6,7 +6,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
-{% breadcrumb "Antibiotic Resistant Pathogens" "sepsis:index" %}
+{% breadcrumb "Antibiotic Resistant Sepsis Pathogens" "sepsis:index" %}
 {% breadcrumb "Samples" "sepsis:samples" %}
 {% breadcrumb sample.bpa_id "sepsis:sample" sample.bpa_id %}
 {% endblock %}
