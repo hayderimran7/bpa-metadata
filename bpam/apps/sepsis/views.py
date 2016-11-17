@@ -76,12 +76,12 @@ class TrackOverview(TemplateView):
 class TrackOverviewConstraints(View):
     # query definition is shared with TrackDetails
     constraint_queries = OrderedDict([
-        ('PacBio', lambda: GenomicsPacBioTrack.objects.all()),
-        ('MiSeq', lambda: GenomicsMiSeqTrack.objects.all()),
-        ('HiSeq', lambda: TranscriptomicsHiSeqTrack.objects.all()),
-        ('Metabolomics', lambda: MetabolomicsLCMSTrack.objects.all()),
-        ('DeepLCMS', lambda: ProteomicsMS1QuantificationTrack.objects.all()),
-        ('SWATHMS', lambda: ProteomicsSwathMSTrack.objects.all())
+        ('Genomics PacBio', lambda: GenomicsPacBioTrack.objects.all()),
+        ('Genomics MiSeq', lambda: GenomicsMiSeqTrack.objects.all()),
+        ('Transcriptomics HiSeq', lambda: TranscriptomicsHiSeqTrack.objects.all()),
+        ('Metabolomics LCMS', lambda: MetabolomicsLCMSTrack.objects.all()),
+        ('Proteomics MS1 Quantification', lambda: ProteomicsMS1QuantificationTrack.objects.all()),
+        ('Proteomics Swath-MS', lambda: ProteomicsSwathMSTrack.objects.all())
     ])
     state_queries = OrderedDict([
         ('inproc', ('Sample processing', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False))),
