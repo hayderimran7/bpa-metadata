@@ -12,12 +12,12 @@ from .models import (Host,
                      PacBioGenomicsMethod,
                      GenomicsPacBioFile,
                      SepsisSample,
-                     PacBioTrack,
-                     MiSeqTrack,
-                     RNAHiSeqTrack,
-                     MetabolomicsTrack,
-                     DeepLCMSTrack,
-                     SWATHMSTrack,
+                     GenomicsPacBioTrack,
+                     GenomicsMiSeqTrack,
+                     TranscriptomicsHiSeqTrack,
+                     MetabolomicsLCMSTrack,
+                     ProteomicsMS1QuantificationTrack,
+                     ProteomicsSwathMSTrack,
                      )
 
 
@@ -111,39 +111,39 @@ class PacBioTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = PacBioTrack
+        model = GenomicsPacBioTrack
 
 
 class MiSeqTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = MiSeqTrack
+        model = GenomicsMiSeqTrack
 
 
 class RNAHiSeqTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = RNAHiSeqTrack
+        model = TranscriptomicsHiSeqTrack
 
 
 class MetabolomicsTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = MetabolomicsTrack
+        model = MetabolomicsLCMSTrack
 
 
 class DeepLCMSTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = DeepLCMSTrack
+        model = ProteomicsMS1QuantificationTrack
 
 
 class SWATHMSTrackSerializer(serializers.ModelSerializer):
     bpa_id = BPAUniqueIDSerializer()
 
     class Meta:
-        model = SWATHMSTrack
+        model = ProteomicsSwathMSTrack

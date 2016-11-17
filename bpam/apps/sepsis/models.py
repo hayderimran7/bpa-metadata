@@ -226,51 +226,51 @@ class SampleTrack(models.Model):
         abstract = True
 
 
-class PacBioTrack(SampleTrack):
-    track_type = 'PacBio'
+class GenomicsPacBioTrack(SampleTrack):
+    track_type = 'Genomics PacBio'
 
     class Meta:
-        verbose_name = 'Track PacBio'
+        verbose_name = 'Track Genomics PacBio'
         verbose_name_plural = verbose_name
 
 
-class MiSeqTrack(SampleTrack):
-    track_type = 'MiSeq'
+class GenomicsMiSeqTrack(SampleTrack):
+    track_type = 'Genomics MiSeq'
 
     class Meta:
-        verbose_name = 'Track MiSeq'
+        verbose_name = 'Track Genomics MiSeq'
         verbose_name_plural = verbose_name
 
 
-class RNAHiSeqTrack(SampleTrack):
-    track_type = 'RNA (HiSeq)'
+class TranscriptomicsHiSeqTrack(SampleTrack):
+    track_type = 'Transcriptomics HiSeq'
 
     class Meta:
-        verbose_name = 'Track RNA (HiSeq)'
+        verbose_name = 'Track Transcriptomics HiSeq'
         verbose_name_plural = verbose_name
 
 
-class MetabolomicsTrack(SampleTrack):
-    track_type = 'Metabolomics'
+class MetabolomicsLCMSTrack(SampleTrack):
+    track_type = 'Metabolomics LCMS'
 
     class Meta:
-        verbose_name = 'Track Metabolomics'
+        verbose_name = 'Track Metabolomics LCMS'
         verbose_name_plural = verbose_name
 
 
-class DeepLCMSTrack(SampleTrack):
-    track_type = 'Deep LC-MS (Monash)'
+class ProteomicsMS1QuantificationTrack(SampleTrack):
+    track_type = 'Proteomics MS1-Quantification'
 
     class Meta:
-        verbose_name = 'Track Deep LC-MS (Monash)'
+        verbose_name = 'Track Proteomics MS1-Quantification'
         verbose_name_plural = verbose_name
 
 
-class SWATHMSTrack(SampleTrack):
-    track_type = 'SWATH-MS (APAF)'
+class ProteomicsSwathMSTrack(SampleTrack):
+    track_type = 'Proteomics Swath-MS'
 
     class Meta:
-        verbose_name = 'Track SWATH-MS (APAF)'
+        verbose_name = 'Track Proteomics Swath-MS'
         verbose_name_plural = verbose_name
 
 # Little point in expanding the common Sample Type
