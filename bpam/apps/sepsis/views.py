@@ -14,18 +14,18 @@ from .models import (Host,
                      TranscriptomicsHiseqFile,
                      GenomicsPacBioFile,
                      SepsisSample,
-                     PacBioTrack,
-                     MiSeqTrack,
-                     RNAHiSeqTrack,
-                     MetabolomicsTrack,
-                     DeepLCMSTrack,
-                     SWATHMSTrack,
+                     GenomicsPacBioTrack,
+                     GenomicsMiSeqTrack,
+                     TranscriptomicsHiSeqTrack,
+                     MetabolomicsLCMSTrack,
+                     ProteomicsMS1QuantificationTrack,
+                     ProteomicsSwathMSTrack,
                      )
 
 import serializers
 
 # a list of sepsis sample track types
-tracks = (PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack)
+tracks = (GenomicsPacBioTrack, GenomicsMiSeqTrack, TranscriptomicsHiSeqTrack, MetabolomicsLCMSTrack, ProteomicsMS1QuantificationTrack, ProteomicsSwathMSTrack)
 
 
 class SepsisView(TemplateView):
@@ -76,12 +76,12 @@ class TrackOverview(TemplateView):
 class TrackOverviewConstraints(View):
     # query definition is shared with TrackDetails
     constraint_queries = OrderedDict([
-        ('PacBio', lambda: PacBioTrack.objects.all()),
-        ('MiSeq', lambda: MiSeqTrack.objects.all()),
-        ('HiSeq', lambda: RNAHiSeqTrack.objects.all()),
-        ('Metabolomics', lambda: MetabolomicsTrack.objects.all()),
-        ('DeepLCMS', lambda: DeepLCMSTrack.objects.all()),
-        ('SWATHMS', lambda: SWATHMSTrack.objects.all())
+        ('Genomics PacBio', lambda: GenomicsPacBioTrack.objects.all()),
+        ('Genomics MiSeq', lambda: GenomicsMiSeqTrack.objects.all()),
+        ('Transcriptomics HiSeq', lambda: TranscriptomicsHiSeqTrack.objects.all()),
+        ('Metabolomics LCMS', lambda: MetabolomicsLCMSTrack.objects.all()),
+        ('Proteomics MS1 Quantification', lambda: ProteomicsMS1QuantificationTrack.objects.all()),
+        ('Proteomics Swath-MS', lambda: ProteomicsSwathMSTrack.objects.all())
     ])
     state_queries = OrderedDict([
         ('inproc', ('Sample processing', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False))),
@@ -227,7 +227,7 @@ class PacBioTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of PacBio
     '''
-    queryset = PacBioTrack.objects.all()
+    queryset = GenomicsPacBioTrack.objects.all()
     serializer_class = serializers.PacBioTrackSerializer
 
 
@@ -235,7 +235,7 @@ class MiSeqTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of MiSeq
     '''
-    queryset = MiSeqTrack.objects.all()
+    queryset = GenomicsMiSeqTrack.objects.all()
     serializer_class = serializers.MiSeqTrackSerializer
 
 
@@ -243,7 +243,7 @@ class RNAHiSeqTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of RNAHiSeq
     '''
-    queryset = RNAHiSeqTrack.objects.all()
+    queryset = TranscriptomicsHiSeqTrack.objects.all()
     serializer_class = serializers.RNAHiSeqTrackSerializer
 
 
@@ -251,7 +251,7 @@ class MetabolomicsTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of Metabolomics
     '''
-    queryset = MetabolomicsTrack.objects.all()
+    queryset = MetabolomicsLCMSTrack.objects.all()
     serializer_class = serializers.MetabolomicsTrackSerializer
 
 
@@ -259,7 +259,7 @@ class DeepLCMSTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of Deep LC-MS
     '''
-    queryset = DeepLCMSTrack.objects.all()
+    queryset = ProteomicsMS1QuantificationTrack.objects.all()
     serializer_class = serializers.DeepLCMSTrackSerializer
 
 
@@ -267,7 +267,7 @@ class SWATHMSTrackViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint that allows the tracking of SWAT HMST
     '''
-    queryset = SWATHMSTrack.objects.all()
+    queryset = ProteomicsSwathMSTrack.objects.all()
     serializer_class = serializers.SWATHMSTrackSerializer
 
 

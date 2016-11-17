@@ -9,7 +9,7 @@ from apps.common.models import BPAUniqueID
 # import export fields
 from commonfields import DateField
 
-from ..models import PacBioTrack, MiSeqTrack, RNAHiSeqTrack, MetabolomicsTrack, DeepLCMSTrack, SWATHMSTrack, SampleTrack
+from ..models import GenomicsPacBioTrack, GenomicsMiSeqTrack, TranscriptomicsHiSeqTrack, MetabolomicsLCMSTrack, ProteomicsMS1QuantificationTrack, ProteomicsSwathMSTrack, SampleTrack
 
 # 5 digit BPA ID
 # Taxon_OR_organism
@@ -121,13 +121,13 @@ class CommonTrackAdmin(BPAImportExportModelAdmin):
 class PacBioSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = PacBioTrack
+        model = GenomicsPacBioTrack
 
 
-class PacBioTrackAdmin(CommonTrackAdmin):
+class GenomicsPacBioTrackAdmin(CommonTrackAdmin):
     resource_class = PacBioSampleTrackResource
 
-admin.site.register(PacBioTrack, PacBioTrackAdmin)
+admin.site.register(GenomicsPacBioTrack, GenomicsPacBioTrackAdmin)
 
 # MiSeq
 
@@ -135,62 +135,62 @@ admin.site.register(PacBioTrack, PacBioTrackAdmin)
 class MiSeqSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = MiSeqTrack
+        model = GenomicsMiSeqTrack
 
 
-class MiSeqTrackAdmin(CommonTrackAdmin):
+class GenomicsMiSeqTrackAdmin(CommonTrackAdmin):
     resource_class = MiSeqSampleTrackResource
 
-admin.site.register(MiSeqTrack, MiSeqTrackAdmin)
+admin.site.register(GenomicsMiSeqTrack, GenomicsMiSeqTrackAdmin)
 
 
 # RNAHiSeq
 class RNAHiSeqSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = RNAHiSeqTrack
+        model = TranscriptomicsHiSeqTrack
 
 
-class RNAHiSeqTrackAdmin(CommonTrackAdmin):
+class TranscriptomicsHiSeqTrackAdmin(CommonTrackAdmin):
     resource_class = RNAHiSeqSampleTrackResource
 
-admin.site.register(RNAHiSeqTrack, RNAHiSeqTrackAdmin)
+admin.site.register(TranscriptomicsHiSeqTrack, TranscriptomicsHiSeqTrackAdmin)
 
 
 # Metabolomics
 class MetabolomicsSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = MetabolomicsTrack
+        model = MetabolomicsLCMSTrack
 
 
-class MetabolomicsTrackAdmin(CommonTrackAdmin):
+class MetabolomicsLCMSTrackAdmin(CommonTrackAdmin):
     resource_class = MetabolomicsSampleTrackResource
 
-admin.site.register(MetabolomicsTrack, MetabolomicsTrackAdmin)
+admin.site.register(MetabolomicsLCMSTrack, MetabolomicsLCMSTrackAdmin)
 
 
 # DeepLCMS
 class DeepLCMSSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = DeepLCMSTrack
+        model = ProteomicsMS1QuantificationTrack
 
 
-class DeepLCMSTrackAdmin(CommonTrackAdmin):
+class ProteomicsMS1QuantificationTrackAdmin(CommonTrackAdmin):
     resource_class = DeepLCMSSampleTrackResource
 
-admin.site.register(DeepLCMSTrack, DeepLCMSTrackAdmin)
+admin.site.register(ProteomicsMS1QuantificationTrack, ProteomicsMS1QuantificationTrackAdmin)
 
 
-# SWATHMSTrack
+# ProteomicsSwathMSTrack
 class SWATHMSSampleTrackResource(CommonSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
-        model = SWATHMSTrack
+        model = ProteomicsSwathMSTrack
 
 
-class SWATHMSMSTrackAdmin(CommonTrackAdmin):
+class ProteomicsSwathMSTrackAdmin(CommonTrackAdmin):
     resource_class = SWATHMSSampleTrackResource
 
-admin.site.register(SWATHMSTrack, SWATHMSMSTrackAdmin)
+admin.site.register(ProteomicsSwathMSTrack, ProteomicsSwathMSTrackAdmin)
