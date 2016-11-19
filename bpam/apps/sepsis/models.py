@@ -173,26 +173,6 @@ class SampleTrack(models.Model):
         (2, 'Pilot'),
         (3, 'Main dataset')
     )
-
-    ''' Track the Sepsis Sample '''
-
-    # 5 digit BPA ID
-    # Taxon_OR_organism
-    # Strain_OR_isolate
-    # Serovar
-    # Growth Media
-    # Replicate
-    # Omics
-    # Analytical platform
-    # Facility
-    # Work order
-    # Contextual Data Submission Date
-    # Sample submission FIXME, no need for flag if date is set, date is flag
-    # Sample submission date
-    # Data generated
-    # Archive ID
-    # Archive Ingestion Date
-
     bpa_id = models.ForeignKey(BPAUniqueID,
                                null=True,
                                verbose_name='BPA ID',
@@ -226,7 +206,14 @@ class SampleTrack(models.Model):
         abstract = True
 
 
-class GenomicsPacBioTrack(SampleTrack):
+class GenomicsSampleTrack(SampleTrack):
+    growth_condition_notes = models.CharField('Growth condition notes', max_length=500, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class GenomicsPacBioTrack(GenomicsSampleTrack):
     track_type = 'Genomics PacBio'
 
     class Meta:
@@ -234,7 +221,7 @@ class GenomicsPacBioTrack(SampleTrack):
         verbose_name_plural = verbose_name
 
 
-class GenomicsMiSeqTrack(SampleTrack):
+class GenomicsMiSeqTrack(GenomicsSampleTrack):
     track_type = 'Genomics MiSeq'
 
     class Meta:

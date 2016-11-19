@@ -29,23 +29,41 @@ from ..models import GenomicsPacBioTrack, GenomicsMiSeqTrack, TranscriptomicsHiS
 # Archive Ingestion Date
 
 BPA_ID = '102.100.100'
-track_data = ('bpa_id',
-              'data_type',
-              'taxon_or_organism',
-              'strain_or_isolate',
-              'serovar',
-              'growth_media',
-              'replicate',
-              'omics',
-              'analytical_platform',
-              'facility',
-              'work_order',
-              'contextual_data_submission_date',
-              'sample_submission_date',
-              'data_generated',
-              'archive_ingestion_date',
-              'dataset_url',
-              )
+track_data = (
+    'bpa_id',
+    'data_type',
+    'taxon_or_organism',
+    'strain_or_isolate',
+    'serovar',
+    'growth_media',
+    'replicate',
+    'omics',
+    'analytical_platform',
+    'facility',
+    'work_order',
+    'contextual_data_submission_date',
+    'sample_submission_date',
+    'data_generated',
+    'archive_ingestion_date',
+    'dataset_url')
+genomics_track_data = (
+    'bpa_id',
+    'data_type',
+    'taxon_or_organism',
+    'strain_or_isolate',
+    'serovar',
+    'growth_media',
+    'growth_condition_notes',
+    'replicate',
+    'omics',
+    'analytical_platform',
+    'facility',
+    'work_order',
+    'contextual_data_submission_date',
+    'sample_submission_date',
+    'data_generated',
+    'archive_ingestion_date',
+    'dataset_url')
 
 
 class TrackBooleanField(fields.Field):
@@ -110,36 +128,46 @@ class CommonSampleTrackResource(resources.ModelResource):
         export_order = track_data
 
 
+class GenomicsSampleTrackResource(CommonSampleTrackResource):
+    growth_condition_notes = fields.Field(attribute='growth_condition_notes', column_name='Growth condition notes')
+
+    class Meta:
+        import_id_fields = ('bpa_id', )
+        export_order = genomics_track_data
+
+
 class CommonTrackAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'sample_submission_date'
     list_display = track_data
     list_filter = ('bpa_id', 'taxon_or_organism', 'strain_or_isolate', 'omics')
 
-# PacBio
+
+class GenomicsTrackAdmin(CommonTrackAdmin):
+    list_display = genomics_track_data
 
 
-class PacBioSampleTrackResource(CommonSampleTrackResource):
+class PacBioSampleTrackResource(GenomicsSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
         model = GenomicsPacBioTrack
 
 
-class GenomicsPacBioTrackAdmin(CommonTrackAdmin):
+class GenomicsPacBioTrackAdmin(GenomicsTrackAdmin):
     resource_class = PacBioSampleTrackResource
+
 
 admin.site.register(GenomicsPacBioTrack, GenomicsPacBioTrackAdmin)
 
-# MiSeq
 
-
-class MiSeqSampleTrackResource(CommonSampleTrackResource):
+class MiSeqSampleTrackResource(GenomicsSampleTrackResource):
 
     class Meta(CommonSampleTrackResource.Meta):
         model = GenomicsMiSeqTrack
 
 
-class GenomicsMiSeqTrackAdmin(CommonTrackAdmin):
+class GenomicsMiSeqTrackAdmin(GenomicsTrackAdmin):
     resource_class = MiSeqSampleTrackResource
+
 
 admin.site.register(GenomicsMiSeqTrack, GenomicsMiSeqTrackAdmin)
 
@@ -154,6 +182,7 @@ class RNAHiSeqSampleTrackResource(CommonSampleTrackResource):
 class TranscriptomicsHiSeqTrackAdmin(CommonTrackAdmin):
     resource_class = RNAHiSeqSampleTrackResource
 
+
 admin.site.register(TranscriptomicsHiSeqTrack, TranscriptomicsHiSeqTrackAdmin)
 
 
@@ -166,6 +195,7 @@ class MetabolomicsSampleTrackResource(CommonSampleTrackResource):
 
 class MetabolomicsLCMSTrackAdmin(CommonTrackAdmin):
     resource_class = MetabolomicsSampleTrackResource
+
 
 admin.site.register(MetabolomicsLCMSTrack, MetabolomicsLCMSTrackAdmin)
 
@@ -180,6 +210,7 @@ class DeepLCMSSampleTrackResource(CommonSampleTrackResource):
 class ProteomicsMS1QuantificationTrackAdmin(CommonTrackAdmin):
     resource_class = DeepLCMSSampleTrackResource
 
+
 admin.site.register(ProteomicsMS1QuantificationTrack, ProteomicsMS1QuantificationTrackAdmin)
 
 
@@ -192,5 +223,6 @@ class SWATHMSSampleTrackResource(CommonSampleTrackResource):
 
 class ProteomicsSwathMSTrackAdmin(CommonTrackAdmin):
     resource_class = SWATHMSSampleTrackResource
+
 
 admin.site.register(ProteomicsSwathMSTrack, ProteomicsSwathMSTrackAdmin)

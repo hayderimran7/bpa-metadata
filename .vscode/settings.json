@@ -1,7 +1,0 @@
-{
-    "files.exclude": {
-        "**/*.pyc": true,
-        "data/": true,
-        "virt_bpametadata/": true
-    }
-}
