@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.5.0](https://github.com/muccg/bpa-metadata/tree/4.5.0) (2016-11-19)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.4.1...4.5.0)
+
+**Implemented enhancements:**
+
+- Update tracker names for Proteomics DeepLCMS, Metabolomics DeepLCMS [\#117](https://github.com/muccg/bpa-metadata/issues/117)
+
 ## [4.4.1](https://github.com/muccg/bpa-metadata/tree/4.4.1) (2016-11-15)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.4.0...4.4.1)
 
