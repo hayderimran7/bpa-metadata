@@ -6,6 +6,7 @@
 **Implemented enhancements:**
 
 - Update tracker names for Proteomics DeepLCMS, Metabolomics DeepLCMS [\#117](https://github.com/muccg/bpa-metadata/issues/117)
+- API: Tracker fields update for Pacbio, Miseq [\#116](https://github.com/muccg/bpa-metadata/issues/116)
 
 ## [4.4.1](https://github.com/muccg/bpa-metadata/tree/4.4.1) (2016-11-15)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.4.0...4.4.1)
