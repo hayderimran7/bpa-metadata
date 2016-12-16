@@ -71,6 +71,10 @@ class AmpliconDetailView(DetailView):
         return context
 
 
+class MethodsView(TemplateView):
+    template_name = 'marine_microbes/methods.html'
+
+
 class MMView(TemplateView):
     template_name = 'marine_microbes/index.html'
 

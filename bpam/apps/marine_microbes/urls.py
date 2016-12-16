@@ -40,6 +40,9 @@ urlpatterns = [
         name='collectionsitedetail'),
     url(regex=r'^sites', view=views.CollectionSiteListView.as_view(),
         name='collectionsites'),
+    url(regex=r'^methods$',
+        view=views.MethodsView.as_view(),
+        name='methods'),
 
     # BEGIN----- Tracker URLs ----------
 

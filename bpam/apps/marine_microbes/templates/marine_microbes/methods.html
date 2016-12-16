@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Information{% endblock %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
+{% breadcrumb "Methods" "" %}
+{% endblock %}
+
+<div class="container-fluid">
+    <div class="well">
+        <h2>
+            <span class="glyphicon glyphicon-info-sign"> </span> Marine Microbes Methods
+        </h2>
+        <div class="list-group">
+            <a href='{% static "marine_microbes/methods/MM_Illumina_16S_SOP.pdf" %}' class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> 16S Amplicon sequencing SOP
+            </a>
+            <a href='{% static "marine_microbes/methods/MM_Illumina_A16S_SOP.pdf" %}' class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> Archaeal 16S Amplicon sequencing SOP
+            </a>
+            <a href='{% static "marine_microbes/methods/MM_Illumina_18SV4_SOP.pdf" %}' class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> 18S Amplicon sequencing SOP
+            </a>
+            <a href='{% static "marine_microbes/methods/Coastal_sampling_SOP_v5.pdf" %}' class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> Coastal sampling SOP
+            </a>
+            <a href='{% static "marine_microbes/methods/Pelagic_sampling_SOP_16122016.pdf" %}' class="list-group-item">
+                <span class="glyphicon glyphicon-file"></span> Pelagic sampling SOP
+            </a>
+        </div>
+</div>
+
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}
