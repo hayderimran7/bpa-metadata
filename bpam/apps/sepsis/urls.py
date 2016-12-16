@@ -28,8 +28,6 @@ urlpatterns = [
     url(regex=r'^sample/(?P<pk>.*)/$',
         view=views.SampleDetailView.as_view(),
         name='sample'),
-    url(regex=r'^sampletracks', view=views.TrackListView.as_view(),
-        name='sampletracks'),
     url(regex=r'^genomicsmiseqfiles',
         view=views.GenomicsMiseqFileListView.as_view(),
         name='genomics_miseq_files'),

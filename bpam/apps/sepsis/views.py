@@ -37,7 +37,6 @@ class SepsisView(TemplateView):
         context['genomics_miseq_file_count'] = GenomicsMiseqFile.objects.count()
         context['transcriptomics_hiseq_file_count'] = TranscriptomicsHiseqFile.objects.count()
         context['genomics_pacbio_file_count'] = GenomicsPacBioFile.objects.count()
-        context['track_count'] = sum(t.objects.count() for t in tracks)
         return context
 
 
@@ -50,18 +49,6 @@ class SampleListView(ListView):
         context = super(SampleListView, self).get_context_data(**kwargs)
         context['samples'] = SepsisSample.objects.exclude(strain_or_isolate__isnull=True).exclude(
             strain_or_isolate__exact='')
-        return context
-
-
-class TrackListView(ListView):
-    template_name = 'sepsis/track_list.html'
-
-    def get_queryset(self):
-        return chain(*(t.objects.all() for t in tracks))
-
-    def get_context_data(self, **kwargs):
-        context = super(TrackListView, self).get_context_data(**kwargs)
-        context['sampletracks'] = self.get_queryset()
         return context
 
 
