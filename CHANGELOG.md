@@ -1,5 +1,26 @@
 # Change Log
 
+## [4.6.0](https://github.com/muccg/bpa-metadata/tree/4.6.0) (2016-12-16)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.5.0...4.6.0)
+
+**Implemented enhancements:**
+
+- Deprecate sepsis tracker API - migrate fields to sample API [\#105](https://github.com/muccg/bpa-metadata/issues/105)
+- migrate tracker ticket links to github issues [\#47](https://github.com/muccg/bpa-metadata/issues/47)
+- Methods tab for MM [\#122](https://github.com/muccg/bpa-metadata/issues/122)
+- Minor changes to sepsis webpage [\#121](https://github.com/muccg/bpa-metadata/issues/121)
+- Remove legacy sepsis sample tracking view [\#119](https://github.com/muccg/bpa-metadata/issues/119)
+- API: add support for proteomics swathms data [\#112](https://github.com/muccg/bpa-metadata/issues/112)
+- API: add support for Metabalomics LCMS files [\#104](https://github.com/muccg/bpa-metadata/issues/104)
+- Metatranscriptome support for marine microbes [\#99](https://github.com/muccg/bpa-metadata/issues/99)
+- API: Add support for Proteomics Deep LC-MS files [\#98](https://github.com/muccg/bpa-metadata/issues/98)
+- Remove the URL checked fields from all projects [\#91](https://github.com/muccg/bpa-metadata/issues/91)
+- sepsis: import contextual metadata [\#81](https://github.com/muccg/bpa-metadata/issues/81)
+
+**Fixed bugs:**
+
+- -omics field incorrect in v3 API for Pacbio and Miseq data [\#120](https://github.com/muccg/bpa-metadata/issues/120)
+
 ## [4.5.0](https://github.com/muccg/bpa-metadata/tree/4.5.0) (2016-11-19)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.4.1...4.5.0)
 
