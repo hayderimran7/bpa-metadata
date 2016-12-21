@@ -1,5 +1,12 @@
 # Change Log
 
+## [4.6.1](https://github.com/muccg/bpa-metadata/tree/4.6.1) (2016-12-21)
+[Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.6.0...4.6.1)
+
+**Implemented enhancements:**
+
+- Metagenomics protocol PDF for MM [\#123](https://github.com/muccg/bpa-metadata/issues/123)
+
 ## [4.6.0](https://github.com/muccg/bpa-metadata/tree/4.6.0) (2016-12-16)
 [Full Changelog](https://github.com/muccg/bpa-metadata/compare/4.5.0...4.6.0)
 
