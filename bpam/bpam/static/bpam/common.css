@@ -4,3 +4,9 @@
     background-color: #ffffe0;
     border: 1px solid black;
 }
+
+#footer {
+    background-color: #222222;
+    color: #666666;
+    padding: 15px 0 5px;
+}
