@@ -191,22 +191,22 @@ class CKANServer(models.Model):
     name = models.CharField(max_length=30, primary_key=True)
     base_url = models.URLField(max_length=200)
     order = models.IntegerField(unique=True)
+    api_key = models.CharField(max_length=100, null=True, blank=True)
 
     def __repr__(self):
         return self.name
 
     class Meta:
         ordering = ['order']
+        verbose_name = 'CKAN Server'
 
     @classmethod
     def primary(cls):
         "Returns the lowest order (primary) mirror"
-        servers = cls.objects.all()
-        if len(servers) > 0:
-            return servers[0]
-        else:
+        first = cls.objects.first()
+        if first is None:
             print("Please set the CKAN servers")
-            return None
+        return first
 
 
 class BPAProject(models.Model):
