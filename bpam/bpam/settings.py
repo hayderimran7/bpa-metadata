@@ -3,6 +3,7 @@
 
 import os
 
+
 from ccg_django_utils.conf import EnvConfig
 
 env = EnvConfig()
@@ -65,6 +66,8 @@ CKAN_SERVERS = ({
         'api_key': env.get('ckan_api_key', ''),
     },
 )
+
+CKAN_CACHE_TIMEOUT = env.get('ckan_cache_timeout', 24 * 60 * 60)
 
 DATABASES = {
     'default': {
@@ -315,6 +318,7 @@ INSTALLED_APPS = ('bpam',
                   'leaflet',
                   'import_export',
                   'anymail',
+                  'revproxy',
                   )
 
 # #
@@ -447,27 +451,34 @@ DEFAULT_PAGINATION = 50
 USE_X_FORWARDED_HOST = env.get("use_x_forwarded_host", True)
 
 if env.get("memcache", ""):
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': env.getlist("memcache", []),
-            'KEY_PREFIX': env.get("key_prefix", "bpam"),
-        }
+    default_cache = {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': env.getlist("memcache", []),
+        'KEY_PREFIX': env.get("key_prefix", "bpam"),
     }
 
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 else:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-            'LOCATION': 'bpam_cache',
-            'TIMEOUT': 3600,
-            'MAX_ENTRIES': 600
-        }
+    default_cache = {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'bpam_cache',
+        'TIMEOUT': 3600,
+        'MAX_ENTRIES': 600
     }
 
     SESSION_ENGINE = 'django.contrib.sessions.backends.file'
     SESSION_FILE_PATH = WRITABLE_DIRECTORY
+
+CACHES = {
+    'default': default_cache,
+
+    'big_objects': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'bpam_big_cache',
+        'TIMEOUT': 3600,
+        'MAX_ENTRIES': 600
+    }
+}
 
 CHMOD_USER = env.get("repo_user", "apache")
 CHMOD_GROUP = env.get("repo_group", "apache")

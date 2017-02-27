@@ -1,5 +1,7 @@
 from django import template
 from django.conf import settings
+from django.core.urlresolvers import reverse
+
 from ..models import CKANServer
 
 register = template.Library()
@@ -17,4 +19,5 @@ def sample_url(mirror, sample):
 
 @register.simple_tag
 def ckan_server_url():
-    return CKANServer.primary().base_url
+    # Point to the base of 'ckan/' urls which is the parent of 'ckan/proxy'
+    return reverse('ckan:proxy', kwargs={'path': '../'})

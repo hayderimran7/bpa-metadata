@@ -38,8 +38,12 @@
                 <div class="list-group">
                     <a class="list-group-item" href="{% url 'marine_microbes:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'marine_microbes:collectionsites' %}">Collection Sites <span class="badge">{{ collection_site_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">Metagenomic Sequences <span class="badge">{{ metagenomics_file_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicon_index' %}">Amplicon Sequences <span class="badge">{{ amplicon_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">
+                        Metagenomic Sequences
+                        <span id="metagenomic_sequences_count" class="badge"></span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicon_index' %}">
+                        Amplicon Sequences
+                        <span id="amplicon_sequences_count" class="badge"></span> </a>
                     <a class="list-group-item" href="{% url 'marine_microbes:overview' %}">Sample Tracking</a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/marine_microbes/">
@@ -64,5 +68,15 @@
 
         </div>
     </div>
+
+    <script>
+        var set_count = function (sel) {
+            return function (count) {
+                $(sel).text(count);
+            };
+        };
+        get_resources_count('bpa-marine-microbes', 'mm-metagenomics', set_count('#metagenomic_sequences_count'));
+        get_resources_count('bpa-marine-microbes', 'mm-genomics-amplicon', set_count('#amplicon_sequences_count'));
+    </script>
 </div>
 {% endblock %}

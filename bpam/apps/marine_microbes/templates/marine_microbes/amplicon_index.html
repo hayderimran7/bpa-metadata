@@ -25,13 +25,29 @@
                 </h2>
 
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_all' %}">All Amplicons <span class="badge">{{ all_size }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_16S' %}">16S <span class="badge">{{ 16S_size }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_A16S' %}">A16S <span class="badge">{{ A16S_size }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_18S' %}">18S <span class="badge">{{ 18S_size }}</span> </a>
+                    <a class="list-group-item" href="{% url 'base_amplicon:amplicons' %}">
+                        All Amplicons
+                        <span id="amplicons_count_all" class="badge"></span></a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_16S' %}">
+                        16S
+                        <span id="amplicons_count_16s" class="badge"></span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_A16S' %}">
+                        A16S
+                        <span id="amplicons_count_a16s" class="badge"></span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicons_18S' %}">
+                        18S
+                        <span id="amplicons_count_18s" class="badge"></span> </a>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        get_resources_count_by_amplicon(function(counts) {
+            $('#amplicons_count_all').text(counts.all);
+            $('#amplicons_count_16s').text(counts['16s']);
+            $('#amplicons_count_a16s').text(counts.a16s);
+            $('#amplicons_count_18s').text(counts['18s']);
+        })
+    </script>
 </div>
 {% endblock %}
