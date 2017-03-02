@@ -1,6 +1,7 @@
 import ckanapi
 from collections import Counter
 from hashlib import sha1
+import json
 import logging
 import operator
 import re
@@ -30,6 +31,7 @@ class CKANProxyView(ProxyView):
         r'\.\.',
     )]
 
+    # TODO review, we've opened up too much?
     WHITELIST = [re.compile(x) for x in (
         # r'^api/3/action/package_search\?.*wheat-pathogens.*',
         r'^api/3/action/package_search\?',
@@ -47,12 +49,9 @@ class CKANProxyView(ProxyView):
         headers = super(CKANProxyView, self).get_request_headers()
         server = CKANServer.primary()
         headers['Authorization'] = server.api_key
-        logger.debug(headers)
         return headers
 
     def access_control(self, path):
-        logger.debug('PATH is %s', path)
-
         for rule in self.BLACKLIST:
             if rule.match(path):
                 raise PermissionDenied()
@@ -64,6 +63,7 @@ class CKANProxyView(ProxyView):
         raise PermissionDenied()
 
     def dispatch(self, request, path):
+        logger.debug('Proxying %s', path)
         path_and_querystring = path
         if request.META.get('QUERY_STRING'):
             path_and_querystring = '%s?%s' % (path, request.META.get('QUERY_STRING'))
@@ -88,28 +88,64 @@ class CKANProxyView(ProxyView):
         return cached(request, path)
 
 
+# To review
+# I disabled all per-page caching to make it obvious that we cache on the ckan requests,
+# namely organizations_show and get_all_resources. All the other views are reusing that data
+# so caching per page isn't that important.
 
-@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
+
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
+def ckan_packages(request, org_name):
+    org = get_org(org_name)
+
+    return JsonResponse({
+        'success': True,
+        'data': org['packages'],
+    })
+
+
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources(request, org_name, package_type):
-    resources = get_resources(org_name, package_type)
+    amplicon = request.GET.get('amplicon')
+    resources = [r for r in get_all_resources(org_name) if r['package']['type'] == package_type]
+    if amplicon:
+        resources = [r for r in resources if r.get('amplicon', '').lower() == amplicon.lower()]
+
     return JsonResponse({
         'success': True,
         'data': resources,
     })
 
 
-@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_resources_count(request, org_name, package_type):
-    package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type]
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
+def ckan_packages_count(request, org_name):
+    org = get_org(org_name)
 
     return JsonResponse({
         'success': True,
-        'count': len(package_ids),
+        'data': len(org['packages']),
     })
 
 
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
+def ckan_resources_count(request, org_name):
+    resources = get_all_resources(org_name)
+    cnt = Counter(r['package']['type'] for r in resources)
+    sample_ids = set(r['package']['id'] for r in resources)
+
+    counts = dict(cnt.most_common())
+    counts['samples'] = len(sample_ids)
+
+    return JsonResponse({
+        'success': True,
+        'data': counts,
+    })
+
+
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources_count_by_amplicon(request):
-    cnt = Counter(p.get('amplicon') for p in get_org('bpa-marine-microbes')['packages'] if p['type'] == 'mm-genomics-amplicon')
+    resources = [r for r in get_all_resources('bpa-marine-microbes') if r['package']['type'] == 'mm-genomics-amplicon']
+    cnt = Counter(r.get('amplicon') for r in resources)
 
     counts = dict(cnt.most_common())
     counts['all'] = reduce(operator.add, counts.values())
@@ -118,6 +154,9 @@ def ckan_resources_count_by_amplicon(request):
         'success': True,
         'data': counts,
     })
+
+
+# CKAN "services"
 
 
 def get_ckan():
@@ -137,11 +176,48 @@ def get_org(org_name):
     return org
 
 
-def get_resources(org_name, package_type):
+def get_all_resources(org_name):
+    cache = caches['big_objects']
     ckan = get_ckan()
-    package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type]
 
-    packages = [ckan.action.package_show(id=pid, include_datasets=True) for pid in package_ids]
+    key = sha1('get_all_resources:${org_name}'.format(org_name=org_name)).hexdigest()
+    resources = cache.get(key)
+    if resources is not None:
+        logger.debug('Cached get_all_resources(%s)', org_name)
+        return resources
+
+    org = get_org(org_name)
+    package_ids = [p['id'] for p in get_org(org_name)['packages']]
+
+    packages = []
+    for pid in package_ids:
+        try:
+            packages.append(ckan.action.package_show(id=pid, include_datasets=True))
+        except ckanapi.errors.CKANAPIError:
+            logger.exception('Error trying to show package %s' % pid)
+
+    resources = [dict(r.items() + [('package', {k: v for k, v in p.items() if k != 'resources'})])
+                 for p in packages
+                 for r in p['resources']]
+
+
+    cache.set(key, resources)
+
+    return resources
+
+
+# Currently, unused, but leaving it because we might go back this
+def get_resources(org_name, package_type, filter_fn=lambda x: True):
+    ckan = get_ckan()
+    # package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type]
+    package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type and filter_fn(p)]
+
+    packages = []
+    for pid in package_ids:
+        try:
+            packages.append(ckan.action.package_show(id=pid, include_datasets=True))
+        except ckanapi.errors.CKANAPIError:
+            logger.exception('Error trying to show package %s' % pid)
 
     resources = [dict(r.items() + [('package', {k: v for k, v in p.items() if k != 'resources'})])
                  for p in packages

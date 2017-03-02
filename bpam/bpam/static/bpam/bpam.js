@@ -1,5 +1,7 @@
 "use strict";
 
+var loadingText = 'Loading...';
+
 $(document).ready(function () {
     var ccg_full_setup = {
         colReorder: true,
@@ -32,7 +34,7 @@ var set_ckanapi_error = function () {
 
 var get_sample = function (package_id, callback) {
     var api_base = bpam_config.ckan_base + 'proxy/';
-    var uri = api_base + 'api/3/action/package_show?bpa_id=' + package_id;
+    var uri = api_base + 'api/3/action/package_show?id=' + package_id;
     $.getJSON(uri).done(function (results) {
         callback(results.result);
     }).fail(function () {
@@ -91,10 +93,19 @@ var get_resources_data = function (org_name, package_type, callback) {
     });
 };
 
-var get_resources_count = function (org_name, package_type, callback) {
-    var resource_count = bpam_config.ckan_base + 'resources_count/' + org_name + '/' + package_type;
+var get_packages_count = function (org_name, callback) {
+    var packages_count = bpam_config.ckan_base + 'packages_count/' + org_name;
+    $.getJSON(packages_count).done(function (result) {
+        callback(result.data);
+    }).fail(function () {
+        set_ckanapi_error();
+    });
+};
+
+var get_resources_count = function (org_name, callback) {
+    var resource_count = bpam_config.ckan_base + 'resources_count/' + org_name;
     $.getJSON(resource_count).done(function (resource_results) {
-        callback(resource_results.count);
+        callback(resource_results.data);
     }).fail(function () {
         set_ckanapi_error();
     });
@@ -151,6 +162,47 @@ var wheat_pathogen_samples_setup = function () {
     });
 };
 
+var marine_microbes_samples_setup = function () {
+    var setup_table = function (resources) {
+        var resource_search = bpam_config.ckan_base + 'packages/bpa-marine-microbes';
+        var config = {
+            colReorder: true,
+            stateSave: true,
+            // data: resources,
+            ajax: {
+                url: resource_search,
+                cache: true,
+                dataSrc: 'data'
+            },
+            processing: true,
+            pageLength: 100,
+            buttons: [
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ], columns: [
+                {
+                    'data': 'id',
+                    'defaultContent': '',
+                    'render': function (data, type, row) {
+                        var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                { 'data': 'bpa_id' , 'defaultContent': ''},
+                { 'data': 'sample_type' , 'defaultContent': ''},
+                { 'data': 'sample_site', 'defaultContent': '' },
+                { 'data': 'date_sampled', 'defaultContent': '' },
+                { 'data': 'depth', 'defaultContent': '' }
+            ],
+            fixedHeader: true
+        };
+        var ft = $('.apitable').DataTable(config);
+        ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
+        $('.apitable').addClass('table-striped table-bordered table-condensed');
+    };
+    $(document).ready(function () {
+        setup_table();
+    });
+};
 
 var marine_microbes_metagenomics_setup = function () {
     var setup_table = function (resources) {
@@ -170,28 +222,82 @@ var marine_microbes_metagenomics_setup = function () {
                 'colvis', 'copy', 'csv', 'excel', 'print'
             ], columns: [
                 {
-                    'data': 'package.bpa_id',
+                    'data': 'package.id',
+                    'defaultContent': '',
                     'render': function (data, type, row) {
-                        // TODO not wheat_pathogens
                         var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
                         return '<a href="' + url + '">' + data + '</a>';
                     }
                 },
-                { 'data': 'package.sample_type' },
-                { 'data': 'vendor' },
-                { 'data': 'index' },
+                { 'data': 'package.bpa_id' , 'defaultContent': ''},
+                { 'data': 'package.sample_type' , 'defaultContent': ''},
+                { 'data': 'vendor', 'defaultContent': '' },
+                { 'data': 'index', 'defaultContent': '' },
                 {
                     'data': 'url',
+                    'defaultContent': '',
                     'render': function (data, type, row) {
                         return '<a href="' + row.url + '"><span class="glyphicon glyphicon-download"></span> Download</a>';
                     }
                 },
                 {
                     'data': 'md5',
+                    'defaultContent': '',
                     'render': function (data, type, row) {
                         return '<pre>' + data + '</pre>';
                     }
                 }
+            ],
+            fixedHeader: true
+        };
+        var ft = $('.apitable').DataTable(config);
+        ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
+        $('.apitable').addClass('table-striped table-bordered table-condensed');
+    };
+    $(document).ready(function () {
+        setup_table();
+    });
+};
+
+var marine_microbes_amplicon_setup = function (amplicon) {
+    var setup_table = function (resources) {
+        var resource_search = bpam_config.ckan_base + 'resources/bpa-marine-microbes/mm-genomics-amplicon';
+        if (amplicon !== 'all') {
+            resource_search += '?amplicon=' + amplicon;
+        }
+        var config = {
+            colReorder: true,
+            stateSave: true,
+            // data: resources,
+            ajax: {
+                url: resource_search,
+                cache: true,
+                dataSrc: 'data'
+            },
+            processing: true,
+            pageLength: 100,
+            buttons: [
+                'colvis', 'copy', 'csv', 'excel', 'print'
+            ], columns: [
+                {
+                    'data': 'package.id',
+                    'defaultContent': '',
+                    'render': function (data, type, row) {
+                        var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                { 'data': 'package.bpa_id' , 'defaultContent': ''},
+                { 'data': 'package.sra', 'defaultContent': ''},
+                { 'data': 'facility', 'defaultContent': ''},
+                { 'data': 'amplicon', 'defaultContent': ''},
+                { 'data': 'index', 'defaultContent': ''},
+                { 'data': 'pcr1_10' , 'defaultContent': ''},
+                { 'data': 'pcr1_100' , 'defaultContent': ''},
+                { 'data': 'neat_pcr' , 'defaultContent': ''},
+                { 'data': 'package.dilution_used' , 'defaultContent': ''},
+                { 'data': 'package.analysis_software_version' , 'defaultContent': ''},
+                { 'data': 'read' , 'defaultContent': ''}
             ],
             fixedHeader: true
         };
@@ -269,9 +375,11 @@ var set_counts = function (data_type) {
 
 var sample_id_from_location = function () {
     var sample_id = window.location.pathname.replace(/\/$/, '').split('/')[3];
+    /*
     if (!sample_id.match(/^[\d\.]+$/)) {
         return;
     }
+    */
     return sample_id;
 };
 
@@ -296,6 +404,21 @@ var set_sample = function () {
     });
 };
 
+var set_mm_sample = function () {
+    var sample_id = sample_id_from_location();
+    if (!sample_id) {
+        return;
+    }
+    get_sample(sample_id, function (sample_obj) {
+        $(".bpa_id").text(sample_obj.bpa_id);
+        $(".sample_id").text(sample_obj.id);
+        $(".sample_type").text(sample_obj.type);
+        $(".site").text(sample_obj.sample_site);
+        $(".sample_depth").text(sample_obj.depth);
+        $(".collection_date").text(sample_obj.date_sampled);
+    });
+};
+
 var set_sample_resources = function () {
     var sample_id = sample_id_from_location();
     if (!sample_id) {
@@ -313,7 +436,7 @@ var set_sample_resources = function () {
             ],
             columns: [
                 {
-                    'data': 'filename',
+                    'data': 'name',
                     'render': function (data, type, row) {
                         return '<a href="' + row.url + '">' + data + '</a>';
                     }
@@ -337,12 +460,18 @@ var set_sample_resources = function () {
 };
 
 var landing_setup = function () {
+    $('#marine_microbes_sample_count').text(loadingText);
+    $('#wheat_pathogens_genome_sample_count').text(loadingText);
+
     var set_count = function (sel) {
         return function (package_info, resource_info) {
             $(sel).text(package_info.length);
         };
     };
     $(document).ready(function () {
-        get_project_data('wheat-pathogens', set_count("#wheat_pathogens_genome_sample_count"));
+        get_project_data('wheat-pathogens', set_count('#wheat_pathogens_genome_sample_count'));
+        get_packages_count('bpa-marine-microbes', function(count) {
+            $('#marine_microbes_sample_count').text(count);
+        });
     });
 };

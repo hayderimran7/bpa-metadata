@@ -6,9 +6,10 @@
         <div class="bootstrap_buttons"> </div>
     </div>
 
-    <table class="ccgtable" width="100%">
+    <table class="apitable" width="100%">
         <thead>
             <tr>
+                <th>Sample ID</th>
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
                 <th class="filter-select filter-exact" amplicon-placeholder="Facility">Facility</th>
@@ -24,6 +25,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th>Sample ID</th>
                 <th>BPA ID</th>
                 <th>SRA biosample accession</th>
                 <th>Facility</th>
@@ -38,41 +40,11 @@
             </tr>
         </tfoot>
         <tbody>
-            {% for amplicon in amplicon_list %}
-            <tr>
-                <td>
-                    <a href="{% url 'marine_microbes:sample' amplicon.sample.bpa_id %}">{{ amplicon.sample.bpa_id }}</a>
-                </td>
-                <td>{{ amplicon.sample.bpa_id.sra_id |default:"" }}</td>
-                <td>{{ amplicon.vendor }}</td>
-                <td>{{ amplicon.amplicon }}</td>
-                <td>{{ amplicon.index }}</td>
-                <td>
-                    {% if amplicon.passed_pcr_1_to_10 %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                    {% endif %}
-                </td>
-                <td>
-                    {%if amplicon.passed_pcr_1_to_100 %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if amplicon.passed_pcr_neat %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                    {% endif %}
-                </td>
-                <td>{{ amplicon.dilution|default:"" }}</td>
-                <td>{{ amplicon.analysis_software_version|default:"" }}</td>
-                <td>{{ amplicon.number_of_reads|default:"" }}</td>
-            </tr>
-            {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        marine_microbes_amplicon_setup('{{ amplicon }}');
+    </script>
+
 </div>

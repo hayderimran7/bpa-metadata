@@ -14,11 +14,7 @@
 {% endblock %}
 
 {% block content %}
-{% if amplicon_list %}
-{% include "marine_microbes/amplicon_table.html" %}
 
-{% else %}
-<h3> No Amplicon data is currently available </h3>
-{% endif %}
+{% include "marine_microbes/amplicon_table.html" %}
 
 {% endblock %}
