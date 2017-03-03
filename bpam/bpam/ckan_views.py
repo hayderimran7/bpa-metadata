@@ -95,12 +95,20 @@ class CKANProxyView(ProxyView):
 
 
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_packages(request, org_name):
+def ckan_packages(request, org_name, package_type=None):
+    amplicon = request.GET.get('amplicon')
     org = get_org(org_name)
+    if package_type is None:
+        packages = org['packages']
+    else:
+        packages = [p for p in org['packages'] if p['type'] == package_type]
+
+    if amplicon:
+        packages = [p for p in packages if p.get('amplicon', '').lower() == amplicon.lower()]
 
     return JsonResponse({
         'success': True,
-        'data': org['packages'],
+        'data': packages,
     })
 
 
@@ -127,6 +135,22 @@ def ckan_packages_count(request, org_name):
     })
 
 
+def mm_project_overview_count(request):
+    org = get_org('bpa-marine-microbes')
+
+    cnt = Counter(p['type'] for p in org['packages'])
+    amplicons_cnt = Counter(p['amplicon'] for p in org['packages'] if p['type'] == 'mm-genomics-amplicon')
+
+    counts = dict(cnt.most_common())
+    counts['amplicons'] = dict(amplicons_cnt.most_common())
+
+    return JsonResponse({
+        'success': True,
+        'data': counts,
+    })
+
+
+
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources_count(request, org_name):
     resources = get_all_resources(org_name)
@@ -145,6 +169,7 @@ def ckan_resources_count(request, org_name):
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources_count_by_amplicon(request):
     resources = [r for r in get_all_resources('bpa-marine-microbes') if r['package']['type'] == 'mm-genomics-amplicon']
+
     cnt = Counter(r.get('amplicon') for r in resources)
 
     counts = dict(cnt.most_common())
