@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-
+import logging
 import urlparse
 import urllib
 import re
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+
+
+logger = logging.getLogger(__name__)
 
 
 class FacilityManager(models.Manager):
@@ -181,7 +184,7 @@ class BPAMirror(models.Model):
         if len(mirrors) > 0:
             return mirrors[0]
         else:
-            print("Please set the mirrors")
+            logger.warning("Please set the mirrors")
             return None
 
 
@@ -205,7 +208,7 @@ class CKANServer(models.Model):
         "Returns the lowest order (primary) mirror"
         first = cls.objects.first()
         if first is None:
-            print("Please set the CKAN servers")
+            logger.warning("Please set the CKAN servers")
         return first
 
 
