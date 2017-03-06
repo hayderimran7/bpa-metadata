@@ -17,6 +17,7 @@ from import_export.admin import ImportExportModelAdmin, ImportExportActionModelA
 from django.conf import settings
 from .models import BPAProject
 from .models import BPAUniqueID
+from .models import CKANServer
 from .models import Facility
 from .models import Organism
 from .models import SequenceFile
@@ -29,6 +30,13 @@ TICKET_URL = ""
 
 
 logger = logging.getLogger(__name__)
+
+
+class CKANServerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'base_url')
+
+
+admin.site.register(CKANServer, CKANServerAdmin)
 
 
 class BPAImportExportModelAdmin(ImportExportModelAdmin):

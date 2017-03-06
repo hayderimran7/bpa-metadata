@@ -47,7 +47,11 @@ urlpatterns = patterns(
     url(r'^admin_tools/', include('admin_tools.urls')),
     # url(r'^$', TemplateView.as_view(template_name='landing/index.html'), name='landing_page'),
     url(r'^$', LandingView.as_view(), name='landing_page'),
-    url(r'^explorer/', include('explorer.urls')), )
+    url(r'^explorer/', include('explorer.urls')),
+
+    url(r'^ckan/', include('bpam.ckan_urls', namespace='ckan')),
+)
+
 
 # pattern for serving statically
 urlpatterns += patterns('', (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root':

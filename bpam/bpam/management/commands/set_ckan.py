@@ -1,12 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from apps.common.models import CKANServer
-
-SITES = [
-    {
-        'name': 'bpa-aws1',
-        'base_url': 'https://data.bioplatforms.com/'
-    },
-]
 
 
 class Command(BaseCommand):
@@ -14,5 +8,10 @@ class Command(BaseCommand):
 
     def handle(self, dataset=[], **options):
         CKANServer.objects.all().delete()
-        [CKANServer.objects.get_or_create(order=i, **t) for i, t in enumerate(SITES)]
-        print("Primary server is `%s'." % (repr(CKANServer.primary())))
+        for i, ckan in enumerate(getattr(settings, 'CKAN_SERVERS', ())):
+            CKANServer.objects.create(
+                    name=ckan.get('name'),
+                    base_url=ckan.get('base_url'),
+                    api_key=ckan.get('api_key'),
+                    order=i)
+        self.stdout.write("Primary server is `%s'." % (repr(CKANServer.primary())))

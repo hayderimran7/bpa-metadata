@@ -11,16 +11,15 @@
 
 {% block content %}
 
-{% if samples %}
-
 <div class="container-fluid">
     <div class="alert alert-info" role="alert">
         To sort by multiple columns, press and hold the Shift key.
         <div class="bootstrap_buttons"> </div>
     </div>
-    <table class="ccgtable" width="100%">
+    <table class="apitable" width="100%">
         <thead>
             <tr>
+                <th>Sample ID</th>
                 <th>BPA ID</th>
                 <th>Sample Type</th>
                 <th>Collection Site</th>
@@ -30,25 +29,21 @@
         </thead>
         <tfoot>
             <tr>
+                <th>Sample ID</th>
+                <th>BPA ID</th>
+                <th>Sample Type</th>
+                <th>Collection Site</th>
+                <th>Collection Date</th>
+                <th>Collection Depth</th>
             </tr>
         </tfoot>
         <tbody>
-            {% for sample in samples %}
-            <tr>
-                <td>
-                    <a href="{% url 'marine_microbes:sample' sample.pk %}">{{ sample.bpa_id }}</a>
-                </td>
-                <td>{{ sample.get_sample_type_display|default:"" }}</td>
-                <td>{{ sample.site|default:""}}</td>
-                <td>{{ sample.collection_date |default:"" }}</td>
-                <td>{{ sample.depth |default:"" }}</td>
-            </tr>
-            {% endfor %}
         </tbody>
     </table>
 
-    {% else %}
-    <h3> No Marine Microbes Sample Data is currently available </h3>
-    {% endif %}
+    <script>
+        marine_microbes_samples_setup();
+    </script>
+
 </div>
 {% endblock %}

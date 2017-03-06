@@ -8,7 +8,7 @@
 {{ block.super }}
 {% breadcrumb "Marine Microbes" "marine_microbes:index" %}
 {% breadcrumb "Samples" "marine_microbes:samples" %}
-{% breadcrumb sample.bpa_id "marine_microbes:sample" sample.bpa_id %}
+{% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
 {% endblock %}
 
 {% block content %}
@@ -16,25 +16,37 @@
   <table id="info" class="table table-striped">
     <tbody>
       <tr>
+        <td> BPA ID</td>
+        <td class="bpa_id"></td>
+      </tr>
+      <tr>
+        <td> Sample ID</td>
+        <td class="sample_id"></td>
+      </tr>
+      <tr>
         <td> Sample Type</td>
-        <td> {{ sample.get_sample_type_display|default:"" }}</td>
+        <td class="sample_type"></td>
       </tr>
       <tr>
         <td> Site </td>
-        <td> {{ sample.site|default:"" }}</td>
+        <td class="site"></td>
       </tr>
       <tr>
         <td> Sample Depth</td>
-        <td> {{ sample.depth|default:"" }}</td>
+        <td class="sample_depth"></td>
       </tr>
       <tr>
         <td>Collection Date</td>
-        <td> {{ sample.collection_date}}</td>
+        <td class="collection_date"></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-{% include "sequencefilelist.html" %}
+<script>
+    set_mm_sample();
+</script>
+
+{% include "apisequencefilelist.html" %}
 
 {% endblock %}

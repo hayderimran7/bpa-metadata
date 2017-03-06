@@ -13,49 +13,29 @@ from .models import MMSite
 class AmpliconIndexView(TemplateView):
     template_name = 'marine_microbes/amplicon_index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(AmpliconIndexView, self).get_context_data(**kwargs)
-        context['16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='16S').count()
-        context['18S_size'] = AmpliconSequenceFile.objects.filter(amplicon='18S').count()
-        context['A16S_size'] = AmpliconSequenceFile.objects.filter(amplicon='A16S').count()
-        context['all_size'] = AmpliconSequenceFile.objects.count()
-        return context
-
 
 class AmpliconListView(ListView):
     model = AmpliconSequenceFile
     context_object_name = 'amplicon_list'
     template_name = 'marine_microbes/amplicon_list.html'
+    amplicon = 'all'
 
     def get_context_data(self, **kwargs):
         context = super(AmpliconListView, self).get_context_data(**kwargs)
-        context['amplicon'] = 'all'
-        context['amplicon_list'] = AmpliconSequenceFile.objects.select_related("sample")
+        context['amplicon'] = self.amplicon
         return context
 
 
 class Amplicon16SListView(AmpliconListView):
-    def get_context_data(self, **kwargs):
-        context = super(Amplicon16SListView, self).get_context_data(**kwargs)
-        context['amplicon'] = '16S'
-        context['amplicon_list'] = AmpliconSequenceFile.objects.filter(amplicon='16S')
-        return context
+    amplicon = '16s'
 
 
 class Amplicon18SListView(AmpliconListView):
-    def get_context_data(self, **kwargs):
-        context = super(Amplicon18SListView, self).get_context_data(**kwargs)
-        context['amplicon'] = '18S'
-        context['amplicon_list'] = AmpliconSequenceFile.objects.filter(amplicon='18S')
-        return context
+    amplicon = '18s'
 
 
 class AmpliconA16SListView(AmpliconListView):
-    def get_context_data(self, **kwargs):
-        context = super(AmpliconA16SListView, self).get_context_data(**kwargs)
-        context['amplicon'] = 'A16S'
-        context['amplicon_list'] = AmpliconSequenceFile.objects.filter(amplicon='A16S')
-        return context
+    amplicon = 'a16s'
 
 
 class AmpliconDetailView(DetailView):
@@ -99,20 +79,8 @@ class MetagenomicFileListView(ListView):
     template_name = 'marine_microbes/metagenomics_file_list.html'
 
 
-class SampleDetailView(DetailView):
-    model = MMSample
-    context_object_name = 'sample'
+class SampleDetailView(TemplateView):
     template_name = 'marine_microbes/sample_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(SampleDetailView, self).get_context_data(**kwargs)
-        miseqset = MetagenomicSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
-        ampliconset = AmpliconSequenceFile.objects.filter(sample__bpa_id=context['sample'].bpa_id)
-        context['sequencefiles'] = list(chain(miseqset, ampliconset))
-        context['mirrors'] = BPAMirror.objects.all()
-        context['disable_run'] = True
-
-        return context
 
 
 class ContactsView(TemplateView):

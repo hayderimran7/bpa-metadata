@@ -36,11 +36,20 @@
 
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'marine_microbes:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:collectionsites' %}">Collection Sites <span class="badge">{{ collection_site_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">Metagenomic Sequences <span class="badge">{{ metagenomics_file_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:amplicon_index' %}">Amplicon Sequences <span class="badge">{{ amplicon_count }}</span> </a>
-                    <a class="list-group-item" href="{% url 'marine_microbes:overview' %}">Sample Tracking</a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:samples' %}">
+                        Samples
+                        <span id="samples_count" class="badge"></span> </a>
+                    {% comment %}
+                      <a class="list-group-item" href="{% url 'marine_microbes:collectionsites' %}">Collection Sites <span class="badge"></span> </a>
+                    {% endcomment %}
+                    <a class="list-group-item" href="{% url 'marine_microbes:metagenomic_sequence_files' %}">
+                        Metagenomic Sequences
+                        <span id="metagenomic_sequences_count" class="badge"></span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:amplicon_index' %}">
+                        Amplicon Sequences
+                        <span id="amplicon_sequences_count" class="badge"></span> </a>
+                    <a class="list-group-item" href="{% url 'marine_microbes:overview' %}">
+                        Project Overview</a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/marine_microbes/">
                         <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
@@ -64,5 +73,17 @@
 
         </div>
     </div>
+
+    <script>
+        $('#samples_count').text(loadingText);
+        $('#metagenomic_sequences_count').text(loadingText);
+        $('#amplicon_sequences_count').text(loadingText);
+
+        get_resources_count('bpa-marine-microbes', function(counts) {
+            $('#samples_count').text(counts['samples']);
+            $('#metagenomic_sequences_count').text(counts['mm-metagenomics']);
+            $('#amplicon_sequences_count').text(counts['mm-genomics-amplicon']);
+        });
+    </script>
 </div>
 {% endblock %}
