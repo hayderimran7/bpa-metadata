@@ -375,7 +375,7 @@ var set_counts = function (data_type) {
 
 var sample_id_from_location = function () {
     // sample id should be the last part of the URL following '.../sample/'
-    var match = window.location.pathname.match(/sample\/([\w-]+)\/?$/);
+    var match = window.location.pathname.match(/sample\/([^\/]+)\/?$/);
     if (match == null || match.length < 2) {
         return;
     }
