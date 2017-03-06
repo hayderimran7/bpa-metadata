@@ -374,13 +374,13 @@ var set_counts = function (data_type) {
 };
 
 var sample_id_from_location = function () {
-    var sample_id = window.location.pathname.replace(/\/$/, '').split('/')[3];
-    /*
-    if (!sample_id.match(/^[\d\.]+$/)) {
+    // sample id should be the last part of the URL following '.../sample/'
+    var match = window.location.pathname.match(/sample\/([\w-]+)\/?$/);
+    if (match == null || match.length < 2) {
         return;
     }
-    */
-    return sample_id;
+
+    return match[1];
 };
 
 var set_sample = function () {
