@@ -462,6 +462,7 @@ var set_sample_resources = function () {
 var landing_setup = function () {
     $('#marine_microbes_sample_count').text(loadingText);
     $('#wheat_pathogens_genome_sample_count').text(loadingText);
+    $('#stemcell_sample_count').text(loadingText);
 
     var set_count = function (sel) {
         return function (package_info, resource_info) {
@@ -472,6 +473,9 @@ var landing_setup = function () {
         get_project_data('wheat-pathogens', set_count('#wheat_pathogens_genome_sample_count'));
         get_packages_count('bpa-marine-microbes', function(count) {
             $('#marine_microbes_sample_count').text(count);
+        });
+        get_packages_count('bpa-stemcells', function(count) {
+            $('#stemcell_sample_count').text(count);
         });
     });
 };
