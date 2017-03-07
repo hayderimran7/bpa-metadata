@@ -419,6 +419,21 @@ var set_mm_sample = function () {
     });
 };
 
+var set_stemcell_sample = function () {
+    var sample_id = sample_id_from_location();
+    if (!sample_id) {
+        return;
+    }
+    get_sample(sample_id, function (sample_obj) {
+        $(".bpa_id").text(sample_obj.bpa_id);
+        $(".sample_id").text(sample_obj.id);
+        $(".state").text(sample_obj.state);
+        $(".sequencer").text(sample_obj.sequencer);
+        $(".library_construction_protocol").text(sample_obj.library_construction_protocol);
+        $(".notes").text(sample_obj.notes);
+    });
+};
+
 var set_sample_resources = function () {
     var sample_id = sample_id_from_location();
     if (!sample_id) {

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Stem Cells Sample Detail {% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Stem Cells" "stemcell:index" %}
+{% comment %}
+  TODO maybe?
+  Change the breadcrumbs to have samples list as parent if we will have that page
+  {% breadcrumb "Samples" "stemcell:samples" %}
+{% endcomment %}
+{% breadcrumb "Project Overview" "stemcell:project_overview" %}
+{% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
+{% endblock %}
+
+{% block content %}
+<div class="panel panel-info">
+  <table id="info" class="table table-striped">
+    <tbody>
+      <tr>
+        <td>BPA ID</td>
+        <td class="bpa_id"></td>
+      </tr>
+      <tr>
+        <td>Sample ID</td>
+        <td class="sample_id"></td>
+      </tr>
+      <tr>
+        <td>State</td>
+        <td class="state"></td>
+      </tr>
+      <tr>
+        <td>Sequencer</td>
+        <td class="sequencer"></td>
+      </tr>
+      <tr>
+        <td>Library Construction Protocol</td>
+        <td class="library_construction_protocol"></td>
+      </tr>
+      <tr>
+        <td>Notes</td>
+        <td class="notes"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+    set_stemcell_sample();
+</script>
+
+{% include "apisequencefilelist.html" %}
+
+{% endblock %}

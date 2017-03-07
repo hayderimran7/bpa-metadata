@@ -16,4 +16,5 @@ urlpatterns = patterns(
     url(r'^resources_count/(?P<org_name>[\w-]+)/?$', views.ckan_resources_count, name='resources_count'),
     url(r'^resources_count_by_amplicon/?$', views.ckan_resources_count_by_amplicon, name='resources_count_by_amplicon'),
     url(r'^mm_project_overview_count/?$', views.mm_project_overview_count, name='mm_project_overview_count'),
+    url(r'^stemcell_project_overview_count/?$', views.stemcell_project_overview_count, name='stemcell_project_overview_count'),
 )
