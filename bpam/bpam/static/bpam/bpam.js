@@ -169,6 +169,8 @@ var marine_microbes_samples_setup = function () {
             colReorder: true,
             stateSave: true,
             // data: resources,
+            serverSide: true,
+            searching: false,
             ajax: {
                 url: resource_search,
                 cache: true,
@@ -211,6 +213,8 @@ var marine_microbes_metagenomics_setup = function () {
             colReorder: true,
             stateSave: true,
             // data: resources,
+            serverSide: true,
+            searching: false,
             ajax: {
                 url: resource_search,
                 cache: true,
@@ -269,6 +273,8 @@ var marine_microbes_amplicon_setup = function (amplicon) {
             colReorder: true,
             stateSave: true,
             // data: resources,
+            serverSide: true,
+            searching: false,
             ajax: {
                 url: resource_search,
                 cache: true,
