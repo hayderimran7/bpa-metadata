@@ -254,6 +254,17 @@ def mm_project_overview_count(request):
     })
 
 
+def stemcell_project_overview_count(request):
+    org = get_org('bpa-stemcells')
+
+    cnt = Counter(p['type'] for p in org['packages'])
+    counts = dict(cnt.most_common())
+
+    return JsonResponse({
+        'success': True,
+        'data': counts,
+    })
+
 
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources_count(request, org_name):

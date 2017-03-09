@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Stem Cells Project Overview{% endblock %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Stem Cells" "stemcell:index" %}
+{% breadcrumb "Stem Cells Project Overview" "" %}
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"
+      integrity="sha256-sbTY4/3NU+qqsJIrxYuJXgOTjF75tfKYOVu+DEdV+cA= sha384-wd7GF/BlZaKbO07QcE6J32f+vLIVar4Qyo7n4601xPjaOS3KuhkoMARpLOOvI4XI sha512-z7TDQTYQF39S87Lt3oi9I5RSsV4SSo7Pmwj4+FXZTXuKxzIzqP6C5uo00RyajhFwncuty57b1s1slkvpj5YLHw=="
+      crossorigin="anonymous"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"
+        integrity="sha256-lK8O5StczSYl4DweTw0KlopBgYKtiwLSq6BbSSe77Kk= sha384-3xJpTAehKTp8sw2H5VBvFFFeUdcxlxQYYyML7JGy/N8CdC+Ij8AALUibuWZRjiJq sha512-MR6zYveOuENWQVCZ6oDvrbySpOsDwGLoKxPt3p0dM/Ce3nZk+IqFgqr+qx94WtM84THJJOmGHMwazsUJn43RhQ=="
+        crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+        function recreateTable(url) {
+            $('#content-table').DataTable().destroy();
+
+            var config = {
+                retrieve: true,
+                colReorder: true,
+                stateSave: true,
+                ajax: {
+                    url: url,
+                    cache: true,
+                    dataSrc: 'data'
+                },
+                processing: true,
+                pageLength: 100,
+                buttons: [
+                    'colvis', 'copy', 'csv', 'excel', 'print'
+                ], columns: [
+                    {
+                        'data': 'id',
+                        'defaultContent': '',
+                        'render': function (data, type, row) {
+                            var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
+                            return '<a href="' + url + '">' + data + '</a>';
+                        }
+                    },
+                    { 'data': 'bpa_id' , 'defaultContent': ''},
+                    { 'data': 'state' , 'defaultContent': ''},
+                    { 'data': 'sequencer' , 'defaultContent': ''},
+                    { 'data': 'library_construction_protocol' , 'defaultContent': ''},
+                    { 'data': 'notes' , 'defaultContent': ''}
+                ],
+                fixedHeader: true
+            };
+            var ft = $('#content-table').DataTable(config);
+            ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
+            $('.apitable').addClass('table-striped table-bordered table-condensed');
+        }
+
+        $("#tree").on('select_node.jstree', function (e, data) {
+            recreateTable(data.node.original.url);
+
+            if (data.instance.is_parent(data.node)) {
+                if (!data.instance.is_open(data.node) ) {
+                    data.instance.toggle_node(data.node);
+                }
+            }
+
+        }).jstree({
+            'core' : {
+              'data': function(obj, callback) {
+                  $.ajax({
+                      'url': '{% url "ckan:stemcell_project_overview_count" %}',
+                  }).done(function(resp) {
+                      var data = resp.data;
+                      callback.call(this, [{
+                              text: 'Single cell RNA seq (' + _.get(data, 'stemcells-singlecellrnaseq', 0)  + ')',
+                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
+                              /* TODO
+                              children: [{
+                                    text: 'Second level (0)'
+                                }, {
+                                    text: 'More second level (0)'
+                              }]
+                              */
+                          },{
+                              text: 'Small RNA (' + _.get(data, 'stemcells-smallrna', 0)  + ')',
+                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-smallrna' %}"
+                          },{
+                              text: 'Transcriptomics (' + _.get(data, 'stemcells-transcriptomics', 0)  + ')',
+                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
+                          }]);
+                  });
+              }
+            },
+            "plugins" : [ "state" ]
+        });
+
+        $("#tree-toggle-btn").on('click', function() {
+            if ( $("#tree-col").is(":hidden") ) {
+                $("#content-col").removeClass("col-md-12");
+                $("#content-col").addClass("col-md-10");
+                $("#tree-col").show("slow");
+                $("#tree-toggle-btn").html("Hide tree");
+            } else {
+                $("#tree-col").hide("slow", function() {
+                    $("#content-col").removeClass("col-md-10");
+                    $("#content-col").addClass("col-md-12");
+                    $("#tree-toggle-btn").html("Show tree");
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
+        </div>
+        <div class="col-md-10">
+            <div class="bootstrap_buttons pull-right"> </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+
+<br>
+<div class="row">
+
+    <div class="col-md-2" id="tree-col">
+        <div id="tree">
+        </div>
+    </div>
+
+    <div class="col-md-10" id="content-col">
+        <table class="apitable" width="100%" id="content-table">
+            <thead>
+                <tr>
+                    <th>Sample ID</th>
+                    <th>BPA ID</th>
+                    <th>State</th>
+                    <th>Sequencer</th>
+                    <th>Library Construction Protocol</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Sample ID</th>
+                    <th>BPA ID</th>
+                    <th>State</th>
+                    <th>Sequencer</th>
+                    <th>Library Construction Protocol</th>
+                    <th>Notes</th>
+                </tr>
+            </tfoot>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

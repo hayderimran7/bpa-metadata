@@ -9,3 +9,11 @@ class StemCellView(TemplateView):
 
 class ContactsView(TemplateView):
     template_name = 'stemcell/contacts.html'
+
+
+class ProjectOverviewView(TemplateView):
+    template_name = 'stemcell/project_overview.html'
+
+
+class SampleDetailView(TemplateView):
+    template_name = 'stemcell/sample_detail.html'
