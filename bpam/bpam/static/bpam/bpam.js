@@ -102,6 +102,8 @@ var get_packages_count = function (org_name, callback) {
     });
 };
 
+var get_all_packages_count = _.partial(get_packages_count, '');
+
 var get_resources_count = function (org_name, callback) {
     var resource_count = bpam_config.ckan_base + 'resources_count/' + org_name;
     $.getJSON(resource_count).done(function (resource_results) {
@@ -485,18 +487,15 @@ var landing_setup = function () {
     $('#wheat_pathogens_genome_sample_count').text(loadingText);
     $('#stemcell_sample_count').text(loadingText);
 
-    var set_count = function (sel) {
-        return function (package_info, resource_info) {
-            $(sel).text(package_info.length);
-        };
-    };
     $(document).ready(function () {
-        get_project_data('wheat-pathogens', set_count('#wheat_pathogens_genome_sample_count'));
-        get_packages_count('bpa-marine-microbes', function(count) {
-            $('#marine_microbes_sample_count').text(count);
-        });
-        get_packages_count('bpa-stemcells', function(count) {
-            $('#stemcell_sample_count').text(count);
+        get_all_packages_count(function(result) {
+            function orgSampleCount(org) {
+                return _.get(result, org, 'ERROR');
+            }
+            $('#marine_microbes_sample_count').text(orgSampleCount('bpa-marine-microbes'));
+            $('#wheat_pathogens_genome_sample_count').text(orgSampleCount('bpa-wheat-pathogens-genomes'));
+            $('#stemcell_sample_count').text(orgSampleCount('bpa-stemcells'));
         });
     });
 };
+

@@ -229,13 +229,17 @@ def ckan_resources(request, org_name, package_type):
     })
 
 
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_packages_count(request, org_name):
-    org = get_org(org_name)
+def ckan_packages_count(request, org_name=None):
+    ckan = get_ckan()
+
+    packages_count = ckan.call_action('package_search', {'facet.field': ['organization'], 'include_private': True, 'rows': 0})
+    path = ['facets', 'organization']
+    if org_name is not None:
+        path.append(org_name)
 
     return JsonResponse({
         'success': True,
-        'data': len(org['packages']),
+        'data': get_in(packages_count, path)
     })
 
 
