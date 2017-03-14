@@ -27,8 +27,8 @@
                 retrieve: true,
                 colReorder: true,
                 stateSave: true,
-                searching: false,
                 serverSide: true,
+                searchDelay: CONFIG.tables.globalSearchDelay,
                 ajax: {
                     url: url,
                     cache: true,
@@ -42,12 +42,13 @@
                     {
                         'data': 'id',
                         'defaultContent': '',
+                        'searchable': false,
                         'render': function (data, type, row) {
                             var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
                             return '<a href="' + url + '">' + data + '</a>';
                         }
                     },
-                    { 'data': 'bpa_id' , 'defaultContent': ''},
+                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
                     { 'data': 'sample_type' , 'defaultContent': ''},
                     { 'data': 'sample_site', 'defaultContent': '' },
                     { 'data': 'date_sampled', 'defaultContent': '' },
