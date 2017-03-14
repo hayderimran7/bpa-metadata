@@ -92,6 +92,10 @@
                               }]
                               */
                           },{
+                              text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
+                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+
+                          },{
                               text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
                               url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
                           },{
