@@ -133,39 +133,41 @@
 
 <div class="container-fluid">
 
-<br>
-<div class="row">
+    <br>
+    <div class="row">
 
-    <div class="col-md-2" id="tree-col">
-        <div id="tree">
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
+        </div>
+
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" width="100%" id="content-table">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>State</th>
+                        <th>Sequencer</th>
+                        <th>Library Construction Protocol</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>State</th>
+                        <th>Sequencer</th>
+                        <th>Library Construction Protocol</th>
+                        <th>Notes</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <div class="col-md-10" id="content-col">
-        <table class="apitable" width="100%" id="content-table">
-            <thead>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>State</th>
-                    <th>Sequencer</th>
-                    <th>Library Construction Protocol</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>State</th>
-                    <th>Sequencer</th>
-                    <th>Library Construction Protocol</th>
-                    <th>Notes</th>
-                </tr>
-            </tfoot>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
 </div>
+
 {% endblock %}
