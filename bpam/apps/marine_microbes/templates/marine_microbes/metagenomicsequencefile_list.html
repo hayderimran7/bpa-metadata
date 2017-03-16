@@ -2,13 +2,6 @@
 
 {% block title %}Marine Microbes Metagenomic Sequence Files{% endblock %}
 
-{% load django_bootstrap_breadcrumbs %}
-{% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
-{% breadcrumb "Metagenomic Sequence Files" "marine_microbes:metagenomicis_file_list" %}
-{% endblock %}
-
 {% block content %}
 
 <div class="container-fluid">

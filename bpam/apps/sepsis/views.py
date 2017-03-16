@@ -7,8 +7,9 @@ from rest_framework import viewsets
 from django.http import JsonResponse
 from collections import OrderedDict
 
-from apps.common.models import BPAMirror
 from apps.common.admin import BPAUniqueID, BPAProject
+from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
 from .models import (Host,
                      GenomicsMiseqFile,
                      TranscriptomicsHiseqFile,
@@ -28,7 +29,7 @@ import serializers
 tracks = (GenomicsPacBioTrack, GenomicsMiSeqTrack, TranscriptomicsHiSeqTrack, MetabolomicsLCMSTrack, ProteomicsMS1QuantificationTrack, ProteomicsSwathMSTrack)
 
 
-class SepsisView(TemplateView):
+class SepsisView(DebugOnlyTemplateView):
     template_name = 'sepsis/index.html'
 
     def get_context_data(self, **kwargs):

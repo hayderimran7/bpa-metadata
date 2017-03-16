@@ -1,10 +1,12 @@
 from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
+
 from .models import CultivarSample, CultivarSequenceFile
 
 
-class IndexView(TemplateView):
+class IndexView(DebugOnlyTemplateView):
     template_name = 'wheat_cultivars/index.html'
 
     def get_context_data(self, **kwargs):

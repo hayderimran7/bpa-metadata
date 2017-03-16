@@ -1,14 +1,21 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
-from views import LandingView
+from django.views.generic import RedirectView, TemplateView
+
+from views import LandingView, GoToCKANView
+from apps.common.models import CKANServer
+
+from .decorators import DEBUG_ONLY_VIEW
+
 
 admin.autodiscover()
 
+
 urlpatterns = patterns(
     '',
-    # rest api
-    url(r'^api/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^$', DEBUG_ONLY_VIEW(LandingView.as_view()), name='landing_page'),
+
     # BASE
     url(r'^base/', include('apps.base.urls', namespace='base')),
     url(r'^base/metagenomics/',
@@ -42,14 +49,16 @@ urlpatterns = patterns(
     url(r'^antibiotic_resistant_pathogens/', include('apps.sepsis.urls', namespace='sepsis')),
     # System
     ('^accounts/', include('django.contrib.auth.urls')),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/doc/?', include('django.contrib.admindocs.urls')),
+    url(r'^admin/?', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),
     # url(r'^$', TemplateView.as_view(template_name='landing/index.html'), name='landing_page'),
-    url(r'^$', LandingView.as_view(), name='landing_page'),
     url(r'^explorer/', include('explorer.urls')),
 
     url(r'^ckan/', include('bpam.ckan_urls', namespace='ckan')),
+
+    # for anything else redirect to main CKAN site
+    url(r'.*', GoToCKANView.as_view(), name='go_to_ckan'),
 )
 
 

@@ -1,5 +1,6 @@
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
+from apps.common.models import CKANServer
 from apps.melanoma.models import MelanomaSample
 from apps.sepsis.models import SepsisSample
 from apps.gbr.models import GBRSample
@@ -23,3 +24,8 @@ class LandingView(TemplateView):
         context['wheat_pathogens_transcript_sample_count'] = WheatPathogenTranscriptSample.objects.count()
 
         return context
+
+
+class GoToCKANView(RedirectView):
+    url = CKANServer.primary().base_url
+    permanent = False

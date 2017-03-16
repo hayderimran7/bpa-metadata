@@ -132,7 +132,6 @@
 {% block content %}
 
 <div class="container-fluid">
-
     <div class="row">
         <div class="col-md-2">
             <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
@@ -141,44 +140,43 @@
             <div class="bootstrap_buttons pull-right"> </div>
         </div>
     </div>
-
 </div>
 
 <div class="container-fluid">
+    <br>
+    <div class="row">
 
-<br>
-<div class="row">
-
-    <div class="col-md-2" id="tree-col">
-        <div id="tree">
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-10" id="content-col">
-        <table class="apitable" width="100%" id="content-table">
-            <thead>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>Sample Type</th>
-                    <th>Collection Site</th>
-                    <th>Collection Date</th>
-                    <th>Collection Depth</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>Sample Type</th>
-                    <th>Collection Site</th>
-                    <th>Collection Date</th>
-                    <th>Collection Depth</th>
-                </tr>
-            </tfoot>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" width="100%" id="content-table">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>Sample Type</th>
+                        <th>Collection Site</th>
+                        <th>Collection Date</th>
+                        <th>Collection Depth</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>Sample Type</th>
+                        <th>Collection Site</th>
+                        <th>Collection Date</th>
+                        <th>Collection Depth</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
