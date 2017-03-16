@@ -27,7 +27,6 @@
                 retrieve: true,
                 colReorder: true,
                 stateSave: true,
-                searching: false,
                 ajax: {
                     url: url,
                     cache: true,
@@ -41,13 +40,14 @@
                     {
                         'data': 'id',
                         'defaultContent': '',
+                        'searchable': false,
                         'render': function (data, type, row) {
                             var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
                             return '<a href="' + url + '">' + data + '</a>';
                         }
                     },
-                    { 'data': 'bpa_id' , 'defaultContent': ''},
-                    { 'data': 'state' , 'defaultContent': ''},
+                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+                    { 'data': 'state' , 'defaultContent': '', 'searchable': false},
                     { 'data': 'sequencer' , 'defaultContent': ''},
                     { 'data': 'library_construction_protocol' , 'defaultContent': ''},
                     { 'data': 'notes' , 'defaultContent': ''}
