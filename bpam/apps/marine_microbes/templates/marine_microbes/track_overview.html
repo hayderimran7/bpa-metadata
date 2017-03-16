@@ -27,8 +27,8 @@
                 retrieve: true,
                 colReorder: true,
                 stateSave: true,
-                searching: false,
                 serverSide: true,
+                searchDelay: CONFIG.tables.globalSearchDelay,
                 ajax: {
                     url: url,
                     cache: true,
@@ -42,12 +42,13 @@
                     {
                         'data': 'id',
                         'defaultContent': '',
+                        'searchable': false,
                         'render': function (data, type, row) {
                             var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
                             return '<a href="' + url + '">' + data + '</a>';
                         }
                     },
-                    { 'data': 'bpa_id' , 'defaultContent': ''},
+                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
                     { 'data': 'sample_type' , 'defaultContent': ''},
                     { 'data': 'sample_site', 'defaultContent': '' },
                     { 'data': 'date_sampled', 'defaultContent': '' },
@@ -90,6 +91,10 @@
                                     text: 'Full Contextual Data Received (0)'
                               }]
                               */
+                          },{
+                              text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
+                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+
                           },{
                               text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
                               url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
