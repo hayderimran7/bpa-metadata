@@ -31,10 +31,17 @@
           crossorigin="anonymous">
 
     <script>
-      var bpam_config = {
-        'bpam_base': '{% url "landing_page" %}',
-        'ckan_base': '{% ckan_server_url %}'
+      var CONFIG = {
+        bpam: {
+          'bpam_base': '{% url "landing_page" %}',
+          'ckan_base': '{% ckan_server_url %}'
+        },
+        tables: {
+          globalSearchDelay: 1 * 1000, // ms
+        }
       };
+      // For convenience
+      var bpam_config = CONFIG.bpam;
     </script>
 
     <script src="//cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.js"
