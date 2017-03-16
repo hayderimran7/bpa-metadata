@@ -27,7 +27,6 @@
                 retrieve: true,
                 colReorder: true,
                 stateSave: true,
-                searching: false,
                 ajax: {
                     url: url,
                     cache: true,
@@ -41,13 +40,14 @@
                     {
                         'data': 'id',
                         'defaultContent': '',
+                        'searchable': false,
                         'render': function (data, type, row) {
                             var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
                             return '<a href="' + url + '">' + data + '</a>';
                         }
                     },
-                    { 'data': 'bpa_id' , 'defaultContent': ''},
-                    { 'data': 'state' , 'defaultContent': ''},
+                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+                    { 'data': 'state' , 'defaultContent': '', 'searchable': false},
                     { 'data': 'sequencer' , 'defaultContent': ''},
                     { 'data': 'library_construction_protocol' , 'defaultContent': ''},
                     { 'data': 'notes' , 'defaultContent': ''}
@@ -133,39 +133,41 @@
 
 <div class="container-fluid">
 
-<br>
-<div class="row">
+    <br>
+    <div class="row">
 
-    <div class="col-md-2" id="tree-col">
-        <div id="tree">
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
+        </div>
+
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" width="100%" id="content-table">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>State</th>
+                        <th>Sequencer</th>
+                        <th>Library Construction Protocol</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>BPA ID</th>
+                        <th>State</th>
+                        <th>Sequencer</th>
+                        <th>Library Construction Protocol</th>
+                        <th>Notes</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <div class="col-md-10" id="content-col">
-        <table class="apitable" width="100%" id="content-table">
-            <thead>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>State</th>
-                    <th>Sequencer</th>
-                    <th>Library Construction Protocol</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>Sample ID</th>
-                    <th>BPA ID</th>
-                    <th>State</th>
-                    <th>Sequencer</th>
-                    <th>Library Construction Protocol</th>
-                    <th>Notes</th>
-                </tr>
-            </tfoot>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
 </div>
+
 {% endblock %}

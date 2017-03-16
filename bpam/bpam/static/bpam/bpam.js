@@ -136,12 +136,13 @@ var wheat_pathogen_samples_setup = function () {
             columns: [
                 {
                     'data': 'bpa_id',
+                    'searchable': false,
                     'render': function (data, type, row) {
                         var url = bpam_config.bpam_base + 'wheat_pathogens/sample/' + data + '/';
                         return '<a href="' + url + '">' + data + '</a>';
                     }
                 },
-                { 'data': 'sample_id' },
+                { 'data': 'sample_id', 'searchable': false},
                 { 'data': 'official_variety_name' },
                 { 'data': 'kingdom' },
                 { 'data': 'phylum' },
@@ -170,9 +171,7 @@ var marine_microbes_samples_setup = function () {
         var config = {
             colReorder: true,
             stateSave: true,
-            // data: resources,
             serverSide: true,
-            searching: false,
             ajax: {
                 url: resource_search,
                 cache: true,
@@ -186,12 +185,13 @@ var marine_microbes_samples_setup = function () {
                 {
                     'data': 'id',
                     'defaultContent': '',
+                    'searchable': false,
                     'render': function (data, type, row) {
                         var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
                         return '<a href="' + url + '">' + data + '</a>';
                     }
                 },
-                { 'data': 'bpa_id' , 'defaultContent': ''},
+                { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
                 { 'data': 'sample_type' , 'defaultContent': ''},
                 { 'data': 'sample_site', 'defaultContent': '' },
                 { 'data': 'date_sampled', 'defaultContent': '' },
@@ -332,6 +332,7 @@ var wheat_pathogen_sequencefiles_setup = function () {
             ], columns: [
                 {
                     'data': 'package.bpa_id',
+                    'searchable': false,
                     'render': function (data, type, row) {
                         var url = bpam_config.bpam_base + 'wheat_pathogens/sample/' + data + '/';
                         return '<a href="' + url + '">' + data + '</a>';
