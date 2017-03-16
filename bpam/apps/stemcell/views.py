@@ -2,8 +2,10 @@
 
 from django.views.generic import TemplateView
 
+from apps.common.views import DebugOnlyTemplateView
 
-class StemCellView(TemplateView):
+
+class StemCellView(DebugOnlyTemplateView):
     template_name = 'stemcell/index.html'
 
 

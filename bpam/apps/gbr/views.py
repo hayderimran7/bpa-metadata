@@ -2,12 +2,14 @@
 
 from django.views.generic import TemplateView, ListView, DetailView
 
-from .models import GBRSample, GBRSequenceFile, CollectionEvent, CollectionSite
 from apps.gbr_amplicon.models import AmpliconSequencingMetadata
 from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
+
+from .models import GBRSample, GBRSequenceFile, CollectionEvent, CollectionSite
 
 
-class GBRView(TemplateView):
+class GBRView(DebugOnlyTemplateView):
     template_name = 'gbr/index.html'
 
     def get_context_data(self, **kwargs):

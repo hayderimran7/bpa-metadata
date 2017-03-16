@@ -1,12 +1,5 @@
 {% extends "base.html" %}
 
-{% load django_bootstrap_breadcrumbs %}
-{% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
-{% breadcrumb "Samples" "sepsis:samples" %}
-{% endblock %}
-
 {% block title %}Marine Microbe Samples {% endblock %}
 
 {% block content %}

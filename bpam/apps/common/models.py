@@ -3,9 +3,11 @@ import logging
 import urlparse
 import urllib
 import re
+
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+from django.core.exceptions import ImproperlyConfigured
 
 
 logger = logging.getLogger(__name__)
@@ -208,7 +210,7 @@ class CKANServer(models.Model):
         "Returns the lowest order (primary) mirror"
         first = cls.objects.first()
         if first is None:
-            logger.warning("Please set the CKAN servers")
+            raise ImproperlyConfigured("Please set the CKAN servers")
         return first
 
 

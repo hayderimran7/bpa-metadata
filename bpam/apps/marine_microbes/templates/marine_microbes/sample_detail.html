@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load django_bootstrap_breadcrumbs %}
 
 {% block title %}Marine Microbes Sample Detail {% endblock %}
 
-{% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "Marine Microbes" "marine_microbes:index" %}
-{% breadcrumb "Samples" "marine_microbes:samples" %}
-{% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
+    {{ block.super }}
+    {% breadcrumb "Samples" "marine_microbes:samples" %}
+    {% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
 {% endblock %}
+
+{% comment %}
+    Disabled navigation for now. They should use the History Back.
+    If we want to re-add breadcrumbs, they should be history based, so that when you
+    come from different pages to the sample detail page the right referring page is
+    added to the breadcrumbs.
+
+    {% block rendered_breadcrumbs %}
+        <div class="navbar-brand">
+            {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
+        </div>
+    {% endblock %}
+{% endcomment %}
 
 {% block content %}
 <div class="panel panel-info">

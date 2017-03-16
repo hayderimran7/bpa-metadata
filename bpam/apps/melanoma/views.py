@@ -1,10 +1,13 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from django.shortcuts import render
-from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
+
 from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
+
+from apps.melanoma.models import MelanomaSample, MelanomaSequenceFile, Array
 
 
-class IndexView(TemplateView):
+class IndexView(DebugOnlyTemplateView):
     template_name = 'melanoma/index.html'
 
     def get_context_data(self, **kwargs):

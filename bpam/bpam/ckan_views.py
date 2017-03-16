@@ -29,6 +29,7 @@ utils.MIN_STREAMING_LENGTH = 20 * 1024 * 1024
 # See datatables.net serverSide documentation for details
 COLUMN_PATTERN = re.compile(r'^columns\[(\d+)\]\[(data|name|searchable|orderable)\]$')
 ORDERING_PATTERN = re.compile(r'^order\[(\d+)\]\[(dir|column)\]$')
+SEARCH_PATTERN = re.compile(r'^search\[(value|regex)\]$')
 
 
 class CKANProxyView(ProxyView):
@@ -135,6 +136,24 @@ def _extract_ordering(request):
     return ordering
 
 
+def _extract_search_params(request):
+    # Note: search[regex] not supported. I don't think it is needed.
+    return {SEARCH_PATTERN.match(k).groups()[0]: v for k, v in request.GET.items() if SEARCH_PATTERN.match(k)}
+
+
+def _make_search_filters(search_params, col_defs):
+    searched_words = search_params.get('value', '').strip().split()
+    if len(searched_words) == 0:
+        return None
+    searchable_columns = [c.get('data') for c in col_defs if c.get('searchable') == 'true']
+    icontains = lambda term, text: term.lower() in text.lower()
+
+    def each_word_exists_in_at_least_one_column(package):
+        return all(any(icontains(w, package.get(c, '')) for c in searchable_columns) for w in searched_words)
+
+    return each_word_exists_in_at_least_one_column
+
+
 def _make_sort_params(order, column_definitions):
     if order['column'] >= len(column_definitions):
         return None, None
@@ -166,28 +185,28 @@ def ckan_packages(request, org_name, package_type=None):
     start = _int_get_param(request, 'start')
     length = _int_get_param(request, 'length')
 
-    total_records = len(packages)
-
-    # TODO apply filter (search)
-    filtered_records = len(packages)
-
     column_definitions = _extract_column_definitions(request)
     ordering = _extract_ordering(request)
+    search_params = _extract_search_params(request)
+
+    package_filter = _make_search_filters(search_params, column_definitions)
+    filtered_packages = packages if package_filter is None else filter(package_filter, packages)
+    filtered_packages_count = len(filtered_packages)
 
     for order in reversed(ordering):
         key_fn, should_reverse = _make_sort_params(order, column_definitions)
         if key_fn is not None:
-            packages = sorted(packages, key=key_fn, reverse=should_reverse)
+            filtered_packages = sorted(filtered_packages, key=key_fn, reverse=should_reverse)
 
     if start is not None and length is not None:
-        packages = packages[int(start):int(start)+int(length)]
+        filtered_packages = filtered_packages[int(start):int(start)+int(length)]
 
     return JsonResponse({
         'success': True,
         'draw': draw,
-        'data': packages,
-        'recordsTotal': total_records,
-        'recordsFiltered': filtered_records,
+        'data': filtered_packages,
+        'recordsTotal': len(packages),
+        'recordsFiltered': filtered_packages_count,
      })
 
 

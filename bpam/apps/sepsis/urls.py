@@ -2,6 +2,8 @@ from django.conf.urls import url, include
 from rest_framework import routers
 import views
 
+from bpam.decorators import DEBUG_ONLY_VIEW
+
 router = routers.DefaultRouter()
 router.register(r"sepsis_samples", views.SepsisSampleViewSet)
 router.register(r"hosts", views.HostViewSet)
@@ -19,40 +21,23 @@ router.register(r"track_deeplc", views.DeepLCMSTrackViewSet)
 router.register(r"track_swath", views.SWATHMSTrackViewSet)
 
 urlpatterns = [
-    url(r'^api/v2/', include(router.urls)),
-    url(regex=r'^$', view=views.SepsisView.as_view(), name='index'),
-    url(regex=r'^contacts$', view=views.ContactsView.as_view(),
-        name='contacts'),
-    url(regex=r'^samples', view=views.SampleListView.as_view(),
-        name='samples'),
-    url(regex=r'^sample/(?P<pk>.*)/$',
-        view=views.SampleDetailView.as_view(),
-        name='sample'),
-    url(regex=r'^genomicsmiseqfiles',
-        view=views.GenomicsMiseqFileListView.as_view(),
-        name='genomics_miseq_files'),
-    url(regex=r'^transcriptomicshiseqfiles',
-        view=views.TranscriptomicsHiseqFileListView.as_view(),
-        name='transcriptomics_hiseq_files'),
-    url(regex=r'^genomicspacbiofiles',
-        view=views.GenomicsPacBioFileListView.as_view(),
-        name='genomics_pacbio_files'),
-    url(regex=r'^consortium$', view=views.ConsortiumView.as_view(),
-        name='consortium'),
+    # url(r'^api/v2/', include(router.urls)),
+    url(r'^$', DEBUG_ONLY_VIEW(views.SepsisView.as_view()), name='index'),
+    url(r'^contacts$', views.ContactsView.as_view(), name='contacts'),
+    url(r'^samples', views.SampleListView.as_view(), name='samples'),
+    url(r'^sample/(?P<pk>.*)/$', views.SampleDetailView.as_view(), name='sample'),
+    url(r'^genomicsmiseqfiles', views.GenomicsMiseqFileListView.as_view(), name='genomics_miseq_files'),
+    url(r'^transcriptomicshiseqfiles', views.TranscriptomicsHiseqFileListView.as_view(), name='transcriptomics_hiseq_files'),
+    url(r'^genomicspacbiofiles', views.GenomicsPacBioFileListView.as_view(), name='genomics_pacbio_files'),
+    url(r'^consortium$', views.ConsortiumView.as_view(), name='consortium'),
 
     # BEGIN----- Tracker URLs ----------
 
-    url(regex=r'^overview/$',
-        view=views.TrackOverview.as_view(),
-        name='overview'),
+    url(r'^overview/$', views.TrackOverview.as_view(), name='overview'),
 
-    url(regex=r'^overview/data/$',
-        view=views.TrackOverviewConstraints.as_view(),
-        name='overview_constraints'),
+    url(r'^overview/data/$', views.TrackOverviewConstraints.as_view(), name='overview_constraints'),
 
-    url(regex=r'^overview/(?P<constraint>.*)/(?P<status>.*)/$',
-        view=views.TrackDetails.as_view(),
-        name='overview_detail'),
+    url(r'^overview/(?P<constraint>.*)/(?P<status>.*)/$', views.TrackDetails.as_view(), name='overview_detail'),
 
     # END------- Tracker URLs ----------
 ]
