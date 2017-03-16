@@ -18,6 +18,7 @@ from django.shortcuts import render
 
 from django.core.mail import BadHeaderError, send_mail
 
+from apps.common.views import DebugOnlyTemplateView
 from apps.base_contextual.models import SampleContext, ChemicalAnalysis, CollectionSite
 from apps.base_contextual import sample_context
 from apps.base_amplicon.models import AmpliconSequencingMetadata
@@ -36,7 +37,7 @@ class InfoView(TemplateView):
     template_name = 'base/info.html'
 
 
-class BaseView(TemplateView):
+class BaseView(DebugOnlyTemplateView):
     template_name = 'base/index.html'
 
     def get_context_data(self, **kwargs):

@@ -33,3 +33,7 @@ td .glyphicon {
 .fixed-table-container {
     border:1px !important;
 }
+
+.in-table-header {
+  text-align: center;
+}

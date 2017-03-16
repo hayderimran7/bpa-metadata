@@ -14,23 +14,22 @@
     {% load commontags %}
 
     {% load bootstrap3 %}
+
     {% bootstrap_css %}
     {% bootstrap_javascript jquery=True %}
 
     {% load django_bootstrap_breadcrumbs %}
+
     {% block breadcrumbs %}
-    {% clear_breadcrumbs %}
-    {% breadcrumb "Bioplatforms Australia Metadata" "landing_page" %}
+        {% clear_breadcrumbs %}
     {% endblock %}
 
-    {% bootstrap_css %}
-
     <link rel="icon" href="{% static 'bpa-logos/favicon.ico' %}" type="image/x-icon">
-    
+
     <link rel="stylesheet" href="//cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,sc-1.3.0/datatables.min.css"
           integrity="sha256-4zLbOiFTCzQ4zxnm/S+9JeIFnhWuIPgyOw0mbhtPuIA= sha384-CpFB96HWkaVC+dOX28UQC2mE/55CXHOQ0JWb+xpe3BHJuxlbmlCwhihPF4Hhk83+ sha512-0EUkXuq2xI8ComQ0X1iDyAOTpE7LzirbiZeWPKMU3ZP/XoWcyx+IbIR9Gb9NOfYxq6Tz35dlRlEuuo8mUFf0xQ=="
           crossorigin="anonymous">
-    
+
     <script>
       var bpam_config = {
         'bpam_base': '{% url "landing_page" %}',
@@ -45,11 +44,11 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"
             integrity="sha256-RWiU4omUU7tQ2M3wmRQNW9UL50MB4CucbRPCbsQv+X0= sha384-BdjsH97+KNxfKcYg/6SnokfwHP6QlMxt/Feedfq5IhIM7QHtYve/dYyKz0sc84fD sha512-qOBWNAMfkz+vXXgbh0Wz7qYSLZp6c14R0bZeVX2TdQxWpuKr6yHjBIM69fcF8Ve4GUX6B6AKRQJqiiAmwvmUmQ=="
             crossorigin="anonymous"></script>
-    
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"
             integrity="sha256-KteOoEtQ75FeAFFOTJZlvNt0iJ8NMusVDESd5jlwKEQ= sha384-+VyieUXwWQSImpRIFhlRJNe2KeZblzwXEF8LsYAO/cYlQdDG2SdJaky4Ud0sdVup sha512-coj002JZWtDMvnYzDgRXBzWlrEiS/EW2SNAYs0SVSDf62RSZ7ygs0leIGAjMiwe8cQRfqwrInDlHYsUSTDTPjQ=="
             crossorigin="anonymous"></script>
-    
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"
             integrity="sha256-4PIvl58L9q7iwjT654TQJM+C/acEyoG738iL8B8nhXg= sha384-7pfELK0arQ3VANqV4kiPWPh5wOsrfitjFGF/NdyHXUJ3JJPy/rNhasPtdkaNKhul sha512-1V1LfkdFb5dlSJjEImkfBwiJhuqBLoWjWWYKI3kMvjOFm3y43yzHhyp1Swz31R7k2GOfVFKFA+7UDZkTdTBIqA=="
             crossorigin="anonymous"></script>
@@ -64,36 +63,22 @@
   </head>
   <body>
     <div id="wrap">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <p>
-            <div class="navbar-brand">
-              {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap3.html" %}
-            </div>
-            </p>
-          </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-
-              <li><a href="{% url 'admin:index' %}">Admin</a></li>
-              {% if user.is_authenticated %}
-                <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log out as {{ user.username }}</a></li>
-              {% endif %}
-            </ul>
-          </div>
+    <header class="navbar navbar-static-top">
+        <div class="container">
+          <a class="logo" href="{% url 'landing_page' %}" />
+              <img src="{% static 'bpa-logos/BioplatformsAustralia.png' %}" alt="Bioplatform Australia" />
+          </a>
         </div>
-      </div>
 
+        {% if DEBUG_ONLY_VIEW %}
+            <div class="alert alert-warning text-center">
+                This page should be accessible only in <strong>DEBUG</strong> mode.
+            </div>
+        {% endif %}
+
+        {% block rendered_breadcrumbs %}
+        {% endblock %}
+    </header>
       <div class="hide container" id="error-bar"></div>
 
       <div class="content-div">
@@ -101,11 +86,22 @@
       </div>
     </div>
 
-    <div id="footer">
-      <div class="container">
-        <p class="text-muted credit">
-        &copy; Bioplatforms Australia.
+    <footer class="site-footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="container">
+          <div class="span4">
+             <a href="https://www.education.gov.au/national-collaborative-research-infrastructure-strategy-ncris">
+               <img id="ncris-img" src="{% static 'bpa-logos/ncris.png' %}" alt="NCRIS" />
+             </a>
+          </div>
+          <div class="span4">
+            <p><a href="http://www.bioplatforms.com">Operated by Bioplatforms Australia</a></p>
+            <p><a href="http://www.bioplatforms.com/contact/">Contact</a></p>
+          </div>
+        </div>
+        </div>
       </div>
-    </div>
+    </footer>
   </body>
 </html>

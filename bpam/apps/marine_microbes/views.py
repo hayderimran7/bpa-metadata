@@ -4,6 +4,7 @@ from itertools import chain
 from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
 from .models import MMSample
 from .models import MetagenomicSequenceFile
 from .models import AmpliconSequenceFile
@@ -55,7 +56,7 @@ class MethodsView(TemplateView):
     template_name = 'marine_microbes/methods.html'
 
 
-class MMView(TemplateView):
+class MMView(DebugOnlyTemplateView):
     template_name = 'marine_microbes/index.html'
 
     def get_context_data(self, **kwargs):

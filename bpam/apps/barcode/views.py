@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic import TemplateView, ListView, DetailView
+
 from apps.common.models import BPAMirror
+from apps.common.views import DebugOnlyTemplateView
 
 from .models import Sheet
 
 
-class BarcodeIndex(TemplateView):
+class BarcodeIndex(DebugOnlyTemplateView):
     template_name = "barcode/index.html"
 
 
