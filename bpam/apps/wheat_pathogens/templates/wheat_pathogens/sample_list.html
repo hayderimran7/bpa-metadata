@@ -56,7 +56,45 @@
 </div>
 
 <script>
-wheat_pathogen_samples_setup();
+  function wheat_pathogen_samples_setup() {
+    var url = bpam_config.ckan_base + 'packages/bpa-wheat-pathogens-genomes';
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [
+            {
+                'data': 'bpa_id',
+                'searchable': false,
+                'render': function(data, type, row) {
+                    var url = bpam_config.bpam_base + 'wheat_pathogens/sample/' + data + '/';
+                    return '<a href="' + url + '">' + data + '</a>';
+                }
+            },
+            { 'data': 'sample_id', 'searchable': false},
+            { 'data': 'official_variety_name' },
+            { 'data': 'kingdom' },
+            { 'data': 'phylum' },
+            { 'data': 'species' },
+            { 'data': 'original_source_host_species' },
+            { 'data': 'collection_location' },
+            { 'data': 'wheat_pathogenicity' },
+            { 'data': 'contact_scientist' },
+            { 'data': 'dna_source' },
+            { 'data': 'dna_extraction_protocol' }
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+    wheat_pathogen_samples_setup();
+  });
 </script>
 
 {% endblock %}

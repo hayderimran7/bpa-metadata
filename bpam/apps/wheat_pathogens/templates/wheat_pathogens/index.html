@@ -72,7 +72,13 @@
 </div>
 
 <script>
-    set_counts('wheat-pathogens');
+    $('#package_count').text(loadingText);
+    $('#resource_count').text(loadingText);
+
+    CKAN.get_resources_count('bpa-wheat-pathogens-genomes', function(counts) {
+        $('#package_count').text(counts['samples']);
+        $('#resource_count').text(counts['wheat-pathogens']);
+    });
 </script>
 
 {% endblock %}

@@ -49,7 +49,14 @@
 </div>
 
 <script>
-    set_stemcell_sample();
+    set_sample(function(sample_obj) {
+        $(".bpa_id").text(sample_obj.bpa_id);
+        $(".sample_id").text(sample_obj.id);
+        $(".state").text(sample_obj.state);
+        $(".sequencer").text(sample_obj.sequencer);
+        $(".library_construction_protocol").text(sample_obj.library_construction_protocol);
+        $(".notes").text(sample_obj.notes);
+    });
 </script>
 
 {% include "apisequencefilelist.html" %}

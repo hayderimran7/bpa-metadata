@@ -11,7 +11,7 @@ from .models import AmpliconSequenceFile
 from .models import MMSite
 
 
-class AmpliconIndexView(TemplateView):
+class AmpliconIndexView(DebugOnlyTemplateView):
     template_name = 'marine_microbes/amplicon_index.html'
 
 

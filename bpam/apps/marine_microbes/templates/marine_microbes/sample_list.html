@@ -34,9 +34,42 @@
         </tbody>
     </table>
 
-    <script>
-        marine_microbes_samples_setup();
-    </script>
-
 </div>
+
+<script>
+  function marine_microbes_samples_setup() {
+    var url = bpam_config.ckan_base + 'packages/bpa-marine-microbes';
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [{
+              'data': 'id',
+              'defaultContent': '',
+              'searchable': false,
+              'render': function(data, type, row) {
+                  var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                  return '<a href="' + url + '">' + data + '</a>';
+              }
+            },
+            { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+            { 'data': 'sample_type' , 'defaultContent': ''},
+            { 'data': 'sample_site', 'defaultContent': '' },
+            { 'data': 'date_sampled', 'defaultContent': '' },
+            { 'data': 'depth', 'defaultContent': '' }
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+     marine_microbes_samples_setup();
+  });
+</script>
+
 {% endblock %}

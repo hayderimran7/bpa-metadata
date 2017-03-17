@@ -21,151 +21,16 @@ from apps.common.models import CKANServer
 logger = logging.getLogger(__name__)
 
 
-# For responses larger than this the revproxy will return a streaming response.
-# We can't cache streaming responses so we have to increase this value.
-utils.MIN_STREAMING_LENGTH = 20 * 1024 * 1024
-
-
 # See datatables.net serverSide documentation for details
 COLUMN_PATTERN = re.compile(r'^columns\[(\d+)\]\[(data|name|searchable|orderable)\]$')
 ORDERING_PATTERN = re.compile(r'^order\[(\d+)\]\[(dir|column)\]$')
 SEARCH_PATTERN = re.compile(r'^search\[(value|regex)\]$')
 
 
-class CKANProxyView(ProxyView):
-    BLACKLIST = [re.compile(x) for x in (
-        r'\.\.',
-    )]
-
-    # TODO review, we've opened up too much?
-    WHITELIST = [re.compile(x) for x in (
-        # r'^api/3/action/package_search\?.*wheat-pathogens.*',
-        r'^api/3/action/package_search\?',
-        r'^api/3/action/package_show\?',
-        r'^api/3/action/resource_search\?',
-        r'^api/3/action/organization_show\?',
-    )]
-
-    @property
-    def upstream(cls):
-        server = CKANServer.primary()
-        return server.base_url
-
-    def get_request_headers(self):
-        headers = super(CKANProxyView, self).get_request_headers()
-        server = CKANServer.primary()
-        headers['Authorization'] = server.api_key
-        return headers
-
-    def access_control(self, path):
-        for rule in self.BLACKLIST:
-            if rule.match(path):
-                raise PermissionDenied()
-
-        for rule in self.WHITELIST:
-            if rule.match(path):
-                return
-
-        raise PermissionDenied()
-
-    def dispatch(self, request, path):
-        logger.debug('Proxying %s', path)
-        path_and_querystring = path
-        if request.META.get('QUERY_STRING'):
-            path_and_querystring = '%s?%s' % (path, request.META.get('QUERY_STRING'))
-        self.access_control(path_and_querystring)
-
-        def f(request, path):
-            return super(CKANProxyView, self).dispatch(request, path)
-
-        ckan_timeout = settings.CKAN_CACHE_TIMEOUT
-
-        # TODO maybe better cache selection
-        # For example write own cacher that on set checks the size of the response.
-        # and chooses the cache to store it in based on it.
-        # Then on get it will check both caches...
-        # cached = cache_page(ckan_timeout)(f)
-        # if 'organization_show' in path:
-        #    cached = cache_page(ckan_timeout, cache='big_objects')(f)
-
-        # For now put all CKAN responses into the big_objects cache
-        cached = cache_page(ckan_timeout, cache='big_objects')(f)
-
-        return cached(request, path)
-
-
-# To review
+# TODO Review
 # I disabled all per-page caching to make it obvious that we cache on the ckan requests,
 # namely organizations_show and get_all_resources. All the other views are reusing that data
 # so caching per page isn't that important.
-
-
-def _int_get_param(request, param_name):
-    param = request.GET.get(param_name)
-    try:
-        return int(param) if param is not None else None
-    except ValueError:
-        return None
-
-def _extract_column_definitions(request):
-    columns = []
-    for k in request.GET:
-        match = COLUMN_PATTERN.match(k)
-        if match is not None:
-            index = int(match.groups()[0])
-            attr = match.groups()[1]
-            for i in range(index - len(columns) + 1):
-                columns.append({})
-            columns[index][attr] = request.GET.get(k)
-    return columns
-
-
-def _extract_ordering(request):
-    ordering = []
-    for k in request.GET:
-        match = ORDERING_PATTERN.match(k)
-        if match is not None:
-            index = int(match.groups()[0])
-            attr = match.groups()[1]
-            for i in range(index - len(ordering) + 1):
-                ordering.append({})
-            value = request.GET.get(k)
-            if attr == 'column':
-                value = int(value)
-            ordering[index][attr] = value
-    return ordering
-
-
-def _extract_search_params(request):
-    # Note: search[regex] not supported. I don't think it is needed.
-    return {SEARCH_PATTERN.match(k).groups()[0]: v for k, v in request.GET.items() if SEARCH_PATTERN.match(k)}
-
-
-def _make_search_filters(search_params, col_defs):
-    searched_words = search_params.get('value', '').strip().split()
-    if len(searched_words) == 0:
-        return None
-    searchable_columns = [c.get('data') for c in col_defs if c.get('searchable') == 'true']
-    icontains = lambda term, text: term.lower() in text.lower()
-
-    def each_word_exists_in_at_least_one_column(package):
-        return all(any(icontains(w, package.get(c, '')) for c in searchable_columns) for w in searched_words)
-
-    return each_word_exists_in_at_least_one_column
-
-
-def _make_sort_params(order, column_definitions):
-    if order['column'] >= len(column_definitions):
-        return None, None
-    column = column_definitions[order['column']]
-    def getter(d):
-        return get_in(d, column.get('data', '').split('.'))
-
-    return getter, order['dir'] == 'desc'
-
-
-def get_in(root_dict, keys):
-    return reduce(lambda d, key: d.get(key) if d is not None else None, keys, root_dict)
 
 
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
@@ -201,8 +66,7 @@ def ckan_packages(request, org_name, package_type=None):
     if start is not None and length is not None:
         filtered_packages = filtered_packages[int(start):int(start)+int(length)]
 
-    return JsonResponse({
-        'success': True,
+    return JsonSuccess({
         'draw': draw,
         'data': filtered_packages,
         'recordsTotal': len(packages),
@@ -213,6 +77,7 @@ def ckan_packages(request, org_name, package_type=None):
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources(request, org_name, package_type):
     amplicon = request.GET.get('amplicon')
+    logger.debug(list(set(r['package']['type'] for r in get_all_resources(org_name))))
     resources = [r for r in get_all_resources(org_name) if r['package']['type'] == package_type]
     if amplicon:
         resources = [r for r in resources if r.get('amplicon', '').lower() == amplicon.lower()]
@@ -239,13 +104,21 @@ def ckan_resources(request, org_name, package_type):
 
     logger.debug('resources is now %s', len(resources))
 
-    return JsonResponse({
-        'success': True,
+    return JsonSuccess({
         'draw': draw,
         'data': resources,
         'recordsTotal': total_records,
         'recordsFiltered': filtered_records,
     })
+
+
+def ckan_package_show(request, package_id):
+    ckan = get_ckan()
+
+    package = ckan.call_action('package_show', {'id': package_id})
+
+    return JsonSuccess.data(package)
+
 
 
 def ckan_packages_count(request, org_name=None):
@@ -256,10 +129,7 @@ def ckan_packages_count(request, org_name=None):
     if org_name is not None:
         path.append(org_name)
 
-    return JsonResponse({
-        'success': True,
-        'data': get_in(packages_count, path)
-    })
+    return JsonSuccess.data(get_in(packages_count, path))
 
 
 def mm_project_overview_count(request):
@@ -271,10 +141,7 @@ def mm_project_overview_count(request):
     counts = dict(cnt.most_common())
     counts['amplicons'] = dict(amplicons_cnt.most_common())
 
-    return JsonResponse({
-        'success': True,
-        'data': counts,
-    })
+    return JsonSuccess.data(counts)
 
 
 def stemcell_project_overview_count(request):
@@ -283,14 +150,17 @@ def stemcell_project_overview_count(request):
     cnt = Counter(p['type'] for p in org['packages'])
     counts = dict(cnt.most_common())
 
-    return JsonResponse({
-        'success': True,
-        'data': counts,
-    })
+    return JsonSuccess.data(counts)
 
 
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
 def ckan_resources_count(request, org_name):
+#    TODO should switch to the new API
+#    ckan = get_ckan()
+
+#    response = ckan.action.resource_search(query='resource_type:%s' % org_name, limit=0)
+#    data = response.get('count')
+
     resources = get_all_resources(org_name)
     cnt = Counter(r['package']['type'] for r in resources)
     sample_ids = set(r['package']['id'] for r in resources)
@@ -298,10 +168,19 @@ def ckan_resources_count(request, org_name):
     counts = dict(cnt.most_common())
     counts['samples'] = len(sample_ids)
 
-    return JsonResponse({
-        'success': True,
-        'data': counts,
-    })
+    return JsonSuccess.data(counts)
+
+
+#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
+def OLD_ckan_resources_count(request, org_name):
+    resources = get_all_resources(org_name)
+    cnt = Counter(r['package']['type'] for r in resources)
+    sample_ids = set(r['package']['id'] for r in resources)
+
+    counts = dict(cnt.most_common())
+    counts['samples'] = len(sample_ids)
+
+    return JsonSuccess.data(counts)
 
 
 #@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
@@ -313,10 +192,7 @@ def ckan_resources_count_by_amplicon(request):
     counts = dict(cnt.most_common())
     counts['all'] = reduce(operator.add, counts.values())
 
-    return JsonResponse({
-        'success': True,
-        'data': counts,
-    })
+    return JsonSuccess.data(counts)
 
 
 # CKAN "services"
@@ -388,3 +264,158 @@ def get_resources(org_name, package_type, filter_fn=lambda x: True):
                  for r in p['resources']]
 
     return resources
+
+
+# Implementation
+
+
+def _int_get_param(request, param_name):
+    param = request.GET.get(param_name)
+    try:
+        return int(param) if param is not None else None
+    except ValueError:
+        return None
+
+def _extract_column_definitions(request):
+    columns = []
+    for k in request.GET:
+        match = COLUMN_PATTERN.match(k)
+        if match is not None:
+            index = int(match.groups()[0])
+            attr = match.groups()[1]
+            for i in range(index - len(columns) + 1):
+                columns.append({})
+            columns[index][attr] = request.GET.get(k)
+    return columns
+
+
+def _extract_ordering(request):
+    ordering = []
+    for k in request.GET:
+        match = ORDERING_PATTERN.match(k)
+        if match is not None:
+            index = int(match.groups()[0])
+            attr = match.groups()[1]
+            for i in range(index - len(ordering) + 1):
+                ordering.append({})
+            value = request.GET.get(k)
+            if attr == 'column':
+                value = int(value)
+            ordering[index][attr] = value
+    return ordering
+
+
+def _extract_search_params(request):
+    # Note: search[regex] not supported. I don't think it is needed.
+    return {SEARCH_PATTERN.match(k).groups()[0]: v for k, v in request.GET.items() if SEARCH_PATTERN.match(k)}
+
+
+def _make_search_filters(search_params, col_defs):
+    searched_words = search_params.get('value', '').strip().split()
+    if len(searched_words) == 0:
+        return None
+    searchable_columns = [c.get('data') for c in col_defs if c.get('searchable') == 'true']
+    icontains = lambda term, text: term.lower() in text.lower()
+
+    def each_word_exists_in_at_least_one_column(package):
+        return all(any(icontains(w, package.get(c, '')) for c in searchable_columns) for w in searched_words)
+
+    return each_word_exists_in_at_least_one_column
+
+
+def _make_sort_params(order, column_definitions):
+    if order['column'] >= len(column_definitions):
+        return None, None
+    column = column_definitions[order['column']]
+    def getter(d):
+        return get_in(d, column.get('data', '').split('.'))
+
+    return getter, order['dir'] == 'desc'
+
+
+def get_in(root_dict, keys):
+    return reduce(lambda d, key: d.get(key) if d is not None else None, keys, root_dict)
+
+
+class JsonSuccess(JsonResponse):
+    def __init__(self, data, *args, **kwargs):
+        resp = data
+        if isinstance(data, dict):
+            resp = data.copy()
+            resp['success'] = True
+
+        super(JsonSuccess, self).__init__(resp, *args, **kwargs)
+
+    @classmethod
+    def data(cls, data):
+        return JsonSuccess({'data': data})
+
+
+# Disabled the proxy (in urls.py) for now, leaving the code for a while in case we will need it
+
+
+# For responses larger than this the revproxy will return a streaming response.
+# We can't cache streaming responses so we have to increase this value.
+utils.MIN_STREAMING_LENGTH = 20 * 1024 * 1024
+
+
+class CKANProxyView(ProxyView):
+    BLACKLIST = [re.compile(x) for x in (
+        r'\.\.',
+    )]
+
+    # TODO review, we've opened up too much?
+    WHITELIST = [re.compile(x) for x in (
+        # r'^api/3/action/package_search\?.*wheat-pathogens.*',
+        r'^api/3/action/package_search\?',
+        r'^api/3/action/package_show\?',
+        r'^api/3/action/resource_search\?',
+        r'^api/3/action/organization_show\?',
+    )]
+
+    @property
+    def upstream(cls):
+        server = CKANServer.primary()
+        return server.base_url
+
+    def get_request_headers(self):
+        headers = super(CKANProxyView, self).get_request_headers()
+        server = CKANServer.primary()
+        headers['Authorization'] = server.api_key
+        return headers
+
+    def access_control(self, path):
+        for rule in self.BLACKLIST:
+            if rule.match(path):
+                raise PermissionDenied()
+
+        for rule in self.WHITELIST:
+            if rule.match(path):
+                return
+
+        raise PermissionDenied()
+
+    def dispatch(self, request, path):
+        logger.debug('Proxying %s', path)
+        path_and_querystring = path
+        if request.META.get('QUERY_STRING'):
+            path_and_querystring = '%s?%s' % (path, request.META.get('QUERY_STRING'))
+        self.access_control(path_and_querystring)
+
+        def f(request, path):
+            return super(CKANProxyView, self).dispatch(request, path)
+
+        ckan_timeout = settings.CKAN_CACHE_TIMEOUT
+
+        # TODO maybe better cache selection
+        # For example write own cacher that on set checks the size of the response.
+        # and chooses the cache to store it in based on it.
+        # Then on get it will check both caches...
+        # cached = cache_page(ckan_timeout)(f)
+        # if 'organization_show' in path:
+        #    cached = cache_page(ckan_timeout, cache='big_objects')(f)
+
+        # For now put all CKAN responses into the big_objects cache
+        cached = cache_page(ckan_timeout, cache='big_objects')(f)
+
+        return cached(request, path)

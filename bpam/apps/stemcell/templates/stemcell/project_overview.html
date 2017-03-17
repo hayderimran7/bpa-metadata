@@ -19,100 +19,59 @@
         crossorigin="anonymous"></script>
 
 <script>
-    $(document).ready(function(){
-        function recreateTable(url) {
-            $('#content-table').DataTable().destroy();
+  function recreateTable(url) {
+    $('.apitable').DataTable().destroy();
 
-            var config = {
-                retrieve: true,
-                colReorder: true,
-                stateSave: true,
-                ajax: {
-                    url: url,
-                    cache: true,
-                    dataSrc: 'data'
-                },
-                processing: true,
-                pageLength: 100,
-                buttons: [
-                    'colvis', 'copy', 'csv', 'excel', 'print'
-                ], columns: [
-                    {
-                        'data': 'id',
-                        'defaultContent': '',
-                        'searchable': false,
-                        'render': function (data, type, row) {
-                            var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
-                            return '<a href="' + url + '">' + data + '</a>';
-                        }
-                    },
-                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
-                    { 'data': 'state' , 'defaultContent': '', 'searchable': false},
-                    { 'data': 'sequencer' , 'defaultContent': ''},
-                    { 'data': 'library_construction_protocol' , 'defaultContent': ''},
-                    { 'data': 'notes' , 'defaultContent': ''}
-                ],
-                fixedHeader: true
-            };
-            var ft = $('#content-table').DataTable(config);
-            ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
-            $('.apitable').addClass('table-striped table-bordered table-condensed');
-        }
+    setup_table(function() {
+      var config = _.defaults({
+        // colReorder: false,
+        searching: true,
 
-        $("#tree").on('select_node.jstree', function (e, data) {
-            recreateTable(data.node.original.url);
-
-            if (data.instance.is_parent(data.node)) {
-                if (!data.instance.is_open(data.node) ) {
-                    data.instance.toggle_node(data.node);
+        columns: [{
+                'data': 'id',
+                'defaultContent': '',
+                'searchable': false,
+                'render': function (data, type, row) {
+                    var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
+                    return '<a href="' + url + '">' + data + '</a>';
                 }
-            }
+              },
+              { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+              { 'data': 'state' , 'defaultContent': '', 'searchable': false},
+              { 'data': 'sequencer' , 'defaultContent': ''},
+              { 'data': 'library_construction_protocol' , 'defaultContent': ''},
+              { 'data': 'notes' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
 
-        }).jstree({
-            'core' : {
-              'data': function(obj, callback) {
-                  $.ajax({
-                      'url': '{% url "ckan:stemcell_project_overview_count" %}',
-                  }).done(function(resp) {
-                      var data = resp.data;
-                      callback.call(this, [{
-                              text: 'Single cell RNA seq (' + _.get(data, 'stemcells-singlecellrnaseq', 0)  + ')',
-                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
-                              /* TODO
-                              children: [{
-                                    text: 'Second level (0)'
-                                }, {
-                                    text: 'More second level (0)'
-                              }]
-                              */
-                          },{
-                              text: 'Small RNA (' + _.get(data, 'stemcells-smallrna', 0)  + ')',
-                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-smallrna' %}"
-                          },{
-                              text: 'Transcriptomics (' + _.get(data, 'stemcells-transcriptomics', 0)  + ')',
-                              url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
-                          }]);
-                  });
-              }
-            },
-            "plugins" : [ "state" ]
-        });
+      config.ajax.url = url;
 
-        $("#tree-toggle-btn").on('click', function() {
-            if ( $("#tree-col").is(":hidden") ) {
-                $("#content-col").removeClass("col-md-12");
-                $("#content-col").addClass("col-md-10");
-                $("#tree-col").show("slow");
-                $("#tree-toggle-btn").html("Hide tree");
-            } else {
-                $("#tree-col").hide("slow", function() {
-                    $("#content-col").removeClass("col-md-10");
-                    $("#content-col").addClass("col-md-12");
-                    $("#tree-toggle-btn").html("Show tree");
-                });
-            }
-        });
+      return config;
     });
+
+  };
+
+  function createTreeNodes(data) {
+      return [{
+            text: 'Single cell RNA seq (' + _.get(data, 'stemcells-singlecellrnaseq', 0)  + ')',
+            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
+        },{
+            text: 'Small RNA (' + _.get(data, 'stemcells-smallrna', 0)  + ')',
+            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-smallrna' %}"
+        },{
+            text: 'Transcriptomics (' + _.get(data, 'stemcells-transcriptomics', 0)  + ')',
+            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
+      }];
+  };
+
+  $(document).ready(function() {
+    createProjectOverviewTree({
+      url: '{% url "ckan:stemcell_project_overview_count" %}',
+      nodeCreator: createTreeNodes,
+      tableRecreator: recreateTable
+    });
+
+  });
 </script>
 {% endblock %}
 

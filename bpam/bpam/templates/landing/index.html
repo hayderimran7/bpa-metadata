@@ -26,6 +26,7 @@
             };
         </script>
 
+        <script src="{% static 'bpam/ckan.js' %}"></script>
         <script src="{% static 'bpam/bpam.js' %}"></script>
     </head>
 
@@ -308,7 +309,18 @@
         </div>
 
         <script>
-            landing_setup();
+            $('#marine_microbes_sample_count').text(loadingText);
+            $('#wheat_pathogens_genome_sample_count').text(loadingText);
+            $('#stemcell_sample_count').text(loadingText);
+
+            $(document).ready(function () {
+                CKAN.get_all_packages_count(function(result) {
+                    var orgSampleCount = function (org) { return _.get(result, org, 'ERROR') };
+                    $('#marine_microbes_sample_count').text(orgSampleCount('bpa-marine-microbes'));
+                    $('#wheat_pathogens_genome_sample_count').text(orgSampleCount('bpa-wheat-pathogens-genomes'));
+                    $('#stemcell_sample_count').text(orgSampleCount('bpa-stemcells'));
+                });
+            });
         </script>
 
     </body>
