@@ -56,7 +56,7 @@
         $('#metagenomic_sequences_count').text(loadingText);
         $('#amplicon_sequences_count').text(loadingText);
 
-        get_resources_count('bpa-marine-microbes', function(counts) {
+        CKAN.get_resources_count('bpa-marine-microbes', function(counts) {
             $('#samples_count').text(counts['samples']);
             $('#metagenomic_sequences_count').text(counts['mm-metagenomics']);
             $('#amplicon_sequences_count').text(counts['mm-genomics-amplicon']);

@@ -56,7 +56,14 @@
 </div>
 
 <script>
-    set_mm_sample();
+    set_sample(function(sample_obj) {
+        $(".bpa_id").text(sample_obj.bpa_id);
+        $(".sample_id").text(sample_obj.id);
+        $(".sample_type").text(sample_obj.type);
+        $(".site").text(sample_obj.sample_site);
+        $(".sample_depth").text(sample_obj.depth);
+        $(".collection_date").text(sample_obj.date_sampled);
+    });
 </script>
 
 {% include "apisequencefilelist.html" %}

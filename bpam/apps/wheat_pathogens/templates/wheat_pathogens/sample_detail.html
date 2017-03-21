@@ -70,7 +70,20 @@
 </div>
 
 <script>
-    set_sample();
+    set_sample(function(sample_obj) {
+				$(".sample_id").text(sample_obj.sample_id);
+				$(".sample_organism").text(sample_obj.species);
+				$(".sample_label").text(sample_obj.label);
+				$(".sample_dna_source").text(sample_obj.dna_source);
+				$(".sample_official_variety_name").text(sample_obj.official_variety_name);
+				$(".sample_wheat_pathogenicity").text(sample_obj.wheat_pathogenicity);
+				$(".sample_original_source_host_species").text(sample_obj.original_source_host_species);
+				$(".sample_requested_sequence_coverage").text(sample_obj.requested_sequence_coverage);
+				$(".sample_collection_location").text(sample_obj.collection_location);
+				$(".sample_protocol_reference").text(sample_obj.protocol_reference);
+				$(".sample_date_sequenced").text(sample_obj.date_sequenced);
+				$(".sample_comments_by_facility").text(sample_obj.comments_by_facility);
+		});
 </script>
 
 {% include "apisequencefilelist.html" %}

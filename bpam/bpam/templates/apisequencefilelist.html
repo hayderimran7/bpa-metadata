@@ -17,7 +17,7 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="filetable">
       <div class="panel-body">
-        <table id="api-sequence-list" class="table table-striped">
+        <table id="api-sequence-list" class="apitable table table-striped">
           <thead>
             <tr>
               <th>Filename</th>
@@ -44,5 +44,34 @@
 </div>
 
 <script>
-  set_sample_resources();
+  var setup_resources_table = function(sample_obj) {
+    setup_table(function() {
+      var config = _.defaults({
+        data: sample_obj.resources,
+
+        columns: [{
+              'data': 'name',
+              'render': function(data, type, row) {
+                  return '<a href="' + row.url + '">' + data + '</a>';
+              }
+            },
+            { 'data': 'md5' }
+        ]
+
+      }, CONFIG.tables.commonConfig);
+
+      return config;
+    });
+  };
+
+  set_sample(function(sample_obj) {
+      $(".resource_count").text(sample_obj.resources.length);
+      var urls = _.map(sample_obj.resources, function (resource_obj) {
+          return resource_obj.url;
+      });
+
+      setup_resources_table(sample_obj);
+
+      $(".download_links").text(urls.join("\n")); 
+  });
 </script>

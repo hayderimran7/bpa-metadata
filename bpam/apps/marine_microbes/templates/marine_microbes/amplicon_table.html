@@ -42,9 +42,46 @@
         <tbody>
         </tbody>
     </table>
-
-    <script>
-        marine_microbes_amplicon_setup('{{ amplicon }}');
-    </script>
-
 </div>
+
+<script>
+  function marine_microbes_amplicon_setup(amplicon) {
+    var url = bpam_config.ckan_base + 'resources/bpa-marine-microbes/mm-genomics-amplicon';
+    if (amplicon !== 'all') {
+      url += '?amplicon=' + amplicon;
+    }
+
+    setup_table(function() {
+      var config = _.defaults({
+        columns: [{
+                'data': 'package.id',
+                'defaultContent': '',
+                'render': function(data, type, row) {
+                    var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                    return '<a href="' + url + '">' + data + '</a>';
+                }
+              },
+              { 'data': 'package.bpa_id' , 'defaultContent': ''},
+              { 'data': 'package.sra', 'defaultContent': ''},
+              { 'data': 'facility', 'defaultContent': ''},
+              { 'data': 'amplicon', 'defaultContent': ''},
+              { 'data': 'index', 'defaultContent': ''},
+              { 'data': 'pcr1_10' , 'defaultContent': ''},
+              { 'data': 'pcr1_100' , 'defaultContent': ''},
+              { 'data': 'neat_pcr' , 'defaultContent': ''},
+              { 'data': 'package.dilution_used' , 'defaultContent': ''},
+              { 'data': 'package.analysis_software_version' , 'defaultContent': ''},
+              { 'data': 'read' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+    marine_microbes_amplicon_setup('{{ amplicon }}');
+  });
+</script>

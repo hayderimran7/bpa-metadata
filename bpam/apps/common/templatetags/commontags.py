@@ -19,5 +19,4 @@ def sample_url(mirror, sample):
 
 @register.simple_tag
 def ckan_server_url():
-    # Point to the base of 'ckan/' urls which is the parent of 'ckan/proxy'
-    return reverse('ckan:proxy', kwargs={'path': '../'})
+    return reverse('ckan:index')

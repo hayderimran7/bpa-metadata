@@ -19,113 +19,64 @@
         crossorigin="anonymous"></script>
 
 <script>
-    $(document).ready(function(){
-        function recreateTable(url) {
-            $('#content-table').DataTable().destroy();
+  function recreateTable(url) {
+    $('.apitable').DataTable().destroy();
 
-            var config = {
-                retrieve: true,
-                colReorder: true,
-                stateSave: true,
-                serverSide: true,
-                searchDelay: CONFIG.tables.globalSearchDelay,
-                ajax: {
-                    url: url,
-                    cache: true,
-                    dataSrc: 'data'
-                },
-                processing: true,
-                pageLength: 100,
-                buttons: [
-                    'colvis', 'copy', 'csv', 'excel', 'print'
-                ], columns: [
-                    {
-                        'data': 'id',
-                        'defaultContent': '',
-                        'searchable': false,
-                        'render': function (data, type, row) {
-                            var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
-                            return '<a href="' + url + '">' + data + '</a>';
-                        }
-                    },
-                    { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
-                    { 'data': 'sample_type' , 'defaultContent': ''},
-                    { 'data': 'sample_site', 'defaultContent': '' },
-                    { 'data': 'date_sampled', 'defaultContent': '' },
-                    { 'data': 'depth', 'defaultContent': '' }
-                ],
-                fixedHeader: true
-            };
-            var ft = $('#content-table').DataTable(config);
-            ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
-            $('.apitable').addClass('table-striped table-bordered table-condensed');
-        }
+    setup_table(function() {
+      var config = _.defaults({
+        colReorder: false,
+        searching: true,
 
-        $("#tree").on('select_node.jstree', function (e, data) {
-            recreateTable(data.node.original.url);
-
-            if (data.instance.is_parent(data.node)) {
-                if (!data.instance.is_open(data.node) ) {
-                    data.instance.toggle_node(data.node);
+        columns: [{
+                'data': 'id',
+                'defaultContent': '',
+                'searchable': false,
+                'render': function (data, type, row) {
+                    var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                    return '<a href="' + url + '">' + data + '</a>';
                 }
-            }
+              },
+              { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+              { 'data': 'sample_type' , 'defaultContent': ''},
+              { 'data': 'sample_site', 'defaultContent': '' },
+              { 'data': 'date_sampled', 'defaultContent': '' },
+              { 'data': 'depth', 'defaultContent': '' }
+        ]
+      }, CONFIG.tables.ajaxConfig);
 
-        }).jstree({
-            'core' : {
-              'data': function(obj, callback) {
-                  $.ajax({
-                      'url': '{% url "ckan:mm_project_overview_count" %}',
-                  }).done(function(resp) {
-                      var data = resp.data;
-                      callback.call(this, [{
-                              text: 'Metagenomics (' + _.get(data, 'mm-metagenomics', 0)  + ')',
-                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metagenomics' %}"
-                              /* TODO
-                              children: [{
-                                    text: 'Generated (0)'
-                                }, {
-                                    text: 'Quality Checked (0)'
-                                }, {
-                                    text: 'Minimum Contextual Data Received (0)'
-                                }, {
-                                    text: 'Full Contextual Data Received (0)'
-                              }]
-                              */
-                          },{
-                              text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
-                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+      config.ajax.url = url;
 
-                          },{
-                              text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
-                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
-                          },{
-                              text: 'Amplicon A16S (' + _.get(data, 'amplicons.a16s', 0) + ')',
-                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S"
-                          },{
-                              text: 'Amplicon 18S (' + _.get(data, 'amplicons.18s', 0) + ')',
-                              url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S"
-                          }]);
-                  });
-              }
-            },
-            "plugins" : [ "state" ]
-        });
-
-        $("#tree-toggle-btn").on('click', function() {
-            if ( $("#tree-col").is(":hidden") ) {
-                $("#content-col").removeClass("col-md-12");
-                $("#content-col").addClass("col-md-10");
-                $("#tree-col").show("slow");
-                $("#tree-toggle-btn").html("Hide tree");
-            } else {
-                $("#tree-col").hide("slow", function() {
-                    $("#content-col").removeClass("col-md-10");
-                    $("#content-col").addClass("col-md-12");
-                    $("#tree-toggle-btn").html("Show tree");
-                });
-            }
-        });
+      return config;
     });
+
+  };
+
+  var createTreeNodes = function(data) {
+      return [{
+            text: 'Metagenomics (' + _.get(data, 'mm-metagenomics', 0)  + ')',
+            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metagenomics' %}"
+          },{
+            text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
+            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+          },{
+            text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
+            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
+          },{
+            text: 'Amplicon A16S (' + _.get(data, 'amplicons.a16s', 0) + ')',
+            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S"
+          },{
+            text: 'Amplicon 18S (' + _.get(data, 'amplicons.18s', 0) + ')',
+            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S"
+      }];
+  };
+
+  $(document).ready(function() {
+    createProjectOverviewTree({
+      url: '{% url "ckan:mm_project_overview_count" %}',
+      nodeCreator: createTreeNodes,
+      tableRecreator: recreateTable
+    });
+  });
 </script>
 {% endblock %}
 
