@@ -52,10 +52,6 @@ class AmpliconDetailView(DetailView):
         return context
 
 
-class MethodsView(TemplateView):
-    template_name = 'marine_microbes/methods.html'
-
-
 class MMView(DebugOnlyTemplateView):
     template_name = 'marine_microbes/index.html'
 
@@ -82,14 +78,6 @@ class MetagenomicFileListView(ListView):
 
 class SampleDetailView(TemplateView):
     template_name = 'marine_microbes/sample_detail.html'
-
-
-class ContactsView(TemplateView):
-    template_name = 'marine_microbes/contacts.html'
-
-
-class ConsortiumView(TemplateView):
-    template_name = 'marine_microbes/consortium.html'
 
 
 class CollectionSiteListView(ListView):
