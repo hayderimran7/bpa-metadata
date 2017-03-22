@@ -75,7 +75,7 @@
     $('#package_count').text(loadingText);
     $('#resource_count').text(loadingText);
 
-    CKAN.get_resources_count('bpa-wheat-pathogens-genomes', function(counts) {
+    CKAN.get_orgs_packages_and_resources_count('bpa-wheat-pathogens-genomes', function(counts) {
         $('#package_count').text(counts['samples']);
         $('#resource_count').text(counts['wheat-pathogens']);
     });

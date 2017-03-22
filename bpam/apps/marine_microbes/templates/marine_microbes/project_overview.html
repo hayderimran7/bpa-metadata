@@ -54,19 +54,19 @@
   var createTreeNodes = function(data) {
       return [{
             text: 'Metagenomics (' + _.get(data, 'mm-metagenomics', 0)  + ')',
-            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metagenomics' %}"
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metagenomics' %}"
           },{
             text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
-            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
           },{
             text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
-            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
           },{
             text: 'Amplicon A16S (' + _.get(data, 'amplicons.a16s', 0) + ')',
-            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S"
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S"
           },{
             text: 'Amplicon 18S (' + _.get(data, 'amplicons.18s', 0) + ')',
-            url: "{% url 'ckan:packages' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S"
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S"
       }];
   };
 

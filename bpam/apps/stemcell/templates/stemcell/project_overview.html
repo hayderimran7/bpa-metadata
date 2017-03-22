@@ -54,13 +54,13 @@
   function createTreeNodes(data) {
       return [{
             text: 'Single cell RNA seq (' + _.get(data, 'stemcells-singlecellrnaseq', 0)  + ')',
-            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
+            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
         },{
             text: 'Small RNA (' + _.get(data, 'stemcells-smallrna', 0)  + ')',
-            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-smallrna' %}"
+            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-smallrna' %}"
         },{
             text: 'Transcriptomics (' + _.get(data, 'stemcells-transcriptomics', 0)  + ')',
-            url: "{% url 'ckan:packages' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
+            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
       }];
   };
 
