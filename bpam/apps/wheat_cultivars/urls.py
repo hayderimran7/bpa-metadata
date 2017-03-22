@@ -12,5 +12,4 @@ urlpatterns = patterns(
     url(r'^sample/(?P<pk>.*)/$', views.SampleDetailView.as_view(), name='sample'),
     url(r'^sequencefiles/csv', data_export.get_sequencefiles, name='sequencefiles_csv'),
     url(r'^sequencefiles', views.SequenceFileListView.as_view(), name='sequencefiles'),
-    url(r'^contacts$', views.ContactsView.as_view(), name='contacts'),
 )
