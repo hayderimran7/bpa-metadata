@@ -23,13 +23,11 @@ router.register(r"track_swath", views.SWATHMSTrackViewSet)
 urlpatterns = [
     # url(r'^api/v2/', include(router.urls)),
     url(r'^$', DEBUG_ONLY_VIEW(views.SepsisView.as_view()), name='index'),
-    url(r'^contacts$', views.ContactsView.as_view(), name='contacts'),
     url(r'^samples', views.SampleListView.as_view(), name='samples'),
     url(r'^sample/(?P<pk>.*)/$', views.SampleDetailView.as_view(), name='sample'),
     url(r'^genomicsmiseqfiles', views.GenomicsMiseqFileListView.as_view(), name='genomics_miseq_files'),
     url(r'^transcriptomicshiseqfiles', views.TranscriptomicsHiseqFileListView.as_view(), name='transcriptomics_hiseq_files'),
     url(r'^genomicspacbiofiles', views.GenomicsPacBioFileListView.as_view(), name='genomics_pacbio_files'),
-    url(r'^consortium$', views.ConsortiumView.as_view(), name='consortium'),
 
     # BEGIN----- Tracker URLs ----------
 
