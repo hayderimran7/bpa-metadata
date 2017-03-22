@@ -70,7 +70,3 @@ class CollectionView(DetailView):
     model = CollectionEvent
     context_object_name = 'collectionevent'
     template_name = 'gbr/collection_event_detail.html'
-
-
-class ContactsView(TemplateView):
-    template_name = 'gbr/contacts.html'
