@@ -16,7 +16,3 @@ class SampleDetailView(TemplateView):
 
 class SequenceFileListView(TemplateView):
     template_name = 'wheat_pathogens/sequencefile_list.html'
-
-
-class ContactsView(TemplateView):
-    template_name = 'contacts.html'

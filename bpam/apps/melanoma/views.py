@@ -81,7 +81,3 @@ def search_view(request, term):
 
     data['nresults'] += len(data['melanoma_object_list'])
     return render(request, 'melanoma/search_results.html', data)
-
-
-class ContactsView(TemplateView):
-    template_name = 'contacts.html'

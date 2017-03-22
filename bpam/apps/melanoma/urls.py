@@ -13,7 +13,6 @@ urlpatterns = patterns(
     url(r'^sequencefiles', views.SequenceFileListView.as_view(), name='sequencefiles'),
     url(r'^arrays', views.ArrayListView.as_view(), name='arrays'),
     url(r'search/(.*)$', views.search_view, name="search"),
-    url(r'^contacts$', views.ContactsView.as_view(), name='contacts'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

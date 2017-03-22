@@ -42,7 +42,3 @@ class SequenceFileListView(ListView):
     context_object_name = 'sequencefiles'
     template_name = 'wheat_pathogens_transcript/sequencefile_list.html'
     # paginate_by = settings.DEFAULT_PAGINATION
-
-
-class ContactsView(TemplateView):
-    template_name = 'contacts.html'
