@@ -1,5 +1,6 @@
 import ckanapi
-from collections import Counter
+from collections import Counter, OrderedDict
+from functools import wraps
 from hashlib import sha1
 import json
 import logging
@@ -27,21 +28,37 @@ ORDERING_PATTERN = re.compile(r'^order\[(\d+)\]\[(dir|column)\]$')
 SEARCH_PATTERN = re.compile(r'^search\[(value|regex)\]$')
 
 
-# TODO Review
-# I disabled all per-page caching to make it obvious that we cache on the ckan requests,
-# namely organizations_show and get_all_resources. All the other views are reusing that data
-# so caching per page isn't that important.
+# Could grab these with a facet.pivot Solr query, but it is unsupported in the CKAN API :-(
+CKAN_RESOURCE_TYPES = {
+        'bpa-marine-microbes':
+            ('mm-metagenomics', 'mm-metatranscriptome', 'mm-genomics-amplicon'),
+        'bpa-wheat-pathogens-genomes':
+            ('wheat-pathogens',),
+        'bpa-stemcells':
+            ('stemcells-transcriptomics', 'stemcells-smallrna', 'stemcells-singlecellrnaseq'),
+}
 
 
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_packages(request, org_name, package_type=None):
+def exceptions_to_json_err(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        try:
+            return view(*args, **kwargs)
+        except Exception as e:
+            logger.exception('Error while running view %s', view.__name__)
+            return JsonError.from_exception(e)
+
+    return wrapped_view
+
+
+@exceptions_to_json_err
+def package_list(request, org_name, resource_type=None):
     amplicon = request.GET.get('amplicon')
 
-    org = get_org(org_name)
-    if package_type is None:
-        packages = org['packages']
+    if resource_type is None:
+        packages = ckan_get_packages_by_organisation(org_name)
     else:
-        packages = [p for p in org['packages'] if p['type'] == package_type]
+        packages = ckan_get_packages_by_resource_type(resource_type)
 
     if amplicon:
         packages = [p for p in packages if p.get('amplicon', '').lower() == amplicon.lower()]
@@ -74,11 +91,11 @@ def ckan_packages(request, org_name, package_type=None):
      })
 
 
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_resources(request, org_name, package_type):
+@exceptions_to_json_err
+def resource_list(request, org_name, resource_type):
     amplicon = request.GET.get('amplicon')
-    logger.debug(list(set(r['package']['type'] for r in get_all_resources(org_name))))
-    resources = [r for r in get_all_resources(org_name) if r['package']['type'] == package_type]
+    resources = ckan_get_resources(resource_type)
+
     if amplicon:
         resources = [r for r in resources if r.get('amplicon', '').lower() == amplicon.lower()]
 
@@ -102,8 +119,6 @@ def ckan_resources(request, org_name, package_type):
     if start is not None and length is not None:
         resources = resources[int(start):int(start)+int(length)]
 
-    logger.debug('resources is now %s', len(resources))
-
     return JsonSuccess({
         'draw': draw,
         'data': resources,
@@ -112,85 +127,56 @@ def ckan_resources(request, org_name, package_type):
     })
 
 
-def ckan_package_show(request, package_id):
+@exceptions_to_json_err
+def package_detail(request, package_id):
     ckan = get_ckan()
-
     package = ckan.call_action('package_show', {'id': package_id})
 
     return JsonSuccess.data(package)
 
 
-
-def ckan_packages_count(request, org_name=None):
-    ckan = get_ckan()
-
-    packages_count = ckan.call_action('package_search', {'facet.field': ['organization'], 'include_private': True, 'rows': 0})
-    path = ['facets', 'organization']
-    if org_name is not None:
-        path.append(org_name)
-
-    return JsonSuccess.data(get_in(packages_count, path))
+# Used by landing page to display how many samples we have in each project
+@exceptions_to_json_err
+def packages_count_by_organisation(request, org_name=None):
+    return JsonSuccess.data(ckan_packages_count_by_organisation(org_name))
 
 
+# Used by each projects page to display how may samples and files (of different types) we have
+@exceptions_to_json_err
+def org_packages_and_resources_count(request, org_name):
+    counts = {k: ckan_get_resources_count(k) for k in CKAN_RESOURCE_TYPES.get(org_name, {})}
+    sample_counts = ckan_packages_count_by_organisation(org_name)
+
+    counts['samples'] = sample_counts
+
+    return JsonSuccess.data(counts)
+
+
+# We use this view currently only to get the amplicons for Marine Microbes.
+# Displays the number of files by amplicon types ie. 16S, A16S, 18S
+@exceptions_to_json_err
+def amplicon_resources_count(request):
+    counts = ckan_amplicon_resources_count()
+
+    return JsonSuccess.data(counts)
+
+
+@exceptions_to_json_err
 def mm_project_overview_count(request):
-    org = get_org('bpa-marine-microbes')
+    all_package_counts = ckan_packages_count_by_resource_type()
+    counts = {k: v for k, v in all_package_counts.items() if k in CKAN_RESOURCE_TYPES['bpa-marine-microbes']}
 
-    cnt = Counter(p['type'] for p in org['packages'])
-    amplicons_cnt = Counter(p['amplicon'] for p in org['packages'] if p['type'] == 'mm-genomics-amplicon')
+    amplicon_counts = ckan_amplicon_packages_count('mm-genomics-amplicon')
+    counts['amplicons'] = amplicon_counts
 
-    counts = dict(cnt.most_common())
-    counts['amplicons'] = dict(amplicons_cnt.most_common())
 
     return JsonSuccess.data(counts)
 
 
+@exceptions_to_json_err
 def stemcell_project_overview_count(request):
-    org = get_org('bpa-stemcells')
-
-    cnt = Counter(p['type'] for p in org['packages'])
-    counts = dict(cnt.most_common())
-
-    return JsonSuccess.data(counts)
-
-
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_resources_count(request, org_name):
-#    TODO should switch to the new API
-#    ckan = get_ckan()
-
-#    response = ckan.action.resource_search(query='resource_type:%s' % org_name, limit=0)
-#    data = response.get('count')
-
-    resources = get_all_resources(org_name)
-    cnt = Counter(r['package']['type'] for r in resources)
-    sample_ids = set(r['package']['id'] for r in resources)
-
-    counts = dict(cnt.most_common())
-    counts['samples'] = len(sample_ids)
-
-    return JsonSuccess.data(counts)
-
-
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def OLD_ckan_resources_count(request, org_name):
-    resources = get_all_resources(org_name)
-    cnt = Counter(r['package']['type'] for r in resources)
-    sample_ids = set(r['package']['id'] for r in resources)
-
-    counts = dict(cnt.most_common())
-    counts['samples'] = len(sample_ids)
-
-    return JsonSuccess.data(counts)
-
-
-#@cache_page(settings.CKAN_CACHE_TIMEOUT, cache='big_objects')
-def ckan_resources_count_by_amplicon(request):
-    resources = [r for r in get_all_resources('bpa-marine-microbes') if r['package']['type'] == 'mm-genomics-amplicon']
-
-    cnt = Counter(r.get('amplicon') for r in resources)
-
-    counts = dict(cnt.most_common())
-    counts['all'] = reduce(operator.add, counts.values())
+    all_package_counts = ckan_packages_count_by_resource_type()
+    counts = {k: v for k, v in all_package_counts.items() if k in CKAN_RESOURCE_TYPES['bpa-stemcells']}
 
     return JsonSuccess.data(counts)
 
@@ -203,67 +189,164 @@ def get_ckan():
     return ckanapi.RemoteCKAN(server.base_url, apikey=server.api_key)
 
 
-def get_org(org_name):
-    cache = caches['big_objects']
+def ckan_get_amplicon_resources_count(resource_type, amplicon_type):
     ckan = get_ckan()
 
-    key = sha1('ckan_organization_show:${id},include_datasets=True'.format(id=org_name)).hexdigest()
-    org = cache.get(key)
-    if org is None:
-        org = ckan.action.organization_show(id=org_name, include_datasets=True)
-        cache.set(key, org)
-    return org
+    args = OrderedDict((
+        ('query', ['resource_type:%s' % resource_type, 'amplicon:%s' % amplicon_type]),
+        ('include_private', True),
+        ('limit', 0),
+    ))
+    result = ckan.call_action('resource_search', args)
+
+    return result['count']
 
 
-def get_all_resources(org_name):
-    cache = caches['big_objects']
+def ckan_get_resources_count(resource_type):
     ckan = get_ckan()
 
-    key = sha1('get_all_resources:${org_name}'.format(org_name=org_name)).hexdigest()
+    args = OrderedDict((
+        ('query', 'resource_type:%s' % resource_type),
+        ('include_private', True),
+        ('limit', 0),
+    ))
+    result = ckan.call_action('resource_search', args)
 
-    resources = cache.get(key)
-    if resources is not None:
-        logger.debug('Cached get_all_resources(%s)', org_name)
-        return resources
+    return result['count']
 
-    org = get_org(org_name)
-    package_ids = [p['id'] for p in get_org(org_name)['packages']]
-
-    packages = []
-    for pid in package_ids:
-        try:
-            packages.append(ckan.action.package_show(id=pid, include_datasets=True))
-        except ckanapi.errors.CKANAPIError:
-            logger.exception('Error trying to show package %s' % pid)
-
-    resources = [dict(r.items() + [('package', {k: v for k, v in p.items() if k != 'resources'})])
-                 for p in packages
-                 for r in p['resources']]
-
-
-    cache.set(key, resources)
-
-    return resources
-
-
-# Currently, unused, but leaving it because we might go back this
-def get_resources(org_name, package_type, filter_fn=lambda x: True):
-    ckan = get_ckan()
-    # package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type]
-    package_ids = [p['id'] for p in get_org(org_name)['packages'] if p['type'] == package_type and filter_fn(p)]
-
-    packages = []
-    for pid in package_ids:
-        try:
-            packages.append(ckan.action.package_show(id=pid, include_datasets=True))
-        except ckanapi.errors.CKANAPIError:
-            logger.exception('Error trying to show package %s' % pid)
-
+    packages = ckan_get_packages_by_resource_type(resource_type)
     resources = [dict(r.items() + [('package', {k: v for k, v in p.items() if k != 'resources'})])
                  for p in packages
                  for r in p['resources']]
 
     return resources
+
+
+def ckan_get_resources(resource_type):
+    # Fetching all resources by getting all packages then turn the resources inside-out
+    # ie. putting the resources at top-level and nest their package inside them
+    # Another strategy would be to fetch only the needed resources and then fetch the associated packages
+    # with show_package (it will result in 1 request per resource, but it might be faster overall)
+
+    packages = ckan_get_packages_by_resource_type(resource_type)
+    resources = [dict(r.items() + [('package', {k: v for k, v in p.items() if k != 'resources'})])
+                 for p in packages
+                 for r in p['resources']]
+
+    return resources
+
+
+def ckan_packages_count_by_organisation(org_name=None):
+    ckan = get_ckan()
+
+    args = OrderedDict((
+        ('facet.field', ['organization']),
+        ('include_private', True),
+        ('rows', 0),
+    ))
+    result = ckan.call_action('package_search', args)
+
+    path = ['facets', 'organization']
+    if org_name is not None:
+        path.append(org_name)
+
+    return get_in(result, path)
+
+
+def ckan_packages_count_by_resource_type():
+    ckan = get_ckan()
+
+    args = OrderedDict((
+        ('facet.field', ['type']),
+        ('include_private', True),
+        ('rows', 0),
+    ))
+    result = ckan.call_action('package_search', args)
+
+    return get_in(result, ['facets', 'type'])
+
+
+def ckan_amplicon_packages_count(resource_type):
+    ckan = get_ckan()
+
+    args = OrderedDict((
+        ('q', 'type:%s' % resource_type),
+        ('facet.field', ['amplicon']),
+        ('include_private', True),
+        ('rows', 0),
+    ))
+    result = ckan.call_action('package_search', args)
+
+    return get_in(result, ['facets', 'amplicon'])
+
+
+def ckan_amplicon_resources_count():
+    # This implementation would be better, but unfortunately the resource search always
+    # uses contains instead of exact matching, so when looking for "16S" amplicons we
+    # also get the "A16S" amplicons back.
+    # Leaving the code here because we might use it later on.
+    #
+    # AMPLICON_TYPES = ('16S', '18S', 'A16S')
+    #
+    # counts = {at: ckan_get_amplicon_resources_count('mm-genomics-amplicon', at)
+    #           for at in AMPLICON_TYPES}
+
+    resources = ckan_get_resources('mm-genomics-amplicon')
+
+    cnt = Counter(r['amplicon'] for r in resources)
+
+    counts = dict(cnt.most_common())
+    counts['all'] = sum(counts.values())
+
+    return counts
+
+
+# Cached CKAN services
+# Some of the other CKAN services above rely on these
+
+
+def ckan_get_packages_by_organisation(org_name):
+    cache = caches['big_objects']
+    ckan = get_ckan()
+
+    args = OrderedDict((
+        ('q', 'organization:%s' % org_name),
+        ('include_private', True),
+        ('rows', 10000),
+    ))
+
+    args_str = ','.join('%s=%s' % i for i in args.items())
+    key = sha1('ckan_package_search(%s)' % args_str).hexdigest()
+
+    packages = cache.get(key)
+    if packages is None:
+        result = ckan.call_action('package_search', args)
+        packages = result['results']
+        cache.set(key, packages)
+
+    return packages
+
+
+def ckan_get_packages_by_resource_type(resource_type):
+    cache = caches['big_objects']
+    ckan = get_ckan()
+
+    args = OrderedDict((
+        ('q', 'type:%s' % resource_type),
+        ('include_private', True),
+        ('rows', 10000),
+    ))
+
+    args_str = ','.join('%s=%s' % i for i in args.items())
+    key = sha1('ckan_package_search(%s)' % args_str).hexdigest()
+
+    packages = cache.get(key)
+    if packages is None:
+        result = ckan.call_action('package_search', args)
+        packages = result['results']
+        cache.set(key, packages)
+
+    return packages
 
 
 # Implementation
@@ -349,6 +432,21 @@ class JsonSuccess(JsonResponse):
     @classmethod
     def data(cls, data):
         return JsonSuccess({'data': data})
+
+
+class JsonError(JsonResponse):
+    def __init__(self, data, *args, **kwargs):
+        resp = data
+        if isinstance(data, dict):
+            resp = data.copy()
+            resp['success'] = False
+
+        super(JsonError, self).__init__(resp, *args, **kwargs)
+
+    @classmethod
+    def from_exception(cls, exc):
+        return JsonError({'msg': repr(exc)})
+
 
 
 # Disabled the proxy (in urls.py) for now, leaving the code for a while in case we will need it

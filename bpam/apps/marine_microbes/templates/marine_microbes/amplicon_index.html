@@ -21,7 +21,7 @@
 
             <div class="col-sm-8 col-md-8">
                 <h2>
-                    All <a href="{% url 'marine_microbes:index' %}">Marine Microbe</a> Amplicons
+                    All Marine Microbe Amplicons
                 </h2>
 
                 <div class="list-group">
@@ -47,7 +47,7 @@
         $('#amplicons_count_a16s').text(loadingText);
         $('#amplicons_count_18s').text(loadingText);
 
-        CKAN.get_resources_count_by_amplicon(function(counts) {
+        CKAN.amplicon_resources_count(function(counts) {
             $('#amplicons_count_all').text(counts.all);
             $('#amplicons_count_16s').text(counts['16S']);
             $('#amplicons_count_a16s').text(counts['A16S']);
