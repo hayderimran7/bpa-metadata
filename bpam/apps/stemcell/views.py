@@ -9,10 +9,6 @@ class StemCellView(DebugOnlyTemplateView):
     template_name = 'stemcell/index.html'
 
 
-class ContactsView(TemplateView):
-    template_name = 'stemcell/contacts.html'
-
-
 class ProjectOverviewView(TemplateView):
     template_name = 'stemcell/project_overview.html'
 
