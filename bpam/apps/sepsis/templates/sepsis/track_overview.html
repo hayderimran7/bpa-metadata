@@ -1,4 +1,4 @@
-{% extends "base_simple.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %}
 
@@ -50,10 +50,8 @@
 
             if (data.node.parent != "#") {
                 var call = url.replace('xxx', params[0]).replace('yyy', params[1]);
-                $("#selected").html(params[0] + " - " + status[params[1]]);
             } else {
                 var call = url.replace('xxx', params[0]).replace('yyy', 'all');
-                $("#selected").html(params[0] + " - All");
             }
 
             $.ajax({
@@ -113,22 +111,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h3>Antibiotic Resistant Sepsis Pathogens - Overview</h3>
-</div>
-
-<hr>
 
 <div class="container-fluid">
 
     <div class="row">
         <div class="col-md-2">
             <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
-        </div>
-        <div class="col-md-2">
-            <h4>
-                <div id="selected"></div>
-            </h4>
         </div>
         <div class="col-md-8">
             <div class="bootstrap_buttons pull-right"> </div>
@@ -169,7 +157,7 @@
             <tbody>
             </tbody>
         </table>
-
     </div>
+</div>
 </div>
 {% endblock %}
