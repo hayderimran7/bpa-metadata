@@ -13,11 +13,11 @@
 
 <script>
     $(document).ready(function(){
-        
+
         var yes_icon = "{% static 'sepsis/icon-yes.gif' %}";
         var no_icon = "{% static 'sepsis/icon-no.gif' %}";
         var sample_url = "{% url 'sepsis:sample' 'xxx' %}";
-        
+
         var status = {
             'inproc': 'Sample processing',
             'bpaarchiveingest': 'BPA Archive Ingest',
@@ -25,7 +25,7 @@
             'embargoed': 'Embargoed',
             'public': 'Public'
         };
-        
+
         function generated_icon(item) {
             if (item) {
                 return "<img src='"+ yes_icon +"' alt='Yes' />";
@@ -33,11 +33,11 @@
                 return "<img src='"+ no_icon +"' alt='No' />";
             }
         }
-        
+
         function get_url(bpaid) {
             return "<a href='"+sample_url.replace('xxx', bpaid) + "'>" + bpaid + "</a>";
         }
-        
+
         $("#tree").on('select_node.jstree', function (e, data) {
             var url = "{% url 'sepsis:overview_detail' 'xxx' 'yyy' %}";
             var params = data.node.id.split("/");
@@ -55,7 +55,7 @@
                 var call = url.replace('xxx', params[0]).replace('yyy', 'all');
                 $("#selected").html(params[0] + " - All");
             }
-            
+
             $.ajax({
                 url: call,
             }).done(function( data ) {
@@ -93,7 +93,7 @@
             },
             "plugins" : [ "state" ]
         });
-        
+
         $("#tree-toggle-btn").on('click', function() {
             if ( $("#tree-col").is(":hidden") ) {
                 $("#content-col").removeClass("col-md-12");
@@ -120,7 +120,7 @@
 <hr>
 
 <div class="container-fluid">
-    
+
     <div class="row">
         <div class="col-md-2">
             <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
@@ -169,7 +169,7 @@
             <tbody>
             </tbody>
         </table>
-    
+
     </div>
 </div>
 {% endblock %}
