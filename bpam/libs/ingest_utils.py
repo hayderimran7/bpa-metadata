@@ -5,6 +5,8 @@ import json
 
 import logger_utils
 import datetime
+from apps.common.models import BPAUniqueID, BPAProject
+
 from django.utils.encoding import smart_text
 
 # where to cache downloaded metadata
@@ -174,6 +176,18 @@ def get_date(dt):
 
     logger.error('Date `{}` is not in a supported format'.format(dt))
     return None
+
+
+def get_bpa_id(bpaid):
+    """get BPA ID"""
+
+    if bpaid is None:
+        return None
+
+    bpaid = bpaid.replace("/", ".")
+    project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
+    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+    return bpa_id
 
 
 def pretty_print_namedtuple(named_tuple):

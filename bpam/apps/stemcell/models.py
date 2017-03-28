@@ -29,7 +29,7 @@ class SampleTrack(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'{} {} {}'.format(self.bpa_id, self.taxon_or_organism, self.omics)
+        return u'{} {}'.format(self.bpa_id, self.omics)
 
     class Meta:
         abstract = True

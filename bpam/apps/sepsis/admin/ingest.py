@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from libs.ingest_utils import get_date
-from apps.common.models import BPAUniqueID, BPAProject
+from libs.ingest_utils import get_date, get_bpa_id  # noqa
 
 from ..models import Host
 
@@ -36,15 +35,3 @@ def get_host(row):
                                          disease_outcome=disease_outcome, )
 
     return host
-
-
-def get_bpa_id(bpaid):
-    """get BPA ID"""
-
-    if bpaid is None:
-        return None
-
-    bpaid = bpaid.replace("/", ".")
-    project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
-    return bpa_id
