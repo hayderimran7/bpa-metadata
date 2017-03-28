@@ -251,7 +251,7 @@ class BPAUniqueID(models.Model):
 
     class Meta:
         verbose_name = 'BPA Unique ID'
-        verbose_name_plural = "BPA Unique ID's"
+        verbose_name_plural = "BPA Unique IDs"
 
     def __unicode__(self):
         return self.bpa_id

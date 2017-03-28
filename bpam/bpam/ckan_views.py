@@ -2,16 +2,13 @@ import ckanapi
 from collections import Counter, OrderedDict
 from functools import wraps
 from hashlib import sha1
-import json
 import logging
-import operator
 import re
 
 from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
-from django.views.generic import TemplateView
 from django.views.decorators.cache import cache_page
 from revproxy.views import ProxyView
 from revproxy import utils
@@ -30,12 +27,14 @@ SEARCH_PATTERN = re.compile(r'^search\[(value|regex)\]$')
 
 # Could grab these with a facet.pivot Solr query, but it is unsupported in the CKAN API :-(
 CKAN_RESOURCE_TYPES = {
-        'bpa-marine-microbes':
-            ('mm-metagenomics', 'mm-metatranscriptome', 'mm-genomics-amplicon'),
-        'bpa-wheat-pathogens-genomes':
-            ('wheat-pathogens',),
-        'bpa-stemcells':
-            ('stemcells-transcriptomics', 'stemcells-smallrna', 'stemcells-singlecellrnaseq'),
+    'bpa-marine-microbes': (
+        'mm-metagenomics',
+        'mm-metatranscriptome',
+        'mm-genomics-amplicon'),
+    'bpa-wheat-pathogens-genomes':
+        ('wheat-pathogens',),
+    'bpa-stemcells':
+        ('stemcells-transcriptomics', 'stemcells-smallrna', 'stemcells-singlecellrnaseq'),
 }
 
 
@@ -81,14 +80,14 @@ def package_list(request, org_name, resource_type=None):
             filtered_packages = sorted(filtered_packages, key=key_fn, reverse=should_reverse)
 
     if start is not None and length is not None:
-        filtered_packages = filtered_packages[int(start):int(start)+int(length)]
+        filtered_packages = filtered_packages[int(start):int(start) + int(length)]
 
     return JsonSuccess({
         'draw': draw,
         'data': filtered_packages,
         'recordsTotal': len(packages),
         'recordsFiltered': filtered_packages_count,
-     })
+    })
 
 
 @exceptions_to_json_err
@@ -117,7 +116,7 @@ def resource_list(request, org_name, resource_type):
             resources = sorted(resources, key=key_fn, reverse=should_reverse)
 
     if start is not None and length is not None:
-        resources = resources[int(start):int(start)+int(length)]
+        resources = resources[int(start):int(start) + int(length)]
 
     return JsonSuccess({
         'draw': draw,
@@ -168,7 +167,6 @@ def mm_project_overview_count(request):
 
     amplicon_counts = ckan_amplicon_packages_count('mm-genomics-amplicon')
     counts['amplicons'] = amplicon_counts
-
 
     return JsonSuccess.data(counts)
 
@@ -359,6 +357,7 @@ def _int_get_param(request, param_name):
     except ValueError:
         return None
 
+
 def _extract_column_definitions(request):
     columns = []
     for k in request.GET:
@@ -398,7 +397,9 @@ def _make_search_filters(search_params, col_defs):
     if len(searched_words) == 0:
         return None
     searchable_columns = [c.get('data') for c in col_defs if c.get('searchable') == 'true']
-    icontains = lambda term, text: term.lower() in text.lower()
+
+    def icontains(term, text):
+        return term.lower() in text.lower()
 
     def each_word_exists_in_at_least_one_column(package):
         return all(any(icontains(w, package.get(c, '')) for c in searchable_columns) for w in searched_words)
@@ -410,6 +411,7 @@ def _make_sort_params(order, column_definitions):
     if order['column'] >= len(column_definitions):
         return None, None
     column = column_definitions[order['column']]
+
     def getter(d):
         return get_in(d, column.get('data', '').split('.'))
 
@@ -448,10 +450,7 @@ class JsonError(JsonResponse):
         return JsonError({'msg': repr(exc)})
 
 
-
 # Disabled the proxy (in urls.py) for now, leaving the code for a while in case we will need it
-
-
 # For responses larger than this the revproxy will return a streaming response.
 # We can't cache streaming responses so we have to increase this value.
 utils.MIN_STREAMING_LENGTH = 20 * 1024 * 1024
@@ -517,3 +516,37 @@ class CKANProxyView(ProxyView):
         cached = cache_page(ckan_timeout, cache='big_objects')(f)
 
         return cached(request, path)
+
+
+def _ckan_tracker_sync(ckan_type, model_cls):
+    packages = ckan_get_packages_by_resource_type(ckan_type)
+    # track the packages which are definitely in CKAN
+    in_ckan = set()
+    for package in packages:
+        bpa_id = package.get('bpa_id')
+        if bpa_id is None:
+            continue
+        try:
+            track_instance = model_cls.objects.get(bpa_id__bpa_id=bpa_id)
+        except model_cls.DoesNotExist:
+            continue
+        in_ckan.add(track_instance.id)
+        if not track_instance.in_data_portal:
+            track_instance.in_data_portal = True
+            track_instance.save()
+    for track_instance in model_cls.objects.all():
+        if track_instance.id not in in_ckan and track_instance.in_data_portal:
+            track_instance.in_data_portal = False
+            track_instance.save()
+
+
+def ckan_tracker_refresh(refresh_map):
+    """
+    synchronise local django tracker objects with CKAN
+    `refresh_map` is a dictionary of CKAN type names (string) to
+    Django model classes. Each model is expected to have a field
+    `in_data_portal`, which is updated by this function, and another
+    field `bpa_id` which is a foreignkey to a BPAUniqueID
+    """
+    for ckan_type, model_cls in refresh_map.items():
+        _ckan_tracker_sync(ckan_type, model_cls)

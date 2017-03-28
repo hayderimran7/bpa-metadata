@@ -52,8 +52,6 @@ track_data = (
     'work_order',
     'contextual_data_submission_date',
     'sample_submission_date',
-    'data_generated',
-    'archive_ingestion_date',
     'dataset_url')
 
 
@@ -105,10 +103,7 @@ class CommonSampleTrackResource(resources.ModelResource):
     work_order = fields.Field(attribute='work_order', column_name='Work order #')
     contextual_data_submission_date = DateField(attribute='contextual_data_submission_date', widget=widgets.DateWidget(format="%Y-%m-%d"), column_name='Contextual Data Submission Date')
     sample_submission_date = DateField(attribute='sample_submission_date', widget=widgets.DateWidget(format="%Y-%m-%d"), column_name='Sample submission date')
-    # data_generated = fields.Field(attribute='data_generated', widget=widgets.BooleanWidget(), column_name='Data generated', default=False)
-    data_generated = TrackBooleanField(attribute='data_generated', widget=widgets.BooleanWidget(), column_name='Data generated', default=False)
-    archive_ingestion_date = DateField(attribute='archive_ingestion_date', widget=widgets.DateWidget(format="%Y-%m-%d"), column_name='Archive Ingestion Date')
-    dataset_url = fields.Field(attribute='dataset_url', column_name='Archive ID')
+    in_data_archive = TrackBooleanField(attribute='in_data_archive', widget=widgets.BooleanWidget(), column_name='In Data Archive', default=False)
 
     class Meta:
         import_id_fields = ('bpa_id', )

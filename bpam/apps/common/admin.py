@@ -397,8 +397,8 @@ class BPAProjectAdmin(admin.ModelAdmin):
             widgets = {'note': AutosizedTextarea(attrs={'class': 'input-large', 'style': 'width:95%'})}
 
     form = BPAProjectForm
-    fields = ('name', 'description', 'note')
-    list_display = ('name', 'description')
+    fields = ('key', 'name', 'description', 'note')
+    list_display = ('key', 'name', 'description')
 
 
 admin.site.register(BPAProject, BPAProjectAdmin)
