@@ -17,7 +17,6 @@ node {
             ./develop.sh build base
             ./develop.sh build builder
             ./develop.sh build dev
-            ./develop.sh check-migrations
         ''')
     }
 
