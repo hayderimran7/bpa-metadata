@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from itertools import chain
 from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.common.models import BPAMirror

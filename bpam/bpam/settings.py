@@ -61,11 +61,10 @@ BASE_REQUEST_LIST = env.getlist('BASE_REQUEST_LIST', ['bpa_base_request@mg.ccgap
 ALLOWED_HOSTS = env.getlist("allowed_hosts", ["*"])
 
 CKAN_SERVERS = ({
-        'name': env.get('ckan_name', 'bpa-aws1'),
-        'base_url': env.get('ckan_base_url', 'https://data.bioplatforms.com/'),
-        'api_key': env.get('ckan_api_key', ''),
-    },
-)
+    'name': env.get('ckan_name', 'bpa-aws1'),
+    'base_url': env.get('ckan_base_url', 'https://data.bioplatforms.com/'),
+    'api_key': env.get('ckan_api_key', ''),
+},)
 
 CKAN_CACHE_TIMEOUT = env.get('ckan_cache_timeout', 24 * 60 * 60)
 

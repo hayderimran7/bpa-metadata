@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import ListView, DetailView
 
 from apps.common.models import BPAMirror
 from apps.common.views import DebugOnlyTemplateView
