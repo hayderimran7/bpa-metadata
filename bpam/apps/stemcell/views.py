@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from bpam.ckan_views import ckan_tracker_refresh
-from .models import (
-    MetabolomicTrack,
-    ProteomicTrack,
-    SingleCellRNASeqTrack,
-    SmallRNATrack,
-    TranscriptomeTrack)
+from .models import CKAN_RESOURCE_TYPE_TO_MODEL
 
 
 from django.http import HttpResponse
@@ -28,15 +23,6 @@ class SampleDetailView(TemplateView):
 
 
 class CKANRefresh(View):
-    refresh_map = {
-        'stemcells-transcriptomics': TranscriptomeTrack,
-        'stemcells-smallrna': SmallRNATrack,
-        'stemcells-singlecellrnaseq': SingleCellRNASeqTrack,
-        'stemcells-metabolomic': MetabolomicTrack,
-        'stemcells-transcriptome': TranscriptomeTrack,
-        'stemcells-proteomic': ProteomicTrack,
-    }
-
     def get(self, request):
-        ckan_tracker_refresh(CKANRefresh.refresh_map)
+        ckan_tracker_refresh(CKAN_RESOURCE_TYPE_TO_MODEL)
         return HttpResponse("OK")

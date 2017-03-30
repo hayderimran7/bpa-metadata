@@ -103,6 +103,7 @@ class CommonSampleTrackResource(resources.ModelResource):
     work_order = fields.Field(attribute='work_order', column_name='Work order #')
     contextual_data_submission_date = DateField(attribute='contextual_data_submission_date', widget=widgets.DateWidget(format="%Y-%m-%d"), column_name='Contextual Data Submission Date')
     sample_submission_date = DateField(attribute='sample_submission_date', widget=widgets.DateWidget(format="%Y-%m-%d"), column_name='Sample submission date')
+    data_generated = TrackBooleanField(attribute='data_generated', widget=widgets.BooleanWidget(), column_name='Data Generated', default=False)
     in_data_archive = TrackBooleanField(attribute='in_data_archive', widget=widgets.BooleanWidget(), column_name='In Data Archive', default=False)
 
     class Meta:

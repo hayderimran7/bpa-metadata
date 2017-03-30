@@ -51,11 +51,12 @@
 
         columns: [{
               'data': 'name',
+              'defaultContent': '',
               'render': function(data, type, row) {
                   return '<a href="' + row.url + '">' + data + '</a>';
               }
             },
-            { 'data': 'md5' }
+            { 'data': 'md5', 'defaultContent': '' }
         ]
 
       }, CONFIG.tables.commonConfig);
@@ -65,8 +66,9 @@
   };
 
   set_sample(function(sample_obj) {
-      $(".resource_count").text(sample_obj.resources.length);
-      var urls = _.map(sample_obj.resources, function (resource_obj) {
+      var resources = _.defaultTo(sample_obj.resources, []);
+      $(".resource_count").text(resources.length);
+      var urls = _.map(resources, function (resource_obj) {
           return resource_obj.url;
       });
 

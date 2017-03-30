@@ -7,13 +7,15 @@ import re
 
 from django.conf import settings
 from django.core.cache import caches
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import MultipleObjectsReturned, PermissionDenied
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 from revproxy.views import ProxyView
 from revproxy import utils
 
 from apps.common.models import CKANServer
+
+from apps.stemcell import models as stemcell_models
 
 
 logger = logging.getLogger(__name__)
@@ -33,8 +35,12 @@ CKAN_RESOURCE_TYPES = {
         'mm-genomics-amplicon'),
     'bpa-wheat-pathogens-genomes':
         ('wheat-pathogens',),
-    'bpa-stemcells':
-        ('stemcells-transcriptomics', 'stemcells-smallrna', 'stemcells-singlecellrnaseq'),
+    'bpa-stemcells': (
+        'stemcells-metabolomic',
+        'stemcells-proteomic',
+        'stemcells-transcriptomics',
+        'stemcells-smallrna',
+        'stemcells-singlecellrnaseq'),
 }
 
 
@@ -51,43 +57,43 @@ def exceptions_to_json_err(view):
 
 
 @exceptions_to_json_err
-def package_list(request, org_name, resource_type=None):
+def models_package_list(request, org_name, resource_type=None, status=None):
+    # org_name will always be 'bpa-stemcells' for now so we can get the map
+    # from stemcell_models
+    model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL[resource_type]
+    qs = model.objects.none()
+
+    if status == 'sample_processing':
+        qs = model.sample_processing
+    elif status == 'bpa_archive_ingest':
+        qs = model.bpa_archive_ingest
+    elif status == 'bpa_qc':
+        # No 'bpa_qc' status in real life
+        pass
+
+    packages = map(adapt_django_sample, qs.values())
+
+    return _js_data_tables_response(packages, request)
+
+
+@exceptions_to_json_err
+def package_list(request, org_name, resource_type=None, status=None):
     amplicon = request.GET.get('amplicon')
 
-    if resource_type is None:
-        packages = ckan_get_packages_by_organisation(org_name)
+    # TODO currently we know we don't have public data so we return nothing
+    # the only other option is "embargoed" which is all packages
+    if status == 'public':
+        packages = []
     else:
-        packages = ckan_get_packages_by_resource_type(resource_type)
+        if resource_type is None:
+            packages = ckan_get_packages_by_organisation(org_name)
+        else:
+            packages = ckan_get_packages_by_resource_type(resource_type)
 
-    if amplicon:
-        packages = [p for p in packages if p.get('amplicon', '').lower() == amplicon.lower()]
+        if amplicon:
+            packages = [p for p in packages if p.get('amplicon', '').lower() == amplicon.lower()]
 
-    draw = _int_get_param(request, 'draw')
-    start = _int_get_param(request, 'start')
-    length = _int_get_param(request, 'length')
-
-    column_definitions = _extract_column_definitions(request)
-    ordering = _extract_ordering(request)
-    search_params = _extract_search_params(request)
-
-    package_filter = _make_search_filters(search_params, column_definitions)
-    filtered_packages = packages if package_filter is None else filter(package_filter, packages)
-    filtered_packages_count = len(filtered_packages)
-
-    for order in reversed(ordering):
-        key_fn, should_reverse = _make_sort_params(order, column_definitions)
-        if key_fn is not None:
-            filtered_packages = sorted(filtered_packages, key=key_fn, reverse=should_reverse)
-
-    if start is not None and length is not None:
-        filtered_packages = filtered_packages[int(start):int(start) + int(length)]
-
-    return JsonSuccess({
-        'draw': draw,
-        'data': filtered_packages,
-        'recordsTotal': len(packages),
-        'recordsFiltered': filtered_packages_count,
-    })
+    return _js_data_tables_response(packages, request)
 
 
 @exceptions_to_json_err
@@ -98,36 +104,21 @@ def resource_list(request, org_name, resource_type):
     if amplicon:
         resources = [r for r in resources if r.get('amplicon', '').lower() == amplicon.lower()]
 
-    draw = _int_get_param(request, 'draw')
-    start = _int_get_param(request, 'start')
-    length = _int_get_param(request, 'length')
-
-    total_records = len(resources)
-
-    # TODO apply filter (search)
-    filtered_records = len(resources)
-
-    column_definitions = _extract_column_definitions(request)
-    ordering = _extract_ordering(request)
-
-    for order in reversed(ordering):
-        key_fn, should_reverse = _make_sort_params(order, column_definitions)
-        if key_fn is not None:
-            resources = sorted(resources, key=key_fn, reverse=should_reverse)
-
-    if start is not None and length is not None:
-        resources = resources[int(start):int(start) + int(length)]
-
-    return JsonSuccess({
-        'draw': draw,
-        'data': resources,
-        'recordsTotal': total_records,
-        'recordsFiltered': filtered_records,
-    })
+    return _js_data_tables_response(resources, request)
 
 
 @exceptions_to_json_err
-def package_detail(request, package_id):
+def package_detail(request, package_id, resource_type=None, status=None):
+    if resource_type is not None:
+        tracker_model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
+        objs = tracker_model.uningested.filter(bpa_id__bpa_id=package_id).values()
+        if len(objs) == 1:
+            raise MultipleObjectsReturned('%d tracker objects returned for bpa_id "%s"' %
+                                          (len(objs), package_id))
+        if len(objs) == 1:
+            sample = map(adapt_django_sample, objs)[0]
+            return JsonSuccess.data(sample)
+
     ckan = get_ckan()
     package = ckan.call_action('package_show', {'id': package_id})
 
@@ -173,8 +164,22 @@ def mm_project_overview_count(request):
 
 @exceptions_to_json_err
 def stemcell_project_overview_count(request):
+    counts = {k: {} for k in CKAN_RESOURCE_TYPES['bpa-stemcells']}
+
+    for k, d in counts.items():
+        model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL[k]
+        d['sample_processing'] = model.sample_processing.count()
+        d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
+
+    # TODO assuming that all packages in CKAN are embargoed, but theoretically they could be
+    # public as well
+
     all_package_counts = ckan_packages_count_by_resource_type()
-    counts = {k: v for k, v in all_package_counts.items() if k in CKAN_RESOURCE_TYPES['bpa-stemcells']}
+    for k, d in counts.items():
+        d['embargoed'] = all_package_counts.get(k, 0)
+
+    for k, d in counts.items():
+        d['all'] = sum(d.values())
 
     return JsonSuccess.data(counts)
 
@@ -350,6 +355,14 @@ def ckan_get_packages_by_resource_type(resource_type):
 # Implementation
 
 
+def adapt_django_sample(d):
+    """Adapts a Django Sample Track to look like a CKAN sample (package)."""
+    d['bpa_id'] = d.get('bpa_id_id')
+    d['data_type_code'] = d.get('data_type')
+    d['data_type'] = stemcell_models.SampleTrack.get_data_type(d.get('data_type'))
+    return d
+
+
 def _int_get_param(request, param_name):
     param = request.GET.get(param_name)
     try:
@@ -401,8 +414,8 @@ def _make_search_filters(search_params, col_defs):
     def icontains(term, text):
         return term.lower() in text.lower()
 
-    def each_word_exists_in_at_least_one_column(package):
-        return all(any(icontains(w, package.get(c, '')) for c in searchable_columns) for w in searched_words)
+    def each_word_exists_in_at_least_one_column(row):
+        return all(any(icontains(w, str(row.get(c, ''))) for c in searchable_columns) for w in searched_words)
 
     return each_word_exists_in_at_least_one_column
 
@@ -413,9 +426,39 @@ def _make_sort_params(order, column_definitions):
     column = column_definitions[order['column']]
 
     def getter(d):
-        return get_in(d, column.get('data', '').split('.'))
+        return str(get_in(d, column.get('data', '').split('.')))
 
     return getter, order['dir'] == 'desc'
+
+
+def _js_data_tables_response(rows, request):
+    """Adapts response to what server-side rendered datatables.net expects."""
+    draw = _int_get_param(request, 'draw')
+    start = _int_get_param(request, 'start')
+    length = _int_get_param(request, 'length')
+
+    column_definitions = _extract_column_definitions(request)
+    ordering = _extract_ordering(request)
+    search_params = _extract_search_params(request)
+
+    row_filter = _make_search_filters(search_params, column_definitions)
+    filtered_rows = rows if row_filter is None else filter(row_filter, rows)
+    filtered_rows_count = len(filtered_rows)
+
+    for order in reversed(ordering):
+        key_fn, should_reverse = _make_sort_params(order, column_definitions)
+        if key_fn is not None:
+            filtered_rows = sorted(filtered_rows, key=key_fn, reverse=should_reverse)
+
+    if start is not None and length is not None:
+        filtered_rows = filtered_rows[int(start):int(start) + int(length)]
+
+    return JsonSuccess({
+        'draw': draw,
+        'data': filtered_rows,
+        'recordsTotal': len(rows),
+        'recordsFiltered': filtered_rows_count,
+    })
 
 
 def get_in(root_dict, keys):
@@ -471,7 +514,7 @@ class CKANProxyView(ProxyView):
     )]
 
     @property
-    def upstream(cls):
+    def upstream(self):
         server = CKANServer.primary()
         return server.base_url
 
