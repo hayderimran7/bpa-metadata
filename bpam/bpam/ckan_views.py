@@ -112,7 +112,7 @@ def package_detail(request, package_id, resource_type=None, status=None):
     if resource_type is not None:
         tracker_model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
         objs = tracker_model.uningested.filter(bpa_id__bpa_id=package_id).values()
-        if len(objs) == 1:
+        if len(objs) > 1:
             raise MultipleObjectsReturned('%d tracker objects returned for bpa_id "%s"' %
                                           (len(objs), package_id))
         if len(objs) == 1:
