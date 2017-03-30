@@ -10,8 +10,8 @@ class Command(BaseCommand):
         CKANServer.objects.all().delete()
         for i, ckan in enumerate(getattr(settings, 'CKAN_SERVERS', ())):
             CKANServer.objects.create(
-                    name=ckan.get('name'),
-                    base_url=ckan.get('base_url'),
-                    api_key=ckan.get('api_key'),
-                    order=i)
+                name=ckan.get('name'),
+                base_url=ckan.get('base_url'),
+                api_key=ckan.get('api_key'),
+                order=i)
         self.stdout.write("Primary server is `%s'." % (repr(CKANServer.primary())))
