@@ -1,10 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
-from django.views.generic import RedirectView, TemplateView
 
 from views import LandingView, GoToCKANView
-from apps.common.models import CKANServer
 
 from .decorators import DEBUG_ONLY_VIEW
 

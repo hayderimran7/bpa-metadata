@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import ListView, DetailView
 
 from apps.gbr_amplicon.models import AmpliconSequencingMetadata
 from apps.common.models import BPAMirror

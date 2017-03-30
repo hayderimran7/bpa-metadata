@@ -9,7 +9,7 @@ from .views import GoToCKANView
 logger = logging.getLogger(__name__)
 
 
-def DEBUG_ONLY_VIEW(view):
+def DEBUG_ONLY_VIEW(view):  # noqa: N802 - I want this decorator to be all uppercase
 
     @wraps(view)
     def wrapper(*args, **kwargs):
