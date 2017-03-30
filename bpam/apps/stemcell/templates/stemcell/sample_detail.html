@@ -22,27 +22,39 @@
     <tbody>
       <tr>
         <td>BPA ID</td>
-        <td class="bpa_id"></td>
+        <td id="bpa_id"></td>
       </tr>
       <tr>
-        <td>Sample ID</td>
-        <td class="sample_id"></td>
+        <td>Data Type</td>
+        <td id="data_type"></td>
       </tr>
       <tr>
-        <td>State</td>
-        <td class="state"></td>
+        <td>Description</td>
+        <td id="description"></td>
       </tr>
       <tr>
-        <td>Sequencer</td>
-        <td class="sequencer"></td>
+        <td>Omics Type</td>
+        <td id="omics"></td>
       </tr>
       <tr>
-        <td>Library Construction Protocol</td>
-        <td class="library_construction_protocol"></td>
+        <td>Analytical Platform</td>
+        <td id="analytical_platform"></td>
       </tr>
       <tr>
-        <td>Notes</td>
-        <td class="notes"></td>
+        <td>Facility</td>
+        <td id="facility"></td>
+      </tr>
+      <tr>
+        <td>Work Order</td>
+        <td id="work_order"></td>
+      </tr>
+      <tr>
+        <td>Contextual Data Submission Date</td>
+        <td id="contextual_data_submission_date"></td>
+      </tr>
+      <tr>
+        <td>Sample Submission Date</td>
+        <td id="sample_submission_date"></td>
       </tr>
     </tbody>
   </table>
@@ -50,12 +62,15 @@
 
 <script>
     set_sample(function(sample_obj) {
-        $(".bpa_id").text(sample_obj.bpa_id);
-        $(".sample_id").text(sample_obj.id);
-        $(".state").text(sample_obj.state);
-        $(".sequencer").text(sample_obj.sequencer);
-        $(".library_construction_protocol").text(sample_obj.library_construction_protocol);
-        $(".notes").text(sample_obj.notes);
+        $("#bpa_id").text(sample_obj.bpa_id);
+        $("#data_type").text(sample_obj.data_type);
+        $("#description").text(sample_obj.description);
+        $("#omics").text(sample_obj.omics);
+        $("#analytical_platform").text(sample_obj.analytical_platform);
+        $("#facility").text(sample_obj.facility);
+        $("#work_order").text(sample_obj.work_order);
+        $("#contextual_data_submission_date").text(sample_obj.contextual_data_submission_date);
+        $("#sample_submission_date").text(sample_obj.sample_submission_date);
     });
 </script>
 

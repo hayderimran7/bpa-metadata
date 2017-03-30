@@ -15,22 +15,38 @@ var setup_table = function(configure) {
   $('.apitable').addClass('table-striped table-bordered table-condensed');
 };
 
-var sample_id_from_location = function() {
+var sample_data_from_location = function() {
     // sample id should be the last part of the URL following '.../sample/'
-    var match = window.location.pathname.match(/sample\/([^\/]+)\/?$/);
+    var match = window.location.pathname.match(/sample\/([^\/]+\/)?([^\/]+\/)?([^\/]+)\/?$/);
     if (match == null || match.length < 2) {
         return;
     }
+    var resource_type = _.chain(match[1]).defaultTo('').trimEnd('/').value();
+    var status = _.chain(match[2]).defaultTo('').trimEnd('/').value();
+    var id = match[3];
+    return [id, resource_type, status];
+}
 
-    return match[1];
-};
+var sample_id_from_location = function() {
+  return sample_data_from_location()[0];
+}
+
+var resource_type_from_location = function() {
+  return sample_data_from_location()[1];
+}
+
+var sample_status_from_location = function() {
+  return sample_data_from_location()[2];
+}
 
 var set_sample = function(callback) {
     var sample_id = sample_id_from_location();
+    var resource_type = resource_type_from_location();
+    var status = sample_status_from_location();
     if (!sample_id) {
         return;
     }
-    CKAN.get_sample(sample_id, callback);
+    CKAN.get_sample_of_type(sample_id, resource_type, status, callback);
 };
 
 // Can be made more general later if needed
@@ -48,7 +64,7 @@ var createProjectOverviewTree = function(config) {
   });
 
   tree.on('select_node.jstree', function (e, data) {
-    config.tableRecreator(data.node.original.url);
+    config.tableRecreator(data.node.original.url, data.node.original);
 
     if (data.instance.is_parent(data.node)) {
         if (!data.instance.is_open(data.node) ) {
