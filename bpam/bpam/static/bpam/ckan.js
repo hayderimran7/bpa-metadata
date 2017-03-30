@@ -14,8 +14,12 @@ var CKAN = (function() {
 
     exported.get_all_packages_count = _.partial(exported.get_packages_count, '');
 
-    exported.get_sample = function(package_id, callback) {
-        var uri = bpam_config.ckan_base + 'package_detail/' + package_id;
+    exported.get_sample_of_type = function(package_id, resource_type, status, callback) {
+        var package_detail_url = bpam_config.ckan_base + 'package_detail/';
+        if (!(_.isEmpty(resource_type) || _.isEmpty(status))) {
+            package_detail_url +=  resource_type + '/' + status + '/';
+        }
+        var uri = package_detail_url + package_id;
         $.getJSON(uri).done(function(results) {
             callback(results.data);
         }).fail(function() {
