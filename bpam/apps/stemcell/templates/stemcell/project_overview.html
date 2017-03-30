@@ -19,28 +19,44 @@
         crossorigin="anonymous"></script>
 
 <script>
-  function recreateTable(url) {
+  function recreateTable(url, nodeData) {
     $('.apitable').DataTable().destroy();
+    if (url == null) {
+      $('.apitable').hide();
+      return;
+    }
+    $('.apitable').show();
+
+    function makeSampleDetailUrl(row) {
+      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
+      // TODO review
+      // Do we have to do this? Can't we refer to the samples always with the same id
+      // either sample_id or bpa_id?
+      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
+      var url = _.join([bpam_config.bpam_base + 'stemcell', 'sample',
+                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
+      return url;
+    }
 
     setup_table(function() {
       var config = _.defaults({
-        // colReorder: false,
         searching: true,
 
         columns: [{
-                'data': 'id',
+                'data': 'bpa_id',
                 'defaultContent': '',
                 'searchable': false,
                 'render': function (data, type, row) {
-                    var url = bpam_config.bpam_base + 'stemcell/sample/' + data + '/';
-                    return '<a href="' + url + '">' + data + '</a>';
-                }
-              },
-              { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
-              { 'data': 'state' , 'defaultContent': '', 'searchable': false},
-              { 'data': 'sequencer' , 'defaultContent': ''},
-              { 'data': 'library_construction_protocol' , 'defaultContent': ''},
-              { 'data': 'notes' , 'defaultContent': ''}
+                    return '<a href="' + makeSampleDetailUrl(row)+ '">' + data + '</a>';
+                }},
+              { 'data': 'data_type' , 'defaultContent': ''},
+              { 'data': 'description' , 'defaultContent': ''},
+              { 'data': 'omics' , 'defaultContent': ''},
+              { 'data': 'analytical_platform' , 'defaultContent': ''},
+              { 'data': 'facility' , 'defaultContent': ''},
+              { 'data': 'work_order' , 'defaultContent': ''},
+              { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+              { 'data': 'sample_submission_date' , 'defaultContent': ''}
         ]
       }, CONFIG.tables.ajaxConfig);
 
@@ -51,26 +67,71 @@
 
   };
 
+  var URLs = {
+    'stemcells-metabolomic': "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-metabolomic' %}",
+    'stemcells-proteomic': "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-proteomic' %}",
+    'stemcells-singlecellrnaseq' : "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}",
+    'stemcells-smallrna' : "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-smallrna' %}",
+    'stemcells-transcriptomics' : "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-transcriptomics' %}",
+  };
+
+
+  function create2ndLevelNodes(data, parentType) {
+    var counts = _.get(data, parentType);
+
+    function url(status) {
+      var baseURL = _.trimEnd(URLs[parentType]);
+      return baseURL + '/' + status;
+    }
+
+    function createNode(args) {
+      var name = args[0];
+      var status = args[1];
+      return {
+        text: name + ' (' +  _.get(counts, status, 0) + ')',
+        url: url(status),
+        referenceType: parentType,
+        status: status
+      }
+    }
+
+    var nodes = _.map(CONFIG.trees.secondLevelNodes, createNode);
+
+    return nodes;
+  }
+
   function createTreeNodes(data) {
       return [{
-            text: 'Single cell RNA seq (' + _.get(data, 'stemcells-singlecellrnaseq', 0)  + ')',
-            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-singlecellrnaseq' %}"
+            text: 'Metabolomic (' + _.get(data, ['stemcells-metabolomic', 'all'], 0)  + ')',
+            url: null,
+            children: create2ndLevelNodes(data, 'stemcells-metabolomic')
         },{
-            text: 'Small RNA (' + _.get(data, 'stemcells-smallrna', 0)  + ')',
-            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-smallrna' %}"
+            text: 'Proteomic (' + _.get(data, ['stemcells-proteomic', 'all'], 0)  + ')',
+            url: null,
+            children: create2ndLevelNodes(data, 'stemcells-proteomic')
         },{
-            text: 'Transcriptomics (' + _.get(data, 'stemcells-transcriptomics', 0)  + ')',
-            url: "{% url 'ckan:package_list' 'bpa-stemcells' 'stemcells-transcriptomics' %}"
+            text: 'Single cell RNA seq (' + _.get(data, ['stemcells-singlecellrnaseq', 'all'], 0)  + ')',
+            url: null,
+            children: create2ndLevelNodes(data, 'stemcells-singlecellrnaseq')
+        },{
+            text: 'Small RNA (' + _.get(data, ['stemcells-smallrna', 'all'], 0)  + ')',
+            url: null,
+            children: create2ndLevelNodes(data, 'stemcells-smallrna')
+        },{
+            text: 'Transcriptomics (' + _.get(data, ['stemcells-transcriptomics', 'all'], 0)  + ')',
+            url: null,
+            children: create2ndLevelNodes(data, 'stemcells-transcriptomics')
       }];
   };
 
   $(document).ready(function() {
+    $('.apitable').DataTable().destroy();
+    $('.apitable').hide();
     createProjectOverviewTree({
       url: '{% url "ckan:stemcell_project_overview_count" %}',
       nodeCreator: createTreeNodes,
       tableRecreator: recreateTable
     });
-
   });
 </script>
 {% endblock %}
@@ -104,22 +165,28 @@
             <table class="apitable" width="100%" id="content-table">
                 <thead>
                     <tr>
-                        <th>Sample ID</th>
                         <th>BPA ID</th>
-                        <th>State</th>
-                        <th>Sequencer</th>
-                        <th>Library Construction Protocol</th>
-                        <th>Notes</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Sample ID</th>
                         <th>BPA ID</th>
-                        <th>State</th>
-                        <th>Sequencer</th>
-                        <th>Library Construction Protocol</th>
-                        <th>Notes</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
                     </tr>
                 </tfoot>
                 <tbody>
