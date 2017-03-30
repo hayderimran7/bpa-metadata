@@ -1,95 +1,194 @@
 #!/bin/bash
 
-INGEST_LOG_FILE=/data/ingest.log
-MIGRATE_LOG_FILE=/data/migrate.log
 
 # wait for a given host:port to become available
 #
 # $1 host
 # $2 port
 function dockerwait {
-    while ! exec 6<>/dev/tcp/$1/$2; do
-        echo "$(date) - waiting to connect $1 $2"
+    while ! exec 6<>/dev/tcp/"$1"/"$2"; do
+        warn "$(date) - waiting to connect $1 $2"
         sleep 5
     done
-    echo "$(date) - connected to $1 $2"
+    success "$(date) - connected to $1 $2"
 
     exec 6>&-
     exec 6<&-
 }
 
 
+function info () {
+    printf "\r  [\033[00;34mINFO\033[0m] %s\n" "$1"
+}
+
+
+function warn () {
+    printf "\r  [\033[00;33mWARN\033[0m] %s\n" "$1"
+}
+
+
+function success () {
+    printf "\r\033[2K  [\033[00;32m OK \033[0m] %s\n" "$1"
+}
+
+
+function fail () {
+    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] %s\n" "$1"
+    echo ''
+    exit 1
+}
+
+
 # wait for services to become available
 # this prevents race conditions using fig
-function wait_for_services() {
+function wait_for_services {
     if [[ "$WAIT_FOR_DB" ]] ; then
-        dockerwait $DBSERVER $DBPORT
+        dockerwait "$DBSERVER" "$DBPORT"
     fi
     if [[ "$WAIT_FOR_CACHE" ]] ; then
-        dockerwait $CACHESERVER $CACHEPORT
+        dockerwait "$CACHESERVER" "$CACHEPORT"
     fi
     if [[ "$WAIT_FOR_RUNSERVER" ]] ; then
-        dockerwait $RUNSERVER $RUNSERVERPORT
+        dockerwait "$RUNSERVER" "$RUNSERVERPORT"
     fi
     if [[ "$WAIT_FOR_HOST_PORT" ]]; then
-        dockerwait $DOCKER_ROUTE $WAIT_FOR_HOST_PORT
+        dockerwait "$DOCKER_ROUTE" "$WAIT_FOR_HOST_PORT"
+    fi
+    if [[ "$WAIT_FOR_UWSGI" ]] ; then
+        dockerwait "$UWSGISERVER" "$UWSGIPORT"
     fi
 }
 
 
-function defaults() {
-    : ${DBSERVER:="db"}
-    : ${DBPORT:="5432"}
-    : ${DBUSER="webapp"}
-    : ${DBNAME="${DBUSER}"}
-    : ${DBPASS="${DBUSER}"}
+function defaults {
+    -INGEST_LOG_FILE=/data/ingest.log
+    -MIGRATE_LOG_FILE=/data/migrate.log
 
-    : ${DOCKER_ROUTE:=$(/sbin/ip route|awk '/default/ { print $3 }')}
+    : "${DBSERVER:=db}"
+    : "${DBPORT:=5432}"
+    : "${DBUSER:=webapp}"
+    : "${DBNAME:=${DBUSER}}"
+    : "${DBPASS:=${DBUSER}}"
 
-    : ${RUNSERVER="web"}
-    : ${RUNSERVERPORT="8000"}
-    : ${CACHESERVER="cache"}
-    : ${CACHEPORT="11211"}
-    : ${MEMCACHE:="${CACHESERVER}:${CACHEPORT}"}
+    : "${DOCKER_ROUTE:=$(/sbin/ip route|awk '/default/ { print $3 }')}"
+
+    : "${UWSGISERVER:=uwsgi}"
+    : "${UWSGIPORT:=9000}"
+    : "${UWSGI_OPTS:=/app/uwsgi/docker.ini}"
+    : "${RUNSERVER:=runserver}"
+    : "${RUNSERVERPORT:=8000}"
+    : "${RUNSERVER_CMD:=runserver}"
+    : "${CACHESERVER:=cache}"
+    : "${CACHEPORT:=11211}"
+    : "${MEMCACHE:=${CACHESERVER}:${CACHEPORT}}"
+
+    # variables to control where tests will look for the app (aloe via selenium hub)
+    : "${TEST_APP_SCHEME:=http}"
+    : "${TEST_APP_HOST:=runservertest}"
+    : "${TEST_APP_PORT:=8000}"
+    : "${TEST_APP_PATH:=/}"
+    : "${TEST_APP_URL:=${TEST_APP_SCHEME}://${TEST_APP_HOST}:${TEST_APP_PORT}${TEST_APP_PATH}}"
+    #: "${TEST_BROWSER:=chrome}"
+    : "${TEST_BROWSER:=firefox}"
+    : "${TEST_WAIT:=30}"
+    : "${TEST_SELENIUM_HUB:=http://hub:4444/wd/hub}"
+
+    : "${DJANGO_FIXTURES:=none}"
 
     export DBSERVER DBPORT DBUSER DBNAME DBPASS MEMCACHE DOCKER_ROUTE
+    export TEST_APP_URL TEST_APP_SCHEME TEST_APP_HOST TEST_APP_PORT TEST_APP_PATH TEST_BROWSER TEST_WAIT TEST_SELENIUM_HUB
+    export DJANGO_FIXTURES
 }
 
 
-function selenium_defaults {
-    : ${SELENIUM_URL:="http://$DOCKER_ROUTE:$RUNSERVERPORT/"}
-    #: ${SELENIUM_BROWSER:="*googlechrome"}
-    : ${SELENIUM_BROWSER:="*firefox"}
-
-    if [ ${DEPLOYMENT} = "prod" ]; then
-        SELENIUM_URL="https://$DOCKER_ROUTE:8443/app/"
-    fi
-
-    export SELENIUM_URL SELENIUM_BROWSER
+function _django_check_deploy {
+    info "running check --deploy"
+    set -x
+    django-admin.py check --deploy --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/uwsgi-check.log
+    set +x
 }
 
 
 function _django_migrate {
-    echo "running migrate"
-    django-admin.py migrate --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
-}
-
-function _django_create_cache_table {
-    echo "running create_cache_table"
-    django-admin.py createcachetable --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
-}
-
-function _django_bpam_setup {
-    echo "running set_mirrors"
-    django-admin.py set_mirrors --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
-    echo "running set_ckan"
-    django-admin.py set_ckan --traceback --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee ${MIGRATE_LOG_FILE}
+    info "running migrate"
+    set -x
+    django-admin.py migrate --noinput --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/uwsgi-migrate.log
+    set +x
 }
 
 
 function _django_collectstatic {
-    echo "running collectstatic"
-    django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/collectstatic.log
+    info "running collectstatic"
+    set -x
+    django-admin.py collectstatic --noinput --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/uwsgi-collectstatic.log
+    set +x
+}
+
+
+function _django_test_fixtures {
+    info 'loading test (iprestrict permissive) fixture'
+    set -x
+    django-admin.py init iprestrict_permissive
+    django-admin.py reload_rules
+    set +x
+}
+
+
+function _django_dev_fixtures {
+    info "loading DEV fixture"
+    set -x
+    django-admin.py init DEV
+    django-admin.py reload_rules
+    set +x
+}
+
+
+function _django_create_cache_table {
+    info "running create_cache_table"
+    django-admin.py createcachetable --traceback --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/createcachetable.log
+}
+
+
+function _django_bpam_setup {
+    info "running set_mirrors"
+    django-admin.py set_mirrors --traceback --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/set_mirrors.log
+    info "running set_ckan"
+    django-admin.py set_ckan --traceback --settings="${DJANGO_SETTINGS_MODULE}" 2>&1 | tee "${LOG_DIRECTORY}"/set_ckan.log
+}
+
+
+function _django_fixtures {
+    if [ "${DJANGO_FIXTURES}" = 'test' ]; then
+        _django_test_fixtures
+    fi
+
+    if [ "${DJANGO_FIXTURES}" = 'dev' ]; then
+        _django_dev_fixtures
+    fi
+}
+
+
+function _runserver() {
+    : "${RUNSERVER_OPTS=${RUNSERVER_CMD} 0.0.0.0:${RUNSERVERPORT} --settings=${DJANGO_SETTINGS_MODULE}}"
+
+    _django_collectstatic
+    _django_migrate
+    _django_create_cache_table
+    _django_bpam_setup
+    _django_fixtures
+
+    info "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
+    set -x
+    # shellcheck disable=SC2086
+    exec django-admin.py ${RUNSERVER_OPTS}
+}
+
+
+function _aloe() {
+    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE}"_test
+    shift
+    set -x
+    exec django-admin.py harvest --with-xunit --xunit-file="${WRITABLE_DIRECTORY}"/tests.xml --verbosity=3 "$@"
 }
 
 
@@ -98,85 +197,66 @@ defaults
 env | grep -iv PASS | sort
 wait_for_services
 
+# prod uwsgi entrypoint
+if [ "$1" = 'uwsgi' ]; then
+    info "[Run] Starting prod uwsgi"
 
-# security by django checksecure
-if [ "$1" = 'checksecure' ]; then
-    echo "[Run] Running Django checksecure"
-    exec django-admin.py check --deploy --traceback 2>&1 | tee /data/checksecure.log
+    _django_collectstatic
+    _django_migrate
+    # TODO what other startup do we need for prod?
+    _django_check_deploy
+
+    set -x
+    exec uwsgi --die-on-term --ini "${UWSGI_OPTS}"
 fi
 
-# uwsgi entrypoint
-if [ "$1" = 'uwsgi' ]; then
-    echo "[Run] Starting uwsgi"
+# local and test uwsgi entrypoint
+if [ "$1" = 'uwsgi_local' ]; then
+    info "[Run] Starting local uwsgi"
 
-    : ${UWSGI_OPTS="/app/uwsgi/docker.ini"}
-    echo "UWSGI_OPTS is ${UWSGI_OPTS}"
+    _django_collectstatic
+    _django_migrate
+    _django_fixtures
+    _django_create_cache_table
+    _django_bpam_setup
+    _django_check_deploy
 
-     _django_collectstatic
-     _django_migrate
-     _django_create_cache_table
-     _django_bpam_setup
-
-    exec uwsgi --die-on-term --ini ${UWSGI_OPTS}
+    set -x
+    exec uwsgi --die-on-term --ini "${UWSGI_OPTS}"
 fi
 
 # runserver entrypoint
 if [ "$1" = 'runserver' ]; then
-    echo "[Run] Starting runserver"
+    info "[Run] Starting runserver"
+    _runserver
+fi
 
-    : ${RUNSERVER_OPTS="runserver_plus 0.0.0.0:${RUNSERVERPORT} --settings=${DJANGO_SETTINGS_MODULE}"}
-    echo "RUNSERVER_OPTS is ${RUNSERVER_OPTS}"
-
-     _django_collectstatic
-
-     # some one off bpa goop
-     #django-admin.py migrate auth --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/migrate.log
-
-     _django_migrate
-     _django_create_cache_table
-     _django_bpam_setup
-
-    echo "running runserver ..."
-    exec django-admin.py ${RUNSERVER_OPTS}
+# runserver_plus entrypoint
+if [ "$1" = 'runserver_plus' ]; then
+    info "[Run] Starting runserver_plus"
+    RUNSERVER_CMD=runserver_plus
+    _runserver
 fi
 
 # runtests entrypoint
 if [ "$1" = 'runtests' ]; then
-    echo "[Run] Starting tests"
-    exec django-admin.py test --traceback
-fi
+    info "[Run] Starting tests"
+    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE}"_test
 
-# lettuce entrypoint
-if [ "$1" = 'lettuce' ]; then
-    echo "[Run] Starting lettuce"
-    exec django-admin.py run_lettuce --with-xunit --xunit-file=/data/tests.xml
-fi
-
-# prepare a tarball of build
-if [ "$1" = 'releasetarball' ]; then
-    echo "[Run] Preparing a tarball of build"
-
-    cd /app
-    rm -rf /app/*
-    echo $GIT_TAG
     set -x
-    git clone --depth=1 --branch=$GIT_TAG ${PROJECT_SOURCE} .
-    git ls-remote ${PROJECT_SOURCE} ${GIT_TAG} > .version
-
-    # install python deps
-    # Note: Environment vars are used to control the behaviour of pip (use local devpi for instance)
-    pip install ${PIP_OPTS} --upgrade -r requirements/runtime-requirements.txt
-    pip install -e bpam
-    set +x
-    # create release tarball
-    DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/bpam"
-    cd /data
-    exec tar -cpzf ${PROJECT_NAME}-${GIT_TAG}.tar.gz ${DEPS}
+    exec django-admin.py test --noinput -v 3 bpam
 fi
 
-echo "[RUN]: Builtin command not provided [lettuce|runtests|runserver|uwsgi|checksecure|superuser"
-echo "[RUN]: Many management commands are available from django-admin.py "
-echo "[RUN]: e.g by running /app/docker-entrypoint.sh django-admin.py url_checker from a docker exec session"
-echo "[RUN]: $@"
+# aloe entrypoint
+if [ "$1" = 'aloe' ]; then
+    info "[Run] Starting aloe"
+    cd /app/bpam || exit
+    _aloe "$@"
+fi
 
+warn "[RUN]: Builtin command not provided [tarball|aloe|runtests|runserver|runserver_plus|uwsgi|uwsgi_local]"
+info "[RUN]: $*"
+
+set -x
+# shellcheck disable=SC2086 disable=SC2048
 exec "$@"

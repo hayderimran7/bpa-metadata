@@ -1,54 +1,52 @@
-# data only container pattern
-datadev:
-  image: debian:jessie
-  volumes:
-    - .:/app
-    - ./data/dev:/data
+version: '2'
+services:
 
-db:
-  image: mdillon/postgis:9.5
-  environment:
-    - POSTGRES_USER=bpamapp
-    - POSTGRES_PASSWORD=bpamapp
-  ports:
-    - 5432
+    # data only container pattern
+    datadev:
+      image: debian:jessie
+      volumes:
+        - .:/app
+        - ./data/dev:/data
 
-cache:
-  image: memcached:1.4
+    db:
+      image: mdillon/postgis:9.5
+      environment:
+        - POSTGRES_USER=webapp
+        - POSTGRES_PASSWORD=webapp
+      ports:
+        - "5432"
+    
+    cache:
+      image: memcached:1.4
 
-nginx:
-  image: muccg/nginx-uwsgi:1.10
-  ports:
-    - "8443:443"
-    - "8080:80"
-  volumes:
-    - ./data/nginx:/data
+    nginx:
+      image: muccg/nginx-uwsgi:1.10
+      ports:
+        - "8443:443"
+        - "8080:80"
+      volumes:
+        - ./data/nginx:/data
 
-runserver:
-  image: muccg/bpametadata-dev
-  command: runserver
-  environment:
-    - DJANGO_MAILGUN_API_KEY
-    - DJANGO_MAILGUN_SERVER_NAME
-    - DBUSER=bpamapp
-    - WAIT_FOR_DB=1
-    - WAIT_FOR_CACHE=1
-  ports:
-    - "8000:8000"
+    runserver:
+      image: muccg/bpametadata-dev
+      environment:
+        - DJANGO_MAILGUN_API_KEY
+        - DJANGO_MAILGUN_SERVER_NAME
+        - WAIT_FOR_DB=1
+        - WAIT_FOR_CACHE=1
 
-uwsgi:
-  image: muccg/bpametadata-dev
-  command: uwsgi
-  environment:
-    - DJANGO_MAILGUN_API_KEY
-    - DJANGO_MAILGUN_SERVER_NAME
-    - DBUSER=bpamapp
-    - WAIT_FOR_DB=1
-    - WAIT_FOR_CACHE=1
-    - WAIT_FOR_RUNSERVER=1
-    # note: important to wait for runserver in dev as both will attempt to syncdb etc
-  ports:
-    - "9000:9000"
-    - "9001:9001"
-    - "9100:9100"
-    - "9101:9101"
+    uwsgi:
+      image: muccg/bpametadata-dev
+      command: uwsgi_local
+      environment:
+        - DJANGO_MAILGUN_API_KEY
+        - DJANGO_MAILGUN_SERVER_NAME
+        - WAIT_FOR_DB=1
+        - WAIT_FOR_CACHE=1
+        - WAIT_FOR_RUNSERVER=1
+        # note: important to wait for runserver in dev as both will attempt to syncdb etc
+      ports:
+        - "9000:9000"
+        - "9001:9001"
+        - "9100:9100"
+        - "9101:9101"
