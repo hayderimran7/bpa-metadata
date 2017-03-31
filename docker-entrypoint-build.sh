@@ -22,6 +22,7 @@ if [ "$1" = 'releasetarball' ]; then
     git clone --depth=1 --branch="${GIT_BRANCH}" "${PROJECT_SOURCE}" .
     git rev-parse HEAD > .version
     cat .version
+    pip install --upgrade -r /app/requirements/runtime-requirements.txt
     pip install -e "${PROJECT_NAME}"
     set +x
 
