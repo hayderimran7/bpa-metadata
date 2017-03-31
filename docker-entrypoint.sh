@@ -61,9 +61,6 @@ function wait_for_services {
 
 
 function defaults {
-    -INGEST_LOG_FILE=/data/ingest.log
-    -MIGRATE_LOG_FILE=/data/migrate.log
-
     : "${DBSERVER:=db}"
     : "${DBPORT:=5432}"
     : "${DBUSER:=webapp}"
