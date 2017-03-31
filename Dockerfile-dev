@@ -10,8 +10,8 @@ ARG ARG_PIP_TRUSTED_HOST="127.0.0.1"
 # Runtime args, don't re-use build time args
 ENV PRODUCTION 0
 ENV DEBUG 1
-ENV PIP_INDEX_URL="https://pypi.python.org/simple"
-ENV PIP_TRUSTED_HOST="127.0.0.1"
+ENV PIP_INDEX_URL $ARG_PIP_INDEX_URL
+ENV PIP_TRUSTED_HOST $ARG_PIP_TRUSTED_HOST
 ENV NO_PROXY ${PIP_TRUSTED_HOST}
 
 # Strictly speaking not needed as we mount over the top
@@ -27,11 +27,11 @@ RUN env | sort
 # Add our python deps in multiple docker layers
 # hgvs was failing due to lack of nose, hence the order
 COPY ./requirements/dev-requirements.txt /app/bpam/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/dev-requirements.txt
+RUN pip install --upgrade -r bpam/dev-requirements.txt
 COPY ./requirements/test-requirements.txt /app/bpam/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/test-requirements.txt
+RUN pip install --upgrade -r bpam/test-requirements.txt
 COPY ./requirements/runtime-requirements.txt /app/bpam/
-RUN NO_PROXY=${ARG_PIP_TRUSTED_HOST} pip ${ARG_PIP_OPTS} --trusted-host ${ARG_PIP_TRUSTED_HOST} install -i ${ARG_PIP_INDEX_URL} --upgrade -r bpam/runtime-requirements.txt
+RUN pip install --upgrade -r bpam/runtime-requirements.txt
 
 # Copy code and install the app
 COPY . /app
