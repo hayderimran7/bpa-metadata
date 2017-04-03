@@ -4,13 +4,10 @@ from django.contrib import admin
 from import_export import fields, widgets
 
 from apps.common.admin import DateField
-from apps.common.admin import CommonTransferLogResource
-from apps.common.admin import CommonTransferLogAdmin
 from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isinteger, istime, isshorttime, isdecimal
 
 from ..models import OpenWaterContextual
 from ..models import CoastalContextual
-from ..models import TransferLog
 from ..models import MMSite
 from ..models import MetagenomicsTrack
 from ..models import Amplicon16STrack
@@ -18,16 +15,6 @@ from ..models import Amplicon18STrack
 
 
 DEGREES = u'°'
-
-
-class TransferLogResource(CommonTransferLogResource):
-
-    class Meta(CommonTransferLogResource.Meta):
-        model = TransferLog
-
-
-class TransferLogAdmin(CommonTransferLogAdmin):
-    resource_class = TransferLogResource
 
 
 class CommonAdmin(BPAImportExportModelAdmin):
@@ -410,7 +397,6 @@ class ContextualOpenWaterAdmin(CommonAdmin):
         }), )
 
 
-admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(CoastalContextual, ContextualCoastalAdmin)
 admin.site.register(OpenWaterContextual, ContextualOpenWaterAdmin)
 admin.site.register(MetagenomicsTrack)

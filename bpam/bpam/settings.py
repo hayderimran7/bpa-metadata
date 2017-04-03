@@ -199,10 +199,7 @@ SUIT_CONFIG = {
      # Marine Microbes
      {'app': 'marine_microbes',
       'label': 'Marine Microbes',
-      'models': ('transferlog',
-                 'metagenomicsequencefile',
-                 'ampliconsequencefile',
-                 'mmsite',
+      'models': ('mmsite',
                  'coastalcontextual',
                  'openwatercontextual',
                  'seaweedcontextual',
