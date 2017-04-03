@@ -208,6 +208,8 @@ SUIT_CONFIG = {
                  'sedimentcontextual',
                  'spongecontextual',
                  'metagenomicstrack',
+                 'metatranscriptometrack',
+                 'amplicona16strack',
                  'amplicon16strack',
                  'amplicon18strack')},
      '-',

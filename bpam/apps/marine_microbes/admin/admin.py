@@ -6,12 +6,15 @@ from import_export import fields, widgets
 from apps.common.admin import DateField
 from apps.common.admin import BPAImportExportModelAdmin, BPAModelResource, isinteger, istime, isshorttime, isdecimal
 
-from ..models import OpenWaterContextual
-from ..models import CoastalContextual
-from ..models import MMSite
-from ..models import MetagenomicsTrack
-from ..models import Amplicon16STrack
-from ..models import Amplicon18STrack
+from ..models import (
+    OpenWaterContextual,
+    CoastalContextual,
+    MMSite,
+    MetagenomicsTrack,
+    MetatranscriptomeTrack,
+    AmpliconA16STrack,
+    Amplicon16STrack,
+    Amplicon18STrack)
 
 
 DEGREES = u'°'
@@ -400,5 +403,7 @@ class ContextualOpenWaterAdmin(CommonAdmin):
 admin.site.register(CoastalContextual, ContextualCoastalAdmin)
 admin.site.register(OpenWaterContextual, ContextualOpenWaterAdmin)
 admin.site.register(MetagenomicsTrack)
+admin.site.register(MetatranscriptomeTrack)
 admin.site.register(Amplicon16STrack)
+admin.site.register(AmpliconA16STrack)
 admin.site.register(Amplicon18STrack)
