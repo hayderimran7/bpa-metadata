@@ -2,6 +2,8 @@
 
 {% block title %}Stem Cells Project Overview{% endblock %}
 
+{% load static from staticfiles %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
@@ -17,6 +19,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"
         integrity="sha256-lK8O5StczSYl4DweTw0KlopBgYKtiwLSq6BbSSe77Kk= sha384-3xJpTAehKTp8sw2H5VBvFFFeUdcxlxQYYyML7JGy/N8CdC+Ij8AALUibuWZRjiJq sha512-MR6zYveOuENWQVCZ6oDvrbySpOsDwGLoKxPt3p0dM/Ce3nZk+IqFgqr+qx94WtM84THJJOmGHMwazsUJn43RhQ=="
         crossorigin="anonymous"></script>
+
+<script src="{% static 'bpam/jstree_conditionalselect_plugin.js' %}"></script>
 
 <script>
   function recreateTable(url, nodeData) {

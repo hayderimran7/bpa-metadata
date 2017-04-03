@@ -60,7 +60,11 @@ var createProjectOverviewTree = function(config) {
         });
       }
     },
-    'plugins' : [ 'state' ]
+    'conditionalselect' : function (node) {
+        var isTopLevel = function(node) { return node.parents.length == 1; }
+        return !isTopLevel(node);
+    },
+    'plugins' : [ 'conditionalselect', 'state' ]
   });
 
   tree.on('select_node.jstree', function (e, data) {
