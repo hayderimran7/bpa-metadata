@@ -24,7 +24,7 @@ package_scripts = ["manage.py"]
 package_data = get_data_files()
 
 setup(name='bpam',
-      version='4.10.3',
+      version='4.10.4',
       description="BPA Metadata Management",
       author='Centre for Comparative Genomics',
       author_email='web@ccg.murdoch.edu.au',
