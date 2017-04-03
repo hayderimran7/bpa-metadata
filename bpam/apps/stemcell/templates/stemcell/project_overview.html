@@ -49,7 +49,6 @@
         columns: [{
                 'data': 'bpa_id',
                 'defaultContent': '',
-                'searchable': false,
                 'render': function (data, type, row) {
                     return '<a href="' + makeSampleDetailUrl(row)+ '">' + data + '</a>';
                 }},
@@ -134,6 +133,7 @@
     $('.apitable').hide();
     createProjectOverviewTree({
       url: '{% url "ckan:stemcell_project_overview_count" %}',
+      parentNonSelectable: true,
       nodeCreator: createTreeNodes,
       tableRecreator: recreateTable
     });

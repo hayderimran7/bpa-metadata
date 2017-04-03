@@ -51,6 +51,14 @@ var set_sample = function(callback) {
 
 // Can be made more general later if needed
 var createProjectOverviewTree = function(config) {
+  var alwaysSelectable = function(node) {
+    return true;
+  };
+  var parentNonSelectable = function (node) {
+        var isTopLevel = function(node) { return node.parents.length == 1; }
+        return !isTopLevel(node);
+  };
+
   var tree = $('#tree').jstree({
     'core' : {
       'data': function(obj, callback) {
@@ -60,10 +68,7 @@ var createProjectOverviewTree = function(config) {
         });
       }
     },
-    'conditionalselect' : function (node) {
-        var isTopLevel = function(node) { return node.parents.length == 1; }
-        return !isTopLevel(node);
-    },
+    'conditionalselect' : config.parentNonSelectable ? parentNonSelectable : alwaysSelectable,
     'plugins' : [ 'conditionalselect', 'state' ]
   });
 
