@@ -1,84 +1,12 @@
-{% extends "base.html" %}
-{% load staticfiles %}
+{% extends "base_sample_detail.html" %}
+{% load django_bootstrap_breadcrumbs %}
 
 {% block title %}Stem Cells Sample Detail {% endblock %}
 
-{% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "Stem Cells" "stemcell:index" %}
-{% comment %}
-  TODO maybe?
-  Change the breadcrumbs to have samples list as parent if we will have that page
-  {% breadcrumb "Samples" "stemcell:samples" %}
-{% endcomment %}
-{% breadcrumb "Project Overview" "stemcell:project_overview" %}
-{% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
+    {{ block.super }}
+    {% breadcrumb "Stem Cells" "stemcell:index" %}
+    {% breadcrumb "Project Overview" "stemcell:project_overview" %}
+    {% breadcrumb_safe "<span class='bpa_id'></span>" "" %}
 {% endblock %}
 
-{% block content %}
-<div class="panel panel-info">
-  <table id="info" class="table table-striped">
-    <tbody>
-      <tr>
-        <td>BPA ID</td>
-        <td id="bpa_id"></td>
-      </tr>
-      <tr>
-        <td>Data Type</td>
-        <td id="data_type"></td>
-      </tr>
-      <tr>
-        <td>Description</td>
-        <td id="description"></td>
-      </tr>
-      <tr>
-        <td>Omics Type</td>
-        <td id="omics"></td>
-      </tr>
-      <tr>
-        <td>Analytical Platform</td>
-        <td id="analytical_platform"></td>
-      </tr>
-      <tr>
-        <td>Facility</td>
-        <td id="facility"></td>
-      </tr>
-      <tr>
-        <td>Work Order</td>
-        <td id="work_order"></td>
-      </tr>
-      <tr>
-        <td>Contextual Data Submission Date</td>
-        <td id="contextual_data_submission_date"></td>
-      </tr>
-      <tr>
-        <td>Sample Submission Date</td>
-        <td id="sample_submission_date"></td>
-      </tr>
-      <tr>
-        <td>Archive Ingestion Date</td>
-        <td id="archive_ingestion_date"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<script>
-    set_sample(function(sample_obj) {
-        $("#bpa_id").text(sample_obj.bpa_id);
-        $("#data_type").text(sample_obj.data_type);
-        $("#description").text(sample_obj.description);
-        $("#omics").text(sample_obj.omics);
-        $("#analytical_platform").text(sample_obj.analytical_platform);
-        $("#facility").text(sample_obj.facility);
-        $("#work_order").text(sample_obj.work_order);
-        $("#contextual_data_submission_date").text(sample_obj.contextual_data_submission_date);
-        $("#sample_submission_date").text(sample_obj.sample_submission_date);
-        $("#archive_ingestion_date").text(sample_obj.archive_ingestion_date);
-    });
-</script>
-
-{% include "apisequencefilelist.html" %}
-
-{% endblock %}
