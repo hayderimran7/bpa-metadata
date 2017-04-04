@@ -25,31 +25,47 @@
 
 {% block content %}
 <div class="panel panel-info">
-  <table id="info" class="table table-striped">
+ <table id="info" class="table table-striped">
     <tbody>
       <tr>
-        <td> BPA ID</td>
-        <td class="bpa_id"></td>
+        <td>BPA ID</td>
+        <td id="bpa_id"></td>
       </tr>
       <tr>
-        <td> Sample ID</td>
-        <td class="sample_id"></td>
+        <td>Data Type</td>
+        <td id="data_type"></td>
       </tr>
       <tr>
-        <td> Sample Type</td>
-        <td class="sample_type"></td>
+        <td>Description</td>
+        <td id="description"></td>
       </tr>
       <tr>
-        <td> Site </td>
-        <td class="site"></td>
+        <td>Omics Type</td>
+        <td id="omics"></td>
       </tr>
       <tr>
-        <td> Sample Depth</td>
-        <td class="sample_depth"></td>
+        <td>Analytical Platform</td>
+        <td id="analytical_platform"></td>
       </tr>
       <tr>
-        <td>Collection Date</td>
-        <td class="collection_date"></td>
+        <td>Facility</td>
+        <td id="facility"></td>
+      </tr>
+      <tr>
+        <td>Work Order</td>
+        <td id="work_order"></td>
+      </tr>
+      <tr>
+        <td>Contextual Data Submission Date</td>
+        <td id="contextual_data_submission_date"></td>
+      </tr>
+      <tr>
+        <td>Sample Submission Date</td>
+        <td id="sample_submission_date"></td>
+      </tr>
+      <tr>
+        <td>Archive Ingestion Date</td>
+        <td id="archive_ingestion_date"></td>
       </tr>
     </tbody>
   </table>
@@ -57,12 +73,16 @@
 
 <script>
     set_sample(function(sample_obj) {
-        $(".bpa_id").text(sample_obj.bpa_id);
-        $(".sample_id").text(sample_obj.id);
-        $(".sample_type").text(sample_obj.type);
-        $(".site").text(sample_obj.sample_site);
-        $(".sample_depth").text(sample_obj.depth);
-        $(".collection_date").text(sample_obj.date_sampled);
+        $("#bpa_id").text(sample_obj.bpa_id);
+        $("#data_type").text(sample_obj.data_type);
+        $("#description").text(sample_obj.description);
+        $("#omics").text(sample_obj.omics);
+        $("#analytical_platform").text(sample_obj.analytical_platform);
+        $("#facility").text(sample_obj.facility);
+        $("#work_order").text(sample_obj.work_order);
+        $("#contextual_data_submission_date").text(sample_obj.contextual_data_submission_date);
+        $("#sample_submission_date").text(sample_obj.sample_submission_date);
+        $("#archive_ingestion_date").text(sample_obj.archive_ingestion_date);
     });
 </script>
 

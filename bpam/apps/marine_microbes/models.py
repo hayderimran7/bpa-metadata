@@ -497,3 +497,12 @@ class SpongeContextual(MarineCommonContextual):
     class Meta(MarineCommonContextual.Meta):
         verbose_name = "Sponge Contextual Data"
         verbose_name_plural = verbose_name
+
+
+CKAN_RESOURCE_TYPE_TO_MODEL = {
+    'mm-metagenomics': MetagenomicsTrack,
+    'mm-metatranscriptome': MetatranscriptomeTrack,
+    'amplicons.16s': AmpliconA16STrack,
+    'amplicons.a16s': Amplicon16STrack,
+    'amplicons.18s': Amplicon18STrack,
+}

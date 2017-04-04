@@ -7,7 +7,7 @@ import re
 
 from django.conf import settings
 from django.core.cache import caches
-from django.core.exceptions import MultipleObjectsReturned, PermissionDenied
+from django.core.exceptions import MultipleObjectsReturned, PermissionDenied, ValidationError
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 from revproxy.views import ProxyView
@@ -16,6 +16,7 @@ from revproxy import utils
 from apps.common.models import CKANServer
 
 from apps.stemcell import models as stemcell_models
+from apps.marine_microbes import models as mm_models
 
 
 logger = logging.getLogger(__name__)
@@ -58,9 +59,17 @@ def exceptions_to_json_err(view):
 
 @exceptions_to_json_err
 def models_package_list(request, org_name, resource_type=None, status=None):
-    # org_name will always be 'bpa-stemcells' for now so we can get the map
-    # from stemcell_models
-    model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL[resource_type]
+    amplicon = request.GET.get('amplicon')
+    lookup = resource_type
+    if amplicon is not None:
+        lookup = 'amplicons.%s' % amplicon
+    if org_name == 'bpa-stemcells':
+        models = stemcell_models
+    elif org_name == 'bpa-marine-microbes':
+        models = mm_models
+    else:
+        raise ValidationError('Invalid organisation name "%s" received.' % org_name)
+    model = models.CKAN_RESOURCE_TYPE_TO_MODEL[lookup]
     qs = model.objects.none()
 
     if status == 'sample_processing':
@@ -108,9 +117,15 @@ def resource_list(request, org_name, resource_type):
 
 
 @exceptions_to_json_err
-def package_detail(request, package_id, resource_type=None, status=None):
+def package_detail(request, package_id, project=None, resource_type=None, status=None):
     if resource_type is not None:
-        tracker_model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
+        if project == 'marine_microbes':
+            models = mm_models
+        elif project == 'stemcell':
+            models = stemcell_models
+        else:
+            raise ValidationError('Incorrect project "%s"' % project)
+        tracker_model = models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
         objs = tracker_model.uningested.filter(bpa_id__bpa_id=package_id).values()
         if len(objs) > 1:
             raise MultipleObjectsReturned('%d tracker objects returned for bpa_id "%s"' %
@@ -153,11 +168,29 @@ def amplicon_resources_count(request):
 
 @exceptions_to_json_err
 def mm_project_overview_count(request):
+    packages = (CKAN_RESOURCE_TYPES['bpa-marine-microbes'] +
+                ('amplicons.16s', 'amplicons.a16s', 'amplicons.18s'))
+    counts = {k: {} for k in packages}
+
+    for k, d in counts.items():
+        if k in ('mm-genomics-amplicon',):
+            # Ignore the mm-genomics-amplicon category because we deal
+            # with each amplicon group separately
+            continue
+        model = mm_models.CKAN_RESOURCE_TYPE_TO_MODEL[k]
+        d['sample_processing'] = model.sample_processing.count()
+        d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
+
     all_package_counts = ckan_packages_count_by_resource_type()
-    counts = {k: v for k, v in all_package_counts.items() if k in CKAN_RESOURCE_TYPES['bpa-marine-microbes']}
+    for k, d in counts.items():
+        d['embargoed'] = all_package_counts.get(k, 0)
 
     amplicon_counts = ckan_amplicon_packages_count('mm-genomics-amplicon')
-    counts['amplicons'] = amplicon_counts
+    for k, d in amplicon_counts.items():
+        counts['amplicons.%s' % k]['embargoed'] = d
+
+    for k, d in counts.items():
+        d['all'] = sum(d.values())
 
     return JsonSuccess.data(counts)
 
