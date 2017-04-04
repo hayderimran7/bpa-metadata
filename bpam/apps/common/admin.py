@@ -185,57 +185,6 @@ class CommonMetagenomicAdmin(BPAImportExportModelAdmin):
     search_fields = ('extraction_id', 'facility__name', 'comments')
 
 
-# TransferLog
-class CommonTransferLogResource(resources.ModelResource):
-    facility = fields.Field(attribute='facility', column_name='Sequencing facility', widget=FacilityWidget())
-    transfer_to_facility_date = DateField(attribute='transfer_to_facility_date', column_name='Date of transfer')
-    description = fields.Field(attribute='description', column_name='Description')
-    data_type = fields.Field(attribute='data_type', column_name='Data type')
-    folder_name = fields.Field(attribute='folder_name', column_name='Folder name')
-    transfer_to_archive_date = DateField(attribute='transfer_to_archive_date',
-                                         column_name='Date of transfer to archive')
-    notes = fields.Field(attribute='notes', column_name='Notes')
-    ticket_url = fields.Field(attribute='ticket_url', column_name='Ticket URL')
-    downloads_url = fields.Field(attribute='downloads_url', column_name='Download')
-
-    class Meta:
-        abstract = True
-        import_id_fields = ('folder_name', )
-
-
-class CommonTransferLogAdmin(BPAImportExportModelAdmin):
-
-    def show_downloads_url(self, obj):
-        try:
-            short = obj.downloads_url.split("/")[-2]
-            return format_html("<a href='{url}'>{short}</a>", url=obj.downloads_url, short=short)
-        except IndexError:
-            return ""
-
-    show_downloads_url.short_description = "Downloads URL"
-    show_downloads_url.allow_tags = True
-
-    def show_ticket_url(self, obj):
-        ticket_url = TICKET_URL + obj.ticket_url
-        return format_html("<a href='{ticket_url}'>{url}</a>", url=obj.ticket_url, ticket_url=ticket_url)
-
-    show_ticket_url.short_description = "Ticket URL"
-    show_ticket_url.allow_tags = True
-
-    date_hierarchy = 'transfer_to_archive_date'
-
-    list_display = ('facility', 'transfer_to_facility_date', 'description', 'data_type', 'folder_name',
-                    'transfer_to_archive_date', 'notes', 'show_ticket_url', 'show_downloads_url')
-
-    list_filter = ('facility',
-                   'transfer_to_facility_date',
-                   'transfer_to_archive_date',
-                   'data_type', )
-
-    search_fields = ('facility__name', 'transfer_to_facility_date', 'description', 'data_type', 'folder_name',
-                     'transfer_to_archive_date', 'notes', 'ticket_url', 'downloads_url')
-
-
 class CommonDataSetAdmin(BPAImportExportModelAdmin):
     date_hierarchy = 'transfer_to_archive_date'
 

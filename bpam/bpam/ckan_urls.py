@@ -17,7 +17,7 @@ urlpatterns = patterns(
 
     url(r'^package_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/(?P<status>(sample_processing|bpa_archive_ingest|bpa_qc))/?$', views.models_package_list, name='models_package_list'),
 
-    url(r'^package_detail/(?P<resource_type>[\w-]+)/(?P<status>[\w-]+)/(?P<package_id>.+)/?$', views.package_detail, name='package_detail'),
+    url(r'^package_detail/(?P<project>[\w-]+)/(?P<resource_type>[^/]+)/(?P<status>[\w-]+)/(?P<package_id>.+)/?$', views.package_detail, name='package_detail'),
     url(r'^package_detail/(?P<package_id>.+)/?$', views.package_detail, name='package_detail'),
 
     url(r'^resource_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/?$', views.resource_list, name='resource_list'),

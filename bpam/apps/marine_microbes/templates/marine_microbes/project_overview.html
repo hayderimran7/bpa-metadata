@@ -2,6 +2,8 @@
 
 {% block title %}Marine Microbes Project Overview{% endblock %}
 
+{% load static from staticfiles %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
 {{ block.super }}
@@ -18,29 +20,48 @@
         integrity="sha256-lK8O5StczSYl4DweTw0KlopBgYKtiwLSq6BbSSe77Kk= sha384-3xJpTAehKTp8sw2H5VBvFFFeUdcxlxQYYyML7JGy/N8CdC+Ij8AALUibuWZRjiJq sha512-MR6zYveOuENWQVCZ6oDvrbySpOsDwGLoKxPt3p0dM/Ce3nZk+IqFgqr+qx94WtM84THJJOmGHMwazsUJn43RhQ=="
         crossorigin="anonymous"></script>
 
+<script src="{% static 'bpam/jstree_conditionalselect_plugin.js' %}"></script>
+
 <script>
-  function recreateTable(url) {
+  function recreateTable(url, nodeData) {
     $('.apitable').DataTable().destroy();
+    if (url == null) {
+      $('.apitable').hide();
+      return;
+    }
+    $('.apitable').show();
+
+    function makeSampleDetailUrl(row) {
+      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
+      // TODO review
+      // Do we have to do this? Can't we refer to the samples always with the same id
+      // either sample_id or bpa_id?
+      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
+      var url = _.join([bpam_config.bpam_base + 'marine_microbes', 'sample',
+                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
+      return url;
+    }
 
     setup_table(function() {
       var config = _.defaults({
-        colReorder: false,
         searching: true,
 
         columns: [{
-                'data': 'id',
+                'data': 'bpa_id',
                 'defaultContent': '',
-                'searchable': false,
                 'render': function (data, type, row) {
-                    var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
-                    return '<a href="' + url + '">' + data + '</a>';
+                    return '<a href="' + makeSampleDetailUrl(row) + '">' + data + '</a>';
                 }
               },
-              { 'data': 'bpa_id' , 'defaultContent': ''},
-              { 'data': 'sample_type' , 'defaultContent': ''},
-              { 'data': 'sample_site', 'defaultContent': '' },
-              { 'data': 'date_sampled', 'defaultContent': '' },
-              { 'data': 'depth', 'defaultContent': '' }
+              { 'data': 'data_type' , 'defaultContent': ''},
+              { 'data': 'description' , 'defaultContent': ''},
+              { 'data': 'omics' , 'defaultContent': ''},
+              { 'data': 'analytical_platform' , 'defaultContent': ''},
+              { 'data': 'facility' , 'defaultContent': ''},
+              { 'data': 'work_order' , 'defaultContent': ''},
+              { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+              { 'data': 'sample_submission_date' , 'defaultContent': ''},
+              { 'data': 'archive_ingestion_date' , 'defaultContent': ''}
         ]
       }, CONFIG.tables.ajaxConfig);
 
@@ -51,28 +72,80 @@
 
   };
 
+  function ampliconURL(ampliconType) {
+    var ampliconBaseURL = "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}";
+    return _.trimEnd(ampliconBaseURL, '/') + '?amplicon=' + ampliconType;
+  }
+
+  var URLs = {
+    'mm-metagenomics': "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metagenomics' %}",
+    'mm-metatranscriptome': "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metatranscriptome' %}",
+    'amplicons.16s': ampliconURL('16s'),
+    'amplicons.a16s': ampliconURL('a16s'),
+    'amplicons.18s': ampliconURL('18s')
+  };
+
+  function create2ndLevelNodes(data, parentType) {
+    var counts = _.get(data, parentType);
+
+    function url(status) {
+      var baseURL = _.trimEnd(URLs[parentType], '/');
+      var parts = _.split(baseURL, '?');
+      var query = null;
+      if (parts.length == 2) {
+          baseURL = parts[0];
+          query = parts[1];
+      }
+
+      return baseURL + '/' + status + ((query === null) ? '' : ('?' + query));
+    }
+
+    function createNode(args) {
+      var name = args[0];
+      var status = args[1];
+      return {
+        text: name + ' (' +  _.get(counts, status, 0) + ')',
+        url: url(status),
+        referenceType: parentType,
+        status: status
+      }
+    }
+
+    var nodes = _.map(CONFIG.trees.secondLevelNodes, createNode);
+
+    return nodes;
+  }
+
   var createTreeNodes = function(data) {
       return [{
-            text: 'Metagenomics (' + _.get(data, 'mm-metagenomics', 0)  + ')',
-            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metagenomics' %}"
+            text: 'Metagenomics (' + _.get(data, ['mm-metagenomics', 'all'], 0)  + ')',
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metagenomics' %}",
+            children: create2ndLevelNodes(data, 'mm-metagenomics')
           },{
-            text: 'Metatranscriptomics (' + _.get(data, 'mm-metatranscriptome', 0)  + ')',
-            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metatranscriptome' %}"
+            text: 'Metatranscriptomics (' + _.get(data, ['mm-metatranscriptome', 'all'], 0)  + ')',
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-metatranscriptome' %}",
+            children: create2ndLevelNodes(data, 'mm-metatranscriptome')
           },{
-            text: 'Amplicon 16S (' + _.get(data, 'amplicons.16s', 0) + ')',
-            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S"
+            text: 'Amplicon 16S (' + _.get(data, ['amplicons.16s', 'all'], 0) + ')',
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=16S",
+            children: create2ndLevelNodes(data, 'amplicons.16s')
           },{
-            text: 'Amplicon A16S (' + _.get(data, 'amplicons.a16s', 0) + ')',
-            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S"
+            text: 'Amplicon A16S (' + _.get(data, ['amplicons.a16s', 'all'], 0) + ')',
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=a16S",
+            children: create2ndLevelNodes(data, 'amplicons.a16s')
           },{
-            text: 'Amplicon 18S (' + _.get(data, 'amplicons.18s', 0) + ')',
-            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S"
+            text: 'Amplicon 18S (' + _.get(data, ['amplicons.18s', 'all'], 0) + ')',
+            url: "{% url 'ckan:package_list' 'bpa-marine-microbes' 'mm-genomics-amplicon' %}?amplicon=18S",
+            children: create2ndLevelNodes(data, 'amplicons.18s')
       }];
   };
 
   $(document).ready(function() {
+    $('.apitable').DataTable().destroy();
+    $('.apitable').hide();
     createProjectOverviewTree({
       url: '{% url "ckan:mm_project_overview_count" %}',
+      parentNonSelectable: true,
       nodeCreator: createTreeNodes,
       tableRecreator: recreateTable
     });
@@ -106,22 +179,30 @@
             <table class="apitable" width="100%" id="content-table">
                 <thead>
                     <tr>
-                        <th>Sample ID</th>
                         <th>BPA ID</th>
-                        <th>Sample Type</th>
-                        <th>Collection Site</th>
-                        <th>Collection Date</th>
-                        <th>Collection Depth</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
+                        <th>Archive Ingestion Date</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Sample ID</th>
                         <th>BPA ID</th>
-                        <th>Sample Type</th>
-                        <th>Collection Site</th>
-                        <th>Collection Date</th>
-                        <th>Collection Depth</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
+                        <th>Archive Ingestion Date</th>
                     </tr>
                 </tfoot>
                 <tbody>

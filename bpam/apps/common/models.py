@@ -139,33 +139,6 @@ class DataSet(models.Model):
         return '{}'.format(self.name)
 
 
-class TransferLog(models.Model):
-    """ Notes transfer to CCG """
-
-    facility = models.ForeignKey(Facility,
-                                 related_name='%(app_label)s_%(class)s_facility',
-                                 verbose_name='Sequencing Facility',
-                                 blank=True,
-                                 null=True)
-    transfer_to_facility_date = models.DateField("Transfer to Facility Date")
-    description = models.CharField("Description", max_length=100)
-    data_type = models.CharField("Data Type", max_length=50)
-    folder_name = models.CharField("Folder", max_length=100)
-    transfer_to_archive_date = models.DateField("Transfer to Archive Date")
-    notes = models.TextField('Notes', blank=True, null=True)
-
-    ticket_url = models.URLField('Dataset')
-    downloads_url = models.URLField('Downloads')
-
-    class Meta:
-        abstract = True
-        verbose_name = 'Transfer Log'
-        verbose_name_plural = 'Transfers'
-
-    def __str__(self):
-        return "{} {}".format(self.facility, self.description)
-
-
 class BPAMirror(models.Model):
     """ A download site, offering the BPA Archive catalogue via a base prefix """
 
