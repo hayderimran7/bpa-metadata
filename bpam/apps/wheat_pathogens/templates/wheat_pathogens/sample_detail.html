@@ -19,72 +19,55 @@
         <tbody>
             <tr>
                 <td> Sample Name</td>
-                <td class="sample_id"></td>
+                <td class="sample_id">{{ sample.sample_id }}</td>
             </tr>
             <tr>
                 <td> Organism</td>
-                <td class="sample_organism"></td>
+                <td class="sample_organism">{{ sample.species }}</td>
             </tr>
             <tr>
                 <td> Sample Label</td>
-                <td class="sample_label"></td>
+                <td class="sample_label">{{ sample.label }}</td>
             </tr>
             <tr>
                 <td> Isolate Name</td>
-                <td class="sample_official_variety_name"></td>
+                <td class="sample_official_variety_name">{{ sample.official_variety_name }}</td>
             </tr>
             <tr>
                 <td> DNA Source</td>
-                <td class="sample_dna_source"></td>
+                <td class="sample_dna_source">{{ sample.dna_source }}</td>
             </tr>
             <tr>
                 <td> Wheat Pathogenicity</td>
-                <td class="sample_wheat_pathogenicity"></td>
+                <td class="sample_wheat_pathogenicity">{{ sample.wheat_pathogenicity }}</td>
             </tr>
             <tr>
                 <td> Original Source Host Species</td>
-                <td class="sample_original_source_host_species"></td>
+                <td class="sample_original_source_host_species">{{ sample.original_source_host_species }}</td>
             </tr>
             <tr>
                 <td> Sequence Coverage</td>
-                <td class="sample_requested_sequence_coverage"></td>
+                <td class="sample_requested_sequence_coverage">{{ sample.requested_sequence_coverage }}</td>
             </tr>
             <tr>
                 <td> Collection Location</td>
-                <td class="sample_collection_location"></td>
+                <td class="sample_collection_location">{{ sample.collection_location }}</td>
             </tr>
             <tr>
                 <td> Protocol Reference</td>
-                <td class="sample_protocol_reference"></td>
+                <td class="sample_protocol_reference">{{ sample.protocol_reference }}</td>
             </tr>
             <tr>
                 <td> Sequence Date</td>
-                <td class="sample_date_sequenced"></td>
+                <td class="sample_date_sequenced">{{ sample.date_sequenced }}</td>
             </tr>
             <tr>
                 <td> Note</td>
-                <td class="sample_comments_by_facility"></td>
+                <td class="sample_comments_by_facility">{{ sample.comments_by_facility }}</td>
             </tr>
         </tbody>
     </table>
 </div>
-
-<script>
-    set_sample(function(sample_obj) {
-				$(".sample_id").text(sample_obj.sample_id);
-				$(".sample_organism").text(sample_obj.species);
-				$(".sample_label").text(sample_obj.label);
-				$(".sample_dna_source").text(sample_obj.dna_source);
-				$(".sample_official_variety_name").text(sample_obj.official_variety_name);
-				$(".sample_wheat_pathogenicity").text(sample_obj.wheat_pathogenicity);
-				$(".sample_original_source_host_species").text(sample_obj.original_source_host_species);
-				$(".sample_requested_sequence_coverage").text(sample_obj.requested_sequence_coverage);
-				$(".sample_collection_location").text(sample_obj.collection_location);
-				$(".sample_protocol_reference").text(sample_obj.protocol_reference);
-				$(".sample_date_sequenced").text(sample_obj.date_sequenced);
-				$(".sample_comments_by_facility").text(sample_obj.comments_by_facility);
-		});
-</script>
 
 {% include "apisequencefilelist.html" %}
 

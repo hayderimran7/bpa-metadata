@@ -118,25 +118,7 @@ def resource_list(request, org_name, resource_type):
 
 @exceptions_to_json_err
 def package_detail(request, package_id, project=None, resource_type=None, status=None):
-    if resource_type is not None:
-        if project == 'marine_microbes':
-            models = mm_models
-        elif project == 'stemcell':
-            models = stemcell_models
-        else:
-            raise ValidationError('Incorrect project "%s"' % project)
-        tracker_model = models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
-        objs = tracker_model.uningested.filter(bpa_id__bpa_id=package_id).values()
-        if len(objs) > 1:
-            raise MultipleObjectsReturned('%d tracker objects returned for bpa_id "%s"' %
-                                          (len(objs), package_id))
-        if len(objs) == 1:
-            sample = map(adapt_django_sample, objs)[0]
-            return JsonSuccess.data(sample)
-
-    ckan = get_ckan()
-    package = ckan.call_action('package_show', {'id': package_id})
-
+    package = get_tracker_or_sample(package_id, project, resource_type, status)
     return JsonSuccess.data(package)
 
 
@@ -386,6 +368,29 @@ def ckan_get_packages_by_resource_type(resource_type):
 
 
 # Implementation
+
+
+def get_tracker_or_sample(package_id, project=None, resource_type=None, status=None):
+    if resource_type is not None:
+        if project == 'marine_microbes':
+            models = mm_models
+        elif project == 'stemcell':
+            models = stemcell_models
+        else:
+            raise ValidationError('Incorrect project "%s"' % project)
+        tracker_model = models.CKAN_RESOURCE_TYPE_TO_MODEL.get(resource_type)
+        objs = tracker_model.uningested.filter(bpa_id__bpa_id=package_id).values()
+        if len(objs) > 1:
+            raise MultipleObjectsReturned('%d tracker objects returned for bpa_id "%s"' %
+                                          (len(objs), package_id))
+        if len(objs) == 1:
+            sample = map(adapt_django_sample, objs)[0]
+            return sample
+
+    ckan = get_ckan()
+    package = ckan.call_action('package_show', {'id': package_id})
+
+    return package
 
 
 def adapt_django_sample(d):
