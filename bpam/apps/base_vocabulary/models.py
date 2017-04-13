@@ -33,17 +33,6 @@ class LandUse(MPTTModel):
         order_insertion_by = ['order']
 
 
-class SoilTexture(models.Model):
-    """
-    Soil Texture
-    """
-    texture = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=100)
-
-    def __unicode__(self):
-        return u"{0} {1}".format(self.texture, self.description)
-
-
 class SoilColour(models.Model):
     """
     Soil Colour

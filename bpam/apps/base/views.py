@@ -295,7 +295,6 @@ class StandardisedVocabularyLookUpView(View):
         "sand": None,
         "silt": None,
         "sulphur_colwell": None,
-        "texture": "SoilTexture.texture",
         "tillage": "TillageType.tillage",
         "total_carbon": None,
         "total_nitrogen": None,

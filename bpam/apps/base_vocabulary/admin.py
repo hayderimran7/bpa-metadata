@@ -4,7 +4,7 @@ from suit.admin import SortableModelAdmin
 from suit.widgets import AutosizedTextarea
 from django import forms
 
-from models import (AustralianSoilClassification, FAOSoilClassification, DrainageClassification, SoilTexture,
+from models import (AustralianSoilClassification, FAOSoilClassification, DrainageClassification,
                     SoilColour, HorizonClassification, ProfilePosition, TillageType, BroadVegetationType,
                     GeneralEcologicalZone, LandUse)
 
@@ -63,24 +63,6 @@ class DrainageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DrainageClassification, DrainageAdmin)
-
-
-class SoilTextureAdmin(admin.ModelAdmin):
-    class Form(forms.ModelForm):
-        class Meta:
-            fields = "__all__"
-            model = SoilTexture
-            widgets = {
-                'texture': forms.TextInput(attrs={'class': 'input-large'}),
-                'description': AutosizedTextarea(attrs={'class': 'input-xlarge',
-                                                        'style': 'width:95%'})
-            }
-
-    form = Form
-    list_display = ('texture', 'description')
-
-
-admin.site.register(SoilTexture, SoilTextureAdmin)
 
 
 class ColourAdmin(admin.ModelAdmin):
