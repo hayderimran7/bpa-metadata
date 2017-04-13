@@ -106,3 +106,37 @@ var createProjectOverviewTree = function(config) {
     }
   });
 };
+
+/*
+Sets up all the ccgtables to use datatables.net.
+This is used in legacy apps that haven't been moved to CKAN yet, should be removed when we port
+all the apps to CKAN.
+*/
+var setup_all_ccg_tables = function() {
+    var ccg_full_setup = {
+        colReorder: true,
+        stateSave: true,
+        processing: true,
+        pageLength: 100,
+        buttons: [
+            'colvis', 'copy', 'csv', 'excel', 'print'
+        ],
+        fixedHeader: true
+    };
+    var ft = $('.ccgtable').DataTable(ccg_full_setup);
+    ft.buttons().container().appendTo($('.bootstrap_buttons'), ft.table().container());
+    $('.ccgtable').addClass('table-striped table-bordered table-condensed');
+
+    var ccg_slim_setup = {
+        colReorder: true,
+        stateSave: true,
+        paging: false,
+        pageLength: 100
+    };
+    var slimtable = $('.ccgslimtable').DataTable(ccg_slim_setup);
+    $('.ccgslimtable').addClass('table-striped table-bordered table-condensed');
+}
+
+$(document).ready(function () {
+		setup_all_ccg_tables();
+});
