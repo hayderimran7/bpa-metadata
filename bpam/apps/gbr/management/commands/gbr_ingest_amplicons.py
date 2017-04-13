@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 from apps.common.models import Facility
 from apps.gbr.models import GBRSample
 from apps.gbr_amplicon.models import AmpliconSequenceFile, AmpliconSequencingMetadata
@@ -26,11 +27,10 @@ def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
     xlrd advertises support for format strings but not implemented.
-    So stuff it.
     """
-    if isinstance(val, float):
-        return u"1:10"  # yea, that's how we roll...
-    return val
+    if isinstance(val, datetime.time):
+        return '%s:%s' % (val.hour, val.minute)
+    return val.strip()
 
 
 def fix_pcr(pcr):
