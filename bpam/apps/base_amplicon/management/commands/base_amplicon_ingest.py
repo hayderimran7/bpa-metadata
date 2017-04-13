@@ -3,6 +3,7 @@
 Ingests BASE Amplicon metadata from server into database.
 """
 
+import datetime
 from django.db.utils import DataError
 from unipath import Path
 from libs.excel_wrapper import ExcelWrapper
@@ -28,11 +29,10 @@ def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
     xlrd advertises support for format strings but not implemented.
-    So stuff it.
     """
-    if isinstance(val, float):
-        return u"1:10"  # yea, that"s how we roll...
-    return val
+    if isinstance(val, datetime.time):
+        return '%s:%s' % (val.hour, val.minute)
+    return val.strip()
 
 
 def fix_pcr(pcr):
