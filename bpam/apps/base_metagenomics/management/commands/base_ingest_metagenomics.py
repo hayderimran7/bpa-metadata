@@ -46,8 +46,7 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.sample_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
-                                                                                      report))
+        logger.warning('Could not add entry BPA ID Invalid: {}'.format(report))
         return None
     return bpa_id
 

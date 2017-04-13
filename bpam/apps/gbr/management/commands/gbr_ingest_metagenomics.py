@@ -8,7 +8,7 @@ from libs import ingest_utils, user_helper
 from libs import bpa_id_utils
 from libs import management_command
 from libs.logger_utils import get_logger
-from libs.excel_wrapper import ExcelWrapper, ColumnNotFoundException
+from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher, get_password
 from unipath import Path
 
@@ -37,8 +37,7 @@ def get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, PROJECT_ID, "GBR", note="Great Barrier Reef Sample")
     if bpa_id is None:
-        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row,
-                                                                                      report))
+        logger.warning("Could not add entry BPA ID Invalid: {}".format(report))
         return None
     return bpa_id
 
@@ -432,11 +431,8 @@ def ingest():
     logger.info("Ingesting GBR metadata from {0}".format(DATA_DIR))
     for metadata_file in DATA_DIR.walk(filter=is_metadata):
         logger.info("Processing GBR Metadata file {0}".format(metadata_file))
-        try:
-            sample_data = get_gbr_sample_data(metadata_file)
-            _ingest(sample_data)
-        except ColumnNotFoundException as e:
-            logger.error("File {0} could not be ingested, column name error: {1}".format(metadata_file, e))
+        sample_data = get_gbr_sample_data(metadata_file)
+        _ingest(sample_data)
 
 
 class MD5ParsedLine(object):
