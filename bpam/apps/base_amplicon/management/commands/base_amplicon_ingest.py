@@ -51,8 +51,8 @@ def get_data(file_name):
     """
 
     field_spec = [
-        ("bpa_id", "Soil sample unique ID", lambda s: s.replace("/", ".")),
-        ("sample_extraction_id", "Sample extraction ID", None),
+        ("bpa_id", "Soil sample unique ID", ingest_utils.extract_bpa_id),
+        ("sample_extraction_id", "Sample extraction ID", ingest_utils.fix_sample_extraction_id),
         ("sequencing_facility", "Sequencing facility", None),
         ("target", "Target", lambda s: s.upper().strip()),
         ("index", "Index", lambda s: s[:12]),
@@ -72,11 +72,10 @@ def get_data(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name="Sheet1",
+                           sheet_name=None,
                            header_length=4,
                            column_name_row_index=1,
-                           formatting_info=True,
-                           pick_first_sheet=True)
+                           formatting_info=True)
 
     return wrapper.get_all()
 
@@ -86,8 +85,7 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.bpa_id, "BASE", "BASE")
     if bpa_id is None:
-        logger.warning("Could not add entry in {}, row {}, BPA ID Invalid: {}".format(entry.file_name, entry.row,
-                                                                                      report))
+        logger.warning("Could not add entry in BPA ID Invalid: {}".format(report))
         return None
     return bpa_id
 
@@ -117,6 +115,9 @@ def add_samples(data):
         metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=entry.target)
 
         metadata.sample_extraction_id = entry.sample_extraction_id
+        if metadata.sample_extraction_id is None:
+            metadata.sample_extraction_id = "%s_1" % (bpa_id.bpa_id.split('.')[-1])
+            logger.warning("no sample_extraction_id: creating from BPA_ID: %s" % (metadata.sample_extraction_id))
         metadata.name = entry.name
 
         # This may be set by older formats here, or later from md5

@@ -38,8 +38,7 @@ def _get_bpa_id(entry):
 
     bpa_id, report = bpa_id_utils.get_bpa_id(entry.sample_id, 'BASE', 'BASE', note="BASE Metagenomics Sample")
     if bpa_id is None:
-        logger.warning('Could not add entry in {}, row {}, BPA ID Invalid: {}'.format(entry.file_name, entry.row,
-                                                                                      report))
+        logger.warning('Could not add entry BPA ID Invalid: {}'.format(report))
         return None
     return bpa_id
 
@@ -50,20 +49,14 @@ class MetadataHandler(object):
         The data sets is relatively small, so make a in-memory copy to simplify some operations.
         """
 
-        def get_id(bpa_id):
-            if isinstance(bpa_id, basestring):
-                return bpa_id.strip().replace('/', '.')
-            else:
-                logger.warning('Expected a valid BPA_ID got {0}'.format(bpa_id))
-                return ''
-
         def get_extraction_id(eid):
-            if eid.strip() == "":
+            eid = ingest_utils.fix_sample_extraction_id(eid)
+            if eid is None:
                 return None
             id = eid.split('_')[1]
             return int(id)
 
-        field_spec = [('sample_id', 'Soil sample unique ID', get_id),
+        field_spec = [('sample_id', 'Soil sample unique ID', ingest_utils.extract_bpa_id),
                       ('extraction_id', 'Sample extraction ID', get_extraction_id),
                       ('insert_size_range', 'Insert size range', None),
                       ('library_construction_protocol', 'Library construction protocol', None),

@@ -135,11 +135,10 @@ def get_metadata(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name="Sheet1",
+                           sheet_name=None,
                            header_length=4,
                            column_name_row_index=1,
-                           formatting_info=True,
-                           pick_first_sheet=True)
+                           formatting_info=True)
 
     return wrapper.get_all()
 

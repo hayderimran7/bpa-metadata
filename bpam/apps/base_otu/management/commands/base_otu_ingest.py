@@ -54,10 +54,9 @@ def ingest_taxonomy(file_name):
 
     wrapper = ExcelWrapper(field_spec,
                            file_name,
-                           sheet_name='',
+                           sheet_name=None,
                            header_length=1,
-                           column_name_row_index=0,
-                           pick_first_sheet=True)
+                           column_name_row_index=0)
 
     otu_list = []
     for e in wrapper.get_all():

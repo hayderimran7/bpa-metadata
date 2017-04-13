@@ -1,8 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from libs.ingest_utils import get_date, get_bpa_id  # noqa
+from libs.ingest_utils import get_date  # noqa
+from apps.common.models import BPAUniqueID, BPAProject
 
 from ..models import Host
+
+
+def get_bpa_id(bpaid):
+    """get BPA ID"""
+
+    if bpaid is None:
+        return None
+
+    bpaid = bpaid.replace("/", ".")
+    project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
+    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+    return bpa_id
 
 
 def get_sex(sex):
