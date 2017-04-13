@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"
+      integrity="sha256-sbTY4/3NU+qqsJIrxYuJXgOTjF75tfKYOVu+DEdV+cA= sha384-wd7GF/BlZaKbO07QcE6J32f+vLIVar4Qyo7n4601xPjaOS3KuhkoMARpLOOvI4XI sha512-z7TDQTYQF39S87Lt3oi9I5RSsV4SSo7Pmwj4+FXZTXuKxzIzqP6C5uo00RyajhFwncuty57b1s1slkvpj5YLHw=="
+      crossorigin="anonymous"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"
+        integrity="sha256-lK8O5StczSYl4DweTw0KlopBgYKtiwLSq6BbSSe77Kk= sha384-3xJpTAehKTp8sw2H5VBvFFFeUdcxlxQYYyML7JGy/N8CdC+Ij8AALUibuWZRjiJq sha512-MR6zYveOuENWQVCZ6oDvrbySpOsDwGLoKxPt3p0dM/Ce3nZk+IqFgqr+qx94WtM84THJJOmGHMwazsUJn43RhQ=="
+        crossorigin="anonymous"></script>
+
+<script src="{% static 'bpam/jstree_conditionalselect_plugin.js' %}"></script>
+
+<script>
+  function recreateTable(url, nodeData) {
+    $('.apitable').DataTable().destroy();
+
+    function makeSampleDetailUrl(row) {
+      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
+      // TODO review
+      // Do we have to do this? Can't we refer to the samples always with the same id
+      // either sample_id or bpa_id?
+      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
+      var url = _.join([bpam_config.bpam_base + PO_CONF.project_name, 'sample',
+                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
+      return url;
+    }
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [{
+                'data': 'bpa_id',
+                'defaultContent': '',
+                'render': function (data, type, row) {
+                    return '<a href="' + makeSampleDetailUrl(row) + '">' + data + '</a>';
+                }
+              },
+              { 'data': 'data_type' , 'defaultContent': ''},
+              { 'data': 'description' , 'defaultContent': ''},
+              { 'data': 'omics' , 'defaultContent': ''},
+              { 'data': 'analytical_platform' , 'defaultContent': ''},
+              { 'data': 'facility' , 'defaultContent': ''},
+              { 'data': 'work_order' , 'defaultContent': ''},
+              { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+              { 'data': 'sample_submission_date' , 'defaultContent': ''},
+              { 'data': 'archive_ingestion_date' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+
+  };
+
+  function create2ndLevelNodes(data, parentType) {
+    var counts = _.get(data, parentType);
+
+    function url(status) {
+      var baseURL = _.trimEnd(_.get(PO_CONF, ['urls', parentType]), '/');
+      var parts = _.split(baseURL, '?');
+      var query = null;
+      if (parts.length == 2) {
+          baseURL = parts[0];
+          query = parts[1];
+      }
+
+      return baseURL + '/' + status + ((query === null) ? '' : ('?' + query));
+    }
+
+    function createNode(args) {
+      var name = args[0];
+      var status = args[1];
+      return {
+        text: name + ' (' +  _.get(counts, status, 0) + ')',
+        url: url(status),
+        referenceType: parentType,
+        status: status
+      }
+    }
+
+    var nodes = _.map(CONFIG.trees.secondLevelNodes, createNode);
+
+    return nodes;
+  }
+
+  var createTreeNodes = function(data) {
+    return _.map(PO_CONF.top_level_nodes, function(tl) {
+      return {
+        text: tl[0] + ' (' + _.get(data, [tl[1], 'all'], 0)  + ')',
+        children: create2ndLevelNodes(data, tl[1])
+      };
+    });
+  };
+
+  $(document).ready(function() {
+    $('.apitable').DataTable().destroy();
+    createProjectOverviewTree({
+      url: PO_CONF.project_overview_count_url,
+      parentNonSelectable: true,
+      nodeCreator: createTreeNodes,
+      tableRecreator: recreateTable
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
+        </div>
+        <div class="col-md-10">
+            <div class="bootstrap_buttons pull-right"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <br>
+    <div class="row">
+
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
+        </div>
+
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" width="100%" id="content-table">
+                <thead>
+                    <tr>
+                        <th>BPA ID</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
+                        <th>Archive Ingestion Date</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>BPA ID</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Omics Type</th>
+                        <th>Analytical Platform</th>
+                        <th>Facility</th>
+                        <th>Work Order</th>
+                        <th>Contextual Data Submission Date</th>
+                        <th>Sample Submission Date</th>
+                        <th>Archive Ingestion Date</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

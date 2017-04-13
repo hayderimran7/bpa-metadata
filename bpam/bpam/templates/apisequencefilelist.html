@@ -44,6 +44,7 @@
 </div>
 
 <script>
+  var sample_json_str = '{{ sample_json|escapejs|safe }}';
   var setup_resources_table = function(sample_obj) {
     setup_table(function() {
       var config = _.defaults({
@@ -65,15 +66,17 @@
     });
   };
 
-  set_sample(function(sample_obj) {
-      var resources = _.defaultTo(sample_obj.resources, []);
-      $(".resource_count").text(resources.length);
-      var urls = _.map(resources, function (resource_obj) {
-          return resource_obj.url;
-      });
+  if (_.trim(sample_json_str) !== '') {
+    var sample_obj = JSON.parse(sample_json_str);
+    var resources = _.defaultTo(sample_obj.resources, []);
+    $(".resource_count").text(resources.length);
+    setup_resources_table(sample_obj);
 
-      setup_resources_table(sample_obj);
+    var urls = _.map(resources, function (resource_obj) {
+        return resource_obj.url;
+    });
 
-      $(".download_links").text(urls.join("\n")); 
-  });
+    $(".download_links").text(urls.join("\n"));
+  }
+
 </script>

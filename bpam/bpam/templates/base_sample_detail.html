@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="panel panel-info">
+ <table id="info" class="table table-striped">
+    <tbody>
+      <tr>
+        <td>BPA ID</td>
+        <td id="bpa_id">{{ sample.bpa_id }}</td>
+      </tr>
+      <tr>
+        <td>Data Type</td>
+        <td id="data_type">{{ sample.data_type }}</td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td id="description">{{ sample.description }}</td>
+      </tr>
+      <tr>
+        <td>Omics Type</td>
+        <td id="omics">{{ sample.omics }}</td>
+      </tr>
+      <tr>
+        <td>Analytical Platform</td>
+        <td id="analytical_platform">{{ sample.analytical_platform }}</td>
+      </tr>
+      <tr>
+        <td>Facility</td>
+        <td id="facility">{{ sample.facility }}</td>
+      </tr>
+      <tr>
+        <td>Work Order</td>
+        <td id="work_order">{{ sample.work_order }}</td>
+      </tr>
+      <tr>
+        <td>Contextual Data Submission Date</td>
+        <td id="contextual_data_submission_date">{{ sample.contextual_data_submission_date }}</td>
+      </tr>
+      <tr>
+        <td>Sample Submission Date</td>
+        <td id="sample_submission_date">{{ sample.sample_submission_date }}</td>
+      </tr>
+      <tr>
+        <td>Archive Ingestion Date</td>
+        <td id="archive_ingestion_date">{{ sample.archive_ingestion_date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% include "apisequencefilelist.html" %}
+
+{% endblock %}

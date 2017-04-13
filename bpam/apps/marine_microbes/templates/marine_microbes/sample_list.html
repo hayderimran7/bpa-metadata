@@ -14,20 +14,30 @@
             <tr>
                 <th>Sample ID</th>
                 <th>BPA ID</th>
-                <th>Sample Type</th>
-                <th>Collection Site</th>
-                <th>Collection Date</th>
-                <th>Collection Depth</th>
+                <th>Data Type</th>
+                <th>Description</th>
+                <th>Omics Type</th>
+                <th>Analytical Platform</th>
+                <th>Facility</th>
+                <th>Work Order</th>
+                <th>Contextual Data Submission Date</th>
+                <th>Sample Submission Date</th>
+                <th>Archive Ingestion Date</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Sample ID</th>
                 <th>BPA ID</th>
-                <th>Sample Type</th>
-                <th>Collection Site</th>
-                <th>Collection Date</th>
-                <th>Collection Depth</th>
+                <th>Data Type</th>
+                <th>Description</th>
+                <th>Omics Type</th>
+                <th>Analytical Platform</th>
+                <th>Facility</th>
+                <th>Work Order</th>
+                <th>Contextual Data Submission Date</th>
+                <th>Sample Submission Date</th>
+                <th>Archive Ingestion Date</th>
             </tr>
         </tfoot>
         <tbody>
@@ -54,10 +64,15 @@
               }
             },
             { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
-            { 'data': 'sample_type' , 'defaultContent': ''},
-            { 'data': 'sample_site', 'defaultContent': '' },
-            { 'data': 'date_sampled', 'defaultContent': '' },
-            { 'data': 'depth', 'defaultContent': '' }
+            { 'data': 'data_type' , 'defaultContent': ''},
+            { 'data': 'description' , 'defaultContent': ''},
+            { 'data': 'omics' , 'defaultContent': ''},
+            { 'data': 'analytical_platform' , 'defaultContent': ''},
+            { 'data': 'facility' , 'defaultContent': ''},
+            { 'data': 'work_order' , 'defaultContent': ''},
+            { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+            { 'data': 'sample_submission_date' , 'defaultContent': ''},
+            { 'data': 'archive_ingestion_date' , 'defaultContent': ''}
         ]
       }, CONFIG.tables.ajaxConfig);
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.common.models import BPAMirror
-from apps.common.views import DebugOnlyTemplateView
+from apps.common.views import BaseSampleDetailView, DebugOnlyTemplateView
 from .models import MMSample
 from .models import MetagenomicSequenceFile
 from .models import AmpliconSequenceFile
@@ -75,8 +74,9 @@ class MetagenomicFileListView(ListView):
     template_name = 'marine_microbes/metagenomics_file_list.html'
 
 
-class SampleDetailView(TemplateView):
+class SampleDetailView(BaseSampleDetailView):
     template_name = 'marine_microbes/sample_detail.html'
+    project = 'marine_microbes'
 
 
 class CollectionSiteListView(ListView):
