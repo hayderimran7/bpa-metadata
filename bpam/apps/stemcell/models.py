@@ -1,6 +1,4 @@
-
-from django.db import models
-from apps.common.models import BPAUniqueID, SampleTrack
+from apps.common.models import SampleTrack
 
 
 class MetabolomicTrack(SampleTrack):

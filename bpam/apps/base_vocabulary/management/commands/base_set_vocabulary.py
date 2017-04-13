@@ -5,6 +5,7 @@ from libs.logger_utils import get_logger
 from apps.base_vocabulary.contextual_controlled_vocabularies import (
     AustralianSoilClassificationVocabulary,
     DrainageClassificationVocabulary,
+    BroadVegetationTypeVocabulary,
     EcologicalZoneVocabulary,
     FAOSoilClassificationVocabulary,
     HorizonClassificationVocabulary,
@@ -91,7 +92,7 @@ def _profileposition():
 def _broad_vegetation_type():
     """Set Broadvegetation Type Vocabulary """
     logger.info(_broad_vegetation_type.__doc__)
-    for vegetation, note in EcologicalZoneVocabulary:
+    for vegetation, note in BroadVegetationTypeVocabulary:
         logger.info(vegetation)
         veg, _ = BroadVegetationType.objects.get_or_create(vegetation=vegetation)
         veg.note = note

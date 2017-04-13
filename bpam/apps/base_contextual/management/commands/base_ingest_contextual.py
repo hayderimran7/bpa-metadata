@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from unipath import Path
 from libs.fetch_data import Fetcher, get_password
 from libs.excel_wrapper import ExcelWrapper
@@ -98,7 +100,7 @@ def get_data(file_name):
                   ('vegetation_dominant_trees', 'Vegetation Dom. Trees (%)', None),
                   ('elevation', 'Elevation ()', ingest_utils.get_clean_number),
                   ('slope', 'Slope (%)', None),
-                  ('slope_aspect', u'Slope Aspect (Direction or degrees; e.g., NW or 315°)', None),
+                  ('slope_aspect', re.compile(r'^slope aspect .*'), None),
                   ('profile_position', 'Profile Position controlled vocab (5)', None),
                   ('australian_soil_classification', 'Australian Soil Classification controlled vocab (6)', None),
                   ('fao', 'FAO soil classification controlled vocab (7)', None),
@@ -121,11 +123,11 @@ def get_data(file_name):
                   ('soil_colour', 'Color controlled vocab (10)', None),
                   ('gravel', 'Gravel (%) - ( >2.0 mm)', None),
                   ('texture', 'Texture ()', ingest_utils.get_clean_float),
-                  ('course_sand', u'Course Sand (%) (200-2000 µm)', ingest_utils.get_clean_float),
-                  ('fine_sand', u'Fine Sand (%) - (20-200 µm)', ingest_utils.get_clean_float),
+                  ('course_sand', re.compile(r'^course sand .*'), ingest_utils.get_clean_float),
+                  ('fine_sand', re.compile(r'^fine sand .*'), ingest_utils.get_clean_float),
                   ('sand', 'Sand (%)', ingest_utils.get_clean_float),
-                  ('silt', u'Silt  (%) (2-20 µm)', ingest_utils.get_clean_float),
-                  ('clay', u'Clay (%) (<2 µm)', ingest_utils.get_clean_float),
+                  ('silt', re.compile(r'^silt .*'), ingest_utils.get_clean_float),
+                  ('clay', re.compile(r'^clay .*'), ingest_utils.get_clean_float),
                   # soil chemical
                   ('ammonium_nitrogen', 'Ammonium Nitrogen (mg/Kg)', get_float_or_sentinal),
                   ('nitrate_nitrogen', 'Nitrate Nitrogen (mg/Kg)', get_float_or_sentinal),
@@ -156,7 +158,7 @@ def get_data(file_name):
     return wrapper.get_all()
 
 
-def get_land_use(land_use_str, row):
+def get_land_use(land_use_str):
     """
     Translate the land use string to a the landuse controlled vocabulary
     """
@@ -165,7 +167,7 @@ def get_land_use(land_use_str, row):
     try:
         return LandUse.objects.get(description__iexact=land_use_str)
     except LandUse.DoesNotExist:
-        logger.warning('Land Use description "{0}" on line {1} not known'.format(land_use_str, row))
+        logger.warning('Land Use description "{0}" not known'.format(land_use_str))
         return None
 
 
@@ -177,7 +179,7 @@ def get_general_ecological_zone(entry):
     try:
         return GeneralEcologicalZone.objects.get(description__iexact=zone_str)
     except GeneralEcologicalZone.DoesNotExist:
-        logger.warning('General Ecological Zone "{0}" on line {1} not known'.format(zone_str, entry.row))
+        logger.warning('General Ecological Zone "{0}" not known'.format(zone_str))
         return None
 
 
@@ -189,30 +191,29 @@ def get_vegetation_type(entry):
     try:
         return BroadVegetationType.objects.get(vegetation__iexact=veg_str)
     except BroadVegetationType.DoesNotExist:
-        logger.warning('Broad Vegetation Type "{0}" on line {1} not known'.format(veg_str, entry.row))
+        logger.warning('Broad Vegetation Type "{0}" not known'.format(veg_str))
         return None
 
 
 def get_australian_soil_classification(entry):
-    classifcation_str = entry.australian_soil_classification
-    if classifcation_str == '':
+    classification_str = entry.australian_soil_classification
+    if classification_str == '':
         return None
     try:
-        return AustralianSoilClassification.objects.get(classification__iexact=classifcation_str)
+        return AustralianSoilClassification.objects.get(classification__iexact=classification_str)
     except AustralianSoilClassification.DoesNotExist:
-        logger.warning('Australian Soil Type classification "{0}" on line {1} not known'.format(classifcation_str,
-                                                                                                entry.row))
+        logger.warning('Australian Soil Type classification "{0}" not known'.format(classification_str))
         return None
 
 
 def get_fao_soil_classification(entry):
-    classifcation_str = entry.fao
-    if classifcation_str == '':
+    classification_str = entry.fao
+    if classification_str == '':
         return None
     try:
-        return FAOSoilClassification.objects.get(classification__iexact=classifcation_str)
+        return FAOSoilClassification.objects.get(classification__iexact=classification_str)
     except FAOSoilClassification.DoesNotExist:
-        logger.warning('FAO Soil Type classification "{0}" on line {1} not known'.format(classifcation_str, entry.row))
+        logger.warning('FAO Soil Type classification "{0}" not known'.format(classification_str))
         return None
 
 
@@ -223,7 +224,7 @@ def get_profile_position(entry):
     try:
         return ProfilePosition.objects.get(position__iexact=profile_str)
     except ProfilePosition.DoesNotExist:
-        logger.warning('Profile Position "{0}" on line {1} not known'.format(profile_str, entry.row))
+        logger.warning('Profile Position "{0}" not known'.format(profile_str))
         return None
 
 
@@ -234,7 +235,7 @@ def get_soil_colour(entry):
     try:
         return SoilColour.objects.get(code=colour_str)
     except SoilColour.DoesNotExist:
-        logger.warning('Soil Colour "{0}" on line {1} not known'.format(colour_str, entry.row))
+        logger.warning('Soil Colour "{0}" not known'.format(colour_str))
         return None
 
 
@@ -245,7 +246,7 @@ def get_tillage(entry):
     try:
         return TillageType.objects.get(tillage__iexact=tillage_str)
     except TillageType.DoesNotExist:
-        logger.warning('Tillage Type "{0}" on line {1} not known'.format(tillage_str, entry.row))
+        logger.warning('Tillage Type "{0}" not known'.format(tillage_str))
         return None
 
 
@@ -273,8 +274,8 @@ def get_site(entry):
         site.slope_aspect = entry.slope_aspect
 
         # controlled vocabularies
-        site.current_land_use = get_land_use(entry.current_land_use, entry.row)
-        site.broad_land_use = get_land_use(entry.broad_land_use, entry.row)
+        site.current_land_use = get_land_use(entry.current_land_use)
+        site.broad_land_use = get_land_use(entry.broad_land_use)
         site.general_ecological_zone = get_general_ecological_zone(entry)
         site.vegetation_type = get_vegetation_type(entry)
         site.soil_type_australian_classification = get_australian_soil_classification(entry)
@@ -283,7 +284,7 @@ def get_site(entry):
         site.profile_position = get_profile_position(entry)
 
         # history
-        site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use, entry.row)
+        site.immediate_previous_land_use = get_land_use(entry.immediate_previous_land_use)
         site.date_since_change_in_land_use = entry.date_since_change_in_land_use
         site.crop_rotation_1 = entry.crop_rotation_1
         site.crop_rotation_2 = entry.crop_rotation_2

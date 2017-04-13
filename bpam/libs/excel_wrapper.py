@@ -11,27 +11,15 @@ being the fist column of the fieldspec, the value are found in the column specis
 as mangled by the provided method.
 '''
 
-import os
 import datetime
 from collections import namedtuple
 
+import os
 import xlrd
+
 import logger_utils
 
 logger = logger_utils.get_logger(__name__)
-
-
-class ColumnNotFoundException(Exception):
-    column_name = 'Not Set'
-
-    def __init__(self, column_name):
-        self.column_name = column_name
-
-    def __str__(self):
-        return 'Column [{0}] not found'.format(self.column_name)
-
-    def __repr__(self):
-        return '{}({})'.format(type(self).__name__, self.column_name)
 
 
 def _stringify(s):
@@ -64,31 +52,44 @@ class ExcelWrapper(object):
                  column_name_row_index=0,
                  ignore_date=False,
                  formatting_info=False,
-                 pick_first_sheet=False):
+                 additional_context=None):
 
         self.ignore_date = ignore_date  # ignore xlrd's attempt at date conversion
         self.file_name = file_name
-        self.sheet_name = sheet_name
         self.header_length = header_length
         self.column_name_row_index = column_name_row_index
-        self.field_spec = field_spec
+        self.field_spec = ExcelWrapper._pad_field_spec(field_spec)
+        self.additional_context = additional_context
 
         self.workbook = xlrd.open_workbook(file_name, formatting_info=False)  # not implemented
-        if pick_first_sheet:
+        if sheet_name is None:
             self.sheet = self.workbook.sheet_by_index(0)
         else:
-            self.sheet = self.workbook.sheet_by_name(self.sheet_name)
+            self.sheet = self.workbook.sheet_by_name(sheet_name)
 
         self.field_names = self._set_field_names()
         self.missing_headers = []
         self.header, self.name_to_column_map = self.set_name_to_column_map()
         self.name_to_func_map = self.set_name_to_func_map()
 
+    @classmethod
+    def _pad_field_spec(cls, spec):
+        # attribute, column_name, func, is_optional
+        new_spec = []
+        for tpl in spec:
+            if len(tpl) == 2:
+                new_spec.append(tpl + (None, False))
+            elif len(tpl) == 3:
+                new_spec.append(tpl + (False,))
+            else:
+                new_spec.append(tpl)
+        return new_spec
+
     def _set_field_names(self):
         ''' sets field name list '''
 
         names = []
-        for attribute, _, _ in self.field_spec:
+        for attribute, _, _, _ in self.field_spec:
             if attribute in names:
                 logger.error('Attribute {0} is listed more than once in the field specification'.format(attribute))
             names.append(attribute)
@@ -97,9 +98,18 @@ class ExcelWrapper(object):
     def set_name_to_column_map(self):
         ''' maps the named field to the actual column in the spreadsheet '''
 
-        header = [str(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
+        def strip_unicode(s):
+            if type(s) is not str and type(s) is not unicode:
+                logger.error("header is not a string: %s `%s'" % (type(s), repr(s)))
+                return str(s)
+            return ''.join([t for t in s if ord(t) < 128])
+
+        header = [strip_unicode(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
 
         def find_column(column_name):
+            # if has the 'match' attribute, it's a regexp
+            if hasattr(column_name, 'match'):
+                return find_column_re(column_name)
             col_index = -1
             try:
                 col_index = header.index(column_name.strip().lower())
@@ -107,10 +117,18 @@ class ExcelWrapper(object):
                 pass
             return col_index
 
+        def find_column_re(column_name_re):
+            for idx, name in enumerate(header):
+                if column_name_re.match(name):
+                    return idx
+            return -1
+
         cmap = {}
-        for attribute, column_name, _ in self.field_spec:
+        for attribute, column_name, _, is_optional in self.field_spec:
             col_index = -1
-            # try a few different ways to match column names
+            col_descr = column_name
+            if hasattr(column_name, 'match'):
+                col_descr = column_name.pattern
             if type(column_name) == tuple:
                 for c, _name in enumerate(column_name):
                     col_index = find_column(_name)
@@ -123,7 +141,8 @@ class ExcelWrapper(object):
                 cmap[attribute] = col_index
             else:
                 self.missing_headers.append(column_name)
-                logger.warning('Column {} not found in {} '.format(column_name, self.file_name))
+                if not is_optional:
+                    logger.warning('Column `{}` not found in `{}` (columns are: {})'.format(col_descr, os.path.basename(self.file_name), [str(t) for t in header]))
                 cmap[attribute] = None
 
         return header, cmap
@@ -132,7 +151,7 @@ class ExcelWrapper(object):
         ''' Map the spec fields to their corresponding functions '''
 
         function_map = {}
-        for attribute, _, func in self.field_spec:
+        for attribute, _, func, _ in self.field_spec:
             function_map[attribute] = func
         return function_map
 
@@ -150,8 +169,28 @@ class ExcelWrapper(object):
 
     def _get_rows(self):
         ''' Yields sequence of cells '''
+
+        merge_redirect = {}
+        for crange in self.sheet.merged_cells:
+            rlo, rhi, clo, chi = crange
+            source_coords = (rlo, clo)
+            for rowx in xrange(rlo, rhi):
+                for colx in xrange(clo, chi):
+                    if rowx == rlo and colx == clo:
+                        continue
+                    merge_redirect[(rowx, colx)] = source_coords
+
         for row_idx in xrange(self.header_length, self.sheet.nrows):
-            yield self.sheet.row(row_idx)
+            row = self.sheet.row(row_idx)
+            merged_row = []
+            for colx, val in enumerate(row):
+                coord = (row_idx, colx)
+                if coord in merge_redirect:
+                    merge_row, merge_col = merge_redirect[coord]
+                    merged_row.append(self.sheet.row(merge_row)[merge_col])
+                else:
+                    merged_row.append(val)
+            yield merged_row
 
     def get_date_time(self, i, cell):
         ''' the cell contains a float and pious hope, get a date, if you dare. '''
@@ -178,15 +217,16 @@ class ExcelWrapper(object):
         return val
 
     def get_all(self, typname='DataRow'):
-        ''' Returns all rows for the sheet as named tuples. '''
+        '''Returns all rows for the sheet as namedtuple instances. Filters out any exact duplicates.'''
 
         # row is added so we know where in the spreadsheet this came from
-        typ = namedtuple(typname, ['row', 'file_name'] + [n for n in self.field_names])
+        typ_attrs = [n for n in self.field_names]
+        if self.additional_context is not None:
+            typ_attrs += self.additional_context.keys()
+        typ = namedtuple(typname, typ_attrs)
 
-        for idx, row in enumerate(self._get_rows()):
-            row_count = idx + self.header_length + 1
-            tpl = [row_count, os.path.basename(self.file_name)
-                   ]  # The original row pos in sheet, + 1 as excel row indexing start at 1
+        for row in self._get_rows():
+            tpl = []
             for name in self.field_names:
                 i = self.name_to_column_map[name]
                 # i is None if the column specified was not found, in that case,
@@ -207,4 +247,6 @@ class ExcelWrapper(object):
                 if func is not None:
                     val = func(val)
                 tpl.append(val)
+            if self.additional_context:
+                tpl += self.additional_context.values()
             yield typ(*tpl)
