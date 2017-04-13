@@ -194,8 +194,6 @@ BroadVegetationTypeVocabulary = (('Marsh/bog', ''),
                                  ('Forest', ''),
                                  ('Savannah', ''),
                                  ('Dune', ''),
-                                 ('Moss and lichen', ''),
-                                 ('Mangrove', ''),
                                  ('Other', ''), )
 
 # 5) Profile position
