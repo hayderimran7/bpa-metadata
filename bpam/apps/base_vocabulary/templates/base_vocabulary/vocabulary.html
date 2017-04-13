@@ -17,7 +17,6 @@
 
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#soil-colour" aria-controls="home" role="tab" data-toggle="tab">Soil Colour</a></li>
-            <li role="presentation"><a href="#soil-texture" aria-controls="profile" role="tab" data-toggle="tab">Soil Texture</a></li>
             <li role="presentation"><a href="#vegetation-type" aria-controls="messages" role="tab" data-toggle="tab">Broad Vegetation Type</a></li>
             <li role="presentation"><a href="#eco-zone" aria-controls="messages" role="tab" data-toggle="tab">General Ecological Zone</a></li>
             <li role="presentation"><a href="#tillage" aria-controls="messages" role="tab" data-toggle="tab">Tillage</a></li>
@@ -52,31 +51,6 @@
                 </div>
 
                 <a href="{% url 'base_vocabulary:soilcolour_rest_api' %}">
-                    <span class="glyphicon glyphicon-cog"></span>API
-                </a>
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="soil-texture">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Soil Texture</h3>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <th>Texture</th>
-                                <th>Description</th>
-                            </tr>
-                            {% for stexture in soil_texture %}
-                            <tr>
-                                <td> {{ stexture.texture }} </td>
-                                <td> {{ stexture.description }} </td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-                <a href="{% url 'base_vocabulary:soiltexture_rest_api' %}">
                     <span class="glyphicon glyphicon-cog"></span>API
                 </a>
             </div>
