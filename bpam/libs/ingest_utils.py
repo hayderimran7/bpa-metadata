@@ -19,6 +19,29 @@ logger = logger_utils.get_logger(__name__)
 # list of chars to delete
 remove_letters_map = dict((ord(char), None) for char in string.punctuation + string.ascii_letters)
 
+BPA_PREFIX = "102.100.100."
+bpa_id_re = re.compile(r'^102\.100\.100[/\.](\d+)$')
+bpa_id_abbrev_re = re.compile(r'^(\d+)$')
+
+
+def extract_bpa_id(s):
+    "parse a BPA ID, with or without the prefix, returning with the prefix"
+    if isinstance(s, float):
+        s = int(s)
+    if isinstance(s, int):
+        s = str(s)
+    # if someone has appended extraction number, remove it
+    if '_' in s:
+        s = s.rsplit('_', 1)[0]
+    m = bpa_id_re.match(s)
+    if m:
+        return BPA_PREFIX + m.groups()[0]
+    m = bpa_id_abbrev_re.match(s)
+    if m:
+        return BPA_PREFIX + m.groups()[0]
+    logger.warning("unable to parse BPA ID: `%s'" % s)
+    return None
+
 
 def get_clean_number(val, default=None, debug=False):
     '''
@@ -176,18 +199,6 @@ def get_date(dt):
 
     logger.error('Date `{}` is not in a supported format'.format(dt))
     return None
-
-
-def get_bpa_id(bpaid):
-    """get BPA ID"""
-
-    if bpaid is None:
-        return None
-
-    bpaid = bpaid.replace("/", ".")
-    project, _ = BPAProject.objects.get_or_create(key="SEPSIS")
-    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
-    return bpa_id
 
 
 def pretty_print_namedtuple(named_tuple):

@@ -25,6 +25,17 @@ BPA_ID = "102.100.100."
 BASE_DESCRIPTION = "BASE"
 
 
+def fix_sample_extraction_id(val):
+    if val is None:
+        return val
+    if type(val) is float:
+        return '%s_1' % (int(val))
+    val = unicode(val).strip().replace('-', '_')
+    if val == '':
+        return None
+    return val
+
+
 def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
@@ -51,8 +62,8 @@ def get_data(file_name):
     """
 
     field_spec = [
-        ("bpa_id", "Soil sample unique ID", lambda s: s.replace("/", ".")),
-        ("sample_extraction_id", "Sample extraction ID", None),
+        ("bpa_id", "Soil sample unique ID", ingest_utils.extract_bpa_id),
+        ("sample_extraction_id", "Sample extraction ID", fix_sample_extraction_id),
         ("sequencing_facility", "Sequencing facility", None),
         ("target", "Target", lambda s: s.upper().strip()),
         ("index", "Index", lambda s: s[:12]),
@@ -117,6 +128,9 @@ def add_samples(data):
         metadata, created = AmpliconSequencingMetadata.objects.get_or_create(bpa_id=bpa_id, target=entry.target)
 
         metadata.sample_extraction_id = entry.sample_extraction_id
+        if metadata.sample_extraction_id is None:
+            metadata.sample_extraction_id = "%s_1" % (bpa_id.bpa_id.split('.')[-1])
+            logger.warning("no sample_extraction_id: creating from BPA_ID: %s" % (metadata.sample_extraction_id))
         metadata.name = entry.name
 
         # This may be set by older formats here, or later from md5

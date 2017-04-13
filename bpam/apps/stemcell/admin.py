@@ -5,7 +5,7 @@ from import_export import resources, fields, widgets
 
 from apps.common.admin import BPAImportExportModelAdmin
 from apps.common.models import BPAUniqueID
-from libs.ingest_utils import get_date, get_bpa_id
+from libs.ingest_utils import get_date
 
 from .models import (
     MetabolomicTrack,
@@ -14,6 +14,18 @@ from .models import (
     SmallRNATrack,
     SampleTrack,
     TranscriptomeTrack)
+
+
+def get_bpa_id(bpaid):
+    """get BPA ID"""
+
+    if bpaid is None:
+        return None
+
+    bpaid = bpaid.replace("/", ".")
+    project, _ = BPAProject.objects.get_or_create(key="STEMCELL")
+    bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
+    return bpa_id
 
 
 class DateField(fields.Field):

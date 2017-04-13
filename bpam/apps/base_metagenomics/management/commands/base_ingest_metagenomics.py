@@ -31,6 +31,14 @@ METADATA_PATH = 'base/tracking/metagenomics/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
+def fix_sample_extraction_id(val):
+    if val is None:
+        return val
+    if type(val) is float:
+        return '%s_1' % (int(val))
+    return unicode(val).strip().replace('-', '_')
+
+
 def _get_bpa_id(entry):
     """
     Get or make BPA ID
@@ -50,20 +58,14 @@ class MetadataHandler(object):
         The data sets is relatively small, so make a in-memory copy to simplify some operations.
         """
 
-        def get_id(bpa_id):
-            if isinstance(bpa_id, basestring):
-                return bpa_id.strip().replace('/', '.')
-            else:
-                logger.warning('Expected a valid BPA_ID got {0}'.format(bpa_id))
-                return ''
-
         def get_extraction_id(eid):
+            eid = fix_sample_extraction_id(eid)
             if eid.strip() == "":
                 return None
             id = eid.split('_')[1]
             return int(id)
 
-        field_spec = [('sample_id', 'Soil sample unique ID', get_id),
+        field_spec = [('sample_id', 'Soil sample unique ID', ingest_utils.extract_bpa_id),
                       ('extraction_id', 'Sample extraction ID', get_extraction_id),
                       ('insert_size_range', 'Insert size range', None),
                       ('library_construction_protocol', 'Library construction protocol', None),
