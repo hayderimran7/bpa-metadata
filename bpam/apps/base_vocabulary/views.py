@@ -1,7 +1,7 @@
 from rest_framework import generics
 from django.views.generic import TemplateView
 
-from .models import (LandUse, SoilTexture, SoilColour, GeneralEcologicalZone, BroadVegetationType, TillageType,
+from .models import (LandUse, SoilColour, GeneralEcologicalZone, BroadVegetationType, TillageType,
                      HorizonClassification, AustralianSoilClassification, FAOSoilClassification, DrainageClassification,
                      ProfilePosition)
 
@@ -14,7 +14,6 @@ class VocabularyView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(VocabularyView, self).get_context_data(**kwargs)
         context['land_use'] = LandUse.objects.all()
-        context['soil_texture'] = SoilTexture.objects.all()
         context['soil_colour'] = SoilColour.objects.all()
         context['ecozone'] = GeneralEcologicalZone.objects.all()
         context['vegetation'] = BroadVegetationType.objects.all()
@@ -30,11 +29,6 @@ class VocabularyView(TemplateView):
 class LandUseReadView(generics.ListAPIView):
     queryset = LandUse.objects.all()
     serializer_class = serializers.LandUseSerializer
-
-
-class SoilTextureReadView(generics.ListAPIView):
-    queryset = SoilTexture.objects.all()
-    serializer_class = serializers.SoilTextureSerializer
 
 
 class SoilColourReadView(generics.ListAPIView):

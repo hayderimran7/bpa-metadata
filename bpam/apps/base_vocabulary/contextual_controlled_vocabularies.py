@@ -345,10 +345,3 @@ DrainageClassificationVocabulary = (
     ('Very poorly drained',
      'Water is removed from the soil so slowly that free water remains at or on the surface during most of the growing season. Unless the soil is artificially drained, most mesophytic crops cannot be grown. Very poorly drained soils are commonly level or depressed and are frequently ponded. Yet in rare cases, where rainfall is high and nearly continuous, they can have moderate or high slope gradients.'
      ), )
-
-SoilTextureVocabulary = (('Clay', '<2 µm'),
-                         ('Silt', '2-20 µm'),
-                         ('Fine sand', '20-200 µm'),
-                         ('Course sand', '200-2000 µm'),
-                         ('Sand', 'Total of fine and coarse sand'),
-                         ('Gravel', '>2.0 mm'), )

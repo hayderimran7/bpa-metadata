@@ -23,20 +23,12 @@ from apps.base_vocabulary.models import (
     LandUse,
     ProfilePosition,
     SoilColour,
-    SoilTexture,
     TillageType)
 
 
 # import logging
 # logging.basicConfig(level=logging.INFO)
 logger = get_logger(__name__)
-
-
-def _texture():
-    """Set Soil texture Classification"""
-    logger.info(_texture.__doc__)
-    for texture, description in SoilColourVocabulary:
-        SoilTexture.objects.get_or_create(texture=texture, description=description)
 
 
 def _drainage():
@@ -147,4 +139,3 @@ class Command(BaseCommand):
         _tillage()
         _soilcolour()
         _drainage()
-        _texture()
