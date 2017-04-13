@@ -9,7 +9,6 @@ from libs.ingest_utils import get_date
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.contrib.gis.geos import Point
 from django.http import HttpResponse
-from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.formats import base_formats
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin

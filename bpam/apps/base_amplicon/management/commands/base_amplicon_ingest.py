@@ -25,17 +25,6 @@ BPA_ID = "102.100.100."
 BASE_DESCRIPTION = "BASE"
 
 
-def fix_sample_extraction_id(val):
-    if val is None:
-        return val
-    if type(val) is float:
-        return '%s_1' % (int(val))
-    val = unicode(val).strip().replace('-', '_')
-    if val == '':
-        return None
-    return val
-
-
 def fix_dilution(val):
     """
     Some source xcell files ship with the dilution column type as time.
@@ -63,7 +52,7 @@ def get_data(file_name):
 
     field_spec = [
         ("bpa_id", "Soil sample unique ID", ingest_utils.extract_bpa_id),
-        ("sample_extraction_id", "Sample extraction ID", fix_sample_extraction_id),
+        ("sample_extraction_id", "Sample extraction ID", ingest_utils.fix_sample_extraction_id),
         ("sequencing_facility", "Sequencing facility", None),
         ("target", "Target", lambda s: s.upper().strip()),
         ("index", "Index", lambda s: s[:12]),

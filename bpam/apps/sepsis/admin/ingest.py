@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from libs.ingest_utils import get_date  # noqa
+from apps.common.models import BPAUniqueID, BPAProject
 
 from ..models import Host
 

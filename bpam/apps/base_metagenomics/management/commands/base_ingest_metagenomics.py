@@ -31,14 +31,6 @@ METADATA_PATH = 'base/tracking/metagenomics/'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 
-def fix_sample_extraction_id(val):
-    if val is None:
-        return val
-    if type(val) is float:
-        return '%s_1' % (int(val))
-    return unicode(val).strip().replace('-', '_')
-
-
 def _get_bpa_id(entry):
     """
     Get or make BPA ID
@@ -58,8 +50,8 @@ class MetadataHandler(object):
         """
 
         def get_extraction_id(eid):
-            eid = fix_sample_extraction_id(eid)
-            if eid.strip() == "":
+            eid = ingest_utils.fix_sample_extraction_id(eid)
+            if eid is None:
                 return None
             id = eid.split('_')[1]
             return int(id)

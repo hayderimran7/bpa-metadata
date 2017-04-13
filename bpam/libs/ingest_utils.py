@@ -5,7 +5,6 @@ import json
 
 import logger_utils
 import datetime
-from apps.common.models import BPAUniqueID, BPAProject
 
 from django.utils.encoding import smart_text
 
@@ -22,6 +21,17 @@ remove_letters_map = dict((ord(char), None) for char in string.punctuation + str
 BPA_PREFIX = "102.100.100."
 bpa_id_re = re.compile(r'^102\.100\.100[/\.](\d+)$')
 bpa_id_abbrev_re = re.compile(r'^(\d+)$')
+
+
+def fix_sample_extraction_id(val):
+    if val is None:
+        return val
+    if type(val) is float:
+        return '%s_1' % (int(val))
+    val = unicode(val).strip().replace('-', '_')
+    if val == '':
+        return None
+    return val
 
 
 def extract_bpa_id(s):

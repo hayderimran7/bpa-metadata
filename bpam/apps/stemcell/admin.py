@@ -4,7 +4,7 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 
 from apps.common.admin import BPAImportExportModelAdmin
-from apps.common.models import BPAUniqueID
+from apps.common.models import BPAUniqueID, BPAProject
 from libs.ingest_utils import get_date
 
 from .models import (
