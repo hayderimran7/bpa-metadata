@@ -21,6 +21,8 @@ remove_letters_map = dict((ord(char), None) for char in string.punctuation + str
 BPA_PREFIX = "102.100.100."
 bpa_id_re = re.compile(r'^102\.100\.100[/\.](\d+)$')
 bpa_id_abbrev_re = re.compile(r'^(\d+)$')
+# this format of BPA ID has been used in older projects (e.g. BASE)
+bpa_id_abbrev_2_re = re.compile(r'^102\.100\.\.100[/\.](\d+)$')
 
 
 def fix_sample_extraction_id(val):
@@ -41,12 +43,22 @@ def extract_bpa_id(s):
     if isinstance(s, int):
         s = str(s)
     # if someone has appended extraction number, remove it
+    s = s.strip()
+    if s == '':
+        return None
+    # handle a sample extraction id tacked on the end with an underscore
     if '_' in s:
         s = s.rsplit('_', 1)[0]
+    # handle a sample extraction id tacked on the end with a hyphen
+    if s.endswith('-1') or s.endswith('-2') or s.endswith('-3'):
+        s = s[:-2]
     m = bpa_id_re.match(s)
     if m:
         return BPA_PREFIX + m.groups()[0]
     m = bpa_id_abbrev_re.match(s)
+    if m:
+        return BPA_PREFIX + m.groups()[0]
+    m = bpa_id_abbrev_2_re.match(s)
     if m:
         return BPA_PREFIX + m.groups()[0]
     logger.warning("unable to parse BPA ID: `%s'" % s)
