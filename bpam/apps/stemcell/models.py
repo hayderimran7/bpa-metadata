@@ -1,7 +1,18 @@
+from django.db import models
+
 from apps.common.models import SampleTrack
 
 
-class MetabolomicTrack(SampleTrack):
+class StemcellSampleTrack(SampleTrack):
+    data_set = models.CharField('Data Set', max_length=100, blank=True, null=True)
+    cell_type = models.CharField('Cell Type', max_length=100, blank=True, null=True)
+    state = models.CharField('Stem Cell State', max_length=100, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class MetabolomicTrack(StemcellSampleTrack):
     track_type = 'Metabolomic'
 
     class Meta:
@@ -9,7 +20,7 @@ class MetabolomicTrack(SampleTrack):
         verbose_name_plural = verbose_name
 
 
-class ProteomicTrack(SampleTrack):
+class ProteomicTrack(StemcellSampleTrack):
     track_type = 'Proteomic'
 
     class Meta:
@@ -17,7 +28,7 @@ class ProteomicTrack(SampleTrack):
         verbose_name_plural = verbose_name
 
 
-class SingleCellRNASeqTrack(SampleTrack):
+class SingleCellRNASeqTrack(StemcellSampleTrack):
     track_type = 'Single Cell RNA'
 
     class Meta:
@@ -25,7 +36,7 @@ class SingleCellRNASeqTrack(SampleTrack):
         verbose_name_plural = verbose_name
 
 
-class SmallRNATrack(SampleTrack):
+class SmallRNATrack(StemcellSampleTrack):
     track_type = 'Small RNA'
 
     class Meta:
@@ -33,7 +44,7 @@ class SmallRNATrack(SampleTrack):
         verbose_name_plural = verbose_name
 
 
-class TranscriptomeTrack(SampleTrack):
+class TranscriptomeTrack(StemcellSampleTrack):
     track_type = 'Transcriptome'
 
     class Meta:

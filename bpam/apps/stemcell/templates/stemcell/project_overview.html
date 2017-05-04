@@ -13,7 +13,6 @@
 
 {% block extra_head %}
 {{ block.super }}
-
 <script>
   var PO_CONF = {
     project_name: 'stemcell',
@@ -33,6 +32,126 @@
         ['Transcriptomics', 'stemcells-transcriptomics']
     ]
   };
-</script>
 
+  function recreateTable(url, nodeData) {
+    destroyTable();
+
+    function makeSampleDetailUrl(row) {
+      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
+      // TODO review
+      // Do we have to do this? Can't we refer to the samples always with the same id
+      // either sample_id or bpa_id?
+      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
+      var url = _.join([bpam_config.bpam_base + PO_CONF.project_name, 'sample',
+                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
+      return url;
+    }
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [
+              { 'data': 'data_set' , 'defaultContent': ''},
+              {
+                'data': 'bpa_id',
+                'defaultContent': '',
+                'render': function (data, type, row) {
+                    return '<a href="' + makeSampleDetailUrl(row) + '">' + data + '</a>';
+                }
+              },
+              { 'data': 'number_samples' , 'defaultContent': ''},
+              { 'data': 'submitter' , 'defaultContent': ''},
+              // { 'data': 'research_group' , 'defaultContent': ''},
+              { 'data': 'cell_type' , 'defaultContent': ''},
+              { 'data': 'state' , 'defaultContent': ''},
+              { 'data': 'work_order' , 'defaultContent': ''},
+              { 'data': 'omics' , 'defaultContent': ''},
+              { 'data': 'analytical_platform' , 'defaultContent': ''},
+              { 'data': 'facility' , 'defaultContent': ''},
+              { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+              { 'data': 'sample_submission_date' , 'defaultContent': ''},
+              { 'data': 'data_generated' , 'defaultContent': ''},
+              { 'data': 'archive_ingestion_date' , 'defaultContent': ''},
+              { 'data': 'ticket' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+
+  };
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
+        </div>
+        <div class="col-md-10">
+            <div class="bootstrap_buttons pull-right"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <br>
+    <div class="row">
+
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
+        </div>
+
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" id="content-table">
+              <thead>
+                  <tr>
+                      <th>Data Set ID</th>
+                      <th>BPA ID</th>
+                      <th>Total Samples</th>
+                      <th>Submitter</th>
+                      <th>Stem Cell Type</th>
+                      <th>Stem Cell State</th>
+                      <th>Work Order</th>
+                      <th>Omics Type</th>
+                      <th>Analytical Platform</th>
+                      <th>Facility</th>
+                      <th>Contextual Data Submission Date</th>
+                      <th>Sample Submission Date</th>
+                      <th>Data Generated</th>
+                      <th>Archive Ingestion Date</th>
+                      <th>BPAOPS</th>
+                 </tr>
+              </thead>
+              <tfoot>
+                  <tr>
+                      <th>Data Set ID</th>
+                      <th>BPA ID</th>
+                      <th>Total Samples</th>
+                      <th>Submitter</th>
+                      <th>Stem Cell Type</th>
+                      <th>Stem Cell State</th>
+                      <th>Work Order</th>
+                      <th>Omics Type</th>
+                      <th>Analytical Platform</th>
+                      <th>Facility</th>
+                      <th>Contextual Data Submission Date</th>
+                      <th>Sample Submission Date</th>
+                      <th>Data Generated</th>
+                      <th>Archive Ingestion Date</th>
+                      <th>BPAOPS</th>
+                 </tr>
+              </tfoot>
+              <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
