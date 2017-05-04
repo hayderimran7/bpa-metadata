@@ -14,8 +14,14 @@
 <script src="{% static 'bpam/jstree_conditionalselect_plugin.js' %}"></script>
 
 <script>
+  function destroyTable() {
+    if ($.fn.dataTable.isDataTable('.apitable')) {
+      $('.apitable').DataTable().destroy();
+    }
+  }
+
   function recreateTable(url, nodeData) {
-    $('.apitable').DataTable().destroy();
+    destroyTable();
 
     function makeSampleDetailUrl(row) {
       var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
@@ -99,7 +105,7 @@
   };
 
   $(document).ready(function() {
-    $('.apitable').DataTable().destroy();
+    destroyTable();
     createProjectOverviewTree({
       url: PO_CONF.project_overview_count_url,
       parentNonSelectable: true,
