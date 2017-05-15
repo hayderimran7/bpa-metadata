@@ -7,6 +7,7 @@ class StemcellSampleTrack(SampleTrack):
     data_set_id = models.CharField('Data Set ID', max_length=100, blank=True, null=True)
     cell_type = models.CharField('Cell Type', max_length=100, blank=True, null=True)
     state = models.CharField('Stem Cell State', max_length=100, blank=True, null=True)
+    group = models.CharField('Research Group', max_length=100, blank=True, null=True)
 
     class Meta:
         abstract = True
