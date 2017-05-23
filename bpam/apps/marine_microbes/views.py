@@ -53,14 +53,6 @@ class AmpliconDetailView(DetailView):
 class MMView(DebugOnlyTemplateView):
     template_name = 'marine_microbes/index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(MMView, self).get_context_data(**kwargs)
-        context['sample_count'] = MMSample.objects.count()
-        context['collection_site_count'] = MMSite.objects.count()
-        context['metagenomics_file_count'] = MetagenomicSequenceFile.objects.count()
-        context['amplicon_count'] = AmpliconSequenceFile.objects.count()
-        return context
-
 
 class SampleListView(ListView):
     model = MMSample

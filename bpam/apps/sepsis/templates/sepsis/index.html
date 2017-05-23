@@ -43,9 +43,9 @@
                     <a class="list-group-item" href="{% url 'sepsis:genomics_miseq_files' %}">Genomics Miseq Sequence <span class="badge">{{ genomics_miseq_file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:genomics_pacbio_files' %}">Genomics PacBio Sequence <span class="badge">{{ genomics_pacbio_file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:transcriptomics_hiseq_files' %}">Transcriptomics Hiseq Sequence <span class="badge">{{ transcriptomics_hiseq_file_count }}</span> </a>
-                    <a class="list-group-item" href="">Proteomics MS1 quantification on DDA data <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
-                    <a class="list-group-item" href="">Proteomics MS2 quantification on DIA/SWATH data <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
-                    <a class="list-group-item" href="">Metabolomics LCMS analysis <span class="badge">{{ metabolomics_analysis_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:proteomics_ms1_files' %}">Proteomics MS1 quantification on DDA data <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:proteomics_swath_files' %}">Proteomics MS2 quantification on DIA/SWATH data <span class="badge">{{ proteomics_analysis_file_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:metabolomics_lcms_files' %}">Metabolomics LCMS analysis <span class="badge">{{ metabolomics_analysis_file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:overview' %}">Project Overview</a>
                     <a class="list-group-item"
                        href="https://downloads.bioplatforms.com/bpa/sepsis/">

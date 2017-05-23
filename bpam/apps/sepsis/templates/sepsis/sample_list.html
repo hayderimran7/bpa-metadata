@@ -11,17 +11,17 @@
 
 {% block content %}
 
-{% if samples %}
-
 <div class="container-fluid">
     <div class="alert alert-info" role="alert">
         To sort by multiple columns, press and hold the Shift key.
         <div class="bootstrap_buttons"> </div>
     </div>
-    <table class="ccgtable" width="100%">
+    <table class="apitable" width="100%">
         <thead>
             <tr>
+                <th>Sample ID</th>
                 <th>BPA ID</th>
+                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
                 <th>Gram Staining</th>
@@ -46,7 +46,9 @@
         </thead>
         <tfoot>
             <tr>
+                <th>Sample ID</th>
                 <th>BPA ID</th>
+                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
                 <th>Gram Staining</th>
@@ -70,38 +72,61 @@
             </tr>
         </tfoot>
         <tbody>
-            {% for sample in samples %}
-            <tr>
-                <td>
-                    <a href="{% url 'sepsis:sample' sample.pk %}">{{ sample.bpa_id.get_short_name }}</a>
-                </td>
-                <td>{{ sample.taxon_or_organism }}</td>
-                <td>{{ sample.strain_or_isolate }}</td>
-                <td>{{ sample.gram_stain }}</td>
-                <td>{{ sample.serovar }}</td>
-                <td>{{ sample.strain_description }}</td>
-                <td>{{ sample.key_virulence_genes }}</td>
-                <td>{{ sample.isolation_source }}</td>
-                <td>{{ sample.publication_reference }}</td>
-                <td>{{ sample.contact_researcher }}</td>
-                <td>{{ sample.culture_collection_date }}</td>
-                <td>{{ sample.culture_collection_id|default:"" }}</td>
-                <td>{{ sample.study_title|default:"" }}</td>
-                <td>{{ sample.investigation_type|default:"" }}</td>
-                <td>{{ sample.project_name|default:"" }}</td>
-                <td>{{ sample.sample_title|default:"" }}</td>
-                <td>{{ sample.ploidy|default:"" }}</td>
-                <td>{{ sample.num_replicons|default:"" }}</td>
-                <td>{{ sample.estimated_size|default:"" }}</td>
-                <td>{{ sample.propagation|default:"" }}</td>
-                <td>{{ sample.collected_by|default:"" }}</td>
-            </tr>
-            {% endfor %}
         </tbody>
     </table>
-
-    {% else %}
-    <h3> No Sepsis Sample Data is currently available </h3>
-    {% endif %}
 </div>
+
+<script>
+  function sepsis_samples_setup() {
+    var url = bpam_config.ckan_base + 'package_list/bpa-sepsis';
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [{
+              'data': 'id',
+              'defaultContent': '',
+              'searchable': false,
+              'render': function(data, type, row) {
+                  var url = bpam_config.bpam_base + 'antibiotic_resistant_pathogens/sample/' + data + '/';
+                  return '<a href="' + url + '">' + data + '</a>';
+              }
+            },
+            { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
+            { 'data': 'data_type' , 'defaultContent': ''},
+            { 'data': 'taxon_or_organism' , 'defaultContent': ''},
+            { 'data': 'strain_or_isolate' , 'defaultContent': ''},
+            { 'data': 'gram_stain' , 'defaultContent': ''},
+            { 'data': 'serovar' , 'defaultContent': ''},
+            { 'data': 'strain_description' , 'defaultContent': ''},
+            { 'data': 'key_virulence_genes' , 'defaultContent': ''},
+            { 'data': 'isolation_source' , 'defaultContent': ''},
+            { 'data': 'publication_reference' , 'defaultContent': ''},
+            { 'data': 'contact_researcher' , 'defaultContent': ''},
+            { 'data': 'culture_collection_date' , 'defaultContent': ''},
+            { 'data': 'culture_collection_id' , 'defaultContent': ''},
+            { 'data': 'study_title' , 'defaultContent': ''},
+            { 'data': 'investigation_type' , 'defaultContent': ''},
+            { 'data': 'project_name' , 'defaultContent': ''},
+            { 'data': 'sample_title' , 'defaultContent': ''},
+            { 'data': 'ploidy' , 'defaultContent': ''},
+            { 'data': 'number_of_replicants' , 'defaultContent': ''},
+            { 'data': 'estimated_size' , 'defaultContent': ''},
+            { 'data': 'propogation' , 'defaultContent': ''},
+            { 'data': 'collected_by' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+     sepsis_samples_setup();
+  });
+</script>
+
 {% endblock %}

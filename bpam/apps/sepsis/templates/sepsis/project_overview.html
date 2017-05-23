@@ -1,0 +1,157 @@
+{% extends "base_project_overview.html" %}
+
+{% block title %}Sepsis Project Overview{% endblock %}
+
+{% load static from staticfiles %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% block breadcrumbs %}
+{{ block.super }}
+{% breadcrumb "Sepsis" "sepsis:index" %}
+{% breadcrumb "Sepsis Project Overview" "" %}
+{% endblock %}
+
+{% block extra_head %}
+{{ block.super }}
+<script>
+  var PO_CONF = {
+    project_name: 'sepsis',
+    project_overview_count_url: '{% url "ckan:sepsis_project_overview_count" %}',
+    urls: {
+      'arp-genomics-miseq': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-genomics-miseq' %}",
+      'arp-genomics-pacbio': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-genomics-pacbio' %}",
+      'arp-metabolomics-lcms': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-metabolomics-lcms' %}",
+      'arp-proteomics-ms1quantification': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-proteomics-ms1quantification' %}",
+      'arp-proteomics-swathms': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-proteomics-swathms' %}",
+      'arp-transcriptomics-hiseq': "{% url 'ckan:package_list' 'bpa-sepsis' 'arp-transcriptomics-hiseq' %}",
+    },
+    top_level_nodes: [
+      ['Genomics PacBio', 'arp-genomics-pacbio'],
+      ['Genomics MiSeq', 'arp-genomics-miseq'],
+      ['Transcriptomics Hiseq', 'arp-transcriptomics-hiseq'],
+      ['Metabolomics LCMS', 'arp-metabolomics-lcms'],
+      ['Proteomics MS1 Quantification', 'arp-proteomics-ms1quantification'],
+      ['Proteomics Swath-MS', 'arp-proteomics-swathms'],
+    ]
+  };
+
+
+  function recreateTable(url, nodeData) {
+    destroyTable();
+
+    function makeSampleDetailUrl(row) {
+      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
+      // TODO review
+      // Do we have to do this? Can't we refer to the samples always with the same id
+      // either sample_id or bpa_id?
+      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
+      var url = _.join([bpam_config.bpam_base + PO_CONF.project_name, 'sample',
+                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
+      return url;
+    }
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [
+              {
+                'data': 'bpa_id',
+                'defaultContent': '',
+                'render': function (data, type, row) {
+                    return '<a href="' + makeSampleDetailUrl(row) + '">' + data + '</a>';
+                }
+              },
+              { 'data': 'data_type' , 'defaultContent': ''},
+              { 'data': 'taxon_or_organism' , 'defaultContent': ''},
+              { 'data': 'strain_or_isolate' , 'defaultContent': ''},
+              { 'data': 'serovar' , 'defaultContent': ''},
+              { 'data': 'growth_media' , 'defaultContent': ''},
+              { 'data': 'replicate' , 'defaultContent': ''},
+              { 'data': 'omics' , 'defaultContent': ''},
+              { 'data': 'analytical_platform' , 'defaultContent': ''},
+              { 'data': 'facility' , 'defaultContent': ''},
+              { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
+              { 'data': 'sample_submission_date' , 'defaultContent': ''},
+              { 'data': 'data_generated' , 'defaultContent': ''},
+              { 'data': 'archive_ingestion_date' , 'defaultContent': ''},
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+
+  };
+
+</script>
+
+{% endblock extra_head %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
+        </div>
+        <div class="col-md-10">
+            <div class="bootstrap_buttons pull-right"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <br>
+    <div class="row">
+
+        <div class="col-md-2" id="tree-col">
+            <div id="tree">
+            </div>
+        </div>
+
+        <div class="col-md-10" id="content-col">
+            <table class="apitable" id="content-table">
+              <thead>
+                <tr>
+                    <th>BPA ID</th>
+                    <th>Data Type</th>
+                    <th>Taxon Or Organism</th>
+                    <th>Strain Or Isolate</th>
+                    <th>Serovar</th>
+                    <th>Growth Media</th>
+                    <th>Replicate</th>
+                    <th>Omics</th>
+                    <th>Analytical Platform</th>
+                    <th>Facility</th>
+                    <th>Contextual Data Submission Date</th>
+                    <th>Sample Submission Date</th>
+                    <th>Data generated</th>
+                    <th>Archive Ingestion Date</th>
+                </tr>
+              </thead>
+              <tfoot>
+                 <tr>
+                    <th>BPA ID</th>
+                    <th>Data Type</th>
+                    <th>Taxon Or Organism</th>
+                    <th>Strain Or Isolate</th>
+                    <th>Serovar</th>
+                    <th>Growth Media</th>
+                    <th>Replicate</th>
+                    <th>Omics</th>
+                    <th>Analytical Platform</th>
+                    <th>Facility</th>
+                    <th>Contextual Data Submission Date</th>
+                    <th>Sample Submission Date</th>
+                    <th>Data generated</th>
+                    <th>Archive Ingestion Date</th>
+                </tr>
+              </tfoot>
+              <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

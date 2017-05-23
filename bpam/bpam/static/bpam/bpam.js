@@ -64,7 +64,7 @@ var createProjectOverviewTree = function(config) {
     return true;
   };
   var parentNonSelectable = function (node) {
-        var isTopLevel = function(node) { return node.parents.length == 1; }
+        var isTopLevel = function(node) { return node.parents && node.parents.length == 1; }
         return !isTopLevel(node);
   };
 

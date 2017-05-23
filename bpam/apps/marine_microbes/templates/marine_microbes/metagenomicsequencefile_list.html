@@ -61,7 +61,12 @@
                   'data': 'url',
                   'defaultContent': '',
                   'render': function(data, type, row) {
-                      return '<a href="' + row.url + '"><span class="glyphicon glyphicon-download"></span> Download</a>';
+                    filename = '';
+                    if (row.url) {
+                      var parts = row.url.split('/');
+                      filename = parts[parts.length - 1];
+                    }
+                    return '<a href="' + row.url + '">' + filename + '</a>';
                   }
               },
               {

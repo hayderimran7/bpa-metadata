@@ -31,4 +31,5 @@ urlpatterns = patterns(
 
     url(r'^mm_project_overview_count/?$', views.mm_project_overview_count, name='mm_project_overview_count'),
     url(r'^stemcell_project_overview_count/?$', views.stemcell_project_overview_count, name='stemcell_project_overview_count'),
+    url(r'^sepsis_project_overview_count/?$', views.sepsis_project_overview_count, name='sepsis_project_overview_count'),
 )

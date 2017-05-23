@@ -17,6 +17,7 @@ from apps.common.models import CKANServer
 
 from apps.stemcell import models as stemcell_models
 from apps.marine_microbes import models as mm_models
+from apps.sepsis import models as sepsis_models
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,13 @@ CKAN_RESOURCE_TYPES = {
         'stemcells-transcriptomics',
         'stemcells-smallrna',
         'stemcells-singlecellrnaseq'),
+    'bpa-sepsis': (
+        'arp-genomics-miseq',
+        'arp-genomics-pacbio',
+        'arp-metabolomics-lcms',
+        'arp-proteomics-ms1quantification',
+        'arp-proteomics-swathms',
+        'arp-transcriptomics-hiseq'),
 }
 
 
@@ -67,6 +75,8 @@ def models_package_list(request, org_name, resource_type=None, status=None):
         models = stemcell_models
     elif org_name == 'bpa-marine-microbes':
         models = mm_models
+    elif org_name == 'bpa-sepsis':
+        models = sepsis_models
     else:
         raise ValidationError('Invalid organisation name "%s" received.' % org_name)
     model = models.CKAN_RESOURCE_TYPE_TO_MODEL[lookup]
@@ -183,6 +193,28 @@ def stemcell_project_overview_count(request):
 
     for k, d in counts.items():
         model = stemcell_models.CKAN_RESOURCE_TYPE_TO_MODEL[k]
+        d['sample_processing'] = model.sample_processing.count()
+        d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
+
+    # TODO assuming that all packages in CKAN are embargoed, but theoretically they could be
+    # public as well
+
+    all_package_counts = ckan_packages_count_by_resource_type()
+    for k, d in counts.items():
+        d['embargoed'] = all_package_counts.get(k, 0)
+
+    for k, d in counts.items():
+        d['all'] = sum(d.values())
+
+    return JsonSuccess.data(counts)
+
+
+@exceptions_to_json_err
+def sepsis_project_overview_count(request):
+    counts = {k: {} for k in CKAN_RESOURCE_TYPES['bpa-sepsis']}
+
+    for k, d in counts.items():
+        model = sepsis_models.CKAN_RESOURCE_TYPE_TO_MODEL[k]
         d['sample_processing'] = model.sample_processing.count()
         d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
 

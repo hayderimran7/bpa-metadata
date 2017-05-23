@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Sepsis Genomics Sequence Files{% endblock %}
+{% block title %}Sepsis {{ description }} Sequence Files{% endblock %}
 
 {% load django_bootstrap_breadcrumbs %}
 {% block breadcrumbs %}
@@ -10,16 +10,16 @@
 {% endblock %}
 
 {% block content %}
-{% if sequencefiles %}
 
 <div class="container-fluid">
   <div class="alert alert-info" role="alert">
     To sort by multiple columns, press and hold the Shift key.
     <div class="bootstrap_buttons"> </div>
   </div>
-  <table class="ccgtable" width="100%">
+  <table class="apitable" width="100%">
     <thead>
       <tr>
+        <th>Sample ID</th>
         <th>BPA ID</th>
         <th>Taxon Or Organism</th>
         <th>Strain Or Isolate</th>
@@ -29,6 +29,7 @@
     </thead>
     <tfoot>
       <tr>
+        <th>Sample ID</th>
         <th>BPA ID</th>
         <th>Taxon Or Organism</th>
         <th>Strain Or Isolate</th>
@@ -37,22 +38,59 @@
       </tr>
     </tfoot>
     <tbody>
-      {% for sfile in sequencefiles %}
-      <tr>
-        <td> <a href="{% url 'sepsis:sample' sfile.sample.bpa_id %}">{{ sfile.sample.bpa_id.get_short_name }}</a> </td>
-        <td>{{ sfile.sample.taxon_or_organism }}</td>
-        <td>{{ sfile.sample.strain_or_isolate }}</td>
-        <td>
-          <a href="{{ sfile.get_url }}"><span class="glyphicon glyphicon-download"></span> {{ sfile.filename }}</a>
-        </td>
-        <td class="md5">{{ sfile.md5 }}</td>
-      </tr>
-      {% endfor %}
     </tbody>
   </table>
 </div>
-{% else %}
-<h3> No Sepsis Genomic Sequence Data is currently available </h3>
-{% endif %}
+
+
+<script>
+  function sepsis_file_list_setup(resource_type) {
+    var url = bpam_config.ckan_base + 'resource_list/bpa-sepsis/' + resource_type;
+
+    setup_table(function() {
+      var config = _.defaults({
+        columns: [{
+                'data': 'package.id',
+                'defaultContent': '',
+                'render': function(data, type, row) {
+                    var url = bpam_config.bpam_base + 'antibiotic_resistant_pathogens/sample/' + data + '/';
+                    return '<a href="' + url + '">' + data + '</a>';
+                }
+              },
+              { 'data': 'package.bpa_id' , 'defaultContent': ''},
+              { 'data': 'package.taxon_or_organism' , 'defaultContent': ''},
+              { 'data': 'package.strain_or_isolate' , 'defaultContent': ''},
+              {
+                  'data': 'url',
+                  'defaultContent': '',
+                  'render': function(data, type, row) {
+                    filename = '';
+                    if (row.url) {
+                      var parts = row.url.split('/');
+                      filename = parts[parts.length - 1];
+                    }
+                    return '<a href="' + row.url + '">' + filename + '</a>';
+                  }
+              },
+              {
+                  'data': 'md5',
+                  'defaultContent': '',
+                  'render': function(data, type, row) {
+                      return '<pre>' + data + '</pre>';
+                  }
+              }
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+    sepsis_file_list_setup('{{ ckan_data_type }}');
+  });
+</script>
 
 {% endblock %}

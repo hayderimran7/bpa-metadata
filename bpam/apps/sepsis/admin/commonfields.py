@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from import_export import fields
-import ingest
+from libs.ingest_utils import get_date  # noqa
 
 
 class DateField(fields.Field):
@@ -16,7 +16,7 @@ class DateField(fields.Field):
     def clean(self, data):
         try:
             val = data[self.column_name]
-            return ingest.get_date(val)
+            return get_date(val)
         except ValueError:
             return None
 
