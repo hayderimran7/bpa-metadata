@@ -39,17 +39,6 @@
   function recreateTable(url, nodeData) {
     destroyTable();
 
-    function makeSampleDetailUrl(row) {
-      var TRACKER_STATUSES = ['sample_processing', 'bpa_archive_ingest', 'bpa_qc'];
-      // TODO review
-      // Do we have to do this? Can't we refer to the samples always with the same id
-      // either sample_id or bpa_id?
-      var sampleId = (_.includes(TRACKER_STATUSES, nodeData.status)) ? row.bpa_id : row.id;
-      var url = _.join([bpam_config.bpam_base + PO_CONF.project_name, 'sample',
-                        nodeData.referenceType, nodeData.status, sampleId], '/') + '/';
-      return url;
-    }
-
     setup_table(function() {
       var config = _.defaults({
         searching: true,
@@ -59,7 +48,8 @@
                 'data': 'bpa_id',
                 'defaultContent': '',
                 'render': function (data, type, row) {
-                    return '<a href="' + makeSampleDetailUrl(row) + '">' + data + '</a>';
+                    var url = '{{ ckan_base_url }}' + 'dataset/' + row.id;
+                    return '<a href="' + url + '">' + data + '</a>';
                 }
               },
               { 'data': 'data_type' , 'defaultContent': ''},
@@ -93,25 +83,12 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-            <div class="btn btn-warning btn-sm" id="tree-toggle-btn">Hide tree</div>
-        </div>
-        <div class="col-md-10">
-            <div class="bootstrap_buttons pull-right"> </div>
-        </div>
-    </div>
-</div>
 
-<div class="container-fluid">
-    <br>
-    <div class="row">
-
-        <div class="col-md-2" id="tree-col">
-            <div id="tree">
-            </div>
+        <div class="col-md-3" id="tree-col">
+            <div id="tree"></div>
         </div>
 
-        <div class="col-md-10" id="content-col">
+        <div class="col-md-9" id="content-col">
             <table class="apitable" id="content-table">
               <thead>
                 <tr>

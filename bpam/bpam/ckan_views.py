@@ -12,6 +12,8 @@ from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 from revproxy.views import ProxyView
 from revproxy import utils
+from collections import defaultdict
+from bpam.utils import common_values
 
 from apps.common.models import CKANServer
 
@@ -113,6 +115,23 @@ def package_list(request, org_name, resource_type=None, status=None):
             packages = [p for p in packages if p.get('amplicon', '').lower() == amplicon.lower()]
 
     return _js_data_tables_response(packages, request)
+
+
+@exceptions_to_json_err
+def sepsis_contextual_list(request):
+    packages = ckan_get_packages_by_organisation('bpa-sepsis')
+    tpl_keys = ('taxon_or_organism', 'strain_or_isolate')
+    tpl_lookup = defaultdict(list)
+    for package in packages:
+        tpl = tuple(package.get(t) for t in tpl_keys)
+        if None in tpl:
+            continue
+        logger.debug(tpl)
+        tpl_lookup[tpl].append(package)
+    contextual = []
+    for packages in tpl_lookup.values():
+        contextual.append(common_values(packages))
+    return _js_data_tables_response(contextual, request)
 
 
 @exceptions_to_json_err

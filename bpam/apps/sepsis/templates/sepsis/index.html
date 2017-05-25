@@ -39,7 +39,7 @@
 
             <div class="col-sm-5 col-md-5 col-lg-3">
                 <div class="list-group">
-                    <a class="list-group-item" href="{% url 'sepsis:samples' %}">Samples <span class="badge">{{ sample_count }}</span> </a>
+                    <a class="list-group-item" href="{% url 'sepsis:samples' %}">Bacterial Contextual Metadata <span class="badge">{{ sample_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:genomics_miseq_files' %}">Genomics Miseq Sequence <span class="badge">{{ genomics_miseq_file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:genomics_pacbio_files' %}">Genomics PacBio Sequence <span class="badge">{{ genomics_pacbio_file_count }}</span> </a>
                     <a class="list-group-item" href="{% url 'sepsis:transcriptomics_hiseq_files' %}">Transcriptomics Hiseq Sequence <span class="badge">{{ transcriptomics_hiseq_file_count }}</span> </a>
