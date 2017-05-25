@@ -19,9 +19,6 @@
     <table class="apitable" width="100%">
         <thead>
             <tr>
-                <th>Sample ID</th>
-                <th>BPA ID</th>
-                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
                 <th>Gram Staining</th>
@@ -33,22 +30,10 @@
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
                 <th>Culture Collection ID</th>
-                <th>Study Title</th>
-                <th>Investigation Type</th>
-                <th>Project Name</th>
-                <th>Sample Title</th>
-                <th>Ploidy</th>
-                <th>Number of Replicants</th>
-                <th>Estimated Size</th>
-                <th>Propagation</th>
-                <th>Collected By</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <th>Sample ID</th>
-                <th>BPA ID</th>
-                <th>Data Type</th>
                 <th>Taxon Or Organism</th>
                 <th>Strain Or Isolate</th>
                 <th>Gram Staining</th>
@@ -60,15 +45,6 @@
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
                 <th>Culture Collection ID</th>
-                <th>Study Title</th>
-                <th>Investigation Type</th>
-                <th>Project Name</th>
-                <th>Sample Title</th>
-                <th>Ploidy</th>
-                <th>Number of Replicants</th>
-                <th>Estimated Size</th>
-                <th>Propagation</th>
-                <th>Collected By</th>
             </tr>
         </tfoot>
         <tbody>
@@ -78,25 +54,24 @@
 
 <script>
   function sepsis_samples_setup() {
-    var url = bpam_config.ckan_base + 'package_list/bpa-sepsis';
+    var url = bpam_config.ckan_base + 'sepsis_contextual_data/';
 
     setup_table(function() {
       var config = _.defaults({
         searching: true,
 
-        columns: [{
-              'data': 'id',
+        columns: [
+            { 'data': 'taxon_or_organism' , 'defaultContent': ''},
+            {
+              'data': 'strain_or_isolate',
               'defaultContent': '',
               'searchable': false,
               'render': function(data, type, row) {
-                  var url = bpam_config.bpam_base + 'antibiotic_resistant_pathogens/sample/' + data + '/';
+                  var tag = (row.taxon_or_organism + '_' + row.strain_or_isolate).replace(' ', '_');
+                  var url = '{{ ckan_base_url }}' + 'organization/' + row.owner_org + '?tags=' + tag + '&_tags_limit=0';
                   return '<a href="' + url + '">' + data + '</a>';
               }
             },
-            { 'data': 'bpa_id' , 'defaultContent': '', 'searchable': false},
-            { 'data': 'data_type' , 'defaultContent': ''},
-            { 'data': 'taxon_or_organism' , 'defaultContent': ''},
-            { 'data': 'strain_or_isolate' , 'defaultContent': ''},
             { 'data': 'gram_stain' , 'defaultContent': ''},
             { 'data': 'serovar' , 'defaultContent': ''},
             { 'data': 'strain_description' , 'defaultContent': ''},
@@ -106,15 +81,6 @@
             { 'data': 'contact_researcher' , 'defaultContent': ''},
             { 'data': 'culture_collection_date' , 'defaultContent': ''},
             { 'data': 'culture_collection_id' , 'defaultContent': ''},
-            { 'data': 'study_title' , 'defaultContent': ''},
-            { 'data': 'investigation_type' , 'defaultContent': ''},
-            { 'data': 'project_name' , 'defaultContent': ''},
-            { 'data': 'sample_title' , 'defaultContent': ''},
-            { 'data': 'ploidy' , 'defaultContent': ''},
-            { 'data': 'number_of_replicants' , 'defaultContent': ''},
-            { 'data': 'estimated_size' , 'defaultContent': ''},
-            { 'data': 'propogation' , 'defaultContent': ''},
-            { 'data': 'collected_by' , 'defaultContent': ''}
         ]
       }, CONFIG.tables.ajaxConfig);
 

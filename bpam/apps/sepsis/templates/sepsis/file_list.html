@@ -53,7 +53,7 @@
                 'data': 'package.id',
                 'defaultContent': '',
                 'render': function(data, type, row) {
-                    var url = bpam_config.bpam_base + 'antibiotic_resistant_pathogens/sample/' + data + '/';
+                    var url = '{{ ckan_base_url }}' + 'dataset/' + row.package_id;
                     return '<a href="' + url + '">' + data + '</a>';
                 }
               },
@@ -64,12 +64,13 @@
                   'data': 'url',
                   'defaultContent': '',
                   'render': function(data, type, row) {
-                    filename = '';
+                    var filename = '';
                     if (row.url) {
                       var parts = row.url.split('/');
                       filename = parts[parts.length - 1];
                     }
-                    return '<a href="' + row.url + '">' + filename + '</a>';
+                    var url = '{{ ckan_base_url }}' + 'dataset/' + row.package_id + '/resource/' + row.id;
+                    return '<a href="' + url + '">' + filename + '</a>';
                   }
               },
               {

@@ -3,7 +3,6 @@
 var loadingText = 'Loading...';
 
 var set_ckanapi_error = function() {
-    console.log("error contacting the CKAN API.")
     $('#error-bar').removeClass('hide').html('<p>An error occurred while attempting to contact the metadata server. Please <a href="javascript:history.go(0);">reload the page.</a> If the error persists, please <a href="http://www.bioplatforms.com/contact/">contact us</a>.</p>');
 };
 
@@ -91,19 +90,9 @@ var createProjectOverviewTree = function(config) {
     }
   });
 
-  $('#tree-toggle-btn').on('click', function() {
-    if ( $('#tree-col').is(':hidden') ) {
-      $('#content-col').removeClass('col-md-12');
-      $('#content-col').addClass('col-md-10');
-      $('#tree-col').show('slow');
-      $('#tree-toggle-btn').html('Hide tree');
-    } else {
-      $('#tree-col').hide('slow', function() {
-          $('#content-col').removeClass('col-md-10');
-          $('#content-col').addClass('col-md-12');
-          $('#tree-toggle-btn').html('Show tree');
-      });
-    }
+  // open all on load
+  tree.on('loaded.jstree', function() {
+    tree.jstree('open_all');
   });
 };
 

@@ -117,6 +117,29 @@
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="right">
+                        <a href="{% url 'sepsis:index' %}">
+                            <img class="resized  img-rounded" src="{% static 'sepsis/sepsis.png' %}" alt="Sepsis">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'sepsis:index' %}">
+                            <h3>Antibiotic Resistant Sepsis Pathogens</h3>
+                        </a>
+                        <p>
+                            The Antibiotic Resistant Sepsis Pathogens Framework Initiative aims to develop a
+                            framework dataset that will enable identification of core targets common to
+                            antibiotic-resistant sepsis pathogens.
+                        </p>
+                        <ul class="nav nav-pills">
+                            <li><a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
+                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a></li>
+                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
+                            <li><a href="{% url 'sepsis:index' %}"><span class="badge">{{ sepsis_sample_count }}</span></a></li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="in-table-header" colspan="2">
@@ -145,31 +168,6 @@
                             <li> <a href="https://downloads-qcif.bioplatforms.com/bpa/base/"> <span class="glyphicon glyphicon-download"></span> </a> </li>
                             <li> <a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a> </li>
                             <li> <a href="{% url 'base:index' %}"> <span class="badge"> {{ base_sample_count }} </span></a> </li>
-                        </ul>
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td class="right">
-                        <a href="{% url 'sepsis:index' %}">
-                            <img class="resized  img-rounded" src="{% static 'sepsis/sepsis.png' %}" alt="Sepsis">
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'sepsis:index' %}">
-                            <h3>Antibiotic Resistant Sepsis Pathogens</h3>
-                        </a>
-                        <p>
-                            The Antibiotic Resistant Sepsis Pathogens Framework Initiative aims to develop a
-                            framework dataset that will enable identification of core targets common to
-                            antibiotic-resistant sepsis pathogens.
-                        </p>
-                        <ul class="nav nav-pills">
-                            <li><a href="http://www.bioplatforms.com/antibiotic-resistant-pathogens"> <span class="glyphicon glyphicon-info-sign"></span> </a></li>
-                            <li><a href="https://downloads-qcif.bioplatforms.com/bpa/sepsis/"> <span class="glyphicon glyphicon-download"></span> </a></li>
-                            <li><a href="{% url 'admin:index' %}"> <span class="glyphicon glyphicon-cog"> </span></a></li>
-                            <li><a href="{% url 'sepsis:index' %}"><span class="badge">{{ sepsis_sample_count }}</span></a></li>
                         </ul>
                     </td>
                 </tr>

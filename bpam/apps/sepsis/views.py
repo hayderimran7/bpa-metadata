@@ -3,9 +3,10 @@
 from django.http import Http404, HttpResponse
 from django.views.generic import TemplateView, View
 from django.http import JsonResponse
+from apps.common.models import CKANServer
 from collections import OrderedDict
 
-from apps.common.views import DebugOnlyTemplateView, BaseSampleDetailView
+from apps.common.views import DebugOnlyTemplateView
 from .models import (GenomicsPacBioTrack,
                      GenomicsMiSeqTrack,
                      TranscriptomicsHiSeqTrack,
@@ -22,10 +23,6 @@ tracks = (GenomicsPacBioTrack, GenomicsMiSeqTrack, TranscriptomicsHiSeqTrack, Me
 
 class SepsisView(DebugOnlyTemplateView):
     template_name = 'sepsis/index.html'
-
-
-class SampleListView(TemplateView):
-    template_name = 'sepsis/sample_list.html'
 
 
 class TrackOverview(TemplateView):
@@ -101,8 +98,19 @@ class TrackDetails(View):
         return json_data
 
 
-class GenomicsMiseqFileListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class CKANTemplateView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super(CKANTemplateView, self).get_context_data(**kwargs)
+        context['ckan_base_url'] = CKANServer.primary().base_url
+        return context
+
+
+class SampleListView(CKANTemplateView):
+    template_name = 'sepsis/sample_list.html'
+
+
+class GenomicsMiseqFileListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(GenomicsMiseqFileListView, self).get_context_data(**kwargs)
@@ -111,8 +119,8 @@ class GenomicsMiseqFileListView(TemplateView):
         return context
 
 
-class TranscriptomicsHiseqFileListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class TranscriptomicsHiseqFileListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(TranscriptomicsHiseqFileListView, self).get_context_data(**kwargs)
@@ -121,8 +129,8 @@ class TranscriptomicsHiseqFileListView(TemplateView):
         return context
 
 
-class GenomicsPacBioFileListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class GenomicsPacBioFileListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(GenomicsPacBioFileListView, self).get_context_data(**kwargs)
@@ -131,8 +139,8 @@ class GenomicsPacBioFileListView(TemplateView):
         return context
 
 
-class MetabolomicsLCMSFileListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class MetabolomicsLCMSFileListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(MetabolomicsLCMSFileListView, self).get_context_data(**kwargs)
@@ -141,8 +149,8 @@ class MetabolomicsLCMSFileListView(TemplateView):
         return context
 
 
-class ProteomicsMS1QuantificationFileListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class ProteomicsMS1QuantificationFileListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(ProteomicsMS1QuantificationFileListView, self).get_context_data(**kwargs)
@@ -151,19 +159,14 @@ class ProteomicsMS1QuantificationFileListView(TemplateView):
         return context
 
 
-class ProteomicsSwathMSListView(TemplateView):
-    template_name = 'sepsis/genomics_file_list.html'
+class ProteomicsSwathMSListView(CKANTemplateView):
+    template_name = 'sepsis/file_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(ProteomicsSwathMSListView, self).get_context_data(**kwargs)
         context['description'] = 'Proteomics MS2 Quantification on DIA/Swath Data'
         context['ckan_data_type'] = 'arp-proteomics-swathms'
         return context
-
-
-class SampleDetailView(BaseSampleDetailView):
-    template_name = 'sepsis/sample_detail.html'
-    project = 'sepsis'
 
 
 class ContactsView(TemplateView):
