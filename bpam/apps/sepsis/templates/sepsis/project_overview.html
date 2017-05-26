@@ -39,6 +39,9 @@
   function recreateTable(url, nodeData) {
     destroyTable();
 
+    var yes_icon = "{% static 'sepsis/icon-yes.gif' %}";
+    var no_icon = "{% static 'sepsis/icon-no.gif' %}";
+
     setup_table(function() {
       var config = _.defaults({
         searching: true,
@@ -63,7 +66,17 @@
               { 'data': 'facility' , 'defaultContent': ''},
               { 'data': 'contextual_data_submission_date' , 'defaultContent': ''},
               { 'data': 'sample_submission_date' , 'defaultContent': ''},
-              { 'data': 'data_generated' , 'defaultContent': ''},
+              {
+                'data': 'data_generated',
+                'defaultContent': '',
+                'render': function (data, type, row) {
+                  if (data && data.toLowerCase() == 'true') {
+                    return '<img src="' + yes_icon + '" />';
+                  } else {
+                    return '<img src="' + no_icon + '" />';
+                  }
+                }
+              },
               { 'data': 'archive_ingestion_date' , 'defaultContent': ''},
         ]
       }, CONFIG.tables.ajaxConfig);
