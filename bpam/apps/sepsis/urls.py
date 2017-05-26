@@ -6,7 +6,7 @@ from bpam.decorators import DEBUG_ONLY_VIEW
 urlpatterns = [
     # url(r'^api/v2/', include(router.urls)),
     url(r'^$', DEBUG_ONLY_VIEW(views.SepsisView.as_view()), name='index'),
-    url(r'^samples', views.SampleListView.as_view(), name='samples'),
+    url(r'^bacterialcontextualdata', views.SampleListView.as_view(), name='samples'),
     # in CKAN
     url(r'^transcriptomicshiseqfiles', views.TranscriptomicsHiseqFileListView.as_view(), name='transcriptomics_hiseq_files'),
     url(r'^genomicsmiseqfiles', views.GenomicsMiseqFileListView.as_view(), name='genomics_miseq_files'),

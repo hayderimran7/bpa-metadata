@@ -30,6 +30,13 @@
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
                 <th>Culture Collection ID</th>
+                <th>Host Location</th>
+                <th>Host Age</th>
+                <th>Host DOB</th>
+                <th>Host Sex</th>
+                <th>Host Disease Outcome</th>
+                <th>Isolation Source</th>
+                <th>Host Description</th>
             </tr>
         </thead>
         <tfoot>
@@ -45,6 +52,13 @@
                 <th>Contact Researcher</th>
                 <th>Collection Date</th>
                 <th>Culture Collection ID</th>
+                <th>Host Location</th>
+                <th>Host Age</th>
+                <th>Host DOB</th>
+                <th>Host Sex</th>
+                <th>Host Disease Outcome</th>
+                <th>Isolation Source</th>
+                <th>Host Description</th>
             </tr>
         </tfoot>
         <tbody>
@@ -68,7 +82,6 @@
               'searchable': false,
               'render': function(data, type, row) {
                   var tag = (row.taxon_or_organism + '_' + row.strain_or_isolate).replace(' ', '_').replace(/[^A-Za-z0-9-_\.]/, '');
-                  console.log(tag);
                   var url = '{{ ckan_base_url }}' + 'organization/' + row.owner_org + '?tags=' + tag + '&_tags_limit=0';
                   return '<a href="' + url + '">' + data + '</a>';
               }
@@ -82,6 +95,13 @@
             { 'data': 'contact_researcher' , 'defaultContent': ''},
             { 'data': 'culture_collection_date' , 'defaultContent': ''},
             { 'data': 'culture_collection_id' , 'defaultContent': ''},
+            { 'data': 'host_location' , 'defaultContent': ''},
+            { 'data': 'host_age' , 'defaultContent': ''},
+            { 'data': 'host_dob' , 'defaultContent': ''},
+            { 'data': 'host_sex' , 'defaultContent': ''},
+            { 'data': 'host_disease_outcome' , 'defaultContent': ''},
+            { 'data': 'isolation_source' , 'defaultContent': ''},
+            { 'data': 'host_description' , 'defaultContent': ''},
         ]
       }, CONFIG.tables.ajaxConfig);
 
