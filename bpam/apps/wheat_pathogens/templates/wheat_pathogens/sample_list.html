@@ -68,7 +68,7 @@
                 'data': 'bpa_id',
                 'searchable': false,
                 'render': function(data, type, row) {
-                    var url = bpam_config.bpam_base + 'wheat_pathogens/sample/' + data + '/';
+                    var url = '{{ ckan_base_url }}' + 'dataset/' + data;
                     return '<a href="' + url + '">' + data + '</a>';
                 }
             },

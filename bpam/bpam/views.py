@@ -27,3 +27,10 @@ class LandingView(TemplateView):
 class GoToCKANView(RedirectView):
     url = CKANServer.primary().base_url
     permanent = False
+
+
+class CKANTemplateView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super(CKANTemplateView, self).get_context_data(**kwargs)
+        context['ckan_base_url'] = CKANServer.primary().base_url
+        return context

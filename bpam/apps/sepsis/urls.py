@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from bpam.views import CKANTemplateView
 import views
 
 from bpam.decorators import DEBUG_ONLY_VIEW
@@ -18,7 +19,7 @@ urlpatterns = [
 
     # BEGIN----- Tracker URLs ----------
     url(r'^overview/?$',
-        views.CKANTemplateView.as_view(template_name='sepsis/project_overview.html'),
+        CKANTemplateView.as_view(template_name='sepsis/project_overview.html'),
         name='overview'),
 
     # END------- Tracker URLs ----------

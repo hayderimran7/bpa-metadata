@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from apps.common.models import SampleSite, SampleTrack, SequenceFile, BPAUniqueID
+from apps.common.models import SampleSite, SampleTrack, BPAUniqueID
 
 
 class MMSite(SampleSite):
@@ -44,72 +44,6 @@ class MMSample(models.Model):
 
     class Meta:
         verbose_name = "Marine Microbes Sample"
-
-
-class AmpliconSequenceFile(SequenceFile):
-    CHOICES = (
-        ("16S", "16S"),
-        ("18S", "18S"),
-        ("A16S", "A16S")
-    )
-
-    PASS_OR_FAIL = (('P', 'Pass'), ('F', 'Fail'))
-    DILUTIONS = (('1:10', '1:10'), ('1:100', '1:100'), ('NEAT', 'Neat'))
-
-    sample = models.ForeignKey(MMSample, null=True)
-    extraction = models.IntegerField("Sample Extraction ID", blank=True, null=True)
-    amplicon = models.CharField("Amplicon", max_length=4, choices=CHOICES)
-    vendor = models.CharField("Vendor", max_length=100, default="UNKNOWN")
-    index = models.CharField("Index", max_length=50, blank=True, null=True)
-    flow_cell = models.CharField("Flow Cell", max_length=9, blank=True, null=True)
-    runsamplenum = models.CharField("Run Sample Number", max_length=9, blank=True, null=True)
-    read = models.CharField("Read", max_length=2, blank=True, null=True)
-
-    pcr_1_to_10 = models.CharField('PCR 1:10', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
-    pcr_1_to_100 = models.CharField('PCR 1:100', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
-    pcr_neat = models.CharField('Neat PCR', max_length=1, blank=True, null=True, choices=PASS_OR_FAIL)
-    dilution = models.CharField('Dilution Used', max_length=5, blank=True, null=True, choices=DILUTIONS)
-
-    number_of_reads = models.IntegerField("Number of Reads", blank=True, null=True)
-    analysis_software_version = models.CharField('Analysis Software Version', max_length=100, blank=True, null=True)
-
-    def passed_pcr_1_to_10(self):
-        return self.pcr_1_to_10 == 'P'
-
-    def passed_pcr_1_to_100(self):
-        return self.pcr_1_to_100 == 'P'
-
-    def passed_pcr_neat(self):
-        return self.pcr_neat == 'P'
-
-    def __unicode__(self):
-        return u"{0}:{1}".format(self.sample, self.amplicon)
-
-    def get_path_parts(self):
-        return ('marine_microbes', 'amplicons/{}'.format(self.amplicon).lower())
-
-    class Meta:
-        verbose_name_plural = "Amplicon Sequence Files"
-
-
-class MetagenomicSequenceFile(SequenceFile):
-    "Metagenome"
-
-    project_name = 'marine_microbes'
-    extraction = models.IntegerField("Extraction", default=1)
-    vendor = models.CharField("Vendor", max_length=100, default="UNKNOWN")
-    sample = models.ForeignKey(MMSample, null=True)
-    library = models.CharField("Library", max_length=20, help_text="MP or PE")
-    size = models.CharField("Extraction Size", max_length=100, default=1)
-    flow_cell = models.CharField("Flow Cell", max_length=9, blank=True, null=True)
-    index = models.CharField("Index", max_length=20, blank=True, null=True)
-    read = models.CharField("Read", max_length=3, blank=True, null=True)
-
-    def get_path_parts(self):
-        return ('marine_microbes', 'metagenomics')
-
-    class Meta:
-        verbose_name_plural = "Metagenome Sequence Files"
 
 
 class MarineCommonContextual(models.Model):

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import TemplateView, ListView, DetailView
 
-from apps.common.models import BPAMirror
-from apps.common.views import BaseSampleDetailView, DebugOnlyTemplateView
+from apps.common.views import DebugOnlyTemplateView
+from bpam.views import CKANTemplateView
 from .models import MMSample
-from .models import MetagenomicSequenceFile
-from .models import AmpliconSequenceFile
 from .models import MMSite
 
 
@@ -13,9 +11,7 @@ class AmpliconIndexView(TemplateView):
     template_name = 'marine_microbes/amplicon_index.html'
 
 
-class AmpliconListView(ListView):
-    model = AmpliconSequenceFile
-    context_object_name = 'amplicon_list'
+class AmpliconListView(CKANTemplateView):
     template_name = 'marine_microbes/amplicon_list.html'
     amplicon = 'all'
 
@@ -37,38 +33,16 @@ class AmpliconA16SListView(AmpliconListView):
     amplicon = 'a16s'
 
 
-class AmpliconDetailView(DetailView):
-    model = AmpliconSequenceFile
-    context_object_name = 'metadata'
-    template_name = 'base_amplicon/metadata_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AmpliconDetailView, self).get_context_data(**kwargs)
-        context['mirrors'] = BPAMirror.objects.all()
-        context['sequencefiles'] = AmpliconSequenceFile.objects.filter(sample__bpa_id=context['metadata'].bpa_id)
-        context['sample'] = context['metadata']  # same name to make common sequence file template work
-        return context
-
-
 class MMView(DebugOnlyTemplateView):
     template_name = 'marine_microbes/index.html'
 
 
-class SampleListView(ListView):
-    model = MMSample
-    context_object_name = 'samples'
+class SampleListView(CKANTemplateView):
     template_name = 'marine_microbes/sample_list.html'
 
 
-class MetagenomicFileListView(ListView):
-    model = MetagenomicSequenceFile
-    context_object_name = 'sequencefiles'
-    template_name = 'marine_microbes/metagenomics_file_list.html'
-
-
-class SampleDetailView(BaseSampleDetailView):
-    template_name = 'marine_microbes/sample_detail.html'
-    project = 'marine_microbes'
+class MetagenomicFileListView(CKANTemplateView):
+    template_name = 'marine_microbes/metagenomicsequencefile_list.html'
 
 
 class CollectionSiteListView(ListView):

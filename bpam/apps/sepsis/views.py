@@ -3,7 +3,7 @@
 from django.http import Http404, HttpResponse
 from django.views.generic import TemplateView, View
 from django.http import JsonResponse
-from apps.common.models import CKANServer
+from bpam.views import CKANTemplateView
 from collections import OrderedDict
 
 from apps.common.views import DebugOnlyTemplateView
@@ -96,13 +96,6 @@ class TrackDetails(View):
         json_data = serializers.serialize("json", raw_data)
 
         return json_data
-
-
-class CKANTemplateView(TemplateView):
-    def get_context_data(self, **kwargs):
-        context = super(CKANTemplateView, self).get_context_data(**kwargs)
-        context['ckan_base_url'] = CKANServer.primary().base_url
-        return context
 
 
 class SampleListView(CKANTemplateView):

@@ -59,7 +59,7 @@
               'defaultContent': '',
               'searchable': false,
               'render': function(data, type, row) {
-                  var url = bpam_config.bpam_base + 'marine_microbes/sample/' + data + '/';
+                  var url = '{{ ckan_base_url }}' + 'dataset/' + data;
                   return '<a href="' + url + '">' + data + '</a>';
               }
             },
