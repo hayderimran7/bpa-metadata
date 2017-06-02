@@ -47,7 +47,7 @@ class TrackOverviewConstraints(View):
         ('inproc', ('Sample processing', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=False))),
         ('bpaarchiveingest', ('BPA Archive Ingest', lambda q: q.filter(archive_ingestion_date__isnull=True).filter(data_generated=True))),
         ('bpaqc', ('BPA QC', None)),
-        ('embargoed', ('Embargoed', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False))),
+        ('mediated', ('Mediated access', lambda q: q.filter(contextual_data_submission_date__isnull=False).filter(archive_ingestion_date__isnull=False))),
         ('public', ('Public', None)),
         ('all', (None, lambda q: q.all())),
     ])

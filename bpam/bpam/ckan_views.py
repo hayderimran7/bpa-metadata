@@ -102,7 +102,7 @@ def package_list(request, org_name, resource_type=None, status=None):
     amplicon = request.GET.get('amplicon')
 
     # TODO currently we know we don't have public data so we return nothing
-    # the only other option is "embargoed" which is all packages
+    # the only other option is "mediated" which is all packages
     if status == 'public':
         packages = []
     else:
@@ -194,11 +194,11 @@ def mm_project_overview_count(request):
 
     all_package_counts = ckan_packages_count_by_resource_type()
     for k, d in counts.items():
-        d['embargoed'] = all_package_counts.get(k, 0)
+        d['mediated'] = all_package_counts.get(k, 0)
 
     amplicon_counts = ckan_amplicon_packages_count('mm-genomics-amplicon')
     for k, d in amplicon_counts.items():
-        counts['amplicons.%s' % k]['embargoed'] = d
+        counts['amplicons.%s' % k]['mediated'] = d
 
     for k, d in counts.items():
         d['all'] = sum(d.values())
@@ -215,12 +215,12 @@ def stemcell_project_overview_count(request):
         d['sample_processing'] = model.sample_processing.count()
         d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
 
-    # TODO assuming that all packages in CKAN are embargoed, but theoretically they could be
+    # TODO assuming that all packages in CKAN are mediated, but theoretically they could be
     # public as well
 
     all_package_counts = ckan_packages_count_by_resource_type()
     for k, d in counts.items():
-        d['embargoed'] = all_package_counts.get(k, 0)
+        d['mediated'] = all_package_counts.get(k, 0)
 
     for k, d in counts.items():
         d['all'] = sum(d.values())
@@ -237,12 +237,12 @@ def sepsis_project_overview_count(request):
         d['sample_processing'] = model.sample_processing.count()
         d['bpa_archive_ingest'] = model.bpa_archive_ingest.count()
 
-    # TODO assuming that all packages in CKAN are embargoed, but theoretically they could be
+    # TODO assuming that all packages in CKAN are mediated, but theoretically they could be
     # public as well
 
     all_package_counts = ckan_packages_count_by_resource_type()
     for k, d in counts.items():
-        d['embargoed'] = all_package_counts.get(k, 0)
+        d['mediated'] = all_package_counts.get(k, 0)
 
     for k, d in counts.items():
         d['all'] = sum(d.values())

@@ -13,7 +13,7 @@ urlpatterns = patterns(
 
     url(r'^package_list/(?P<org_name>[\w-]+)/?$', views.package_list, name='package_list'),
     url(r'^package_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/?$', views.package_list, name='package_list'),
-    url(r'^package_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/(?P<status>(embargoed|public))/?$', views.package_list, name='package_list'),
+    url(r'^package_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/(?P<status>(mediated|public))/?$', views.package_list, name='package_list'),
 
     url(r'^package_list/(?P<org_name>[\w-]+)/(?P<resource_type>[\w-]+)/(?P<status>(sample_processing|bpa_archive_ingest|bpa_qc))/?$', views.models_package_list, name='models_package_list'),
     url(r'^sepsis_contextual_data/?$', views.sepsis_contextual_list, name='sepsis_contextual_list'),
