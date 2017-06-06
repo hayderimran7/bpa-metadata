@@ -92,7 +92,8 @@ function wheat_pathogen_sequencefiles_setup() {
             {
                 'data': 'filename',
                 'render': function(data, type, row) {
-                    return '<a href="' + row.url + '"><span class="glyphicon glyphicon-download"></span>' + data + '</a>';
+                    var url = '{{ ckan_base_url }}' + 'dataset/' + row.package_id + '/resource/' + row.id;
+                    return '<a href="' + url + '">' + data + '</a>';
                 }
             },
             {
