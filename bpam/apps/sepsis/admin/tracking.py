@@ -4,7 +4,7 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 
 from apps.common.admin import BPAImportExportModelAdmin
-from apps.common.models import BPAUniqueID
+from apps.common.models import BPAUniqueID, BPAProject
 
 # import export fields
 from commonfields import DateField
@@ -82,9 +82,8 @@ class BPAField(fields.Field):
     def clean(self, data):
         bpaid = data[self.column_name]
         bpaid = '{}.{}'.format(BPA_ID, bpaid)
-        # project, _ = BPAProject.objects.get_or_create(name='SEPSIS')
-        # bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
-        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid)
+        project, _ = BPAProject.objects.get_or_create(name='SEPSIS')
+        bpa_id, _ = BPAUniqueID.objects.get_or_create(bpa_id=bpaid, project=project)
         return bpa_id
 
 
