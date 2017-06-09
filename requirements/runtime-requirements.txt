@@ -1,4 +1,4 @@
-Django==1.8.14
+Django==1.8.18
 Django-suit==0.2.18
 Unipath==1.1
 Werkzeug==0.11.10
@@ -17,7 +17,7 @@ django-localflavor==1.2
 django-mptt==0.8.4
 django-queryset-csv==0.3.3
 django-revproxy==0.9.13
-django-sql-explorer==1.0.0
+django-sql-explorer==1.1.1
 django_bootstrap_breadcrumbs==0.7.3
 django_compressor==2.0
 djangorestframework==3.4.4
