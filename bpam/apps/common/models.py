@@ -484,7 +484,7 @@ class SampleTrack(models.Model):
     sample_submission_date = models.DateField('Sample Submission Date', blank=True, null=True, help_text='YYYY-MM-DD')
     data_generated = models.NullBooleanField('Data Generated', default=False)
     dataset_url = models.URLField('Download URL', blank=True, null=True)
-    in_data_portal = models.BooleanField('Data ingested into data portal')
+    in_data_portal = models.BooleanField('Data ingested into data portal', default=False)
     last_modified = models.DateTimeField(auto_now=True)
 
     @classmethod

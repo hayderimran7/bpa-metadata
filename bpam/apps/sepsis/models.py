@@ -48,7 +48,7 @@ class SampleTrack(models.Model):
     archive_ingestion_date = models.DateField('Archive Ingestion Date', blank=True, null=True, help_text='YYYY-MM-DD')
     curation_url = models.URLField('Curation URL', blank=True, null=True)
     dataset_url = models.URLField('Download URL', blank=True, null=True)
-    in_data_portal = models.BooleanField('Data ingested into data portal')
+    in_data_portal = models.BooleanField('Data ingested into data portal', default=False)
 
     last_modified = models.DateTimeField(auto_now=True)
 
