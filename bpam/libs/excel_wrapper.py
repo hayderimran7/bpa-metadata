@@ -22,6 +22,10 @@ import logger_utils
 logger = logger_utils.get_logger(__name__)
 
 
+def strip_to_ascii(s):
+    return ''.join([t for t in s if ord(t) < 128])
+
+
 def _stringify(s):
     if isinstance(s, str):
         return str(s.decode('utf8'))
@@ -98,13 +102,13 @@ class ExcelWrapper(object):
     def set_name_to_column_map(self):
         ''' maps the named field to the actual column in the spreadsheet '''
 
-        def strip_unicode(s):
+        def coerce_header(s):
             if type(s) is not str and type(s) is not unicode:
                 logger.error("header is not a string: %s `%s'" % (type(s), repr(s)))
                 return str(s)
-            return ''.join([t for t in s if ord(t) < 128])
+            return strip_to_ascii(s)
 
-        header = [strip_unicode(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
+        header = [coerce_header(t).strip().lower() for t in self.sheet.row_values(self.column_name_row_index)]
 
         def find_column(column_name):
             # if has the 'match' attribute, it's a regexp
@@ -124,6 +128,7 @@ class ExcelWrapper(object):
             return -1
 
         cmap = {}
+        missing_columns = False
         for attribute, column_name, _, is_optional in self.field_spec:
             col_index = -1
             col_descr = column_name
@@ -142,8 +147,16 @@ class ExcelWrapper(object):
             else:
                 self.missing_headers.append(column_name)
                 if not is_optional:
-                    logger.warning('Column `{}` not found in `{}` (columns are: {})'.format(col_descr, os.path.basename(self.file_name), [str(t) for t in header]))
+                    logger.warning("Column `{}' not found in `{}' `{}'".format(col_descr, os.path.basename(self.file_name), self.sheet.name))
+                    missing_columns = True
                 cmap[attribute] = None
+
+        if missing_columns:
+            template = ['[']
+            for header in (str(t) for t in header):
+                template.append("    ('%s', '%s')," % (header.lower().replace(' ', '_'), header))
+            template.append(']')
+            logger.warning('Missing columns -- template for columns in spreadsheet is:\n%s' % ('\n'.join(template)))
 
         return header, cmap
 
@@ -203,17 +216,8 @@ class ExcelWrapper(object):
                 val = datetime.time(*date_time_tup[3:])
             else:
                 val = datetime.datetime(*date_time_tup)
-        except ValueError as e:
-            logger.warning('Error [{0:!r}] column:{1}, val: {2} cannot be converted to a date'.format(e, i, val))
-            # OK so its not really a date, maybe something can be done with the float
-            # This functionality is not currently implemented in the xlrd library
-            # xf_index = cell.xf_index
-            # if xf_index:
-            # xf = self.workbook.xf_list[xf_index] # gets an XF object
-            #     format_key = xf.format_key
-            #     format = self.workbook.format_map[format_key] # gets a Format object
-            #     format_str = format.format_str # this is the 'number format string'
-            #     print format_str
+        except ValueError:
+            logger.warning('column: `%s\' -- value `%s\' cannot be converted to a date' % (i, val))
         return val
 
     def get_all(self, typname='DataRow'):

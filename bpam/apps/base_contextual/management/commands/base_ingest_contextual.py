@@ -15,8 +15,8 @@ from apps.base_contextual.models import (HorizonClassification, LandUse, General
 
 logger = logger_utils.get_logger(__name__)
 
-METADATA_PATH = 'base/metadata'
-CONTEXTUAL_DATA_FILE = 'contextual-latest.xlsx'
+METADATA_PATH = 'base/metadata/contextual/2017-06-21/'
+CONTEXTUAL_DATA_FILE = 'contextual-2017-06-21.xlsx'
 DATA_DIR = Path(ingest_utils.METADATA_ROOT, METADATA_PATH)
 
 BPA_ID_PREFIX = "102.100.100"
@@ -84,7 +84,7 @@ def get_data(file_name):
     The data sets is relatively small, so make a in-memory copy to simplify some operations.
     """
 
-    field_spec = [('sample_id', 'Sample_ID', lambda s: s.strip()),
+    field_spec = [('sample_id', 'Sample_ID', ingest_utils.extract_bpa_id),
                   ('date_sampled', 'Date sampled', ingest_utils.get_date),
                   ('lat', 'latitude', ingest_utils.get_clean_float),
                   ('lon', 'longitude', ingest_utils.get_clean_float),
@@ -121,7 +121,7 @@ def get_data(file_name):
                   # soil structual
                   ('soil_moisture', 'Soil moisture (%)', ingest_utils.get_clean_float),
                   ('soil_colour', 'Color controlled vocab (10)', None),
-                  ('gravel', 'Gravel (%) - ( >2.0 mm)', None),
+                  ('gravel', 'gravel (%)- ( >2.0 mm)'),
                   ('texture', 'Texture ()', ingest_utils.get_clean_float),
                   ('course_sand', re.compile(r'^course sand .*'), ingest_utils.get_clean_float),
                   ('fine_sand', re.compile(r'^fine sand .*'), ingest_utils.get_clean_float),
@@ -147,13 +147,9 @@ def get_data(file_name):
                   ('exc_magnesium', 'Exc. Magnesium (meq/100g)', get_float_or_sentinal),
                   ('exc_potassium', 'Exc. Potassium (meq/100g)', get_float_or_sentinal),
                   ('exc_sodium', 'Exc. Sodium (meq/100g)', get_float_or_sentinal),
-                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', get_float_or_sentinal),
-                  ('total_nitrogen', 'Total Nitrogen', get_float_or_sentinal),
-                  ('total_carbon', 'Total Carbon', get_float_or_sentinal),
-                  ('methodological_notes', 'Methodological notes', None),
-                  ('other_comments', 'Other comments', None), ]
+                  ('boron_hot_cacl2', 'Boron Hot CaCl2 (mg/Kg)', get_float_or_sentinal), ]
 
-    wrapper = ExcelWrapper(field_spec, file_name, sheet_name='Sample_info', header_length=1, column_name_row_index=0)
+    wrapper = ExcelWrapper(field_spec, file_name, sheet_name=None, header_length=1, column_name_row_index=0)
 
     return wrapper.get_all()
 
@@ -300,7 +296,7 @@ def get_site(entry):
 
         # notes
         site.debug_note = ingest_utils.pretty_print_namedtuple(entry)
-        site.other_comments = entry.other_comments
+        site.other_comments = None  # entry.other_comments
 
         site.save()
 
@@ -344,8 +340,8 @@ def get_chemical_analysis(e, bpa_id):
     analysis.exc_potassium = e.exc_potassium
     analysis.exc_sodium = e.exc_sodium
     analysis.boron_hot_cacl2 = e.boron_hot_cacl2
-    analysis.total_nitrogen = e.total_nitrogen
-    analysis.total_carbon = e.total_carbon
+    analysis.total_nitrogen = None  # e.total_nitrogen
+    analysis.total_carbon = None  # e.total_carbon
 
     analysis.save()
     return analysis
@@ -373,7 +369,7 @@ def add_samples(data):
         sample.horizon_classification2 = horizons[1]
         sample.storage = e.storage_method
         sample.debug_note = ingest_utils.pretty_print_namedtuple(e)
-        sample.methodological_notes = e.methodological_notes
+        sample.methodological_notes = None  # e.methodological_notes
         sample.save()
 
 
