@@ -1,23 +1,239 @@
 {% extends "base.html" %}
 
-{% block title %}Sample Data{% endblock %}
+{% block title %}BASE Contextual Samples {% endblock %}
 
 {% block content %}
-{% load django_bootstrap_breadcrumbs %}
-{% block breadcrumbs %}
-{{ block.super }}
-{% breadcrumb "BASE" "base:index" %}
-{% breadcrumb "Samples" "base_contextual:samples" %}
-{% endblock %}
-{% if records %}
 
 <div class="container-fluid">
-    <h3><a href="{% url 'base:index'%}">BASE</a> All Sample Data ({{records|length}} Records) </h3>
-    {% include "base_contextual/sample_matrix_table.html" %}
+    <div class="alert alert-info" role="alert">
+        To sort by multiple columns, press and hold the Shift key.
+        <div class="bootstrap_buttons"> </div>
+    </div>
+    <table class="apitable" width="100%">
+        <thead>
+            <tr>
+                <th>Sample ID</th>
+                <th>BPA ID</th>
+                <th>Data Type</th>
+                <th>Collection Site</th>
+                <th>Date Sampled</th>
+                <th>Soil Depth (cm)</th>
+                <th>Horizon</th>
+                <th>Storage</th>
+                <th>Broad Land Use</th>
+                <th>Detailed Land Use</th>
+                <th>Ecological Zone</th>
+                <th>Vegetation Type</th>
+                <th>Vegetation Cover</th>
+                <th>Elevation</th>
+                <th>Slope</th>
+                <th>Slope Aspect</th>
+                <th>Profile Position</th>
+                <th>Australian Soil Classification</th>
+                <th>FAO Soil Classification</th>
+                <th>Immediate Previous Land Use</th>
+                <th>Date since change in Land Use</th>
+                <th>Crop Rotation 1 year since present</th>
+                <th>Crop Rotation 2 years since present</th>
+                <th>Crop Rotation 3 years since present</th>
+                <th>Crop Rotation 4 years since present</th>
+                <th>Crop Rotation 5 years since present</th>
+                <th>Agrochemical Additions</th>
+                <th>Tillage</th>
+                <th>Fire History</th>
+                <th>Fire Intensity</th>
+                <th>Flooding</th>
+                <th>Extreme Events</th>
+                <th>Moisture</th>
+                <th>Colour</th>
+                <th>Gravel</th>
+                <th>Texture</th>
+                <th>Course Sand</th>
+                <th>Fine Sand</th>
+                <th>Sand</th>
+                <th>Silt</th>
+                <th>Clay</th>
+                <th>NH<sub>3</sub>-N</th>
+                <th>NO<sub>3</sub><sup>−</sup></th>
+                <th>Colwell P</th>
+                <th>Colwell K</th>
+                <th>Sulphur</th>
+                <th>Organic Carbon</th>
+                <th>Conductivity</th>
+                <th>CaCl<sub>2</sub> pH</th>
+                <th>H<sub>2</sub>O pH</th>
+                <th>DTPA Cu</th>
+                <th>DTPA Fe</th>
+                <th>DTPA Mn</th>
+                <th>DTPA Zn</th>
+                <th>Exc Al</th>
+                <th>Exc Ca</th>
+                <th>Exc Mg</th>
+                <th>Exc K</th>
+                <th>Exc Na</th>
+                <th>B Hot CaCl<sub>2</sub></th>
+                <th>Total N</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Sample ID</th>
+                <th>BPA ID</th>
+                <th>Data Type</th>
+                <th>Collection Site</th>
+                <th>Date Sampled</th>
+                <th>Soil Depth (cm)</th>
+                <th>Horizon</th>
+                <th>Storage</th>
+                <th>Broad Land Use</th>
+                <th>Detailed Land Use</th>
+                <th>Ecological Zone</th>
+                <th>Vegetation Type</th>
+                <th>Vegetation Cover</th>
+                <th>Elevation</th>
+                <th>Slope</th>
+                <th>Slope Aspect</th>
+                <th>Profile Position</th>
+                <th>Australian Soil Classification</th>
+                <th>FAO Soil Classification</th>
+                <th>Immediate Previous Land Use</th>
+                <th>Date since change in Land Use</th>
+                <th>Crop Rotation 1 year since present</th>
+                <th>Crop Rotation 2 years since present</th>
+                <th>Crop Rotation 3 years since present</th>
+                <th>Crop Rotation 4 years since present</th>
+                <th>Crop Rotation 5 years since present</th>
+                <th>Agrochemical Additions</th>
+                <th>Tillage</th>
+                <th>Fire History</th>
+                <th>Fire Intensity</th>
+                <th>Flooding</th>
+                <th>Extreme Events</th>
+                <th>Moisture</th>
+                <th>Colour</th>
+                <th>Gravel</th>
+                <th>Texture</th>
+                <th>Course Sand</th>
+                <th>Fine Sand</th>
+                <th>Sand</th>
+                <th>Silt</th>
+                <th>Clay</th>
+                <th>NH<sub>3</sub>-N</th>
+                <th>NO<sub>3</sub><sup>−</sup></th>
+                <th>Colwell P</th>
+                <th>Colwell K</th>
+                <th>Sulphur</th>
+                <th>Organic Carbon</th>
+                <th>Conductivity</th>
+                <th>CaCl<sub>2</sub> pH</th>
+                <th>H<sub>2</sub>O pH</th>
+                <th>DTPA Cu</th>
+                <th>DTPA Fe</th>
+                <th>DTPA Mn</th>
+                <th>DTPA Zn</th>
+                <th>Exc Al</th>
+                <th>Exc Ca</th>
+                <th>Exc Mg</th>
+                <th>Exc K</th>
+                <th>Exc Na</th>
+                <th>B Hot CaCl<sub>2</sub></th>
+                <th>Total N</th>
+            </tr>
+        </tfoot>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
-{% else %}
-<h3> No Sample Data is currently available </h3>
-{% endif %}
+<script>
+  function base_contextual_samples_setup() {
+    var url = bpam_config.ckan_base + 'package_list/bpa-base';
+
+    setup_table(function() {
+      var config = _.defaults({
+        searching: true,
+
+        columns: [{
+              'data': 'id',
+              'defaultContent': '',
+              'searchable': false,
+              'render': function(data, type, row) {
+                  var url = '{{ ckan_base_url }}' + 'dataset/' + data;
+                  return '<a href="' + url + '">' + data + '</a>';
+              }
+            },
+            { 'data': 'bpa_id' , 'defaultContent': ''},
+            { 'data': 'data_type' , 'defaultContent': ''},
+            { 'data': 'location_description' , 'defaultContent': ''},
+            { 'data': 'date_sampled' , 'defaultContent': ''},
+            { 'data': 'depth' , 'defaultContent': ''},
+            { 'data': 'horizon_classification' , 'defaultContent': ''},
+            { 'data': 'soil_sample_storage_method' , 'defaultContent': ''},
+            { 'data': 'broad_land_use' , 'defaultContent': ''},
+            { 'data': 'detailed_land_use' , 'defaultContent': ''},
+            { 'data': 'general_ecological_zone' , 'defaultContent': ''},
+            { 'data': 'vegetation_type' , 'defaultContent': ''},
+            { 'data': 'vegetation_total_cover' , 'defaultContent': ''},
+            { 'data': 'elevation' , 'defaultContent': ''},
+            { 'data': 'slope' , 'defaultContent': ''},
+            { 'data': 'slope_aspect' , 'defaultContent': ''},
+            { 'data': 'profile_position' , 'defaultContent': ''},
+            { 'data': 'australian_soil_classification' , 'defaultContent': ''},
+            { 'data': 'fao_soil_classification' , 'defaultContent': ''},
+            { 'data': 'immediate_previous_land_use' , 'defaultContent': ''},
+            { 'data': 'date_since_change_in_land_use' , 'defaultContent': ''},
+            { 'data': 'crop_rotation_1yrs_since_present' , 'defaultContent': ''},
+            { 'data': 'crop_rotation_2yrs_since_present' , 'defaultContent': ''},
+            { 'data': 'crop_rotation_3yrs_since_present' , 'defaultContent': ''},
+            { 'data': 'crop_rotation_4yrs_since_present' , 'defaultContent': ''},
+            { 'data': 'crop_rotation_5yrs_since_present' , 'defaultContent': ''},
+            { 'data': 'agrochemical_additions' , 'defaultContent': ''},
+            { 'data': 'tillage' , 'defaultContent': ''},
+            { 'data': 'fire_history' , 'defaultContent': ''},
+            { 'data': 'fire_intensity_if_known' , 'defaultContent': ''},
+            { 'data': 'flooding' , 'defaultContent': ''},
+            { 'data': 'extreme_events' , 'defaultContent': ''},
+            { 'data': 'soil_moisture' , 'defaultContent': ''},
+            { 'data': 'color' , 'defaultContent': ''},
+            { 'data': 'gravel' , 'defaultContent': ''},
+            { 'data': 'texture' , 'defaultContent': ''},
+            { 'data': 'course_sand' , 'defaultContent': ''},
+            { 'data': 'fine_sand' , 'defaultContent': ''},
+            { 'data': 'sand' , 'defaultContent': ''},
+            { 'data': 'silt' , 'defaultContent': ''},
+            { 'data': 'clay' , 'defaultContent': ''},
+            { 'data': 'ammonium_nitrogen' , 'defaultContent': ''},
+            { 'data': 'nitrate_nitrogen' , 'defaultContent': ''},
+            { 'data': 'phosphorus_colwell' , 'defaultContent': ''},
+            { 'data': 'potassium_colwell' , 'defaultContent': ''},
+            { 'data': 'sulphur' , 'defaultContent': ''},
+            { 'data': 'organic_carbon' , 'defaultContent': ''},
+            { 'data': 'conductivity' , 'defaultContent': ''},
+            { 'data': 'ph_level_cacl2' , 'defaultContent': ''},
+            { 'data': 'ph_level_h2o' , 'defaultContent': ''},
+            { 'data': 'dtpa_copper' , 'defaultContent': ''},
+            { 'data': 'dtpa_iron' , 'defaultContent': ''},
+            { 'data': 'dtpa_manganese' , 'defaultContent': ''},
+            { 'data': 'dtpa_zinc' , 'defaultContent': ''},
+            { 'data': 'exc_aluminium' , 'defaultContent': ''},
+            { 'data': 'exc_calcium' , 'defaultContent': ''},
+            { 'data': 'exc_magnesium' , 'defaultContent': ''},
+            { 'data': 'exc_potassium' , 'defaultContent': ''},
+            { 'data': 'exc_sodium' , 'defaultContent': ''},
+            { 'data': 'boron_hot_cacl2' , 'defaultContent': ''},
+            { 'data': 'total_n' , 'defaultContent': ''}
+        ]
+      }, CONFIG.tables.ajaxConfig);
+
+      config.ajax.url = url;
+
+      return config;
+    });
+  };
+
+  $(document).ready(function() {
+     base_contextual_samples_setup();
+  });
+</script>
 
 {% endblock %}

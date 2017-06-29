@@ -3,6 +3,7 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 
+from bpam.views import CKANTemplateView
 from .models import ChemicalAnalysis, CollectionSite, SampleContext
 
 import sample_context
@@ -55,11 +56,8 @@ class SampleContextDetailView(DetailView):
         return context
 
 
-class SampleMatrixListView(ListView):
-    model = SampleContext
-    context_object_name = 'records'
+class SampleMatrixListView(CKANTemplateView):
     template_name = 'base_contextual/sample_matrix_list.html'
-    queryset = SampleContext.objects.select_related()
 
 
 class SampleContextListView(ListView):
